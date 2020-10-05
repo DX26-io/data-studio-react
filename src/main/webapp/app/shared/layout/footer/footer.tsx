@@ -3,17 +3,18 @@ import './footer.scss';
 import React from 'react';
 import { Translate } from 'react-jhipster';
 import { Col, Row } from 'reactstrap';
+import { Footer, Grid } from '@adobe/react-spectrum';
 
-const Footer = props => (
-  <div className="footer page-content">
-    <Row>
-      <Col md="12">
-        <p>
-          <Translate contentKey="footer">Your footer</Translate>
-        </p>
-      </Col>
-    </Row>
-  </div>
+const Footers = props => (
+  <Footer>
+    <Grid
+      autoRows="size-800"
+      gap="size-100">
+      <Translate contentKey="footer">Your footer</Translate>
+    </Grid>
+  </Footer>
+
+
 );
 
-export default Footer;
+export default Footers;
