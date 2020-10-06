@@ -1,9 +1,14 @@
 import React from 'react';
 import { Translate, translate } from 'react-jhipster';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Label, Alert, Row, Col } from 'reactstrap';
-import { AvForm, AvField, AvGroup, AvInput } from 'availity-reactstrap-validation';
 import { Link } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import './loginmodal.scss';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 export interface ILoginModalProps {
   showModal: boolean;
   loginError: boolean;
@@ -12,80 +17,95 @@ export interface ILoginModalProps {
 }
 
 class LoginModal extends React.Component<ILoginModalProps> {
-  handleSubmit = (event, errors, { username, password, rememberMe }) => {
+  // handleSubmit = (event, errors, { username, password, rememberMe }) => {
+  //   const { handleLogin } = this.props;
+  //   handleLogin(username, password, rememberMe);
+  // };
+  state = {
+    formData: {
+      email: '',
+      password: '',
+    },
+    submitted: false,
+  }
+
+  handleChange = (event) => {
+    const { formData } = this.state;
+    formData[event.target.name] = event.target.value;
+    this.setState({ formData });
+  }
+
+  handleSubmit = () => {
     const { handleLogin } = this.props;
-    handleLogin(username, password, rememberMe);
-  };
+    handleLogin(this.state.formData.email, this.state.formData.password,false);
+  }
 
   render() {
     const { loginError, handleClose } = this.props;
+    const { formData, submitted } = this.state;
 
     return (
-      <Modal isOpen={this.props.showModal} toggle={handleClose} backdrop="static" id="login-page" autoFocus={false}>
-        <AvForm onSubmit={this.handleSubmit}>
-          <ModalHeader id="login-title" toggle={handleClose}>
-            <Translate contentKey="login.title">Sign in</Translate>
-          </ModalHeader>
-          <ModalBody>
-            <Row>
-              <Col md="12">
-                {loginError ? (
-                  <Alert color="danger">
-                    <Translate contentKey="login.messages.error.authentication">
-                      <strong>Failed to sign in!</strong> Please check your credentials and try again.
-                    </Translate>
-                  </Alert>
-                ) : null}
-              </Col>
-              <Col md="12">
-                <AvField
-                  name="username"
-                  label={translate('global.form.username.label')}
-                  placeholder={translate('global.form.username.placeholder')}
-                  required
-                  errorMessage="Username cannot be empty!"
-                  autoFocus
-                />
-                <AvField
-                  name="password"
-                  type="password"
-                  label={translate('login.form.password')}
-                  placeholder={translate('login.form.password.placeholder')}
-                  required
-                  errorMessage="Password cannot be empty!"
-                />
-                <AvGroup check inline>
-                  <Label className="form-check-label">
-                    <AvInput type="checkbox" name="rememberMe" /> <Translate contentKey="login.form.rememberme">Remember me</Translate>
-                  </Label>
-                </AvGroup>
-              </Col>
-            </Row>
-            <div className="mt-1">&nbsp;</div>
-            <Alert color="warning">
-              <Link to="/account/reset/request">
-                <Translate contentKey="login.password.forgot">Did you forget your password?</Translate>
-              </Link>
-            </Alert>
-            <Alert color="warning">
-              <span>
-                <Translate contentKey="global.messages.info.register.noaccount">You don&apos;t have an account yet?</Translate>
-              </span>{' '}
-              <Link to="/account/register">
-                <Translate contentKey="global.messages.info.register.link">Register a new account</Translate>
-              </Link>
-            </Alert>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="secondary" onClick={handleClose} tabIndex="1">
-              <Translate contentKey="entity.action.cancel">Cancel</Translate>
-            </Button>{' '}
-            <Button color="primary" type="submit">
-              <Translate contentKey="login.form.button">Sign in</Translate>
+      <div className="root">
+        <Grid container spacing={1}>
+
+          <Grid item xs={12} sm={12}>
+            <Paper></Paper>
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <Paper>
+              <ValidatorForm
+                ref="form"
+                onSubmit={this.handleSubmit}
+              >
+                <div>
+                  <TextValidator
+                    label="Email Address"
+                    onChange={this.handleChange}
+                    name="email"
+                    value={formData.email}
+                    validators={['required', 'isEmail']}
+                    errorMessages={['email is required', 'email is not valid']}
+                  />
+                </div>
+                <div>
+                  <TextValidator
+                    label="Password"
+                    onChange={this.handleChange}
+                    name="password"
+                    value={formData.password}
+                    validators={['required']}
+                    errorMessages={['password is required']}
+                  />
+                </div>
+                <div>
+
+                  <Grid container spacing={1}>
+
+                    <Grid item >
+                      <Button href="#text-buttons" color="primary" className="text-left">
+                        Sign in using SSO
             </Button>
-          </ModalFooter>
-        </AvForm>
-      </Modal>
+                    </Grid>
+                    <Grid item >
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        type="submit"
+                        disabled={submitted}
+                      >
+                        {
+                          (submitted && 'Your form is submitted!')
+                          || (!submitted && 'Login')
+                        }
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </div>
+              </ValidatorForm>
+            </Paper>
+          </Grid>
+        </Grid>
+      </div>
     );
   }
 }
