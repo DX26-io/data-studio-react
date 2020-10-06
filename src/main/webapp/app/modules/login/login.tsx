@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
-
 import { IRootState } from 'app/shared/reducers';
 import { login } from 'app/shared/reducers/authentication';
 import LoginModal from './login-modal';
@@ -10,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 export interface ILoginProps extends StateProps, DispatchProps, RouteComponentProps<{}> { }
 
@@ -26,20 +26,7 @@ export const Login = (props: ILoginProps) => {
     setShowModal(false);
     props.history.push('/');
   };
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      '& .MuiTextField-root': {
-        margin: theme.spacing(1),
-        width: 400,
-      },
-    },
-    paper: {
-      padding: theme.spacing(2),
-      //   textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
-  }));
-  const classes = useStyles();
+
 
   const { location, isAuthenticated } = props;
   const { from } = (location.state as any) || { from: { pathname: '/', search: location.search } };

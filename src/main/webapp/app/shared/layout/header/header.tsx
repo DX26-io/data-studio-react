@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Translate, Storage } from 'react-jhipster';
 import { NavLink as Link } from 'react-router-dom';
 import LoadingBar from 'react-redux-loading-bar';
-import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,7 +15,6 @@ import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
 
 export interface IHeaderProps {
   isAuthenticated: boolean;
@@ -46,49 +44,6 @@ const Headers = (props: IHeaderProps) => {
       </div>
     ) : null;
 
-  const useStyles = makeStyles((theme) => ({
-    grow: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      display: 'none',
-      [theme.breakpoints.up('sm')]: {
-        display: 'block',
-      },
-    },
-   
-   
-    inputRoot: {
-      color: 'inherit',
-    },
-    inputInput: {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('md')]: {
-        width: '20ch',
-      },
-    },
-    sectionDesktop: {
-      display: 'none',
-      [theme.breakpoints.up('md')]: {
-        display: 'flex',
-      },
-    },
-    sectionMobile: {
-      display: 'flex',
-      [theme.breakpoints.up('md')]: {
-        display: 'none',
-      },
-    },
-  }));
-
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -123,7 +78,7 @@ const Headers = (props: IHeaderProps) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <Link to="/login" style={{ textDecoration: 'none', display: 'block' }}>
+      <Link to="/login" className="menu">
         <MenuItem onClick={handleMenuClose}>Login </MenuItem>
       </Link>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
@@ -178,16 +133,16 @@ const Headers = (props: IHeaderProps) => {
       {renderDevRibbon()}
       <LoadingBar className="loading-bar" />
 
-      <div className={classes.grow}>
+      <div className="grow">
         <AppBar position="static">
           <Toolbar>
-           
-            <Typography className={classes.title} variant="h6" noWrap>
+
+            <Typography variant="h6" noWrap>
               dx26
           </Typography>
 
-            <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
+            <div className="grow" />
+            <div >
               <IconButton aria-label="show 4 new mails" color="inherit">
                 <Badge badgeContent={4} color="secondary">
                   <MailIcon />
@@ -207,17 +162,6 @@ const Headers = (props: IHeaderProps) => {
                 color="inherit"
               >
                 <AccountCircle />
-              </IconButton>
-            </div>
-            <div className={classes.sectionMobile}>
-              <IconButton
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen}
-                color="inherit"
-              >
-                <MoreIcon />
               </IconButton>
             </div>
           </Toolbar>
