@@ -1,15 +1,13 @@
 import './header.scss';
 
-import React, { useState } from 'react';
-import { Translate, Storage } from 'react-jhipster';
-import { Navbar, Nav, NavbarToggler, NavbarBrand, Collapse } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import { NavLink as Link } from 'react-router-dom';
+import React from 'react';
+import { Storage, Translate } from 'react-jhipster';
 import LoadingBar from 'react-redux-loading-bar';
-
-import { Home, Brand } from './header-components';
-import { AdminMenu, EntitiesMenu, AccountMenu, LocaleMenu } from '../menus';
+import Notifications from 'app/shared/layout/header/partials/Notifications';
+import RealmSwitcher from 'app/shared/layout/header/partials/RealmSwitcher';
+import DataStudioAvatar from 'app/shared/layout/header/partials/DataStudioAvatar';
+import Logo from 'app/shared/components/logo/Logo';
+import { Flex, View } from '@adobe/react-spectrum';
 
 export interface IHeaderProps {
   isAuthenticated: boolean;
@@ -22,8 +20,7 @@ export interface IHeaderProps {
 }
 
 const Header = (props: IHeaderProps) => {
-  const [menuOpen, setMenuOpen] = useState(false);
-
+  // TODO use this in user preferences page
   const handleLocaleChange = event => {
     const langKey = event.target.value;
     Storage.session.set('locale', langKey);
@@ -39,28 +36,25 @@ const Header = (props: IHeaderProps) => {
       </div>
     ) : null;
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-
-  /* jhipster-needle-add-element-to-menu - JHipster will add new menu items here */
-
   return (
-    <div id="app-header">
+    <>
       {renderDevRibbon()}
       <LoadingBar className="loading-bar" />
-      <Navbar dark expand="sm" fixed="top" className="jh-navbar">
-        <NavbarToggler aria-label="Menu" onClick={toggleMenu} />
-        <Brand />
-        <Collapse isOpen={menuOpen} navbar>
-          <Nav id="header-tabs" className="ml-auto" navbar>
-            <Home />
-            {props.isAuthenticated && <EntitiesMenu />}
-            {props.isAuthenticated && props.isAdmin && <AdminMenu showSwagger={props.isSwaggerEnabled} />}
-            <LocaleMenu currentLocale={props.currentLocale} onClick={handleLocaleChange} />
-            <AccountMenu isAuthenticated={props.isAuthenticated} />
-          </Nav>
-        </Collapse>
-      </Navbar>
-    </div>
+      <View padding='size-150' backgroundColor='static-black'>
+        <header>
+          <Flex justifyContent='space-between'>
+            <Flex justifyContent='center' alignItems='center'>
+              <Logo />
+            </Flex>
+            <Flex alignItems='end'>
+              <RealmSwitcher />
+              <Notifications />
+              <DataStudioAvatar />
+            </Flex>
+          </Flex>
+        </header>
+      </View>
+    </>
   );
 };
 
