@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import appConfig from 'app/config/constants';
 
+// TODO this needs to be removed
 export const BrandIcon = props => (
   <div {...props} className="brand-icon">
     <img src="content/images/logo-jhipster.png" alt="Logo" />

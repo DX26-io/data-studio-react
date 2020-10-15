@@ -11,6 +11,7 @@ import { clearAuthentication } from './shared/reducers/authentication';
 import ErrorBoundary from './shared/error/error-boundary';
 import AppComponent from './app';
 import { loadIcons } from './config/icon-loader';
+import { defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
 
 const devTools = process.env.NODE_ENV === 'development' ? <DevTools /> : null;
 
@@ -28,13 +29,15 @@ const render = Component =>
   // eslint-disable-next-line react/no-render-return-value
   ReactDOM.render(
     <ErrorBoundary>
-      <Provider store={store}>
-        <div>
-          {/* If this slows down the app in dev disable it and enable when required  */}
-          {devTools}
-          <Component />
-        </div>
-      </Provider>
+      <SpectrumProvider theme={defaultTheme}>
+        <Provider store={store}>
+          <div>
+            {/* If this slows down the app in dev disable it and enable when required  */}
+            {devTools}
+            <Component />
+          </div>
+        </Provider>
+      </SpectrumProvider>
     </ErrorBoundary>,
     rootEl
   );
