@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { Row, Col, Alert } from 'reactstrap';
 
 import { IRootState } from 'app/shared/reducers';
+import Bell from '@spectrum-icons/workflow/Bell';
 
 export type IHomeProp = StateProps;
 
@@ -14,6 +15,7 @@ export const Home = (props: IHomeProp) => {
   const { account } = props;
 
   return (
+
     <Row>
       <Col md="9">
         <h2>

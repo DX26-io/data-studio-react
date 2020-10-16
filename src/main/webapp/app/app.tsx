@@ -30,7 +30,6 @@ export const App = (props: IAppProps) => {
     props.getProfile();
   }, []);
 
-  const paddingTop = '60px';
   return (
     <Router basename={baseHref}>
       { props.isAuthenticated ?
