@@ -3,22 +3,19 @@ import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 
 import { IRootState } from 'app/shared/reducers';
-import { login } from 'app/shared/reducers/authentication';
-import LoginModal from './login-modal';
+import { login } from 'app/shared/reducers/authentication';;
+import LoginForm from './login-form';
 
 export interface ILoginProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export const Login = (props: ILoginProps) => {
-  const [showModal, setShowModal] = useState(props.showModal);
 
   useEffect(() => {
-    setShowModal(true);
   }, []);
 
   const handleLogin = (username, password, rememberMe = false) => props.login(username, password, rememberMe);
 
   const handleClose = () => {
-    setShowModal(false);
     props.history.push('/');
   };
 
@@ -27,7 +24,7 @@ export const Login = (props: ILoginProps) => {
   if (isAuthenticated) {
     return <Redirect to={from} />;
   }
-  return <LoginModal showModal={showModal} handleLogin={handleLogin} handleClose={handleClose} loginError={props.loginError} />;
+  return <LoginForm  handleLogin={handleLogin} handleClose={handleClose} loginError={props.loginError} />;
 };
 
 const mapStateToProps = ({ authentication }: IRootState) => ({
