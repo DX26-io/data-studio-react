@@ -26,10 +26,14 @@ const DataStudioAvatar = () => {
             </Text>
             <Divider marginY='size-200' size="S" />
             <Button isQuiet={true} variant='primary' marginBottom='size-200'>
-              <Text> <Translate contentKey="header.avatar.preferences">Preferences</Translate> </Text>
+              <Text>
+                <Translate contentKey="header.avatar.preferences">Preferences</Translate>
+              </Text>
             </Button>
             <Button variant="primary" justifySelf='center'>
-              <Text> <Translate contentKey="header.avatar.signOut">Sign Out</Translate> </Text>
+              <Text>
+                <Translate contentKey="header.avatar.signOut">Sign Out</Translate>
+              </Text>
             </Button>
           </Flex>
         </View>

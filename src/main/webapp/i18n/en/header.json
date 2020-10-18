@@ -2,7 +2,7 @@
   "header": {
     "avatar": {
       "greeting": "Hello",
-      "preference": "Preference",
+      "preferences": "Preferences",
       "signOut": "Sign Out"
     }
   }
