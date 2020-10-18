@@ -1,6 +1,4 @@
-import React, { PropsWithChildren, useRef } from 'react';
-import { useToggleButton } from 'react-aria';
-import { useToggleState } from 'react-stately';
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { View } from '@adobe/react-spectrum';
 
 interface IHeaderPopoverProps {
@@ -8,23 +6,32 @@ interface IHeaderPopoverProps {
 }
 
 const HeaderPopover: React.FC<PropsWithChildren<IHeaderPopoverProps>> = (props) => {
-  const iconRef = useRef();
-  const iconToggleState = useToggleState(props);
-  const { buttonProps } = useToggleButton(props, iconToggleState, iconRef);
-
-  const handleOnBlur = () => {
-    iconToggleState.setSelected(false);
+  const [IsContainerOpen, setIsContainerOpen] = useState(false);
+  const container = useRef(null);
+  const toggleContainer = () => setIsContainerOpen(!IsContainerOpen);
+  const handleClickOutside = (event) => {
+    if (IsContainerOpen && container.current && !container.current.contains(event.target)) {
+      setIsContainerOpen(false);
+    }
   };
+
+  useEffect(() => {
+    if (IsContainerOpen)
+      document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [IsContainerOpen]);
 
   return (
     <>
       <View marginEnd='size-300'>
-        <button {...buttonProps} ref={iconRef} onBlur={handleOnBlur} className='header-icon'>
+        <button className='header-icon' onClick={toggleContainer}>
           {props.icon}
         </button>
       </View>
 
-      {iconToggleState.isSelected &&
+      {IsContainerOpen &&
       <View
         borderRadius='regular'
         borderColor='default'
@@ -34,7 +41,9 @@ const HeaderPopover: React.FC<PropsWithChildren<IHeaderPopoverProps>> = (props) 
         top='size-600'
         right='size-100'
         backgroundColor='default'>
-        {props.children}
+        <div className='header-popover-dropdown-container' ref={container}>
+          {props.children}
+        </div>
       </View>}
     </>
   );

@@ -1,0 +1,9 @@
+{
+  "header": {
+    "avatar": {
+      "greeting": "Hello",
+      "preference": "Preference",
+      "signOut": "Sign Out"
+    }
+  }
+}
