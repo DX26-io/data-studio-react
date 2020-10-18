@@ -1,4 +1,5 @@
 import 'react-toastify/dist/ReactToastify.css';
+import '@spectrum-css/typography/dist/index-vars.css'
 import './app.scss';
 
 import React, { useEffect } from 'react';
