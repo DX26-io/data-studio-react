@@ -1,12 +1,12 @@
 import 'react-toastify/dist/ReactToastify.css';
 import './app.scss';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Card } from 'reactstrap';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { hot } from 'react-hot-loader';
+import {Grid, View} from '@adobe/react-spectrum'
 
 import { IRootState } from 'app/shared/reducers';
 import { getSession } from 'app/shared/reducers/authentication';
@@ -24,41 +24,57 @@ const baseHref = document.querySelector('base').getAttribute('href').replace(/\/
 
 export interface IAppProps extends StateProps, DispatchProps {}
 
+// TODO: Test Cases
 export const App = (props: IAppProps) => {
+  // TODO: If possible, remove the usage of computed content height and control it through styling
+  const [contentSize, setContentSize] = useState(window.innerHeight)
+  const updateContentHeight = () => {
+    setContentSize(window.innerHeight)
+  }
+
   useEffect(() => {
     props.getSession();
     props.getProfile();
-  }, []);
+    window.removeEventListener('resize', updateContentHeight);
+  }, [contentSize]);
 
   return (
     <Router basename={baseHref}>
       { props.isAuthenticated ?
-      <div className="app-container">
-        <ToastContainer position={toast.POSITION.TOP_LEFT} className="toastify-container" toastClassName="toastify-toast" />
-        <ErrorBoundary>
-          <Header
-            isAuthenticated={props.isAuthenticated}
-            isAdmin={props.isAdmin}
-            currentLocale={props.currentLocale}
-            onLocaleChange={props.setLocale}
-            ribbonEnv={props.ribbonEnv}
-            isInProduction={props.isInProduction}
-            isSwaggerEnabled={props.isSwaggerEnabled}
-          />
-        </ErrorBoundary>
-        <div className="container-fluid view-container" id="app-view-container">
-          <Card className="jh-card">
-            <ErrorBoundary>
-              <AppRoutes />
-            </ErrorBoundary>
-          </Card>
-          <Footer />
-        </div>
-      </div>
+        <>
+          <ToastContainer position={toast.POSITION.TOP_LEFT} className="toastify-container" toastClassName="toastify-toast" />
+          <Grid
+            areas={['header', 'content', 'footer']}
+            columns={['1fr']}
+            rows={['size-700', 'auto', 'size-600']}
+            minHeight={contentSize}
+          >
+            <View gridArea="header">
+              <ErrorBoundary>
+                <Header
+                  isAuthenticated={props.isAuthenticated}
+                  isAdmin={props.isAdmin}
+                  currentLocale={props.currentLocale}
+                  onLocaleChange={props.setLocale}
+                  ribbonEnv={props.ribbonEnv}
+                  isInProduction={props.isInProduction}
+                  isSwaggerEnabled={props.isSwaggerEnabled}
+                />
+              </ErrorBoundary>
+            </View>
+            <View padding={'size-150'} gridArea="content" flex={true} alignSelf={'stretch'}>
+              <ErrorBoundary>
+                <AppRoutes />
+              </ErrorBoundary>
+            </View>
+            <View gridArea="footer">
+              <Footer />
+            </View>
+          </Grid>
+        </>
       :
-      <div>
         <LoginRoute />
-      </div> }
+      }
     </Router>
   );
 };
