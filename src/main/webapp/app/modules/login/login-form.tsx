@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 export interface ILoginProps {
   loginError: boolean;
   handleLogin: Function;
-  handleClose: Function;
 }
 
 class LoginForm extends React.Component<ILoginProps> {
@@ -17,7 +16,7 @@ class LoginForm extends React.Component<ILoginProps> {
   };
 
   render() {
-    const { loginError, handleClose } = this.props;
+    const { loginError } = this.props;
 
     return (
         <AvForm onSubmit={this.handleSubmit}>
@@ -70,9 +69,6 @@ class LoginForm extends React.Component<ILoginProps> {
                 <Translate contentKey="global.messages.info.register.link">Register a new account</Translate>
               </Link>
             </Alert>
-            <Button color="secondary" onClick={handleClose} tabIndex="1">
-              <Translate contentKey="entity.action.cancel">Cancel</Translate>
-            </Button>{' '}
             <Button color="primary" type="submit">
               <Translate contentKey="login.form.button">Sign in</Translate>
             </Button>
