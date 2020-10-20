@@ -15,10 +15,6 @@ export const Login = (props: ILoginProps) => {
 
   const handleLogin = (username, password, rememberMe = false) => props.login(username, password, rememberMe);
 
-  const handleClose = () => {
-    props.history.push('/');
-  };
-
   /* let the below commented for time being as i would need it */
 
   // const { location, isAuthenticated } = props;
@@ -27,7 +23,7 @@ export const Login = (props: ILoginProps) => {
   //   return <Redirect to={from} />;
   // }
 
-  return <LoginForm  handleLogin={handleLogin} handleClose={handleClose} loginError={props.loginError} />;
+  return <LoginForm  handleLogin={handleLogin} loginError={props.loginError} />;
 };
 
 const mapStateToProps = ({ authentication }: IRootState) => ({
