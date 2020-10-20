@@ -41,7 +41,7 @@ export const PrivateRouteComponent = ({
       ) : (
         <Redirect
           to={{
-            pathname: '/login',
+            pathname: '/',
             search: props.location.search,
             state: { from: props.location },
           }}
@@ -70,7 +70,7 @@ const mapStateToProps = (
   { hasAnyAuthorities = [] }: IOwnProps
 ) => ({
   isAuthenticated,
-  isAuthorized: hasAnyAuthority(account.authorities, hasAnyAuthorities),
+  isAuthorized: hasAnyAuthority(account.userGroups, hasAnyAuthorities),
   sessionHasBeenFetched,
 });
 
