@@ -44,7 +44,10 @@ export default () => next => action => {
       } else if (error && error.response) {
         const response = error.response;
         const data = response.data;
-        if (!(response.status === 401 && (error.message === '' || (data && data.path && data.path.includes('/api/account'))))) {
+        if (
+          !(response.status === 401 && (error.message === '' || (data && data.path && data.path.includes('/api/account')))) &&
+          !(response.status === 500 && response.config.url.includes('api/account'))
+        ) {
           let i;
           switch (response.status) {
             // connection refused, server not reachable
