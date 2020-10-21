@@ -2,6 +2,7 @@ import React, { PropsWithChildren, useRef } from 'react';
 import { useToggleButton } from 'react-aria';
 import { useToggleState } from 'react-stately';
 import { View } from '@adobe/react-spectrum';
+import {headerStyles} from './header-style';
 
 interface IHeaderPopoverProps {
   icon: React.ReactNode;
@@ -26,14 +27,14 @@ const HeaderPopover: React.FC<PropsWithChildren<IHeaderPopoverProps>> = (props) 
 
       {iconToggleState.isSelected &&
       <View
-        borderRadius='regular'
-        borderColor='default'
-        borderWidth='thin'
-        padding='size-200'
-        position='absolute'
-        top='size-600'
-        right='size-100'
-        backgroundColor='default'>
+        borderRadius={headerStyles.borderRadius}
+        borderColor={headerStyles.borderColor}
+        borderWidth={headerStyles.borderWidth}
+        padding={headerStyles.padding}
+        position={headerStyles.position}
+        top={headerStyles.top}
+        right={headerStyles.right}
+        backgroundColor={headerStyles.backgroundColor}>
         {props.children}
       </View>}
     </>
