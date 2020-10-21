@@ -9,7 +9,7 @@ import { hot } from 'react-hot-loader';
 import {Grid, View} from '@adobe/react-spectrum'
 
 import { IRootState } from 'app/shared/reducers';
-import { getSession } from 'app/shared/reducers/authentication';
+import { getSession,isTokenExist } from 'app/shared/reducers/authentication';
 import { getProfile } from 'app/shared/reducers/application-profile';
 import { setLocale } from 'app/shared/reducers/locale';
 import Header from 'app/shared/layout/header/header';
@@ -40,7 +40,7 @@ export const App = (props: IAppProps) => {
 
   return (
     <Router basename={baseHref}>
-      { props.isAuthenticated ?
+      { isTokenExist() || props.isAuthenticated ?
         <>
           <ToastContainer position={toast.POSITION.TOP_LEFT} className="toastify-container" toastClassName="toastify-toast" />
           <Grid

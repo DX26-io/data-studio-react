@@ -159,3 +159,7 @@ export const clearAuthentication = messageKey => (dispatch, getState) => {
     type: ACTION_TYPES.CLEAR_AUTH,
   });
 };
+
+export const isTokenExist = () => {
+  return Storage.local.get(AUTH_TOKEN_KEY) ? true : false;
+};
