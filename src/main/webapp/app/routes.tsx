@@ -1,8 +1,6 @@
 import React from 'react';
 import { Switch } from 'react-router-dom';
 import Loadable from 'react-loadable';
-
-import Login from 'app/modules/login/login';
 import Register from 'app/modules/account/register/register';
 import Activate from 'app/modules/account/activate/activate';
 import PasswordResetInit from 'app/modules/account/password-reset/init/password-reset-init';
@@ -28,7 +26,6 @@ const Admin = Loadable({
 const Routes = () => (
   <div className="view-routes">
     <Switch>
-      <ErrorBoundaryRoute path="/login" component={Login} />
       <ErrorBoundaryRoute path="/logout" component={Logout} />
       <ErrorBoundaryRoute path="/account/register" component={Register} />
       <ErrorBoundaryRoute path="/account/activate/:key?" component={Activate} />
@@ -36,7 +33,7 @@ const Routes = () => (
       <ErrorBoundaryRoute path="/account/reset/finish/:key?" component={PasswordResetFinish} />
       <PrivateRoute path="/admin" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN]} />
       <PrivateRoute path="/account" component={Account} hasAnyAuthorities={[AUTHORITIES.ADMIN, AUTHORITIES.USER]} />
-      <ErrorBoundaryRoute path="/" exact component={Home} />
+      <PrivateRoute path="/" exact component={Home} hasAnyAuthorities={[AUTHORITIES.USER]}/>
       <PrivateRoute path="/" component={Entities} hasAnyAuthorities={[AUTHORITIES.USER]} />
       <ErrorBoundaryRoute component={PageNotFound} />
     </Switch>

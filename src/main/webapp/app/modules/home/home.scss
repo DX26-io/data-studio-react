@@ -1,10 +1,20 @@
-/* ==========================================================================
-Main page styles
-========================================================================== */
-.hipster {
-  display: inline-block;
-  width: 100%;
-  height: 497px;
-  background: url('../../../content/images/jhipster_family_member_0.svg') no-repeat center top;
-  background-size: contain;
+Card {
+  .root {
+    minwidth: 275;
+  }
+  .bullet {
+    display: inline-block;
+    margin: 0 2px;
+    transform: scale(0.8);
+  }
+  .title {
+    font-size: 14px;
+  }
+  .pos {
+    margin-bottom: 12px;
+  }
+}
+
+.username {
+  color: #147373;
 }

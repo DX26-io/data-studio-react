@@ -1,19 +1,17 @@
 import './footer.scss';
 
 import React from 'react';
-import { Translate } from 'react-jhipster';
-import { Col, Row } from 'reactstrap';
+import {View, Text, Flex} from '@adobe/react-spectrum'
 
+// TODO: Test Cases
 const Footer = props => (
-  <div className="footer page-content">
-    <Row>
-      <Col md="12">
-        <p>
-          <Translate contentKey="footer">Your footer</Translate>
-        </p>
-      </Col>
-    </Row>
-  </div>
+  <View padding={'size-150'} height={'size-600'}>
+    <Flex justifyContent={'end'}>
+      <Text>
+        <i>DX26 © 2020</i>
+      </Text>
+    </Flex>
+  </View>
 );
 
 export default Footer;
