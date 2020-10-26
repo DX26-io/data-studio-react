@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import {View, Grid, Flex, Heading, Breadcrumbs, Item, Button} from '@adobe/react-spectrum'
+import {Breadcrumbs, Item, Button} from '@adobe/react-spectrum'
 
 import SecondaryHeader, { ISecondaryHeaderProps } from 'app/shared/layout/secondary-header/secondary-header';
 
@@ -23,7 +23,7 @@ describe('SecondaryHeader', () => {
     if (!mountedWrapper) {
       mountedWrapper = shallow(<SecondaryHeader {...props}/>);
     }
-    return mountedWrapper;
+    return mountedWrapper
   };
 
   const wrapperWithChildren = (props = defaultProps) => {
@@ -42,21 +42,27 @@ describe('SecondaryHeader', () => {
         </SecondaryHeader>
       );
     }
-    return mountedWrapper;
+    return mountedWrapper
   };
 
   beforeEach(() => {
-    mountedWrapper = undefined;
+    mountedWrapper = undefined
   });
 
   it('Renders Secondary Header with default Props', () => {
     const component = wrapper()
-    expect(component).toMatchSnapshot();
+    expect(component).toMatchSnapshot()
   })
 
   it('Renders Secondary Header with children', () => {
     const component = wrapperWithChildren()
-    expect(component).toMatchSnapshot();
+    expect(component).toMatchSnapshot()
+  })
+
+  it('Validate Breadcrumb Items', () => {
+    const breadcrumbs = wrapper().find(Breadcrumbs)
+    const breadcrumbItems = breadcrumbs.find(Item)
+    expect(breadcrumbItems.length).toEqual(defaultProps.breadcrumbItems.length)
   })
 
 });

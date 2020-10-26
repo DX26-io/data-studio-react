@@ -1,7 +1,7 @@
 {
-  "name": "datastudio",
-  "version": "0.0.1-SNAPSHOT",
-  "description": "Description for datastudio",
+  "name": "@dx26-io/datastudio",
+  "version": "0.0.2",
+  "description": "Data Studio for DX26",
   "private": true,
   "license": "UNLICENSED",
   "cacheDirectories": [
@@ -159,5 +159,14 @@
   "jestSonar": {
     "reportPath": "build/test-results/jest",
     "reportFile": "TESTS-results-sonar.xml"
+  },
+  "homepage": "https://github.com/DX26-io/data-studio-react",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DX26-io/data-studio-react.git"
+  },
+  "author": "development@dx26.io",
+  "bugs": {
+    "url": "https://github.com/DX26-io/data-studio-react/issues"
   }
 }
