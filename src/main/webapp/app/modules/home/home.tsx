@@ -39,7 +39,7 @@ export const Home = (props: IHomeProp) => {
         <Flex justifyContent={'center'} alignItems={'center'} direction={'column'}>
           {account && account.login ? (
             <View>
-              <Heading level={2} >
+              <Heading level={2}>
                 You are logged in as &quot;<span className="username">{account.login}</span>&quot;
               </Heading>
             </View>

@@ -68,7 +68,7 @@ export const App = (props: IAppProps) => {
             <View
               gridArea="content"
               flex={true} alignSelf={'stretch'}
-              backgroundColor="static-gray-200">
+              backgroundColor="default">
               <ErrorBoundary>
                 <AppRoutes />
               </ErrorBoundary>

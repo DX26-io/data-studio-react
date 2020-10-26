@@ -18,7 +18,12 @@ export interface ISecondaryHeaderProps {
 
 const SecondaryHeader: React.FC<PropsWithChildren<ISecondaryHeaderProps>> = (props) => {
   return (
-    <View paddingX="size-150" paddingY="size-100" backgroundColor="default">
+    <View
+      paddingX="size-150"
+      paddingY="size-100"
+      backgroundColor="default"
+      borderBottomWidth={'thin'}
+      borderBottomColor={'default'}>
       <Grid
         areas={['breadcrumbs title options']}
         columns={['1fr', '1fr', '1fr']}
