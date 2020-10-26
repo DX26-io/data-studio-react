@@ -75,7 +75,7 @@ export const App = (props: IAppProps) => {
             </View>
             <View
               gridArea="footer"
-              backgroundColor="static-gray-200">
+              backgroundColor="default">
               <Footer />
             </View>
           </Grid>

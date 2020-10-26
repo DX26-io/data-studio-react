@@ -1,7 +1,8 @@
 import './secondary-header.scss'
 
-import React, { PropsWithChildren, ReactNode } from 'react';
-import { View, Flex, Grid, Breadcrumbs, Item } from '@adobe/react-spectrum';
+import React, {PropsWithChildren} from 'react';
+import {View, Flex, Grid, Breadcrumbs, Item, Heading} from '@adobe/react-spectrum';
+import {Link} from 'react-router-dom';
 
 export interface IBreadcrumbItem {
   key: string
@@ -12,12 +13,12 @@ export interface IBreadcrumbItem {
 export interface ISecondaryHeaderProps {
   breadcrumbItems: Array<IBreadcrumbItem>
   title: string
-  children: Array<JSX.Element>
+  children?: Array<JSX.Element>
 }
 
 const SecondaryHeader: React.FC<PropsWithChildren<ISecondaryHeaderProps>> = (props) => {
   return (
-    <View paddingX="size-150" paddingY="size-100" backgroundColor="static-white">
+    <View paddingX="size-150" paddingY="size-100" backgroundColor="default">
       <Grid
         areas={['breadcrumbs title options']}
         columns={['1fr', '1fr', '1fr']}
@@ -26,10 +27,12 @@ const SecondaryHeader: React.FC<PropsWithChildren<ISecondaryHeaderProps>> = (pro
           gridArea="breadcrumbs"
           justifyContent="start"
           alignItems="center">
-          <Breadcrumbs>
+          <Breadcrumbs size="M">
             {props.breadcrumbItems.map(item => (
               <Item key={item.key}>
-                {item.label}
+                <Link to={item.route}>
+                  {item.label}
+                </Link>
               </Item>
             ))}
           </Breadcrumbs>
@@ -38,7 +41,7 @@ const SecondaryHeader: React.FC<PropsWithChildren<ISecondaryHeaderProps>> = (pro
           gridArea="title"
           justifyContent="center"
           alignItems="center">
-          <p className="secondary-header-title">{props.title}</p>
+          <Heading level={3} marginY="size-0">{props.title}</Heading>
         </Flex>
         <Flex
           gridArea="options"

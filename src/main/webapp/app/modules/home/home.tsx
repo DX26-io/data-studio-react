@@ -17,6 +17,7 @@ export const Home = (props: IHomeProp) => {
 
   return (
     <>
+      {/* TODO: Example Secondary Header Usage. To be modified or removed at a later point */}
       <SecondaryHeader
         breadcrumbItems={[
           { key: 'home', label: 'Home', route: '/'},
@@ -25,7 +26,7 @@ export const Home = (props: IHomeProp) => {
         ]}
         title={'Home'}>
         <Button
-          variant="cta"
+          variant="primary"
           marginX="size-150">
           Edit
         </Button>

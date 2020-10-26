@@ -1,0 +1,189 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SecondaryHeader Renders Secondary Header with children 1`] = `
+<ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
+  backgroundColor="default"
+  paddingX="size-150"
+  paddingY="size-100"
+>
+  <ForwardRef($f784fbb881b5b101cd7607722a86$var$Grid)
+    areas={
+      Array [
+        "breadcrumbs title options",
+      ]
+    }
+    columns={
+      Array [
+        "1fr",
+        "1fr",
+        "1fr",
+      ]
+    }
+    maxHeight="size-600"
+  >
+    <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
+      alignItems="center"
+      gridArea="breadcrumbs"
+      justifyContent="start"
+    >
+      <ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)
+        size="M"
+      >
+        <$de85adf0b38f4f13e9cffd2f21$var$Item
+          key="home"
+        >
+          <Link
+            to="/"
+          >
+            Home
+          </Link>
+        </$de85adf0b38f4f13e9cffd2f21$var$Item>
+        <$de85adf0b38f4f13e9cffd2f21$var$Item
+          key="dashboards"
+        >
+          <Link
+            to="/dashboards"
+          >
+            Dashboards
+          </Link>
+        </$de85adf0b38f4f13e9cffd2f21$var$Item>
+        <$de85adf0b38f4f13e9cffd2f21$var$Item
+          key="d123"
+        >
+          <Link
+            to="/dashboards/d123"
+          >
+            Inventory Dashboard
+          </Link>
+        </$de85adf0b38f4f13e9cffd2f21$var$Item>
+        <$de85adf0b38f4f13e9cffd2f21$var$Item
+          key="v123"
+        >
+          <Link
+            to="/dashboards/d123/v123"
+          >
+            Stock
+          </Link>
+        </$de85adf0b38f4f13e9cffd2f21$var$Item>
+      </ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)>
+    </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
+    <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
+      alignItems="center"
+      gridArea="title"
+      justifyContent="center"
+    >
+      <ForwardRef($a76c0421a0242146b7d397a8ac50$var$Heading)
+        level={3}
+        marginY="size-0"
+      >
+        SH Unit Test
+      </ForwardRef($a76c0421a0242146b7d397a8ac50$var$Heading)>
+    </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
+    <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
+      alignItems="center"
+      gridArea="options"
+      justifyContent="end"
+    >
+      <ForwardRef($ead2ca032915257adf53f639d99d1a73$var$Button)
+        marginX="size-150"
+        variant="primary"
+      >
+        Edit
+      </ForwardRef($ead2ca032915257adf53f639d99d1a73$var$Button)>
+      <ForwardRef($ead2ca032915257adf53f639d99d1a73$var$Button)
+        variant="secondary"
+      >
+        Save
+      </ForwardRef($ead2ca032915257adf53f639d99d1a73$var$Button)>
+    </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
+  </ForwardRef($f784fbb881b5b101cd7607722a86$var$Grid)>
+</ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)>
+`;
+
+exports[`SecondaryHeader Renders Secondary Header with default Props 1`] = `
+<ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
+  backgroundColor="default"
+  paddingX="size-150"
+  paddingY="size-100"
+>
+  <ForwardRef($f784fbb881b5b101cd7607722a86$var$Grid)
+    areas={
+      Array [
+        "breadcrumbs title options",
+      ]
+    }
+    columns={
+      Array [
+        "1fr",
+        "1fr",
+        "1fr",
+      ]
+    }
+    maxHeight="size-600"
+  >
+    <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
+      alignItems="center"
+      gridArea="breadcrumbs"
+      justifyContent="start"
+    >
+      <ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)
+        size="M"
+      >
+        <$de85adf0b38f4f13e9cffd2f21$var$Item
+          key="home"
+        >
+          <Link
+            to="/"
+          >
+            Home
+          </Link>
+        </$de85adf0b38f4f13e9cffd2f21$var$Item>
+        <$de85adf0b38f4f13e9cffd2f21$var$Item
+          key="dashboards"
+        >
+          <Link
+            to="/dashboards"
+          >
+            Dashboards
+          </Link>
+        </$de85adf0b38f4f13e9cffd2f21$var$Item>
+        <$de85adf0b38f4f13e9cffd2f21$var$Item
+          key="d123"
+        >
+          <Link
+            to="/dashboards/d123"
+          >
+            Inventory Dashboard
+          </Link>
+        </$de85adf0b38f4f13e9cffd2f21$var$Item>
+        <$de85adf0b38f4f13e9cffd2f21$var$Item
+          key="v123"
+        >
+          <Link
+            to="/dashboards/d123/v123"
+          >
+            Stock
+          </Link>
+        </$de85adf0b38f4f13e9cffd2f21$var$Item>
+      </ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)>
+    </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
+    <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
+      alignItems="center"
+      gridArea="title"
+      justifyContent="center"
+    >
+      <ForwardRef($a76c0421a0242146b7d397a8ac50$var$Heading)
+        level={3}
+        marginY="size-0"
+      >
+        SH Unit Test
+      </ForwardRef($a76c0421a0242146b7d397a8ac50$var$Heading)>
+    </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
+    <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
+      alignItems="center"
+      gridArea="options"
+      justifyContent="end"
+    />
+  </ForwardRef($f784fbb881b5b101cd7607722a86$var$Grid)>
+</ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)>
+`;
