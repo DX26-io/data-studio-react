@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { getBasePath, Storage } from 'react-jhipster';
-
+import { clearAuthToken } from 'app/shared/reducers/authentication';
 import { SERVER_API_URL } from 'app/config/constants';
 
 const TIMEOUT = 1 * 60 * 1000;
@@ -18,6 +18,9 @@ const setupAxiosInterceptors = onUnauthenticated => {
   const onResponseSuccess = response => response;
   const onResponseError = err => {
     const status = err.status || (err.response ? err.response.status : 0);
+    if (status === 401) {
+      clearAuthToken();
+    }
     if (status === 403 || status === 401) {
       onUnauthenticated();
     }

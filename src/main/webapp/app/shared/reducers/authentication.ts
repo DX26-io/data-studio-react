@@ -112,14 +112,7 @@ export const getSession: () => void = () => async (dispatch, getState) => {
   }
 };
 
-export const login: (username: string, password: string, rememberMe?: boolean) => void = (username, password, rememberMe = false) => async (
-  dispatch,
-  getState
-) => {
-  const result = await dispatch({
-    type: ACTION_TYPES.LOGIN,
-    payload: axios.post('api/authenticate', { username, password, rememberMe }),
-  });
+export const setAuthToken = (result, rememberMe) => {
   const bearerToken = result.value.headers.authorization;
   if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
     const jwt = bearerToken.slice(7, bearerToken.length);
@@ -129,7 +122,18 @@ export const login: (username: string, password: string, rememberMe?: boolean) =
       Storage.session.set(AUTH_TOKEN_KEY, jwt);
     }
   }
-  await dispatch(getSession());
+};
+
+export const login: (username: string, password: string, rememberMe?: boolean) => void = (username, password, rememberMe = false) => async (
+  dispatch,
+  getState
+) => {
+  const result = await dispatch({
+    type: ACTION_TYPES.LOGIN,
+    payload: axios.post('api/authenticate', { username, password, rememberMe }),
+  });
+  setAuthToken(result, rememberMe);
+  return result;
 };
 
 export const clearAuthToken = () => {
@@ -154,4 +158,8 @@ export const clearAuthentication = messageKey => (dispatch, getState) => {
   dispatch({
     type: ACTION_TYPES.CLEAR_AUTH,
   });
+};
+
+export const isTokenExist = () => {
+  return Storage.local.get(AUTH_TOKEN_KEY) ? true : false;
 };
