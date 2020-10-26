@@ -42,11 +42,14 @@ export const App = (props: IAppProps) => {
     <Router basename={baseHref}>
       { isTokenExist() || props.isAuthenticated ?
         <>
-          <ToastContainer position={toast.POSITION.TOP_LEFT} className="toastify-container" toastClassName="toastify-toast" />
+          <ToastContainer
+            position={toast.POSITION.TOP_LEFT}
+            className="toastify-container"
+            toastClassName="toastify-toast" />
           <Grid
             areas={['header', 'content', 'footer']}
             columns={['1fr']}
-            rows={['size-700', 'auto', 'size-600']}
+            rows={['size-700', 'auto', 'size-400']}
             minHeight={contentSize}
           >
             <View gridArea="header">
@@ -62,12 +65,17 @@ export const App = (props: IAppProps) => {
                 />
               </ErrorBoundary>
             </View>
-            <View padding={'size-150'} gridArea="content" flex={true} alignSelf={'stretch'}>
+            <View
+              gridArea="content"
+              flex={true} alignSelf={'stretch'}
+              backgroundColor="default">
               <ErrorBoundary>
                 <AppRoutes />
               </ErrorBoundary>
             </View>
-            <View gridArea="footer">
+            <View
+              gridArea="footer"
+              backgroundColor="default">
               <Footer />
             </View>
           </Grid>

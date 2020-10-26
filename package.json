@@ -1,7 +1,7 @@
 {
-  "name": "datastudio",
-  "version": "0.0.1-SNAPSHOT",
-  "description": "Description for datastudio",
+  "name": "@dx26-io/datastudio",
+  "version": "0.0.2",
+  "description": "Data Studio for DX26",
   "private": true,
   "license": "UNLICENSED",
   "cacheDirectories": [
@@ -47,7 +47,8 @@
     "@openapitools/openapi-generator-cli": "1.0.13-4.3.1",
     "@types/chai": "4.2.11",
     "@types/enzyme": "3.10.7",
-    "@types/jest": "25.2.1",
+    "@types/jasmine": "^3.6.0",
+    "@types/jest": "^25.2.1",
     "@types/lodash": "4.14.150",
     "@types/mocha": "7.0.2",
     "@types/node": "13.13.4",
@@ -100,6 +101,7 @@
     "prettier": "2.1.2",
     "protractor": "5.4.4",
     "react-infinite-scroller": "1.2.4",
+    "redux-devtools-extension": "^2.13.8",
     "redux-mock-store": "1.5.4",
     "rimraf": "3.0.2",
     "sass": "1.26.5",
@@ -114,7 +116,7 @@
     "terser-webpack-plugin": "2.3.6",
     "thread-loader": "2.1.3",
     "to-string-loader": "1.1.6",
-    "ts-jest": "25.4.0",
+    "ts-jest": "^25.4.0",
     "ts-loader": "7.0.1",
     "ts-node": "8.9.1",
     "typescript": "3.8.3",
@@ -158,5 +160,14 @@
   "jestSonar": {
     "reportPath": "build/test-results/jest",
     "reportFile": "TESTS-results-sonar.xml"
+  },
+  "homepage": "https://github.com/DX26-io/data-studio-react",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DX26-io/data-studio-react.git"
+  },
+  "author": "development@dx26.io",
+  "bugs": {
+    "url": "https://github.com/DX26-io/data-studio-react/issues"
   }
 }
