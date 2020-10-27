@@ -40,7 +40,8 @@ const HeaderPopover: React.FC<PropsWithChildren<IHeaderPopoverProps>> = (props) 
         position='absolute'
         top='size-600'
         right='size-100'
-        backgroundColor='default'>
+        backgroundColor='default'
+        zIndex={1000}>
         <div className='header-popover-dropdown-container' ref={container}>
           {props.children}
         </div>

@@ -5,9 +5,10 @@ import { Avatar } from '@material-ui/core';
 import HeaderPopover from 'app/shared/layout/header/partials/HeaderPopover';
 import { Translate } from 'react-jhipster';
 import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { IRootState } from 'app/shared/reducers';
 
-const DataStudioAvatar = () => {
-
+const DataStudioAvatar: React.FC = () => {
   const avatarStyles = makeStyles((theme) => ({
     small: {
       width: theme.spacing(4),
@@ -16,6 +17,7 @@ const DataStudioAvatar = () => {
   }));
   const avatarClasses = avatarStyles();
   const history = useHistory();
+  const account = useSelector((storeState: IRootState) => storeState.authentication.account);
 
   return (
     <>
@@ -24,7 +26,7 @@ const DataStudioAvatar = () => {
           <Flex alignItems='center' justifyContent='center' direction='column'>
             <span className='spectrum-Body spectrum-Body--L'>
               <Text marginBottom='size-200'>
-                <Translate contentKey="header.avatar.greeting">Hello</Translate> {'userName'}
+                <Translate contentKey="header.avatar.greeting">Hello</Translate> {account.login}
               </Text>
             </span>
             <Divider marginY='size-200' size="S" />

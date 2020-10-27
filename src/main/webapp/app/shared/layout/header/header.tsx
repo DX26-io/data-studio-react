@@ -4,7 +4,6 @@ import React from 'react';
 import { Storage, Translate } from 'react-jhipster';
 import LoadingBar from 'react-redux-loading-bar';
 import Notifications from 'app/shared/layout/header/partials/Notifications';
-import RealmSwitcher from 'app/shared/layout/header/partials/RealmSwitcher';
 import DataStudioAvatar from 'app/shared/layout/header/partials/DataStudioAvatar';
 import Logo from 'app/shared/components/logo/Logo';
 import { Flex, View } from '@adobe/react-spectrum';
@@ -47,7 +46,6 @@ const Header = (props: IHeaderProps) => {
               <Logo />
             </Flex>
             <Flex alignItems='end'>
-              <RealmSwitcher />
               <Notifications />
               <DataStudioAvatar />
             </Flex>
