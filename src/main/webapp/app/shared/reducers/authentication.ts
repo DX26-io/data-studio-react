@@ -133,7 +133,7 @@ export const login: (username: string, password: string, rememberMe?: boolean) =
     payload: axios.post('api/authenticate', { username, password, rememberMe }),
   });
   setAuthToken(result, rememberMe);
-  return result;
+  return result.value.status;
 };
 
 export const clearAuthToken = () => {

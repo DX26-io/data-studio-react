@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch } from 'react-router-dom';
-import Login from 'app/modules/login/login';
+import Login from 'app/modules/login/Login';
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 
 const LoginRoute = () => (
