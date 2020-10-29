@@ -12,7 +12,7 @@ export const LoginForm = (props: ILoginProps) => {
 
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(true);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
