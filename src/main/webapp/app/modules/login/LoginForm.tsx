@@ -29,6 +29,7 @@ export const LoginForm = (props: ILoginProps) => {
       <TextField label="Email Address" isQuiet isRequired type="text" value={username} onChange={setUserName} />
       <TextField label="Password" isQuiet isRequired type="password" value={password} onChange={setPassword} />
       <Checkbox isSelected={rememberMe} onChange={setRememberMe}>Remember me</Checkbox>
+      <br />
       <Flex direction="row" alignItems="center" justifyContent="center">
         <Text>Sign In using&nbsp;
         <Link to="/" className="dx26-link">
