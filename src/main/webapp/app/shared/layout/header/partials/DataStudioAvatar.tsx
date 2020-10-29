@@ -26,7 +26,8 @@ const DataStudioAvatar: React.FC = () => {
           <Flex alignItems='center' justifyContent='center' direction='column'>
             <span className='spectrum-Body spectrum-Body--L'>
               <Text marginBottom='size-200'>
-                <Translate contentKey="header.avatar.greeting">Hello</Translate> {account.login}
+                <Translate contentKey="header.avatar.greeting">Hello</Translate>
+                {` ${account.login}`}
               </Text>
             </span>
             <Divider marginY='size-200' size="S" />

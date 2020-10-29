@@ -1,0 +1,304 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Data studio Avatar test should render component as expected 1`] = `
+<Provider
+  store={
+    Object {
+      "clearActions": [Function],
+      "dispatch": [Function],
+      "getActions": [Function],
+      "getState": [Function],
+      "replaceReducer": [Function],
+      "subscribe": [Function],
+    }
+  }
+>
+  <DataStudioAvatar>
+    <HeaderPopover
+      icon={
+        <WithStyles(ForwardRef(Avatar))
+          className="makeStyles-small-1"
+        >
+          <span
+            className="avatar-initial"
+          >
+            H
+          </span>
+        </WithStyles(ForwardRef(Avatar))>
+      }
+    >
+      <ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
+        marginEnd="size-300"
+      >
+        <div
+          style={
+            Object {
+              "marginRight": "var(--spectrum-global-dimension-size-300, var(--spectrum-alias-size-300))",
+            }
+          }
+        >
+          <ClearSlots>
+            <button
+              className="header-icon"
+              onClick={[Function]}
+            >
+              <WithStyles(ForwardRef(Avatar))
+                className="makeStyles-small-1"
+              >
+                <ForwardRef(Avatar)
+                  className="makeStyles-small-1"
+                  classes={
+                    Object {
+                      "circle": "MuiAvatar-circle",
+                      "colorDefault": "MuiAvatar-colorDefault",
+                      "fallback": "MuiAvatar-fallback",
+                      "img": "MuiAvatar-img",
+                      "root": "MuiAvatar-root",
+                      "rounded": "MuiAvatar-rounded",
+                      "square": "MuiAvatar-square",
+                    }
+                  }
+                >
+                  <div
+                    className="MuiAvatar-root MuiAvatar-circle makeStyles-small-1 MuiAvatar-colorDefault"
+                  >
+                    <span
+                      className="avatar-initial"
+                    >
+                      H
+                    </span>
+                  </div>
+                </ForwardRef(Avatar)>
+              </WithStyles(ForwardRef(Avatar))>
+            </button>
+          </ClearSlots>
+        </div>
+      </ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)>
+      <ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
+        backgroundColor="default"
+        borderColor="default"
+        borderRadius="regular"
+        borderWidth="thin"
+        padding="size-200"
+        position="absolute"
+        right="size-100"
+        top="size-600"
+        zIndex={1000}
+      >
+        <div
+          style={
+            Object {
+              "backgroundColor": "var(--spectrum-alias-background-color-default, var(--spectrum-global-color-default, var(--spectrum-semantic-default-color-background)))",
+              "borderColor": "var(--spectrum-alias-border-color)",
+              "borderRadius": "var(--spectrum-alias-border-radius-regular)",
+              "borderStyle": "solid",
+              "borderWidth": "var(--spectrum-alias-border-size-thin)",
+              "boxSizing": "border-box",
+              "padding": "var(--spectrum-global-dimension-size-200, var(--spectrum-alias-size-200))",
+              "position": "absolute",
+              "right": "var(--spectrum-global-dimension-size-100, var(--spectrum-alias-size-100))",
+              "top": "var(--spectrum-global-dimension-size-600, var(--spectrum-alias-size-600))",
+              "zIndex": 1000,
+            }
+          }
+        >
+          <ClearSlots>
+            <div
+              className="header-popover-dropdown-container"
+            >
+              <ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
+                padding="size-300"
+              >
+                <div
+                  style={
+                    Object {
+                      "padding": "var(--spectrum-global-dimension-size-300, var(--spectrum-alias-size-300))",
+                    }
+                  }
+                >
+                  <ClearSlots>
+                    <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
+                      alignItems="center"
+                      direction="column"
+                      justifyContent="center"
+                    >
+                      <div
+                        className="_flex_ffbb7"
+                        style={
+                          Object {
+                            "alignItems": "center",
+                            "flexDirection": "column",
+                            "justifyContent": "center",
+                          }
+                        }
+                      >
+                        <span
+                          className="spectrum-Body spectrum-Body--L"
+                        >
+                          <ForwardRef($fe1955053990ab873941970c7463$var$Text)
+                            marginBottom="size-200"
+                          >
+                            <span
+                              style={
+                                Object {
+                                  "marginBottom": "var(--spectrum-global-dimension-size-200, var(--spectrum-alias-size-200))",
+                                }
+                              }
+                            >
+                              <Translate
+                                component="span"
+                                contentKey="header.avatar.greeting"
+                              >
+                                <span />
+                              </Translate>
+                              userName
+                            </span>
+                          </ForwardRef($fe1955053990ab873941970c7463$var$Text)>
+                        </span>
+                        <ForwardRef($e4a3649e5820982ed2d66266f2$var$Divider)
+                          marginY="size-200"
+                          size="S"
+                        >
+                          <hr
+                            className="_spectrum-Rule_3c70b _spectrum-Rule--small_3c70b _spectrum-Rule--horizontal_3c70b"
+                            style={
+                              Object {
+                                "marginBottom": "var(--spectrum-global-dimension-size-200, var(--spectrum-alias-size-200))",
+                                "marginTop": "var(--spectrum-global-dimension-size-200, var(--spectrum-alias-size-200))",
+                              }
+                            }
+                          />
+                        </ForwardRef($e4a3649e5820982ed2d66266f2$var$Divider)>
+                        <ForwardRef($ead2ca032915257adf53f639d99d1a73$var$Button)
+                          isQuiet={true}
+                          marginBottom="size-200"
+                          variant="primary"
+                        >
+                          <FocusRing
+                            focusRingClass="_focus-ring_7a745"
+                          >
+                            <button
+                              className="_spectrum-Button_7a745 _spectrum-Button--primary_7a745 _spectrum-Button--quiet_7a745"
+                              onBlur={[Function]}
+                              onClick={[Function]}
+                              onFocus={[Function]}
+                              onKeyDown={[Function]}
+                              onKeyUp={[Function]}
+                              onMouseDown={[Function]}
+                              onMouseEnter={[Function]}
+                              onMouseLeave={[Function]}
+                              onMouseUp={[Function]}
+                              onTouchCancel={[Function]}
+                              onTouchEnd={[Function]}
+                              onTouchMove={[Function]}
+                              onTouchStart={[Function]}
+                              style={
+                                Object {
+                                  "marginBottom": "var(--spectrum-global-dimension-size-200, var(--spectrum-alias-size-200))",
+                                }
+                              }
+                              type="button"
+                            >
+                              <SlotProvider
+                                slots={
+                                  Object {
+                                    "icon": Object {
+                                      "UNSAFE_className": "_spectrum-Icon_7a745",
+                                      "size": "S",
+                                    },
+                                    "text": Object {
+                                      "UNSAFE_className": "_spectrum-Button-label_7a745",
+                                    },
+                                  }
+                                }
+                              >
+                                <ForwardRef($fe1955053990ab873941970c7463$var$Text)>
+                                  <span
+                                    className="_spectrum-Button-label_7a745"
+                                    style={Object {}}
+                                  >
+                                    <Translate
+                                      component="span"
+                                      contentKey="header.avatar.preferences"
+                                    >
+                                      <span />
+                                    </Translate>
+                                  </span>
+                                </ForwardRef($fe1955053990ab873941970c7463$var$Text)>
+                              </SlotProvider>
+                            </button>
+                          </FocusRing>
+                        </ForwardRef($ead2ca032915257adf53f639d99d1a73$var$Button)>
+                        <ForwardRef($ead2ca032915257adf53f639d99d1a73$var$Button)
+                          justifySelf="center"
+                          onPress={[Function]}
+                          variant="primary"
+                        >
+                          <FocusRing
+                            focusRingClass="_focus-ring_7a745"
+                          >
+                            <button
+                              className="_spectrum-Button_7a745 _spectrum-Button--primary_7a745"
+                              onBlur={[Function]}
+                              onClick={[Function]}
+                              onFocus={[Function]}
+                              onKeyDown={[Function]}
+                              onKeyUp={[Function]}
+                              onMouseDown={[Function]}
+                              onMouseEnter={[Function]}
+                              onMouseLeave={[Function]}
+                              onMouseUp={[Function]}
+                              onTouchCancel={[Function]}
+                              onTouchEnd={[Function]}
+                              onTouchMove={[Function]}
+                              onTouchStart={[Function]}
+                              style={
+                                Object {
+                                  "justifySelf": "center",
+                                }
+                              }
+                              type="button"
+                            >
+                              <SlotProvider
+                                slots={
+                                  Object {
+                                    "icon": Object {
+                                      "UNSAFE_className": "_spectrum-Icon_7a745",
+                                      "size": "S",
+                                    },
+                                    "text": Object {
+                                      "UNSAFE_className": "_spectrum-Button-label_7a745",
+                                    },
+                                  }
+                                }
+                              >
+                                <ForwardRef($fe1955053990ab873941970c7463$var$Text)>
+                                  <span
+                                    className="_spectrum-Button-label_7a745"
+                                    style={Object {}}
+                                  >
+                                    <Translate
+                                      component="span"
+                                      contentKey="header.avatar.signOut"
+                                    >
+                                      <span />
+                                    </Translate>
+                                  </span>
+                                </ForwardRef($fe1955053990ab873941970c7463$var$Text)>
+                              </SlotProvider>
+                            </button>
+                          </FocusRing>
+                        </ForwardRef($ead2ca032915257adf53f639d99d1a73$var$Button)>
+                      </div>
+                    </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
+                  </ClearSlots>
+                </div>
+              </ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)>
+            </div>
+          </ClearSlots>
+        </div>
+      </ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)>
+    </HeaderPopover>
+  </DataStudioAvatar>
+</Provider>
+`;

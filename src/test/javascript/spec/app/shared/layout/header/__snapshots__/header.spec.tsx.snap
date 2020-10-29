@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Header Renders a Header component in dev profile with LoadingBar, Navbar, Nav and dev ribbon. 1`] = `
+exports[`Header tests should render header component 1`] = `
 <Fragment>
   <div
     className="ribbon dev"
@@ -44,8 +44,20 @@ exports[`Header Renders a Header component in dev profile with LoadingBar, Navba
 </Fragment>
 `;
 
-exports[`Header Renders a Header component in prod profile with LoadingBar, Navbar, Nav. 1`] = `
+exports[`Header tests should render header component and have HTML header tag 1`] = `
 <Fragment>
+  <div
+    className="ribbon dev"
+  >
+    <a
+      href=""
+    >
+      <Translate
+        component="span"
+        contentKey="global.ribbon.dev"
+      />
+    </a>
+  </div>
   <Connect(LoadingBar)
     className="loading-bar"
   />
@@ -66,7 +78,6 @@ exports[`Header Renders a Header component in prod profile with LoadingBar, Navb
         <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
           alignItems="end"
         >
-          <RealmSwitcher />
           <Notifications />
           <DataStudioAvatar />
         </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>

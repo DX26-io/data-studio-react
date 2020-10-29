@@ -19,7 +19,8 @@ export interface IHeaderProps {
 }
 
 const Header = (props: IHeaderProps) => {
-  // TODO use this in user preferences page
+  // TODO fix the UI issues with the header icons
+  // TODO use the below method in user preferences page
   const handleLocaleChange = event => {
     const langKey = event.target.value;
     Storage.session.set('locale', langKey);
