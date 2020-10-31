@@ -3,6 +3,8 @@
 exports[`SecondaryHeader Renders Secondary Header with children 1`] = `
 <ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
   backgroundColor="default"
+  borderBottomColor="default"
+  borderBottomWidth="thin"
   paddingX="size-150"
   paddingY="size-100"
 >
@@ -103,6 +105,8 @@ exports[`SecondaryHeader Renders Secondary Header with children 1`] = `
 exports[`SecondaryHeader Renders Secondary Header with default Props 1`] = `
 <ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
   backgroundColor="default"
+  borderBottomColor="default"
+  borderBottomWidth="thin"
   paddingX="size-150"
   paddingY="size-100"
 >
