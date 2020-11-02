@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import HeaderPopover from 'app/shared/layout/header/partials/HeaderPopover';
+import HeaderPopover from 'app/shared/layout/header/partials/header-popover';
 
 describe('Header popover tests', () => {
   const headerPopoverProps = {

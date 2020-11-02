@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import sinon from 'sinon';
 
-import Header from 'app/shared/layout/header/Header';
+import Header from 'app/shared/layout/header/header';
 
 describe('Header tests', () => {
   const localeSpy = sinon.spy();

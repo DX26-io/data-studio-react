@@ -3,9 +3,9 @@ import './header.scss';
 import React from 'react';
 import { Storage, Translate } from 'react-jhipster';
 import LoadingBar from 'react-redux-loading-bar';
-import Notifications from 'app/shared/layout/header/partials/Notifications';
-import DataStudioAvatar from 'app/shared/layout/header/partials/DataStudioAvatar';
-import Logo from 'app/shared/components/logo/Logo';
+import Notifications from 'app/shared/layout/header/partials/notifications';
+import DataStudioAvatar from 'app/shared/layout/header/partials/data-studio-avatar';
+import Logo from 'app/shared/components/logo/logo';
 import { Flex, View } from '@adobe/react-spectrum';
 
 export interface IHeaderProps {
