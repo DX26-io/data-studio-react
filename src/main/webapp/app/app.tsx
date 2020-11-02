@@ -1,6 +1,6 @@
 import 'react-toastify/dist/ReactToastify.css';
 import '../content/scss/main.scss';
-
+import '@spectrum-css/typography/dist/index-vars.css'
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -12,7 +12,7 @@ import { IRootState } from 'app/shared/reducers';
 import { getSession,isTokenExist } from 'app/shared/reducers/authentication';
 import { getProfile } from 'app/shared/reducers/application-profile';
 import { setLocale } from 'app/shared/reducers/locale';
-import Header from 'app/shared/layout/header/header';
+import Header from 'app/shared/layout/header/Header';
 import Footer from 'app/shared/layout/footer/footer';
 import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import ErrorBoundary from 'app/shared/error/error-boundary';

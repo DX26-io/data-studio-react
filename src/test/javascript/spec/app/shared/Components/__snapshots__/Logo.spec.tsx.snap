@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Logo tests should render component as expected 1`] = `
+<Logo>
+  <span
+    className="logo"
+  >
+    Dx26
+  </span>
+</Logo>
+`;

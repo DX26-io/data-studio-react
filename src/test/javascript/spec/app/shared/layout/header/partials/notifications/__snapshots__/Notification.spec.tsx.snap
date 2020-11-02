@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Notifications test should render as expected 1`] = `
+<Notifications>
+  <HeaderPopover
+    icon={<Bell />}
+  >
+    <ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
+      marginEnd="size-300"
+    >
+      <div
+        style={
+          Object {
+            "marginRight": "var(--spectrum-global-dimension-size-300, var(--spectrum-alias-size-300))",
+          }
+        }
+      >
+        <ClearSlots>
+          <button
+            className="header-icon"
+            onClick={[Function]}
+          >
+            <Bell>
+              <Icon>
+                <A4uBell
+                  aria-hidden={true}
+                  className="_spectrum-Icon_8ac98 _spectrum-Icon--sizeM_8ac98"
+                  focusable="false"
+                  role="img"
+                  style={Object {}}
+                >
+                  <svg
+                    aria-hidden={true}
+                    className="_spectrum-Icon_8ac98 _spectrum-Icon--sizeM_8ac98"
+                    focusable="false"
+                    role="img"
+                    style={Object {}}
+                    viewBox="0 0 36 36"
+                  >
+                    <path
+                      d="M18 36a4.406 4.406 0 0 0 4-4h-8a4.406 4.406 0 0 0 4 4zM27.143 11.385c0-3.437-3.206-4.891-7.143-5.268V3a1.079 1.079 0 0 0-1.143-1h-1.714A1.079 1.079 0 0 0 16 3v3.117c-3.937.377-7.143 1.831-7.143 5.268C8.857 26.8 4 26.111 4 28.154V30h28v-1.846C32 26 27.143 26.8 27.143 11.385z"
+                    />
+                  </svg>
+                </A4uBell>
+              </Icon>
+            </Bell>
+          </button>
+        </ClearSlots>
+      </div>
+    </ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)>
+    <ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
+      backgroundColor="default"
+      borderColor="default"
+      borderRadius="regular"
+      borderWidth="thin"
+      padding="size-200"
+      position="absolute"
+      right="size-100"
+      top="size-600"
+      zIndex={1000}
+    >
+      <div
+        style={
+          Object {
+            "backgroundColor": "var(--spectrum-alias-background-color-default, var(--spectrum-global-color-default, var(--spectrum-semantic-default-color-background)))",
+            "borderColor": "var(--spectrum-alias-border-color)",
+            "borderRadius": "var(--spectrum-alias-border-radius-regular)",
+            "borderStyle": "solid",
+            "borderWidth": "var(--spectrum-alias-border-size-thin)",
+            "boxSizing": "border-box",
+            "padding": "var(--spectrum-global-dimension-size-200, var(--spectrum-alias-size-200))",
+            "position": "absolute",
+            "right": "var(--spectrum-global-dimension-size-100, var(--spectrum-alias-size-100))",
+            "top": "var(--spectrum-global-dimension-size-600, var(--spectrum-alias-size-600))",
+            "zIndex": 1000,
+          }
+        }
+      >
+        <ClearSlots>
+          <div
+            className="header-popover-dropdown-container"
+          >
+            <ForwardRef($fe1955053990ab873941970c7463$var$Text)>
+              <span
+                style={Object {}}
+              >
+                Here goes the notifications
+              </span>
+            </ForwardRef($fe1955053990ab873941970c7463$var$Text)>
+          </div>
+        </ClearSlots>
+      </div>
+    </ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)>
+  </HeaderPopover>
+</Notifications>
+`;

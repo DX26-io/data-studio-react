@@ -1,0 +1,30 @@
+server {
+    listen ${NGINX_PORT};
+    index index.html;
+    server_name ${NGINX_HOST};
+    error_log  /var/log/nginx/error.log;
+
+    root /usr/share/nginx/html;
+
+    include /etc/nginx/mime.types;
+
+    location /api {
+        proxy_pass ${NGINX_PROXY}/api;
+    }
+    location /management {
+        proxy_pass ${NGINX_PROXY}/management;
+    }
+    location /swagger-resources {
+        proxy_pass ${NGINX_PROXY}/swagger-resources;
+    }
+    location /v2 {
+       proxy_pass ${NGINX_PROXY}/v2;
+    }
+    location /auth {
+       proxy_pass ${NGINX_PROXY}/auth;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
