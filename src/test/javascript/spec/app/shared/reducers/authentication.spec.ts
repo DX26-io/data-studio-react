@@ -211,17 +211,6 @@ describe('Authentication reducer tests', () => {
           type: SUCCESS(ACTION_TYPES.LOGIN),
           payload: loginResponse,
         },
-        {
-          type: REQUEST(ACTION_TYPES.GET_SESSION),
-        },
-        {
-          type: SUCCESS(ACTION_TYPES.GET_SESSION),
-          payload: resolvedObject,
-        },
-        {
-          type: localeActionTypes.SET_LOCALE,
-          locale: 'en',
-        },
       ];
       await store.dispatch(login('test', 'test'));
       expect(store.getActions()).toEqual(expectedActions);

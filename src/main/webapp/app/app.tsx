@@ -1,7 +1,6 @@
 import 'react-toastify/dist/ReactToastify.css';
+import '../content/scss/main.scss';
 import '@spectrum-css/typography/dist/index-vars.css'
-import './app.scss';
-
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';

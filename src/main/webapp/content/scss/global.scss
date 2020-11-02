@@ -1,0 +1,22 @@
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+}
+
+.dx26-link {
+  color: $primary-color;
+  text-decoration: none;
+}
+
+.dx26-font-bold {
+  font-weight: $primary-font-weight-bold !important;
+  color: $primary-font-color;
+}
