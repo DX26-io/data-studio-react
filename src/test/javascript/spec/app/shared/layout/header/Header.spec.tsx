@@ -13,13 +13,13 @@ describe('Header tests', () => {
     onLocaleChange: localeSpy,
     ribbonEnv: 'dev',
     isInProduction: false,
-    isSwaggerEnabled: true
+    isSwaggerEnabled: true,
   };
   const prodProps = {
     ...devProps,
     ribbonEnv: 'prod',
     isInProduction: true,
-    isSwaggerEnabled: false
+    isSwaggerEnabled: false,
   };
 
   let mountedWrapper;
@@ -41,10 +41,9 @@ describe('Header tests', () => {
     expect(component.find('header').length).toEqual(1);
   });
 
-  it('should hide the dev ribbon in prod', function() {
+  it('should hide the dev ribbon in prod', function () {
     const component = wrapper(prodProps);
     const ribbon = component.find('.ribbon.dev');
     expect(ribbon.length).toEqual(0);
   });
-
 });

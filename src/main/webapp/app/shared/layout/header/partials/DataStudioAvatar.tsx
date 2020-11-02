@@ -9,11 +9,11 @@ import { useSelector } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
 
 const DataStudioAvatar: React.FC = () => {
-  const avatarStyles = makeStyles((theme) => ({
+  const avatarStyles = makeStyles(theme => ({
     small: {
       width: theme.spacing(4),
-      height: theme.spacing(4)
-    }
+      height: theme.spacing(4),
+    },
   }));
   const avatarClasses = avatarStyles();
   const history = useHistory();
@@ -21,22 +21,28 @@ const DataStudioAvatar: React.FC = () => {
 
   return (
     <>
-      <HeaderPopover icon={<Avatar className={avatarClasses.small}><span className='avatar-initial'>H</span></Avatar>}>
-        <View padding='size-300'>
-          <Flex alignItems='center' justifyContent='center' direction='column'>
-            <span className='spectrum-Body spectrum-Body--L'>
-              <Text marginBottom='size-200'>
+      <HeaderPopover
+        icon={
+          <Avatar className={avatarClasses.small}>
+            <span className="avatar-initial">H</span>
+          </Avatar>
+        }
+      >
+        <View padding="size-300">
+          <Flex alignItems="center" justifyContent="center" direction="column">
+            <span className="spectrum-Body spectrum-Body--L">
+              <Text marginBottom="size-200">
                 <Translate contentKey="header.avatar.greeting">Hello</Translate>
                 {` ${account.login}`}
               </Text>
             </span>
-            <Divider marginY='size-200' size="S" />
-            <Button isQuiet={true} variant='primary' marginBottom='size-200'>
+            <Divider marginY="size-200" size="S" />
+            <Button isQuiet={true} variant="primary" marginBottom="size-200">
               <Text>
                 <Translate contentKey="header.avatar.preferences">Preferences</Translate>
               </Text>
             </Button>
-            <Button onPress={() => history.push('/logout')} variant="primary" justifySelf='center'>
+            <Button onPress={() => history.push('/logout')} variant="primary" justifySelf="center">
               <Text>
                 <Translate contentKey="header.avatar.signOut">Sign Out</Translate>
               </Text>

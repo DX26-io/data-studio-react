@@ -15,7 +15,7 @@ describe('Notifications test', () => {
     wrapper().find('button').simulate('click');
   };
 
-  it('should render as expected', function() {
+  it('should render as expected', function () {
     simulateClick();
     expect(wrapper()).toMatchSnapshot();
   });

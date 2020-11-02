@@ -4,7 +4,7 @@ import HeaderPopover from 'app/shared/layout/header/partials/HeaderPopover';
 
 describe('Header popover tests', () => {
   const headerPopoverProps = {
-    icon: `<i class='sample-icon' />`
+    icon: `<i class='sample-icon' />`,
   };
   let mountedWrapper;
 
@@ -24,18 +24,17 @@ describe('Header popover tests', () => {
     mountedWrapper = undefined;
   });
 
-  it('should render component', function() {
+  it('should render component', function () {
     expect(component).toMatchSnapshot();
   });
 
-  it('should not render popover container with the initial component load', function() {
+  it('should not render popover container with the initial component load', function () {
     expect(component.find('.header-popover-dropdown-container').length).toEqual(0);
   });
 
-  it('should open dropdown and contain passed children', function() {
+  it('should open dropdown and contain passed children', function () {
     simulateClick();
     expect(component.find('.header-popover-dropdown-container').length).toEqual(1);
     expect(component.find('.header-popover-dropdown-container').text()).toEqual('child component');
   });
-
 });

@@ -11,7 +11,7 @@ describe('Logo tests', () => {
     return mountedWrapper;
   };
 
-  it('should render component as expected', function() {
+  it('should render component as expected', function () {
     expect(wrapper()).toMatchSnapshot();
   });
 });

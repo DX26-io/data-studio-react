@@ -7,8 +7,8 @@ import DataStudioAvatar from 'app/shared/layout/header/partials/DataStudioAvatar
 
 jest.mock('react-router-dom', () => ({
   useHistory: () => ({
-    push: jest.fn()
-  })
+    push: jest.fn(),
+  }),
 }));
 
 describe('Data studio Avatar test', () => {
@@ -16,16 +16,20 @@ describe('Data studio Avatar test', () => {
   const initialState = {
     authentication: {
       account: {
-        login: 'userName'
-      }
-    }
+        login: 'userName',
+      },
+    },
   };
   const mockStore = configureStore();
   const store = mockStore(initialState);
 
   const wrapper = () => {
     if (!mountedWrapper) {
-      mountedWrapper = mount(<Provider store={store}><DataStudioAvatar /></Provider>);
+      mountedWrapper = mount(
+        <Provider store={store}>
+          <DataStudioAvatar />
+        </Provider>
+      );
     }
     return mountedWrapper;
   };
@@ -34,9 +38,8 @@ describe('Data studio Avatar test', () => {
     wrapper().find('button').simulate('click');
   };
 
-  it('should render component as expected', function() {
+  it('should render component as expected', function () {
     simulateClick();
     expect(wrapper()).toMatchSnapshot();
   });
-
 });

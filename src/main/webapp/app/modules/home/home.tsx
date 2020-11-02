@@ -2,7 +2,7 @@ import './home.scss';
 
 import React from 'react';
 import { connect } from 'react-redux';
-import {Flex, View, Heading, Button} from '@adobe/react-spectrum'
+import { Flex, View, Heading, Button } from '@adobe/react-spectrum';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
@@ -20,20 +20,16 @@ export const Home = (props: IHomeProp) => {
       {/* TODO: Example Secondary Header Usage. To be modified or removed at a later point */}
       <SecondaryHeader
         breadcrumbItems={[
-          { key: 'home', label: 'Home', route: '/'},
-          { key: 'dash', label: 'Dashboards', route: '/dashboards'},
-          { key: 'd12367', label: 'Inventory Dashboard', route: '/dashboards/d12367'}
+          { key: 'home', label: 'Home', route: '/' },
+          { key: 'dash', label: 'Dashboards', route: '/dashboards' },
+          { key: 'd12367', label: 'Inventory Dashboard', route: '/dashboards/d12367' },
         ]}
-        title={'Home'}>
-        <Button
-          variant="primary"
-          marginX="size-150">
+        title={'Home'}
+      >
+        <Button variant="primary" marginX="size-150">
           Edit
         </Button>
-        <Button
-          variant="secondary">
-          Save
-        </Button>
+        <Button variant="secondary">Save</Button>
       </SecondaryHeader>
       <View padding={'size-150'}>
         <Flex justifyContent={'center'} alignItems={'center'} direction={'column'}>
@@ -43,7 +39,7 @@ export const Home = (props: IHomeProp) => {
                 You are logged in as &quot;<span className="username">{account.login}</span>&quot;
               </Heading>
             </View>
-          ):(
+          ) : (
             <View>
               <Heading>You are not currently logged in!</Heading>
             </View>
