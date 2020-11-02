@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 
 export interface ILoginProps {
   loginError: boolean;
-  handleLogin: Function;
+  handleLogin: (username: string,password: string, rememberMe: boolean) => void;
 }
 
 export const LoginForm = (props: ILoginProps) => {
