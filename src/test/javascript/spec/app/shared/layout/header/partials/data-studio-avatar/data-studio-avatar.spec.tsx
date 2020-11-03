@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
-import DataStudioAvatar from 'app/shared/layout/header/partials/DataStudioAvatar';
+import DataStudioAvatar from 'app/shared/layout/header/partials/data-studio-avatar';
 
 jest.mock('react-router-dom', () => ({
   useHistory: () => ({
