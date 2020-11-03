@@ -5,19 +5,18 @@ interface IHeaderPopoverProps {
   icon: React.ReactNode;
 }
 
-const HeaderPopover: React.FC<PropsWithChildren<IHeaderPopoverProps>> = (props) => {
+const HeaderPopover: React.FC<PropsWithChildren<IHeaderPopoverProps>> = props => {
   const [IsContainerOpen, setIsContainerOpen] = useState(false);
   const container = useRef(null);
   const toggleContainer = () => setIsContainerOpen(!IsContainerOpen);
-  const handleClickOutside = (event) => {
+  const handleClickOutside = event => {
     if (IsContainerOpen && container.current && !container.current.contains(event.target)) {
       setIsContainerOpen(false);
     }
   };
 
   useEffect(() => {
-    if (IsContainerOpen)
-      document.addEventListener('mousedown', handleClickOutside);
+    if (IsContainerOpen) document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -25,27 +24,29 @@ const HeaderPopover: React.FC<PropsWithChildren<IHeaderPopoverProps>> = (props) 
 
   return (
     <>
-      <View marginEnd='size-300'>
-        <button className='header-icon' onClick={toggleContainer}>
+      <View marginEnd="size-300">
+        <button className="header-icon" onClick={toggleContainer}>
           {props.icon}
         </button>
       </View>
 
-      {IsContainerOpen &&
-      <View
-        borderRadius='regular'
-        borderColor='default'
-        borderWidth='thin'
-        padding='size-200'
-        position='absolute'
-        top='size-600'
-        right='size-100'
-        backgroundColor='default'
-        zIndex={1000}>
-        <div className='header-popover-dropdown-container' ref={container}>
-          {props.children}
-        </div>
-      </View>}
+      {IsContainerOpen && (
+        <View
+          borderRadius="regular"
+          borderColor="default"
+          borderWidth="thin"
+          padding="size-200"
+          position="absolute"
+          top="size-600"
+          right="size-100"
+          backgroundColor="default"
+          zIndex={1000}
+        >
+          <div className="header-popover-dropdown-container" ref={container}>
+            {props.children}
+          </div>
+        </View>
+      )}
     </>
   );
 };

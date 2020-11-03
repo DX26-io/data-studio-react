@@ -3,19 +3,16 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { Grid, View } from '@adobe/react-spectrum';
 import { IRootState } from '../../shared/reducers';
-import { login, getSession } from '../../shared/reducers/authentication';;
+import { login, getSession } from '../../shared/reducers/authentication';
 import LoginForm from './LoginForm';
 import LoginFooter from './LoginFooter';
 import LoginTopText from './LoginTopText';
 import './login.scss';
 
-export interface ILoginProps extends StateProps, DispatchProps, RouteComponentProps<{}> { }
+export interface ILoginProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export const Login = (props: ILoginProps) => {
-
-
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   const handleLogin = (username, password, rememberMe = false) => {
     new Promise(resolve => {
@@ -25,15 +22,11 @@ export const Login = (props: ILoginProps) => {
         props.getSession();
         props.history.push('/');
       }
-    })
-  }
+    });
+  };
 
   return (
-    <Grid
-      areas={['todo login']}
-      columns={['2fr', '2fr']}
-      rows={['auto']}
-      minHeight={window.innerHeight}>
+    <Grid areas={['todo login']} columns={['2fr', '2fr']} rows={['auto']} minHeight={window.innerHeight}>
       <View backgroundColor="blue-600" gridArea="todo" overflow="hidden" />
       <View gridArea="login" backgroundColor="static-white">
         <LoginTopText />

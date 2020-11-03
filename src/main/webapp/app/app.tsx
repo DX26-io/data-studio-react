@@ -1,15 +1,15 @@
 import 'react-toastify/dist/ReactToastify.css';
 import '../content/scss/main.scss';
-import '@spectrum-css/typography/dist/index-vars.css'
+import '@spectrum-css/typography/dist/index-vars.css';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { hot } from 'react-hot-loader';
-import {Grid, View} from '@adobe/react-spectrum'
+import { Grid, View } from '@adobe/react-spectrum';
 
 import { IRootState } from 'app/shared/reducers';
-import { getSession,isTokenExist } from 'app/shared/reducers/authentication';
+import { getSession, isTokenExist } from 'app/shared/reducers/authentication';
 import { getProfile } from 'app/shared/reducers/application-profile';
 import { setLocale } from 'app/shared/reducers/locale';
 import Header from 'app/shared/layout/header/header';
@@ -27,10 +27,10 @@ export interface IAppProps extends StateProps, DispatchProps {}
 // TODO: Test Cases
 export const App = (props: IAppProps) => {
   // TODO: If possible, remove the usage of computed content height and control it through styling
-  const [contentSize, setContentSize] = useState(window.innerHeight)
+  const [contentSize, setContentSize] = useState(window.innerHeight);
   const updateContentHeight = () => {
-    setContentSize(window.innerHeight)
-  }
+    setContentSize(window.innerHeight);
+  };
 
   useEffect(() => {
     props.getSession();
@@ -40,18 +40,10 @@ export const App = (props: IAppProps) => {
 
   return (
     <Router basename={baseHref}>
-      { isTokenExist() || props.isAuthenticated ?
+      {isTokenExist() || props.isAuthenticated ? (
         <>
-          <ToastContainer
-            position={toast.POSITION.TOP_LEFT}
-            className="toastify-container"
-            toastClassName="toastify-toast" />
-          <Grid
-            areas={['header', 'content', 'footer']}
-            columns={['1fr']}
-            rows={['size-700', 'auto', 'size-400']}
-            minHeight={contentSize}
-          >
+          <ToastContainer position={toast.POSITION.TOP_LEFT} className="toastify-container" toastClassName="toastify-toast" />
+          <Grid areas={['header', 'content', 'footer']} columns={['1fr']} rows={['size-700', 'auto', 'size-400']} minHeight={contentSize}>
             <View gridArea="header">
               <ErrorBoundary>
                 <Header
@@ -65,24 +57,19 @@ export const App = (props: IAppProps) => {
                 />
               </ErrorBoundary>
             </View>
-            <View
-              gridArea="content"
-              flex={true} alignSelf={'stretch'}
-              backgroundColor="default">
+            <View gridArea="content" flex={true} alignSelf={'stretch'} backgroundColor="default">
               <ErrorBoundary>
                 <AppRoutes />
               </ErrorBoundary>
             </View>
-            <View
-              gridArea="footer"
-              backgroundColor="default">
+            <View gridArea="footer" backgroundColor="default">
               <Footer />
             </View>
           </Grid>
         </>
-      :
+      ) : (
         <LoginRoute />
-      }
+      )}
     </Router>
   );
 };
