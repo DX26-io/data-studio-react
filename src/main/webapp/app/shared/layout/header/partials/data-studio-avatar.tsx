@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Divider, Flex, Text, View } from '@adobe/react-spectrum';
 import { Avatar } from '@material-ui/core';
-import HeaderPopover from 'app/shared/layout/header/partials/HeaderPopover';
+import HeaderPopover from 'app/shared/layout/header/partials/header-popover';
 import { Translate } from 'react-jhipster';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';

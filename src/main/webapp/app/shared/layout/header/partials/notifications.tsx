@@ -1,6 +1,6 @@
 import React from 'react';
 import Bell from '@spectrum-icons/workflow/Bell';
-import HeaderPopover from './HeaderPopover';
+import HeaderPopover from './header-popover';
 import { Text } from '@adobe/react-spectrum';
 
 const Notifications = () => {

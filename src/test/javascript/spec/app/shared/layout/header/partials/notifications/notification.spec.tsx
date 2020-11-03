@@ -1,6 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import Notifications from 'app/shared/layout/header/partials/Notifications';
+import Notifications from 'app/shared/layout/header/partials/notifications';
 
 describe('Notifications test', () => {
   let mountedWrapper;
