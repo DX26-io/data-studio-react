@@ -8,12 +8,18 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
+import Cards from 'app/shared/components/card/card';
 
 export type IHomeProp = StateProps;
 
 // TODO: Test Cases
 export const Home = (props: IHomeProp) => {
   const { account } = props;
+  var thumbnail = "https://i.imgur.com/Z7AzH2c.png",
+    title = "sales united states",
+    description = "product sales dashboard for united states",
+    modifyDate = "May 13,2020",
+    status = "Published";
 
   return (
     <>
@@ -40,10 +46,10 @@ export const Home = (props: IHomeProp) => {
               </Heading>
             </View>
           ) : (
-            <View>
-              <Heading>You are not currently logged in!</Heading>
-            </View>
-          )}
+              <View>
+                <Heading>You are not currently logged in!</Heading>
+              </View>
+            )}
           <Card className="root" variant="outlined">
             <CardContent>
               <Typography className="title" color={'textSecondary'} gutterBottom>
@@ -60,6 +66,13 @@ export const Home = (props: IHomeProp) => {
               </Typography>
             </CardContent>
           </Card>
+          <Cards
+            thumbnail={thumbnail}
+            title={title}
+            description={description}
+            footer={description}
+            modifyDate={modifyDate}
+            status={status} />
         </Flex>
       </View>
     </>
