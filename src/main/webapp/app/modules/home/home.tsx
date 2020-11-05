@@ -15,11 +15,18 @@ export type IHomeProp = StateProps;
 // TODO: Test Cases
 export const Home = (props: IHomeProp) => {
   const { account } = props;
-  var thumbnail = "https://i.imgur.com/Z7AzH2c.png",
-    title = "sales united states",
-    description = "product sales dashboard for united states",
-    modifyDate = "May 13,2020",
-    status = "Published";
+
+  const data = {
+    thumbnail: "https://i.imgur.com/Z7AzH2c.png",
+    header: {
+      title: "sales united states",
+      description: "product sales dashboard for united states",
+    },
+    footer: {
+      modifyDate: "May 13,2020",
+      status: false
+    }
+  }
 
   return (
     <>
@@ -66,13 +73,7 @@ export const Home = (props: IHomeProp) => {
               </Typography>
             </CardContent>
           </Card>
-          <Cards
-            thumbnail={thumbnail}
-            title={title}
-            description={description}
-            footer={description}
-            modifyDate={modifyDate}
-            status={status} />
+          <Cards data={data} />
         </Flex>
       </View>
     </>

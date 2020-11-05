@@ -5,30 +5,33 @@ import CardFooter from 'app/shared/components/card/partials/card-footer';
 import { View } from '@adobe/react-spectrum'
 
 interface ICardsProps {
-  thumbnail: React.ReactNode;
-  title: React.ReactNode;
-  description: React.ReactNode;
-  footer: React.ReactNode;
-  modifyDate: React.ReactNode;
-  status: React.ReactNode;
+  data: {
+    thumbnail: string,
+    header: {
+      title: string,
+      description: string
+    },
+    footer: {
+      modifyDate: string,
+      status: boolean
+    }
+  }
 }
 
-const Cards: React.FC<PropsWithChildren<ICardsProps>> = props => {
+const Cards: React.FC<ICardsProps> = props => {
   return (
     <>
-      <View
+      <View 
         borderWidth="thin"
         borderColor="dark"
-        width="250px"
-        borderRadius="medium"
-        padding="size-250">
-        <CardThumbnail thumbnail={props.thumbnail} />
+        width="size-3600"
+        backgroundColor="static-white"
+      >
+        <CardThumbnail thumbnail={props.data.thumbnail} />
         <CardHeader
-          title={props.title}
-          description={props.description} />
+          header={props.data.header} />
         <CardFooter
-          modifyDate={props.modifyDate}
-          status={props.status} />
+          footer={props.data.footer} />
       </View>
     </>
   );

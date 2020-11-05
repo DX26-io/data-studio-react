@@ -1,18 +1,19 @@
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
-import { View, Image } from '@adobe/react-spectrum'
+import { View, Image, Divider, Flex } from '@adobe/react-spectrum'
 
 interface ICardThumbnailProps {
-  thumbnail: React.ReactNode;
+  thumbnail: string;
 }
-const CardThumbnail: React.FC<PropsWithChildren<ICardThumbnailProps>> = props => {
-
+const CardThumbnail: React.FC<ICardThumbnailProps> = props => {
   return (
     <>
-      <View>
-        <Image width="200px" height="100px" src={props.thumbnail} alt="Sky and roof" />
+      <View >
+        <Flex marginY="size-600" direction="row" gap="size-100" justifyContent="center" >
+          <Image width="75px" height="75px" src={props.thumbnail} alt="Sky and roof" />
+        </Flex>
+        <Divider size="S" />
       </View>
     </>
   );
 }
-
 export default CardThumbnail;
