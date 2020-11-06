@@ -1,0 +1,33 @@
+{
+  "datastudioApp": {
+    "dashboard": {
+      "home": {
+        "title": "Dashboards",
+        "createLabel": "Create a new Dashboard",
+        "createOrEditLabel": "Create or edit a Dashboard",
+        "notFound": "No Dashboards found"
+      },
+      "created": "A new Dashboard is created with identifier {{ param }}",
+      "updated": "A Dashboard is updated with identifier {{ param }}",
+      "deleted": "A Dashboard is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Dashboard {{ id }}?"
+      },
+      "detail": {
+        "title": "Dashboard"
+      },
+      "dashboard_name": "Dashboard Name",
+      "category": "Category",
+      "description": "Description",
+      "published": "Published",
+      "image_location": "Image Location",
+      "image_content_type": "Image Content Type",
+      "dashboard_datasource_id": "Dashboard Datasource Id",
+      "created_by": "Created By",
+      "created_date": "Created Date",
+      "last_modified_by": "Last Modified By",
+      "last_modified_date": "Last Modified Date",
+      "current_release_id": "Current Release Id"
+    }
+  }
+}

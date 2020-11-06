@@ -5,7 +5,13 @@ import Delete from '@spectrum-icons/workflow/Delete';
 import Settings from '@spectrum-icons/workflow/Settings';
 import AnchorSelect from '@spectrum-icons/workflow/AnchorSelect';
 
-const CardHeader = () => {
+
+interface ICardHeaderProps {
+  title: React.ReactNode,
+  description: React.ReactNode,
+}
+
+const CardHeader: React.FC<ICardHeaderProps> = props => {
   return (
     <>
       <View paddingX="size-250" paddingY="size-100">
@@ -13,7 +19,7 @@ const CardHeader = () => {
           <Flex alignItems="center">
             <span className="spectrum-Heading spectrum-Heading--sizeXXS">
               <Text>
-                sales united states
+                {props.title}
             </Text>
             </span>
           </Flex>
@@ -42,7 +48,7 @@ const CardHeader = () => {
         <Flex alignItems="center">
           <span className="pectrum-Body spectrum-Body--sizeXS">
             <Text >
-              product sales dashboard for united states
+            {props.description}
           </Text>
           </span>
         </Flex>
@@ -50,5 +56,4 @@ const CardHeader = () => {
     </>
   );
 }
-
 export default CardHeader;
