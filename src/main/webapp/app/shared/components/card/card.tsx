@@ -22,10 +22,6 @@ const Cards: React.FC<ICardsProps> = props => {
         <CardThumbnail thumbnail={props.thumbnail} />
         {props.header}
         {props.footer}
-        {/* <CardHeader
-          header={props.header} />
-        <CardFooter
-          footer={props.footer} /> */}
       </View>
     </>
   );

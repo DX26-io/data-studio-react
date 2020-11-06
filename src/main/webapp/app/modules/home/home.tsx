@@ -43,10 +43,10 @@ export const Home = (props: IHomeProp) => {
               </Heading>
             </View>
           ) : (
-              <View>
-                <Heading>You are not currently logged in!</Heading>
-              </View>
-            )}
+            <View>
+              <Heading>You are not currently logged in!</Heading>
+            </View>
+          )}
           <Card className="root" variant="outlined">
             <CardContent>
               <Typography className="title" color={'textSecondary'} gutterBottom>
@@ -63,9 +63,7 @@ export const Home = (props: IHomeProp) => {
               </Typography>
             </CardContent>
           </Card>
-          <Cards thumbnail="https://i.imgur.com/Z7AzH2c.png"
-            header={ <CardHeader />}
-            footer={<CardFooter />} />
+          <Cards thumbnail="https://i.imgur.com/Z7AzH2c.png" header={<CardHeader />} footer={<CardFooter />} />
         </Flex>
       </View>
     </>
