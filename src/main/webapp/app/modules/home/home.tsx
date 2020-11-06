@@ -9,25 +9,15 @@ import Typography from '@material-ui/core/Typography';
 
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Cards from 'app/shared/components/card/card';
+import CardHeader from 'app/shared/components/card/partials/dashboard-card-header';
+import CardFooter from 'app/shared/components/card/partials/dashboard-card-footer';
+
 
 export type IHomeProp = StateProps;
 
 // TODO: Test Cases
 export const Home = (props: IHomeProp) => {
   const { account } = props;
-
-  const data = {
-    thumbnail: "https://i.imgur.com/Z7AzH2c.png",
-    header: {
-      title: "sales united states",
-      description: "product sales dashboard for united states",
-    },
-    footer: {
-      modifyDate: "May 13,2020",
-      status: false
-    }
-  }
-
   return (
     <>
       {/* TODO: Example Secondary Header Usage. To be modified or removed at a later point */}
@@ -73,7 +63,9 @@ export const Home = (props: IHomeProp) => {
               </Typography>
             </CardContent>
           </Card>
-          <Cards data={data} />
+          <Cards thumbnail="https://i.imgur.com/Z7AzH2c.png"
+            header={ <CardHeader />}
+            footer={<CardFooter />} />
         </Flex>
       </View>
     </>

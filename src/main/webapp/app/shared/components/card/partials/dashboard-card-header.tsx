@@ -1,27 +1,21 @@
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { View, Text, Flex, ActionButton, Menu, MenuTrigger, Item, Divider } from '@adobe/react-spectrum'
-import Typography from '@material-ui/core/Typography';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import Delete from '@spectrum-icons/workflow/Delete';
 import Settings from '@spectrum-icons/workflow/Settings';
 import AnchorSelect from '@spectrum-icons/workflow/AnchorSelect';
-//import './card-header.scss';
-interface ICardHeaderProps {
-  header: {
-    title: string,
-    description: string
-  }
-}
 
-const CardHeader: React.FC<ICardHeaderProps> = props => {
+const CardHeader = () => {
   return (
     <>
-      <View paddingX="size-250"  paddingY="size-100">
+      <View paddingX="size-250" paddingY="size-100">
         <Flex direction="row" gap="size-100" justifyContent="space-between" >
           <Flex alignItems="center">
-            <Text UNSAFE_className="spectrum-Heading spectrum-Heading--sizeXXS">
-              {props.header.title}
+            <span className="spectrum-Heading spectrum-Heading--sizeXXS">
+              <Text>
+                sales united states
             </Text>
+            </span>
           </Flex>
           <Flex alignItems="center">
             <MenuTrigger>
@@ -46,9 +40,11 @@ const CardHeader: React.FC<ICardHeaderProps> = props => {
           </Flex>
         </Flex>
         <Flex alignItems="center">
-          <Text UNSAFE_className="spectrum-Body spectrum-Body--sizeXS">
-            {props.header.description}
+          <span className="pectrum-Body spectrum-Body--sizeXS">
+            <Text >
+              product sales dashboard for united states
           </Text>
+          </span>
         </Flex>
       </View>
     </>
