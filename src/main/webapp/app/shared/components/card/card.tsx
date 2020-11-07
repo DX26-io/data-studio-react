@@ -13,7 +13,7 @@ interface ICardsProps {
 const Cards: React.FC<ICardsProps> = props => {
   return (
     <>
-      <View borderWidth="thin" borderColor="default" width="size-3600" backgroundColor="default" borderRadius="regular" zIndex={10000}>
+      <View borderWidth="thin" borderColor="default" width="size-3600" backgroundColor="default" borderRadius="regular" zIndex={1000}>
         <CardThumbnail thumbnail={props.thumbnail} />
         {props.header}
         {props.footer}
