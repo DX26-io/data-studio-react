@@ -1,21 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table } from 'reactstrap';
-import { Translate, ICrudGetAllAction, TextFormat, getSortState, IPaginationBaseState, JhiPagination, JhiItemCount } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { RouteComponentProps } from 'react-router-dom';
+import { getSortState } from 'react-jhipster';
 
 import { IRootState } from 'app/shared/reducers';
 import { getEntities } from './dashboard.reducer';
-import { IDashboard } from 'app/shared/model/dashboard.model';
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import Cards from 'app/shared/components/card/card';
-import CardHeader from 'app/shared/components/card/partials/dashboard-card-header';
-import CardFooter from 'app/shared/components/card/partials/dashboard-card-footer';
+import Card from 'app/shared/components/card/card';
 import { Flex, View } from '@adobe/react-spectrum';
-import moment from 'moment';
+import DashboardCardThumbnail from 'app/entities/dashboard/dashboard-card/dashboard-card-thumbnail';
+import DashboardCardContent from 'app/entities/dashboard/dashboard-card/dashboard-card-content';
 
 export interface IDashboardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -64,7 +59,7 @@ export const Dashboard = (props: IDashboardProps) => {
   };
 
   const handlePagination = currentPage =>
-    setPaginationState({  
+    setPaginationState({
       ...paginationState,
       activePage: currentPage,
     });
@@ -73,13 +68,23 @@ export const Dashboard = (props: IDashboardProps) => {
   return (
     <Flex direction="row" gap="size-175" wrap margin="size-175" alignItems="center" justifyContent="start">
       {dashboardList.map(dashboard => (
-        <View>
-          <Cards
-            thumbnail="https://i.imgur.com/Z7AzH2c.png"
-            header={<CardHeader title={dashboard.dashboardName} description={dashboard.description} />}
-            footer={<CardFooter modifyDate={moment(dashboard.lastModifiedDate).format('MMM DD,YYYY')} status={dashboard.published} />}
+        <>
+          <Card
+            key={dashboard.id}
+            thumbnail={
+              <View height="size-3200">
+                <DashboardCardThumbnail thumbnailImagePath={dashboard.image_location} dashboardName={dashboard.dashboardName} />
+              </View>
+            }
+            content={
+              <DashboardCardContent
+                dashboardName={dashboard.dashboardName}
+                dashboardDescription={dashboard.description}
+                dashboardType={dashboard.category}
+              />
+            }
           />
-        </View>
+        </>
       ))}
     </Flex>
   );

@@ -2,16 +2,12 @@ import './home.scss';
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Flex, View, Heading, Button } from '@adobe/react-spectrum';
+import { Button, Flex, Heading, View } from '@adobe/react-spectrum';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import Cards from 'app/shared/components/card/card';
-import CardHeader from 'app/shared/components/card/partials/dashboard-card-header';
-import CardFooter from 'app/shared/components/card/partials/dashboard-card-footer';
-
 
 export type IHomeProp = StateProps;
 
@@ -63,7 +59,6 @@ export const Home = (props: IHomeProp) => {
               </Typography>
             </CardContent>
           </Card>
-          <Cards thumbnail="https://i.imgur.com/Z7AzH2c.png" header={<CardHeader />} footer={<CardFooter />} />
         </Flex>
       </View>
     </>

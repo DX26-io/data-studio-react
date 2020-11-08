@@ -30,7 +30,7 @@ export const DashboardDetail = (props: IDashboardDetailProps) => {
               <Translate contentKey="datastudioApp.dashboard.dashboard_name">Dashboard Name</Translate>
             </span>
           </dt>
-          <dd>{dashboardEntity.dashboard_name}</dd>
+          <dd>{dashboardEntity.dashboardName}</dd>
           <dt>
             <span id="category">
               <Translate contentKey="datastudioApp.dashboard.category">Category</Translate>
@@ -95,8 +95,8 @@ export const DashboardDetail = (props: IDashboardDetailProps) => {
             </span>
           </dt>
           <dd>
-            {dashboardEntity.last_modified_date ? (
-              <TextFormat value={dashboardEntity.last_modified_date} type="date" format={APP_LOCAL_DATE_FORMAT} />
+            {dashboardEntity.lastModifiedDate ? (
+              <TextFormat value={dashboardEntity.lastModifiedDate} type="date" format={APP_LOCAL_DATE_FORMAT} />
             ) : null}
           </dd>
           <dt>

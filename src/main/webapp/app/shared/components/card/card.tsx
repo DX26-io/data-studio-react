@@ -1,25 +1,21 @@
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
-import CardThumbnail from 'app/shared/components/card/partials/card-thumbnail';
-import CardHeader from 'app/shared/components/card/partials/dashboard-card-header';
-import CardFooter from 'app/shared/components/card/partials/dashboard-card-footer';
-import { View } from '@adobe/react-spectrum';
+import React, { PropsWithChildren } from 'react';
+import { Divider, View } from '@adobe/react-spectrum';
 
-interface ICardsProps {
-  thumbnail: string;
-  header: React.ReactNode;
-  footer: React.ReactNode;
+interface ICardProps {
+  thumbnail: React.ReactNode;
+  content: React.ReactNode;
 }
 
-const Cards: React.FC<ICardsProps> = props => {
+const Card: React.FC<ICardProps> = props => {
   return (
     <>
-      <View borderWidth="thin" borderColor="default" width="size-3600" backgroundColor="default" borderRadius="regular" zIndex={1000}>
-        <CardThumbnail thumbnail={props.thumbnail} />
-        {props.header}
-        {props.footer}
+      <View borderWidth="thin" borderColor="default" width="static-size-3400" backgroundColor="gray-75" borderRadius="regular">
+        {props.thumbnail}
+        <Divider size="S" />
+        {props.content}
       </View>
     </>
   );
 };
 
-export default Cards;
+export default Card;
