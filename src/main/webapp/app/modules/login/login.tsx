@@ -40,7 +40,6 @@ export const Login = (props: ILoginProps) => {
 const mapStateToProps = ({ authentication }: IRootState) => ({
   isAuthenticated: authentication.isAuthenticated,
   loginError: authentication.loginError,
-  showModal: authentication.showModalLogin,
 });
 
 const mapDispatchToProps = { login, getSession };

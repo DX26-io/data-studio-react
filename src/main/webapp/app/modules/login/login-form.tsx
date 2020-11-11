@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { TextField, Flex, Form, Checkbox, Button, Text } from '@adobe/react-spectrum';
+import { TextField, Flex, Checkbox, Button, Text } from '@adobe/react-spectrum';
 import Typography from '@material-ui/core/Typography';
 
 export interface ILoginProps {
@@ -22,29 +21,28 @@ export const LoginForm = (props: ILoginProps) => {
   const { loginError } = props;
 
   return (
-    <Form onSubmit={handleSubmit} aria-label="Login Form" width="50%" margin="auto" marginTop="33%">
+    <form onSubmit={handleSubmit} className="login-form" data-testid="login-form">
       <Typography className="dx26-font-bold" variant="h4">
         Login
       </Typography>
       <br />
-      <TextField label="Email Address" isQuiet isRequired type="text" data-testid="username" value={username} onChange={setUserName} />
-      <TextField label="Password" isQuiet isRequired type="password" data-testid="password" value={password} onChange={setPassword} />
-      <Checkbox isSelected={rememberMe} onChange={setRememberMe}>
+      <TextField  width="100%" marginTop="static-size-25" label="Email Address" isQuiet isRequired type="text" data-testid="username" value={username} onChange={setUserName} />
+      <TextField  width="100%" marginTop="static-size-25" label="Password" isQuiet isRequired type="password" data-testid="password" value={password} onChange={setPassword} />
+      <Checkbox marginTop="static-size-25" isSelected={rememberMe} onChange={setRememberMe} data-testid="rememberme">
         Remember me
       </Checkbox>
-      <br />
-      <Flex direction="row" alignItems="center" justifyContent="center">
+      <Flex data-testid="login-action" marginTop="static-size-200" direction="row" alignItems="center" justifyContent="center">
         <Text>
           Sign In using&nbsp;
-          <Link to="/" className="dx26-link">
+          <a href="/" className="dx26-link">
             SSO
-          </Link>
+          </a>
         </Text>
-        <Button variant="cta" marginStart="auto" type="submit">
+        <Button data-testid="submit" variant="cta" marginStart="auto" type="submit">
           Sign In
         </Button>
       </Flex>
-    </Form>
+    </form>
   );
 };
 
