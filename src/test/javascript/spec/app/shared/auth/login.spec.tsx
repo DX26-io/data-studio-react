@@ -1,16 +1,19 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import { Grid, View } from '@adobe/react-spectrum';
 import { Login, ILoginProps } from 'app/modules/login/login';
-
-// TODO : test cases are partially written.call back of login needs to be tested
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 describe('Login Container', () => {
   let mountedWrapper;
 
+  const defaultProps = {
+    login: jest.fn(),
+    getSession: jest.fn(),
+  };
+
   const wrapper = (props: ILoginProps) => {
     if (!mountedWrapper) {
-      mountedWrapper = shallow(<Login {...props} />);
+      mountedWrapper = render(<Login {...defaultProps} {...props} />);
     }
     return mountedWrapper;
   };
@@ -21,10 +24,13 @@ describe('Login Container', () => {
 
   it('Renders login container with default Props', () => {
     const component = wrapper(null);
-    expect(component).toMatchSnapshot();
-    const grid = component.find(Grid);
-    expect(grid.length).toEqual(1);
-    const views = grid.find(View);
-    expect(views.length).toEqual(2);
+    expect(component).toBeDefined();
+  });
+
+  it('login callback ', () => {
+    const component = wrapper(null);
+    userEvent.click(component.getByTestId('submit'));
+    expect(defaultProps.login.mock.calls.length).toEqual(1);
+    expect(defaultProps.getSession.mock.calls.length).toEqual(0);
   });
 });
