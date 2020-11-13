@@ -53,7 +53,13 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
               <ActionButton isQuiet={true}>
                 <InfoOutline />
               </ActionButton>
-              <Tooltip>{dashboardDescription}</Tooltip>
+              <Tooltip>
+                {dashboardDescription ? (
+                  dashboardDescription
+                ) : (
+                  <Translate contentKey="dashboard.dashboard_card.no_description"> no description</Translate>
+                )}
+              </Tooltip>
             </TooltipTrigger>
           </Flex>
         </Flex>

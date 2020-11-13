@@ -28,6 +28,7 @@
     "last_modified_date": "Last Modified Date",
     "current_release_id": "Current Release Id",
     "dashboard_card": {
+      "no_description": "no description",
       "options": {
         "more_options": "More options",
         "danger": "Danger",
