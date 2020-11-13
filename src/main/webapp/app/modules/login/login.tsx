@@ -26,7 +26,7 @@ export const Login = (props: ILoginProps) => {
   };
 
   return (
-    <Grid areas={['todo login']} columns={['2fr', '2fr']} rows={['auto']} minHeight={window.innerHeight}>
+    <Grid areas={['todo login']} columns={['2fr', '2fr']} rows={['auto']} minHeight={window.innerHeight} data-testid="login-container">
       <View backgroundColor="blue-600" gridArea="todo" overflow="hidden" />
       <View gridArea="login" backgroundColor="static-white">
         <LoginTopText />

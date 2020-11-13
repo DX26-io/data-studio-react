@@ -24,7 +24,7 @@ describe('Login Container', () => {
 
   it('Renders login container with default Props', () => {
     const component = wrapper(null);
-    expect(component).toBeDefined();
+    expect(component.getByTestId('login-container')).toBeDefined();
   });
 
   it('login callback ', () => {
