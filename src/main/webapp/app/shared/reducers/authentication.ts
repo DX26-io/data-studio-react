@@ -161,5 +161,6 @@ export const clearAuthentication = messageKey => (dispatch, getState) => {
 };
 
 export const isTokenExist = () => {
-  return Storage.local.get(AUTH_TOKEN_KEY) ? true : false;
+  const token = Storage.local.get(AUTH_TOKEN_KEY) || Storage.session.get(AUTH_TOKEN_KEY);
+  return token ? true : false;
 };
