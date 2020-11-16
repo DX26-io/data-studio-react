@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login Top Text Renders Login Top Text 1`] = `
+<WithStyles(ForwardRef(Typography))
+  className="dx26-font-bold"
+  style={
+    Object {
+      "position": "absolute",
+      "right": "3%",
+      "top": "4%",
+    }
+  }
+  variant="h6"
+>
+  DX26
+</WithStyles(ForwardRef(Typography))>
+`;

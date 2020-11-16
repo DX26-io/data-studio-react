@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login Container Renders login container with default Props 1`] = `
+<ForwardRef($f784fbb881b5b101cd7607722a86$var$Grid)
+  areas={
+    Array [
+      "todo login",
+    ]
+  }
+  columns={
+    Array [
+      "2fr",
+      "2fr",
+    ]
+  }
+  minHeight={768}
+  rows={
+    Array [
+      "auto",
+    ]
+  }
+>
+  <ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
+    backgroundColor="blue-600"
+    gridArea="todo"
+    overflow="hidden"
+  />
+  <ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
+    backgroundColor="static-white"
+    gridArea="login"
+  >
+    <LoginTopText />
+    <Component
+      handleLogin={[Function]}
+    />
+    <LoginFooter />
+  </ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)>
+</ForwardRef($f784fbb881b5b101cd7607722a86$var$Grid)>
+`;

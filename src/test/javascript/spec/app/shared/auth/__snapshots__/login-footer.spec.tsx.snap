@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login Footer Renders Login Footer 1`] = `
+<ForwardRef($fe1955053990ab873941970c7463$var$Text)
+  bottom="4%"
+  position="absolute"
+  right="3%"
+>
+  DX26
+   
+  ©
+   2020
+</ForwardRef($fe1955053990ab873941970c7463$var$Text)>
+`;
