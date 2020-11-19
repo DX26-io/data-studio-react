@@ -1,17 +1,37 @@
 import React from 'react';
-import { ActionButton, Flex, Item, Menu, MenuTrigger, Section, Text, Tooltip, TooltipTrigger, View } from '@adobe/react-spectrum';
+import {
+  ActionButton,
+  Flex,
+  Item,
+  Menu,
+  MenuTrigger,
+  Section,
+  Text,
+  Tooltip,
+  TooltipTrigger,
+  View,
+  DialogContainer,
+  Dialog,
+  AlertDialog,
+  useDialogContainer,
+} from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
+import { DashboardDeleteDialog } from '../dashboard-delete-dialog';
+import DashboardDeleteModal from '../dashboard-delete-modal';
 
 interface IDashboardCardContentProps {
   dashboardName: string;
   dashboardType: string;
   dashboardDescription: string;
+  dashboardId : number
 }
 
 const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
-  const { dashboardName, dashboardType, dashboardDescription } = props;
+  const { dashboardName, dashboardType, dashboardDescription,dashboardId } = props;
+  let [dialog, setDialog] = React.useState();
+
   return (
     <>
       <View padding="size-200">
@@ -27,7 +47,7 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
               <ActionButton isQuiet aria-label="more options">
                 <MoreSmallListVert size="S" aria-label="Default Alert" />
               </ActionButton>
-              <Menu>
+              <Menu onAction={setDialog}>
                 <Section title={<Translate contentKey="dashboard.dashboard_card.options.more_options">More options</Translate>}>
                   <Item key="properties">
                     <Text>
@@ -49,6 +69,9 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
                 </Section>
               </Menu>
             </MenuTrigger>
+            <DialogContainer onDismiss={() => setDialog(null)}>
+              {dialog === 'delete' && <DashboardDeleteModal dashboardName={dashboardName} dashboardId={dashboardId} />}
+            </DialogContainer>
             <TooltipTrigger delay={0} placement="end">
               <ActionButton isQuiet={true}>
                 <InfoOutline />
