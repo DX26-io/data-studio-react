@@ -19,7 +19,7 @@ const initialState = {
   isAuthenticated: false,
   loginSuccess: false,
   loginError: false, // Errors returned from server side
-  showModalLogin: false,
+  logoutError: false, // Errors returned from server side
   account: {} as any,
   errorMessage: (null as unknown) as string, // Errors returned from server side
   redirectMessage: (null as unknown) as string,
@@ -35,6 +35,7 @@ export type AuthenticationState = Readonly<typeof initialState>;
 export default (state: AuthenticationState = initialState, action): AuthenticationState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.LOGIN):
+    case REQUEST(ACTION_TYPES.LOGOUT):
     case REQUEST(ACTION_TYPES.GET_SESSION):
       return {
         ...state,
@@ -44,8 +45,13 @@ export default (state: AuthenticationState = initialState, action): Authenticati
       return {
         ...initialState,
         errorMessage: action.payload,
-        showModalLogin: true,
         loginError: true,
+      };
+    case FAILURE(ACTION_TYPES.LOGOUT):
+      return {
+        ...initialState,
+        errorMessage: action.payload,
+        logoutError: true,
       };
     case FAILURE(ACTION_TYPES.GET_SESSION):
       return {
@@ -53,7 +59,6 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         loading: false,
         isAuthenticated: false,
         sessionHasBeenFetched: true,
-        showModalLogin: true,
         errorMessage: action.payload,
       };
     case SUCCESS(ACTION_TYPES.LOGIN):
@@ -61,13 +66,11 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...state,
         loading: false,
         loginError: false,
-        showModalLogin: false,
         loginSuccess: true,
       };
-    case ACTION_TYPES.LOGOUT:
+    case SUCCESS(ACTION_TYPES.LOGOUT):
       return {
         ...initialState,
-        showModalLogin: true,
       };
     case SUCCESS(ACTION_TYPES.GET_SESSION): {
       const isAuthenticated = action.payload && action.payload.data && action.payload.data.activated;
@@ -82,14 +85,12 @@ export default (state: AuthenticationState = initialState, action): Authenticati
     case ACTION_TYPES.ERROR_MESSAGE:
       return {
         ...initialState,
-        showModalLogin: true,
         redirectMessage: action.message,
       };
     case ACTION_TYPES.CLEAR_AUTH:
       return {
         ...state,
         loading: false,
-        showModalLogin: true,
         isAuthenticated: false,
       };
     default:
@@ -133,7 +134,7 @@ export const login: (username: string, password: string, rememberMe?: boolean) =
     payload: axios.post('api/authenticate', { username, password, rememberMe }),
   });
   setAuthToken(result, rememberMe);
-  return result.value.status;
+  await dispatch(getSession());
 };
 
 export const clearAuthToken = () => {
@@ -149,6 +150,7 @@ export const logout: () => void = () => dispatch => {
   clearAuthToken();
   dispatch({
     type: ACTION_TYPES.LOGOUT,
+    payload: axios.get('api/logout'),
   });
 };
 

@@ -12,17 +12,8 @@ import './login.scss';
 export interface ILoginProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export const Login = (props: ILoginProps) => {
-  useEffect(() => {}, []);
-
   const handleLogin = (username, password, rememberMe = false) => {
-    new Promise(resolve => {
-      resolve(props.login(username, password, rememberMe));
-    }).then(status => {
-      if (status === 200) {
-        props.getSession();
-        props.history.push('/');
-      }
-    });
+    props.login(username, password, rememberMe);
   };
 
   return (

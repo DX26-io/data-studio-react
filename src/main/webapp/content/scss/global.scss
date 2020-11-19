@@ -1,3 +1,5 @@
+@import './variables';
+
 html {
   box-sizing: border-box;
 }
@@ -19,4 +21,8 @@ body {
 .dx26-font-bold {
   font-weight: $primary-font-weight-bold !important;
   color: $primary-font-color;
+}
+
+.error-message {
+  color: $spectrum-red-600;
 }
