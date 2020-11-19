@@ -22,7 +22,7 @@ var card_1 = require("app/shared/components/card/card");
 var react_spectrum_1 = require("@adobe/react-spectrum");
 var dashboard_card_thumbnail_1 = require("app/entities/dashboard/dashboard-card/dashboard-card-thumbnail");
 var dashboard_card_content_1 = require("app/entities/dashboard/dashboard-card/dashboard-card-content");
-var TablePagination_1 = require("@material-ui/core/TablePagination");
+var Pagination_1 = require("@material-ui/lab/Pagination");
 exports.Dashboard = function (props) {
     var totalPage;
     var _a = react_1.useState(entity_utils_1.overridePaginationStateWithQueryParams(react_jhipster_1.getSortState(props.location, pagination_constants_1.ITEMS_PER_PAGE), props.location.search)), paginationState = _a[0], setPaginationState = _a[1];
@@ -59,7 +59,7 @@ exports.Dashboard = function (props) {
         setPaginationState(__assign(__assign({}, paginationState), { activePage: 1, itemsPerPage: event.target.value }));
     };
     var handleChangePage = function (event, newPage) {
-        setPaginationState(__assign(__assign({}, paginationState), { activePage: newPage + 1 }));
+        setPaginationState(__assign(__assign({}, paginationState), { activePage: newPage }));
     };
     var dashboardListElement = props.dashboardList.map(function (dashboard) {
         return (react_1["default"].createElement(react_1["default"].Fragment, null,
@@ -71,7 +71,7 @@ exports.Dashboard = function (props) {
         react_1["default"].createElement(react_spectrum_1.Flex, { direction: "row", gap: "size-175", wrap: true, margin: "size-175", alignItems: "center", justifyContent: "start" }, dashboardListElement),
         react_1["default"].createElement(react_spectrum_1.Flex, { direction: "row", margin: "size-175", alignItems: "center", justifyContent: "center" },
             react_1["default"].createElement("div", { className: dashboardList && dashboardList.length > 0 ? '' : 'd-none' },
-                react_1["default"].createElement(TablePagination_1["default"], { component: "div", count: props.totalItems, page: paginationState.activePage - 1, onChangePage: handleChangePage, rowsPerPage: paginationState.itemsPerPage, onChangeRowsPerPage: handleChangeRowsPerPage })))));
+                react_1["default"].createElement(Pagination_1["default"], { onChange: handleChangePage, count: Math.ceil(props.totalItems / paginationState.itemsPerPage), color: "primary" })))));
 };
 var mapStateToProps = function (_a) {
     var dashboard = _a.dashboard;

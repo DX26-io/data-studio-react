@@ -83,7 +83,7 @@ export const Dashboard = (props: IDashboardProps) => {
   const handleChangePage = (event, newPage) => {
     setPaginationState({
       ...paginationState,
-      activePage: newPage + 1,
+      activePage: newPage,
     });
   };
 
@@ -118,14 +118,7 @@ export const Dashboard = (props: IDashboardProps) => {
       </Flex>
       <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
         <div className={dashboardList && dashboardList.length > 0 ? '' : 'd-none'}>
-          <TablePagination
-            component="div"
-            count={props.totalItems}
-            page={paginationState.activePage - 1}
-            onChangePage={handleChangePage}
-            rowsPerPage={paginationState.itemsPerPage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-          />
+          <Pagination onChange={handleChangePage} count={Math.ceil(props.totalItems / paginationState.itemsPerPage)} color="primary" />       
         </div>
       </Flex>
     </React.Fragment>
