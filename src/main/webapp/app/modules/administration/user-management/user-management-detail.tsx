@@ -82,8 +82,8 @@ export const UserManagementDetail = (props: IUserManagementDetailProps) => {
           </dt>
           <dd>
             <ul className="list-unstyled">
-              {user.authorities
-                ? user.authorities.map((authority, i) => (
+              {user.userGroups
+                ? user.userGroups.map((authority, i) => (
                     <li key={`user-auth-${i}`}>
                       <Badge color="info">{authority}</Badge>
                     </li>

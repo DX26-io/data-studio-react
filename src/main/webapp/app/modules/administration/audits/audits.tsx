@@ -33,7 +33,7 @@ const today = (): string => {
 
 export const AuditsPage = (props: IAuditsPageProps) => {
   const [pagination, setPagination] = useState(
-    overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
+    overridePaginationStateWithQueryParams(getSortState(props.location), props.location.search)
   );
   const [fromDate, setFromDate] = useState(previousMonth());
   const [toDate, setToDate] = useState(today());
