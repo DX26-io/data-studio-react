@@ -131,7 +131,6 @@ export const UserManagement = (props: IUserManagementProps) => {
                     <TableCell align="center">
                       <Flex gap="size-100" justifyContent="center">
                         <Edit size="S" />
-                        <DeleteOutline size="S" />
                       </Flex>
                     </TableCell>
                   </TableRow>
