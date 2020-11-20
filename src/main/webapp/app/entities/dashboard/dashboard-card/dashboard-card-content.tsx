@@ -20,16 +20,19 @@ import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
 import { DashboardDeleteDialog } from '../dashboard-delete-dialog';
 import DashboardDeleteModal from '../dashboard-delete-modal';
+import DashboardPropertiesModal from '../dashboard-properties-modal';
 
 interface IDashboardCardContentProps {
   dashboardName: string;
   dashboardType: string;
   dashboardDescription: string;
-  dashboardId : number
+  dashboardId: number;
+  datasource: string;
+
 }
 
 const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
-  const { dashboardName, dashboardType, dashboardDescription,dashboardId } = props;
+  const { dashboardName, dashboardType, dashboardDescription, dashboardId } = props;
   let [dialog, setDialog] = React.useState();
 
   return (
@@ -71,6 +74,9 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
             </MenuTrigger>
             <DialogContainer onDismiss={() => setDialog(null)}>
               {dialog === 'delete' && <DashboardDeleteModal dashboardName={dashboardName} dashboardId={dashboardId} />}
+            </DialogContainer>
+            <DialogContainer  type="fullscreenTakeover" onDismiss={() => setDialog(null)}>
+              {dialog === 'properties' && <DashboardPropertiesModal dashboardName={dashboardName}  datasource={props.datasource}  description={dashboardDescription} category={props.dashboardType} dashboardId={dashboardId} />}
             </DialogContainer>
             <TooltipTrigger delay={0} placement="end">
               <ActionButton isQuiet={true}>

@@ -1,26 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { getSortState } from 'react-jhipster';
+import { getSortState, Translate } from 'react-jhipster';
 
 import { IRootState } from 'app/shared/reducers';
 import { getEntities } from './dashboard.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import Card from 'app/shared/components/card/card';
-import { Button, Flex, View } from '@adobe/react-spectrum';
+import { ActionButton, AlertDialog, Button, DialogContainer, Flex, View, Text } from '@adobe/react-spectrum';
 import DashboardCardThumbnail from 'app/entities/dashboard/dashboard-card/dashboard-card-thumbnail';
 import DashboardCardContent from 'app/entities/dashboard/dashboard-card/dashboard-card-content';
-import { Row } from 'reactstrap';
-import { JhiPagination, JhiItemCount } from 'react-jhipster';
 import Pagination from '@material-ui/lab/Pagination';
-import TablePagination from '@material-ui/core/TablePagination';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
+import DashboardModal from '../dashboard/dashboard-modal';
 
 export interface IDashboardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Dashboard = (props: IDashboardProps) => {
-  let totalPage;
   const [paginationState, setPaginationState] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
@@ -64,22 +61,6 @@ export const Dashboard = (props: IDashboardProps) => {
     });
   };
 
-  const handlePagination = currentPage =>
-    setPaginationState({
-      ...paginationState,
-      activePage: currentPage,
-    });
-
-  const handleChangeRowsPerPage = event => {
-    // setRowsPerPage(parseInt(event.target.value, 10));
-
-    setPaginationState({
-      ...paginationState,
-      activePage: 1,
-      itemsPerPage: event.target.value,
-    });
-  };
-
   const handleChangePage = (event, newPage) => {
     setPaginationState({
       ...paginationState,
@@ -103,6 +84,7 @@ export const Dashboard = (props: IDashboardProps) => {
               dashboardDescription={dashboard.description}
               dashboardType={dashboard.category}
               dashboardId={dashboard.id}
+              datasource={dashboard.dashboardDatasource.name}
             />
           }
         />
@@ -111,14 +93,30 @@ export const Dashboard = (props: IDashboardProps) => {
   });
 
   const { dashboardList, match, loading, totalItems } = props;
+  let [isOpen, setOpen] = React.useState(false);
   return (
     <React.Fragment>
+      <SecondaryHeader
+        breadcrumbItems={[
+          { key: 'home', label: 'Home', route: '/' },
+          { key: 'dashboard', label: 'Dashboard', route: '/dashboard' },
+        ]}
+        title={'Dashboard'}
+      >
+        <Button variant="cta" onPress={() => setOpen(true)}>
+          <Translate contentKey="dashboard.home.createLabel">Create</Translate>
+        </Button>
+       
+        <DialogContainer type="fullscreenTakeover" onDismiss={() => setOpen(false)} {...props}>
+          {isOpen && <DashboardModal></DashboardModal>}
+        </DialogContainer>
+      </SecondaryHeader>
       <Flex direction="row" gap="size-175" wrap margin="size-175" alignItems="center" justifyContent="start">
         {dashboardListElement}
       </Flex>
       <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
         <div className={dashboardList && dashboardList.length > 0 ? '' : 'd-none'}>
-          <Pagination onChange={handleChangePage} count={Math.ceil(props.totalItems / paginationState.itemsPerPage)} color="primary" />       
+          <Pagination onChange={handleChangePage} count={Math.ceil(totalItems / paginationState.itemsPerPage)} />
         </div>
       </Flex>
     </React.Fragment>

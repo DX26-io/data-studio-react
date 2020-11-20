@@ -6,6 +6,7 @@ var MoreSmallListVert_1 = require("@spectrum-icons/workflow/MoreSmallListVert");
 var InfoOutline_1 = require("@spectrum-icons/workflow/InfoOutline");
 var react_jhipster_1 = require("react-jhipster");
 var dashboard_delete_modal_1 = require("../dashboard-delete-modal");
+var dashboard_properties_modal_1 = require("../dashboard-properties-modal");
 var DashboardCardContent = function (props) {
     var dashboardName = props.dashboardName, dashboardType = props.dashboardType, dashboardDescription = props.dashboardDescription, dashboardId = props.dashboardId;
     var _a = react_1["default"].useState(), dialog = _a[0], setDialog = _a[1];
@@ -33,6 +34,7 @@ var DashboardCardContent = function (props) {
                                     react_1["default"].createElement(react_spectrum_1.Text, null,
                                         react_1["default"].createElement(react_jhipster_1.Translate, { contentKey: "dashboard.dashboard_card.options.delete" }, "Delete")))))),
                     react_1["default"].createElement(react_spectrum_1.DialogContainer, { onDismiss: function () { return setDialog(null); } }, dialog === 'delete' && react_1["default"].createElement(dashboard_delete_modal_1["default"], { dashboardName: dashboardName, dashboardId: dashboardId })),
+                    react_1["default"].createElement(react_spectrum_1.DialogContainer, { type: "fullscreenTakeover", onDismiss: function () { return setDialog(null); } }, dialog === 'properties' && react_1["default"].createElement(dashboard_properties_modal_1["default"], { dashboardName: dashboardName, datasource: props.datasource, description: dashboardDescription, category: props.dashboardType, dashboardId: dashboardId })),
                     react_1["default"].createElement(react_spectrum_1.TooltipTrigger, { delay: 0, placement: "end" },
                         react_1["default"].createElement(react_spectrum_1.ActionButton, { isQuiet: true },
                             react_1["default"].createElement(InfoOutline_1["default"], null)),

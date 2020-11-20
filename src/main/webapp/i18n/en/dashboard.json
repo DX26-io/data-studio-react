@@ -2,7 +2,7 @@
   "dashboard": {
     "home": {
       "title": "Dashboards",
-      "createLabel": "Create a new Dashboard",
+      "createLabel": "Create",
       "createOrEditLabel": "Create or edit a Dashboard",
       "notFound": "No Dashboards found"
     },
