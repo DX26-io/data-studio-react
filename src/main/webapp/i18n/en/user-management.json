@@ -18,14 +18,15 @@
     "firstName": "First name",
     "lastName": "Last name",
     "email": "Email",
-    "activated": "Activated",
-    "deactivated": "Deactivated",
+    "activated": "Enabled",
+    "deactivated": "Disabled",
     "profiles": "Profiles",
     "langKey": "Language",
     "createdBy": "Created by",
     "createdDate": "Created date",
     "lastModifiedBy": "Modified by",
     "lastModifiedDate": "Modified date",
-    "status": "Status"
+    "status": "Status",
+    "userType": "User Type"
   }
 }

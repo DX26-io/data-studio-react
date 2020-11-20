@@ -48,14 +48,6 @@ export const UserManagement = (props: IUserManagementProps) => {
       sort: p,
     });
 
-  const toggleActive = user => () => {
-    user.activated = !user.activated;
-    props.updateUser({
-      ...user,
-      activated: user.activated,
-    });
-  };
-
   const handleChangePage = (event, newPage) => {
     setPagination({
       ...pagination,
@@ -111,19 +103,10 @@ export const UserManagement = (props: IUserManagementProps) => {
                     <Translate contentKey="userManagement.status">Status</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="userManagement.profiles">Profiles</Translate>
+                    <Translate contentKey="userManagement.userType">User Type</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="userManagement.createdDate">Created Date</Translate>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Translate contentKey="userManagement.lastModifiedBy">Modified By</Translate>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Translate contentKey="userManagement.lastModifiedDate">Modified Date</Translate>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Translate contentKey="entity.action.actions">Actions</Translate>
+                    <Translate contentKey="entity.action.manage">Manage</Translate>
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -138,28 +121,13 @@ export const UserManagement = (props: IUserManagementProps) => {
                     <TableCell align="center">{user.login}</TableCell>
                     <TableCell align="center">{user.email}</TableCell>
                     <TableCell align="center">
-                      <Checkbox isSelected={user.activated} onChange={toggleActive(user)}></Checkbox>
+                      {user.activated ? (
+                        <Translate contentKey="userManagement.activated">Enabled</Translate>
+                      ) : (
+                        <Translate contentKey="userManagement.deactivated">Disabled</Translate>
+                      )}
                     </TableCell>
-                    <TableCell align="center">
-                      {user.userGroups
-                        ? user.userGroups.map(userGroup => (
-                            <div key={userGroup}>
-                              <span color="info">{userGroup}</span>
-                            </div>
-                          ))
-                        : null}
-                    </TableCell>
-                    <TableCell align="center">
-                      {user.createdDate ? (
-                        <TextFormat value={user.createdDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
-                      ) : null}
-                    </TableCell>
-                    <TableCell align="center">{user.lastModifiedBy}</TableCell>
-                    <TableCell align="center">
-                      {user.lastModifiedDate ? (
-                        <TextFormat value={user.lastModifiedDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
-                      ) : null}
-                    </TableCell>
+                    <TableCell align="center">{user.userType}</TableCell>
                     <TableCell align="center">
                       <Flex gap="size-100" justifyContent="center">
                         <Edit size="S" />
