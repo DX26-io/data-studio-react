@@ -1,15 +1,16 @@
 import React from 'react';
-import { Text } from '@adobe/react-spectrum';
+import { Text, Flex } from '@adobe/react-spectrum';
 
 import { CommonConstants } from '../../shared/util/common.constants';
 
-// TODO: Test Cases
-// TODO : year should come dynamically
+// TODO: Place the text to the bottom right
 
-const LoginFooter = props => (
-  <Text position="absolute" right="3%" bottom="4%">
-    {CommonConstants.DX26} {CommonConstants.COPYRIGHT} 2020
-  </Text>
+const LoginFooter: React.FC = () => (
+  <Flex direction="row-reverse">
+    <Text marginEnd="size-300">
+      {CommonConstants.DX26} {CommonConstants.COPYRIGHT} {new Date().getFullYear()}
+    </Text>
+  </Flex>
 );
 
 export default LoginFooter;
