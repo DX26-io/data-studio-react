@@ -143,7 +143,6 @@ export const updateUser: ICrudPutAction<IUser> = user => async dispatch => {
     type: ACTION_TYPES.UPDATE_USER,
     payload: axios.put(apiUrl, user),
   });
-  dispatch(getUsers());
   return result;
 };
 

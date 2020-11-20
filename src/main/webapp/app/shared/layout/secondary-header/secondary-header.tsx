@@ -13,7 +13,7 @@ export interface IBreadcrumbItem {
 export interface ISecondaryHeaderProps {
   breadcrumbItems: Array<IBreadcrumbItem>;
   title: string;
-  children?: Array<JSX.Element>;
+  children?: JSX.Element;
 }
 
 const SecondaryHeader: React.FC<PropsWithChildren<ISecondaryHeaderProps>> = props => {

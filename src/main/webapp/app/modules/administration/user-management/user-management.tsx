@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Table, Row, Badge } from 'reactstrap';
 import { Translate, TextFormat, JhiPagination, JhiItemCount, getSortState } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import { APP_DATE_FORMAT } from 'app/config/constants';
-import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { getUsers, updateUser } from './user-management.reducer';
 import { IRootState } from 'app/shared/reducers';
+import { Checkbox, Button, Flex } from '@adobe/react-spectrum';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, makeStyles, Paper, TablePagination } from '@material-ui/core';
+import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
+import Edit from '@spectrum-icons/workflow/Edit';
+import DeleteOutline from '@spectrum-icons/workflow/DeleteOutline';
 
 export interface IUserManagementProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export const UserManagement = (props: IUserManagementProps) => {
-  const [pagination, setPagination] = useState(
-    overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
-  );
+  const [pagination, setPagination] = useState(overridePaginationStateWithQueryParams(getSortState(props.location), props.location.search));
 
   useEffect(() => {
-    props.getUsers(pagination.activePage - 1, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
+    props.getUsers(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
     const endURL = `?page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
     if (props.location.search !== endURL) {
       props.history.push(`${props.location.pathname}${endURL}`);
     }
-  }, [pagination.activePage, pagination.order, pagination.sort]);
+  }, [pagination.activePage, pagination.order, pagination.sort, pagination.itemsPerPage]);
 
   useEffect(() => {
     const params = new URLSearchParams(props.location.search);
@@ -48,155 +48,140 @@ export const UserManagement = (props: IUserManagementProps) => {
       sort: p,
     });
 
-  const handlePagination = currentPage =>
-    setPagination({
-      ...pagination,
-      activePage: currentPage,
-    });
-
-  const toggleActive = user => () =>
+  const toggleActive = user => () => {
+    user.activated = !user.activated;
     props.updateUser({
       ...user,
-      activated: !user.activated,
+      activated: user.activated,
     });
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPagination({
+      ...pagination,
+      activePage: newPage,
+    });
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setPagination({
+      ...pagination,
+      itemsPerPage: +event.target.value,
+    });
+  };
 
   const { users, account, match, totalItems } = props;
+
   return (
     <div>
-      <h2 id="user-management-page-heading">
+      {/* TODO : mapping of urls */}
+      <SecondaryHeader
+        breadcrumbItems={[
+          { key: 'home', label: 'Home', route: '/' },
+          { key: 'user-management', label: 'User Management', route: 'administration/user-management' },
+        ]}
+        title={'User Management'}
+      >
+        <Button variant="cta">
+          <Translate contentKey="entity.action.create">Create</Translate>
+        </Button>
+      </SecondaryHeader>
+      {/* <h2 id="user-management-page-heading">
         <Translate contentKey="userManagement.home.title">Users</Translate>
         <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity">
           <FontAwesomeIcon icon="plus" /> <Translate contentKey="userManagement.home.createLabel">Create a new user</Translate>
         </Link>
-      </h2>
-      <Table responsive striped>
-        <thead>
-          <tr>
-            <th className="hand" onClick={sort('id')}>
-              <Translate contentKey="global.field.id">ID</Translate>
-              <FontAwesomeIcon icon="sort" />
-            </th>
-            <th className="hand" onClick={sort('login')}>
-              <Translate contentKey="userManagement.login">Login</Translate>
-              <FontAwesomeIcon icon="sort" />
-            </th>
-            <th className="hand" onClick={sort('email')}>
-              <Translate contentKey="userManagement.email">Email</Translate>
-              <FontAwesomeIcon icon="sort" />
-            </th>
-            <th />
-            <th className="hand" onClick={sort('langKey')}>
-              <Translate contentKey="userManagement.langKey">Lang Key</Translate>
-              <FontAwesomeIcon icon="sort" />
-            </th>
-            <th>
-              <Translate contentKey="userManagement.profiles">Profiles</Translate>
-            </th>
-            <th className="hand" onClick={sort('createdDate')}>
-              <Translate contentKey="userManagement.createdDate">Created Date</Translate>
-              <FontAwesomeIcon icon="sort" />
-            </th>
-            <th className="hand" onClick={sort('lastModifiedBy')}>
-              <Translate contentKey="userManagement.lastModifiedBy">Last Modified By</Translate>
-              <FontAwesomeIcon icon="sort" />
-            </th>
-            <th id="modified-date-sort" className="hand" onClick={sort('lastModifiedDate')}>
-              <Translate contentKey="userManagement.lastModifiedDate">Last Modified Date</Translate>
-              <FontAwesomeIcon icon="sort" />
-            </th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user, i) => (
-            <tr id={user.login} key={`user-${i}`}>
-              <td>
-                <Button tag={Link} to={`${match.url}/${user.login}`} color="link" size="sm">
-                  {user.id}
-                </Button>
-              </td>
-              <td>{user.login}</td>
-              <td>{user.email}</td>
-              <td>
-                {user.activated ? (
-                  <Button color="success" onClick={toggleActive(user)}>
-                    <Translate contentKey="userManagement.activated">Activated</Translate>
-                  </Button>
-                ) : (
-                  <Button color="danger" onClick={toggleActive(user)}>
-                    <Translate contentKey="userManagement.deactivated">Deactivated</Translate>
-                  </Button>
-                )}
-              </td>
-              <td>{user.langKey}</td>
-              <td>
-                {user.authorities
-                  ? user.authorities.map((authority, j) => (
-                      <div key={`user-auth-${i}-${j}`}>
-                        <Badge color="info">{authority}</Badge>
-                      </div>
-                    ))
-                  : null}
-              </td>
-              <td>
-                {user.createdDate ? <TextFormat value={user.createdDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid /> : null}
-              </td>
-              <td>{user.lastModifiedBy}</td>
-              <td>
-                {user.lastModifiedDate ? (
-                  <TextFormat value={user.lastModifiedDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
-                ) : null}
-              </td>
-              <td className="text-right">
-                <div className="btn-group flex-btn-group-container">
-                  <Button tag={Link} to={`${match.url}/${user.login}`} color="info" size="sm">
-                    <FontAwesomeIcon icon="eye" />{' '}
-                    <span className="d-none d-md-inline">
-                      <Translate contentKey="entity.action.view">View</Translate>
-                    </span>
-                  </Button>
-                  <Button tag={Link} to={`${match.url}/${user.login}/edit`} color="primary" size="sm">
-                    <FontAwesomeIcon icon="pencil-alt" />{' '}
-                    <span className="d-none d-md-inline">
-                      <Translate contentKey="entity.action.edit">Edit</Translate>
-                    </span>
-                  </Button>
-                  <Button
-                    tag={Link}
-                    to={`${match.url}/${user.login}/delete`}
-                    color="danger"
-                    size="sm"
-                    disabled={account.login === user.login}
-                  >
-                    <FontAwesomeIcon icon="trash" />{' '}
-                    <span className="d-none d-md-inline">
-                      <Translate contentKey="entity.action.delete">Delete</Translate>
-                    </span>
-                  </Button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-      {props.totalItems ? (
-        <div className={users && users.length > 0 ? '' : 'd-none'}>
-          <Row className="justify-content-center">
-            <JhiItemCount page={pagination.activePage} total={totalItems} itemsPerPage={pagination.itemsPerPage} i18nEnabled />
-          </Row>
-          <Row className="justify-content-center">
-            <JhiPagination
-              activePage={pagination.activePage}
-              onSelect={handlePagination}
-              maxButtons={5}
-              itemsPerPage={pagination.itemsPerPage}
-              totalItems={props.totalItems}
-            />
-          </Row>
-        </div>
-      ) : (
-        ''
-      )}
+      </h2> */}
+      <div className="dx26-container">
+        <Paper className="dx26-table-pager">
+          <TableContainer>
+            <Table aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center" onClick={sort('id')}>
+                    <Translate contentKey="global.field.id">ID</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="userManagement.login">Login</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="userManagement.email">Email</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="userManagement.status">Status</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="userManagement.profiles">Profiles</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="userManagement.createdDate">Created Date</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="userManagement.lastModifiedBy">Modified By</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="userManagement.lastModifiedDate">Modified Date</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="entity.action.actions">Actions</Translate>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {users.map((user, i) => (
+                  <TableRow key={`user-${i}`}>
+                    <TableCell component="th" scope="row" align="center">
+                      <Link className="dx26-link" to={`${match.url}/${user.login}`}>
+                        {user.id}
+                      </Link>
+                    </TableCell>
+                    <TableCell align="center">{user.login}</TableCell>
+                    <TableCell align="center">{user.email}</TableCell>
+                    <TableCell align="center">
+                      <Checkbox isSelected={user.activated} onChange={toggleActive(user)}></Checkbox>
+                    </TableCell>
+                    <TableCell align="center">
+                      {user.userGroups
+                        ? user.userGroups.map(userGroup => (
+                            <div key={userGroup}>
+                              <span color="info">{userGroup}</span>
+                            </div>
+                          ))
+                        : null}
+                    </TableCell>
+                    <TableCell align="center">
+                      {user.createdDate ? (
+                        <TextFormat value={user.createdDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
+                      ) : null}
+                    </TableCell>
+                    <TableCell align="center">{user.lastModifiedBy}</TableCell>
+                    <TableCell align="center">
+                      {user.lastModifiedDate ? (
+                        <TextFormat value={user.lastModifiedDate} type="date" format={APP_DATE_FORMAT} blankOnInvalid />
+                      ) : null}
+                    </TableCell>
+                    <TableCell align="center">
+                      <Flex gap="size-100" justifyContent="center">
+                        <Edit size="S" />
+                        <DeleteOutline size="S" />
+                      </Flex>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
+            component="div"
+            count={props.totalItems}
+            rowsPerPage={pagination.itemsPerPage}
+            page={pagination.activePage}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+        </Paper>
+      </div>
     </div>
   );
 };
