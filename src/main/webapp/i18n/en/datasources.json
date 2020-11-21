@@ -1,0 +1,25 @@
+{
+  "datastudioApp": {
+    "datasources": {
+      "home": {
+        "title": "Datasources",
+        "createLabel": "Create a new Datasources",
+        "createOrEditLabel": "Create or edit a Datasources",
+        "notFound": "No Datasources found"
+      },
+      "created": "A new Datasources is created with identifier {{ param }}",
+      "updated": "A Datasources is updated with identifier {{ param }}",
+      "deleted": "A Datasources is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Datasources {{ id }}?"
+      },
+      "detail": {
+        "title": "Datasources"
+      },
+      "name": "Name",
+      "lastUpdated": "Last Updated",
+      "connectionName": "Connection Name",
+      "queryPath": "Query Path"
+    }
+  }
+}

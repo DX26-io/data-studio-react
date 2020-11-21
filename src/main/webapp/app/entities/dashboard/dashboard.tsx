@@ -8,7 +8,7 @@ import { getEntities } from './dashboard.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import Card from 'app/shared/components/card/card';
-import { ActionButton, AlertDialog, Button, DialogContainer, Flex, View, Text } from '@adobe/react-spectrum';
+import { Button, DialogContainer, Flex, View } from '@adobe/react-spectrum';
 import DashboardCardThumbnail from 'app/entities/dashboard/dashboard-card/dashboard-card-thumbnail';
 import DashboardCardContent from 'app/entities/dashboard/dashboard-card/dashboard-card-content';
 import Pagination from '@material-ui/lab/Pagination';
@@ -93,7 +93,7 @@ export const Dashboard = (props: IDashboardProps) => {
   });
 
   const { dashboardList, match, loading, totalItems } = props;
-  let [isOpen, setOpen] = React.useState(false);
+  const [isOpen, setOpen] = React.useState(false);
   return (
     <React.Fragment>
       <SecondaryHeader
@@ -106,7 +106,7 @@ export const Dashboard = (props: IDashboardProps) => {
         <Button variant="cta" onPress={() => setOpen(true)}>
           <Translate contentKey="dashboard.home.createLabel">Create</Translate>
         </Button>
-       
+
         <DialogContainer type="fullscreenTakeover" onDismiss={() => setOpen(false)} {...props}>
           {isOpen && <DashboardModal></DashboardModal>}
         </DialogContainer>

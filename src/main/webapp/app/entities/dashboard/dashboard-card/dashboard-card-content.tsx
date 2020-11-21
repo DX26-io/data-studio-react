@@ -11,14 +11,10 @@ import {
   TooltipTrigger,
   View,
   DialogContainer,
-  Dialog,
-  AlertDialog,
-  useDialogContainer,
 } from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
-import { DashboardDeleteDialog } from '../dashboard-delete-dialog';
 import DashboardDeleteModal from '../dashboard-delete-modal';
 import DashboardPropertiesModal from '../dashboard-properties-modal';
 

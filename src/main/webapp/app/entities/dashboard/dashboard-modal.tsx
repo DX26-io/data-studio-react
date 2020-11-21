@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Image,
   View,
   Flex,
   useDialogContainer,
@@ -9,14 +8,15 @@ import {
   Divider,
   Content,
   Form,
-  Text,
   ButtonGroup,
   Button,
   TextField,
   TextArea,
+  Picker,
+  Item,
 } from '@adobe/react-spectrum';
-import { DisplayNamePlaceholder } from 'app/shared/components/placeholder/placeholder';
 import { getEntity, updateEntity, createEntity, reset } from './dashboard.reducer';
+import { getEntities } from '../datasources/datasources.reducer';
 
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
@@ -26,21 +26,18 @@ export interface DashboardModal extends StateProps, DispatchProps, RouteComponen
 
 const DashboardModal = (props: DashboardModal) => {
   const dialog = useDialogContainer();
-  const { dashboardEntity, loading, updating } = props;
+  const { dashboardEntity, loading, updating, datasourcesList } = props;
 
-  let [dashboardName, setDashboardNameText] = useState();
-  let [category, setCategoryText] = useState();
-  let [description, setDescriptionText] = useState();
-  let [datasource, setDatasourceText] = useState();
+  const [dashboardName, setDashboardNameText] = useState();
+  const [category, setCategoryText] = useState();
+  const [description, setDescriptionText] = useState();
+  const [datasource, setDatasourceText] = useState();
 
-  const createDashboard = (dashboardName, category, description, datasource) => {
-    alert('d');
-    saveEntity({
-      dashboardName: dashboardName,
-      category: category,
-      description: description,
-      dashboardDatasource: parseInt( datasource),
+  const getDatasourceById = id => {
+    const datasource = datasourcesList.filter(function (item) {
+      return item.id === id;
     });
+    return datasource[0];
   };
 
   const saveEntity = values => {
@@ -49,7 +46,26 @@ const DashboardModal = (props: DashboardModal) => {
       ...values,
     };
     props.createEntity(entity);
+    dialog.dismiss();
+    
   };
+
+  const createDashboard = (dashboardName, category, description, datasource) => {
+    saveEntity({
+      dashboardName: dashboardName,
+      category: category,
+      description: description,
+      dashboardDatasource: getDatasourceById(parseInt(datasource)),
+    });
+  };
+  
+  const getAllDatasource = () => {
+    props.getEntities();
+  };
+
+  useEffect(() => {
+    getAllDatasource();
+  }, []);
 
   return (
     <Dialog>
@@ -62,7 +78,11 @@ const DashboardModal = (props: DashboardModal) => {
               <TextField label="Dashboard name" onChange={setDashboardNameText} />
               <TextField label="Category" onChange={setCategoryText} />
               <TextArea label="Description" onChange={setDescriptionText} />
-              <TextField label="Datasource" onChange={setDatasourceText} />
+              <Picker onSelectionChange={setDatasourceText} label="Datasource">
+                {datasourcesList.map((datasources, i) => (
+                  <Item key={datasources.id}>{datasources.name}</Item>
+                ))}
+              </Picker>
             </Form>
           </View>
         </Flex>
@@ -84,6 +104,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   loading: storeState.dashboard.loading,
   updating: storeState.dashboard.updating,
   updateSuccess: storeState.dashboard.updateSuccess,
+  datasourcesList: storeState.datasources.entities,
 });
 
 const mapDispatchToProps = {
@@ -91,6 +112,7 @@ const mapDispatchToProps = {
   updateEntity,
   createEntity,
   reset,
+  getEntities,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

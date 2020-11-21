@@ -8,6 +8,7 @@
       "entities": {
         "main": "Entities",
         "dashboard": "Dashboard",
+        "datasources": "Datasources",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
