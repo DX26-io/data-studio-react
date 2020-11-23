@@ -1,23 +1,18 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
-  Image,
-  View,
-  Flex,
   useDialogContainer,
   Dialog,
   Heading,
   Divider,
   Content,
-  Form,
-  Text,
   ButtonGroup,
   Button,
 } from '@adobe/react-spectrum';
-import { DisplayNamePlaceholder } from 'app/shared/components/placeholder/placeholder';
 import { getEntity, deleteEntity } from './dashboard.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
+import { Translate } from 'react-jhipster';
 
 export interface DashboardDeleteModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
   dashboardId: number;
@@ -33,7 +28,9 @@ const DashboardDeleteModal = (props: DashboardDeleteModal) => {
 
   return (
     <Dialog>
-      <Heading>Delete Dashboard</Heading>
+      <Heading>
+        <Translate contentKey="dashboard.home.deleteDashboard">Delete Dashboard</Translate>
+      </Heading>
       <Divider />
       <Content>
         <span>This will permanently delete the selected </span>
@@ -42,10 +39,10 @@ const DashboardDeleteModal = (props: DashboardDeleteModal) => {
       </Content>
       <ButtonGroup>
         <Button variant="secondary" onPress={dialog.dismiss}>
-          Cancel
+          <Translate contentKey="dashboard.home.cancelLabel">Cancel</Translate>
         </Button>
         <Button variant="negative" onPress={confirmDelete}>
-          Delete
+        <Translate contentKey="dashboard.home.delete">Delete</Translate>
         </Button>
       </ButtonGroup>
     </Dialog>

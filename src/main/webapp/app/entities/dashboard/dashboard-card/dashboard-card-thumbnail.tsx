@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, Flex } from '@adobe/react-spectrum';
+import { Image, Flex } from '@adobe/react-spectrum';
 import { DisplayNamePlaceholder } from 'app/shared/components/placeholder/placeholder';
 
 interface IDashboardCardThumbnailProps {

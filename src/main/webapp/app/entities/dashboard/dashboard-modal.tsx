@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Flex,
@@ -21,23 +21,30 @@ import { getEntities } from '../datasources/datasources.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
+import { Translate } from 'react-jhipster';
 
-export interface DashboardModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface DashboardModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
+  dashboardId?: number;
+  dashboardName?: string;
+  category?: string;
+  description?: string;
+  datasource?: string;
+}
 
 const DashboardModal = (props: DashboardModal) => {
   const dialog = useDialogContainer();
   const { dashboardEntity, loading, updating, datasourcesList } = props;
 
-  const [dashboardName, setDashboardNameText] = useState();
-  const [category, setCategoryText] = useState();
-  const [description, setDescriptionText] = useState();
-  const [datasource, setDatasourceText] = useState();
+  const [dashboarName, setDashboardNameText] = React.useState(props.dashboardName ? props.dashboardName : '');
+  const [dashboarCategory, setCategoryText] = React.useState(props.category ? props.category : '');
+  const [dashboarDescription, setDescriptionText] = React.useState(props.description ? props.description : '');
+  const [dashboarDatasources, setDatasourceText] = React.useState(props.datasource ? props.datasource : '');
 
-  const getDatasourceById = id => {
-    const datasource = datasourcesList.filter(function (item) {
-      return item.id === id;
+  const getDatasourceByName = id => {
+    const _datasource = datasourcesList.filter(function (item) {
+      return item.name === id;
     });
-    return datasource[0];
+    return _datasource[0];
   };
 
   const saveEntity = values => {
@@ -45,42 +52,81 @@ const DashboardModal = (props: DashboardModal) => {
       ...dashboardEntity,
       ...values,
     };
-    props.createEntity(entity);
+    if (props.dashboardId) {
+      props.updateEntity(entity);
+    } else {
+      props.createEntity(entity);
+    }
     dialog.dismiss();
-    
+    window.location.reload();
   };
 
   const createDashboard = (dashboardName, category, description, datasource) => {
     saveEntity({
-      dashboardName: dashboardName,
-      category: category,
-      description: description,
-      dashboardDatasource: getDatasourceById(parseInt(datasource)),
+      dashboardName,
+      category,
+      description,
+      dashboardDatasource: getDatasourceByName(datasource),
     });
   };
-  
+
   const getAllDatasource = () => {
     props.getEntities();
   };
 
   useEffect(() => {
     getAllDatasource();
+    if (props.dashboardId) {
+      props.getEntity(props.dashboardId);
+    }
   }, []);
 
   return (
     <Dialog>
-      <Heading>Create new dashboard</Heading>
+      {props.dashboardId != null ? (
+        <Heading>Edit {props.dashboardEntity.dashboardName}</Heading>
+      ) : (
+        <Heading>
+          <Translate contentKey="dashboard.home.createNewDashboard">Create new dashboard</Translate>
+        </Heading>
+      )}
+
       <Divider />
       <Content>
         <Flex direction="column" gap="size-100" alignItems="center">
           <View padding="size-600">
-            <Form isRequired necessityIndicator="icon" width="size-4600">
-              <TextField label="Dashboard name" onChange={setDashboardNameText} />
-              <TextField label="Category" onChange={setCategoryText} />
-              <TextArea label="Description" onChange={setDescriptionText} />
-              <Picker onSelectionChange={setDatasourceText} label="Datasource">
+            <Form isRequired necessityIndicator="icon" minWidth="size-4600">
+              <TextField
+                label="Dashboard name"
+                maxLength={30}  
+                validationState={dashboarName?.length < 30 ? 'valid' : 'invalid'}
+                value={dashboarName}
+                onChange={setDashboardNameText}
+              />
+              <TextField
+                label="Category"
+                maxLength={30}
+                validationState={dashboarCategory?.length < 30 ? 'valid' : 'invalid'}
+                onChange={setCategoryText}
+                value={dashboarCategory}
+              />
+
+              <TextArea
+                value={dashboarDescription}
+                label="Description"
+                maxLength={100}
+                validationState={dashboarDescription?.length < 100 ? 'valid' : 'invalid'}
+                onChange={setDescriptionText}
+              />
+              <Picker
+                validationState={dashboarDatasources?.length !== 0 ? 'valid' : 'invalid'}
+                label="Datasource"
+                selectedKey={dashboarDatasources}
+                placeholder="Select datasource"
+                onSelectionChange={selected => setDatasourceText(selected.toString())}
+              >
                 {datasourcesList.map((datasources, i) => (
-                  <Item key={datasources.id}>{datasources.name}</Item>
+                  <Item key={datasources.name}>{datasources.name}</Item>
                 ))}
               </Picker>
             </Form>
@@ -89,10 +135,10 @@ const DashboardModal = (props: DashboardModal) => {
       </Content>
       <ButtonGroup>
         <Button variant="secondary" onPress={dialog.dismiss}>
-          Cancel
+          <Translate contentKey="dashboard.home.cancelLabel">Cancel</Translate>
         </Button>
-        <Button onPress={() => createDashboard(dashboardName, category, description, datasource)} variant="cta">
-          Save
+        <Button onPress={() => createDashboard(dashboarName, dashboarCategory, dashboarDescription, dashboarDatasources)} variant="cta">
+          <Translate contentKey="dashboard.home.save">Save</Translate>
         </Button>
       </ButtonGroup>
     </Dialog>

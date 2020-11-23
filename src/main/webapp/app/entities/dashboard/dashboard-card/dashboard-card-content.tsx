@@ -29,7 +29,7 @@ interface IDashboardCardContentProps {
 
 const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
   const { dashboardName, dashboardType, dashboardDescription, dashboardId } = props;
-  let [dialog, setDialog] = React.useState();
+  const [dialog, setDialog] = React.useState();
 
   return (
     <>

@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { IDatasources } from './datasources.model';
 
 export interface IDashboard {
   id?: number;
@@ -14,8 +15,13 @@ export interface IDashboard {
   last_modified_by?: string;
   lastModifiedDate?: string;
   current_release_id?: number;
+  dashboardDatasource: IDatasources;
 }
 
 export const defaultValue: Readonly<IDashboard> = {
   published: false,
+  dashboardName: '',
+  category: '',
+  description: '',
+  dashboardDatasource: null,
 };

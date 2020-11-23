@@ -3,14 +3,20 @@
     "home": {
       "title": "Dashboards",
       "createLabel": "Create",
+      "editLabel": "Edit",
+      "cancelLabel": "Cancel",
       "createOrEditLabel": "Create or edit a Dashboard",
-      "notFound": "No Dashboards found"
+      "notFound": "No Dashboards found",
+      "deleteDashboard": "Delete Dashboard",
+      "delete": "Delete",
+      "save": "Save",
+      "createNewDashboard": "Create new dashboard"
     },
     "created": "A new Dashboard is created with identifier {{ param }}",
     "updated": "A Dashboard is updated with identifier {{ param }}",
     "deleted": "A Dashboard is deleted with identifier {{ param }}",
     "delete": {
-      "question": "Are you sure you want to delete Dashboard {{ id }}?"
+      "question": "This will permanently delete the selected {{ name }} dashboard. continue?"
     },
     "detail": {
       "title": "Dashboard"
