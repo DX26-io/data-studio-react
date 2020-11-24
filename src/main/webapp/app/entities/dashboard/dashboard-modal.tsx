@@ -23,22 +23,16 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { Translate } from 'react-jhipster';
 
-export interface DashboardModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
-  dashboardId?: number;
-  dashboardName?: string;
-  category?: string;
-  description?: string;
-  datasource?: string;
-}
+export interface DashboardModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 const DashboardModal = (props: DashboardModal) => {
   const dialog = useDialogContainer();
   const { dashboardEntity, loading, updating, datasourcesList } = props;
 
-  const [dashboarName, setDashboardNameText] = React.useState(props.dashboardName ? props.dashboardName : '');
-  const [dashboarCategory, setCategoryText] = React.useState(props.category ? props.category : '');
-  const [dashboarDescription, setDescriptionText] = React.useState(props.description ? props.description : '');
-  const [dashboarDatasources, setDatasourceText] = React.useState(props.datasource ? props.datasource : '');
+  const [dashboarName, setDashboardNameText] = React.useState('');
+  const [dashboarCategory, setCategoryText] = React.useState('');
+  const [dashboarDescription, setDescriptionText] = React.useState('');
+  const [dashboarDatasources, setDatasourceText] = React.useState('');
 
   const getDatasourceByName = id => {
     const _datasource = datasourcesList.filter(function (item) {
@@ -52,13 +46,8 @@ const DashboardModal = (props: DashboardModal) => {
       ...dashboardEntity,
       ...values,
     };
-    if (props.dashboardId) {
-      props.updateEntity(entity);
-    } else {
-      props.createEntity(entity);
-    }
+    props.createEntity(entity);
     dialog.dismiss();
-    window.location.reload();
   };
 
   const createDashboard = (dashboardName, category, description, datasource) => {
@@ -76,21 +65,13 @@ const DashboardModal = (props: DashboardModal) => {
 
   useEffect(() => {
     getAllDatasource();
-    if (props.dashboardId) {
-      props.getEntity(props.dashboardId);
-    }
   }, []);
 
   return (
     <Dialog>
-      {props.dashboardId != null ? (
-        <Heading>Edit {props.dashboardEntity.dashboardName}</Heading>
-      ) : (
-        <Heading>
-          <Translate contentKey="dashboard.home.createNewDashboard">Create new dashboard</Translate>
-        </Heading>
-      )}
-
+      <Heading>
+        <Translate contentKey="dashboard.home.createNewDashboard">Create new dashboard</Translate>
+      </Heading>
       <Divider />
       <Content>
         <Flex direction="column" gap="size-100" alignItems="center">
@@ -98,9 +79,8 @@ const DashboardModal = (props: DashboardModal) => {
             <Form isRequired necessityIndicator="icon" minWidth="size-4600">
               <TextField
                 label="Dashboard name"
-                maxLength={30}  
+                maxLength={30}
                 validationState={dashboarName?.length < 30 ? 'valid' : 'invalid'}
-                value={dashboarName}
                 onChange={setDashboardNameText}
               />
               <TextField
@@ -108,11 +88,9 @@ const DashboardModal = (props: DashboardModal) => {
                 maxLength={30}
                 validationState={dashboarCategory?.length < 30 ? 'valid' : 'invalid'}
                 onChange={setCategoryText}
-                value={dashboarCategory}
               />
 
               <TextArea
-                value={dashboarDescription}
                 label="Description"
                 maxLength={100}
                 validationState={dashboarDescription?.length < 100 ? 'valid' : 'invalid'}
@@ -121,7 +99,6 @@ const DashboardModal = (props: DashboardModal) => {
               <Picker
                 validationState={dashboarDatasources?.length !== 0 ? 'valid' : 'invalid'}
                 label="Datasource"
-                selectedKey={dashboarDatasources}
                 placeholder="Select datasource"
                 onSelectionChange={selected => setDatasourceText(selected.toString())}
               >
