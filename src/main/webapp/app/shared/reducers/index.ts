@@ -20,6 +20,10 @@ import dashboard, {
 import datasources, {
   DatasourcesState
 } from 'app/entities/datasources/datasources.reducer';
+// prettier-ignore
+import views, {
+  ViewsState
+} from 'app/entities/views/views.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -35,6 +39,7 @@ export interface IRootState {
   readonly settings: SettingsState;
   readonly dashboard: DashboardState;
   readonly datasources: DatasourcesState;
+  readonly views: ViewsState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -52,6 +57,7 @@ const rootReducer = combineReducers<IRootState>({
   settings,
   dashboard,
   datasources,
+  views,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
 });
