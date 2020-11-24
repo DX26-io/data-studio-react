@@ -14,6 +14,7 @@ import {
   TextArea,
   Picker,
   Item,
+  Text,
 } from '@adobe/react-spectrum';
 import { getEntity, updateEntity } from './dashboard.reducer';
 import { IRootState } from 'app/shared/reducers';
@@ -31,7 +32,8 @@ export interface DashboardPropertiesModal extends StateProps, DispatchProps, Rou
 }
 
 const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
-  const [isOpen, setOpen] = React.useState(false);
+  const { dashboardEntity, updating, updateSuccess, datasourcesList } = props;
+
   const [isEdit, setEdit] = React.useState(false);
   const [dashboarName, setDashboardNameText] = React.useState(props.dashboardName ? props.dashboardName : '');
   const [dashboarCategory, setCategoryText] = React.useState(props.category ? props.category : '');
@@ -40,8 +42,6 @@ const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
 
   const dialog = useDialogContainer();
 
-  const { dashboardEntity, updating, datasourcesList } = props;
-
   const getDatasourceByName = id => {
     const _datasource = datasourcesList.filter(function (item) {
       return item.name === id;
@@ -49,7 +49,7 @@ const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
     return _datasource[0];
   };
 
-  const updateEntity = values => {
+  const editEntity = values => {
     const entity = {
       ...dashboardEntity,
       ...values,
@@ -60,12 +60,16 @@ const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
   };
 
   const updateDashboard = (dashboardName, category, description, datasource) => {
-    updateEntity({
+    editEntity({
       dashboardName,
       category,
       description,
       dashboardDatasource: getDatasourceByName(datasource),
     });
+  };
+
+  const getAllDatasource = () => {
+    props.getEntities();
   };
 
   useEffect(() => {
@@ -74,10 +78,6 @@ const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
       props.getEntity(props.dashboardId);
     }
   }, []);
-
-  const getAllDatasource = () => {
-    props.getEntities();
-  };
 
   return (
     <Dialog>
