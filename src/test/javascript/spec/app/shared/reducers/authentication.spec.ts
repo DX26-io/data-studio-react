@@ -30,7 +30,6 @@ describe('Authentication reducer tests', () => {
         errorMessage: null, // Errors returned from server side
         loginSuccess: false,
         loginError: false, // Errors returned from server side
-        showModalLogin: false,
         redirectMessage: null,
       });
       expect(isAccountEmpty(toTest));
@@ -55,7 +54,6 @@ describe('Authentication reducer tests', () => {
         loading: false,
         loginError: false,
         loginSuccess: true,
-        showModalLogin: false,
       });
     });
 
@@ -87,7 +85,6 @@ describe('Authentication reducer tests', () => {
 
       expect(toTest).toMatchObject({
         errorMessage: payload,
-        showModalLogin: true,
         loginError: true,
       });
       expect(isAccountEmpty(toTest));
@@ -100,7 +97,6 @@ describe('Authentication reducer tests', () => {
       expect(toTest).toMatchObject({
         loading: false,
         isAuthenticated: false,
-        showModalLogin: true,
         errorMessage: payload,
       });
       expect(isAccountEmpty(toTest));
@@ -115,7 +111,6 @@ describe('Authentication reducer tests', () => {
         isAuthenticated: false,
         loginSuccess: false,
         loginError: false,
-        showModalLogin: true,
         errorMessage: null,
         redirectMessage: null,
       });
@@ -130,7 +125,6 @@ describe('Authentication reducer tests', () => {
         isAuthenticated: false,
         loginSuccess: false,
         loginError: false,
-        showModalLogin: true,
         errorMessage: null,
         redirectMessage: message,
       });
@@ -142,7 +136,6 @@ describe('Authentication reducer tests', () => {
       const toTest = authentication(undefined, { type: ACTION_TYPES.CLEAR_AUTH, message });
       expect(toTest).toMatchObject({
         loading: false,
-        showModalLogin: true,
         isAuthenticated: false,
       });
     });
@@ -179,7 +172,14 @@ describe('Authentication reducer tests', () => {
     it('dispatches LOGOUT actions', async () => {
       const expectedActions = [
         {
-          type: ACTION_TYPES.LOGOUT,
+          type: REQUEST(ACTION_TYPES.LOGOUT),
+        },
+
+        {
+          payload: {
+            value: 'whatever',
+          },
+          type: SUCCESS(ACTION_TYPES.LOGOUT),
         },
       ];
       await store.dispatch(logout());
@@ -210,6 +210,17 @@ describe('Authentication reducer tests', () => {
         {
           type: SUCCESS(ACTION_TYPES.LOGIN),
           payload: loginResponse,
+        },
+        {
+          type: REQUEST(ACTION_TYPES.GET_SESSION),
+        },
+        {
+          type: SUCCESS(ACTION_TYPES.GET_SESSION),
+          payload: resolvedObject,
+        },
+        {
+          type: localeActionTypes.SET_LOCALE,
+          locale: 'en',
         },
       ];
       await store.dispatch(login('test', 'test'));

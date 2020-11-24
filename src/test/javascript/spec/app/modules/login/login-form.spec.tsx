@@ -1,14 +1,25 @@
 import React from 'react';
 import LoginForm from 'app/modules/login/login-form';
-import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { shallow } from 'enzyme';
+import { defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
+import { render } from '@testing-library/react';
+
+const username = 'test';
+const password = 'test';
+
+export const fillUsernamePasswordAndSubmit = tree => {
+  const usernameElement = tree.getByTestId('username');
+  userEvent.click(usernameElement);
+  userEvent.type(document.activeElement, username);
+  const passwordElement = tree.getByTestId('password');
+  userEvent.click(passwordElement);
+  userEvent.type(document.activeElement, password);
+  const submitButton = tree.getByTestId('submit');
+  userEvent.click(submitButton);
+};
 
 describe('Login Form', () => {
   let mountedWrapper;
-  const username = 'test';
-  const password = 'test';
-  const rememberme = 'true';
 
   const defaultProps = {
     handleLogin: jest.fn(),
@@ -17,7 +28,11 @@ describe('Login Form', () => {
 
   const wrapper = (props = defaultProps) => {
     if (!mountedWrapper) {
-      mountedWrapper = shallow(<LoginForm {...props} />);
+      mountedWrapper = render(
+        <SpectrumProvider theme={defaultTheme}>
+          <LoginForm {...props} />
+        </SpectrumProvider>
+      );
     }
     return mountedWrapper;
   };
@@ -26,53 +41,46 @@ describe('Login Form', () => {
     mountedWrapper = undefined;
   });
 
-  it('Renders login form with default Props', () => {
+  it('should render login form', () => {
     const tree = wrapper();
-    // eslint-disable-next-line no-console
-    console.log(tree.debug());
-    // expect(tree.getByTestId('login-form')).toBeDefined();
-    // expect(tree.getByTestId('username')).toBeDefined();
-    // expect(tree.getByTestId('password')).toBeDefined();
-    // expect(tree.getByTestId('rememberme')).toBeDefined();
-    // expect(tree.getByTestId('login-action')).toBeDefined();
-  });
-
-  it('on change username', () => {
-    const tree = wrapper();
-    const element = tree.getByTestId('username');
-    userEvent.click(element);
-    userEvent.type(document.activeElement, username);
-    expect(element.value).toBe(username);
-  });
-
-  it('on change password', () => {
-    const tree = wrapper();
-    const element = tree.getByTestId('password');
-    userEvent.click(element);
-    userEvent.type(document.activeElement, password);
-    expect(element.value).toBe(password);
-  });
-
-  it('on change rememberme', () => {
-    const tree = wrapper();
-    const element = tree.getByTestId('rememberme');
-    userEvent.click(element);
-    userEvent.type(document.activeElement, rememberme);
-    expect(element.value).toBe(rememberme);
+    expect(tree.getByTestId('login-form')).toBeDefined();
+    expect(tree.getByTestId('username')).toBeDefined();
+    expect(tree.getByTestId('password')).toBeDefined();
+    expect(tree.getByTestId('remember-me')).toBeDefined();
+    expect(tree.getByTestId('login-action')).toBeDefined();
   });
 
   it('on form submit', () => {
     const tree = wrapper();
-    const elementUserName = tree.getByTestId('username');
-    userEvent.click(elementUserName);
-    userEvent.type(document.activeElement, username);
-    const elementPassword = tree.getByTestId('password');
-    userEvent.click(elementPassword);
-    userEvent.type(document.activeElement, password);
-    const elementRememberme = tree.getByTestId('rememberme');
-    userEvent.click(elementRememberme);
-    userEvent.type(document.activeElement, rememberme);
-    userEvent.click(tree.getByTestId('submit'));
+    fillUsernamePasswordAndSubmit(tree);
     expect(defaultProps.handleLogin.mock.calls.length).toEqual(1);
+  });
+
+  it('should show error when submitted without username and password', () => {
+    const tree = wrapper();
+    const submitButton = tree.getByTestId('submit');
+    userEvent.click(submitButton);
+    const emptyError = tree.getByTestId('empty-error');
+    expect(emptyError.textContent).toBe('Username or password should not be empty');
+  });
+
+  it('should not show error when submitted with username and password', () => {
+    const tree = wrapper();
+    fillUsernamePasswordAndSubmit(tree);
+    expect(tree.queryByTestId('empty-error')).toBeNull();
+  });
+
+  it('should show login error with wrong credentials', () => {
+    const defaultPropsWithLoginError = {
+      ...defaultProps,
+      loginError: true,
+    };
+    const tree = render(
+      <SpectrumProvider theme={defaultTheme}>
+        <LoginForm {...defaultPropsWithLoginError} />
+      </SpectrumProvider>
+    );
+    const loginError = tree.getByTestId('login-error');
+    expect(loginError.textContent).toEqual('Your username or password does not match any account');
   });
 });

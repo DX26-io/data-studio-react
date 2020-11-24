@@ -1,19 +1,24 @@
 import React from 'react';
-import { Login, ILoginProps } from 'app/modules/login/login';
+import { ILoginProps, Login } from 'app/modules/login/login';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { defaultTheme } from '@adobe/react-spectrum';
+import { Provider as SpectrumProvider } from '@react-spectrum/provider';
+import { fillUsernamePasswordAndSubmit } from './login-form.spec';
 
 describe('Login Container', () => {
   let mountedWrapper;
 
   const defaultProps = {
     login: jest.fn(),
-    getSession: jest.fn(),
   };
 
   const wrapper = (props: ILoginProps) => {
     if (!mountedWrapper) {
-      mountedWrapper = render(<Login {...defaultProps} {...props} />);
+      mountedWrapper = render(
+        <SpectrumProvider theme={defaultTheme}>
+          <Login {...defaultProps} {...props} />)
+        </SpectrumProvider>
+      );
     }
     return mountedWrapper;
   };
@@ -28,9 +33,8 @@ describe('Login Container', () => {
   });
 
   it('login callback ', () => {
-    const component = wrapper(null);
-    userEvent.click(component.getByTestId('submit'));
+    const tree = wrapper(null);
+    fillUsernamePasswordAndSubmit(tree);
     expect(defaultProps.login.mock.calls.length).toEqual(1);
-    expect(defaultProps.getSession.mock.calls.length).toEqual(0);
   });
 });

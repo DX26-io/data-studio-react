@@ -125,10 +125,11 @@ export const setAuthToken = (result, rememberMe) => {
   }
 };
 
-export const login: (username: string, password: string, rememberMe?: boolean) => void = (username, password, rememberMe = false) => async (
-  dispatch,
-  getState
-) => {
+export const login: (username: string, password: string, rememberMe?: boolean) => void = (
+  username,
+  password,
+  rememberMe = false
+) => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.LOGIN,
     payload: axios.post('api/authenticate', { username, password, rememberMe }),

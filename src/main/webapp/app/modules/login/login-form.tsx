@@ -54,7 +54,9 @@ export const LoginForm = (props: ILoginProps) => {
           <Flex gap="size-100">
             <Alert color="negative" />
             <Text marginBottom="size-300">
-              <span className="spectrum-Body-emphasis error-message">Your username or password does not match any account</span>
+              <span className="spectrum-Body-emphasis error-message" data-testid="login-error">
+                Your username or password does not match any account
+              </span>
             </Text>
           </Flex>
         )}
@@ -62,11 +64,13 @@ export const LoginForm = (props: ILoginProps) => {
           <Flex gap="size-100">
             <Alert color="negative" />
             <Text marginBottom="size-300">
-              <span className="spectrum-Body-emphasis error-message">Username or password should not be empty</span>
+              <span className="spectrum-Body-emphasis error-message" data-testid="empty-error">
+                Username or password should not be empty
+              </span>
             </Text>
           </Flex>
         )}
-        <Checkbox marginTop="static-size-25" isRequired={false} isSelected={rememberMe} onChange={setRememberMe} data-testid="rememberme">
+        <Checkbox marginTop="static-size-25" isRequired={false} isSelected={rememberMe} onChange={setRememberMe} data-testid="remember-me">
           Remember me
         </Checkbox>
         <Flex data-testid="login-action" marginTop="size-400" alignItems="center" justifyContent="center" direction="row-reverse">

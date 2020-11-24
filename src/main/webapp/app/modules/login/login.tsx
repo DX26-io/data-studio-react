@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { Grid, View } from '@adobe/react-spectrum';
 import { IRootState } from '../../shared/reducers';
-import { getSession, login } from '../../shared/reducers/authentication';
+import { login } from '../../shared/reducers/authentication';
 import LoginForm from './login-form';
 import LoginFooter from './login-footer';
 import LoginHeader from './login-header';
-
+// TODO create login page image
 export interface ILoginProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export const Login: React.FC<ILoginProps> = props => {
@@ -33,7 +33,7 @@ const mapStateToProps = ({ authentication }: IRootState) => ({
   loginError: authentication.loginError,
 });
 
-const mapDispatchToProps = { login, getSession };
+const mapDispatchToProps = { login };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
