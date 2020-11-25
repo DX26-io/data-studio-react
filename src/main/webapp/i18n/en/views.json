@@ -3,9 +3,15 @@
     "views": {
       "home": {
         "title": "Views",
-        "createLabel": "Create a new Views",
+        "createLabel": "Create",
         "createOrEditLabel": "Create or edit a Views",
-        "notFound": "No Views found"
+        "notFound": "No view found for {{ param }} dashboard",
+        "editLabel": "Edit",
+        "cancelLabel": "Cancel",
+        "deleteView": "Delete View",
+        "delete": "Delete",
+        "save": "Save",
+        "createNewView": "Create new view"
       },
       "created": "A new Views is created with identifier {{ param }}",
       "updated": "A Views is updated with identifier {{ param }}",
@@ -23,7 +29,9 @@
       "lastModifiedDate": "Last Modified Date",
       "published": "Published",
       "image": "Image",
-      "viewDashboard": "View Dashboard"
+      "viewDashboard": "View Dashboard",
+      "uniqueError": "View already exists with this name",
+      "errorSaving": "Error saving view"
     }
   }
 }

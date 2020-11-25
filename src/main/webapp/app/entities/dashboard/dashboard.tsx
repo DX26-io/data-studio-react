@@ -116,7 +116,7 @@ export const Dashboard = (props: IDashboardProps) => {
       </Flex>
       <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
         <div className={dashboardList && dashboardList.length > 0 ? '' : 'd-none'}>
-          <Pagination onChange={handleChangePage} count={Math.ceil(totalItems / paginationState.itemsPerPage)} />
+          <Pagination defaultPage={paginationState.activePage}  onChange={handleChangePage} count={Math.ceil(totalItems / paginationState.itemsPerPage)} />
         </div>
       </Flex>
     </React.Fragment>

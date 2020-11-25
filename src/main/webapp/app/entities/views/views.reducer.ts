@@ -1,10 +1,15 @@
 import axios from 'axios';
-import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
+import { ICrudGetAction, ICrudGetAllAction, ICrudGetViewAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
 
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 
 import { IViews, defaultValue } from 'app/shared/model/views.model';
+import { ITEMS_PER_PAGE } from 'app/shared/util/dist/pagination.constants';
+const params = new URLSearchParams(window.location.search);
+const viewDashboard = Number(params.get('viewDashboard'));
+const page = Number(params.get('page')) - 1;
+const sort = params.get('sort');
 
 export const ACTION_TYPES = {
   FETCH_VIEWS_LIST: 'views/FETCH_VIEWS_LIST',
@@ -113,8 +118,8 @@ const apiUrl = 'api/views';
 
 // Actions
 
-export const getEntities: ICrudGetAllAction<IViews> = (viewDashboard, page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}&viewDashboard=${viewDashboard}&paginate=true`;
+export const getEntities: ICrudGetViewAction<IViews> = (dashboardId, page, size, sort) => {
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}&viewDashboard=${dashboardId}&paginate=true`;
   return {
     type: ACTION_TYPES.FETCH_VIEWS_LIST,
     payload: axios.get<IViews>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -134,7 +139,7 @@ export const createEntity: ICrudPutAction<IViews> = entity => async dispatch => 
     type: ACTION_TYPES.CREATE_VIEWS,
     payload: axios.post(apiUrl, cleanEntity(entity)),
   });
-  dispatch(getEntities());
+  dispatch(getEntities(viewDashboard, page, ITEMS_PER_PAGE, sort));
   return result;
 };
 
@@ -152,7 +157,7 @@ export const deleteEntity: ICrudDeleteAction<IViews> = id => async dispatch => {
     type: ACTION_TYPES.DELETE_VIEWS,
     payload: axios.delete(requestUrl),
   });
-  dispatch(getEntities());
+  dispatch(getEntities(viewDashboard, page, ITEMS_PER_PAGE, sort));
   return result;
 };
 

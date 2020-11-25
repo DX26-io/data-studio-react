@@ -16,18 +16,19 @@ var react_spectrum_1 = require("@adobe/react-spectrum");
 var dashboard_reducer_1 = require("./dashboard.reducer");
 var datasources_reducer_1 = require("../datasources/datasources.reducer");
 var react_redux_1 = require("react-redux");
+var react_jhipster_1 = require("react-jhipster");
 var DashboardModal = function (props) {
     var dialog = react_spectrum_1.useDialogContainer();
     var dashboardEntity = props.dashboardEntity, loading = props.loading, updating = props.updating, datasourcesList = props.datasourcesList;
-    var _a = react_1.useState(), dashboardName = _a[0], setDashboardNameText = _a[1];
-    var _b = react_1.useState(), category = _b[0], setCategoryText = _b[1];
-    var _c = react_1.useState(), description = _c[0], setDescriptionText = _c[1];
-    var _d = react_1.useState(), datasource = _d[0], setDatasourceText = _d[1];
-    var getDatasourceById = function (id) {
-        var datasource = datasourcesList.filter(function (item) {
-            return item.id === id;
+    var _a = react_1["default"].useState(''), dashboarName = _a[0], setDashboardNameText = _a[1];
+    var _b = react_1["default"].useState(''), dashboarCategory = _b[0], setCategoryText = _b[1];
+    var _c = react_1["default"].useState(''), dashboarDescription = _c[0], setDescriptionText = _c[1];
+    var _d = react_1["default"].useState(''), dashboarDatasources = _d[0], setDatasourceText = _d[1];
+    var getDatasourceByName = function (id) {
+        var _datasource = datasourcesList.filter(function (item) {
+            return item.name === id;
         });
-        return datasource[0];
+        return _datasource[0];
     };
     var saveEntity = function (values) {
         var entity = __assign(__assign({}, dashboardEntity), values);
@@ -39,7 +40,7 @@ var DashboardModal = function (props) {
             dashboardName: dashboardName,
             category: category,
             description: description,
-            dashboardDatasource: getDatasourceById(parseInt(datasource))
+            dashboardDatasource: getDatasourceByName(datasource)
         });
     };
     var getAllDatasource = function () {
@@ -49,19 +50,22 @@ var DashboardModal = function (props) {
         getAllDatasource();
     }, []);
     return (react_1["default"].createElement(react_spectrum_1.Dialog, null,
-        react_1["default"].createElement(react_spectrum_1.Heading, null, "Create new dashboard"),
+        react_1["default"].createElement(react_spectrum_1.Heading, null,
+            react_1["default"].createElement(react_jhipster_1.Translate, { contentKey: "dashboard.home.createNewDashboard" }, "Create new dashboard")),
         react_1["default"].createElement(react_spectrum_1.Divider, null),
         react_1["default"].createElement(react_spectrum_1.Content, null,
             react_1["default"].createElement(react_spectrum_1.Flex, { direction: "column", gap: "size-100", alignItems: "center" },
                 react_1["default"].createElement(react_spectrum_1.View, { padding: "size-600" },
-                    react_1["default"].createElement(react_spectrum_1.Form, { isRequired: true, necessityIndicator: "icon", width: "size-4600" },
-                        react_1["default"].createElement(react_spectrum_1.TextField, { label: "Dashboard name", onChange: setDashboardNameText }),
-                        react_1["default"].createElement(react_spectrum_1.TextField, { label: "Category", onChange: setCategoryText }),
-                        react_1["default"].createElement(react_spectrum_1.TextArea, { label: "Description", onChange: setDescriptionText }),
-                        react_1["default"].createElement(react_spectrum_1.Picker, { onSelectionChange: setDatasourceText, label: "Datasource" }, datasourcesList.map(function (datasources, i) { return (react_1["default"].createElement(react_spectrum_1.Item, { key: datasources.id }, datasources.name)); })))))),
+                    react_1["default"].createElement(react_spectrum_1.Form, { isRequired: true, necessityIndicator: "icon", minWidth: "size-4600" },
+                        react_1["default"].createElement(react_spectrum_1.TextField, { label: "Dashboard name", maxLength: 30, validationState: (dashboarName === null || dashboarName === void 0 ? void 0 : dashboarName.length) < 30 ? 'valid' : 'invalid', onChange: setDashboardNameText }),
+                        react_1["default"].createElement(react_spectrum_1.TextField, { label: "Category", maxLength: 30, validationState: (dashboarCategory === null || dashboarCategory === void 0 ? void 0 : dashboarCategory.length) < 30 ? 'valid' : 'invalid', onChange: setCategoryText }),
+                        react_1["default"].createElement(react_spectrum_1.TextArea, { label: "Description", maxLength: 100, validationState: (dashboarDescription === null || dashboarDescription === void 0 ? void 0 : dashboarDescription.length) < 100 ? 'valid' : 'invalid', onChange: setDescriptionText }),
+                        react_1["default"].createElement(react_spectrum_1.Picker, { validationState: (dashboarDatasources === null || dashboarDatasources === void 0 ? void 0 : dashboarDatasources.length) !== 0 ? 'valid' : 'invalid', label: "Datasource", placeholder: "Select datasource", onSelectionChange: function (selected) { return setDatasourceText(selected.toString()); } }, datasourcesList.map(function (datasources, i) { return (react_1["default"].createElement(react_spectrum_1.Item, { key: datasources.name }, datasources.name)); })))))),
         react_1["default"].createElement(react_spectrum_1.ButtonGroup, null,
-            react_1["default"].createElement(react_spectrum_1.Button, { variant: "secondary", onPress: dialog.dismiss }, "Cancel"),
-            react_1["default"].createElement(react_spectrum_1.Button, { onPress: function () { return createDashboard(dashboardName, category, description, datasource); }, variant: "cta" }, "Save"))));
+            react_1["default"].createElement(react_spectrum_1.Button, { variant: "secondary", onPress: dialog.dismiss },
+                react_1["default"].createElement(react_jhipster_1.Translate, { contentKey: "dashboard.home.cancelLabel" }, "Cancel")),
+            react_1["default"].createElement(react_spectrum_1.Button, { onPress: function () { return createDashboard(dashboarName, dashboarCategory, dashboarDescription, dashboarDatasources); }, variant: "cta" },
+                react_1["default"].createElement(react_jhipster_1.Translate, { contentKey: "dashboard.home.save" }, "Save")))));
 };
 var mapStateToProps = function (storeState) { return ({
     dashboardEntity: storeState.dashboard.entity,

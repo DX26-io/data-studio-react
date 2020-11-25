@@ -21,7 +21,7 @@ const ViewDeleteModal = (props: ViewDeleteModal) => {
   return (
     <Dialog>
       <Heading>
-        <Translate contentKey="dashboard.home.deleteDashboard">Delete Dashboard</Translate>
+        <Translate contentKey="datastudioApp.views.home.deleteView">Delete View</Translate>
       </Heading>
       <Divider />
       <Content>
@@ -31,10 +31,10 @@ const ViewDeleteModal = (props: ViewDeleteModal) => {
       </Content>
       <ButtonGroup>
         <Button variant="secondary" onPress={dialog.dismiss}>
-          <Translate contentKey="dashboard.home.cancelLabel">Cancel</Translate>
+          <Translate contentKey="datastudioApp.views.home.cancelLabel">Cancel</Translate>
         </Button>
         <Button variant="negative" onPress={confirmDelete}>
-          <Translate contentKey="dashboard.home.delete">Delete</Translate>
+          <Translate contentKey="datastudioApp.views.home.delete">Delete</Translate>
         </Button>
       </ButtonGroup>
     </Dialog>

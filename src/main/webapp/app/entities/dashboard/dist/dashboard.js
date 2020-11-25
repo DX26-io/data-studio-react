@@ -58,7 +58,7 @@ exports.Dashboard = function (props) {
     var dashboardListElement = props.dashboardList.map(function (dashboard) {
         return (react_1["default"].createElement(react_1["default"].Fragment, null,
             react_1["default"].createElement(card_1["default"], { key: dashboard.id, thumbnail: react_1["default"].createElement(react_spectrum_1.View, { height: "size-3200" },
-                    react_1["default"].createElement(dashboard_card_thumbnail_1["default"], { thumbnailImagePath: dashboard.image_location, dashboardName: dashboard.dashboardName })), content: react_1["default"].createElement(dashboard_card_content_1["default"], { dashboardName: dashboard.dashboardName, dashboardDescription: dashboard.description, dashboardType: dashboard.category, dashboardId: dashboard.id, datasource: dashboard.dashboardDatasource.name }) })));
+                    react_1["default"].createElement(dashboard_card_thumbnail_1["default"], { dashboardId: dashboard.id, thumbnailImagePath: dashboard.image_location, dashboardName: dashboard.dashboardName })), content: react_1["default"].createElement(dashboard_card_content_1["default"], { dashboardName: dashboard.dashboardName, dashboardDescription: dashboard.description, dashboardType: dashboard.category, dashboardId: dashboard.id, datasource: dashboard.dashboardDatasource.name }) })));
     });
     var dashboardList = props.dashboardList, match = props.match, loading = props.loading, totalItems = props.totalItems;
     var _b = react_1["default"].useState(false), isOpen = _b[0], setOpen = _b[1];
@@ -73,7 +73,7 @@ exports.Dashboard = function (props) {
         react_1["default"].createElement(react_spectrum_1.Flex, { direction: "row", gap: "size-175", wrap: true, margin: "size-175", alignItems: "center", justifyContent: "start" }, dashboardListElement),
         react_1["default"].createElement(react_spectrum_1.Flex, { direction: "row", margin: "size-175", alignItems: "center", justifyContent: "center" },
             react_1["default"].createElement("div", { className: dashboardList && dashboardList.length > 0 ? '' : 'd-none' },
-                react_1["default"].createElement(Pagination_1["default"], { onChange: handleChangePage, count: Math.ceil(totalItems / paginationState.itemsPerPage) })))));
+                react_1["default"].createElement(Pagination_1["default"], { defaultPage: paginationState.activePage, onChange: handleChangePage, count: Math.ceil(totalItems / paginationState.itemsPerPage) })))));
 };
 var mapStateToProps = function (_a) {
     var dashboard = _a.dashboard;

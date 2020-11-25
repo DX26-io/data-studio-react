@@ -16,14 +16,18 @@ import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
 import ViewDeleteModal from '../view-delete-modal';
+import ViewPropertiesModal from '../view-properties-modal';
+import { IDashboard } from 'app/shared/model/dashboard.model';
 
 interface IDashboardCardContentProps {
+  viewDashboard: IDashboard;
   viewName: string;
+  description: string;
   viewId: number;
 }
 
 const ViewCardContent: React.FC<IDashboardCardContentProps> = props => {
-  const { viewName, viewId } = props;
+  const { viewName, viewId, description, viewDashboard } = props;
   const [dialog, setDialog] = React.useState();
 
   return (
@@ -63,9 +67,11 @@ const ViewCardContent: React.FC<IDashboardCardContentProps> = props => {
             <DialogContainer onDismiss={() => setDialog(null)}>
               {dialog === 'delete' && <ViewDeleteModal viewdName={viewName} viewId={viewId} />}
             </DialogContainer>
-            {/* <DialogContainer  type="fullscreenTakeover" onDismiss={() => setDialog(null)}>
-              {dialog === 'properties' && <DashboardPropertiesModal dashboardName={dashboardName}  datasource={props.datasource}  description={dashboardDescription} category={props.dashboardType} dashboardId={dashboardId} />}
-            </DialogContainer> */}
+            <DialogContainer type="fullscreenTakeover" onDismiss={() => setDialog(null)}>
+              {dialog === 'properties' && (
+                <ViewPropertiesModal viewName={viewName} description={description} viewId={viewId} viewDashboard={viewDashboard} />
+              )}
+            </DialogContainer>
             <TooltipTrigger delay={0} placement="end">
               <ActionButton isQuiet={true}>
                 <InfoOutline />

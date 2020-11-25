@@ -7,12 +7,15 @@ import { getEntities } from './views.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import { Flex, View, Button } from '@adobe/react-spectrum';
+import { Flex, View, Button, IllustratedMessage,  Content, DialogContainer } from '@adobe/react-spectrum';
 import Card from 'app/shared/components/card/card';
 import ViewCardThumbnail from './view-card/view-card-thumbnail';
 import ViewCardContent from './view-card/view-card-content';
+import ViewModal from './view-modal';
+
 import Pagination from '@material-ui/lab/Pagination';
 import { getEntity } from '../dashboard/dashboard.reducer';
+import NotFound from '@spectrum-icons/illustrations/NotFound';
 
 export interface IViewsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -41,11 +44,11 @@ export const Views = (props: IViewsProps) => {
   };
 
   const getDashbaordEntity = () => {
-    props.getEntity(parseInt(params.get('viewDashboard')));
+    props.getEntity(Number(params.get('viewDashboard')));
   };
 
   useEffect(() => {
-    getDashbaordEntity()
+    getDashbaordEntity();
     sortEntities();
   }, [paginationState.activePage, paginationState.order, paginationState.sort]);
 
@@ -88,13 +91,15 @@ export const Views = (props: IViewsProps) => {
               <ViewCardThumbnail thumbnailImagePath={view.image} viewName={view.viewName} />
             </View>
           }
-          content={<ViewCardContent viewName={view.viewName} viewId={view.id} />}
+          content={<ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} />}
         />
       </>
     );
   });
 
-  const { viewsList, match, loading, totalItems,dashboardEntity } = props;
+  const { viewsList, match, loading, totalItems, dashboardEntity } = props;
+  const [isOpen, setOpen] = React.useState(false);
+
   return (
     <React.Fragment>
       <SecondaryHeader
@@ -105,17 +110,26 @@ export const Views = (props: IViewsProps) => {
         ]}
         title={dashboardEntity.dashboardName}
       >
-        <Button variant="cta">
-          <Translate contentKey="dashboard.home.createLabel">Create</Translate>
+        <Button variant="cta" onPress={() => setOpen(true)}>
+          <Translate contentKey="datastudioApp.views.home.createLabel">Create</Translate>
         </Button>
+
+        <DialogContainer type="fullscreenTakeover" onDismiss={() => setOpen(false)} {...props}>
+          {isOpen && <ViewModal viewDashboard={dashboardEntity}></ViewModal>}
+        </DialogContainer>
       </SecondaryHeader>
       <Flex direction="row" gap="size-175" wrap margin="size-175" alignItems="center" justifyContent="start">
         {viewsListElement}
       </Flex>
       <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
-        <div className={viewsList && viewsList.length > 0 ? '' : 'd-none'}>
-          <Pagination onChange={handleChangePage} count={Math.ceil(totalItems / paginationState.itemsPerPage)} />
-        </div>
+        {viewsList && viewsList.length > 0 ? (
+          <Pagination defaultPage={paginationState.activePage} onChange={handleChangePage} count={Math.ceil(totalItems / paginationState.itemsPerPage)} />
+        ) : (
+          <IllustratedMessage>
+            <NotFound />
+            <Content>No view found for {dashboardEntity.dashboardName} dashboard</Content>
+          </IllustratedMessage>
+        )}
       </Flex>
     </React.Fragment>
   );
