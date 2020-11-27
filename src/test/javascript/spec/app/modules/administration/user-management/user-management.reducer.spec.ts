@@ -14,7 +14,7 @@ import userManagement, {
   updateUser,
   deleteUser,
   reset,
-} from 'app/modules/administration/user-management/user-management.reducer';
+} from 'app/modules/administration/user-management/users/user-management.reducer';
 import { defaultValue } from 'app/shared/model/user.model';
 import { AUTHORITIES } from 'app/config/constants';
 

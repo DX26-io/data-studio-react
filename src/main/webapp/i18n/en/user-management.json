@@ -3,7 +3,20 @@
     "home": {
       "title": "Users",
       "createLabel": "Create a new user",
-      "createOrEditLabel": "Create or edit a user"
+      "createOrEditLabel": "Create or edit a user",
+      "description": "Manage your users"
+    },
+    "userGroup": {
+      "title": "Groups",
+      "description": "Manage your groups"
+    },
+    "dashboardPermission": {
+      "title": "Dashboard permissions",
+      "description": "Manage dashboards user and  group permissions"
+    },
+    "datasourcePermission": {
+      "title": "Datasource permissions",
+      "description": "Manage datasources user and  group permissions"
     },
     "created": "A new user is created with identifier {{ param }}",
     "updated": "A user is updated with identifier {{ param }}",

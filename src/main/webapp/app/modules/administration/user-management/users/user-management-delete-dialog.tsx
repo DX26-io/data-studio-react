@@ -5,7 +5,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { getUser, deleteUser } from './user-management.reducer';
+import { getUser, deleteUser } from '../users/user-management.reducer';
 import { IRootState } from 'app/shared/reducers';
 
 export interface IUserManagementDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ login: string }> {}

@@ -1,0 +1,17 @@
+.admin-card-container {
+  width: 12%;
+  height: 400px;
+  .admin-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 35px;
+    background-color: #fff;
+    text-decoration: none;
+    color: inherit;
+  }
+  .card-title {
+    margin-top: 13px;
+    margin-bottom: 5px;
+  }
+}

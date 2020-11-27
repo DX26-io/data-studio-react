@@ -1,22 +1,15 @@
 import React from 'react';
-import { Switch } from 'react-router-dom';
-
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
+import Users from './users';
 import UserManagement from './user-management';
-import UserManagementDetail from './user-management-detail';
-import UserManagementUpdate from './user-management-update';
-import UserManagementDeleteDialog from './user-management-delete-dialog';
+
 
 const Routes = ({ match }) => (
-  <>
-    <Switch>
-      <ErrorBoundaryRoute exact path={`${match.url}/new`} component={UserManagementUpdate} />
-      <ErrorBoundaryRoute exact path={`${match.url}/:login/edit`} component={UserManagementUpdate} />
-      <ErrorBoundaryRoute exact path={`${match.url}/:login`} component={UserManagementDetail} />
-      <ErrorBoundaryRoute path={match.url} component={UserManagement} />
-    </Switch>
-    <ErrorBoundaryRoute path={`${match.url}/:login/delete`} component={UserManagementDeleteDialog} />
-  </>
+  <div>
+    <ErrorBoundaryRoute exact path={match.url} component={UserManagement} />
+    <ErrorBoundaryRoute exact path={`${match.url}/users`} component={Users} />
+    {/* user group,permission module root route will be kept here */}
+  </div>
 );
 
 export default Routes;
