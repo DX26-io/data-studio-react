@@ -111,7 +111,7 @@ export const Views = (props: IViewsProps) => {
         title={dashboardEntity.dashboardName}
       >
         <Button variant="cta" onPress={() => setOpen(true)}>
-          <Translate contentKey="datastudioApp.views.home.createLabel">Create</Translate>
+          <Translate contentKey="datastudioApp.views.home.createLabel">Create View</Translate>
         </Button>
 
         <DialogContainer type="fullscreenTakeover" onDismiss={() => setOpen(false)} {...props}>

@@ -25,6 +25,7 @@ var dashboard_card_content_1 = require("app/entities/dashboard/dashboard-card/da
 var Pagination_1 = require("@material-ui/lab/Pagination");
 var secondary_header_1 = require("app/shared/layout/secondary-header/secondary-header");
 var dashboard_modal_1 = require("../dashboard/dashboard-modal");
+var NotFound_1 = require("@spectrum-icons/illustrations/NotFound");
 exports.Dashboard = function (props) {
     var _a = react_1.useState(entity_utils_1.overridePaginationStateWithQueryParams(react_jhipster_1.getSortState(props.location, pagination_constants_1.ITEMS_PER_PAGE), props.location.search)), paginationState = _a[0], setPaginationState = _a[1];
     var getAllEntities = function () {
@@ -71,9 +72,10 @@ exports.Dashboard = function (props) {
                 react_1["default"].createElement(react_jhipster_1.Translate, { contentKey: "dashboard.home.createLabel" }, "Create")),
             react_1["default"].createElement(react_spectrum_1.DialogContainer, __assign({ type: "fullscreenTakeover", onDismiss: function () { return setOpen(false); } }, props), isOpen && react_1["default"].createElement(dashboard_modal_1["default"], null))),
         react_1["default"].createElement(react_spectrum_1.Flex, { direction: "row", gap: "size-175", wrap: true, margin: "size-175", alignItems: "center", justifyContent: "start" }, dashboardListElement),
-        react_1["default"].createElement(react_spectrum_1.Flex, { direction: "row", margin: "size-175", alignItems: "center", justifyContent: "center" },
-            react_1["default"].createElement("div", { className: dashboardList && dashboardList.length > 0 ? '' : 'd-none' },
-                react_1["default"].createElement(Pagination_1["default"], { defaultPage: paginationState.activePage, onChange: handleChangePage, count: Math.ceil(totalItems / paginationState.itemsPerPage) })))));
+        react_1["default"].createElement(react_spectrum_1.Flex, { direction: "row", margin: "size-175", alignItems: "center", justifyContent: "center" }, dashboardList && dashboardList.length > 0 ? (react_1["default"].createElement(Pagination_1["default"], { defaultPage: paginationState.activePage, onChange: handleChangePage, count: Math.ceil(totalItems / paginationState.itemsPerPage) })) : (react_1["default"].createElement(react_spectrum_1.IllustratedMessage, null,
+            react_1["default"].createElement(NotFound_1["default"], null),
+            react_1["default"].createElement(react_spectrum_1.Content, null,
+                react_1["default"].createElement(react_jhipster_1.Translate, { contentKey: "dashboard.home.notFound" }, "No dashboard found")))))));
 };
 var mapStateToProps = function (_a) {
     var dashboard = _a.dashboard;

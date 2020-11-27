@@ -15,12 +15,14 @@ import {
   Picker,
   Item,
   Text,
+  DialogContainer,
+  AlertDialog,
 } from '@adobe/react-spectrum';
 import { getEntity, updateEntity } from './dashboard.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { Translate } from 'react-jhipster';
+import { translate, Translate } from 'react-jhipster';
 import { getEntities } from '../datasources/datasources.reducer';
 
 export interface DashboardPropertiesModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
@@ -39,7 +41,8 @@ const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
   const [dashboarCategory, setCategoryText] = React.useState(props.category ? props.category : '');
   const [dashboarDescription, setDescriptionText] = React.useState(props.description ? props.description : '');
   const [dashboarDatasources, setDatasourceText] = React.useState(props.datasource ? props.datasource : '');
-
+  const [isError, setErrorOpen] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
   const dialog = useDialogContainer();
 
   const getDatasourceByName = id => {
@@ -54,9 +57,23 @@ const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
       ...dashboardEntity,
       ...values,
     };
-    props.updateEntity(entity);
-    dialog.dismiss();
-    window.location.reload();
+
+    new Promise(resolve => {
+      resolve(props.updateEntity(entity));
+    })
+      .then(data => {
+        if (data['value'].status === 200) {
+          dialog.dismiss();
+        }
+      })
+      .catch(error => {
+        if (error.response.data.message === 'uniqueError') {
+          setErrorMessage(translate('dashboard.uniqueError'));
+        } else {
+          setErrorMessage(translate('dashboard.errorSaving'));
+        }
+        setErrorOpen(true);
+      });
   };
 
   const updateDashboard = (dashboardName, category, description, datasource) => {
@@ -85,6 +102,13 @@ const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
       <Divider />
       <Content>
         <Flex direction="column" gap="size-100" alignItems="center">
+          <DialogContainer onDismiss={() => setErrorOpen(false)} {...props}>
+            {isError && (
+              <AlertDialog title="Error" variant="destructive" primaryActionLabel="Close">
+                {errorMessage}
+              </AlertDialog>
+            )}
+          </DialogContainer>
           <View padding="size-600">
             <Form isDisabled={!isEdit} necessityIndicator="icon" minWidth="size-4600">
               <TextField

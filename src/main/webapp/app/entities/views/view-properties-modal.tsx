@@ -12,14 +12,15 @@ import {
   Button,
   TextField,
   TextArea,
+  AlertDialog,
+  DialogContainer,
 } from '@adobe/react-spectrum';
 import { updateEntity, getEntity } from './views.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { Translate } from 'react-jhipster';
+import { translate, Translate } from 'react-jhipster';
 import { IDashboard } from 'app/shared/model/dashboard.model';
-import { error } from 'console';
 
 export interface ViewPropertiesModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
   viewDashboard: IDashboard;
@@ -32,8 +33,10 @@ const ViewPropertiesModal = (props: ViewPropertiesModal) => {
   const [isEdit, setEdit] = React.useState(false);
   const [viewName, setViewNameText] = React.useState(props.viewName);
   const [viewDescription, setDescriptionText] = React.useState(props.description);
-
+  const [isError, setErrorOpen] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
   const dialog = useDialogContainer();
+
   const editEntity = values => {
     const entity = {
       ...props.viewEntity,
@@ -48,7 +51,12 @@ const ViewPropertiesModal = (props: ViewPropertiesModal) => {
         }
       })
       .catch(error => {
-        debugger
+        if (error.response.data.message === 'uniqueError') {
+          setErrorMessage(translate('datastudioApp.views.uniqueError'));
+        } else {
+          setErrorMessage(translate('datastudioApp.views.errorSaving'));
+        }
+        setErrorOpen(true);
       });
   };
 
@@ -72,6 +80,13 @@ const ViewPropertiesModal = (props: ViewPropertiesModal) => {
       <Divider />
       <Content>
         <Flex direction="column" gap="size-100" alignItems="center">
+          <DialogContainer onDismiss={() => setErrorOpen(false)} {...props}>
+            {isError && (
+              <AlertDialog title="Error" variant="destructive" primaryActionLabel="Close">
+                {errorMessage}
+              </AlertDialog>
+            )}
+          </DialogContainer>
           <View padding="size-600">
             <Form isDisabled={!isEdit} isRequired necessityIndicator="icon" minWidth="size-4600">
               <TextField

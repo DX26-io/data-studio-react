@@ -48,7 +48,7 @@ const ViewModal = (props: ViewModal) => {
         }
       })
       .catch(error => {
-        if (error.response.data.message == 'uniqueError') {
+        if (error.response.data.message === 'uniqueError') {
           setErrorMessage(translate('datastudioApp.views.uniqueError'));
         } else {
           setErrorMessage(translate('datastudioApp.views.errorSaving'));
@@ -103,14 +103,7 @@ const ViewModal = (props: ViewModal) => {
           </DialogContainer>
           <DialogContainer onDismiss={() => setErrorOpen(false)} {...props}>
             {isError && (
-              <AlertDialog
-                title="Error"
-                onPrimaryAction={alertOpen}
-                onCancel={alertClose}
-                variant="destructive"
-                cancelLabel="Close"
-                primaryActionLabel="Open"
-              >
+              <AlertDialog title="Error" variant="destructive" primaryActionLabel="Close">
                 {errorMessage}
               </AlertDialog>
             )}

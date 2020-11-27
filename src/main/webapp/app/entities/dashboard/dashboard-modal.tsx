@@ -14,6 +14,8 @@ import {
   TextArea,
   Picker,
   Item,
+  DialogContainer,
+  AlertDialog,
 } from '@adobe/react-spectrum';
 import { getEntity, updateEntity, createEntity, reset } from './dashboard.reducer';
 import { getEntities } from '../datasources/datasources.reducer';
@@ -21,18 +23,23 @@ import { getEntities } from '../datasources/datasources.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { Translate } from 'react-jhipster';
+import { translate, Translate } from 'react-jhipster';
+import { useHistory } from 'react-router-dom';
 
 export interface DashboardModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 const DashboardModal = (props: DashboardModal) => {
   const dialog = useDialogContainer();
   const { dashboardEntity, loading, updating, datasourcesList } = props;
-
+  const [isOpen, setOpen] = React.useState(false);
+  const [dashboardId, setDashboardId] = React.useState('');
   const [dashboarName, setDashboardNameText] = React.useState('');
   const [dashboarCategory, setCategoryText] = React.useState('');
   const [dashboarDescription, setDescriptionText] = React.useState('');
   const [dashboarDatasources, setDatasourceText] = React.useState('');
+  const [isError, setErrorOpen] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const history = useHistory();
 
   const getDatasourceByName = id => {
     const _datasource = datasourcesList.filter(function (item) {
@@ -46,8 +53,24 @@ const DashboardModal = (props: DashboardModal) => {
       ...dashboardEntity,
       ...values,
     };
-    props.createEntity(entity);
-    dialog.dismiss();
+
+    new Promise(resolve => {
+      resolve(props.createEntity(entity));
+    })
+      .then(data => {
+        if (data['value'].status === 201) {
+          setDashboardId( data['value'].data.id);
+          setOpen(true);
+        }
+      })
+      .catch(error => {
+        if (error.response.data.message === 'uniqueError') {
+          setErrorMessage(translate('dashboard.uniqueError'));
+        } else {
+          setErrorMessage(translate('dashboard.errorSaving'));
+        }
+        setErrorOpen(true);
+      });
   };
 
   const createDashboard = (dashboardName, category, description, datasource) => {
@@ -63,6 +86,17 @@ const DashboardModal = (props: DashboardModal) => {
     props.getEntities();
   };
 
+  const alertClose = () => {
+    setOpen(false);
+    dialog.dismiss();
+  };
+
+  const alertOpen = () => {
+    setOpen(false);
+    dialog.dismiss();
+    history.push('/views?viewDashboard=' + dashboardId);
+  };
+
   useEffect(() => {
     getAllDatasource();
   }, []);
@@ -75,6 +109,27 @@ const DashboardModal = (props: DashboardModal) => {
       <Divider />
       <Content>
         <Flex direction="column" gap="size-100" alignItems="center">
+          <DialogContainer onDismiss={() => setOpen(false)} {...props}>
+            {isOpen && (
+              <AlertDialog
+                title="Success"
+                onPrimaryAction={alertOpen}
+                onCancel={alertClose}
+                variant="confirmation"
+                cancelLabel="Close"
+                primaryActionLabel="Open"
+              >
+                Created view successfully
+              </AlertDialog>
+            )}
+          </DialogContainer>
+          <DialogContainer onDismiss={() => setErrorOpen(false)} {...props}>
+            {isError && (
+              <AlertDialog title="Error" variant="destructive" primaryActionLabel="Close">
+                {errorMessage}
+              </AlertDialog>
+            )}
+          </DialogContainer>
           <View padding="size-600">
             <Form isRequired necessityIndicator="icon" minWidth="size-4600">
               <TextField

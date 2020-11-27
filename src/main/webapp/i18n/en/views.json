@@ -3,7 +3,7 @@
     "views": {
       "home": {
         "title": "Views",
-        "createLabel": "Create",
+        "createLabel": "Create view",
         "createOrEditLabel": "Create or edit a Views",
         "notFound": "No view found for {{ param }} dashboard",
         "editLabel": "Edit",

@@ -34,7 +34,7 @@ var ViewModal = function (props) {
                 setOpen(true);
             }
         })["catch"](function (error) {
-            if (error.response.data.message == 'uniqueError') {
+            if (error.response.data.message === 'uniqueError') {
                 setErrorMessage(react_jhipster_1.translate('datastudioApp.views.uniqueError'));
             }
             else {
@@ -68,7 +68,7 @@ var ViewModal = function (props) {
         react_1["default"].createElement(react_spectrum_1.Content, null,
             react_1["default"].createElement(react_spectrum_1.Flex, { direction: "column", gap: "size-100", alignItems: "center" },
                 react_1["default"].createElement(react_spectrum_1.DialogContainer, __assign({ onDismiss: function () { return setOpen(false); } }, props), isOpen && (react_1["default"].createElement(react_spectrum_1.AlertDialog, { title: "Success", onPrimaryAction: alertOpen, onCancel: alertClose, variant: "confirmation", cancelLabel: "Close", primaryActionLabel: "Open" }, "Created view successfully"))),
-                react_1["default"].createElement(react_spectrum_1.DialogContainer, __assign({ onDismiss: function () { return setErrorOpen(false); } }, props), isError && (react_1["default"].createElement(react_spectrum_1.AlertDialog, { title: "Error", onPrimaryAction: alertOpen, onCancel: alertClose, variant: "destructive", cancelLabel: "Close", primaryActionLabel: "Open" }, errorMessage))),
+                react_1["default"].createElement(react_spectrum_1.DialogContainer, __assign({ onDismiss: function () { return setErrorOpen(false); } }, props), isError && (react_1["default"].createElement(react_spectrum_1.AlertDialog, { title: "Error", variant: "destructive", primaryActionLabel: "Close" }, errorMessage))),
                 react_1["default"].createElement(react_spectrum_1.View, { padding: "size-600" },
                     react_1["default"].createElement(react_spectrum_1.Form, { isRequired: true, necessityIndicator: "icon", minWidth: "size-4600" },
                         react_1["default"].createElement(react_spectrum_1.TextField, { label: "View name", maxLength: 30, validationState: (viewName === null || viewName === void 0 ? void 0 : viewName.length) < 30 ? 'valid' : 'invalid', onChange: setViewNameText }),

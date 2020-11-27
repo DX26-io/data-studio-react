@@ -24,6 +24,8 @@ var DashboardPropertiesModal = function (props) {
     var _c = react_1["default"].useState(props.category ? props.category : ''), dashboarCategory = _c[0], setCategoryText = _c[1];
     var _d = react_1["default"].useState(props.description ? props.description : ''), dashboarDescription = _d[0], setDescriptionText = _d[1];
     var _e = react_1["default"].useState(props.datasource ? props.datasource : ''), dashboarDatasources = _e[0], setDatasourceText = _e[1];
+    var _f = react_1["default"].useState(false), isError = _f[0], setErrorOpen = _f[1];
+    var _g = react_1["default"].useState(''), errorMessage = _g[0], setErrorMessage = _g[1];
     var dialog = react_spectrum_1.useDialogContainer();
     var getDatasourceByName = function (id) {
         var _datasource = datasourcesList.filter(function (item) {
@@ -33,9 +35,22 @@ var DashboardPropertiesModal = function (props) {
     };
     var editEntity = function (values) {
         var entity = __assign(__assign({}, dashboardEntity), values);
-        props.updateEntity(entity);
-        dialog.dismiss();
-        window.location.reload();
+        new Promise(function (resolve) {
+            resolve(props.updateEntity(entity));
+        })
+            .then(function (data) {
+            if (data['value'].status === 200) {
+                dialog.dismiss();
+            }
+        })["catch"](function (error) {
+            if (error.response.data.message === 'uniqueError') {
+                setErrorMessage(react_jhipster_1.translate('dashboard.uniqueError'));
+            }
+            else {
+                setErrorMessage(react_jhipster_1.translate('dashboard.errorSaving'));
+            }
+            setErrorOpen(true);
+        });
     };
     var updateDashboard = function (dashboardName, category, description, datasource) {
         editEntity({
@@ -61,6 +76,7 @@ var DashboardPropertiesModal = function (props) {
         react_1["default"].createElement(react_spectrum_1.Divider, null),
         react_1["default"].createElement(react_spectrum_1.Content, null,
             react_1["default"].createElement(react_spectrum_1.Flex, { direction: "column", gap: "size-100", alignItems: "center" },
+                react_1["default"].createElement(react_spectrum_1.DialogContainer, __assign({ onDismiss: function () { return setErrorOpen(false); } }, props), isError && (react_1["default"].createElement(react_spectrum_1.AlertDialog, { title: "Error", variant: "destructive", primaryActionLabel: "Close" }, errorMessage))),
                 react_1["default"].createElement(react_spectrum_1.View, { padding: "size-600" },
                     react_1["default"].createElement(react_spectrum_1.Form, { isDisabled: !isEdit, necessityIndicator: "icon", minWidth: "size-4600" },
                         react_1["default"].createElement(react_spectrum_1.TextField, { label: "Dashboard name", maxLength: 30, validationState: (dashboarName === null || dashboarName === void 0 ? void 0 : dashboarName.length) < 30 ? 'valid' : 'invalid', value: dashboarName, onChange: setDashboardNameText }),

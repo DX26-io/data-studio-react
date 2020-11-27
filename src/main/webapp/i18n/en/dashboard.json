@@ -42,6 +42,8 @@
         "release": "Release",
         "delete": "Delete"
       }
-    }
+    },
+    "uniqueError": "dashboard already exists with this name",
+    "errorSaving": "Error saving dashboard"
   }
 }

@@ -8,12 +8,13 @@ import { getEntities } from './dashboard.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import Card from 'app/shared/components/card/card';
-import { Button, DialogContainer, Flex, View } from '@adobe/react-spectrum';
+import { Button, Content, DialogContainer, Flex, IllustratedMessage, View } from '@adobe/react-spectrum';
 import DashboardCardThumbnail from 'app/entities/dashboard/dashboard-card/dashboard-card-thumbnail';
 import DashboardCardContent from 'app/entities/dashboard/dashboard-card/dashboard-card-content';
 import Pagination from '@material-ui/lab/Pagination';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import DashboardModal from '../dashboard/dashboard-modal';
+import NotFound from '@spectrum-icons/illustrations/NotFound';
 
 export interface IDashboardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -75,7 +76,11 @@ export const Dashboard = (props: IDashboardProps) => {
           key={dashboard.id}
           thumbnail={
             <View height="size-3200">
-              <DashboardCardThumbnail dashboardId={dashboard.id} thumbnailImagePath={dashboard.image_location} dashboardName={dashboard.dashboardName} />
+              <DashboardCardThumbnail
+                dashboardId={dashboard.id}
+                thumbnailImagePath={dashboard.image_location}
+                dashboardName={dashboard.dashboardName}
+              />
             </View>
           }
           content={
@@ -115,9 +120,20 @@ export const Dashboard = (props: IDashboardProps) => {
         {dashboardListElement}
       </Flex>
       <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
-        <div className={dashboardList && dashboardList.length > 0 ? '' : 'd-none'}>
-          <Pagination defaultPage={paginationState.activePage}  onChange={handleChangePage} count={Math.ceil(totalItems / paginationState.itemsPerPage)} />
-        </div>
+        {dashboardList && dashboardList.length > 0 ? (
+          <Pagination
+            defaultPage={paginationState.activePage}
+            onChange={handleChangePage}
+            count={Math.ceil(totalItems / paginationState.itemsPerPage)}
+          />
+        ) : (
+          <IllustratedMessage>
+            <NotFound />
+            <Content>
+              <Translate contentKey="dashboard.home.notFound">No dashboard found</Translate>
+            </Content>
+          </IllustratedMessage>
+        )}
       </Flex>
     </React.Fragment>
   );

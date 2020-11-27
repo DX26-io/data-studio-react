@@ -76,7 +76,7 @@ exports.Views = function (props) {
                 { key: dashboardEntity.dashboardName, label: 'view', route: '/dashboard' },
             ], title: dashboardEntity.dashboardName },
             react_1["default"].createElement(react_spectrum_1.Button, { variant: "cta", onPress: function () { return setOpen(true); } },
-                react_1["default"].createElement(react_jhipster_1.Translate, { contentKey: "datastudioApp.views.home.createLabel" }, "Create")),
+                react_1["default"].createElement(react_jhipster_1.Translate, { contentKey: "datastudioApp.views.home.createLabel" }, "Create View")),
             react_1["default"].createElement(react_spectrum_1.DialogContainer, __assign({ type: "fullscreenTakeover", onDismiss: function () { return setOpen(false); } }, props), isOpen && react_1["default"].createElement(view_modal_1["default"], { viewDashboard: dashboardEntity }))),
         react_1["default"].createElement(react_spectrum_1.Flex, { direction: "row", gap: "size-175", wrap: true, margin: "size-175", alignItems: "center", justifyContent: "start" }, viewsListElement),
         react_1["default"].createElement(react_spectrum_1.Flex, { direction: "row", margin: "size-175", alignItems: "center", justifyContent: "center" }, viewsList && viewsList.length > 0 ? (react_1["default"].createElement(Pagination_1["default"], { defaultPage: paginationState.activePage, onChange: handleChangePage, count: Math.ceil(totalItems / paginationState.itemsPerPage) })) : (react_1["default"].createElement(react_spectrum_1.IllustratedMessage, null,
