@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { Grid, View } from '@adobe/react-spectrum';
-import { IRootState } from '../../shared/reducers';
-import { login } from '../../shared/reducers/authentication';
+import { IRootState } from 'app/shared/reducers';
+import { login } from 'app/shared/reducers/authentication';
 import LoginForm from './login-form';
 import LoginFooter from './login-footer';
 import LoginHeader from './login-header';
@@ -15,16 +15,24 @@ export const Login: React.FC<ILoginProps> = props => {
     props.login(username, password, rememberMe);
   };
 
-  return (
+  return !props.isAuthenticated ? (
     <Grid areas={['image login']} columns={['1fr', '2fr']} rows={['auto']} minHeight={window.innerHeight} data-testid="login-container">
       {/* <Image src="https://i.imgur.com/Z7AzH2c.png" alt="alt-text" objectFit="cover" gridArea="image" />*/}
-      <View gridArea="image" backgroundColor="gray-400"></View>
+      <View gridArea="image" backgroundColor="gray-400" />
       <View gridArea="login">
         <LoginHeader />
         <LoginForm handleLogin={handleLogin} loginError={props.loginError} />
         <LoginFooter />
       </View>
     </Grid>
+  ) : (
+    <Redirect
+      to={{
+        pathname: '/',
+        search: props.location.search,
+        state: { from: props.location },
+      }}
+    />
   );
 };
 

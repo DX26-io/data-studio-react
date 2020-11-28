@@ -18,7 +18,6 @@ import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import ErrorBoundary from 'app/shared/error/error-boundary';
 import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
-import LoginRoute from 'app/login-route';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
 
@@ -38,38 +37,38 @@ export const App = (props: IAppProps) => {
     window.removeEventListener('resize', updateContentHeight);
   }, [contentSize]);
 
-  return (
+  return props.isAuthenticated ? (
     <Router basename={baseHref}>
-      {isTokenExist() || props.isAuthenticated ? (
-        <>
-          <ToastContainer position={toast.POSITION.TOP_LEFT} className="toastify-container" toastClassName="toastify-toast" />
-          <Grid areas={['header', 'content', 'footer']} columns={['1fr']} rows={['size-700', 'auto', 'size-400']} minHeight={contentSize}>
-            <View gridArea="header">
-              <ErrorBoundary>
-                <Header
-                  isAuthenticated={props.isAuthenticated}
-                  isAdmin={props.isAdmin}
-                  currentLocale={props.currentLocale}
-                  onLocaleChange={props.setLocale}
-                  ribbonEnv={props.ribbonEnv}
-                  isInProduction={props.isInProduction}
-                  isSwaggerEnabled={props.isSwaggerEnabled}
-                />
-              </ErrorBoundary>
-            </View>
-            <View gridArea="content" flex={true} alignSelf={'stretch'} backgroundColor="default">
-              <ErrorBoundary>
-                <AppRoutes />
-              </ErrorBoundary>
-            </View>
-            <View gridArea="footer" backgroundColor="default">
-              <Footer />
-            </View>
-          </Grid>
-        </>
-      ) : (
-        <LoginRoute />
-      )}
+      <ToastContainer position={toast.POSITION.TOP_LEFT} className="toastify-container" toastClassName="toastify-toast" />
+      <Grid areas={['header', 'content', 'footer']} columns={['1fr']} rows={['size-700', 'auto', 'size-400']} minHeight={contentSize}>
+        <View gridArea="header">
+          <ErrorBoundary>
+            <Header
+              isAuthenticated={props.isAuthenticated}
+              isAdmin={props.isAdmin}
+              currentLocale={props.currentLocale}
+              onLocaleChange={props.setLocale}
+              ribbonEnv={props.ribbonEnv}
+              isInProduction={props.isInProduction}
+              isSwaggerEnabled={props.isSwaggerEnabled}
+            />
+          </ErrorBoundary>
+        </View>
+        <View gridArea="content" flex={true} alignSelf={'stretch'} backgroundColor="default">
+          <ErrorBoundary>
+            <AppRoutes />
+          </ErrorBoundary>
+        </View>
+        <View gridArea="footer" backgroundColor="default">
+          <Footer />
+        </View>
+      </Grid>
+    </Router>
+  ) : (
+    <Router basename={baseHref}>
+      <ErrorBoundary>
+        <AppRoutes />
+      </ErrorBoundary>
     </Router>
   );
 };
