@@ -54,20 +54,20 @@ export const LoginForm = (props: ILoginProps) => {
           onChange={setPassword}
         />
         {loginError && !emptyFieldError && (
-          <Flex gap="size-100">
+          <Flex gap="size-100" data-testid="login-error">
             <Alert color="negative" />
             <Text marginBottom="size-300">
-              <span className="spectrum-Body-emphasis error-message" data-testid="login-error">
+              <span className="spectrum-Body-emphasis error-message">
                 <Translate contentKey="login.messages.error.authentication">Your username or password does not match any account</Translate>
               </span>
             </Text>
           </Flex>
         )}
         {emptyFieldError && (
-          <Flex gap="size-100">
+          <Flex gap="size-100" data-testid="empty-error">
             <Alert color="negative" />
             <Text marginBottom="size-300">
-              <span className="spectrum-Body-emphasis error-message" data-testid="empty-error">
+              <span className="spectrum-Body-emphasis error-message">
                 <Translate contentKey="login.messages.error.emptyUsernameOrPassword"> Username or password should not be empty</Translate>
               </span>
             </Text>
