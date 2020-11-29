@@ -99,7 +99,7 @@ exports[`Data studio Avatar test should render component as expected 1`] = `
         <$e8eede229dc4bb152d31b6896bc207be$var$DialogTriggerBase
           dialogProps={
             Object {
-              "id": "react-aria-6430236964-1",
+              "id": "react-aria-5623674798-1",
             }
           }
           overlay={
