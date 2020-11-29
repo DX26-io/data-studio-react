@@ -42,7 +42,7 @@ exports[`Notifications test should render as expected 1`] = `
       <$e8eede229dc4bb152d31b6896bc207be$var$DialogTriggerBase
         dialogProps={
           Object {
-            "id": "react-aria-7686275397-1",
+            "id": "react-aria-5797834042-1",
           }
         }
         overlay={
