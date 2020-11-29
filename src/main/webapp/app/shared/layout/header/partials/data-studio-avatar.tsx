@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, Divider, Flex, Text, View } from '@adobe/react-spectrum';
-import HeaderPopover from 'app/shared/layout/header/partials/header-popover';
+import { ActionButton, Button, Content, Dialog, DialogTrigger, Divider, Flex, Text } from '@adobe/react-spectrum';
 import { Translate } from 'react-jhipster';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -12,18 +11,21 @@ const DataStudioAvatar: React.FC = () => {
   const account = useSelector((storeState: IRootState) => storeState.authentication.account);
 
   return (
-    <>
-      <HeaderPopover icon={<User />}>
-        <View padding="size-300">
-          <Flex alignItems="center" justifyContent="center" direction="column">
-            <span className="spectrum-Body spectrum-Body--L">
-              <Text marginBottom="size-200">
+    <DialogTrigger type="popover">
+      <ActionButton aria-label="User avatar" isQuiet={true} marginEnd="size-200">
+        <User size="M" />
+      </ActionButton>
+      <Dialog>
+        <Content>
+          <Flex alignItems="center" justifyContent="center" direction="column" gap="size-175">
+            <Text>
+              <span className="spectrum-Body spectrum-Body--sizeL">
                 <Translate contentKey="header.avatar.greeting">Hello</Translate>
-                {` ${account.login}`}
-              </Text>
-            </span>
-            <Divider marginY="size-200" size="S" />
-            <Button isQuiet={true} variant="primary" marginBottom="size-200">
+                <strong>{` ${account.login}`}</strong>
+              </span>
+            </Text>
+            <Divider size="M" />
+            <Button isQuiet={true} variant="primary">
               <Text>
                 <Translate contentKey="header.avatar.preferences">Preferences</Translate>
               </Text>
@@ -34,10 +36,9 @@ const DataStudioAvatar: React.FC = () => {
               </Text>
             </Button>
           </Flex>
-        </View>
-      </HeaderPopover>
-    </>
+        </Content>
+      </Dialog>
+    </DialogTrigger>
   );
 };
-
 export default DataStudioAvatar;
