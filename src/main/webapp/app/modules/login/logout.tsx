@@ -31,7 +31,7 @@ export const Logout = (props: ILogoutProps) => {
   };
 
   return (
-    <Flex justifyContent="center" alignItems="center">
+    <Flex justifyContent="center" alignItems="center" minHeight={window.innerHeight}>
       <View borderWidth="thin" borderColor="dark" borderRadius="medium" backgroundColor="gray-50" paddingY="size-600" paddingX="size-1200">
         <Flex direction="column" gap="size-200" justifyContent="center" alignItems="center">
           <Logo />
