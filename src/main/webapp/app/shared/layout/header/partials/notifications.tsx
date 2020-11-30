@@ -5,10 +5,10 @@ import { Text, DialogTrigger, ActionButton, Dialog, Heading, Divider, Content } 
 const Notifications = () => {
   return (
     <DialogTrigger type="popover">
-      <ActionButton aria-label="Notifications" isQuiet={true} marginEnd="size-200">
+      <ActionButton aria-label="Notifications" isQuiet={true} marginEnd="size-200" data-testid="notificationsButton">
         <Bell size="M" />
       </ActionButton>
-      <Dialog>
+      <Dialog data-testid="notificationsContainer">
         <Heading>Notifications</Heading>
         <Divider />
         <Content>

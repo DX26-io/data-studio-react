@@ -12,25 +12,25 @@ const DataStudioAvatar: React.FC = () => {
 
   return (
     <DialogTrigger type="popover">
-      <ActionButton aria-label="User avatar" isQuiet={true} marginEnd="size-200">
+      <ActionButton aria-label="User avatar" isQuiet={true} marginEnd="size-200" data-testid="avatarButton">
         <User size="M" />
       </ActionButton>
       <Dialog>
         <Content>
           <Flex alignItems="center" justifyContent="center" direction="column" gap="size-175">
             <Text>
-              <span className="spectrum-Body spectrum-Body--sizeL">
+              <span className="spectrum-Body spectrum-Body--sizeL" data-testid="userGreeting">
                 <Translate contentKey="header.avatar.greeting">Hello</Translate>
                 <strong>{` ${account.login}`}</strong>
               </span>
             </Text>
             <Divider size="M" />
-            <Button isQuiet={true} variant="primary">
+            <Button isQuiet={true} variant="primary" data-testid="preferencesButton">
               <Text>
                 <Translate contentKey="header.avatar.preferences">Preferences</Translate>
               </Text>
             </Button>
-            <Button onPress={() => history.push('/logout')} variant="primary" justifySelf="center">
+            <Button onPress={() => history.push('/logout')} variant="primary" justifySelf="center" data-testid="logoutButton">
               <Text>
                 <Translate contentKey="header.avatar.signOut">Sign Out</Translate>
               </Text>
