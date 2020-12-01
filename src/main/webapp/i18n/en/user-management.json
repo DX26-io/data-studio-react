@@ -2,8 +2,8 @@
   "userManagement": {
     "home": {
       "title": "Users",
-      "createLabel": "Create a new user",
-      "createOrEditLabel": "Create or edit a user",
+      "createLabel": "Create User",
+      "editLabel": "Edit user",
       "description": "Manage your users"
     },
     "userGroup": {
@@ -33,6 +33,7 @@
     "email": "Email",
     "activated": "Enabled",
     "deactivated": "Disabled",
+    "activate": "Activate",
     "profiles": "Profiles",
     "langKey": "Language",
     "createdBy": "Created by",

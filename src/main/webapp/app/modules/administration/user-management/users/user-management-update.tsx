@@ -1,51 +1,178 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Label, Row, Col } from 'reactstrap';
+// import { Button, Label, Row, Col } from 'reactstrap';
 import { AvForm, AvGroup, AvInput, AvField, AvFeedback } from 'availity-reactstrap-validation';
 import { Translate, translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import { IUser } from 'app/shared/model/user.model';
 import { locales, languages } from 'app/config/translation';
-import { getUser, getRoles, updateUser, createUser, reset } from './user-management.reducer';
+import { getUser, getRoles, updateUser, createUser, reset, deleteUser } from './user-management.reducer';
 import { IRootState } from 'app/shared/reducers';
+import {
+  View,
+  Flex,
+  useDialogContainer,
+  Dialog,
+  Heading,
+  Divider,
+  Content,
+  Form,
+  ButtonGroup,
+  Button,
+  TextField,
+  TextArea,
+  Picker,
+  Item,
+  DialogTrigger,
+  Footer,
+  ActionButton,
+  Header,
+  Checkbox,
+  Text,
+} from '@adobe/react-spectrum';
 
-export interface IUserManagementUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ login: string }> {}
+export interface IUserManagementUpdateProps extends StateProps, DispatchProps {
+  user: IUser;
+  setOpen: (isOpen: boolean) => void;
+}
 
 export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.login);
+  const { user, setOpen } = props;
+  const [login, setLogin] = useState(user.login);
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [email, setEmail] = useState(user.email);
+  const [activated, setActivated] = useState(user.activated);
+
+  const isValidLogin = React.useMemo(() => /^[_'.@A-Za-z0-9-]*$/.test(login), [login]);
+
+  const dialog = useDialogContainer();
 
   useEffect(() => {
-    if (isNew) {
-      props.reset();
-    } else {
-      props.getUser(props.match.params.login);
-    }
     props.getRoles();
-    return () => {
-      props.reset();
-    };
   }, []);
 
-  const handleClose = () => {
-    props.history.push('/admin/user-management');
+  const buildUser = () => {
+    user.login = login;
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+    user.activated = activated;
   };
 
-  const saveUser = (event, values) => {
-    if (isNew) {
-      props.createUser(values);
+  const handleClose = () => {
+    setOpen(false);
+    dialog.dismiss();
+    // props.history.push('/admin/user-management');
+  };
+
+  const saveUser = () => {
+    buildUser();
+    if (user.id) {
+      props.updateUser(user);
     } else {
-      props.updateUser(values);
+      props.createUser(user);
     }
     handleClose();
   };
 
+  const removeUser = () => {
+    props.deleteUser(user.login);
+    handleClose();
+  };
+
   const isInvalid = false;
-  const { user, loading, updating, roles } = props;
+  const { loading, updating, roles } = props;
 
   return (
     <div>
-      <Row className="justify-content-center">
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <Dialog>
+          <Heading>
+            <Flex alignItems="center" gap="size-100">
+              {user.id ? (
+                <Translate contentKey="userManagement.home.editLabel">Edit User</Translate>
+              ) : (
+                <Translate contentKey="userManagement.home.createLabel">Create User</Translate>
+              )}
+            </Flex>
+          </Heading>
+          <Header>
+            <Flex alignItems="center" gap="size-100">
+              <Button variant="secondary" onPress={handleClose}>
+                <Translate contentKey="entity.action.cancel">Cancel</Translate>
+              </Button>
+              <Button variant="cta" onPress={saveUser} isDisabled={updating}>
+                <Translate contentKey="entity.action.save">Save</Translate>
+              </Button>
+            </Flex>
+          </Header>
+          <Divider />
+          <Content>
+            <Form>
+              <TextField
+                label="Login ID"
+                placeholder="John"
+                minLength={1}
+                // maxlength={50} it does not exist..need to be part of valaidation
+                validationState={isValidLogin ? 'valid' : 'invalid'}
+                type="text"
+                value={login}
+                onChange={setLogin}
+                autoFocus
+                isRequired
+              />
+              <TextField
+                label="First Name"
+                placeholder="John"
+                isRequired
+                type="text"
+                value={firstName}
+                onChange={setFirstName}
+                // maxlength={50} it does not exist..need to be part of valaidation
+                autoFocus
+              />
+              <TextField
+                label="Last Name"
+                placeholder="Deo"
+
+                type="text"
+                value={lastName}
+                onChange={setLastName}
+                // maxlength={50} it does not exist..need to be part of valaidation
+                autoFocus
+              />
+              <TextField
+                label="Email"
+                placeholder="John@dx26.com"
+                isRequired
+                type="email"
+                value={email}
+                onChange={setEmail}
+                // maxlength={100} it does not exist..need to be part of valaidation
+                autoFocus
+              />
+              <Checkbox isSelected={activated} onChange={setActivated} isEmphasized defaultSelected>
+                <Translate contentKey="userManagement.activate">Activate</Translate>
+              </Checkbox>
+              <Text>
+                <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
+              </Text>
+              <Divider size="M" />
+            </Form>
+            {user.id ? (
+              <Button variant="negative" onPress={removeUser} marginTop="size-175">
+                <Translate contentKey="entity.action.delete">Delete</Translate>
+              </Button>
+            ) : null}
+          </Content>
+        </Dialog>
+      )}
+
+      {/* <Row className="justify-content-center">
         <Col md="8">
           <h1>
             <Translate contentKey="userManagement.home.createOrEditLabel">Create or edit a User</Translate>
@@ -202,19 +329,18 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
             </AvForm>
           )}
         </Col>
-      </Row>
+      </Row> */}
     </div>
   );
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  user: storeState.userManagement.user,
   roles: storeState.userManagement.authorities,
   loading: storeState.userManagement.loading,
   updating: storeState.userManagement.updating,
 });
 
-const mapDispatchToProps = { getUser, getRoles, updateUser, createUser, reset };
+const mapDispatchToProps = { getUser, getRoles, updateUser, createUser, reset, deleteUser };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

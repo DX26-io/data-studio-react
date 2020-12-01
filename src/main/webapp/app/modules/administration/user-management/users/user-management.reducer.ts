@@ -118,7 +118,7 @@ export const getUsers: ICrudGetAllAction<IUser> = (page, size, sort) => {
 
 export const getRoles = () => ({
   type: ACTION_TYPES.FETCH_ROLES,
-  payload: axios.get(`${apiUrl}/authorities`),
+  payload: axios.get(`api/userGroups/all`),
 });
 
 export const getUser: ICrudGetAction<IUser> = id => {

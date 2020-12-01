@@ -6,10 +6,12 @@ import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/paginati
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { getUsers, updateUser } from './user-management.reducer';
 import { IRootState } from 'app/shared/reducers';
-import { Button, Flex } from '@adobe/react-spectrum';
+import { Button, Flex,DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
+import UserManagementUpdate from './user-management-update';
+import { defaultValue } from 'app/shared/model/user.model';
 
 export interface IUserManagementProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -60,6 +62,10 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
     });
   };
 
+  const [isOpen, setOpen] = React.useState(false);
+  const [user,setUser] = React.useState(defaultValue);
+
+
   const { users, account, match, totalItems } = props;
 
   return (
@@ -73,16 +79,15 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
         ]}
         title={'User Management'}
       >
-        <Button variant="cta">
+        <Button variant="cta" onPress={() => {setOpen(true);setUser(defaultValue)}}>
           <Translate contentKey="entity.action.create">Create</Translate>
         </Button>
       </SecondaryHeader>
-      {/* <h2 id="user-management-page-heading">
-        <Translate contentKey="userManagement.home.title">Users</Translate>
-        <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity">
-          <FontAwesomeIcon icon="plus" /> <Translate contentKey="userManagement.home.createLabel">Create a new user</Translate>
-        </Link>
-      </h2> */}
+      <DialogContainer onDismiss={() => setOpen(false)}>
+        {isOpen && (
+          <UserManagementUpdate user={user} setOpen={setOpen} ></UserManagementUpdate>
+        )}
+      </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
           <TableContainer>
@@ -110,26 +115,26 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.map((user, i) => (
+                {users.map((u, i) => (
                   <TableRow key={`user-${i}`}>
                     <TableCell component="th" scope="row" align="center">
                       <Link className="dx26-link" to={`${match.url}/${user.login}`}>
-                        {user.id}
+                        {u.id}
                       </Link>
                     </TableCell>
-                    <TableCell align="center">{user.login}</TableCell>
-                    <TableCell align="center">{user.email}</TableCell>
+                    <TableCell align="center">{u.login}</TableCell>
+                    <TableCell align="center">{u.email}</TableCell>
                     <TableCell align="center">
-                      {user.activated ? (
+                      {u.activated ? (
                         <Translate contentKey="userManagement.activated">Enabled</Translate>
                       ) : (
                         <Translate contentKey="userManagement.deactivated">Disabled</Translate>
                       )}
                     </TableCell>
-                    <TableCell align="center">{user.userType}</TableCell>
+                    <TableCell align="center">{u.userType}</TableCell>
                     <TableCell align="center">
                       <Flex gap="size-100" justifyContent="center">
-                        <Edit size="S" />
+                        <a onClick={() => {setOpen(true);setUser(u)}}><Edit size="S"/></a>
                       </Flex>
                     </TableCell>
                   </TableRow>

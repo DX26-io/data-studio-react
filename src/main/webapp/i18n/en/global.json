@@ -100,7 +100,8 @@
       "save": "Save",
       "view": "View",
       "manage": "Manage",
-      "create": "Create"
+      "create": "Create",
+      "dangerZone": "Danger Zone"
     },
     "detail": {
       "field": "Field",
