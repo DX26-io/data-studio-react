@@ -1,57 +1,44 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Button, Divider, Flex, Text, View } from '@adobe/react-spectrum';
-import { Avatar } from '@material-ui/core';
-import HeaderPopover from 'app/shared/layout/header/partials/header-popover';
+import { ActionButton, Button, Content, Dialog, DialogTrigger, Divider, Flex, Text } from '@adobe/react-spectrum';
 import { Translate } from 'react-jhipster';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
+import User from '@spectrum-icons/workflow/User';
 
 const DataStudioAvatar: React.FC = () => {
-  const avatarStyles = makeStyles(theme => ({
-    small: {
-      width: theme.spacing(4),
-      height: theme.spacing(4),
-    },
-  }));
-  const avatarClasses = avatarStyles();
   const history = useHistory();
   const account = useSelector((storeState: IRootState) => storeState.authentication.account);
 
   return (
-    <>
-      <HeaderPopover
-        icon={
-          <Avatar className={avatarClasses.small}>
-            <span className="avatar-initial">H</span>
-          </Avatar>
-        }
-      >
-        <View padding="size-300">
-          <Flex alignItems="center" justifyContent="center" direction="column">
-            <span className="spectrum-Body spectrum-Body--L">
-              <Text marginBottom="size-200">
+    <DialogTrigger type="popover">
+      <ActionButton aria-label="User avatar" isQuiet={true} marginEnd="size-200" data-testid="avatarButton">
+        <User size="M" />
+      </ActionButton>
+      <Dialog>
+        <Content>
+          <Flex alignItems="center" justifyContent="center" direction="column" gap="size-175">
+            <Text>
+              <span className="spectrum-Body spectrum-Body--sizeL" data-testid="userGreeting">
                 <Translate contentKey="header.avatar.greeting">Hello</Translate>
-                {` ${account.login}`}
-              </Text>
-            </span>
-            <Divider marginY="size-200" size="S" />
-            <Button isQuiet={true} variant="primary" marginBottom="size-200">
+                <strong>{` ${account.login}`}</strong>
+              </span>
+            </Text>
+            <Divider size="M" />
+            <Button isQuiet={true} variant="primary" data-testid="preferencesButton">
               <Text>
                 <Translate contentKey="header.avatar.preferences">Preferences</Translate>
               </Text>
             </Button>
-            <Button onPress={() => history.push('/logout')} variant="primary" justifySelf="center">
+            <Button onPress={() => history.push('/logout')} variant="primary" justifySelf="center" data-testid="logoutButton">
               <Text>
                 <Translate contentKey="header.avatar.signOut">Sign Out</Translate>
               </Text>
             </Button>
           </Flex>
-        </View>
-      </HeaderPopover>
-    </>
+        </Content>
+      </Dialog>
+    </DialogTrigger>
   );
 };
-
 export default DataStudioAvatar;

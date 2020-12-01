@@ -1,8 +1,12 @@
 import React, { useLayoutEffect } from 'react';
 import { connect } from 'react-redux';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
 
 import { IRootState } from 'app/shared/reducers';
 import { logout } from 'app/shared/reducers/authentication';
+import { View, Flex, Link, Button } from '@adobe/react-spectrum';
+import Logo from 'app/shared/components/logo/logo';
+import { Translate } from 'react-jhipster';
 
 export interface ILogoutProps extends StateProps, DispatchProps {
   idToken: string;
@@ -10,6 +14,7 @@ export interface ILogoutProps extends StateProps, DispatchProps {
 }
 
 export const Logout = (props: ILogoutProps) => {
+  const history = useHistory();
   useLayoutEffect(() => {
     props.logout();
     const logoutUrl = props.logoutUrl;
@@ -21,10 +26,24 @@ export const Logout = (props: ILogoutProps) => {
     }
   });
 
+  const handleNavigateToLogin = () => {
+    history.push('/login');
+  };
+
   return (
-    <div className="p-5">
-      <h4>Logged out successfully!</h4>
-    </div>
+    <Flex justifyContent="center" alignItems="center" minHeight={window.innerHeight}>
+      <View borderWidth="thin" borderColor="dark" borderRadius="medium" backgroundColor="gray-50" paddingY="size-600" paddingX="size-1200">
+        <Flex direction="column" gap="size-200" justifyContent="center" alignItems="center">
+          <Logo />
+          <span className="spectrum-Body--sizeS">
+            <strong>Logged out successfully!</strong>
+          </span>
+          <Button variant="cta" onPress={handleNavigateToLogin}>
+            <Translate contentKey="logout.loginText">Click here to login</Translate>
+          </Button>
+        </Flex>
+      </View>
+    </Flex>
   );
 };
 
