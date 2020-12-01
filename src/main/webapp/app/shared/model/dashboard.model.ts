@@ -15,7 +15,7 @@ export interface IDashboard {
   last_modified_by?: string;
   lastModifiedDate?: string;
   current_release_id?: number;
-  dashboardDatasource: IDatasources;
+  dashboardDatasource?: IDatasources;
 }
 
 export const defaultValue: Readonly<IDashboard> = {
@@ -23,5 +23,5 @@ export const defaultValue: Readonly<IDashboard> = {
   dashboardName: '',
   category: '',
   description: '',
-  dashboardDatasource: null,
+  dashboardDatasource: {},
 };

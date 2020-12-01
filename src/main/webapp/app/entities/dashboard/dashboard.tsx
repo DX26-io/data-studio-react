@@ -8,12 +8,12 @@ import { getEntities } from './dashboard.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import Card from 'app/shared/components/card/card';
-import { Button, Content, DialogContainer, Flex, IllustratedMessage, View } from '@adobe/react-spectrum';
+import { Button,Text, Content, DialogContainer, Flex, IllustratedMessage, ProgressCircle, View } from '@adobe/react-spectrum';
 import DashboardCardThumbnail from 'app/entities/dashboard/dashboard-card/dashboard-card-thumbnail';
 import DashboardCardContent from 'app/entities/dashboard/dashboard-card/dashboard-card-content';
 import Pagination from '@material-ui/lab/Pagination';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import DashboardModal from '../dashboard/dashboard-modal';
+import DashboardCreateModal from './dashboard-create-modal';
 import NotFound from '@spectrum-icons/illustrations/NotFound';
 
 export interface IDashboardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
@@ -68,7 +68,7 @@ export const Dashboard = (props: IDashboardProps) => {
       activePage: newPage,
     });
   };
-
+  const { dashboardList, match, loading, totalItems } = props;
   const dashboardListElement = props.dashboardList.map(dashboard => {
     return (
       <>
@@ -80,6 +80,7 @@ export const Dashboard = (props: IDashboardProps) => {
                 dashboardId={dashboard.id}
                 thumbnailImagePath={dashboard.image_location}
                 dashboardName={dashboard.dashboardName}
+                match={match}
               />
             </View>
           }
@@ -97,7 +98,6 @@ export const Dashboard = (props: IDashboardProps) => {
     );
   });
 
-  const { dashboardList, match, loading, totalItems } = props;
   const [isOpen, setOpen] = React.useState(false);
   return (
     <React.Fragment>
@@ -113,26 +113,33 @@ export const Dashboard = (props: IDashboardProps) => {
         </Button>
 
         <DialogContainer type="fullscreenTakeover" onDismiss={() => setOpen(false)} {...props}>
-          {isOpen && <DashboardModal></DashboardModal>}
+          {isOpen && <DashboardCreateModal></DashboardCreateModal>}
         </DialogContainer>
       </SecondaryHeader>
       <Flex direction="row" gap="size-175" wrap margin="size-175" alignItems="center" justifyContent="start">
         {dashboardListElement}
       </Flex>
       <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
-        {dashboardList && dashboardList.length > 0 ? (
-          <Pagination
-            defaultPage={paginationState.activePage}
-            onChange={handleChangePage}
-            count={Math.ceil(totalItems / paginationState.itemsPerPage)}
-          />
+        {!loading ? (
+          dashboardList && dashboardList.length > 0 ? (
+            <Pagination
+              defaultPage={paginationState.activePage}
+              onChange={handleChangePage}
+              count={Math.ceil(totalItems / paginationState.itemsPerPage)}
+            />
+          ) : (
+            <IllustratedMessage>
+              <NotFound />
+              <Content>
+                <Translate contentKey="dashboard.home.notFound">No dashboard found</Translate>
+              </Content>
+            </IllustratedMessage>
+          )
         ) : (
-          <IllustratedMessage>
-            <NotFound />
-            <Content>
-              <Translate contentKey="dashboard.home.notFound">No dashboard found</Translate>
-            </Content>
-          </IllustratedMessage>
+          <Flex  margin="size-175" alignItems="center" justifyContent="center">
+            <ProgressCircle isIndeterminate aria-label="Loading…" marginEnd="size-300" value={30} />
+            <Text>loading</Text>
+          </Flex>
         )}
       </Flex>
     </React.Fragment>

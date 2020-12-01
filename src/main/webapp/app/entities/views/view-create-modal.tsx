@@ -22,11 +22,11 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Translate, translate } from 'react-jhipster';
 import { IDashboard } from 'app/shared/model/dashboard.model';
 
-export interface ViewModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
+export interface ViewCreateModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
   viewDashboard: IDashboard;
 }
 
-const ViewModal = (props: ViewModal) => {
+const ViewCreateModal = (props: ViewCreateModal) => {
   const dialog = useDialogContainer();
   const { viewEntity, loading, updating } = props;
   const [isOpen, setOpen] = React.useState(false);
@@ -156,4 +156,4 @@ const mapDispatchToProps = {
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewModal);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewCreateModal);

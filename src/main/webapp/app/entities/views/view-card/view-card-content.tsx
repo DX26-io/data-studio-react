@@ -65,7 +65,7 @@ const ViewCardContent: React.FC<IDashboardCardContentProps> = props => {
               </Menu>
             </MenuTrigger>
             <DialogContainer onDismiss={() => setDialog(null)}>
-              {dialog === 'delete' && <ViewDeleteModal viewdName={viewName} viewId={viewId} />}
+              {dialog === 'delete' && <ViewDeleteModal viewName={viewName} viewId={viewId} />}
             </DialogContainer>
             <DialogContainer type="fullscreenTakeover" onDismiss={() => setDialog(null)}>
               {dialog === 'properties' && (

@@ -8,7 +8,7 @@ import { Translate } from 'react-jhipster';
 
 export interface ViewDeleteModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
   viewId: number;
-  viewdName: React.ReactNode;
+  viewName: React.ReactNode;
 }
 
 const ViewDeleteModal = (props: ViewDeleteModal) => {
@@ -26,7 +26,7 @@ const ViewDeleteModal = (props: ViewDeleteModal) => {
       <Divider />
       <Content>
         <span>This will permanently delete the selected </span>
-        <span className="spectrum-Heading--XS">{props.viewdName} </span>
+        <span className="spectrum-Heading--XS">{props.viewName} </span>
         <span>view. continue? </span>
       </Content>
       <ButtonGroup>

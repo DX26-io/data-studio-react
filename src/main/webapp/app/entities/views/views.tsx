@@ -7,11 +7,11 @@ import { getEntities } from './views.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import { Flex, View, Button, IllustratedMessage,  Content, DialogContainer } from '@adobe/react-spectrum';
+import { Flex, View, Button, IllustratedMessage, Content, DialogContainer } from '@adobe/react-spectrum';
 import Card from 'app/shared/components/card/card';
 import ViewCardThumbnail from './view-card/view-card-thumbnail';
 import ViewCardContent from './view-card/view-card-content';
-import ViewModal from './view-modal';
+import ViewCreateModal from './view-create-modal';
 
 import Pagination from '@material-ui/lab/Pagination';
 import { getEntity } from '../dashboard/dashboard.reducer';
@@ -35,16 +35,16 @@ export const Views = (props: IViewsProps) => {
   };
 
   const sortEntities = () => {
-    const viewDashboard = params.get('viewDashboard');
+    const viewDashboard = props.match.params['id'];
     getAllEntities(viewDashboard);
-    const endURL = `?viewDashboard=${viewDashboard}&page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`;
+    const endURL = `?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`;
     if (props.location.search !== endURL) {
       props.history.push(`${props.location.pathname}${endURL}`);
     }
   };
 
   const getDashbaordEntity = () => {
-    props.getEntity(Number(params.get('viewDashboard')));
+    props.getEntity(Number(props.match.params['id']));
   };
 
   useEffect(() => {
@@ -91,7 +91,9 @@ export const Views = (props: IViewsProps) => {
               <ViewCardThumbnail thumbnailImagePath={view.image} viewName={view.viewName} />
             </View>
           }
-          content={<ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} />}
+          content={
+            <ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} />
+          }
         />
       </>
     );
@@ -115,7 +117,7 @@ export const Views = (props: IViewsProps) => {
         </Button>
 
         <DialogContainer type="fullscreenTakeover" onDismiss={() => setOpen(false)} {...props}>
-          {isOpen && <ViewModal viewDashboard={dashboardEntity}></ViewModal>}
+          {isOpen && <ViewCreateModal viewDashboard={dashboardEntity}></ViewCreateModal>}
         </DialogContainer>
       </SecondaryHeader>
       <Flex direction="row" gap="size-175" wrap margin="size-175" alignItems="center" justifyContent="start">
@@ -123,7 +125,11 @@ export const Views = (props: IViewsProps) => {
       </Flex>
       <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
         {viewsList && viewsList.length > 0 ? (
-          <Pagination defaultPage={paginationState.activePage} onChange={handleChangePage} count={Math.ceil(totalItems / paginationState.itemsPerPage)} />
+          <Pagination
+            defaultPage={paginationState.activePage}
+            onChange={handleChangePage}
+            count={Math.ceil(totalItems / paginationState.itemsPerPage)}
+          />
         ) : (
           <IllustratedMessage>
             <NotFound />

@@ -26,13 +26,12 @@ import { RouteComponentProps } from 'react-router-dom';
 import { translate, Translate } from 'react-jhipster';
 import { useHistory } from 'react-router-dom';
 
-export interface DashboardModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface DashboardCreateModal extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
-const DashboardModal = (props: DashboardModal) => {
+const DashboardCreateModal = (props: DashboardCreateModal) => {
   const dialog = useDialogContainer();
   const { dashboardEntity, loading, updating, datasourcesList } = props;
   const [isOpen, setOpen] = React.useState(false);
-  const [dashboardId, setDashboardId] = React.useState('');
   const [dashboarName, setDashboardNameText] = React.useState('');
   const [dashboarCategory, setCategoryText] = React.useState('');
   const [dashboarDescription, setDescriptionText] = React.useState('');
@@ -53,24 +52,7 @@ const DashboardModal = (props: DashboardModal) => {
       ...dashboardEntity,
       ...values,
     };
-
-    new Promise(resolve => {
-      resolve(props.createEntity(entity));
-    })
-      .then(data => {
-        if (data['value'].status === 201) {
-          setDashboardId( data['value'].data.id);
-          setOpen(true);
-        }
-      })
-      .catch(error => {
-        if (error.response.data.message === 'uniqueError') {
-          setErrorMessage(translate('dashboard.uniqueError'));
-        } else {
-          setErrorMessage(translate('dashboard.errorSaving'));
-        }
-        setErrorOpen(true);
-      });
+    props.createEntity(entity);
   };
 
   const createDashboard = (dashboardName, category, description, datasource) => {
@@ -94,12 +76,26 @@ const DashboardModal = (props: DashboardModal) => {
   const alertOpen = () => {
     setOpen(false);
     dialog.dismiss();
-    history.push('/views?viewDashboard=' + dashboardId);
+    history.push('/dashboard/' + props.dashboardEntity.id.toString());
   };
 
   useEffect(() => {
     getAllDatasource();
   }, []);
+
+  useEffect(() => {
+    if (props.updateSuccess) {
+      setOpen(true);
+    }
+    if (props.errorMessage != null) {
+      if (props.errorMessage.response.data.message === 'uniqueError') {
+        setErrorMessage(translate('dashboard.uniqueError'));
+      } else {
+        setErrorMessage(translate('dashboard.errorSaving'));
+      }
+      setErrorOpen(true);
+    }
+  }, [props.updateSuccess, props.errorMessage]);
 
   return (
     <Dialog>
@@ -182,6 +178,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   loading: storeState.dashboard.loading,
   updating: storeState.dashboard.updating,
   updateSuccess: storeState.dashboard.updateSuccess,
+  errorMessage: storeState.dashboard.errorMessage,
   datasourcesList: storeState.datasources.entities,
 });
 
@@ -196,4 +193,4 @@ const mapDispatchToProps = {
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardModal);
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardCreateModal);
