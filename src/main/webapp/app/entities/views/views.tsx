@@ -88,7 +88,7 @@ export const Views = (props: IViewsProps) => {
           key={view.id}
           thumbnail={
             <View height="size-3200">
-              <ViewCardThumbnail thumbnailImagePath={view.image} viewName={view.viewName} />
+              <ViewCardThumbnail viewId={view.id} dashboardId={view.viewDashboard.id} thumbnailImagePath={view.image} viewName={view.viewName} />
             </View>
           }
           content={
