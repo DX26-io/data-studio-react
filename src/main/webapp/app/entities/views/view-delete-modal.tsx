@@ -3,15 +3,14 @@ import { useDialogContainer, Dialog, Heading, Divider, Content, ButtonGroup, But
 import { getEntity, deleteEntity } from './views.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
 import { Translate } from 'react-jhipster';
 
-export interface ViewDeleteModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
+export interface IVieweleteModalProps extends StateProps, DispatchProps {
   viewId: number;
   viewName: React.ReactNode;
 }
 
-const ViewDeleteModal = (props: ViewDeleteModal) => {
+const ViewDeleteModal = (props: IVieweleteModalProps) => {
   const dialog = useDialogContainer();
   const confirmDelete = () => {
     props.deleteEntity(props.viewId);

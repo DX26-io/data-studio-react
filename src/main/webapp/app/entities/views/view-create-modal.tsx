@@ -18,15 +18,14 @@ import {
 import { createEntity, reset } from './views.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
 import { Translate, translate } from 'react-jhipster';
 import { IDashboard } from 'app/shared/model/dashboard.model';
 
-export interface ViewCreateModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
+export interface IViewCreateModalProps extends StateProps, DispatchProps {
   viewDashboard: IDashboard;
 }
 
-const ViewCreateModal = (props: ViewCreateModal) => {
+const ViewCreateModal = (props: IViewCreateModalProps) => {
   const dialog = useDialogContainer();
   const { viewEntity, loading, updating } = props;
   const [isOpen, setOpen] = React.useState(false);

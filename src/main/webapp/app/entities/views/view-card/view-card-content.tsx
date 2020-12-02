@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactText } from 'react';
 import {
   ActionButton,
   Flex,
@@ -19,16 +19,16 @@ import ViewDeleteModal from '../view-delete-modal';
 import ViewPropertiesModal from '../view-properties-modal';
 import { IDashboard } from 'app/shared/model/dashboard.model';
 
-interface IDashboardCardContentProps {
+interface IViewCardContentProps {
   viewDashboard: IDashboard;
   viewName: string;
   description: string;
   viewId: number;
 }
 
-const ViewCardContent: React.FC<IDashboardCardContentProps> = props => {
+const ViewCardContent: React.FC<IViewCardContentProps> = props => {
   const { viewName, viewId, description, viewDashboard } = props;
-  const [dialog, setDialog] = React.useState();
+  const [dialog, setDialog] = React.useState<ReactText>('');
 
   return (
     <>
@@ -42,7 +42,7 @@ const ViewCardContent: React.FC<IDashboardCardContentProps> = props => {
               <ActionButton isQuiet aria-label="more options">
                 <MoreSmallListVert size="S" aria-label="Default Alert" />
               </ActionButton>
-              <Menu onAction={setDialog}>
+              <Menu onAction={key => setDialog(key)}>
                 <Section title={<Translate contentKey="dashboard.dashboard_card.options.more_options">More options</Translate>}>
                   <Item key="properties">
                     <Text>

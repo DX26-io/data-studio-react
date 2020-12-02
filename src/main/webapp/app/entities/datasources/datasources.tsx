@@ -182,7 +182,7 @@ export const Datasources = (props: IDatasourcesProps) => {
 };
 
 const mapStateToProps = ({ datasources }: IRootState) => ({
-  dataSourcesList: datasources.entities,
+  datasourcesList: datasources.entities,
   loading: datasources.loading,
   totalItems: datasources.totalItems,
 });

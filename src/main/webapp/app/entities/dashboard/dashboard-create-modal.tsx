@@ -75,7 +75,7 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
   const alertOpen = () => {
     setOpen(false);
     dialog.dismiss();
-    history.push('/dashboard/' + props.dashboardEntity.id.toString());
+    history.push('/dashboards/' + props.dashboardEntity.id.toString());
   };
 
   useEffect(() => {

@@ -22,14 +22,14 @@ import { RouteComponentProps } from 'react-router-dom';
 import { translate, Translate } from 'react-jhipster';
 import { IDashboard } from 'app/shared/model/dashboard.model';
 
-export interface ViewPropertiesModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
+export interface IViewPropertiesModalProps extends StateProps, DispatchProps {
   viewDashboard: IDashboard;
   viewName: string;
   description: string;
   viewId: number;
 }
 
-const ViewPropertiesModal = (props: ViewPropertiesModal) => {
+const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
   const [isEdit, setEdit] = React.useState(false);
   const [viewName, setViewNameText] = React.useState(props.viewName);
   const [viewDescription, setDescriptionText] = React.useState(props.description);
