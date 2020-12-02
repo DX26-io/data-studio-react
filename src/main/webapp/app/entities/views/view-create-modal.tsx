@@ -39,22 +39,7 @@ const ViewCreateModal = (props: ViewCreateModal) => {
       ...viewEntity,
       ...values,
     };
-    new Promise(resolve => {
-      resolve(props.createEntity(entity));
-    })
-      .then(data => {
-        if (data['value'].status === 201) {
-          setOpen(true);
-        }
-      })
-      .catch(error => {
-        if (error.response.data.message === 'uniqueError') {
-          setErrorMessage(translate('datastudioApp.views.uniqueError'));
-        } else {
-          setErrorMessage(translate('datastudioApp.views.errorSaving'));
-        }
-        setErrorOpen(true);
-      });
+      props.createEntity(entity);
   };
 
   const createView = (name, description) => {
@@ -77,7 +62,19 @@ const ViewCreateModal = (props: ViewCreateModal) => {
     //redirect to build page
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (props.updateSuccess) {
+      setOpen(true);
+    }
+    if (props.errorMessage != null) {
+      if (props.errorMessage.response.data.message === 'uniqueError') {
+        setErrorMessage(translate('datastudioApp.views.uniqueError'));
+      } else {
+        setErrorMessage(translate('datastudioApp.views.errorSaving'));
+      }
+      setErrorOpen(true);
+    }
+  }, [props.updateSuccess, props.errorMessage]);
 
   return (
     <Dialog>
@@ -145,6 +142,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   loading: storeState.views.loading,
   updating: storeState.views.updating,
   updateSuccess: storeState.views.updateSuccess,
+  errorMessage: storeState.views.errorMessage,
   datasourcesList: storeState.views.entities,
 });
 

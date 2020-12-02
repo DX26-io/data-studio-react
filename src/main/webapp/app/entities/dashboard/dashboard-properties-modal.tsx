@@ -57,23 +57,7 @@ const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
       ...dashboardEntity,
       ...values,
     };
-
-    new Promise(resolve => {
-      resolve(props.updateEntity(entity));
-    })
-      .then(data => {
-        if (data['value'].status === 200) {
-          dialog.dismiss();
-        }
-      })
-      .catch(error => {
-        if (error.response.data.message === 'uniqueError') {
-          setErrorMessage(translate('dashboard.uniqueError'));
-        } else {
-          setErrorMessage(translate('dashboard.errorSaving'));
-        }
-        setErrorOpen(true);
-      });
+    props.updateEntity(entity);
   };
 
   const updateDashboard = (dashboardName, category, description, datasource) => {
@@ -95,6 +79,20 @@ const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
       props.getEntity(props.dashboardId);
     }
   }, []);
+
+  useEffect(() => {
+    if (props.updateSuccess) {
+      dialog.dismiss();
+    }
+    if (props.errorMessage != null) {
+      if (props.errorMessage.response.data.message === 'uniqueError') {
+        setErrorMessage(translate('dashboard.uniqueError'));
+      } else {
+        setErrorMessage(translate('dashboard.errorSaving'));
+      }
+      setErrorOpen(true);
+    }
+  }, [props.updateSuccess, props.errorMessage]);
 
   return (
     <Dialog>
@@ -178,6 +176,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updateSuccess: storeState.dashboard.updateSuccess,
   updating: storeState.dashboard.updating,
   datasourcesList: storeState.datasources.entities,
+  errorMessage: storeState.dashboard.errorMessage,
 });
 
 const mapDispatchToProps = { getEntity, updateEntity, getEntities };

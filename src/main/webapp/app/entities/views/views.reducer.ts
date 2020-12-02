@@ -6,10 +6,11 @@ import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util'
 
 import { IViews, defaultValue } from 'app/shared/model/views.model';
 import { ITEMS_PER_PAGE } from 'app/shared/util/dist/pagination.constants';
+
 const params = new URLSearchParams(window.location.search);
-const viewDashboard = Number(params.get('viewDashboard'));
-const page = Number(params.get('page')) - 1;
-const sort = params.get('sort');
+const viewDashboard = Number(window.location.pathname.split('/')[2]);
+const PAGE = Number(params.get('page')) - 1;
+const SORT = params.get('sort');
 
 export const ACTION_TYPES = {
   FETCH_VIEWS_LIST: 'views/FETCH_VIEWS_LIST',
@@ -139,7 +140,7 @@ export const createEntity: ICrudPutAction<IViews> = entity => async dispatch => 
     type: ACTION_TYPES.CREATE_VIEWS,
     payload: axios.post(apiUrl, cleanEntity(entity)),
   });
-  dispatch(getEntities(viewDashboard, page, ITEMS_PER_PAGE, sort));
+  dispatch(getEntities(viewDashboard, PAGE, ITEMS_PER_PAGE, SORT));
   return result;
 };
 
@@ -157,7 +158,7 @@ export const deleteEntity: ICrudDeleteAction<IViews> = id => async dispatch => {
     type: ACTION_TYPES.DELETE_VIEWS,
     payload: axios.delete(requestUrl),
   });
-  dispatch(getEntities(viewDashboard, page, ITEMS_PER_PAGE, sort));
+  dispatch(getEntities(viewDashboard, PAGE, ITEMS_PER_PAGE, SORT));
   return result;
 };
 

@@ -7,7 +7,7 @@ import { getEntities } from './views.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import { Flex, View, Button, IllustratedMessage, Content, DialogContainer } from '@adobe/react-spectrum';
+import { Flex, Text, View, Button, IllustratedMessage, Content, DialogContainer, ProgressCircle } from '@adobe/react-spectrum';
 import Card from 'app/shared/components/card/card';
 import ViewCardThumbnail from './view-card/view-card-thumbnail';
 import ViewCardContent from './view-card/view-card-content';
@@ -123,18 +123,26 @@ export const Views = (props: IViewsProps) => {
       <Flex direction="row" gap="size-175" wrap margin="size-175" alignItems="center" justifyContent="start">
         {viewsListElement}
       </Flex>
+
       <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
-        {viewsList && viewsList.length > 0 ? (
-          <Pagination
-            defaultPage={paginationState.activePage}
-            onChange={handleChangePage}
-            count={Math.ceil(totalItems / paginationState.itemsPerPage)}
-          />
+        {!loading ? (
+          viewsList && viewsList.length > 0 ? (
+            <Pagination
+              defaultPage={paginationState.activePage}
+              onChange={handleChangePage}
+              count={Math.ceil(totalItems / paginationState.itemsPerPage)}
+            />
+          ) : (
+            <IllustratedMessage>
+              <NotFound />
+              <Content>No view found for {dashboardEntity.dashboardName} dashboard</Content>
+            </IllustratedMessage>
+          )
         ) : (
-          <IllustratedMessage>
-            <NotFound />
-            <Content>No view found for {dashboardEntity.dashboardName} dashboard</Content>
-          </IllustratedMessage>
+          <Flex margin="size-175" alignItems="center" justifyContent="center">
+            <ProgressCircle isIndeterminate aria-label="Loading…" marginEnd="size-300" value={30} />
+            <Text>loading</Text>
+          </Flex>
         )}
       </Flex>
     </React.Fragment>

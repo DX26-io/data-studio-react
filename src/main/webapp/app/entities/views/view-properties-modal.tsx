@@ -42,22 +42,7 @@ const ViewPropertiesModal = (props: ViewPropertiesModal) => {
       ...props.viewEntity,
       ...values,
     };
-    new Promise(resolve => {
-      resolve(props.updateEntity(entity));
-    })
-      .then(data => {
-        if (data['value'].status === 200) {
-          dialog.dismiss();
-        }
-      })
-      .catch(error => {
-        if (error.response.data.message === 'uniqueError') {
-          setErrorMessage(translate('datastudioApp.views.uniqueError'));
-        } else {
-          setErrorMessage(translate('datastudioApp.views.errorSaving'));
-        }
-        setErrorOpen(true);
-      });
+    props.updateEntity(entity);
   };
 
   const updateView = (name, description) => {
@@ -73,6 +58,20 @@ const ViewPropertiesModal = (props: ViewPropertiesModal) => {
       props.getEntity(props.viewId);
     }
   }, []);
+
+  useEffect(() => {
+    if (props.updateSuccess) {
+      dialog.dismiss();
+    }
+    if (props.errorMessage != null) {
+      if (props.errorMessage.response.data.message === 'uniqueError') {
+        setErrorMessage(translate('datastudioApp.views.uniqueError'));
+      } else {
+        setErrorMessage(translate('datastudioApp.views.errorSaving'));
+      }
+      setErrorOpen(true);
+    }
+  }, [props.updateSuccess, props.errorMessage]);
 
   return (
     <Dialog>
@@ -139,6 +138,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   loading: storeState.views.loading,
   updating: storeState.views.updating,
   updateSuccess: storeState.views.updateSuccess,
+  errorMessage: storeState.views.errorMessage,
 });
 
 const mapDispatchToProps = {
