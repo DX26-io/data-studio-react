@@ -1,31 +1,29 @@
 import React, { useEffect } from 'react';
 import {
-  View,
-  Flex,
-  useDialogContainer,
-  Dialog,
-  Heading,
-  Divider,
-  Content,
-  Form,
-  ButtonGroup,
-  Button,
-  TextField,
-  TextArea,
-  Picker,
-  Item,
-  Text,
-  DialogContainer,
   AlertDialog,
+  Button,
+  ButtonGroup,
+  Content,
+  Dialog,
+  DialogContainer,
+  Divider,
+  Flex,
+  Form,
+  Heading,
+  Item,
+  Picker,
+  TextArea,
+  TextField,
+  useDialogContainer,
+  View,
 } from '@adobe/react-spectrum';
 import { getEntity, updateEntity } from './dashboard.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
 import { translate, Translate } from 'react-jhipster';
-import { getEntities } from '../datasources/datasources.reducer';
+import { getEntities as getDataSourceEntities } from '../datasources/datasources.reducer';
 
-export interface DashboardPropertiesModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
+export interface IDashboardPropertiesModalProps extends StateProps, DispatchProps {
   dashboardId: number;
   dashboardName: string;
   category: string;
@@ -33,20 +31,20 @@ export interface DashboardPropertiesModal extends StateProps, DispatchProps, Rou
   datasource: string;
 }
 
-const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
-  const { dashboardEntity, updating, updateSuccess, datasourcesList } = props;
+const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
+  const { dashboardEntity, dataSourcesList } = props;
 
   const [isEdit, setEdit] = React.useState(false);
-  const [dashboarName, setDashboardNameText] = React.useState(props.dashboardName ? props.dashboardName : '');
-  const [dashboarCategory, setCategoryText] = React.useState(props.category ? props.category : '');
-  const [dashboarDescription, setDescriptionText] = React.useState(props.description ? props.description : '');
-  const [dashboarDatasources, setDatasourceText] = React.useState(props.datasource ? props.datasource : '');
+  const [dashboardName, setDashboardNameText] = React.useState(props.dashboardName ? props.dashboardName : '');
+  const [dashboardCategory, setCategoryText] = React.useState(props.category ? props.category : '');
+  const [dashboardDescription, setDescriptionText] = React.useState(props.description ? props.description : '');
+  const [dashboardDataSources, setDataSourceText] = React.useState(props.datasource ? props.datasource : '');
   const [isError, setErrorOpen] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const dialog = useDialogContainer();
 
   const getDatasourceByName = id => {
-    const _datasource = datasourcesList.filter(function (item) {
+    const _datasource = dataSourcesList.filter(function (item) {
       return item.name === id;
     });
     return _datasource[0];
@@ -60,9 +58,9 @@ const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
     props.updateEntity(entity);
   };
 
-  const updateDashboard = (dashboardName, category, description, datasource) => {
+  const updateDashboard = (name, category, description, datasource) => {
     editEntity({
-      dashboardName,
+      dashboardName: name,
       category,
       description,
       dashboardDatasource: getDatasourceByName(datasource),
@@ -70,7 +68,7 @@ const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
   };
 
   const getAllDatasource = () => {
-    props.getEntities();
+    props.getDataSourceEntities();
   };
 
   useEffect(() => {
@@ -112,34 +110,34 @@ const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
               <TextField
                 label="Dashboard name"
                 maxLength={30}
-                validationState={dashboarName?.length < 30 ? 'valid' : 'invalid'}
-                value={dashboarName}
+                validationState={dashboardName?.length < 30 ? 'valid' : 'invalid'}
+                value={dashboardName}
                 onChange={setDashboardNameText}
               />
               <TextField
                 label="Category"
                 maxLength={30}
-                validationState={dashboarCategory?.length < 30 ? 'valid' : 'invalid'}
+                validationState={dashboardCategory?.length < 30 ? 'valid' : 'invalid'}
                 onChange={setCategoryText}
-                value={dashboarCategory}
+                value={dashboardCategory}
               />
 
               <TextArea
-                value={dashboarDescription}
+                value={dashboardDescription}
                 label="Description"
                 maxLength={100}
-                validationState={dashboarDescription?.length < 100 ? 'valid' : 'invalid'}
+                validationState={dashboardDescription?.length < 100 ? 'valid' : 'invalid'}
                 onChange={setDescriptionText}
               />
               <Picker
-                validationState={dashboarDatasources?.length !== 0 ? 'valid' : 'invalid'}
+                validationState={dashboardDataSources?.length !== 0 ? 'valid' : 'invalid'}
                 label="Datasource"
-                selectedKey={dashboarDatasources}
+                selectedKey={dashboardDataSources}
                 placeholder="Select datasource"
-                onSelectionChange={selected => setDatasourceText(selected.toString())}
+                onSelectionChange={selected => setDataSourceText(selected.toString())}
               >
-                {datasourcesList.map((datasources, i) => (
-                  <Item key={datasources.name}>{datasources.name}</Item>
+                {dataSourcesList.map(dataSource => (
+                  <Item key={dataSource.name}>{dataSource.name}</Item>
                 ))}
               </Picker>
             </Form>
@@ -162,7 +160,10 @@ const DashboardPropertiesModal = (props: DashboardPropertiesModal) => {
         )}
 
         {isEdit && (
-          <Button variant="cta" onPress={() => updateDashboard(dashboarName, dashboarCategory, dashboarDescription, dashboarDatasources)}>
+          <Button
+            variant="cta"
+            onPress={() => updateDashboard(dashboardName, dashboardCategory, dashboardDescription, dashboardDataSources)}
+          >
             <Translate contentKey="dashboard.home.save">Save</Translate>
           </Button>
         )}
@@ -175,11 +176,11 @@ const mapStateToProps = (storeState: IRootState) => ({
   dashboardEntity: storeState.dashboard.entity,
   updateSuccess: storeState.dashboard.updateSuccess,
   updating: storeState.dashboard.updating,
-  datasourcesList: storeState.datasources.entities,
   errorMessage: storeState.dashboard.errorMessage,
+  dataSourcesList: storeState.datasources.entities,
 });
 
-const mapDispatchToProps = { getEntity, updateEntity, getEntities };
+const mapDispatchToProps = { getEntity, updateEntity, getDataSourceEntities };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

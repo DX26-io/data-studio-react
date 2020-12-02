@@ -39,7 +39,7 @@ const ViewCreateModal = (props: ViewCreateModal) => {
       ...viewEntity,
       ...values,
     };
-      props.createEntity(entity);
+    props.createEntity(entity);
   };
 
   const createView = (name, description) => {
@@ -58,8 +58,8 @@ const ViewCreateModal = (props: ViewCreateModal) => {
   const alertOpen = () => {
     setOpen(false);
     dialog.dismiss();
-    //TODO
-    //redirect to build page
+    // TODO
+    // redirect to build page
   };
 
   useEffect(() => {
@@ -143,7 +143,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.views.updating,
   updateSuccess: storeState.views.updateSuccess,
   errorMessage: storeState.views.errorMessage,
-  datasourcesList: storeState.views.entities,
+  dataSourcesList: storeState.views.entities,
 });
 
 const mapDispatchToProps = {

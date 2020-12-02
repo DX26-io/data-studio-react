@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { ReactText } from 'react';
 import {
   ActionButton,
+  DialogContainer,
   Flex,
   Item,
   Menu,
@@ -10,7 +11,6 @@ import {
   Tooltip,
   TooltipTrigger,
   View,
-  DialogContainer,
 } from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
@@ -24,12 +24,11 @@ interface IDashboardCardContentProps {
   dashboardDescription: string;
   dashboardId: number;
   datasource: string;
-
 }
 
 const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
   const { dashboardName, dashboardType, dashboardDescription, dashboardId } = props;
-  const [dialog, setDialog] = React.useState();
+  const [dialog, setDialog] = React.useState<ReactText>('');
 
   return (
     <>
@@ -46,7 +45,7 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
               <ActionButton isQuiet aria-label="more options">
                 <MoreSmallListVert size="S" aria-label="Default Alert" />
               </ActionButton>
-              <Menu onAction={setDialog}>
+              <Menu onAction={key => setDialog(key)}>
                 <Section title={<Translate contentKey="dashboard.dashboard_card.options.more_options">More options</Translate>}>
                   <Item key="properties">
                     <Text>
@@ -71,8 +70,16 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
             <DialogContainer onDismiss={() => setDialog(null)}>
               {dialog === 'delete' && <DashboardDeleteModal dashboardName={dashboardName} dashboardId={dashboardId} />}
             </DialogContainer>
-            <DialogContainer  type="fullscreenTakeover" onDismiss={() => setDialog(null)}>
-              {dialog === 'properties' && <DashboardPropertiesModal dashboardName={dashboardName}  datasource={props.datasource}  description={dashboardDescription} category={props.dashboardType} dashboardId={dashboardId} />}
+            <DialogContainer type="fullscreenTakeover" onDismiss={() => setDialog(null)}>
+              {dialog === 'properties' && (
+                <DashboardPropertiesModal
+                  dashboardName={dashboardName}
+                  datasource={props.datasource}
+                  description={dashboardDescription}
+                  category={props.dashboardType}
+                  dashboardId={dashboardId}
+                />
+              )}
             </DialogContainer>
             <TooltipTrigger delay={0} placement="end">
               <ActionButton isQuiet={true}>

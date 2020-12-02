@@ -8,7 +8,7 @@ import { getEntities } from './dashboard.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import Card from 'app/shared/components/card/card';
-import { Button,Text, Content, DialogContainer, Flex, IllustratedMessage, ProgressCircle, View } from '@adobe/react-spectrum';
+import { Button, Text, Content, DialogContainer, Flex, IllustratedMessage, ProgressCircle, View } from '@adobe/react-spectrum';
 import DashboardCardThumbnail from 'app/entities/dashboard/dashboard-card/dashboard-card-thumbnail';
 import DashboardCardContent from 'app/entities/dashboard/dashboard-card/dashboard-card-content';
 import Pagination from '@material-ui/lab/Pagination';
@@ -77,10 +77,9 @@ export const Dashboard = (props: IDashboardProps) => {
           thumbnail={
             <View height="size-3200">
               <DashboardCardThumbnail
-                dashboardId={dashboard.id}
                 thumbnailImagePath={dashboard.image_location}
                 dashboardName={dashboard.dashboardName}
-                match={match}
+                url={`${match.url}/${dashboard.id}`}
               />
             </View>
           }
@@ -113,7 +112,7 @@ export const Dashboard = (props: IDashboardProps) => {
         </Button>
 
         <DialogContainer type="fullscreenTakeover" onDismiss={() => setOpen(false)} {...props}>
-          {isOpen && <DashboardCreateModal></DashboardCreateModal>}
+          {isOpen && <DashboardCreateModal />}
         </DialogContainer>
       </SecondaryHeader>
       <Flex direction="row" gap="size-175" wrap margin="size-175" alignItems="center" justifyContent="start">
@@ -136,7 +135,7 @@ export const Dashboard = (props: IDashboardProps) => {
             </IllustratedMessage>
           )
         ) : (
-          <Flex  margin="size-175" alignItems="center" justifyContent="center">
+          <Flex margin="size-175" alignItems="center" justifyContent="center">
             <ProgressCircle isIndeterminate aria-label="Loading…" marginEnd="size-300" value={30} />
             <Text>loading</Text>
           </Flex>

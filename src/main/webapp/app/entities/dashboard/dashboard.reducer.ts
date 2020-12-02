@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
+import { ICrudDeleteAction, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
 
 import { cleanEntity } from 'app/shared/util/entity-utils';
-import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
+import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
 
-import { IDashboard, defaultValue } from 'app/shared/model/dashboard.model';
+import { defaultValue, IDashboard } from 'app/shared/model/dashboard.model';
 
 export const ACTION_TYPES = {
   FETCH_DASHBOARD_LIST: 'dashboard/FETCH_DASHBOARD_LIST',
@@ -127,11 +127,10 @@ export const createEntity: ICrudPutAction<IDashboard> = entity => async dispatch
 };
 
 export const updateEntity: ICrudPutAction<IDashboard> = entity => async dispatch => {
-  const result = await dispatch({
+  return await dispatch({
     type: ACTION_TYPES.UPDATE_DASHBOARD,
     payload: axios.put(apiUrl, cleanEntity(entity)),
   });
-  return result;
 };
 
 export const deleteEntity: ICrudDeleteAction<IDashboard> = id => async dispatch => {

@@ -1,25 +1,16 @@
 import React from 'react';
-import {
-  useDialogContainer,
-  Dialog,
-  Heading,
-  Divider,
-  Content,
-  ButtonGroup,
-  Button,
-} from '@adobe/react-spectrum';
-import { getEntity, deleteEntity } from './dashboard.reducer';
+import { Button, ButtonGroup, Content, Dialog, Divider, Heading, useDialogContainer } from '@adobe/react-spectrum';
+import { deleteEntity, getEntity } from './dashboard.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
 import { Translate } from 'react-jhipster';
 
-export interface DashboardDeleteModal extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {
+export interface IDashboardDeleteModalProps extends StateProps, DispatchProps {
   dashboardId: number;
   dashboardName: React.ReactNode;
 }
 
-const DashboardDeleteModal = (props: DashboardDeleteModal) => {
+const DashboardDeleteModal = (props: IDashboardDeleteModalProps) => {
   const confirmDelete = () => {
     props.deleteEntity(props.dashboardId);
   };
@@ -42,7 +33,7 @@ const DashboardDeleteModal = (props: DashboardDeleteModal) => {
           <Translate contentKey="dashboard.home.cancelLabel">Cancel</Translate>
         </Button>
         <Button variant="negative" onPress={confirmDelete}>
-        <Translate contentKey="dashboard.home.delete">Delete</Translate>
+          <Translate contentKey="dashboard.home.delete">Delete</Translate>
         </Button>
       </ButtonGroup>
     </Dialog>
