@@ -63,7 +63,8 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
   };
 
   const [isOpen, setOpen] = React.useState(false);
-  const [user,setUser] = React.useState(defaultValue);
+  const [isNew,setNew] = React.useState(false);
+  const [loginID,setLoginID] = React.useState('');
 
 
   const { users, account, match, totalItems } = props;
@@ -79,13 +80,13 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
         ]}
         title={'User Management'}
       >
-        <Button variant="cta" onPress={() => {setOpen(true);setUser(defaultValue)}}>
+        <Button variant="cta" onPress={() => {setOpen(true);setNew(true)}}>
           <Translate contentKey="entity.action.create">Create</Translate>
         </Button>
       </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
         {isOpen && (
-          <UserManagementUpdate user={user} setOpen={setOpen} ></UserManagementUpdate>
+          <UserManagementUpdate isNew={isNew} setOpen={setOpen} loginID={loginID}></UserManagementUpdate>
         )}
       </DialogContainer>
       <div className="dx26-container">
@@ -118,7 +119,7 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
                 {users.map((u, i) => (
                   <TableRow key={`user-${i}`}>
                     <TableCell component="th" scope="row" align="center">
-                      <Link className="dx26-link" to={`${match.url}/${user.login}`}>
+                      <Link className="dx26-link" to={`${match.url}/${u.login}`}>
                         {u.id}
                       </Link>
                     </TableCell>
@@ -134,7 +135,7 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
                     <TableCell align="center">{u.userType}</TableCell>
                     <TableCell align="center">
                       <Flex gap="size-100" justifyContent="center">
-                        <a onClick={() => {setOpen(true);setUser(u)}}><Edit size="S"/></a>
+                        <a onClick={() => {setOpen(true);setNew(false);setLoginID(u.login)}}><Edit size="S"/></a>
                       </Flex>
                     </TableCell>
                   </TableRow>

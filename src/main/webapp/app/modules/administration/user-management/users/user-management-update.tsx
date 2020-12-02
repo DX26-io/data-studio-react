@@ -33,33 +33,61 @@ import {
 } from '@adobe/react-spectrum';
 
 export interface IUserManagementUpdateProps extends StateProps, DispatchProps {
-  user: IUser;
+  isNew: boolean;
   setOpen: (isOpen: boolean) => void;
+  loginID: string;
 }
 
 export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
-  const { user, setOpen } = props;
-  const [login, setLogin] = useState(user.login);
-  const [firstName, setFirstName] = useState(user.firstName);
-  const [lastName, setLastName] = useState(user.lastName);
-  const [email, setEmail] = useState(user.email);
-  const [activated, setActivated] = useState(user.activated);
+  // const { isNew, setOpen } = props;
+  const isInvalid = false;
+  const { isNew, setOpen, loginID, user, loading, updating, roles, fetchSuccess } = props;
+  const [login, setLogin] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [activated, setActivated] = useState(true);
 
   const isValidLogin = React.useMemo(() => /^[_'.@A-Za-z0-9-]*$/.test(login), [login]);
 
   const dialog = useDialogContainer();
 
   useEffect(() => {
+    // props.getRoles();
+    if (isNew) {
+      props.reset();
+    } else {
+      props.getUser(loginID);
+    }
     props.getRoles();
+    return () => {
+      props.reset();
+    };
   }, []);
 
-  const buildUser = () => {
-    user.login = login;
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.email = email;
-    user.activated = activated;
-  };
+  useEffect(() => {
+    if (isNew) {
+      setLogin('');
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setActivated(true);
+    } else {
+      setLogin(user.login);
+      setFirstName(user.firstName);
+      setLastName(user.lastName);
+      setEmail(user.email);
+      setActivated(user.activated);
+    }
+  }, [fetchSuccess, isNew]);
+
+  // const buildUser = () => {
+  //   user.login = login;
+  //   user.firstName = firstName;
+  //   user.lastName = lastName;
+  //   user.email = email;
+  //   user.activated = activated;
+  // };
 
   const handleClose = () => {
     setOpen(false);
@@ -68,11 +96,10 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
   };
 
   const saveUser = () => {
-    buildUser();
-    if (user.id) {
-      props.updateUser(user);
+    if (!isNew) {
+      props.updateUser({ ...user, login: login, firstName: firstName, lastName: lastName, email: email, activated: activated });
     } else {
-      props.createUser(user);
+      props.createUser({ ...user, id: '', login: login, firstName: firstName, lastName: lastName, email: email, activated: activated });
     }
     handleClose();
   };
@@ -81,9 +108,6 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
     props.deleteUser(user.login);
     handleClose();
   };
-
-  const isInvalid = false;
-  const { loading, updating, roles } = props;
 
   return (
     <div>
@@ -138,7 +162,6 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
               <TextField
                 label="Last Name"
                 placeholder="Deo"
-
                 type="text"
                 value={lastName}
                 onChange={setLastName}
@@ -335,9 +358,11 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
+  user: storeState.userManagement.user,
   roles: storeState.userManagement.authorities,
   loading: storeState.userManagement.loading,
   updating: storeState.userManagement.updating,
+  fetchSuccess: storeState.userManagement.fetchSuccess,
 });
 
 const mapDispatchToProps = { getUser, getRoles, updateUser, createUser, reset, deleteUser };

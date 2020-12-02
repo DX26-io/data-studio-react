@@ -22,6 +22,7 @@ const initialState = {
   user: defaultValue,
   updating: false,
   updateSuccess: false,
+  fetchSuccess: false,
   totalItems: 0,
 };
 
@@ -81,6 +82,7 @@ export default (state: UserManagementState = initialState, action): UserManageme
         ...state,
         loading: false,
         user: action.payload.data,
+        fetchSuccess: true,
       };
     case SUCCESS(ACTION_TYPES.CREATE_USER):
     case SUCCESS(ACTION_TYPES.UPDATE_USER):
@@ -99,7 +101,9 @@ export default (state: UserManagementState = initialState, action): UserManageme
       };
     case ACTION_TYPES.RESET:
       return {
-        ...initialState,
+        ...state,
+        user: defaultValue,
+        fetchSuccess: false,
       };
     default:
       return state;
