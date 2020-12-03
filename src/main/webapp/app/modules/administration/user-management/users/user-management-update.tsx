@@ -5,7 +5,6 @@ import { Translate } from 'react-jhipster';
 import { getUser, getRoles, updateUser, createUser, reset, deleteUser } from './user-management.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
-  View,
   Flex,
   useDialogContainer,
   Dialog,
@@ -71,10 +70,11 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
   };
 
   const saveUser = () => {
-    if (!isNew) {
-      props.updateUser({ ...user, login: login, firstName: firstName, lastName: lastName, email: email, activated: activated });
+    const values = { ...user, login, firstName, lastName, email, activated };
+    if (isNew) {
+      props.createUser(values);
     } else {
-      props.createUser({ ...user, id: '', login: login, firstName: firstName, lastName: lastName, email: email, activated: activated });
+      props.updateUser(values);
     }
     handleClose();
   };
