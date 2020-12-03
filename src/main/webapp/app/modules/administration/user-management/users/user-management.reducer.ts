@@ -22,6 +22,7 @@ const initialState = {
   user: defaultValue,
   updating: false,
   updateSuccess: false,
+  fetchSuccess: false,
   totalItems: 0,
 };
 
@@ -81,8 +82,13 @@ export default (state: UserManagementState = initialState, action): UserManageme
         ...state,
         loading: false,
         user: action.payload.data,
+        fetchSuccess: true,
       };
     case SUCCESS(ACTION_TYPES.CREATE_USER):
+      return {
+        ...state,
+        updateSuccess: true,
+      };
     case SUCCESS(ACTION_TYPES.UPDATE_USER):
       return {
         ...state,
@@ -99,7 +105,10 @@ export default (state: UserManagementState = initialState, action): UserManageme
       };
     case ACTION_TYPES.RESET:
       return {
-        ...initialState,
+        ...state,
+        user: defaultValue,
+        fetchSuccess: false,
+        updateSuccess: false,
       };
     default:
       return state;
@@ -143,6 +152,7 @@ export const updateUser: ICrudPutAction<IUser> = user => async dispatch => {
     type: ACTION_TYPES.UPDATE_USER,
     payload: axios.put(apiUrl, user),
   });
+  dispatch(getUsers());
   return result;
 };
 
