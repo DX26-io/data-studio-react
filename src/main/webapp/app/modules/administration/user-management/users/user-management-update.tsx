@@ -27,7 +27,7 @@ export interface IUserManagementUpdateProps extends StateProps, DispatchProps {
 
 export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
   const isInvalid = false;
-  const { isNew, setOpen, loginID, user, loading, updating, roles, fetchSuccess } = props;
+  const { isNew, setOpen, loginID, user, loading, updating, roles, fetchSuccess, updateSuccess } = props;
   const [login, setLogin] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -48,6 +48,11 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
     };
   }, []);
 
+  const handleClose = () => {
+    setOpen(false);
+    dialog.dismiss();
+  };
+
   useEffect(() => {
     if (isNew) {
       setLogin('');
@@ -62,12 +67,10 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
       setEmail(user.email);
       setActivated(user.activated);
     }
-  }, [fetchSuccess, isNew]);
-
-  const handleClose = () => {
-    setOpen(false);
-    dialog.dismiss();
-  };
+    if (updateSuccess) {
+      handleClose();
+    }
+  }, [fetchSuccess, isNew, updateSuccess]);
 
   const saveUser = () => {
     const values = { ...user, login, firstName, lastName, email, activated };
@@ -76,12 +79,10 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
     } else {
       props.updateUser(values);
     }
-    handleClose();
   };
 
   const removeUser = () => {
     props.deleteUser(user.login);
-    handleClose();
   };
 
   return (
@@ -179,6 +180,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   loading: storeState.userManagement.loading,
   updating: storeState.userManagement.updating,
   fetchSuccess: storeState.userManagement.fetchSuccess,
+  updateSuccess: storeState.userManagement.updateSuccess
 });
 
 const mapDispatchToProps = { getUser, getRoles, updateUser, createUser, reset, deleteUser };

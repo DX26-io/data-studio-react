@@ -85,6 +85,10 @@ export default (state: UserManagementState = initialState, action): UserManageme
         fetchSuccess: true,
       };
     case SUCCESS(ACTION_TYPES.CREATE_USER):
+      return {
+        ...state,
+        updateSuccess: true,
+      };
     case SUCCESS(ACTION_TYPES.UPDATE_USER):
       return {
         ...state,
@@ -104,6 +108,7 @@ export default (state: UserManagementState = initialState, action): UserManageme
         ...state,
         user: defaultValue,
         fetchSuccess: false,
+        updateSuccess: false,
       };
     default:
       return state;
