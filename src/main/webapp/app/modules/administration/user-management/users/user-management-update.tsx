@@ -157,10 +157,14 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
               <Checkbox isSelected={activated} onChange={setActivated} isEmphasized defaultSelected>
                 <Translate contentKey="userManagement.activate">Activate</Translate>
               </Checkbox>
-              <Text>
-                <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
-              </Text>
-              <Divider size="M" />
+              {user.id ? (
+                <React.Fragment>
+                  <Text>
+                    <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
+                  </Text>
+                  <Divider size="M" />{' '}
+                </React.Fragment>
+              ) : null}
             </Form>
             {user.id ? (
               <Button variant="negative" onPress={removeUser} marginTop="size-175">
