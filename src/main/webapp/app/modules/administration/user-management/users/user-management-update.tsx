@@ -18,6 +18,7 @@ import {
   Checkbox,
   Text,
 } from '@adobe/react-spectrum';
+import Select from 'react-select';
 
 export interface IUserManagementUpdateProps extends StateProps, DispatchProps {
   isNew: boolean;
@@ -33,6 +34,7 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [activated, setActivated] = useState(true);
+  let userGroups = [];
 
   const dialog = useDialogContainer();
 
@@ -60,6 +62,7 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
       setLastName('');
       setEmail('');
       setActivated(true);
+      userGroups = [];
     } else {
       setLogin(user.login);
       setFirstName(user.firstName);
@@ -73,7 +76,7 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
   }, [fetchSuccess, isNew, updateSuccess]);
 
   const saveUser = () => {
-    const values = { ...user, login, firstName, lastName, email, activated };
+    const values = { ...user, login, firstName, lastName, email, activated, userGroups };
     if (isNew) {
       props.createUser(values);
     } else {
@@ -83,6 +86,15 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
 
   const removeUser = () => {
     props.deleteUser(user.login);
+  };
+
+  const selectRole = selectedOption => {
+    userGroups = [];
+    if (selectedOption) {
+      selectedOption.forEach(function (option) {
+        userGroups.push(option.value);
+      });
+    }
   };
 
   return (
@@ -128,7 +140,6 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
               <TextField
                 label="First Name"
                 placeholder="John"
-                isRequired
                 type="text"
                 value={firstName}
                 onChange={setFirstName}
@@ -157,6 +168,16 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
               <Checkbox isSelected={activated} onChange={setActivated} isEmphasized defaultSelected>
                 <Translate contentKey="userManagement.activate">Activate</Translate>
               </Checkbox>
+              <Text><Translate contentKey="userManagement.profiles">Activate</Translate></Text>
+             {/* TODO : need to find a better approach to set defaultValue. it does not reset  */}
+              <Select
+                isMulti
+                onChange={selectRole}
+                defaultValue={isNew ? userGroups : user.userGroups}
+                options={roles}
+                className="basic-multi-select"
+                classNamePrefix="select"
+              />
               {user.id ? (
                 <React.Fragment>
                   <Text>
@@ -184,7 +205,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   loading: storeState.userManagement.loading,
   updating: storeState.userManagement.updating,
   fetchSuccess: storeState.userManagement.fetchSuccess,
-  updateSuccess: storeState.userManagement.updateSuccess
+  updateSuccess: storeState.userManagement.updateSuccess,
 });
 
 const mapDispatchToProps = { getUser, getRoles, updateUser, createUser, reset, deleteUser };

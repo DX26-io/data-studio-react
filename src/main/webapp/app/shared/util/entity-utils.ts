@@ -44,3 +44,11 @@ export const overridePaginationStateWithQueryParams = (paginationBaseState: IPag
 export const setItemsPerPagePerPage = itemsPerPage => {
   return itemsPerPage ? itemsPerPage : ITEMS_PER_PAGE;
 };
+
+export const generateOptions = (data = []) => {
+  const options = [];
+  data.forEach(function (option) {
+    options.push({ value: option, label: option });
+  });
+  return options;
+};

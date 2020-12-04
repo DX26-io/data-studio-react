@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
-
+import { generateOptions } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IUser, defaultValue } from 'app/shared/model/user.model';
 
@@ -68,7 +68,7 @@ export default (state: UserManagementState = initialState, action): UserManageme
     case SUCCESS(ACTION_TYPES.FETCH_ROLES):
       return {
         ...state,
-        authorities: action.payload.data,
+        authorities: generateOptions(action.payload.data),
       };
     case SUCCESS(ACTION_TYPES.FETCH_USERS):
       return {
@@ -81,7 +81,7 @@ export default (state: UserManagementState = initialState, action): UserManageme
       return {
         ...state,
         loading: false,
-        user: action.payload.data,
+        user: { ...action.payload.data, userGroups: generateOptions(action.payload.data.userGroups) },
         fetchSuccess: true,
       };
     case SUCCESS(ACTION_TYPES.CREATE_USER):
@@ -109,6 +109,7 @@ export default (state: UserManagementState = initialState, action): UserManageme
         user: defaultValue,
         fetchSuccess: false,
         updateSuccess: false,
+        updating: false,
       };
     default:
       return state;
@@ -125,6 +126,7 @@ export const getUsers: ICrudGetAllAction<IUser> = (page, size, sort) => {
   };
 };
 
+// TODO : needs to be moved in user group reducer.
 export const getRoles = () => ({
   type: ACTION_TYPES.FETCH_ROLES,
   payload: axios.get(`api/userGroups/all`),
