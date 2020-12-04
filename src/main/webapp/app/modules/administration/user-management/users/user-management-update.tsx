@@ -76,11 +76,14 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
   }, [fetchSuccess, isNew, updateSuccess]);
 
   const saveUser = () => {
-    const values = { ...user, login, firstName, lastName, email, activated, userGroups };
-    if (isNew) {
-      props.createUser(values);
-    } else {
-      props.updateUser(values);
+    // TODO : this condition has to be part of form itself
+    if (email && login) {
+      const values = { ...user, login, firstName, lastName, email, activated, userGroups };
+      if (isNew) {
+        props.createUser(values);
+      } else {
+        props.updateUser(values);
+      }
     }
   };
 
@@ -168,8 +171,10 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
               <Checkbox isSelected={activated} onChange={setActivated} isEmphasized defaultSelected>
                 <Translate contentKey="userManagement.activate">Activate</Translate>
               </Checkbox>
-              <Text><Translate contentKey="userManagement.profiles">Activate</Translate></Text>
-             {/* TODO : need to find a better approach to set defaultValue. it does not reset  */}
+              <Text>
+                <Translate contentKey="userManagement.profiles">Activate</Translate>
+              </Text>
+              {/* TODO : need to find a better approach to set defaultValue. it does not reset  */}
               <Select
                 isMulti
                 onChange={selectRole}
