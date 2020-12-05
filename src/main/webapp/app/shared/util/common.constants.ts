@@ -1,4 +1,4 @@
 export class CommonConstants {
-  public static DX26 = 'DX26';
+  public static DX26 = 'Dx26';
   public static COPYRIGHT = '©';
 }

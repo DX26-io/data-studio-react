@@ -1,25 +1,3 @@
-$header-icons: #a2a2a2;
-$header-icons-hover: white;
-
-header {
-  .avatar-initial {
-    font-size: 16px;
-    font-weight: 500;
-  }
-
-  .header-icon {
-    background: none;
-    color: $header-icons;
-    border: 0;
-    padding: 0;
-    cursor: pointer;
-
-    &:hover {
-      color: $header-icons-hover;
-    }
-  }
-}
-
 .loading-bar {
   height: 3px;
   background-color: #009cd8;
