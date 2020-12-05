@@ -1,42 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { getSortState, Translate } from 'react-jhipster';
+import { translate, Translate, getSortState } from 'react-jhipster';
 
 import { IRootState } from 'app/shared/reducers';
 import { getEntities } from './dashboard.reducer';
-import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
-import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import Card from 'app/shared/components/card/card';
-import { Button, Text, Content, DialogContainer, Flex, IllustratedMessage, ProgressCircle, View } from '@adobe/react-spectrum';
+import { Button, DialogContainer, Flex, View } from '@adobe/react-spectrum';
 import DashboardCardThumbnail from 'app/entities/dashboard/dashboard-card/dashboard-card-thumbnail';
 import DashboardCardContent from 'app/entities/dashboard/dashboard-card/dashboard-card-content';
 import Pagination from '@material-ui/lab/Pagination';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import DashboardCreateModal from './dashboard-create-modal';
-import NotFound from '@spectrum-icons/illustrations/NotFound';
+import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
+import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
+import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
 export interface IDashboardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Dashboard = (props: IDashboardProps) => {
+  const [isDashboardCreateModelOpen, setDashboardCreateModelOpen] = React.useState(false);
   const [paginationState, setPaginationState] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
-
+  const DASHBOARDS_TITLE = translate('dashboard.home.title');
+  const { dashboardList, match, totalItems } = props;
   const getAllEntities = () => {
     props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
   };
-
   const sortEntities = () => {
     getAllEntities();
+  };
+  useEffect(() => {
+    sortEntities();
     const endURL = `?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`;
     if (props.location.search !== endURL) {
       props.history.push(`${props.location.pathname}${endURL}`);
     }
-  };
-
-  useEffect(() => {
-    sortEntities();
   }, [paginationState.activePage, paginationState.order, paginationState.sort]);
 
   useEffect(() => {
@@ -54,94 +54,77 @@ export const Dashboard = (props: IDashboardProps) => {
     }
   }, [props.location.search]);
 
-  const sort = p => () => {
-    setPaginationState({
-      ...paginationState,
-      order: paginationState.order === 'asc' ? 'desc' : 'asc',
-      sort: p,
-    });
-  };
-
   const handleChangePage = (event, newPage) => {
     setPaginationState({
       ...paginationState,
       activePage: newPage,
     });
   };
-  const { dashboardList, match, loading, totalItems } = props;
-  const dashboardListElement = props.dashboardList.map(dashboard => {
+
+  const dashboardListElement = dashboardList.map(dashboard => {
     return (
-      <>
-        <Card
-          key={dashboard.id}
-          thumbnail={
-            <View height="size-3200">
-              <DashboardCardThumbnail
-                thumbnailImagePath={dashboard.image_location}
-                dashboardName={dashboard.dashboardName}
-                url={`${match.url}/${dashboard.id}`}
-              />
-            </View>
-          }
-          content={
-            <DashboardCardContent
+      <Card
+        key={dashboard.id}
+        thumbnail={
+          <View height="size-3200">
+            <DashboardCardThumbnail
+              thumbnailImagePath={dashboard.image_location}
               dashboardName={dashboard.dashboardName}
-              dashboardDescription={dashboard.description}
-              dashboardType={dashboard.category}
-              dashboardId={dashboard.id}
-              datasource={dashboard.dashboardDatasource.name}
+              url={`${match.url}/${dashboard.id}`}
             />
-          }
-        />
-      </>
+          </View>
+        }
+        content={
+          <DashboardCardContent
+            dashboardName={dashboard.dashboardName}
+            dashboardDescription={dashboard.description}
+            dashboardType={dashboard.category}
+            dashboardId={dashboard.id}
+            datasource={dashboard.dashboardDatasource.name}
+          />
+        }
+      />
     );
   });
 
-  const [isOpen, setOpen] = React.useState(false);
   return (
-    <React.Fragment>
+    <>
       <SecondaryHeader
         breadcrumbItems={[
-          { key: 'home', label: 'Home', route: '/' },
-          { key: 'dashboard', label: 'Dashboard', route: '/dashboard' },
+          { label: 'Home', route: '/' },
+          { label: 'Dashboards', route: '/dashboards' },
         ]}
-        title={'Dashboard'}
+        title={DASHBOARDS_TITLE}
       >
-        <Button variant="cta" onPress={() => setOpen(true)}>
+        <Button variant="cta" onPress={() => setDashboardCreateModelOpen(true)}>
           <Translate contentKey="dashboard.home.createLabel">Create</Translate>
         </Button>
-
-        <DialogContainer type="fullscreenTakeover" onDismiss={() => setOpen(false)} {...props}>
-          {isOpen && <DashboardCreateModal />}
+        <DialogContainer type="fullscreenTakeover" onDismiss={() => setDashboardCreateModelOpen(false)} {...props}>
+          {isDashboardCreateModelOpen && <DashboardCreateModal />}
         </DialogContainer>
       </SecondaryHeader>
-      <Flex direction="row" gap="size-175" wrap margin="size-175" alignItems="center" justifyContent="start">
-        {dashboardListElement}
-      </Flex>
-      <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
-        {!loading ? (
-          dashboardList && dashboardList.length > 0 ? (
-            <Pagination
-              defaultPage={paginationState.activePage}
-              onChange={handleChangePage}
-              count={Math.ceil(totalItems / paginationState.itemsPerPage)}
-            />
-          ) : (
-            <IllustratedMessage>
-              <NotFound />
-              <Content>
-                <Translate contentKey="dashboard.home.notFound">No dashboard found</Translate>
-              </Content>
-            </IllustratedMessage>
-          )
-        ) : (
-          <Flex margin="size-175" alignItems="center" justifyContent="center">
-            <ProgressCircle isIndeterminate aria-label="Loading…" marginEnd="size-300" value={30} />
-            <Text>loading</Text>
+      {dashboardList.length > 0 ? (
+        <>
+          <Flex direction="row" gap="size-250" wrap marginX="5%" marginY="size-450" alignItems="center" justifyContent="start">
+            {dashboardListElement}
           </Flex>
-        )}
-      </Flex>
-    </React.Fragment>
+          <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
+            {dashboardList && dashboardList.length > 0 && (
+              <Pagination
+                defaultPage={paginationState.activePage}
+                onChange={handleChangePage}
+                count={Math.ceil(totalItems / paginationState.itemsPerPage)}
+              />
+            )}
+          </Flex>
+        </>
+      ) : (
+        <NoItemsFoundPlaceHolder
+          headerTranslationKey="dashboard.home.notFound.heading"
+          contentTranslationKey="dashboard.home.notFound.content"
+        />
+      )}
+    </>
   );
 };
 

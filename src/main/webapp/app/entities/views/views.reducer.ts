@@ -5,7 +5,7 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 
 import { IViews, defaultValue } from 'app/shared/model/views.model';
-import { ITEMS_PER_PAGE } from 'app/shared/util/dist/pagination.constants';
+import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
 const params = new URLSearchParams(window.location.search);
 const viewDashboard = Number(window.location.pathname.split('/')[2]);

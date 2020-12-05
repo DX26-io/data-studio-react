@@ -11,11 +11,11 @@ export interface IDashboardDeleteModalProps extends StateProps, DispatchProps {
 }
 
 const DashboardDeleteModal = (props: IDashboardDeleteModalProps) => {
-  const confirmDelete = () => {
+  const dialog = useDialogContainer();
+  const handleDelete = () => {
+    dialog.dismiss();
     props.deleteEntity(props.dashboardId);
   };
-
-  const dialog = useDialogContainer();
 
   return (
     <Dialog>
@@ -24,16 +24,16 @@ const DashboardDeleteModal = (props: IDashboardDeleteModalProps) => {
       </Heading>
       <Divider />
       <Content>
-        <span>This will permanently delete the selected </span>
-        <span className="spectrum-Heading--XS">{props.dashboardName} </span>
-        <span>dashboard. continue? </span>
+        <Translate contentKey="dashboard.delete.question" interpolate={{ name: props.dashboardName }}>
+          This will permanently delete the selected dashboard
+        </Translate>
       </Content>
       <ButtonGroup>
         <Button variant="secondary" onPress={dialog.dismiss}>
-          <Translate contentKey="dashboard.home.cancelLabel">Cancel</Translate>
+          <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
-        <Button variant="negative" onPress={confirmDelete}>
-          <Translate contentKey="dashboard.home.delete">Delete</Translate>
+        <Button variant="negative" onPress={handleDelete}>
+          <Translate contentKey="entity.action.delete">Delete</Translate>
         </Button>
       </ButtonGroup>
     </Dialog>

@@ -27,7 +27,7 @@ interface IDashboardCardContentProps {
 }
 
 const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
-  const { dashboardName, dashboardType, dashboardDescription, dashboardId } = props;
+  const { dashboardName, dashboardType, dashboardDescription, dashboardId, datasource } = props;
   const [dialog, setDialog] = React.useState<ReactText>('');
 
   return (
@@ -74,9 +74,9 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
               {dialog === 'properties' && (
                 <DashboardPropertiesModal
                   dashboardName={dashboardName}
-                  datasource={props.datasource}
+                  datasource={datasource}
                   description={dashboardDescription}
-                  category={props.dashboardType}
+                  category={dashboardType}
                   dashboardId={dashboardId}
                 />
               )}

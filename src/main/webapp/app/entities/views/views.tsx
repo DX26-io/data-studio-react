@@ -106,9 +106,9 @@ export const Views = (props: IViewsProps) => {
     <React.Fragment>
       <SecondaryHeader
         breadcrumbItems={[
-          { key: 'home', label: 'Home', route: '/' },
-          { key: 'dashboard', label: 'Dashboard', route: '/dashboard' },
-          { key: dashboardEntity.dashboardName, label: 'view', route: '/dashboard' },
+          { label: 'Home', route: '/' },
+          { label: 'Dashboards', route: '/dashboards' },
+          { label: 'Views', route: '/views' },
         ]}
         title={dashboardEntity.dashboardName}
       >

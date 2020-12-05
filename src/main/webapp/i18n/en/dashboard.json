@@ -1,38 +1,32 @@
 {
   "dashboard": {
     "home": {
-      "title": "Dashboards",
+      "title": "All dashboards",
       "createLabel": "Create",
-      "editLabel": "Edit",
-      "cancelLabel": "Cancel",
-      "createOrEditLabel": "Create or edit a Dashboard",
-      "notFound": "No Dashboards found",
+      "notFound": {
+        "heading": "No dashboards found",
+        "content": "To create a new dashboard click on create"
+      },
       "deleteDashboard": "Delete Dashboard",
-      "delete": "Delete",
-      "save": "Save",
       "createNewDashboard": "Create new dashboard"
     },
-    "created": "A new Dashboard is created with identifier {{ param }}",
-    "updated": "A Dashboard is updated with identifier {{ param }}",
-    "deleted": "A Dashboard is deleted with identifier {{ param }}",
+    "created": {
+      "header": "Success",
+      "content": "Dashboard is created successfully. Click on open to create a new view."
+    },
+    "error": {
+      "header": "Error",
+      "content": "Error saving dashboard"
+    },
     "delete": {
-      "question": "This will permanently delete the selected {{ name }} dashboard. continue?"
+      "question": "This will permanently delete the selected <strong>{{ name }}</strong> dashboard. continue?"
     },
-    "detail": {
-      "title": "Dashboard"
-    },
-    "dashboard_name": "Dashboard Name",
+    "dashboard_name": "Dashboard name",
     "category": "Category",
     "description": "Description",
-    "published": "Published",
+    "datasource": "Datasource",
+    "datasource_placeholder": "Select datasource",
     "image_location": "Image Location",
-    "image_content_type": "Image Content Type",
-    "dashboard_datasource_id": "Dashboard Datasource Id",
-    "created_by": "Created By",
-    "created_date": "Created Date",
-    "last_modified_by": "Last Modified By",
-    "last_modified_date": "Last Modified Date",
-    "current_release_id": "Current Release Id",
     "dashboard_card": {
       "no_description": "no description",
       "options": {
@@ -43,7 +37,10 @@
         "delete": "Delete"
       }
     },
-    "uniqueError": "dashboard already exists with this name",
+    "uniqueError": {
+      "create": "Dashboard already exists with <strong>{{param}}</strong> name please choose a different name and click on create.",
+      "update": "Dashboard already exists with <strong>{{param}}</strong> name please choose a different name and click on save."
+    },
     "errorSaving": "Error saving dashboard"
   }
 }
