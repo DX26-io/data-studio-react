@@ -40,7 +40,6 @@
     "uniqueError": {
       "create": "Dashboard already exists with <strong>{{param}}</strong> name please choose a different name and click on create.",
       "update": "Dashboard already exists with <strong>{{param}}</strong> name please choose a different name and click on save."
-    },
-    "errorSaving": "Error saving dashboard"
+    }
   }
 }

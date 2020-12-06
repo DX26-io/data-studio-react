@@ -1,26 +1,26 @@
 import React, { useEffect } from 'react';
 import {
-  View,
-  Flex,
-  useDialogContainer,
-  Dialog,
-  Heading,
-  Divider,
-  Content,
-  Form,
-  ButtonGroup,
-  Button,
-  TextField,
-  TextArea,
   AlertDialog,
+  Button,
+  ButtonGroup,
+  Content,
+  Dialog,
   DialogContainer,
+  Divider,
+  Flex,
+  Form,
+  Heading,
+  TextArea,
+  TextField,
+  useDialogContainer,
+  View,
 } from '@adobe/react-spectrum';
-import { updateEntity, getEntity } from './views.reducer';
+import { getEntity, updateEntity } from './views.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
 import { translate, Translate } from 'react-jhipster';
 import { IDashboard } from 'app/shared/model/dashboard.model';
+import { getViewErrorTranslations, getViewFromTranslations } from 'app/entities/views/view-util';
 
 export interface IViewPropertiesModalProps extends StateProps, DispatchProps {
   viewDashboard: IDashboard;
@@ -36,6 +36,8 @@ const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
   const [isError, setErrorOpen] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const dialog = useDialogContainer();
+  const { VIEW_LABEL, DESCRIPTION_LABEL } = getViewFromTranslations();
+  const { ERROR_LABEL, ERROR_CLOSE_LABEL } = getViewErrorTranslations();
 
   const editEntity = values => {
     const entity = {
@@ -65,71 +67,72 @@ const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
     }
     if (props.errorMessage != null) {
       if (props.errorMessage.response.data.message === 'uniqueError') {
-        setErrorMessage(translate('datastudioApp.views.uniqueError'));
+        setErrorMessage(translate('views.uniqueError.update'));
       } else {
-        setErrorMessage(translate('datastudioApp.views.errorSaving'));
+        setErrorMessage(translate('views.error.content'));
       }
       setErrorOpen(true);
     }
   }, [props.updateSuccess, props.errorMessage]);
 
   return (
-    <Dialog>
-      {isEdit ? <Heading>Edit {props.viewName}</Heading> : <Heading>{props.viewName}</Heading>}
-      <Divider />
-      <Content>
-        <Flex direction="column" gap="size-100" alignItems="center">
-          <DialogContainer onDismiss={() => setErrorOpen(false)} {...props}>
-            {isError && (
-              <AlertDialog title="Error" variant="destructive" primaryActionLabel="Close">
-                {errorMessage}
-              </AlertDialog>
-            )}
-          </DialogContainer>
-          <View padding="size-600">
-            <Form isDisabled={!isEdit} isRequired necessityIndicator="icon" minWidth="size-4600">
-              <TextField
-                label="View name"
-                maxLength={30}
-                validationState={viewName?.length < 30 ? 'valid' : 'invalid'}
-                onChange={setViewNameText}
-                value={viewName}
-              />
+    <>
+      <Dialog>
+        {isEdit ? <Heading>Edit {props.viewName}</Heading> : <Heading>{props.viewName}</Heading>}
+        <Divider />
+        <Content>
+          <Flex direction="column" gap="size-100" alignItems="center">
+            <View padding="size-600">
+              <Form isDisabled={!isEdit} isRequired necessityIndicator="icon" minWidth="size-4600">
+                <TextField
+                  label={VIEW_LABEL}
+                  maxLength={30}
+                  validationState={viewName?.length < 30 ? 'valid' : 'invalid'}
+                  onChange={setViewNameText}
+                  value={viewName}
+                />
 
-              <TextArea
-                label="Description"
-                maxLength={100}
-                isRequired={false}
-                value={viewDescription}
-                validationState={viewDescription?.length < 100 ? 'valid' : 'invalid'}
-                onChange={setDescriptionText}
-              />
-            </Form>
-          </View>
-        </Flex>
-      </Content>
-      <ButtonGroup>
-        <Button variant="secondary" onPress={dialog.dismiss}>
-          <Translate contentKey="dashboard.home.cancelLabel">Cancel</Translate>
-        </Button>
-        {!isEdit && (
-          <Button
-            variant="cta"
-            onPress={() => {
-              setEdit(true);
-            }}
-          >
-            <Translate contentKey="dashboard.home.editLabel">Edit</Translate>
+                <TextArea
+                  label={DESCRIPTION_LABEL}
+                  maxLength={100}
+                  isRequired={false}
+                  value={viewDescription}
+                  validationState={viewDescription?.length < 100 ? 'valid' : 'invalid'}
+                  onChange={setDescriptionText}
+                />
+              </Form>
+            </View>
+          </Flex>
+        </Content>
+        <ButtonGroup>
+          <Button variant="secondary" onPress={dialog.dismiss}>
+            <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
+          {!isEdit && (
+            <Button
+              variant="cta"
+              onPress={() => {
+                setEdit(true);
+              }}
+            >
+              <Translate contentKey="entity.action.edit">Edit</Translate>
+            </Button>
+          )}
+          {isEdit && (
+            <Button variant="cta" onPress={() => updateView(viewName, viewDescription)} isDisabled={viewName === '' || props.updating}>
+              <Translate contentKey="entity.action.save">Save</Translate>
+            </Button>
+          )}
+        </ButtonGroup>
+      </Dialog>
+      <DialogContainer onDismiss={() => setErrorOpen(false)} {...props}>
+        {isError && (
+          <AlertDialog title={ERROR_LABEL} variant="destructive" primaryActionLabel={ERROR_CLOSE_LABEL}>
+            {errorMessage}
+          </AlertDialog>
         )}
-
-        {isEdit && (
-          <Button variant="cta" onPress={() => updateView(viewName, viewDescription)}>
-            <Translate contentKey="dashboard.home.save">Save</Translate>
-          </Button>
-        )}
-      </ButtonGroup>
-    </Dialog>
+      </DialogContainer>
+    </>
   );
 };
 

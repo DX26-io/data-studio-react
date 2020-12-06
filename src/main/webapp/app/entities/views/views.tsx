@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { Translate, getSortState } from 'react-jhipster';
+import { getSortState, Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
-import { getEntities } from './views.reducer';
+import { getDashboardViewEntities } from './views.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import { Flex, Text, View, Button, IllustratedMessage, Content, DialogContainer, ProgressCircle } from '@adobe/react-spectrum';
+import { Button, DialogContainer, Flex, View } from '@adobe/react-spectrum';
 import Card from 'app/shared/components/card/card';
 import ViewCardThumbnail from './view-card/view-card-thumbnail';
 import ViewCardContent from './view-card/view-card-content';
 import ViewCreateModal from './view-create-modal';
 
 import Pagination from '@material-ui/lab/Pagination';
-import { getEntity } from '../dashboard/dashboard.reducer';
-import NotFound from '@spectrum-icons/illustrations/NotFound';
+import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer';
+import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 
 export interface IViewsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -24,10 +24,13 @@ export const Views = (props: IViewsProps) => {
   const [paginationState, setPaginationState] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
+  const [isViewCreateModelOpen, setViewCreateModelOpen] = React.useState(false);
+  const { viewsList, totalItems, dashboardEntity } = props;
 
-  const getAllEntities = viewDashboard => {
-    props.getEntities(
-      viewDashboard,
+  const getAllEntities = () => {
+    const dashboardId = props.match.params['id'];
+    props.getDashboardViewEntities(
+      dashboardId,
       paginationState.activePage - 1,
       paginationState.itemsPerPage,
       `${paginationState.sort},${paginationState.order}`
@@ -35,27 +38,21 @@ export const Views = (props: IViewsProps) => {
   };
 
   const sortEntities = () => {
-    const viewDashboard = props.match.params['id'];
-    getAllEntities(viewDashboard);
+    getAllEntities();
     const endURL = `?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`;
     if (props.location.search !== endURL) {
       props.history.push(`${props.location.pathname}${endURL}`);
     }
   };
 
-  const getDashbaordEntity = () => {
-    props.getEntity(Number(props.match.params['id']));
-  };
-
   useEffect(() => {
-    getDashbaordEntity();
+    props.getDashboardEntity(Number(props.match.params['id']));
     sortEntities();
   }, [paginationState.activePage, paginationState.order, paginationState.sort]);
 
   useEffect(() => {
     const page = params.get('page');
     const sort = params.get('sort');
-
     if (page && sort) {
       const sortSplit = sort.split(',');
       setPaginationState({
@@ -66,14 +63,6 @@ export const Views = (props: IViewsProps) => {
       });
     }
   }, [props.location.search]);
-
-  const sort = p => () => {
-    setPaginationState({
-      ...paginationState,
-      order: paginationState.order === 'asc' ? 'desc' : 'asc',
-      sort: p,
-    });
-  };
 
   const handleChangePage = (event, newPage) => {
     setPaginationState({
@@ -99,11 +88,8 @@ export const Views = (props: IViewsProps) => {
     );
   });
 
-  const { viewsList, match, loading, totalItems, dashboardEntity } = props;
-  const [isOpen, setOpen] = React.useState(false);
-
   return (
-    <React.Fragment>
+    <>
       <SecondaryHeader
         breadcrumbItems={[
           { label: 'Home', route: '/' },
@@ -112,40 +98,30 @@ export const Views = (props: IViewsProps) => {
         ]}
         title={dashboardEntity.dashboardName}
       >
-        <Button variant="cta" onPress={() => setOpen(true)}>
-          <Translate contentKey="datastudioApp.views.home.createLabel">Create View</Translate>
+        <Button variant="cta" onPress={() => setViewCreateModelOpen(true)}>
+          <Translate contentKey="views.home.createLabel">Create View</Translate>
         </Button>
-
-        <DialogContainer type="fullscreenTakeover" onDismiss={() => setOpen(false)} {...props}>
-          {isOpen && <ViewCreateModal viewDashboard={dashboardEntity}></ViewCreateModal>}
+        <DialogContainer type="fullscreenTakeover" onDismiss={() => setViewCreateModelOpen(false)} {...props}>
+          {isViewCreateModelOpen && <ViewCreateModal viewDashboard={dashboardEntity} />}
         </DialogContainer>
       </SecondaryHeader>
-      <Flex direction="row" gap="size-175" wrap margin="size-175" alignItems="center" justifyContent="start">
-        {viewsListElement}
-      </Flex>
-
-      <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
-        {!loading ? (
-          viewsList && viewsList.length > 0 ? (
+      {viewsList && viewsList.length > 0 ? (
+        <>
+          <Flex direction="row" gap="size-250" wrap marginX="5%" marginY="size-450" alignItems="center" justifyContent="start">
+            {viewsListElement}
+          </Flex>
+          <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
             <Pagination
               defaultPage={paginationState.activePage}
               onChange={handleChangePage}
               count={Math.ceil(totalItems / paginationState.itemsPerPage)}
             />
-          ) : (
-            <IllustratedMessage>
-              <NotFound />
-              <Content>No view found for {dashboardEntity.dashboardName} dashboard</Content>
-            </IllustratedMessage>
-          )
-        ) : (
-          <Flex margin="size-175" alignItems="center" justifyContent="center">
-            <ProgressCircle isIndeterminate aria-label="Loading…" marginEnd="size-300" value={30} />
-            <Text>loading</Text>
           </Flex>
-        )}
-      </Flex>
-    </React.Fragment>
+        </>
+      ) : (
+        <NoItemsFoundPlaceHolder headerTranslationKey="views.home.notFound.heading" contentTranslationKey="views.home.notFound.content" />
+      )}
+    </>
   );
 };
 
@@ -157,8 +133,8 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-  getEntities,
-  getEntity,
+  getDashboardViewEntities,
+  getDashboardEntity,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

@@ -35,7 +35,7 @@ const ViewCardContent: React.FC<IViewCardContentProps> = props => {
       <View padding="size-200">
         <Flex direction="row" justifyContent="space-between">
           <Flex direction="column" gap="size-50" justifyContent="space-around">
-            <span className="spectrum-Heading--XS">{viewName}</span>
+            <span className="spectrum-Heading--sizeXS">{viewName}</span>
           </Flex>
           <Flex direction="column">
             <MenuTrigger>

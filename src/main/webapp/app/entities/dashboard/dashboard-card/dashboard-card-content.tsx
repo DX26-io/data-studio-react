@@ -35,10 +35,10 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
       <View padding="size-200">
         <Flex direction="row" justifyContent="space-between">
           <Flex direction="column" gap="size-50" justifyContent="space-around">
-            <span className="spectrum-Detail spectrum-Detail--S">
+            <span className="spectrum-Detail spectrum-Detail--sizeS">
               <span className="spectrum-Detail--light">{dashboardType}</span>
             </span>
-            <span className="spectrum-Heading--XS">{dashboardName}</span>
+            <span className="spectrum-Heading--sizeXS">{dashboardName}</span>
           </Flex>
           <Flex direction="column">
             <MenuTrigger>

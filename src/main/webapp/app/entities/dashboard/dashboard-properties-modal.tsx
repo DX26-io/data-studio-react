@@ -142,7 +142,7 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
         </Content>
         <ButtonGroup>
           <Button variant="secondary" onPress={dialog.dismiss}>
-            <Translate contentKey="entity.action.cancel">Cancel</Translate>
+            <Translate contentKey="entity.action.cancel">Close</Translate>
           </Button>
           {!isEdit && (
             <Button

@@ -5,22 +5,22 @@ import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { Translate } from 'react-jhipster';
 
-export interface IVieweleteModalProps extends StateProps, DispatchProps {
+export interface IViewDeleteModalProps extends StateProps, DispatchProps {
   viewId: number;
   viewName: React.ReactNode;
 }
 
-const ViewDeleteModal = (props: IVieweleteModalProps) => {
+const ViewDeleteModal = (props: IViewDeleteModalProps) => {
   const dialog = useDialogContainer();
   const confirmDelete = () => {
-    props.deleteEntity(props.viewId);
+    props.deleteEntity(props.viewId, props.dashboardEntity.id);
     dialog.dismiss();
   };
 
   return (
     <Dialog>
       <Heading>
-        <Translate contentKey="datastudioApp.views.home.deleteView">Delete View</Translate>
+        <Translate contentKey="views.home.deleteView">Delete View</Translate>
       </Heading>
       <Divider />
       <Content>
@@ -30,10 +30,10 @@ const ViewDeleteModal = (props: IVieweleteModalProps) => {
       </Content>
       <ButtonGroup>
         <Button variant="secondary" onPress={dialog.dismiss}>
-          <Translate contentKey="datastudioApp.views.home.cancelLabel">Cancel</Translate>
+          <Translate contentKey="entity.action.cancel">close</Translate>
         </Button>
         <Button variant="negative" onPress={confirmDelete}>
-          <Translate contentKey="datastudioApp.views.home.delete">Delete</Translate>
+          <Translate contentKey="entity.action.delete">delete</Translate>
         </Button>
       </ButtonGroup>
     </Dialog>

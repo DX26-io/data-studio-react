@@ -1,16 +1,13 @@
 import axios from 'axios';
-import { ICrudGetAction, ICrudGetAllAction, ICrudGetViewAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
+import { ICrudDeleteAction, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
 
 import { cleanEntity } from 'app/shared/util/entity-utils';
-import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
+import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
 
-import { IViews, defaultValue } from 'app/shared/model/views.model';
-import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
-
-const params = new URLSearchParams(window.location.search);
-const viewDashboard = Number(window.location.pathname.split('/')[2]);
-const PAGE = Number(params.get('page')) - 1;
-const SORT = params.get('sort');
+import { defaultValue, IViews } from 'app/shared/model/views.model';
+import { IPayload, IPayloadResult } from 'react-jhipster/src/type/redux-action.type';
+import { getDefaultInitialPaginationState } from 'app/shared/util/pagination-utils';
+import { ICrudGetDashboardViewsAction, ICrudViewDeleteAction } from './view-util';
 
 export const ACTION_TYPES = {
   FETCH_VIEWS_LIST: 'views/FETCH_VIEWS_LIST',
@@ -119,8 +116,16 @@ const apiUrl = 'api/views';
 
 // Actions
 
-export const getEntities: ICrudGetViewAction<IViews> = (dashboardId, page, size, sort) => {
+export const getDashboardViewEntities: ICrudGetDashboardViewsAction<IViews> = (dashboardId, page, size, sort) => {
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}&viewDashboard=${dashboardId}&paginate=true`;
+  return {
+    type: ACTION_TYPES.FETCH_VIEWS_LIST,
+    payload: axios.get<IViews>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
+  };
+};
+
+export const getEntities: ICrudGetAllAction<IViews> = (page, size, sort) => {
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}&paginate=true`;
   return {
     type: ACTION_TYPES.FETCH_VIEWS_LIST,
     payload: axios.get<IViews>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
@@ -140,7 +145,8 @@ export const createEntity: ICrudPutAction<IViews> = entity => async dispatch => 
     type: ACTION_TYPES.CREATE_VIEWS,
     payload: axios.post(apiUrl, cleanEntity(entity)),
   });
-  dispatch(getEntities(viewDashboard, PAGE, ITEMS_PER_PAGE, SORT));
+  const { activePage, itemsPerPage, sort, order } = getDefaultInitialPaginationState();
+  dispatch(getDashboardViewEntities(entity.viewDashboard.id, activePage - 1, itemsPerPage, `${sort},${order}`));
   return result;
 };
 
@@ -149,16 +155,19 @@ export const updateEntity: ICrudPutAction<IViews> = entity => async dispatch => 
     type: ACTION_TYPES.UPDATE_VIEWS,
     payload: axios.put(apiUrl, cleanEntity(entity)),
   });
+  const { activePage, itemsPerPage, sort, order } = getDefaultInitialPaginationState();
+  dispatch(getDashboardViewEntities(entity.viewDashboard.id, activePage - 1, itemsPerPage, `${sort},${order}`));
   return result;
 };
 
-export const deleteEntity: ICrudDeleteAction<IViews> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
+export const deleteEntity: ICrudViewDeleteAction<IViews> = (viewId, dashboardId) => async dispatch => {
+  const requestUrl = `${apiUrl}/${viewId}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_VIEWS,
     payload: axios.delete(requestUrl),
   });
-  dispatch(getEntities(viewDashboard, PAGE, ITEMS_PER_PAGE, SORT));
+  const { activePage, itemsPerPage, sort, order } = getDefaultInitialPaginationState();
+  dispatch(getDashboardViewEntities(dashboardId, activePage - 1, itemsPerPage, `${sort},${order}`));
   return result;
 };
 

@@ -20,6 +20,7 @@ import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { Translate, translate } from 'react-jhipster';
 import { IDashboard } from 'app/shared/model/dashboard.model';
+import { getViewFromTranslations, getViewSuccessTranslations, getViewErrorTranslations } from 'app/entities/views/view-util';
 
 export interface IViewCreateModalProps extends StateProps, DispatchProps {
   viewDashboard: IDashboard;
@@ -27,12 +28,15 @@ export interface IViewCreateModalProps extends StateProps, DispatchProps {
 
 const ViewCreateModal = (props: IViewCreateModalProps) => {
   const dialog = useDialogContainer();
-  const { viewEntity, loading, updating } = props;
   const [isOpen, setOpen] = React.useState(false);
   const [isError, setErrorOpen] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [viewName, setViewNameText] = React.useState('');
   const [viewDescription, setDescriptionText] = React.useState('');
+  const { viewEntity, updating } = props;
+  const { VIEW_LABEL, DESCRIPTION_LABEL } = getViewFromTranslations();
+  const { SUCCESS_LABEL, SUCCESS_CLOSE_LABEL, PRIMARY_ACTION_LABEL } = getViewSuccessTranslations();
+  const { ERROR_LABEL, ERROR_CLOSE_LABEL } = getViewErrorTranslations();
   const saveEntity = values => {
     const entity = {
       ...viewEntity,
@@ -67,72 +71,74 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
     }
     if (props.errorMessage != null) {
       if (props.errorMessage.response.data.message === 'uniqueError') {
-        setErrorMessage(translate('datastudioApp.views.uniqueError'));
+        setErrorMessage(translate('views.uniqueError.create'));
       } else {
-        setErrorMessage(translate('datastudioApp.views.errorSaving'));
+        setErrorMessage(translate('views.error.content'));
       }
       setErrorOpen(true);
     }
   }, [props.updateSuccess, props.errorMessage]);
 
   return (
-    <Dialog>
-      <Heading>
-        <Translate contentKey="datastudioApp.views.home.createNewView">Create new view</Translate>
-      </Heading>
-      <Divider />
-      <Content>
-        <Flex direction="column" gap="size-100" alignItems="center">
-          <DialogContainer onDismiss={() => setOpen(false)} {...props}>
-            {isOpen && (
-              <AlertDialog
-                title="Success"
-                onPrimaryAction={alertOpen}
-                onCancel={alertClose}
-                variant="confirmation"
-                cancelLabel="Close"
-                primaryActionLabel="Open"
-              >
-                Created view successfully
-              </AlertDialog>
-            )}
-          </DialogContainer>
-          <DialogContainer onDismiss={() => setErrorOpen(false)} {...props}>
-            {isError && (
-              <AlertDialog title="Error" variant="destructive" primaryActionLabel="Close">
-                {errorMessage}
-              </AlertDialog>
-            )}
-          </DialogContainer>
-          <View padding="size-600">
-            <Form isRequired necessityIndicator="icon" minWidth="size-4600">
-              <TextField
-                label="View name"
-                maxLength={30}
-                validationState={viewName?.length < 30 ? 'valid' : 'invalid'}
-                onChange={setViewNameText}
-              />
+    <>
+      <Dialog>
+        <Heading>
+          <Translate contentKey="views.home.createNewView">Create new view</Translate>
+        </Heading>
+        <Divider />
+        <Content>
+          <Flex direction="column" gap="size-100" alignItems="center">
+            <View padding="size-600">
+              <Form isRequired necessityIndicator="icon" minWidth="size-4600">
+                <TextField
+                  label={VIEW_LABEL}
+                  maxLength={30}
+                  validationState={viewName?.length < 30 ? 'valid' : 'invalid'}
+                  onChange={setViewNameText}
+                />
 
-              <TextArea
-                label="Description"
-                maxLength={100}
-                isRequired={false}
-                validationState={viewDescription?.length < 100 ? 'valid' : 'invalid'}
-                onChange={setDescriptionText}
-              />
-            </Form>
-          </View>
-        </Flex>
-      </Content>
-      <ButtonGroup>
-        <Button variant="secondary" onPress={dialog.dismiss}>
-          <Translate contentKey="datastudioApp.views.home.cancelLabel">Cancel</Translate>
-        </Button>
-        <Button onPress={() => createView(viewName, viewDescription)} variant="cta">
-          <Translate contentKey="datastudioApp.views.home.save">Save</Translate>
-        </Button>
-      </ButtonGroup>
-    </Dialog>
+                <TextArea
+                  label={DESCRIPTION_LABEL}
+                  maxLength={100}
+                  isRequired={false}
+                  validationState={viewDescription?.length < 100 ? 'valid' : 'invalid'}
+                  onChange={setDescriptionText}
+                />
+              </Form>
+            </View>
+          </Flex>
+        </Content>
+        <ButtonGroup>
+          <Button variant="secondary" onPress={dialog.dismiss}>
+            <Translate contentKey="entity.action.cancel">close</Translate>
+          </Button>
+          <Button onPress={() => createView(viewName, viewDescription)} variant="cta" isDisabled={viewName === '' || updating}>
+            <Translate contentKey="entity.action.save">Save</Translate>
+          </Button>
+        </ButtonGroup>
+      </Dialog>
+      <DialogContainer onDismiss={() => setOpen(false)} {...props}>
+        {isOpen && (
+          <AlertDialog
+            title={SUCCESS_LABEL}
+            onPrimaryAction={alertOpen}
+            onCancel={alertClose}
+            variant="confirmation"
+            cancelLabel={SUCCESS_CLOSE_LABEL}
+            primaryActionLabel={PRIMARY_ACTION_LABEL}
+          >
+            <Translate contentKey="views.created.content">Created view successfully</Translate>
+          </AlertDialog>
+        )}
+      </DialogContainer>
+      <DialogContainer onDismiss={() => setErrorOpen(false)} {...props}>
+        {isError && (
+          <AlertDialog title={ERROR_LABEL} variant="destructive" primaryActionLabel={ERROR_CLOSE_LABEL}>
+            {errorMessage}
+          </AlertDialog>
+        )}
+      </DialogContainer>
+    </>
   );
 };
 

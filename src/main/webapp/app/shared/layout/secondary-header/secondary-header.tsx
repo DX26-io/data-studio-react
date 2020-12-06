@@ -18,7 +18,15 @@ export interface ISecondaryHeaderProps {
 const SecondaryHeader: React.FC<PropsWithChildren<ISecondaryHeaderProps>> = props => {
   const history = useHistory();
   return (
-    <View paddingX="size-150" paddingY="size-100" backgroundColor="default" borderBottomWidth={'thin'} borderBottomColor={'default'}>
+    <View
+      paddingX="size-150"
+      paddingY="size-100"
+      backgroundColor="gray-75"
+      borderBottomWidth={'thin'}
+      borderTopWidth={'thin'}
+      borderBottomColor={'light'}
+      borderTopColor={'light'}
+    >
       <Grid areas={['breadcrumbs title options']} columns={['1fr', '1fr', '1fr']} maxHeight={'size-600'}>
         <Flex gridArea="breadcrumbs" justifyContent="start" alignItems="center">
           <Breadcrumbs size="M" onAction={key => history.push(`${key}`)}>
