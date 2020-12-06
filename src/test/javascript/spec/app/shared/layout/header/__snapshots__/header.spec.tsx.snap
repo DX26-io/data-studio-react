@@ -18,7 +18,7 @@ exports[`Header tests should render header component and have HTML header tag 1`
     className="loading-bar"
   />
   <ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
-    backgroundColor="gray-200"
+    backgroundColor="default"
     padding="size-150"
   >
     <header>
