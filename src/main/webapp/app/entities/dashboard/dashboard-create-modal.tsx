@@ -56,7 +56,11 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
   };
 
   const saveEntity = values => {
-    props.createEntity(values);
+    const entity = {
+      ...dashboardEntity,
+      ...values,
+    };
+    props.createEntity(entity);
   };
 
   const createDashboard = (name, category, description, datasource) => {
@@ -87,6 +91,7 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
   useEffect(() => {
     if (props.updateSuccess) {
       setCreateSuccessDialog(true);
+      props.reset();
     }
     if (props.errorMessage != null) {
       if (props.errorMessage.response.data.message === 'uniqueError') {
@@ -95,6 +100,7 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
         setErrorMessage(translate('dashboard.error.content'));
       }
       setCreateErrorDialog(true);
+      props.reset();
     }
   }, [props.updateSuccess, props.errorMessage]);
 

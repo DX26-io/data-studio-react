@@ -68,6 +68,7 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
   useEffect(() => {
     if (props.updateSuccess) {
       setOpen(true);
+      props.reset();
     }
     if (props.errorMessage != null) {
       if (props.errorMessage.response.data.message === 'uniqueError') {
@@ -76,6 +77,7 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
         setErrorMessage(translate('views.error.content'));
       }
       setErrorOpen(true);
+      props.reset();
     }
   }, [props.updateSuccess, props.errorMessage]);
 

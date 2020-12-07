@@ -17,7 +17,7 @@ import {
   useDialogContainer,
   View,
 } from '@adobe/react-spectrum';
-import { getEntity, updateEntity } from './dashboard.reducer';
+import { getEntity, updateEntity, reset } from './dashboard.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { translate, Translate } from 'react-jhipster';
@@ -83,6 +83,7 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
   useEffect(() => {
     if (props.updateSuccess) {
       dialog.dismiss();
+      props.reset();
     }
     if (props.errorMessage != null) {
       if (props.errorMessage.response.data.message === 'uniqueError') {
@@ -91,6 +92,7 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
         setErrorMessage(translate('dashboard.error.content'));
       }
       setErrorOpen(true);
+      props.reset();
     }
   }, [props.updateSuccess, props.errorMessage]);
 
@@ -185,7 +187,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   dataSourcesList: storeState.datasources.entities,
 });
 
-const mapDispatchToProps = { getEntity, updateEntity, getDataSourceEntities };
+const mapDispatchToProps = { getEntity, updateEntity, getDataSourceEntities, reset };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

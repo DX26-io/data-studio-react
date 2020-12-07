@@ -15,7 +15,7 @@ import {
   useDialogContainer,
   View,
 } from '@adobe/react-spectrum';
-import { getEntity, updateEntity } from './views.reducer';
+import { getEntity, updateEntity, reset } from './views.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { translate, Translate } from 'react-jhipster';
@@ -64,6 +64,7 @@ const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
   useEffect(() => {
     if (props.updateSuccess) {
       dialog.dismiss();
+      props.reset();
     }
     if (props.errorMessage != null) {
       if (props.errorMessage.response.data.message === 'uniqueError') {
@@ -72,6 +73,7 @@ const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
         setErrorMessage(translate('views.error.content'));
       }
       setErrorOpen(true);
+      props.reset();
     }
   }, [props.updateSuccess, props.errorMessage]);
 
@@ -147,6 +149,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 const mapDispatchToProps = {
   updateEntity,
   getEntity,
+  reset,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
