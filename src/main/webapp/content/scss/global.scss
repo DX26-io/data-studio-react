@@ -1,5 +1,9 @@
+@import './variables';
+
 html {
   box-sizing: border-box;
+  height: 100%;
+  overflow-y: auto;
 }
 *,
 *:before,
@@ -9,6 +13,7 @@ html {
 
 body {
   margin: 0;
+  height: 100%;
 }
 
 a {
@@ -20,9 +25,8 @@ a {
   text-decoration: none;
 }
 
-.dx26-font-bold {
-  font-weight: $primary-font-weight-bold !important;
-  color: $primary-font-color;
+.error-message {
+  color: $spectrum-red-600;
 }
 
 .dx26-table-pager {
