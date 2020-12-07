@@ -21,18 +21,6 @@ import { AUTHORITIES } from 'app/config/constants';
 
 describe('User management reducer tests', () => {
   const username = process.env.E2E_USERNAME || 'admin';
-  const initialState = {
-    loading: false,
-    errorMessage: null,
-    users: [],
-    authorities: [] as any[],
-    user: defaultValue,
-    updating: false,
-    updateSuccess: false,
-    fetchSuccess: false,
-    totalItems: 0,
-  };
-
   function isEmpty(element): boolean {
     if (element instanceof Array) {
       return element.length === 0;
