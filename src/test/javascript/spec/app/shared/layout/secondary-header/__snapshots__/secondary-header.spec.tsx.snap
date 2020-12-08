@@ -23,52 +23,46 @@ exports[`SecondaryHeader Renders Secondary Header with children 1`] = `
     }
     maxHeight="size-600"
   >
-    <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
-      alignItems="center"
-      gridArea="breadcrumbs"
-      justifyContent="start"
+    <ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)
+      size="M"
     >
-      <ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)
-        size="M"
+      <$de85adf0b38f4f13e9cffd2f21$var$Item
+        key="home"
       >
-        <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="home"
+        <Link
+          to="/"
         >
-          <Link
-            to="/"
-          >
-            Home
-          </Link>
-        </$de85adf0b38f4f13e9cffd2f21$var$Item>
-        <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="dashboards"
+          Home
+        </Link>
+      </$de85adf0b38f4f13e9cffd2f21$var$Item>
+      <$de85adf0b38f4f13e9cffd2f21$var$Item
+        key="dashboards"
+      >
+        <Link
+          to="/dashboards"
         >
-          <Link
-            to="/dashboards"
-          >
-            Dashboards
-          </Link>
-        </$de85adf0b38f4f13e9cffd2f21$var$Item>
-        <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="d123"
+          Dashboards
+        </Link>
+      </$de85adf0b38f4f13e9cffd2f21$var$Item>
+      <$de85adf0b38f4f13e9cffd2f21$var$Item
+        key="d123"
+      >
+        <Link
+          to="/dashboards/d123"
         >
-          <Link
-            to="/dashboards/d123"
-          >
-            Inventory Dashboard
-          </Link>
-        </$de85adf0b38f4f13e9cffd2f21$var$Item>
-        <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="v123"
+          Inventory Dashboard
+        </Link>
+      </$de85adf0b38f4f13e9cffd2f21$var$Item>
+      <$de85adf0b38f4f13e9cffd2f21$var$Item
+        key="v123"
+      >
+        <Link
+          to="/dashboards/d123/v123"
         >
-          <Link
-            to="/dashboards/d123/v123"
-          >
-            Stock
-          </Link>
-        </$de85adf0b38f4f13e9cffd2f21$var$Item>
-      </ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)>
-    </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
+          Stock
+        </Link>
+      </$de85adf0b38f4f13e9cffd2f21$var$Item>
+    </ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)>
     <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
       alignItems="center"
       gridArea="title"
@@ -125,52 +119,46 @@ exports[`SecondaryHeader Renders Secondary Header with default Props 1`] = `
     }
     maxHeight="size-600"
   >
-    <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
-      alignItems="center"
-      gridArea="breadcrumbs"
-      justifyContent="start"
+    <ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)
+      size="M"
     >
-      <ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)
-        size="M"
+      <$de85adf0b38f4f13e9cffd2f21$var$Item
+        key="home"
       >
-        <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="home"
+        <Link
+          to="/"
         >
-          <Link
-            to="/"
-          >
-            Home
-          </Link>
-        </$de85adf0b38f4f13e9cffd2f21$var$Item>
-        <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="dashboards"
+          Home
+        </Link>
+      </$de85adf0b38f4f13e9cffd2f21$var$Item>
+      <$de85adf0b38f4f13e9cffd2f21$var$Item
+        key="dashboards"
+      >
+        <Link
+          to="/dashboards"
         >
-          <Link
-            to="/dashboards"
-          >
-            Dashboards
-          </Link>
-        </$de85adf0b38f4f13e9cffd2f21$var$Item>
-        <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="d123"
+          Dashboards
+        </Link>
+      </$de85adf0b38f4f13e9cffd2f21$var$Item>
+      <$de85adf0b38f4f13e9cffd2f21$var$Item
+        key="d123"
+      >
+        <Link
+          to="/dashboards/d123"
         >
-          <Link
-            to="/dashboards/d123"
-          >
-            Inventory Dashboard
-          </Link>
-        </$de85adf0b38f4f13e9cffd2f21$var$Item>
-        <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="v123"
+          Inventory Dashboard
+        </Link>
+      </$de85adf0b38f4f13e9cffd2f21$var$Item>
+      <$de85adf0b38f4f13e9cffd2f21$var$Item
+        key="v123"
+      >
+        <Link
+          to="/dashboards/d123/v123"
         >
-          <Link
-            to="/dashboards/d123/v123"
-          >
-            Stock
-          </Link>
-        </$de85adf0b38f4f13e9cffd2f21$var$Item>
-      </ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)>
-    </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
+          Stock
+        </Link>
+      </$de85adf0b38f4f13e9cffd2f21$var$Item>
+    </ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)>
     <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
       alignItems="center"
       gridArea="title"
