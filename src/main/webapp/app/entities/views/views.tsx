@@ -98,12 +98,9 @@ export const Views = (props: IViewsProps) => {
         ]}
         title={dashboardEntity.dashboardName}
       >
-        <Button variant="cta" onPress={() => setViewCreateModelOpen(true)}>
+        <Button variant="cta" onPress={() => props.history.push(`${props.match.url}/create`)}>
           <Translate contentKey="views.home.createLabel">Create View</Translate>
         </Button>
-        <DialogContainer type="fullscreenTakeover" onDismiss={() => setViewCreateModelOpen(false)} {...props}>
-          {isViewCreateModelOpen && <ViewCreateModal viewDashboard={dashboardEntity} />}
-        </DialogContainer>
       </SecondaryHeader>
       {viewsList && viewsList.length > 0 ? (
         <>

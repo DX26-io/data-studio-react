@@ -21,23 +21,21 @@ import { connect } from 'react-redux';
 import { translate, Translate } from 'react-jhipster';
 import { IDashboard } from 'app/shared/model/dashboard.model';
 import { getViewErrorTranslations, getViewFromTranslations } from 'app/entities/views/view-util';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer';
 
-export interface IViewPropertiesModalProps extends StateProps, DispatchProps {
-  viewDashboard: IDashboard;
-  viewName: string;
-  description: string;
-  viewId: number;
-}
+export interface IViewPropertiesModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string; viewId: string }> {}
 
 const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
   const [isEdit, setEdit] = React.useState(false);
-  const [viewName, setViewNameText] = React.useState(props.viewName);
-  const [viewDescription, setDescriptionText] = React.useState(props.description);
+  const [isViewPropertiesModelOpen, setViewPropertiesModelOpen] = React.useState(true);
+  const [viewName, setViewNameText] = React.useState(props.viewEntity.viewName);
+  const [viewDescription, setDescriptionText] = React.useState(props.viewEntity.description);
   const [isError, setErrorOpen] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
-  const dialog = useDialogContainer();
   const { VIEW_LABEL, DESCRIPTION_LABEL } = getViewFromTranslations();
   const { ERROR_LABEL, ERROR_CLOSE_LABEL } = getViewErrorTranslations();
+  const history = useHistory();
 
   const editEntity = values => {
     const entity = {
@@ -51,21 +49,20 @@ const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
     editEntity({
       viewName: name,
       description,
-      viewDashboard: props.viewDashboard,
     });
   };
 
   useEffect(() => {
-    if (props.viewId) {
-      props.getEntity(props.viewId);
+    if (props.match.params.viewId) {
+      props.getEntity(props.match.params.viewId);
     }
   }, []);
 
   useEffect(() => {
     if (props.updateSuccess) {
-      dialog.dismiss();
-      props.reset();
+      history.push('/dashboards/' + props.viewEntity.viewDashboard?.id);
     }
+   
     if (props.errorMessage != null) {
       if (props.errorMessage.response.data.message === 'uniqueError') {
         setErrorMessage(translate('views.uniqueError.update'));
@@ -73,60 +70,67 @@ const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
         setErrorMessage(translate('views.error.content'));
       }
       setErrorOpen(true);
-      props.reset();
     }
-  }, [props.updateSuccess, props.errorMessage]);
+    if (props.dashboardEntity) {
+      setViewNameText(props.viewEntity.viewName);
+      setDescriptionText(props.viewEntity.description);
+    }
+  }, [props.updateSuccess, props.errorMessage, props.viewEntity]);
 
   return (
     <>
-      <Dialog>
-        {isEdit ? <Heading>Edit {props.viewName}</Heading> : <Heading>{props.viewName}</Heading>}
-        <Divider />
-        <Content>
-          <Flex direction="column" gap="size-100" alignItems="center">
-            <View padding="size-600">
-              <Form isDisabled={!isEdit} isRequired necessityIndicator="icon" minWidth="size-4600">
-                <TextField
-                  label={VIEW_LABEL}
-                  maxLength={30}
-                  validationState={viewName?.length < 30 ? 'valid' : 'invalid'}
-                  onChange={setViewNameText}
-                  value={viewName}
-                />
+      <DialogContainer type="fullscreenTakeover" onDismiss={() => setViewPropertiesModelOpen(false)} {...props}>
+        {isViewPropertiesModelOpen && (
+          <Dialog>
+            {isEdit ? <Heading>Edit {props.viewEntity.viewName}</Heading> : <Heading>{props.viewEntity.viewName}</Heading>}
+            <Divider />
+            <Content>
+              <Flex direction="column" gap="size-100" alignItems="center">
+                <View padding="size-600">
+                  <Form isDisabled={!isEdit} isRequired necessityIndicator="icon" minWidth="size-4600">
+                    <TextField
+                      label={VIEW_LABEL}
+                      maxLength={30}
+                      validationState={viewName?.length < 30 ? 'valid' : 'invalid'}
+                      onChange={setViewNameText}
+                      value={viewName}
+                    />
 
-                <TextArea
-                  label={DESCRIPTION_LABEL}
-                  maxLength={100}
-                  isRequired={false}
-                  value={viewDescription}
-                  validationState={viewDescription?.length < 100 ? 'valid' : 'invalid'}
-                  onChange={setDescriptionText}
-                />
-              </Form>
-            </View>
-          </Flex>
-        </Content>
-        <ButtonGroup>
-          <Button variant="secondary" onPress={dialog.dismiss}>
-            <Translate contentKey="entity.action.cancel">Cancel</Translate>
-          </Button>
-          {!isEdit && (
-            <Button
-              variant="cta"
-              onPress={() => {
-                setEdit(true);
-              }}
-            >
-              <Translate contentKey="entity.action.edit">Edit</Translate>
-            </Button>
-          )}
-          {isEdit && (
-            <Button variant="cta" onPress={() => updateView(viewName, viewDescription)} isDisabled={viewName === '' || props.updating}>
-              <Translate contentKey="entity.action.save">Save</Translate>
-            </Button>
-          )}
-        </ButtonGroup>
-      </Dialog>
+                    <TextArea
+                      label={DESCRIPTION_LABEL}
+                      maxLength={100}
+                      isRequired={false}
+                      value={viewDescription}
+                      validationState={viewDescription?.length < 100 ? 'valid' : 'invalid'}
+                      onChange={setDescriptionText}
+                    />
+                  </Form>
+                </View>
+              </Flex>
+            </Content>
+            <ButtonGroup>
+              <Button variant="secondary" onPress={() => history.push('/dashboards/' + props.viewEntity.viewDashboard?.id)}> 
+                <Translate contentKey="entity.action.cancel">Cancel</Translate>
+              </Button>
+              {!isEdit && (
+                <Button
+                  variant="cta"
+                  onPress={() => {
+                    setEdit(true);
+                  }}
+                >
+                  <Translate contentKey="entity.action.edit">Edit</Translate>
+                </Button>
+              )}
+              {isEdit && (
+                <Button variant="cta" onPress={() => updateView(viewName, viewDescription)} isDisabled={viewName === '' || props.updating}>
+                  <Translate contentKey="entity.action.save">Save</Translate>
+                </Button>
+              )}
+            </ButtonGroup>
+          </Dialog>
+        )}
+      </DialogContainer>
       <DialogContainer onDismiss={() => setErrorOpen(false)} {...props}>
         {isError && (
           <AlertDialog title={ERROR_LABEL} variant="destructive" primaryActionLabel={ERROR_CLOSE_LABEL}>
@@ -144,12 +148,14 @@ const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.views.updating,
   updateSuccess: storeState.views.updateSuccess,
   errorMessage: storeState.views.errorMessage,
+  dashboardEntity: storeState.dashboard.entity,
 });
 
 const mapDispatchToProps = {
   updateEntity,
   getEntity,
   reset,
+  getDashboardEntity,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

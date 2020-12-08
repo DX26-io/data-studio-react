@@ -18,6 +18,7 @@ import { Translate } from 'react-jhipster';
 import ViewDeleteModal from '../view-delete-modal';
 import ViewPropertiesModal from '../view-properties-modal';
 import { IDashboard } from 'app/shared/model/dashboard.model';
+import { Redirect } from 'react-router-dom';
 
 interface IViewCardContentProps {
   viewDashboard: IDashboard;
@@ -65,11 +66,20 @@ const ViewCardContent: React.FC<IViewCardContentProps> = props => {
               </Menu>
             </MenuTrigger>
             <DialogContainer onDismiss={() => setDialog(null)}>
-              {dialog === 'delete' && <ViewDeleteModal viewName={viewName} viewId={viewId} />}
+              {dialog === 'delete' &&
+              <Redirect
+              to={{
+                pathname: '/dashboards/' + viewDashboard.id + '/' + viewId + '/delete',
+              }}
+            />}
             </DialogContainer>
             <DialogContainer type="fullscreenTakeover" onDismiss={() => setDialog(null)}>
               {dialog === 'properties' && (
-                <ViewPropertiesModal viewName={viewName} description={description} viewId={viewId} viewDashboard={viewDashboard} />
+                <Redirect
+                  to={{
+                    pathname: '/dashboards/' + viewDashboard.id + '/' + viewId + '/properties',
+                  }}
+                />
               )}
             </DialogContainer>
             <TooltipTrigger delay={0} placement="end">

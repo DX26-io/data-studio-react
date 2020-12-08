@@ -96,7 +96,7 @@ export const Dashboard = (props: IDashboardProps) => {
         ]}
         title={DASHBOARDS_TITLE}
       >
-        <Button variant="cta" onPress={() => setDashboardCreateModelOpen(true)}>
+        <Button variant="cta"  onPress={() => props.history.push(`${match.url}/create`)}>
           <Translate contentKey="dashboard.home.createLabel">Create</Translate>
         </Button>
         <DialogContainer type="fullscreenTakeover" onDismiss={() => setDashboardCreateModelOpen(false)} {...props}>

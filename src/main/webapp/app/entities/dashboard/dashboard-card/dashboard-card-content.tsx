@@ -15,8 +15,7 @@ import {
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
-import DashboardDeleteModal from '../dashboard-delete-modal';
-import DashboardPropertiesModal from '../dashboard-properties-modal';
+import { Redirect } from 'react-router-dom';
 
 interface IDashboardCardContentProps {
   dashboardName: string;
@@ -68,16 +67,20 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
               </Menu>
             </MenuTrigger>
             <DialogContainer onDismiss={() => setDialog(null)}>
-              {dialog === 'delete' && <DashboardDeleteModal dashboardName={dashboardName} dashboardId={dashboardId} />}
+              {dialog === 'delete' && (
+                <Redirect
+                  to={{
+                    pathname: '/dashboards/' + dashboardId + '/delete',
+                  }}
+                />
+              )}
             </DialogContainer>
             <DialogContainer type="fullscreenTakeover" onDismiss={() => setDialog(null)}>
               {dialog === 'properties' && (
-                <DashboardPropertiesModal
-                  dashboardName={dashboardName}
-                  datasource={datasource}
-                  description={dashboardDescription}
-                  category={dashboardType}
-                  dashboardId={dashboardId}
+                <Redirect
+                  to={{
+                    pathname: '/dashboards/' + dashboardId + '/properties',
+                  }}
                 />
               )}
             </DialogContainer>

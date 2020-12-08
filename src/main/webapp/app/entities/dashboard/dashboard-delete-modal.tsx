@@ -1,42 +1,52 @@
-import React from 'react';
-import { Button, ButtonGroup, Content, Dialog, Divider, Heading, useDialogContainer } from '@adobe/react-spectrum';
+import React, {  useEffect } from 'react';
+import { Button, ButtonGroup, Content, Dialog, DialogContainer, Divider, Heading, useDialogContainer } from '@adobe/react-spectrum';
 import { deleteEntity, getEntity } from './dashboard.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { Translate } from 'react-jhipster';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 
-export interface IDashboardDeleteModalProps extends StateProps, DispatchProps {
-  dashboardId: number;
-  dashboardName: React.ReactNode;
-}
+export interface IDashboardDeleteModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 const DashboardDeleteModal = (props: IDashboardDeleteModalProps) => {
-  const dialog = useDialogContainer();
+  const history = useHistory();
+  const [isDashboardDeleteModelOpen, setDashboardDeleteModelOpen] = React.useState(true);
+
   const handleDelete = () => {
-    dialog.dismiss();
-    props.deleteEntity(props.dashboardId);
+    props.deleteEntity(props.match.params.id);
+    history.push('/dashboards');
   };
 
+  useEffect(() => {
+    if (props.match.params.id) {
+      props.getEntity(props.match.params.id);
+    }
+  }, []);
+
   return (
-    <Dialog>
-      <Heading>
-        <Translate contentKey="dashboard.home.deleteDashboard">Delete Dashboard</Translate>
-      </Heading>
-      <Divider />
-      <Content>
-        <Translate contentKey="dashboard.delete.question" interpolate={{ name: props.dashboardName }}>
-          This will permanently delete the selected dashboard
-        </Translate>
-      </Content>
-      <ButtonGroup>
-        <Button variant="secondary" onPress={dialog.dismiss}>
-          <Translate contentKey="entity.action.cancel">Cancel</Translate>
-        </Button>
-        <Button variant="negative" onPress={handleDelete}>
-          <Translate contentKey="entity.action.delete">Delete</Translate>
-        </Button>
-      </ButtonGroup>
-    </Dialog>
+    <DialogContainer onDismiss={() => setDashboardDeleteModelOpen(false)}>
+      {isDashboardDeleteModelOpen  && (
+        <Dialog>
+          <Heading>
+            <Translate contentKey="dashboard.home.deleteDashboard">Delete Dashboard</Translate>
+          </Heading>
+          <Divider />
+          <Content>
+            <Translate contentKey="dashboard.delete.question" interpolate={{ name: props.dashboardEntity.dashboardName }}>
+              This will permanently delete the selected dashboard
+            </Translate>
+          </Content>
+          <ButtonGroup>
+            <Button variant="secondary" onPress={() =>history.push('/dashboards')}>
+              <Translate contentKey="entity.action.cancel">Cancel</Translate>
+            </Button>
+            <Button variant="negative" onPress={handleDelete}>
+              <Translate contentKey="entity.action.delete">Delete</Translate>
+            </Button>
+          </ButtonGroup>
+        </Dialog>
+      )}
+    </DialogContainer>
   );
 };
 
