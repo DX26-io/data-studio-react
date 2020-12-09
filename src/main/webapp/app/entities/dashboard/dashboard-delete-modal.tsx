@@ -11,24 +11,26 @@ export interface IDashboardDeleteModalProps extends StateProps, DispatchProps, R
 const DashboardDeleteModal = (props: IDashboardDeleteModalProps) => {
   const history = useHistory();
 
-  useEffect(() => {
-    const dashboardId = props.match.params.id;
-    if (dashboardId) {
-      props.getEntity(dashboardId);
-    }
-  }, []);
-
   const handleDelete = () => {
     props.deleteEntity(props.match.params.id);
-    history.push('/dashboards');
   };
 
   const handleClose = () => {
     history.push('/dashboards');
   };
 
+  useEffect(() => {
+    props.getEntity(props.match.params.id);
+  }, []);
+
+  useEffect(() => {
+    if (props.updateSuccess) {
+      handleClose();
+    }
+  }, [props.updateSuccess]);
+
   return (
-    <DialogContainer onDismiss={() => handleClose()}>
+    <DialogContainer onDismiss={handleClose}>
       <Dialog>
         <Heading>
           <Translate contentKey="dashboard.home.deleteDashboard">Delete Dashboard</Translate>
@@ -40,7 +42,7 @@ const DashboardDeleteModal = (props: IDashboardDeleteModalProps) => {
           </Translate>
         </Content>
         <ButtonGroup>
-          <Button variant="secondary" onPress={() => handleClose()}>
+          <Button variant="secondary" onPress={handleClose}>
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
           <Button variant="negative" onPress={handleDelete}>

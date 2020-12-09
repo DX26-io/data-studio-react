@@ -110,7 +110,7 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
 
   return (
     <>
-      <DialogContainer type="fullscreenTakeover" onDismiss={() => handlePropertiesModelClose()}>
+      <DialogContainer type="fullscreenTakeover" onDismiss={handlePropertiesModelClose}>
         <Dialog>
           {isEdit ? (
             <Heading>Edit {props.dashboardEntity.dashboardName}</Heading>
@@ -160,11 +160,11 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
             </Flex>
           </Content>
           <ButtonGroup>
-            <Button variant="secondary" onPress={() => handlePropertiesModelClose()}>
+            <Button variant="secondary" onPress={handlePropertiesModelClose}>
               <Translate contentKey="entity.action.cancel">Close</Translate>
             </Button>
             {!isEdit && (
-              <Button variant="cta" onPress={() => handleEdit()}>
+              <Button variant="cta" onPress={handleEdit}>
                 <Translate contentKey="entity.action.edit">Edit</Translate>
               </Button>
             )}

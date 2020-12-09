@@ -107,7 +107,7 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
 
   return (
     <>
-      <DialogContainer type="fullscreenTakeover" onDismiss={() => handleClose()}>
+      <DialogContainer type="fullscreenTakeover" onDismiss={handleClose}>
         <Dialog>
           <Heading>
             <Translate contentKey="dashboard.home.createNewDashboard">Create new dashboard</Translate>
@@ -152,7 +152,7 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
             </Flex>
           </Content>
           <ButtonGroup>
-            <Button variant="secondary" onPress={() => handleClose()}>
+            <Button variant="secondary" onPress={handleClose}>
               <Translate contentKey="entity.action.cancel">Cancel</Translate>
             </Button>
             <Button
