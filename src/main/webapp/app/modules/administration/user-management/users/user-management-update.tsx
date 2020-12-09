@@ -105,29 +105,29 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <Dialog>
+        <Dialog  data-testid="user-form-dialog">
           <Heading>
-            <Flex alignItems="center" gap="size-100">
-              {user.id ? (
+            <Flex alignItems="center" gap="size-100" data-testid="user-form-heading">
+              {!isNew ? (
                 <Translate contentKey="userManagement.home.editLabel">Edit User</Translate>
               ) : (
                 <Translate contentKey="userManagement.home.createLabel">Create User</Translate>
               )}
             </Flex>
           </Heading>
-          <Header>
+          <Header data-testid="user-form-action">
             <Flex alignItems="center" gap="size-100">
               <Button variant="secondary" onPress={handleClose}>
                 <Translate contentKey="entity.action.cancel">Cancel</Translate>
               </Button>
-              <Button variant="cta" onPress={saveUser} isDisabled={updating}>
+              <Button variant="cta" onPress={saveUser} isDisabled={updating} data-testid="user-form-submit">
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
             </Flex>
           </Header>
           <Divider />
           <Content>
-            <Form>
+            <Form data-testid="user-form">
               <TextField
                 label="Login ID"
                 placeholder="John"
@@ -139,6 +139,7 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
                 onChange={setLogin}
                 autoFocus
                 isRequired
+                data-testid="login"
               />
               <TextField
                 label="First Name"
@@ -148,6 +149,7 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
                 onChange={setFirstName}
                 validationState={firstName.length < 50 ? 'valid' : 'invalid'}
                 autoFocus
+                data-testid="first-name"
               />
               <TextField
                 label="Last Name"
@@ -157,6 +159,7 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
                 onChange={setLastName}
                 validationState={lastName.length < 50 ? 'valid' : 'invalid'}
                 autoFocus
+                data-testid="last-name"
               />
               <TextField
                 label="Email"
@@ -165,10 +168,11 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
                 type="email"
                 value={email}
                 onChange={setEmail}
+                data-testid="email"
                 validationState={email.length < 100 ? 'valid' : 'invalid'}
                 autoFocus
               />
-              <Checkbox isSelected={activated} onChange={setActivated} isEmphasized defaultSelected>
+              <Checkbox isSelected={activated} onChange={setActivated} isEmphasized defaultSelected data-testid="activated">
                 <Translate contentKey="userManagement.activate">Activate</Translate>
               </Checkbox>
               <Text>
@@ -183,7 +187,7 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
                 className="basic-multi-select"
                 classNamePrefix="select"
               />
-              {user.id ? (
+              {!isNew ? (
                 <React.Fragment>
                   <Text>
                     <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
@@ -192,8 +196,8 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
                 </React.Fragment>
               ) : null}
             </Form>
-            {user.id ? (
-              <Button variant="negative" onPress={removeUser} marginTop="size-175">
+            {!isNew ? (
+              <Button data-testid="delete" variant="negative" onPress={removeUser} marginTop="size-175">
                 <Translate contentKey="entity.action.delete">Delete</Translate>
               </Button>
             ) : null}

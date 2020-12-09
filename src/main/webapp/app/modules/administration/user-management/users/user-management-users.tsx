@@ -11,7 +11,6 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 import UserManagementUpdate from './user-management-update';
-import { defaultValue } from 'app/shared/model/user.model';
 
 export interface IUserManagementProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -67,7 +66,7 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
   const [loginID,setLoginID] = React.useState('');
 
 
-  const { users, account, match, totalItems } = props;
+  const { users, match, totalItems } = props;
 
   return (
     <div>
@@ -80,11 +79,11 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
         ]}
         title={'User Management'}
       >
-        <Button variant="cta" onPress={() => {setOpen(true);setNew(true)}}>
+        <Button variant="cta" onPress={() => {setOpen(true);setNew(true)}} data-testid="create-user">
           <Translate contentKey="entity.action.create">Create</Translate>
         </Button>
       </SecondaryHeader>
-      <DialogContainer onDismiss={() => setOpen(false)}>
+      <DialogContainer onDismiss={() => setOpen(false)} >
         {isOpen && (
           <UserManagementUpdate isNew={isNew} setOpen={setOpen} loginID={loginID}></UserManagementUpdate>
         )}
@@ -160,8 +159,7 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   users: storeState.userManagement.users,
-  totalItems: storeState.userManagement.totalItems,
-  account: storeState.authentication.account,
+  totalItems: storeState.userManagement.totalItems
 });
 
 const mapDispatchToProps = { getUsers, updateUser };
