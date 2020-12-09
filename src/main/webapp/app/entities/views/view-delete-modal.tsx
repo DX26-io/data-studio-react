@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDialogContainer, Dialog, Heading, Divider, Content, ButtonGroup, Button, DialogContainer } from '@adobe/react-spectrum';
+import { Dialog, Heading, Divider, Content, ButtonGroup, Button, DialogContainer } from '@adobe/react-spectrum';
 import { getEntity, deleteEntity } from './views.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
@@ -8,47 +8,51 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 export interface IViewDeleteModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string; viewId: string }> {}
 
 const ViewDeleteModal = (props: IViewDeleteModalProps) => {
-  const [isViewDeleteModelOpen, setViewDeleteModelOpen] = React.useState(true);
   const history = useHistory();
+  const viewId = props.match.params.viewId;
+  const dashboardId = props.match.params.id;
+
   const confirmDelete = () => {
-    props.deleteEntity(props.match.params.viewId, props.match.params.id);
+    props.deleteEntity(viewId, dashboardId);
+  };
+
+  const handleClose = () => {
+    history.push('/dashboards/' + dashboardId);
   };
 
   useEffect(() => {
-    if (props.match.params.viewId) {
-      props.getEntity(props.match.params.viewId);
+    if (viewId) {
+      props.getEntity(viewId);
     }
   }, []);
 
   useEffect(() => {
     if (props.updateSuccess) {
-      history.push('/dashboards/' +  props.match.params.id);
+      handleClose();
     }
   }, [props.updateSuccess, props.errorMessage, props.viewEntity]);
 
   return (
-    <DialogContainer onDismiss={() => setViewDeleteModelOpen(false)}>
-      {isViewDeleteModelOpen && (
-        <Dialog>
-          <Heading>
-            <Translate contentKey="views.home.deleteView">Delete View</Translate>
-          </Heading>
-          <Divider />
-          <Content>
-            <Translate contentKey="views.delete.question" interpolate={{ param: props.viewEntity.viewName }}>
-              This will permanently delete the selected <strong>{props.viewEntity.viewName}</strong> view. continue?
-            </Translate>
-          </Content>
-          <ButtonGroup>
-            <Button variant="secondary" onPress={() => history.push('/dashboards/' +  props.match.params.id)}>
-              <Translate contentKey="entity.action.cancel">close</Translate>
-            </Button>
-            <Button variant="negative" onPress={confirmDelete}>
-              <Translate contentKey="entity.action.delete">delete</Translate>
-            </Button>
-          </ButtonGroup>
-        </Dialog>
-      )}
+    <DialogContainer onDismiss={() => handleClose()}>
+      <Dialog>
+        <Heading>
+          <Translate contentKey="views.home.deleteView">Delete View</Translate>
+        </Heading>
+        <Divider />
+        <Content>
+          <Translate contentKey="views.delete.question" interpolate={{ param: props.viewEntity.viewName }}>
+            This will permanently delete the selected <strong>{props.viewEntity.viewName}</strong> view. continue?
+          </Translate>
+        </Content>
+        <ButtonGroup>
+          <Button variant="secondary" onPress={() => history.push('/dashboards/' + dashboardId)}>
+            <Translate contentKey="entity.action.cancel">close</Translate>
+          </Button>
+          <Button variant="negative" onPress={confirmDelete}>
+            <Translate contentKey="entity.action.delete">delete</Translate>
+          </Button>
+        </ButtonGroup>
+      </Dialog>
     </DialogContainer>
   );
 };

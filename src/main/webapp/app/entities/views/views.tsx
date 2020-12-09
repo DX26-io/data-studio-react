@@ -7,11 +7,10 @@ import { getDashboardViewEntities } from './views.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import { Button, DialogContainer, Flex, View } from '@adobe/react-spectrum';
+import { Button,  Flex, View } from '@adobe/react-spectrum';
 import Card from 'app/shared/components/card/card';
 import ViewCardThumbnail from './view-card/view-card-thumbnail';
 import ViewCardContent from './view-card/view-card-content';
-import ViewCreateModal from './view-create-modal';
 
 import Pagination from '@material-ui/lab/Pagination';
 import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer';
@@ -24,7 +23,6 @@ export const Views = (props: IViewsProps) => {
   const [paginationState, setPaginationState] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
-  const [isViewCreateModelOpen, setViewCreateModelOpen] = React.useState(false);
   const { viewsList, totalItems, dashboardEntity } = props;
 
   const getAllEntities = () => {
@@ -77,7 +75,7 @@ export const Views = (props: IViewsProps) => {
           key={view.id}
           thumbnail={
             <View height="size-3200">
-              <ViewCardThumbnail thumbnailImagePath={view.image} viewName={view.viewName} />
+              <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName} />
             </View>
           }
           content={
@@ -89,7 +87,8 @@ export const Views = (props: IViewsProps) => {
   });
 
   return (
-    <>
+    !props.loading && (
+      <>
       <SecondaryHeader
         breadcrumbItems={[
           { label: 'Home', route: '/' },
@@ -119,6 +118,8 @@ export const Views = (props: IViewsProps) => {
         <NoItemsFoundPlaceHolder headerTranslationKey="views.home.notFound.heading" contentTranslationKey="views.home.notFound.content" />
       )}
     </>
+    )
+   
   );
 };
 

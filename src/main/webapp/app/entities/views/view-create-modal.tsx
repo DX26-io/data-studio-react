@@ -14,21 +14,19 @@ import {
   AlertDialog,
   DialogContainer,
 } from '@adobe/react-spectrum';
-import { createEntity, reset ,setBlob} from './views.reducer';
-import { getEntity as getDashboardEntity  } from '../dashboard/dashboard.reducer';
+import { createEntity, reset, setBlob } from './views.reducer';
+import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { Translate, translate,setFileData } from 'react-jhipster';
-import { IDashboard } from 'app/shared/model/dashboard.model';
+import { Translate, translate, setFileData } from 'react-jhipster';
 import { getViewFromTranslations, getViewSuccessTranslations, getViewErrorTranslations } from 'app/entities/views/view-util';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 
 export interface IViewCreateModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 const ViewCreateModal = (props: IViewCreateModalProps) => {
-  const [isViewCreateModelOpen, setViewCreateModelOpen] = React.useState(true);
-  const [isOpen, setOpen] = React.useState(false);
-  const [isError, setErrorOpen] = React.useState(false);
+  const [createSuccessDialog, setCreateSuccessDialog] = React.useState(false);
+  const [createErrorDialog, setCreateErrorDialog] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [viewName, setViewNameText] = React.useState('');
   const [viewDescription, setDescriptionText] = React.useState('');
@@ -37,6 +35,7 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
   const { SUCCESS_LABEL, SUCCESS_CLOSE_LABEL, PRIMARY_ACTION_LABEL } = getViewSuccessTranslations();
   const { ERROR_LABEL, ERROR_CLOSE_LABEL } = getViewErrorTranslations();
   const history = useHistory();
+  const dashboardId = props.match.params.id;
 
   const saveEntity = values => {
     const entity = {
@@ -54,27 +53,28 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
     });
   };
 
-  const alertClose = () => {
-    setOpen(false);
-    history.push('/dashboards/' + viewEntity.viewDashboard?.id);
+  const handleClose = () => {
+    history.push('/dashboards/' + dashboardId);
   };
 
-  const alertOpen = () => {
-    setOpen(false);
-    history.push('/dashboards/' + viewEntity.viewDashboard?.id);
+  const handleCloseOnSuccessDialog = () => {
+    setCreateSuccessDialog(false);
+    props.reset();
+    handleClose();
+  };
+
+  const handleOpenOnSuccessDialog = () => {
+    setCreateSuccessDialog(false);
+    history.push('/dashboards/' +dashboardId);
     // TODO
     // redirect to build page
   };
-
-  useEffect(() => {
-    props.reset();
-  }, []);
 
 
   useEffect(() => {
     props.getDashboardEntity(props.match.params.id);
     if (props.updateSuccess) {
-      setOpen(true);
+      setCreateSuccessDialog(true);
     }
     if (props.errorMessage != null) {
       if (props.errorMessage.response.data.message === 'uniqueError') {
@@ -82,7 +82,7 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
       } else {
         setErrorMessage(translate('views.error.content'));
       }
-      setErrorOpen(true);
+      setCreateErrorDialog(true);
     }
   }, [props.updateSuccess, props.errorMessage]);
 
@@ -96,54 +96,52 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
 
   return (
     <>
-      <DialogContainer type="fullscreenTakeover" onDismiss={() => setViewCreateModelOpen(false)} {...props}>
-        {isViewCreateModelOpen && (
-          <Dialog>
-            <Heading>
-              <Translate contentKey="views.home.createNewView">Create new view</Translate>
-            </Heading>
-            <Divider />
-            <Content>
-              <Flex direction="column" gap="size-100" alignItems="center">
-                <View padding="size-600">
-                  <Form isRequired necessityIndicator="icon" minWidth="size-4600">
-                    <TextField
-                      label={VIEW_LABEL}
-                      maxLength={30}
-                      validationState={viewName?.length < 30 ? 'valid' : 'invalid'}
-                      onChange={setViewNameText}
-                    />
+      <DialogContainer type="fullscreenTakeover" onDismiss={handleClose}>
+        <Dialog>
+          <Heading>
+            <Translate contentKey="views.home.createNewView">Create new view</Translate>
+          </Heading>
+          <Divider />
+          <Content>
+            <Flex direction="column" gap="size-100" alignItems="center">
+              <View padding="size-600">
+                <Form isRequired necessityIndicator="icon" minWidth="size-4600">
+                  <TextField
+                    label={VIEW_LABEL}
+                    maxLength={30}
+                    validationState={viewName?.length < 30 ? 'valid' : 'invalid'}
+                    onChange={setViewNameText}
+                  />
 
-                    <TextArea
-                      label={DESCRIPTION_LABEL}
-                      maxLength={100}
-                      isRequired={false}
-                      validationState={viewDescription?.length < 100 ? 'valid' : 'invalid'}
-                      onChange={setDescriptionText}
-                    />
-                     <input id="file_image" type="file" onChange={onBlobChange(true, 'image')} accept="image/*" />
-                  </Form>
-                </View>
-              </Flex>
-            </Content>
-            <ButtonGroup>
-              <Button variant="secondary" onPress={() => history.push('/dashboards/' + props.dashboardEntity?.id)}>
-                <Translate contentKey="entity.action.cancel">close</Translate>
-              </Button>
-              <Button onPress={() => createView(viewName, viewDescription)} variant="cta" isDisabled={viewName === '' || updating}>
-                <Translate contentKey="entity.action.save">Save</Translate>
-              </Button>
-            </ButtonGroup>
-          </Dialog>
-        )}
+                  <TextArea
+                    label={DESCRIPTION_LABEL}
+                    maxLength={100}
+                    isRequired={false}
+                    validationState={viewDescription?.length < 100 ? 'valid' : 'invalid'}
+                    onChange={setDescriptionText}
+                  />
+                  <input id="file_image" type="file" onChange={onBlobChange(true, 'image')} accept="image/*" />
+                </Form>
+              </View>
+            </Flex>
+          </Content>
+          <ButtonGroup>
+            <Button variant="secondary" onPress={handleClose}>
+              <Translate contentKey="entity.action.cancel">close</Translate>
+            </Button>
+            <Button onPress={() => createView(viewName, viewDescription)} variant="cta" isDisabled={viewName === '' || updating}>
+              <Translate contentKey="entity.action.save">Save</Translate>
+            </Button>
+          </ButtonGroup>
+        </Dialog>
       </DialogContainer>
 
-      <DialogContainer onDismiss={() => setOpen(false)} {...props}>
-        {isOpen && (
+      <DialogContainer onDismiss={() => setCreateSuccessDialog(false)}>
+        {createSuccessDialog && (
           <AlertDialog
             title={SUCCESS_LABEL}
-            onPrimaryAction={alertOpen}
-            onCancel={alertClose}
+            onPrimaryAction={handleOpenOnSuccessDialog}
+            onCancel={handleCloseOnSuccessDialog}
             variant="confirmation"
             cancelLabel={SUCCESS_CLOSE_LABEL}
             primaryActionLabel={PRIMARY_ACTION_LABEL}
@@ -152,8 +150,8 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
           </AlertDialog>
         )}
       </DialogContainer>
-      <DialogContainer onDismiss={() => setErrorOpen(false)} {...props}>
-        {isError && (
+      <DialogContainer onDismiss={() => setCreateErrorDialog(false)}>
+        {createErrorDialog && (
           <AlertDialog title={ERROR_LABEL} variant="destructive" primaryActionLabel={ERROR_CLOSE_LABEL}>
             {errorMessage}
           </AlertDialog>
@@ -170,15 +168,14 @@ const mapStateToProps = (storeState: IRootState) => ({
   updateSuccess: storeState.views.updateSuccess,
   errorMessage: storeState.views.errorMessage,
   dataSourcesList: storeState.views.entities,
-  dashboardEntity:storeState.dashboard.entity,
-
+  dashboardEntity: storeState.dashboard.entity,
 });
 
 const mapDispatchToProps = {
   createEntity,
   reset,
   getDashboardEntity,
-  setBlob
+  setBlob,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

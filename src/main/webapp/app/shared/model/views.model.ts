@@ -10,6 +10,7 @@ export interface IViews {
   lastModifiedDate?: Date | null;
   published?: boolean;
   imageContentType?: string;
+  imageLocation?: string;
   image?: any;
   viewDashboard?: IDashboard;
 }

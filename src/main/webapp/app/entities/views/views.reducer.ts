@@ -5,7 +5,6 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
 
 import { defaultValue, IViews } from 'app/shared/model/views.model';
-import { IPayload, IPayloadResult } from 'react-jhipster/src/type/redux-action.type';
 import { getDefaultInitialPaginationState } from 'app/shared/util/pagination-utils';
 import { ICrudGetDashboardViewsAction, ICrudViewDeleteAction } from './view-util';
 
