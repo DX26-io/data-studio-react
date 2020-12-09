@@ -1,17 +1,5 @@
 import React, { ReactText } from 'react';
-import {
-  ActionButton,
-  DialogContainer,
-  Flex,
-  Item,
-  Menu,
-  MenuTrigger,
-  Section,
-  Text,
-  Tooltip,
-  TooltipTrigger,
-  View,
-} from '@adobe/react-spectrum';
+import { ActionButton, Flex, Item, Menu, MenuTrigger, Section, Text, Tooltip, TooltipTrigger, View } from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
@@ -26,8 +14,8 @@ interface IDashboardCardContentProps {
 }
 
 const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
-  const { dashboardName, dashboardType, dashboardDescription, dashboardId, datasource } = props;
-  const [dialog, setDialog] = React.useState<ReactText>('');
+  const { dashboardName, dashboardType, dashboardDescription, dashboardId } = props;
+  const [redirect, setRedirect] = React.useState<ReactText>('');
 
   return (
     <>
@@ -44,7 +32,7 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
               <ActionButton isQuiet aria-label="more options">
                 <MoreSmallListVert size="S" aria-label="Default Alert" />
               </ActionButton>
-              <Menu onAction={key => setDialog(key)}>
+              <Menu onAction={key => setRedirect(key)}>
                 <Section title={<Translate contentKey="dashboard.dashboard_card.options.more_options">More options</Translate>}>
                   <Item key="properties">
                     <Text>
@@ -66,24 +54,6 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
                 </Section>
               </Menu>
             </MenuTrigger>
-            <DialogContainer onDismiss={() => setDialog(null)}>
-              {dialog === 'delete' && (
-                <Redirect
-                  to={{
-                    pathname: '/dashboards/' + dashboardId + '/delete',
-                  }}
-                />
-              )}
-            </DialogContainer>
-            <DialogContainer type="fullscreenTakeover" onDismiss={() => setDialog(null)}>
-              {dialog === 'properties' && (
-                <Redirect
-                  to={{
-                    pathname: '/dashboards/' + dashboardId + '/properties',
-                  }}
-                />
-              )}
-            </DialogContainer>
             <TooltipTrigger delay={0} placement="end">
               <ActionButton isQuiet={true}>
                 <InfoOutline />
@@ -99,6 +69,20 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
           </Flex>
         </Flex>
       </View>
+      {redirect === 'delete' && (
+        <Redirect
+          to={{
+            pathname: '/dashboards/' + dashboardId + '/delete',
+          }}
+        />
+      )}
+      {redirect === 'properties' && (
+        <Redirect
+          to={{
+            pathname: '/dashboards/' + dashboardId + '/properties',
+          }}
+        />
+      )}
     </>
   );
 };

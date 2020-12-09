@@ -34,7 +34,6 @@ export interface IDashboardCreateModalProps extends StateProps, DispatchProps {}
 const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
   const history = useHistory();
   const dashboardNameInputEl = useRef(null);
-  const [isDashboardCreateModelOpen, setDashboardCreateModelOpen] = React.useState(true);
 
   const [dashboardName, setDashboardName] = React.useState('');
   const [dashboardCategory, setCategory] = React.useState('');
@@ -79,11 +78,15 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
 
   const handleCloseOnSuccessDialog = () => {
     setCreateSuccessDialog(false);
+    props.reset();
+    history.push('/dashboards');
+  };
+
+  const handleClose = () => {
     history.push('/dashboards');
   };
 
   useEffect(() => {
-    props.reset();
     props.getDataSourceEntities();
     dashboardNameInputEl.current.focus();
   }, []);
@@ -104,65 +107,63 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
 
   return (
     <>
-      <DialogContainer type="fullscreenTakeover" onDismiss={() => setDashboardCreateModelOpen(false)} {...props}>
-        {isDashboardCreateModelOpen && (
-          <Dialog>
-            <Heading>
-              <Translate contentKey="dashboard.home.createNewDashboard">Create new dashboard</Translate>
-            </Heading>
-            <Divider />
-            <Content>
-              <Flex direction="column" gap="size-100" alignItems="center">
-                <View padding="size-600">
-                  <Form isRequired necessityIndicator="icon" minWidth="size-4600">
-                    <TextField
-                      ref={dashboardNameInputEl}
-                      label={DASHBOARD_LABEL}
-                      maxLength={30}
-                      validationState={dashboardName?.length < 30 ? 'valid' : 'invalid'}
-                      onChange={setDashboardName}
-                    />
-                    <TextField
-                      label={CATEGORY_LABEL}
-                      maxLength={30}
-                      validationState={dashboardCategory?.length < 30 ? 'valid' : 'invalid'}
-                      onChange={setCategory}
-                    />
-                    <TextArea
-                      label={DESCRIPTION_LABEL}
-                      maxLength={100}
-                      isRequired={false}
-                      validationState={dashboardDescription?.length < 100 ? 'valid' : 'invalid'}
-                      onChange={setDescription}
-                    />
-                    <Picker
-                      validationState={dashboardDataSource?.length !== 0 ? 'valid' : 'invalid'}
-                      label={DATASOURCE_LABEL}
-                      placeholder={DATASOURCE_PLACEHOLDER}
-                      onSelectionChange={selected => setDatasource(selected.toString())}
-                    >
-                      {dataSourcesList.map(dataSources => (
-                        <Item key={dataSources.name}>{dataSources.name}</Item>
-                      ))}
-                    </Picker>
-                  </Form>
-                </View>
-              </Flex>
-            </Content>
-            <ButtonGroup>
-              <Button variant="secondary" onPress={() =>history.push('/dashboards') }>
-                <Translate contentKey="entity.action.cancel">Cancel</Translate>
-              </Button>
-              <Button
-                isDisabled={isCreateEditFormNotValid({ dashboardName, dashboardCategory, dashboardDataSource }) || updating}
-                onPress={() => createDashboard(dashboardName, dashboardCategory, dashboardDescription, dashboardDataSource)}
-                variant="cta"
-              >
-                <Translate contentKey="entity.action.create">Create</Translate>
-              </Button>
-            </ButtonGroup>
-          </Dialog>
-        )}
+      <DialogContainer type="fullscreenTakeover" onDismiss={() => handleClose()}>
+        <Dialog>
+          <Heading>
+            <Translate contentKey="dashboard.home.createNewDashboard">Create new dashboard</Translate>
+          </Heading>
+          <Divider />
+          <Content>
+            <Flex direction="column" gap="size-100" alignItems="center">
+              <View padding="size-600">
+                <Form isRequired necessityIndicator="icon" minWidth="size-4600">
+                  <TextField
+                    ref={dashboardNameInputEl}
+                    label={DASHBOARD_LABEL}
+                    maxLength={30}
+                    validationState={dashboardName?.length < 30 ? 'valid' : 'invalid'}
+                    onChange={setDashboardName}
+                  />
+                  <TextField
+                    label={CATEGORY_LABEL}
+                    maxLength={30}
+                    validationState={dashboardCategory?.length < 30 ? 'valid' : 'invalid'}
+                    onChange={setCategory}
+                  />
+                  <TextArea
+                    label={DESCRIPTION_LABEL}
+                    maxLength={100}
+                    isRequired={false}
+                    validationState={dashboardDescription?.length < 100 ? 'valid' : 'invalid'}
+                    onChange={setDescription}
+                  />
+                  <Picker
+                    validationState={dashboardDataSource?.length !== 0 ? 'valid' : 'invalid'}
+                    label={DATASOURCE_LABEL}
+                    placeholder={DATASOURCE_PLACEHOLDER}
+                    onSelectionChange={selected => setDatasource(selected.toString())}
+                  >
+                    {dataSourcesList.map(dataSources => (
+                      <Item key={dataSources.name}>{dataSources.name}</Item>
+                    ))}
+                  </Picker>
+                </Form>
+              </View>
+            </Flex>
+          </Content>
+          <ButtonGroup>
+            <Button variant="secondary" onPress={() => handleClose()}>
+              <Translate contentKey="entity.action.cancel">Cancel</Translate>
+            </Button>
+            <Button
+              isDisabled={isCreateEditFormNotValid({ dashboardName, dashboardCategory, dashboardDataSource }) || updating}
+              onPress={() => createDashboard(dashboardName, dashboardCategory, dashboardDescription, dashboardDataSource)}
+              variant="cta"
+            >
+              <Translate contentKey="entity.action.create">Create</Translate>
+            </Button>
+          </ButtonGroup>
+        </Dialog>
       </DialogContainer>
 
       <DialogContainer onDismiss={() => setCreateSuccessDialog(false)}>
@@ -196,8 +197,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.dashboard.updating,
   updateSuccess: storeState.dashboard.updateSuccess,
   errorMessage: storeState.dashboard.errorMessage,
-  dataSourcesList: storeState.datasources.entities
-
+  dataSourcesList: storeState.datasources.entities,
 });
 
 const mapDispatchToProps = {

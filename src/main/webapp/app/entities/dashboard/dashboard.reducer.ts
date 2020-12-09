@@ -5,7 +5,6 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
 
 import { defaultValue, IDashboard } from 'app/shared/model/dashboard.model';
-import { getDefaultInitialPaginationState } from 'app/shared/util/pagination-utils';
 
 export const ACTION_TYPES = {
   FETCH_DASHBOARD_LIST: 'dashboard/FETCH_DASHBOARD_LIST',
@@ -126,8 +125,7 @@ export const createEntity: ICrudPutAction<IDashboard> = entity => async dispatch
     type: ACTION_TYPES.CREATE_DASHBOARD,
     payload: axios.post(apiUrl, cleanEntity(entity)),
   });
-  const { activePage, itemsPerPage, sort, order } = getDefaultInitialPaginationState();
-  dispatch(getEntities(activePage - 1, itemsPerPage, `${sort},${order}`));
+  dispatch(getEntities());
   return result;
 };
 
@@ -136,8 +134,6 @@ export const updateEntity: ICrudPutAction<IDashboard> = entity => async dispatch
     type: ACTION_TYPES.UPDATE_DASHBOARD,
     payload: axios.put(apiUrl, cleanEntity(entity)),
   });
-  const { activePage, itemsPerPage, sort, order } = getDefaultInitialPaginationState();
-  dispatch(getEntities(activePage - 1, itemsPerPage, `${sort},${order}`));
   return result;
 };
 
@@ -147,8 +143,7 @@ export const deleteEntity: ICrudDeleteAction<IDashboard> = id => async dispatch 
     type: ACTION_TYPES.DELETE_DASHBOARD,
     payload: axios.delete(requestUrl),
   });
-  const { activePage, itemsPerPage, sort, order } = getDefaultInitialPaginationState();
-  dispatch(getEntities(activePage - 1, itemsPerPage, `${sort},${order}`));
+  dispatch(getEntities());
   return result;
 };
 

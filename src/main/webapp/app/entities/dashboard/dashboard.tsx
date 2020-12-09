@@ -88,43 +88,45 @@ export const Dashboard = (props: IDashboardProps) => {
   });
 
   return (
-    <>
-      <SecondaryHeader
-        breadcrumbItems={[
-          { label: 'Home', route: '/' },
-          { label: 'Dashboards', route: '/dashboards' },
-        ]}
-        title={DASHBOARDS_TITLE}
-      >
-        <Button variant="cta"  onPress={() => props.history.push(`${match.url}/create`)}>
-          <Translate contentKey="dashboard.home.createLabel">Create</Translate>
-        </Button>
-        <DialogContainer type="fullscreenTakeover" onDismiss={() => setDashboardCreateModelOpen(false)} {...props}>
-          {isDashboardCreateModelOpen && <DashboardCreateModal />}
-        </DialogContainer>
-      </SecondaryHeader>
-      {dashboardList.length > 0 ? (
-        <>
-          <Flex direction="row" gap="size-250" wrap marginX="5%" marginY="size-450" alignItems="center" justifyContent="start">
-            {dashboardListElement}
-          </Flex>
-          <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
-            {dashboardList && dashboardList.length > 0 && (
-              <Pagination
-                defaultPage={paginationState.activePage}
-                onChange={handleChangePage}
-                count={Math.ceil(totalItems / paginationState.itemsPerPage)}
-              />
-            )}
-          </Flex>
-        </>
-      ) : (
-        <NoItemsFoundPlaceHolder
-          headerTranslationKey="dashboard.home.notFound.heading"
-          contentTranslationKey="dashboard.home.notFound.content"
-        />
-      )}
-    </>
+    !props.loading && (
+      <>
+        <SecondaryHeader
+          breadcrumbItems={[
+            { label: 'Home', route: '/' },
+            { label: 'Dashboards', route: '/dashboards' },
+          ]}
+          title={DASHBOARDS_TITLE}
+        >
+          <Button variant="cta" onPress={() => props.history.push(`${match.url}/create`)}>
+            <Translate contentKey="dashboard.home.createLabel">Create</Translate>
+          </Button>
+          <DialogContainer type="fullscreenTakeover" onDismiss={() => setDashboardCreateModelOpen(false)} {...props}>
+            {isDashboardCreateModelOpen && <DashboardCreateModal />}
+          </DialogContainer>
+        </SecondaryHeader>
+        {dashboardList.length > 0 ? (
+          <>
+            <Flex direction="row" gap="size-250" wrap marginX="5%" marginY="size-450" alignItems="center" justifyContent="start">
+              {dashboardListElement}
+            </Flex>
+            <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
+              {dashboardList && dashboardList.length > 0 && (
+                <Pagination
+                  defaultPage={paginationState.activePage}
+                  onChange={handleChangePage}
+                  count={Math.ceil(totalItems / paginationState.itemsPerPage)}
+                />
+              )}
+            </Flex>
+          </>
+        ) : (
+          <NoItemsFoundPlaceHolder
+            headerTranslationKey="dashboard.home.notFound.heading"
+            contentTranslationKey="dashboard.home.notFound.content"
+          />
+        )}
+      </>
+    )
   );
 };
 

@@ -29,17 +29,18 @@ import {
 import { RouteComponentProps } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 
-export interface IDashboardPropertiesModalProps extends StateProps, DispatchProps ,RouteComponentProps<{ id: string }> {}
+export interface IDashboardPropertiesModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
   const history = useHistory();
   const [isEdit, setEdit] = React.useState(false);
-  const [isDashboardPropertiesModelOpen, setDashboardPropertiesModelOpen] = React.useState(true);
 
   const [dashboardName, setDashboardName] = React.useState(props.dashboardEntity.dashboardName ? props.dashboardEntity.dashboardName : '');
   const [dashboardCategory, setCategory] = React.useState(props.dashboardEntity.category ? props.dashboardEntity.category : '');
   const [dashboardDescription, setDescription] = React.useState(props.dashboardEntity.description ? props.dashboardEntity.description : '');
-  const [dashboardDataSource, setDataSource] = React.useState(props.dashboardEntity.dashboardDatasource?.name ? props.dashboardEntity.dashboardDatasource?.name  : '');
+  const [dashboardDataSource, setDataSource] = React.useState(
+    props.dashboardEntity.dashboardDatasource?.name ? props.dashboardEntity.dashboardDatasource?.name : ''
+  );
   const [isError, setErrorOpen] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const { DASHBOARD_LABEL, CATEGORY_LABEL, DESCRIPTION_LABEL, DATASOURCE_LABEL, DATASOURCE_PLACEHOLDER } = getDashboardFromTranslations();
@@ -71,9 +72,9 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
   };
 
   useEffect(() => {
-    props.getDataSourceEntities();
-    if (props.match.params.id) {
-      props.getEntity(props.match.params.id);
+    const dashboardId = props.match.params.id;
+    if (dashboardId) {
+      props.getEntity(dashboardId);
     }
   }, []);
 
@@ -89,92 +90,96 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
       }
       setErrorOpen(true);
     }
-    if(props.dashboardEntity){
+    if (props.dashboardEntity) {
       setDashboardName(props.dashboardEntity.dashboardName);
       setCategory(props.dashboardEntity.category);
       setDescription(props.dashboardEntity.description);
-      setDataSource (props.dashboardEntity.dashboardDatasource.name);
-
+      setDataSource(props.dashboardEntity.dashboardDatasource.name);
     }
-  }, [props.updateSuccess, props.errorMessage,props.dashboardEntity]);
+  }, [props.updateSuccess, props.errorMessage, props.dashboardEntity]);
+
+  const handlePropertiesModelClose = () => {
+    props.reset();
+    history.push('/dashboards');
+  };
+
+  const handleEdit = () => {
+    setEdit(true);
+    props.getDataSourceEntities();
+  };
 
   return (
     <>
-    <DialogContainer type="fullscreenTakeover" onDismiss={() => setDashboardPropertiesModelOpen(false)} {...props}>
-        { isDashboardPropertiesModelOpen && (
-           <Dialog>
-           {isEdit ? <Heading>Edit {props.dashboardEntity.dashboardName}</Heading> : <Heading>{props.dashboardEntity.dashboardName}</Heading>}
-           <Divider />
-           <Content>
-             <Flex direction="column" gap="size-100" alignItems="center">
-               <View padding="size-600">
-                 <Form isRequired isDisabled={!isEdit} necessityIndicator="icon" minWidth="size-4600">
-                   <TextField
-                     label={DASHBOARD_LABEL}
-                     maxLength={30}
-                     validationState={dashboardName?.length < 30 ? 'valid' : 'invalid'}
-                     value={dashboardName}
-                     onChange={setDashboardName}
-                   />
-                   <TextField
-                     label={CATEGORY_LABEL}
-                     maxLength={30}
-                     validationState={dashboardCategory?.length < 30 ? 'valid' : 'invalid'}
-                     onChange={setCategory}
-                     value={dashboardCategory}
-                   />
-                   <TextArea
-                     isRequired={false}
-                     value={dashboardDescription}
-                     label={DESCRIPTION_LABEL}
-                     maxLength={100}
-                     validationState={dashboardDescription?.length < 100 ? 'valid' : 'invalid'}
-                     onChange={setDescription}
-                   />
-                   <Picker
-                     validationState={dashboardDataSource?.length !== 0 ? 'valid' : 'invalid'}
-                     label={DATASOURCE_LABEL}
-                     selectedKey={dashboardDataSource}
-                     placeholder={DATASOURCE_PLACEHOLDER}
-                     onSelectionChange={selected => setDataSource(selected.toString())}
-                   >
-                     {dataSourcesList.map(dataSource => (
-                       <Item key={dataSource.name}>{dataSource.name}</Item>
-                     ))}
-                   </Picker>
-                 </Form>
-               </View>
-             </Flex>
-           </Content>
-           <ButtonGroup>
-             <Button variant="secondary" onPress={() =>history.push('/dashboards') }>
-               <Translate contentKey="entity.action.cancel">Close</Translate>
-             </Button>
-             {!isEdit && (
-               <Button
-                 variant="cta"
-                 onPress={() => {
-                   setEdit(true);
-                 }}
-               >
-                 <Translate contentKey="entity.action.edit">Edit</Translate>
-               </Button>
-             )}
-   
-             {isEdit && (
-               <Button
-                 variant="cta"
-                 isDisabled={isCreateEditFormNotValid({ dashboardName, dashboardCategory, dashboardDataSource }) || updating}
-                 onPress={() => updateDashboard(dashboardName, dashboardCategory, dashboardDescription, dashboardDataSource)}
-               >
-                 <Translate contentKey="entity.action.save">Save</Translate>
-               </Button>
-             )}
-           </ButtonGroup>
-         </Dialog>
-        )}
-          </DialogContainer>
-     
+      <DialogContainer type="fullscreenTakeover" onDismiss={() => handlePropertiesModelClose()}>
+        <Dialog>
+          {isEdit ? (
+            <Heading>Edit {props.dashboardEntity.dashboardName}</Heading>
+          ) : (
+            <Heading>{props.dashboardEntity.dashboardName}</Heading>
+          )}
+          <Divider />
+          <Content>
+            <Flex direction="column" gap="size-100" alignItems="center">
+              <View padding="size-600">
+                <Form isRequired isDisabled={!isEdit} necessityIndicator="icon" minWidth="size-4600">
+                  <TextField
+                    label={DASHBOARD_LABEL}
+                    maxLength={30}
+                    validationState={dashboardName?.length < 30 ? 'valid' : 'invalid'}
+                    value={dashboardName}
+                    onChange={setDashboardName}
+                  />
+                  <TextField
+                    label={CATEGORY_LABEL}
+                    maxLength={30}
+                    validationState={dashboardCategory?.length < 30 ? 'valid' : 'invalid'}
+                    onChange={setCategory}
+                    value={dashboardCategory}
+                  />
+                  <TextArea
+                    isRequired={false}
+                    value={dashboardDescription}
+                    label={DESCRIPTION_LABEL}
+                    maxLength={100}
+                    validationState={dashboardDescription?.length < 100 ? 'valid' : 'invalid'}
+                    onChange={setDescription}
+                  />
+                  <Picker
+                    validationState={dashboardDataSource?.length !== 0 ? 'valid' : 'invalid'}
+                    label={DATASOURCE_LABEL}
+                    selectedKey={dashboardDataSource}
+                    placeholder={DATASOURCE_PLACEHOLDER}
+                    onSelectionChange={selected => setDataSource(selected.toString())}
+                  >
+                    {dataSourcesList.map(dataSource => (
+                      <Item key={dataSource.name}>{dataSource.name}</Item>
+                    ))}
+                  </Picker>
+                </Form>
+              </View>
+            </Flex>
+          </Content>
+          <ButtonGroup>
+            <Button variant="secondary" onPress={() => handlePropertiesModelClose()}>
+              <Translate contentKey="entity.action.cancel">Close</Translate>
+            </Button>
+            {!isEdit && (
+              <Button variant="cta" onPress={() => handleEdit()}>
+                <Translate contentKey="entity.action.edit">Edit</Translate>
+              </Button>
+            )}
+            {isEdit && (
+              <Button
+                variant="cta"
+                isDisabled={isCreateEditFormNotValid({ dashboardName, dashboardCategory, dashboardDataSource }) || updating}
+                onPress={() => updateDashboard(dashboardName, dashboardCategory, dashboardDescription, dashboardDataSource)}
+              >
+                <Translate contentKey="entity.action.save">Save</Translate>
+              </Button>
+            )}
+          </ButtonGroup>
+        </Dialog>
+      </DialogContainer>
       <DialogContainer onDismiss={() => setErrorOpen(false)} {...props}>
         {isError && (
           <AlertDialog title={ERROR_LABEL} variant="destructive" primaryActionLabel={ERROR_CLOSE_LABEL}>
