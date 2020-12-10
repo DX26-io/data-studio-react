@@ -27,16 +27,6 @@
     "datasource": "Datasource",
     "datasource_placeholder": "Select datasource",
     "image_location": "Image Location",
-    "dashboard_card": {
-      "no_description": "no description",
-      "options": {
-        "more_options": "More options",
-        "danger": "Danger",
-        "properties": "Properties",
-        "release": "Release",
-        "delete": "Delete"
-      }
-    },
     "uniqueError": {
       "create": "Dashboard already exists with <strong>{{param}}</strong> name please choose a different name and click on create.",
       "update": "Dashboard already exists with <strong>{{param}}</strong> name please choose a different name and click on save."
