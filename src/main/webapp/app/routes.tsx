@@ -24,6 +24,11 @@ const Admin = Loadable({
   loading: () => <div>loading ...</div>,
 });
 
+const Dx26 = Loadable({
+  loader: () => import(/* webpackChunkName: "Dx26" */ 'app/modules/dx26'),
+  loading: () => <div>loading ...</div>,
+});
+
 const Routes = () => (
   <div className="view-routes">
     <Switch>
@@ -33,6 +38,8 @@ const Routes = () => (
       <ErrorBoundaryRoute path="/account/activate/:key?" component={Activate} />
       <ErrorBoundaryRoute path="/account/reset/request" component={PasswordResetInit} />
       <ErrorBoundaryRoute path="/account/reset/finish/:key?" component={PasswordResetFinish} />
+      <ErrorBoundaryRoute path="/dx26" component={Dx26} />
+
       <PrivateRoute path="/admin" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN]} />
       <PrivateRoute path="/account" component={Account} hasAnyAuthorities={[AUTHORITIES.ADMIN, AUTHORITIES.USER]} />
       <PrivateRoute path="/" exact component={Home} hasAnyAuthorities={[AUTHORITIES.USER]} />

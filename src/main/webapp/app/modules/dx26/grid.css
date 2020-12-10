@@ -1,0 +1,33 @@
+.react-grid-layout {
+  width: 100%;
+}
+
+.header {
+  /* height: 30px; */
+  background: #eee;
+  border-bottom: 1px solid #bbb;
+  margin: -5px -5px 0;
+  padding: 0 5px 0;
+  -webkit-box-flex: 0;
+  cursor: move;
+}
+
+.widget {
+  outline: 1px solid #888;
+  border-radius: 1px;
+  padding: 5px 5px;
+  position: relative;
+}
+
+/* override react-grid-layout css for display resize icon on mouseover */
+.react-grid-item:hover .react-resizable-handle {
+  opacity: 1;
+}
+.react-resizable-handle {
+  opacity: 0;
+}
+
+/* override react-grid-layout css for remove colour while resize */
+.react-grid-item.react-grid-placeholder {
+  background: transparent;
+}
