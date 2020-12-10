@@ -4,6 +4,8 @@ import { AvForm, AvGroup, AvInput, AvField, AvFeedback } from 'availity-reactstr
 import { Translate } from 'react-jhipster';
 import { getUser, getRoles, updateUser, createUser, reset, deleteUser } from './user-management.reducer';
 import { IRootState } from 'app/shared/reducers';
+import { isFormValid } from './user.util';
+import Alert from '@spectrum-icons/workflow/Alert';
 import {
   Flex,
   useDialogContainer,
@@ -16,7 +18,7 @@ import {
   TextField,
   Header,
   Checkbox,
-  Text,
+  Text
 } from '@adobe/react-spectrum';
 import Select from 'react-select';
 
@@ -27,13 +29,14 @@ export interface IUserManagementUpdateProps extends StateProps, DispatchProps {
 }
 
 export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
-  const isInvalid = false;
   const { isNew, setOpen, loginID, user, loading, updating, roles, fetchSuccess, updateSuccess } = props;
   const [login, setLogin] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [activated, setActivated] = useState(true);
+  const [isInValidForm, setInValidForm] = useState(false);
+  const [validationErrorKey, setValidationErrorKey] = useState('');
   let userGroups = [];
 
   const dialog = useDialogContainer();
@@ -76,14 +79,17 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
   }, [fetchSuccess, isNew, updateSuccess]);
 
   const saveUser = () => {
-    // TODO : this condition has to be part of form itself
-    if (email && login) {
+    const error = isFormValid({ ...user, login, firstName, lastName, email });
+    if (error.isValid) {
       const values = { ...user, login, firstName, lastName, email, activated, userGroups };
       if (isNew) {
         props.createUser(values);
       } else {
         props.updateUser(values);
       }
+    } else {
+      setInValidForm(!error.isValid);
+      setValidationErrorKey(error.translationKey);
     }
   };
 
@@ -105,7 +111,7 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <Dialog  data-testid="user-form-dialog">
+        <Dialog data-testid="user-form-dialog">
           <Heading>
             <Flex alignItems="center" gap="size-100" data-testid="user-form-heading">
               {!isNew ? (
@@ -132,7 +138,6 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
                 label="Login ID"
                 placeholder="John"
                 minLength={1}
-                pattern="/^[_'.@A-Za-z0-9-]*$/"
                 validationState={login.length < 50 ? 'valid' : 'invalid'}
                 type="text"
                 value={login}
@@ -201,6 +206,16 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
                 <Translate contentKey="entity.action.delete">Delete</Translate>
               </Button>
             ) : null}
+            {isInValidForm && (
+              <Flex gap="size-100" data-testid="validation-error" marginTop="static-size-200">
+                <Alert color="negative" />
+                <Text marginBottom="size-300">
+                  <span className="spectrum-Body-emphasis error-message">
+                    <Translate contentKey={validationErrorKey}></Translate>
+                  </span>
+                </Text>
+              </Flex>
+            )}
           </Content>
         </Dialog>
       )}

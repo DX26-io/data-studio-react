@@ -105,7 +105,7 @@ describe('User Management dialog', () => {
     const defaultProps = {
       isNew: true,
       setOpen: jest.fn(),
-      loginID: 'test'
+      loginID: '',
     };
     const tree = wrapper(true, defaultProps);
     fillUserManagementForm(tree, true);
@@ -139,7 +139,14 @@ describe('User Management dialog', () => {
   });
 
   it('should show error when submitted without email and login', () => {
-    // TODO
-    expect(1).toEqual(1);
+    const defaultProps = {
+      isNew: true,
+      setOpen: jest.fn(),
+      loginID: '',
+    };
+    const tree = wrapper(true, defaultProps);
+    const submitButton = tree.getByTestId('user-form-submit');
+    userEvent.click(submitButton);
+    expect(tree.getByTestId('validation-error')).toBeDefined();
   });
 });
