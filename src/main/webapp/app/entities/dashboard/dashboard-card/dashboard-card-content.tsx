@@ -33,22 +33,22 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
                 <MoreSmallListVert size="S" aria-label="Default Alert" />
               </ActionButton>
               <Menu onAction={key => setRedirect(key)}>
-                <Section title={<Translate contentKey="dashboard.dashboard_card.options.more_options">More options</Translate>}>
+                <Section title={<Translate contentKey="entity.options.more_options">More options</Translate>}>
                   <Item key="properties">
                     <Text>
-                      <Translate contentKey="dashboard.dashboard_card.options.properties">Properties</Translate>
+                      <Translate contentKey="entity.options.properties">Properties</Translate>
                     </Text>
                   </Item>
                   <Item key="release">
                     <Text>
-                      <Translate contentKey="dashboard.dashboard_card.options.release">Release</Translate>
+                      <Translate contentKey="entity.options.release">Release</Translate>
                     </Text>
                   </Item>
                 </Section>
-                <Section title={<Translate contentKey="dashboard.dashboard_card.options.danger">Danger</Translate>}>
+                <Section title={<Translate contentKey="entity.options.danger">Danger</Translate>}>
                   <Item key="delete">
                     <Text>
-                      <Translate contentKey="dashboard.dashboard_card.options.delete">Delete</Translate>
+                      <Translate contentKey="entity.options.delete">Delete</Translate>
                     </Text>
                   </Item>
                 </Section>
@@ -62,7 +62,7 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
                 {dashboardDescription ? (
                   dashboardDescription
                 ) : (
-                  <Translate contentKey="dashboard.dashboard_card.no_description"> no description</Translate>
+                  <Translate contentKey="entity.options.no_description"> no description</Translate>
                 )}
               </Tooltip>
             </TooltipTrigger>
