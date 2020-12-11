@@ -296,13 +296,6 @@ describe('User management reducer tests', () => {
           type: SUCCESS(ACTION_TYPES.CREATE_USER),
           payload: resolvedObject,
         },
-        {
-          type: REQUEST(ACTION_TYPES.FETCH_USERS),
-        },
-        {
-          type: SUCCESS(ACTION_TYPES.FETCH_USERS),
-          payload: resolvedObject,
-        },
       ];
       await store.dispatch(createUser()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
@@ -315,13 +308,6 @@ describe('User management reducer tests', () => {
           type: SUCCESS(ACTION_TYPES.UPDATE_USER),
           payload: resolvedObject,
         },
-        {
-          type: REQUEST(ACTION_TYPES.FETCH_USERS),
-        },
-        {
-          type: SUCCESS(ACTION_TYPES.FETCH_USERS),
-          payload: resolvedObject,
-        },
       ];
       await store.dispatch(updateUser({ login: username })).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
@@ -332,13 +318,6 @@ describe('User management reducer tests', () => {
         },
         {
           type: SUCCESS(ACTION_TYPES.DELETE_USER),
-          payload: resolvedObject,
-        },
-        {
-          type: REQUEST(ACTION_TYPES.FETCH_USERS),
-        },
-        {
-          type: SUCCESS(ACTION_TYPES.FETCH_USERS),
           payload: resolvedObject,
         },
       ];
