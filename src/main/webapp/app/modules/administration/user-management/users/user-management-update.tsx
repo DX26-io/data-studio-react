@@ -123,7 +123,7 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
           </Heading>
           <Header data-testid="user-form-action">
             <Flex alignItems="center" gap="size-100">
-              <Button variant="secondary" onPress={handleClose}>
+              <Button variant="secondary" onPress={handleClose} data-testid="user-form-cancel">
                 <Translate contentKey="entity.action.cancel">Cancel</Translate>
               </Button>
               <Button variant="cta" onPress={saveUser} isDisabled={updating} data-testid="user-form-submit">

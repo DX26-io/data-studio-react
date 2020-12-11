@@ -149,4 +149,16 @@ describe('User Management dialog', () => {
     userEvent.click(submitButton);
     expect(tree.getByTestId('validation-error')).toBeDefined();
   });
+
+  it('on user dialog close', () => {
+    const defaultProps = {
+      isNew: true,
+      setOpen: jest.fn(),
+      loginID: '',
+    };
+    const tree = wrapper(true, defaultProps);
+    const cancelButton = tree.getByTestId('user-form-cancel');
+    userEvent.click(cancelButton);
+    expect(defaultProps.setOpen.mock.calls.length).toEqual(2);
+  });
 });
