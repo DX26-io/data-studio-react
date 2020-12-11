@@ -18,18 +18,19 @@ import {
   TextField,
   Header,
   Checkbox,
-  Text
+  Text,
 } from '@adobe/react-spectrum';
 import Select from 'react-select';
 
 export interface IUserManagementUpdateProps extends StateProps, DispatchProps {
+  setUpdateSuccess: () => void;
   isNew: boolean;
   setOpen: (isOpen: boolean) => void;
   loginID: string;
 }
 
 export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
-  const { isNew, setOpen, loginID, user, loading, updating, roles, fetchSuccess, updateSuccess } = props;
+  const { isNew, setOpen, setUpdateSuccess, loginID, user, loading, updating, roles, fetchSuccess, updateSuccess } = props;
   const [login, setLogin] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -75,6 +76,7 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
     }
     if (updateSuccess) {
       handleClose();
+      setUpdateSuccess();
     }
   }, [fetchSuccess, isNew, updateSuccess]);
 

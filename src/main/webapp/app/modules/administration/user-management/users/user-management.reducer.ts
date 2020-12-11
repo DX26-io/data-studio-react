@@ -145,7 +145,6 @@ export const createUser: ICrudPutAction<IUser> = user => async dispatch => {
     type: ACTION_TYPES.CREATE_USER,
     payload: axios.post(apiUrl, user),
   });
-  dispatch(getUsers());
   return result;
 };
 
@@ -154,7 +153,6 @@ export const updateUser: ICrudPutAction<IUser> = user => async dispatch => {
     type: ACTION_TYPES.UPDATE_USER,
     payload: axios.put(apiUrl, user),
   });
-  dispatch(getUsers());
   return result;
 };
 
@@ -164,7 +162,6 @@ export const deleteUser: ICrudDeleteAction<IUser> = id => async dispatch => {
     type: ACTION_TYPES.DELETE_USER,
     payload: axios.delete(requestUrl),
   });
-  dispatch(getUsers());
   return result;
 };
 

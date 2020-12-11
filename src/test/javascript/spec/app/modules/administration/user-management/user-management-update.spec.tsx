@@ -88,6 +88,7 @@ describe('User Management dialog', () => {
       isNew: true,
       setOpen: jest.fn(),
       loginID: 'test',
+      setUpdateSuccess:jest.fn()
     };
     const tree = wrapper(true, defaultProps);
     expect(tree.getByTestId('user-form-dialog')).toBeDefined();
@@ -106,11 +107,11 @@ describe('User Management dialog', () => {
       isNew: true,
       setOpen: jest.fn(),
       loginID: '',
+      setUpdateSuccess:jest.fn()
     };
     const tree = wrapper(true, defaultProps);
     fillUserManagementForm(tree, true);
-    // TODO : find a way to expect with dispatch action
-    expect(defaultProps.setOpen.mock.calls.length).toEqual(1);
+    expect(defaultProps.setUpdateSuccess.mock.calls.length).toEqual(1);
   });
 
   it('on user update', () => {
@@ -118,11 +119,11 @@ describe('User Management dialog', () => {
       isNew: false,
       setOpen: jest.fn(),
       loginID: 'test123',
+      setUpdateSuccess:jest.fn()
     };
     const tree = wrapper(false, defaultProps);
     fillUserManagementForm(tree, false);
-    // TODO : find a way to expect with dispatch action
-    expect(defaultProps.setOpen.mock.calls.length).toEqual(1);
+    expect(defaultProps.setUpdateSuccess.mock.calls.length).toEqual(1);
   });
 
   it('on user delete', () => {
@@ -130,12 +131,12 @@ describe('User Management dialog', () => {
       isNew: false,
       setOpen: jest.fn(),
       loginID: 'test123',
+      setUpdateSuccess:jest.fn()
     };
     const tree = wrapper(false, defaultProps);
     const deleteButton = tree.getByTestId('delete');
     userEvent.click(deleteButton);
-    // TODO : find a way to expect with dispatch action
-    expect(defaultProps.setOpen.mock.calls.length).toEqual(1);
+    expect(defaultProps.setUpdateSuccess.mock.calls.length).toEqual(1);
   });
 
   it('should show error when submitted without email and login', () => {
@@ -143,6 +144,7 @@ describe('User Management dialog', () => {
       isNew: true,
       setOpen: jest.fn(),
       loginID: '',
+      setUpdateSuccess:jest.fn()
     };
     const tree = wrapper(true, defaultProps);
     const submitButton = tree.getByTestId('user-form-submit');
@@ -155,6 +157,7 @@ describe('User Management dialog', () => {
       isNew: true,
       setOpen: jest.fn(),
       loginID: '',
+      setUpdateSuccess:jest.fn()
     };
     const tree = wrapper(true, defaultProps);
     const cancelButton = tree.getByTestId('user-form-cancel');

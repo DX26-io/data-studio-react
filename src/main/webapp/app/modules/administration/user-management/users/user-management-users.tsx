@@ -6,7 +6,7 @@ import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/paginati
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { getUsers, updateUser } from './user-management.reducer';
 import { IRootState } from 'app/shared/reducers';
-import { Button, Flex,DialogContainer } from '@adobe/react-spectrum';
+import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
@@ -16,13 +16,20 @@ export interface IUserManagementProps extends StateProps, DispatchProps, RouteCo
 
 export const UserManagementUsers = (props: IUserManagementProps) => {
   const [pagination, setPagination] = useState(overridePaginationStateWithQueryParams(getSortState(props.location), props.location.search));
+  const [isOpen, setOpen] = React.useState(false);
+  const [isNew, setNew] = React.useState(false);
+  const [loginID, setLoginID] = React.useState('');
 
-  useEffect(() => {
+  const fetchUsers = () => {
     props.getUsers(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
     const endURL = `?page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
     if (props.location.search !== endURL) {
       props.history.push(`${props.location.pathname}${endURL}`);
     }
+  };
+
+  useEffect(() => {
+    fetchUsers();
   }, [pagination.activePage, pagination.order, pagination.sort, pagination.itemsPerPage]);
 
   useEffect(() => {
@@ -40,12 +47,9 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
     }
   }, [props.location.search]);
 
-  const sort = p => () =>
-    setPagination({
-      ...pagination,
-      order: pagination.order === 'asc' ? 'desc' : 'asc',
-      sort: p,
-    });
+  const setUpdateSuccess = () => {
+    fetchUsers();
+  };
 
   const handleChangePage = (event, newPage) => {
     setPagination({
@@ -61,11 +65,6 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
     });
   };
 
-  const [isOpen, setOpen] = React.useState(false);
-  const [isNew,setNew] = React.useState(false);
-  const [loginID,setLoginID] = React.useState('');
-
-
   const { users, match, totalItems } = props;
 
   return (
@@ -79,13 +78,26 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
         ]}
         title={'User Management'}
       >
-        <Button variant="cta" onPress={() => {setOpen(true);setNew(true)}} data-testid="create-user">
+        <Button
+          variant="cta"
+          onPress={() => {
+            setOpen(true);
+            setNew(true);
+            setLoginID('');
+          }}
+          data-testid="create-user"
+        >
           <Translate contentKey="entity.action.create">Create</Translate>
         </Button>
       </SecondaryHeader>
-      <DialogContainer onDismiss={() => setOpen(false)} >
+      <DialogContainer onDismiss={() => setOpen(false)}>
         {isOpen && (
-          <UserManagementUpdate isNew={isNew} setOpen={setOpen} loginID={loginID}></UserManagementUpdate>
+          <UserManagementUpdate
+            setUpdateSuccess={setUpdateSuccess}
+            isNew={isNew}
+            setOpen={setOpen}
+            loginID={loginID}
+          ></UserManagementUpdate>
         )}
       </DialogContainer>
       <div className="dx26-container">
@@ -94,7 +106,7 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
             <Table aria-label="customized table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center" onClick={sort('id')}>
+                  <TableCell align="center">
                     <Translate contentKey="global.field.id">ID</Translate>
                   </TableCell>
                   <TableCell align="center">
@@ -134,7 +146,15 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
                     <TableCell align="center">{u.userType}</TableCell>
                     <TableCell align="center">
                       <Flex gap="size-100" justifyContent="center">
-                        <a onClick={() => {setOpen(true);setNew(false);setLoginID(u.login)}}><Edit size="S"/></a>
+                        <a
+                          onClick={() => {
+                            setOpen(true);
+                            setNew(false);
+                            setLoginID(u.login);
+                          }}
+                        >
+                          <Edit size="S" />
+                        </a>
                       </Flex>
                     </TableCell>
                   </TableRow>
@@ -145,7 +165,7 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
             component="div"
-            count={props.totalItems}
+            count={totalItems}
             rowsPerPage={pagination.itemsPerPage}
             page={pagination.activePage}
             onChangePage={handleChangePage}
@@ -159,7 +179,7 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   users: storeState.userManagement.users,
-  totalItems: storeState.userManagement.totalItems
+  totalItems: storeState.userManagement.totalItems,
 });
 
 const mapDispatchToProps = { getUsers, updateUser };
