@@ -234,7 +234,7 @@ describe('Entities reducer tests', () => {
           payload: resolvedObject,
         },
       ];
-      await store.dispatch(createEntity({ id: 1 })).then(() => expect(store.getActions()).toEqual(expectedActions));
+      await store.dispatch(createEntity({ viewDashboard: { id: 1 } })).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
     it('dispatches ACTION_TYPES.UPDATE_VIEWS actions', async () => {
@@ -246,8 +246,15 @@ describe('Entities reducer tests', () => {
           type: SUCCESS(ACTION_TYPES.UPDATE_VIEWS),
           payload: resolvedObject,
         },
+        {
+          type: REQUEST(ACTION_TYPES.FETCH_VIEWS_LIST),
+        },
+        {
+          type: SUCCESS(ACTION_TYPES.FETCH_VIEWS_LIST),
+          payload: resolvedObject,
+        },
       ];
-      await store.dispatch(updateEntity({ id: 1 })).then(() => expect(store.getActions()).toEqual(expectedActions));
+      await store.dispatch(updateEntity({ viewDashboard: { id: 1 } })).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
     it('dispatches ACTION_TYPES.DELETE_VIEWS actions', async () => {
@@ -267,7 +274,7 @@ describe('Entities reducer tests', () => {
           payload: resolvedObject,
         },
       ];
-      await store.dispatch(deleteEntity(42666)).then(() => expect(store.getActions()).toEqual(expectedActions));
+      await store.dispatch(deleteEntity(42666, 1001)).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
     it('dispatches ACTION_TYPES.RESET actions', async () => {
