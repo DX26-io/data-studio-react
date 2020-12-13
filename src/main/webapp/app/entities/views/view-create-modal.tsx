@@ -65,11 +65,10 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
 
   const handleOpenOnSuccessDialog = () => {
     setCreateSuccessDialog(false);
-    history.push('/dashboards/' +dashboardId);
+    history.push('/dashboards/' + dashboardId);
     // TODO
     // redirect to build page
   };
-
 
   useEffect(() => {
     props.getDashboardEntity(props.match.params.id);

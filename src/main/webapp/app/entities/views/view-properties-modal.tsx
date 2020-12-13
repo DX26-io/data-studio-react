@@ -111,7 +111,7 @@ const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
             </Flex>
           </Content>
           <ButtonGroup>
-            <Button variant="secondary" onPress={ handleClose}>
+            <Button variant="secondary" onPress={handleClose}>
               <Translate contentKey="entity.action.cancel">Cancel</Translate>
             </Button>
             {!isEdit && (

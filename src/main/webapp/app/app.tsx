@@ -21,7 +21,7 @@ import AppRoutes from 'app/routes';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
 
-export interface IAppProps extends StateProps, DispatchProps { }
+export interface IAppProps extends StateProps, DispatchProps {}
 
 // TODO: Test Cases
 export const App = (props: IAppProps) => {
@@ -63,12 +63,12 @@ export const App = (props: IAppProps) => {
       </Grid>
     </Router>
   ) : (
-      <Router basename={baseHref}>
-        <ErrorBoundary>
-          <AppRoutes />
-        </ErrorBoundary>
-      </Router>
-    );
+    <Router basename={baseHref}>
+      <ErrorBoundary>
+        <AppRoutes />
+      </ErrorBoundary>
+    </Router>
+  );
 };
 
 const mapStateToProps = ({ authentication, applicationProfile, locale }: IRootState) => ({
