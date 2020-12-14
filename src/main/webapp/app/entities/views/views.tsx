@@ -7,7 +7,7 @@ import { getDashboardViewEntities } from './views.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import { Button,  Flex, View } from '@adobe/react-spectrum';
+import { Button, Flex, View } from '@adobe/react-spectrum';
 import Card from 'app/shared/components/card/card';
 import ViewCardThumbnail from './view-card/view-card-thumbnail';
 import ViewCardContent from './view-card/view-card-content';
@@ -70,7 +70,6 @@ export const Views = (props: IViewsProps) => {
   };
   const viewsListElement = props.viewsList.map(view => {
     return (
-      <>
         <Card
           key={view.id}
           thumbnail={
@@ -82,44 +81,43 @@ export const Views = (props: IViewsProps) => {
             <ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} />
           }
         />
-      </>
     );
   });
 
   return (
     !props.loading && (
       <>
-      <SecondaryHeader
-        breadcrumbItems={[
-          { label: 'Home', route: '/' },
-          { label: 'Dashboards', route: '/dashboards' },
-          { label: 'Views', route: '/views' },
-        ]}
-        title={dashboardEntity.dashboardName}
-      >
-        <Button variant="cta" onPress={() => props.history.push(`${props.match.url}/create`)}>
-          <Translate contentKey="views.home.createLabel">Create View</Translate>
-        </Button>
-      </SecondaryHeader>
-      {viewsList && viewsList.length > 0 ? (
-        <>
-          <Flex direction="row" gap="size-250" wrap marginX="5%" marginY="size-450" alignItems="center" justifyContent="start">
-            {viewsListElement}
-          </Flex>
-          <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
-            <Pagination
-              defaultPage={paginationState.activePage}
-              onChange={handleChangePage}
-              count={Math.ceil(totalItems / paginationState.itemsPerPage)}
-            />
-          </Flex>
-        </>
-      ) : (
-        <NoItemsFoundPlaceHolder headerTranslationKey="views.home.notFound.heading" contentTranslationKey="views.home.notFound.content" />
-      )}
-    </>
+        <SecondaryHeader
+          breadcrumbItems={[
+            { label: 'Home', route: '/' },
+            { label: 'Dashboards', route: '/dashboards' },
+            { label: 'Views', route: '/views' },
+          ]}
+          title={dashboardEntity.dashboardName}
+        >
+          <Button variant="cta" onPress={() => props.history.push(`${props.match.url}/create`)}>
+            <Translate contentKey="views.home.createLabel">Create View</Translate>
+          </Button>
+          <></>
+        </SecondaryHeader>
+        {viewsList && viewsList.length > 0 ? (
+          <>
+            <Flex direction="row" gap="size-250" wrap marginX="5%" marginY="size-450" alignItems="center" justifyContent="start">
+              {viewsListElement}
+            </Flex>
+            <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
+              <Pagination
+                defaultPage={paginationState.activePage}
+                onChange={handleChangePage}
+                count={Math.ceil(totalItems / paginationState.itemsPerPage)}
+              />
+            </Flex>
+          </>
+        ) : (
+          <NoItemsFoundPlaceHolder headerTranslationKey="views.home.notFound.heading" contentTranslationKey="views.home.notFound.content" />
+        )}
+      </>
     )
-   
   );
 };
 

@@ -71,7 +71,7 @@ const ViewCardContent: React.FC<IViewCardContentProps> = props => {
                 <InfoOutline />
               </ActionButton>
               <Tooltip>
-                {viewName ? viewName : <Translate contentKey="entity.options.no_description"> no description</Translate>}
+                {description ? description : <Translate contentKey="entity.options.no_description"> no description</Translate>}
               </Tooltip>
             </TooltipTrigger>
           </Flex>

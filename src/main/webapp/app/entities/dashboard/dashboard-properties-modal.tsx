@@ -90,7 +90,7 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
       }
       setErrorOpen(true);
     }
-    if (props.dashboardEntity) {
+    if (props.dashboardEntity.id) {
       setDashboardName(props.dashboardEntity.dashboardName);
       setCategory(props.dashboardEntity.category);
       setDescription(props.dashboardEntity.description);
