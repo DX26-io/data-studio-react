@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { ReactText, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { ActionButton, Flex, Text, Item, Menu, MenuTrigger, View, Section, Picker, Button } from '@adobe/react-spectrum';
 
-import { RouteComponentProps } from 'react-router-dom';
+import { Redirect, RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import './grid.css';
 import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
@@ -17,6 +17,7 @@ import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import { IRootState } from 'app/shared/reducers';
 import clusteredverticalbar from 'flair-visualizations/js/charts/clusteredverticalbar';
+import Dx26Modal from './dx26-modal';
 
 import $ from 'jquery';
 
@@ -29,64 +30,11 @@ const visualmetadata = [
   { i: '3', x: 2, y: 0, w: 1, h: 2, minH: 2, maxH: Infinity, isBounded: true },
 ];
 
-const generateWidge = () => {
-  return visualmetadata.map(function (l, i) {
-    return (
-      <div className="item widget" id={`widget-${i}`} key={l.i}>
-        <div className="header">
-          <View>
-            <Flex direction="row" justifyContent="space-between" alignContent="center">
-              <Flex direction="column" alignItems="center" justifyContent="space-around">
-                <span>clustered vertical bar chart</span>
-              </Flex>
-              <Flex direction="column" justifyContent="space-around">
-                <MenuTrigger>
-                  <ActionButton isQuiet height="size-300">
-                    <Settings size={'XS'} aria-label="Default Alert" />
-                  </ActionButton>
-                  <Menu>
-                    <Item key="Edit" textValue="Edit">
-                      <Edit size="M" />
-                      <Text>Edit</Text>
-                    </Item>
-                    <Item key="Share" textValue="Share">
-                      <ShareAndroid size="M" />
-                      <Text>Share</Text>
-                    </Item>
-                    <Item key="Export" textValue="Export">
-                      <Export size="M" />
-                      <Text>Export</Text>
-                    </Item>
-                    <Item key="View" textValue="View">
-                      <ViewedMarkAs size="M" />
-                      <Text>View</Text>
-                    </Item>
-                    <Item key="data" textValue="data">
-                      <Table size="M" />
-                      <Text>Data</Text>
-                    </Item>
-                    <Item key="More" textValue="More">
-                      <MoreSmallListVert size="M" />
-                      <Text>More</Text>
-                    </Item>
-                    <Item key="Delete" textValue="Delete">
-                      <Delete size="M" />
-                      <Text>Delete</Text>
-                    </Item>
-                  </Menu>
-                </MenuTrigger>
-              </Flex>
-            </Flex>
-          </View>
-        </div>
-        <div id={`demo-${i}`} ></div>
-      </div>
-    );
-  });
-};
 
 const Dx26 = (props: IDx26Prop) => {
   const [visualmetaList, setvisualmetadata] = React.useState(visualmetadata);
+  const [redirect, setRedirect] = React.useState<ReactText>('');
+
   const config = {
     alternateDimension: null,
     axisScaleLabel: 'Formated',
@@ -129,22 +77,25 @@ const Dx26 = (props: IDx26Prop) => {
     { order_status: 'CANCELED', order_item_product_price: 3519 },
     { order_status: 'PAYMENT_REVIEW', order_item_product_price: 1797 },
   ];
-  const onLayoutChange = (_visualmetaList,all) => {
-   
+  const onLayoutChange = (_visualmetaList, all) => {
     const widget = $('#widget-0');
-    const height = widget[0].clientHeight-30;
-    const width =  widget[0].clientWidth;
-    $('#chart').remove('')
-    $('#widget-0').append('<div id="chart" height="' + height + '" width="' + width+ '" style="width:' + width+ 'px; height:' + height + 'px;overflow:hidden;position:relative" ></div>')
+    const height = widget[0].clientHeight - 30;
+    const width = widget[0].clientWidth;
+    $('#chart').remove('');
+    $('#widget-0').append(
+      '<div id="chart" height="' +
+        height +
+        '" width="' +
+        width +
+        '" style="width:' +
+        width +
+        'px; height:' +
+        height +
+        'px;overflow:hidden;position:relative" ></div>'
+    );
     var div = $('#chart');
-    var clusteredverticalBarChartObj = clusteredverticalbar()
-      .config(config)
-      .tooltip(true)
-      .print(false)
-      .notification(false)
-      .data(data);
+    var clusteredverticalBarChartObj = clusteredverticalbar().config(config).tooltip(true).print(false).notification(false).data(data);
     setvisualmetadata(_visualmetaList);
-
     clusteredverticalBarChartObj(div[0]);
   };
 
@@ -167,14 +118,74 @@ const Dx26 = (props: IDx26Prop) => {
   };
 
   const onResizeStop = (layout, oldItem, newItem, placeholder, e, element) => {
-    debugger
-      
-    };
+    debugger;
+  };
   useEffect(() => {
     if (props.match.params.viewId) {
       props.getViewEntity(props.match.params.viewId);
     }
   }, []);
+
+
+  const generateWidge = () => {
+    return visualmetadata.map(function (l, i) {
+      return (
+        <div className="item widget" id={`widget-${i}`} key={l.i}>
+          <div className="header">
+            <View>
+              <Flex direction="row" justifyContent="space-between" alignContent="center">
+                <Flex direction="column" alignItems="center" justifyContent="space-around">
+                  <span>clustered vertical bar chart</span>
+                </Flex>
+                <Flex direction="column" justifyContent="space-around">
+                  <MenuTrigger>
+                    <ActionButton isQuiet height="size-300">
+                      <Settings size={'XS'} aria-label="Default Alert" />
+                    </ActionButton>
+                    <Menu onAction={key => setRedirect(key)}>
+                      <Item key="Edit" textValue="Edit">
+                        <Edit size="M" />
+                        <Text>Edit</Text>
+                      </Item>
+                      <Item key="Share" textValue="Share">
+                        <ShareAndroid size="M" />
+                        <Text>Share</Text>
+                      </Item>
+                      <Item key="Export" textValue="Export">
+                        <Export size="M" />
+                        <Text>Export</Text>
+                      </Item>
+                      <Item key="View" textValue="View">
+                        <ViewedMarkAs size="M" />
+                        <Text>View</Text>
+                      </Item>
+                      <Item key="data" textValue="data">
+                        <Table size="M" />
+                        <Text>Data</Text>
+                      </Item>
+                      <Item key="More" textValue="More">
+                        <MoreSmallListVert size="M" />
+                        <Text>More</Text>
+                      </Item>
+                      <Item key="Delete" textValue="Delete">
+                        <Delete size="M" />
+                        <Text>Delete</Text>
+                      </Item>
+                    </Menu>
+                  </MenuTrigger>
+                  {redirect === 'Edit' && (
+                    <Dx26Modal />
+                  )}
+                </Flex>
+              </Flex>
+            </View>
+          </div>
+          <div id={`demo-${i}`}></div>
+        </div>
+      );
+    });
+  };
+  
 
   return (
     <>

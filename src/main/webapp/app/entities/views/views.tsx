@@ -75,7 +75,7 @@ export const Views = (props: IViewsProps) => {
           key={view.id}
           thumbnail={
             <View height="size-3200">
-              <ViewCardThumbnail  url={`${props.match.url}/${view.viewDashboard.id}/${view.id}/build`} thumbnailImagePath={view.imageLocation} viewName={view.viewName} />
+              <ViewCardThumbnail  url={`${props.match.url}/${view.id}/build`} thumbnailImagePath={view.imageLocation} viewName={view.viewName} />
             </View>
           }
           content={
