@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState } from 'react-jhipster';
-import { ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/pagination.constants';
+import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { getUsers, updateUser } from './user-management.reducer';
 import { IRootState } from 'app/shared/reducers';
@@ -15,7 +15,9 @@ import UserManagementUpdate from './user-management-update';
 export interface IUserManagementProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export const UserManagementUsers = (props: IUserManagementProps) => {
-  const [pagination, setPagination] = useState(overridePaginationStateWithQueryParams(getSortState(props.location), props.location.search));
+  const [pagination, setPagination] = useState(
+    overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
+  );
   const [isOpen, setOpen] = React.useState(false);
   const [isNew, setNew] = React.useState(false);
   const [loginID, setLoginID] = React.useState('');
