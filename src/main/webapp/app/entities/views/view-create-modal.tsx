@@ -70,8 +70,13 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
     // redirect to build page
   };
 
+
   useEffect(() => {
+    props.reset();
     props.getDashboardEntity(props.match.params.id);
+  }, []);
+
+  useEffect(() => {
     if (props.updateSuccess) {
       setCreateSuccessDialog(true);
     }

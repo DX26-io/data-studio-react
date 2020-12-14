@@ -74,7 +74,7 @@ const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
       }
       setErrorOpen(true);
     }
-    if (props.dashboardEntity) {
+    if (props.viewEntity.id) {
       setViewNameText(props.viewEntity.viewName);
       setDescriptionText(props.viewEntity.description);
     }

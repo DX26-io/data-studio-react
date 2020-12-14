@@ -87,6 +87,7 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
   };
 
   useEffect(() => {
+    props.reset();
     props.getDataSourceEntities();
     dashboardNameInputEl.current.focus();
   }, []);

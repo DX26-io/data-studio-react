@@ -70,7 +70,6 @@ export const Views = (props: IViewsProps) => {
   };
   const viewsListElement = props.viewsList.map(view => {
     return (
-      <>
         <Card
           key={view.id}
           thumbnail={
@@ -82,7 +81,6 @@ export const Views = (props: IViewsProps) => {
             <ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} />
           }
         />
-      </>
     );
   });
 

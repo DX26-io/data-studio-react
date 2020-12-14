@@ -144,7 +144,6 @@ export const createEntity: ICrudPutAction<IViews> = entity => async dispatch => 
     type: ACTION_TYPES.CREATE_VIEWS,
     payload: axios.post(apiUrl, cleanEntity(entity)),
   });
-  dispatch(getDashboardViewEntities(entity.viewDashboard.id));
   return result;
 };
 
@@ -153,7 +152,6 @@ export const updateEntity: ICrudPutAction<IViews> = entity => async dispatch => 
     type: ACTION_TYPES.UPDATE_VIEWS,
     payload: axios.put(apiUrl, cleanEntity(entity)),
   });
-  dispatch(getDashboardViewEntities(entity.viewDashboard.id));
   return result;
 };
 
@@ -163,7 +161,6 @@ export const deleteEntity: ICrudViewDeleteAction<IViews> = (viewId, dashboardId)
     type: ACTION_TYPES.DELETE_VIEWS,
     payload: axios.delete(requestUrl),
   });
-  dispatch(getDashboardViewEntities(dashboardId));
   return result;
 };
 

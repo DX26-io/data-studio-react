@@ -125,7 +125,6 @@ export const createEntity: ICrudPutAction<IDashboard> = entity => async dispatch
     type: ACTION_TYPES.CREATE_DASHBOARD,
     payload: axios.post(apiUrl, cleanEntity(entity)),
   });
-  dispatch(getEntities());
   return result;
 };
 
@@ -143,7 +142,6 @@ export const deleteEntity: ICrudDeleteAction<IDashboard> = id => async dispatch 
     type: ACTION_TYPES.DELETE_DASHBOARD,
     payload: axios.delete(requestUrl),
   });
-  dispatch(getEntities());
   return result;
 };
 
