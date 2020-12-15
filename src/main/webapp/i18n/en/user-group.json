@@ -1,0 +1,29 @@
+{
+  "userGroups": {
+    "home": {
+      "title": "Groups",
+      "createLabel": "Create Group",
+      "editLabel": "Edit Group",
+      "description": "Manage your groups"
+    },
+    "created": "A new user is created with identifier {{ param }}",
+    "updated": "A user is updated with identifier {{ param }}",
+    "deleted": "A user is deleted with identifier {{ param }}",
+    "delete": {
+      "question": "Are you sure you want to delete user {{ login }}?"
+    },
+    "tip": "Tip",
+    "newTipMessage1": "after creating group please navigate to",
+    "newTipMessage2": "to set permission for this new group",
+    "updateTipMessage": "to modify the permission please navigate to",
+    "permissionManagement": "permission management",
+    "error": {
+      "name": "Name is required"
+    },
+    "name": "Name",
+    "createdBy": "Created by",
+    "createdDate": "Created date",
+    "lastModifiedBy": "Modified by",
+    "lastModifiedDate": "Modified date"
+  }
+}

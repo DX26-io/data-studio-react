@@ -22,7 +22,7 @@ const UserManagement = (props: RouteComponentProps) => {
     },
     {
       icon: <UserGroup size="L" />,
-      link: `${match.url}/user-group`,
+      link: `${match.url}/groups`,
       title: 'userManagement.userGroup.title',
       description: 'userManagement.userGroup.description',
     },

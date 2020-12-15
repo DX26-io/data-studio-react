@@ -1,5 +1,5 @@
 import React from 'react';
-import UserManagementUpdate from 'app/modules/administration/user-management/users/user-management-update';
+import UserUpdate from 'app/modules/administration/user-management/users/user-update';
 import userEvent from '@testing-library/user-event';
 import { DialogContainer, defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
 import { render } from '@testing-library/react';
@@ -70,7 +70,7 @@ describe('User Management dialog', () => {
                 return true;
               }}
             >
-              <UserManagementUpdate {...defaultProps} />
+              <UserUpdate {...defaultProps} />
             </DialogContainer>
           </Provider>
         </SpectrumProvider>

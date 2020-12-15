@@ -1,4 +1,4 @@
-import { IUser, defaultValue } from 'app/shared/model/user.model';
+import { IUser } from 'app/shared/model/user.model';
 
 const isValidLogin = (login: string) => {
   return login !== '' && login.length > 1 && login.length < 50;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { AvForm, AvGroup, AvInput, AvField, AvFeedback } from 'availity-reactstrap-validation';
 import { Translate } from 'react-jhipster';
-import { getUser, getRoles, updateUser, createUser, reset, deleteUser } from './user-management.reducer';
+import { getUser, getRoles, updateUser, createUser, reset, deleteUser } from './user.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { isFormValid } from './user.util';
 import Alert from '@spectrum-icons/workflow/Alert';
@@ -22,14 +22,14 @@ import {
 } from '@adobe/react-spectrum';
 import Select from 'react-select';
 
-export interface IUserManagementUpdateProps extends StateProps, DispatchProps {
+export interface IUserUpdateProps extends StateProps, DispatchProps {
   setUpdateSuccess: () => void;
   isNew: boolean;
   setOpen: (isOpen: boolean) => void;
   loginID: string;
 }
 
-export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
+export const UserUpdate = (props: IUserUpdateProps) => {
   const { isNew, setOpen, setUpdateSuccess, loginID, user, loading, updating, roles, fetchSuccess, updateSuccess } = props;
   const [login, setLogin] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -196,9 +196,9 @@ export const UserManagementUpdate = (props: IUserManagementUpdateProps) => {
               />
               {!isNew ? (
                 <React.Fragment>
-                  <Text>
+                  <span className="spectrum-Heading spectrum-Heading--sizeXXS">
                     <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
-                  </Text>
+                  </span>
                   <Divider size="M" />{' '}
                 </React.Fragment>
               ) : null}
@@ -239,4 +239,4 @@ const mapDispatchToProps = { getUser, getRoles, updateUser, createUser, reset, d
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserManagementUpdate);
+export default connect(mapStateToProps, mapDispatchToProps)(UserUpdate);

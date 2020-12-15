@@ -4,17 +4,17 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getUsers, updateUser } from './user-management.reducer';
+import { getUsers, updateUser } from './user.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
-import UserManagementUpdate from './user-management-update';
+import UserUpdate from './user-update';
 
-export interface IUserManagementProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
+export interface IUsersProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
-export const UserManagementUsers = (props: IUserManagementProps) => {
+export const Users = (props: IUsersProps) => {
   const [pagination, setPagination] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
@@ -94,12 +94,12 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
       </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
         {isOpen && (
-          <UserManagementUpdate
+          <UserUpdate
             setUpdateSuccess={setUpdateSuccess}
             isNew={isNew}
             setOpen={setOpen}
             loginID={loginID}
-          ></UserManagementUpdate>
+          ></UserUpdate>
         )}
       </DialogContainer>
       <div className="dx26-container">
@@ -132,9 +132,7 @@ export const UserManagementUsers = (props: IUserManagementProps) => {
                 {users.map((u, i) => (
                   <TableRow key={`user-${i}`}>
                     <TableCell component="th" scope="row" align="center">
-                      <Link className="dx26-link" to={`${match.url}/${u.login}`}>
-                        {u.id}
-                      </Link>
+                      {u.id}
                     </TableCell>
                     <TableCell align="center">{u.login}</TableCell>
                     <TableCell align="center">{u.email}</TableCell>
@@ -189,4 +187,4 @@ const mapDispatchToProps = { getUsers, updateUser };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserManagementUsers);
+export default connect(mapStateToProps, mapDispatchToProps)(Users);

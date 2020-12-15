@@ -2,12 +2,12 @@ import React from 'react';
 import { Switch } from 'react-router-dom';
 
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
-import Users from './users';
+import UserGroups from './user-groups';
 
 const Routes = ({ match }) => (
   <div>
     <Switch>
-    <ErrorBoundaryRoute path={match.url} component={Users} />
+    <ErrorBoundaryRoute path={match.url} component={UserGroups} />
     </Switch>
   </div>
 );
