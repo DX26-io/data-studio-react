@@ -102,7 +102,13 @@
       "open": "Open",
       "save": "Save",
       "view": "View",
-      "create": "Create"
+      "create": "Create",
+      "apply": "Apply",
+      "discard": "Discard",
+      "export": "Export",
+      "data": "Data",
+      "more": "More",
+      "share": "Share"
     },
     "options": {
       "more_options": "More options",

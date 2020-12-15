@@ -1,65 +1,54 @@
-import React, { useEffect } from 'react';
-import {
-  View,
-  Flex,
-  Dialog,
-  Heading,
-  Divider,
-  Content,
-  Form,
-  ButtonGroup,
-  Button,
-  TextField,
-  TextArea,
-  Text,
-  AlertDialog,
-  DialogContainer,
-} from '@adobe/react-spectrum';
-import { Tabs, Item } from '@react-spectrum/tabs';
+import React from 'react';
+import { View, Flex, Dialog, Heading, Divider, Content, ButtonGroup, Button, DialogContainer } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
+import './dx26-modal.css';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
+import IDx26Properties from './partials/dx26-properties';
+import IDx26Settings from './partials/dx26-settings';
+import { Translate } from 'react-jhipster';
 
-export interface IDx26ModalProps extends StateProps, DispatchProps {}
+export interface IDx26ModalProps
+  extends StateProps,
+    DispatchProps,
+    RouteComponentProps<{ id: string; viewId: string; visualizationId: string }> {}
 
 const Dx26Modal = (props: IDx26ModalProps) => {
-  const handleClose = () => {};
-
+  const history = useHistory();
+  const handleClose = () => {
+    history.push('/dashboards/' + props.match.params.id + '/' + props.match.params.viewId + '/build');
+  };
   return (
     <>
       <DialogContainer type="fullscreenTakeover" onDismiss={handleClose}>
         <Dialog>
-          <Heading>Profile</Heading>
+          <Heading level={6}>Visualization Title</Heading>
           <Divider />
           <ButtonGroup>
-            <Button variant="secondary" onPress={close}>
-              Cancel
+            <Button variant="secondary" onPress={handleClose}>
+              <Translate contentKey="entity.action.discard">Discard</Translate>
             </Button>
-            <Button autoFocus variant="cta" onPress={close}>
-              Save
+            <Button variant="secondary" onPress={handleClose}>
+              <Translate contentKey="entity.action.save">Save</Translate>
+            </Button>
+            <Button variant="cta" onPress={handleClose}>
+              <Translate contentKey="entity.action.apply">Apply</Translate>
             </Button>
           </ButtonGroup>
           <Content>
-            <Form>
-              <TextField label="Name" />
-            </Form>
-            <Tabs aria-label="History of Ancient Rome">
-              <Item title="Founding of Rome" key="FoR">
-                <Content marginTop="size-250" marginStart="size-125">
-                  <Text>Arma virumque cano, Troiae qui primus ab oris.</Text>
-                </Content>
-              </Item>
-              <Item title="Monarchy and Republic" key="MaR">
-                <Content marginTop="size-250" marginStart="size-125">
-                  <Text>Senatus Populusque Romanus.</Text>
-                </Content>
-              </Item>
-              <Item title="Empire" key="Emp">
-                <Content marginTop="size-250" marginStart="size-125">
-                  <Text>Alea jacta est.</Text>
-                </Content>
-              </Item>
-            </Tabs>
+            <Flex direction="row" height="100%" gap="size-75">
+              <View borderWidth="thin" borderColor="default" borderRadius="regular" flex>
+                <Flex direction="column" height="100%" flex gap="size-75">
+                  <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%" />
+                  <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%">
+                    <IDx26Settings />
+                  </View>
+                </Flex>
+              </View>
+              <View borderWidth="thin" borderColor="default" borderRadius="regular" width="size-4000">
+                <IDx26Properties />
+              </View>
+            </Flex>
           </Content>
         </Dialog>
       </DialogContainer>

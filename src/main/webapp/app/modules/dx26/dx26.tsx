@@ -1,6 +1,6 @@
 import React, { ReactText, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { ActionButton, Flex, Text, Item, Menu, MenuTrigger, View, Section, Picker, Button } from '@adobe/react-spectrum';
+import { ActionButton, Flex, Text, Item, Menu, MenuTrigger, View, Button } from '@adobe/react-spectrum';
 
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
@@ -17,7 +17,7 @@ import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import { IRootState } from 'app/shared/reducers';
 import clusteredverticalbar from 'flair-visualizations/js/charts/clusteredverticalbar';
-import Dx26Modal from './dx26-modal';
+import { Translate } from 'react-jhipster';
 
 import $ from 'jquery';
 
@@ -30,73 +30,13 @@ const visualmetadata = [
   { i: '3', x: 2, y: 0, w: 1, h: 2, minH: 2, maxH: Infinity, isBounded: true },
 ];
 
-
 const Dx26 = (props: IDx26Prop) => {
   const [visualmetaList, setvisualmetadata] = React.useState(visualmetadata);
   const [redirect, setRedirect] = React.useState<ReactText>('');
 
-  const config = {
-    alternateDimension: null,
-    axisScaleLabel: 'Formated',
-    borderColor: ['#439dd3'],
-    dimension: ['order_status'],
-    dimensionType: ['String'],
-    displayColor: ['#439dd3'],
-    displayColorExpression: [null],
-    displayName: 'order_status',
-    displayNameForMeasure: ['order_item_product_price'],
-    fontSize: [15],
-    fontStyle: ['Normal'],
-    fontWeight: ['normal'],
-    isFilterGrid: false,
-    legendPosition: 'top',
-    maxMes: 1,
-    measure: ['order_item_product_price'],
-    numberFormat: ['Actual'],
-    showGrid: true,
-    showLegend: true,
-    showSorting: true,
-    showValues: [false],
-    showXaxis: true,
-    showXaxisLabel: true,
-    showYaxis: true,
-    showYaxisLabel: true,
-    textColor: ['#FFFFFF'],
-    textColorExpression: [null],
-    xAxisColor: '#676a6c',
-    yAxisColor: '#676a6c',
-  };
-  const data = [
-    { order_status: 'COMPLETE', order_item_product_price: 56740 },
-    { order_status: 'PENDING_PAYMENT', order_item_product_price: 38031 },
-    { order_status: 'PROCESSING', order_item_product_price: 20901 },
-    { order_status: 'PENDING', order_item_product_price: 19291 },
-    { order_status: 'CLOSED', order_item_product_price: 18668 },
-    { order_status: 'ON_HOLD', order_item_product_price: 9373 },
-    { order_status: 'SUSPECTED_FRAUD', order_item_product_price: 3878 },
-    { order_status: 'CANCELED', order_item_product_price: 3519 },
-    { order_status: 'PAYMENT_REVIEW', order_item_product_price: 1797 },
-  ];
+  
   const onLayoutChange = (_visualmetaList, all) => {
-    const widget = $('#widget-0');
-    const height = widget[0].clientHeight - 30;
-    const width = widget[0].clientWidth;
-    $('#chart').remove('');
-    $('#widget-0').append(
-      '<div id="chart" height="' +
-        height +
-        '" width="' +
-        width +
-        '" style="width:' +
-        width +
-        'px; height:' +
-        height +
-        'px;overflow:hidden;position:relative" ></div>'
-    );
-    var div = $('#chart');
-    var clusteredverticalBarChartObj = clusteredverticalbar().config(config).tooltip(true).print(false).notification(false).data(data);
     setvisualmetadata(_visualmetaList);
-    clusteredverticalBarChartObj(div[0]);
   };
 
   const onResize = _visualmetaList => {
@@ -118,14 +58,13 @@ const Dx26 = (props: IDx26Prop) => {
   };
 
   const onResizeStop = (layout, oldItem, newItem, placeholder, e, element) => {
-    debugger;
+    //To do
   };
   useEffect(() => {
     if (props.match.params.viewId) {
       props.getViewEntity(props.match.params.viewId);
     }
   }, []);
-
 
   const generateWidge = () => {
     return visualmetadata.map(function (l, i) {
@@ -145,36 +84,54 @@ const Dx26 = (props: IDx26Prop) => {
                     <Menu onAction={key => setRedirect(key)}>
                       <Item key="Edit" textValue="Edit">
                         <Edit size="M" />
-                        <Text>Edit</Text>
+                        <Text>
+                          <Translate contentKey="entity.action.edit">Edit</Translate>
+                        </Text>
                       </Item>
                       <Item key="Share" textValue="Share">
                         <ShareAndroid size="M" />
-                        <Text>Share</Text>
+                        <Text>
+                          <Translate contentKey="entity.action.share">Share</Translate>
+                        </Text>
                       </Item>
                       <Item key="Export" textValue="Export">
                         <Export size="M" />
-                        <Text>Export</Text>
+                        <Text>
+                          <Translate contentKey="entity.action.export">Export</Translate>
+                        </Text>
                       </Item>
                       <Item key="View" textValue="View">
                         <ViewedMarkAs size="M" />
-                        <Text>View</Text>
+                        <Text>
+                          <Translate contentKey="entity.action.view">View</Translate>
+                        </Text>
                       </Item>
                       <Item key="data" textValue="data">
-                        <Table size="M" />
-                        <Text>Data</Text>
+                      <Table size="M" />
+                        <Text>
+                          <Translate contentKey="entity.action.data">Data</Translate>
+                        </Text>
                       </Item>
                       <Item key="More" textValue="More">
                         <MoreSmallListVert size="M" />
-                        <Text>More</Text>
+                        <Text>
+                          <Translate contentKey="entity.action.more">More</Translate>
+                        </Text>
                       </Item>
                       <Item key="Delete" textValue="Delete">
                         <Delete size="M" />
-                        <Text>Delete</Text>
+                        <Text>
+                          <Translate contentKey="entity.action.delete">Delete</Translate>
+                        </Text>
                       </Item>
                     </Menu>
                   </MenuTrigger>
                   {redirect === 'Edit' && (
-                    <Dx26Modal />
+                    <Redirect
+                      to={{
+                        pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/edit/5',
+                      }}
+                    />
                   )}
                 </Flex>
               </Flex>
@@ -185,7 +142,6 @@ const Dx26 = (props: IDx26Prop) => {
       );
     });
   };
-  
 
   return (
     <>

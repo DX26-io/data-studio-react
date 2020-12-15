@@ -1,0 +1,9 @@
+.MuiTab-root {
+  min-width: inherit !important;
+  text-transform: none !important;
+  padding: 2px 12px !important;
+  min-height: 30px !important;
+}
+.MuiTabs-root {
+  min-height: 30px !important;
+}
