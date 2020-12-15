@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserManagementUsers, IUserManagementProps } from 'app/modules/administration/user-management/users/user-management-users';
+import { Users, IUsersProps } from 'app/modules/administration/user-management/users/users';
 import userEvent from '@testing-library/user-event';
 import { DialogContainer, defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
 import { render } from '@testing-library/react';
@@ -8,10 +8,7 @@ import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import promiseMiddleware from 'redux-promise-middleware';
-import { shallow, mount } from 'enzyme';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import { MemoryRouter } from 'react-router';
-import { screen } from '@testing-library/dom';
 
 export const getInitialState = () => {
   return {
@@ -25,7 +22,7 @@ export const getInitialState = () => {
 describe('User Management Users', () => {
   let mountedWrapper;
 
-  const userManagementUsersProps = {
+  const UsersProps = {
     history: { push: jest.fn() } as any,
     location: {} as any,
     match: {} as any,
@@ -55,7 +52,7 @@ describe('User Management Users', () => {
     getUsers: jest.fn(),
   };
 
-  const wrapper = (props: IUserManagementProps) => {
+  const wrapper = (props: IUsersProps) => {
     const mockStore = configureMockStore([thunk, promiseMiddleware]);
     const store = mockStore(getInitialState());
     if (!mountedWrapper) {
@@ -63,7 +60,7 @@ describe('User Management Users', () => {
         <SpectrumProvider theme={defaultTheme}>
           <Provider store={store}>
             <MemoryRouter>
-              <UserManagementUsers {...props} {...userManagementUsersProps} />
+              <Users {...props} {...UsersProps} />
             </MemoryRouter>
           </Provider>
         </SpectrumProvider>
@@ -79,7 +76,7 @@ describe('User Management Users', () => {
   it('should render users', () => {
     const tree = wrapper(null);
     expect(tree).toBeDefined();
-    expect(userManagementUsersProps.getUsers.mock.calls.length).toEqual(1);
+    expect(UsersProps.getUsers.mock.calls.length).toEqual(1);
   });
 
   it('on user dialog open', () => {
