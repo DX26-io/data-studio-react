@@ -19,7 +19,7 @@
       "content": "Error saving dashboard"
     },
     "delete": {
-      "question": "This will permanently delete the selected <strong>{{ name }}</strong> dashboard. continue?"
+      "question": "This will permanently delete the selected <strong>{{ name }}</strong> dashboard. If you wish to continue type <em>{{ name }}</em> and click on delete."
     },
     "dashboard_name": "Dashboard name",
     "category": "Category",
