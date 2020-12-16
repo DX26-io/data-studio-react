@@ -5,7 +5,7 @@ import { getUserGroup, updateUserGroup, createUserGroup, reset, deleteUserGroup 
 import { IRootState } from 'app/shared/reducers';
 import { isFormValid } from './user-group.util';
 import Alert from '@spectrum-icons/workflow/Alert';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import AlertCircle from '@spectrum-icons/workflow/AlertCircle';
 import { Flex, useDialogContainer, Dialog, Heading, Divider, Content, Form, Button, TextField, Header, Text } from '@adobe/react-spectrum';
 
 export interface IUserGroupUpdateProps extends StateProps, DispatchProps {
@@ -13,10 +13,11 @@ export interface IUserGroupUpdateProps extends StateProps, DispatchProps {
   isNew: boolean;
   setOpen: (isOpen: boolean) => void;
   groupName: string;
+  history: any;
 }
 
 export const UserUpdate = (props: IUserGroupUpdateProps) => {
-  const { isNew, setOpen, setUpdateSuccess, groupName, group, loading, updating, fetchSuccess, updateSuccess } = props;
+  const { isNew, setOpen, setUpdateSuccess, groupName, group, loading, updating, fetchSuccess, updateSuccess, history } = props;
   const [name, setName] = useState('');
   const [isInValidForm, setInValidForm] = useState(false);
   const [validationErrorKey, setValidationErrorKey] = useState('');
@@ -70,14 +71,20 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
     props.deleteUserGroup(group.name);
   };
 
+  const redirectToPermissionPage = () => {
+    handleClose();
+    // TODO : once permission page is done.this url will be updated
+    props.history.push('/administration/user-management/user-permission');
+  };
+
   return (
     <div>
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <Dialog data-testid="user-form-dialog">
+        <Dialog data-testid="group-form-dialog">
           <Heading>
-            <Flex alignItems="center" gap="size-100" data-testid="user-form-heading">
+            <Flex alignItems="center" gap="size-100" data-testid="group-form-heading">
               {!isNew ? (
                 <Translate contentKey="userGroups.home.editLabel">Edit Group</Translate>
               ) : (
@@ -85,19 +92,19 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
               )}
             </Flex>
           </Heading>
-          <Header data-testid="user-form-action">
+          <Header data-testid="group-form-action">
             <Flex alignItems="center" gap="size-100">
-              <Button variant="secondary" onPress={handleClose} data-testid="user-form-cancel">
+              <Button variant="secondary" onPress={handleClose} data-testid="group-form-cancel">
                 <Translate contentKey="entity.action.cancel">Cancel</Translate>
               </Button>
-              <Button variant="cta" onPress={saveUser} isDisabled={updating} data-testid="user-form-submit">
+              <Button variant="cta" onPress={saveUser} isDisabled={updating} data-testid="group-form-submit">
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
             </Flex>
           </Header>
           <Divider />
           <Content>
-            <Form data-testid="user-form">
+            <Form data-testid="group-form">
               <TextField
                 label="Name"
                 placeholder="ROLE_ACCOUNT"
@@ -109,30 +116,31 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
                 data-testid="name"
               />
               <div style={{ marginTop: '20px' }}>
-                <p className="spectrum-Heading spectrum-Heading--sizeXXS">
-                  <Translate contentKey="userGroups.tip"></Translate>
-                </p>
+                <Flex alignItems="center" gap="size-25">
+                  <p className="spectrum-Heading spectrum-Heading--sizeXXS">
+                    <Translate contentKey="userGroups.tip"></Translate>
+                  </p>
+                  <AlertCircle size="S" />
+                </Flex>
                 {!isNew ? (
                   <p>
                     <span className="spectrum-Body-emphasis">
                       <Translate contentKey="userGroups.updateTipMessage"></Translate>
                     </span>
-                    {/* TODO : once permission page is done.this url will be updated */}
-                    <Link className="dx26-link" to={`/dahsboard-permission`}>
+                    <a className="dx26-link" onClick={redirectToPermissionPage}>
                       &nbsp;&nbsp;
                       <Translate contentKey="userGroups.permissionManagement"></Translate>
-                    </Link>
+                    </a>
                   </p>
                 ) : (
                   <p>
                     <span className="spectrum-Body-emphasis">
                       <Translate contentKey="userGroups.newTipMessage1"></Translate>
                     </span>
-                    {/* TODO : once permission page is done.this url will be updated */}
-                    <Link className="dx26-link" to={`/dahsboard-permission`}>
+                    <a className="dx26-link" onClick={redirectToPermissionPage} data-testid="redirect">
                       &nbsp;&nbsp;
                       <Translate contentKey="userGroups.permissionManagement"></Translate>
-                    </Link>
+                    </a>
                     &nbsp;&nbsp;
                     <span className="spectrum-Body-emphasis">
                       <Translate contentKey="userGroups.newTipMessage2"></Translate>

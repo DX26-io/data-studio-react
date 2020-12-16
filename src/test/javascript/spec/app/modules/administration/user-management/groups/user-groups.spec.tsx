@@ -1,9 +1,8 @@
 import React from 'react';
-import { Users, IUsersProps } from 'app/modules/administration/user-management/users/users';
+import { UserGroups, IUserGroupsProps } from 'app/modules/administration/user-management/groups/user-groups';
 import userEvent from '@testing-library/user-event';
-import { DialogContainer, defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
+import { defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
 import { render } from '@testing-library/react';
-import { AUTHORITIES } from 'app/config/constants';
 import configureMockStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
@@ -12,47 +11,35 @@ import { MemoryRouter } from 'react-router';
 
 export const getInitialState = () => {
   return {
-    userManagement: {
-      users: [],
+    userGroups: {
+      groups: [],
       totalItems: 0,
     },
   };
 };
 
-describe('User Management Users', () => {
+describe('User Management Groups', () => {
   let mountedWrapper;
 
-  const UsersProps = {
+  const groupsProps = {
     history: { push: jest.fn() } as any,
     location: {} as any,
     match: {} as any,
-    users: [
+    totalItems: 2,
+    getUserGroups: jest.fn(),
+    groups: [
       {
         id: '123',
-        login: 'test1',
-        firstName: 'test1',
-        lastName: 'test1',
-        email: 'test1@dx26.com',
-        activated: true,
-        userGroups: [AUTHORITIES.ADMIN],
-        userType: 'xyz',
+        name: 'test123',
       },
       {
-        id: '113',
-        login: 'test2',
-        firstName: 'test2',
-        lastName: 'test2',
-        email: 'test2@dx26.com',
-        activated: true,
-        userGroups: [AUTHORITIES.ADMIN],
-        userType: 'xyz',
+        id: '1234',
+        name: 'test1234',
       },
     ],
-    totalItems: 2,
-    getUsers: jest.fn(),
   };
 
-  const wrapper = (props: IUsersProps) => {
+  const wrapper = (props: IUserGroupsProps) => {
     const mockStore = configureMockStore([thunk, promiseMiddleware]);
     const store = mockStore(getInitialState());
     if (!mountedWrapper) {
@@ -60,7 +47,7 @@ describe('User Management Users', () => {
         <SpectrumProvider theme={defaultTheme}>
           <Provider store={store}>
             <MemoryRouter>
-              <Users {...props} {...UsersProps} />
+              <UserGroups {...props} {...groupsProps} />
             </MemoryRouter>
           </Provider>
         </SpectrumProvider>
@@ -73,18 +60,17 @@ describe('User Management Users', () => {
     mountedWrapper = undefined;
   });
 
-  it('should render users', () => {
+  it('should render groups', () => {
     const tree = wrapper(null);
     expect(tree).toBeDefined();
-    expect(UsersProps.getUsers.mock.calls.length).toEqual(1);
+    expect(groupsProps.getUserGroups.mock.calls.length).toEqual(1);
   });
 
-  it('on user dialog open', () => {
+  it('on group dialog open', () => {
     const tree = wrapper(null);
-    const createButton = tree.getByTestId('create-user');
+    const createButton = tree.getByTestId('create-group');
     userEvent.click(createButton);
-    const dialog = tree.getByTestId('user-form-dialog');
+    const dialog = tree.getByTestId('group-form-dialog');
     expect(dialog).toBeDefined();
   });
-
 });
