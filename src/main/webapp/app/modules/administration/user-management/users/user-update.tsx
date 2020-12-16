@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { AvForm, AvGroup, AvInput, AvField, AvFeedback } from 'availity-reactstrap-validation';
 import { Translate } from 'react-jhipster';
 import { getUser, getRoles, updateUser, createUser, reset, deleteUser } from './user.reducer';
 import { IRootState } from 'app/shared/reducers';
@@ -128,7 +127,12 @@ export const UserUpdate = (props: IUserUpdateProps) => {
               <Button variant="secondary" onPress={handleClose} data-testid="user-form-cancel">
                 <Translate contentKey="entity.action.cancel">Cancel</Translate>
               </Button>
-              <Button variant="cta" onPress={saveUser} isDisabled={updating} data-testid="user-form-submit">
+              <Button
+                variant="cta"
+                onPress={saveUser}
+                isDisabled={updating || !isFormValid({ ...user, login, firstName, lastName, email }).isValid}
+                data-testid="user-form-submit"
+              >
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
             </Flex>

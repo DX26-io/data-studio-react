@@ -97,7 +97,12 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
               <Button variant="secondary" onPress={handleClose} data-testid="group-form-cancel">
                 <Translate contentKey="entity.action.cancel">Cancel</Translate>
               </Button>
-              <Button variant="cta" onPress={saveUser} isDisabled={updating} data-testid="group-form-submit">
+              <Button
+                variant="cta"
+                onPress={saveUser}
+                isDisabled={updating || !isFormValid({ ...group, name }).isValid}
+                data-testid="group-form-submit"
+              >
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
             </Flex>

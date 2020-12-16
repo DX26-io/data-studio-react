@@ -1,4 +1,5 @@
 import { IUser } from 'app/shared/model/user.model';
+import { IError } from 'app/shared/model/error.model';
 
 const isValidLogin = (login: string) => {
   return login !== '' && login.length > 1 && login.length < 50;
@@ -16,7 +17,7 @@ const isValidLastName = (lastName: string) => {
   return lastName.length < 50;
 };
 
-export const isFormValid = (user: IUser): any => {
+export const isFormValid = (user: IUser): IError => {
   let error = { translationKey: '', isValid: true };
   if (!isValidLogin(user.login)) {
     error = { translationKey: 'userManagement.error.login', isValid: false };
@@ -32,6 +33,4 @@ export const isFormValid = (user: IUser): any => {
     return error;
   }
   return error;
-  // below is required in near future hence commented it
-  // return isValidLogin(user.login) || isValidEmail(user.email) || isValidFirstName(user.firstName) || isValidLastName(user.lastName);
 };
