@@ -86,14 +86,14 @@ export const UserGroups = (props: IUserGroupsProps) => {
             setNew(true);
             setGroupName('');
           }}
-          data-testid="create-user"
+          data-testid="create-group"
         >
           <Translate contentKey="entity.action.create">Create</Translate>
         </Button>
       </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
         {isOpen && (
-          <UserGroupUpdate setUpdateSuccess={setUpdateSuccess} isNew={isNew} setOpen={setOpen} groupName={groupName}></UserGroupUpdate>
+          <UserGroupUpdate setUpdateSuccess={setUpdateSuccess} isNew={isNew} setOpen={setOpen} groupName={groupName} {...props}></UserGroupUpdate>
         )}
       </DialogContainer>
       <div className="dx26-container">
