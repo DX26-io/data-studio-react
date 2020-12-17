@@ -20,6 +20,7 @@ import {
   Text,
 } from '@adobe/react-spectrum';
 import Select from 'react-select';
+import { IError, defaultValue } from 'app/shared/model/error.model';
 
 export interface IUserUpdateProps extends StateProps, DispatchProps {
   setUpdateSuccess: () => void;
@@ -35,8 +36,7 @@ export const UserUpdate = (props: IUserUpdateProps) => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [activated, setActivated] = useState(true);
-  const [isInValidForm, setInValidForm] = useState(false);
-  const [validationErrorKey, setValidationErrorKey] = useState('');
+  const [error, setError] = useState(defaultValue);
   let userGroups = [];
 
   const dialog = useDialogContainer();
@@ -79,18 +79,17 @@ export const UserUpdate = (props: IUserUpdateProps) => {
     }
   }, [fetchSuccess, isNew, updateSuccess]);
 
+  useEffect(() => {
+    const errorObj = isFormValid({ ...user, login, firstName, lastName, email });
+    setError(errorObj);
+  }, [login, firstName, lastName, email]);
+
   const saveUser = () => {
-    const error = isFormValid({ ...user, login, firstName, lastName, email });
-    if (error.isValid) {
-      const values = { ...user, login, firstName, lastName, email, activated, userGroups };
-      if (isNew) {
-        props.createUser(values);
-      } else {
-        props.updateUser(values);
-      }
+    const values = { ...user, login, firstName, lastName, email, activated, userGroups };
+    if (isNew) {
+      props.createUser(values);
     } else {
-      setInValidForm(!error.isValid);
-      setValidationErrorKey(error.translationKey);
+      props.updateUser(values);
     }
   };
 
@@ -127,12 +126,7 @@ export const UserUpdate = (props: IUserUpdateProps) => {
               <Button variant="secondary" onPress={handleClose} data-testid="user-form-cancel">
                 <Translate contentKey="entity.action.cancel">Cancel</Translate>
               </Button>
-              <Button
-                variant="cta"
-                onPress={saveUser}
-                isDisabled={updating || !isFormValid({ ...user, login, firstName, lastName, email }).isValid}
-                data-testid="user-form-submit"
-              >
+              <Button variant="cta" onPress={saveUser} isDisabled={updating || !error.isValid} data-testid="user-form-submit">
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
             </Flex>
@@ -212,12 +206,12 @@ export const UserUpdate = (props: IUserUpdateProps) => {
                 <Translate contentKey="entity.action.delete">Delete</Translate>
               </Button>
             ) : null}
-            {isInValidForm && (
+            {!error.isValid && (
               <Flex gap="size-100" data-testid="validation-error" marginTop="static-size-200">
                 <Alert color="negative" />
                 <Text marginBottom="size-300">
                   <span className="spectrum-Body-emphasis error-message">
-                    <Translate contentKey={validationErrorKey}></Translate>
+                    <Translate contentKey={error.translationKey}></Translate>
                   </span>
                 </Text>
               </Flex>

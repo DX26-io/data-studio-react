@@ -7,6 +7,7 @@ import { isFormValid } from './user-group.util';
 import Alert from '@spectrum-icons/workflow/Alert';
 import AlertCircle from '@spectrum-icons/workflow/AlertCircle';
 import { Flex, useDialogContainer, Dialog, Heading, Divider, Content, Form, Button, TextField, Header, Text } from '@adobe/react-spectrum';
+import { defaultValue } from 'app/shared/model/error.model';
 
 export interface IUserGroupUpdateProps extends StateProps, DispatchProps {
   setUpdateSuccess: () => void;
@@ -19,8 +20,7 @@ export interface IUserGroupUpdateProps extends StateProps, DispatchProps {
 export const UserUpdate = (props: IUserGroupUpdateProps) => {
   const { isNew, setOpen, setUpdateSuccess, groupName, group, loading, updating, fetchSuccess, updateSuccess, history } = props;
   const [name, setName] = useState('');
-  const [isInValidForm, setInValidForm] = useState(false);
-  const [validationErrorKey, setValidationErrorKey] = useState('');
+  const [error, setError] = useState(defaultValue);
 
   const dialog = useDialogContainer();
 
@@ -52,18 +52,17 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
     }
   }, [fetchSuccess, isNew, updateSuccess]);
 
+  useEffect(() => {
+    const errorObj = isFormValid({ ...group, name });
+    setError(errorObj);
+  }, [name]);
+
   const saveUser = () => {
-    const error = isFormValid({ ...group, name });
-    if (error.isValid) {
-      const values = { ...group, name };
-      if (isNew) {
-        props.createUserGroup(values);
-      } else {
-        props.updateUserGroup(values);
-      }
+    const values = { ...group, name };
+    if (isNew) {
+      props.createUserGroup(values);
     } else {
-      setInValidForm(!error.isValid);
-      setValidationErrorKey(error.translationKey);
+      props.updateUserGroup(values);
     }
   };
 
@@ -96,12 +95,7 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
               <Button variant="secondary" onPress={handleClose} data-testid="group-form-cancel">
                 <Translate contentKey="entity.action.cancel">Cancel</Translate>
               </Button>
-              <Button
-                variant="cta"
-                onPress={saveUser}
-                isDisabled={updating || !isFormValid({ ...group, name }).isValid}
-                data-testid="group-form-submit"
-              >
+              <Button variant="cta" onPress={saveUser} isDisabled={updating || !error.isValid} data-testid="group-form-submit">
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
             </Flex>
@@ -166,12 +160,12 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
                 <Translate contentKey="entity.action.delete">Delete</Translate>
               </Button>
             ) : null}
-            {isInValidForm && (
+            {!error.isValid && (
               <Flex gap="size-100" data-testid="validation-error" marginTop="static-size-200">
                 <Alert color="negative" />
                 <Text marginBottom="size-300">
                   <span className="spectrum-Body-emphasis error-message">
-                    <Translate contentKey={validationErrorKey}></Translate>
+                    <Translate contentKey={error.translationKey}></Translate>
                   </span>
                 </Text>
               </Flex>
