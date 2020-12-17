@@ -24,11 +24,11 @@ export default class DashboardUpdatePage {
     return this.pageTitle;
   }
 
-  async setDashboard_nameInput(dashboard_name) {
-    await this.dashboard_nameInput.sendKeys(dashboard_name);
+  async setDashboardNameInput(dashboardName) {
+    await this.dashboard_nameInput.sendKeys(dashboardName);
   }
 
-  async getDashboard_nameInput() {
+  async getDashboardNameInput() {
     return this.dashboard_nameInput.getAttribute('value');
   }
 
@@ -51,67 +51,67 @@ export default class DashboardUpdatePage {
   getPublishedInput() {
     return this.publishedInput;
   }
-  async setImage_locationInput(image_location) {
-    await this.image_locationInput.sendKeys(image_location);
+  async setImageLocationInput(imageLocation) {
+    await this.image_locationInput.sendKeys(imageLocation);
   }
 
-  async getImage_locationInput() {
+  async getImageLocationInput() {
     return this.image_locationInput.getAttribute('value');
   }
 
-  async setImage_content_typeInput(image_content_type) {
-    await this.image_content_typeInput.sendKeys(image_content_type);
+  async setImageContentTypeInput(imageContentType) {
+    await this.image_content_typeInput.sendKeys(imageContentType);
   }
 
-  async getImage_content_typeInput() {
+  async getImageContentTypeInput() {
     return this.image_content_typeInput.getAttribute('value');
   }
 
-  async setDashboard_datasource_idInput(dashboard_datasource_id) {
-    await this.dashboard_datasource_idInput.sendKeys(dashboard_datasource_id);
+  async setDashboardDatasourceIdInput(dashboardDatasourceId) {
+    await this.dashboard_datasource_idInput.sendKeys(dashboardDatasourceId);
   }
 
-  async getDashboard_datasource_idInput() {
+  async getDashboardDatasourceIdInput() {
     return this.dashboard_datasource_idInput.getAttribute('value');
   }
 
-  async setCreated_byInput(created_by) {
-    await this.created_byInput.sendKeys(created_by);
+  async setCreatedByInput(createdBy) {
+    await this.created_byInput.sendKeys(createdBy);
   }
 
-  async getCreated_byInput() {
+  async getCreatedByInput() {
     return this.created_byInput.getAttribute('value');
   }
 
-  async setCreated_dateInput(created_date) {
-    await this.created_dateInput.sendKeys(created_date);
+  async setCreatedDateInput(createdDate) {
+    await this.created_dateInput.sendKeys(createdDate);
   }
 
-  async getCreated_dateInput() {
+  async getCreatedDateInput() {
     return this.created_dateInput.getAttribute('value');
   }
 
-  async setLast_modified_byInput(last_modified_by) {
-    await this.last_modified_byInput.sendKeys(last_modified_by);
+  async setLastModifiedByInput(lastModifiedBy) {
+    await this.last_modified_byInput.sendKeys(lastModifiedBy);
   }
 
-  async getLast_modified_byInput() {
+  async getLastModifiedByInput() {
     return this.last_modified_byInput.getAttribute('value');
   }
 
-  async setLast_modified_dateInput(last_modified_date) {
-    await this.last_modified_dateInput.sendKeys(last_modified_date);
+  async setLastModifiedDateInput(lastModifiedDate) {
+    await this.last_modified_dateInput.sendKeys(lastModifiedDate);
   }
 
-  async getLast_modified_dateInput() {
+  async getLastModifiedDateInput() {
     return this.last_modified_dateInput.getAttribute('value');
   }
 
-  async setCurrent_release_idInput(current_release_id) {
-    await this.current_release_idInput.sendKeys(current_release_id);
+  async setCurrentReleaseIdInput(currentReleaseId) {
+    await this.current_release_idInput.sendKeys(currentReleaseId);
   }
 
-  async getCurrent_release_idInput() {
+  async getCurrentReleaseIdInput() {
     return this.current_release_idInput.getAttribute('value');
   }
 
@@ -129,8 +129,8 @@ export default class DashboardUpdatePage {
 
   async enterData() {
     await waitUntilDisplayed(this.saveButton);
-    await this.setDashboard_nameInput('dashboard_name');
-    expect(await this.getDashboard_nameInput()).to.match(/dashboard_name/);
+    await this.setDashboardNameInput('dashboard_name');
+    expect(await this.getDashboardNameInput()).to.match(/dashboard_name/);
     await waitUntilDisplayed(this.saveButton);
     await this.setCategoryInput('category');
     expect(await this.getCategoryInput()).to.match(/category/);
@@ -147,29 +147,29 @@ export default class DashboardUpdatePage {
       expect(await this.getPublishedInput().isSelected()).to.be.true;
     }
     await waitUntilDisplayed(this.saveButton);
-    await this.setImage_locationInput('image_location');
-    expect(await this.getImage_locationInput()).to.match(/image_location/);
+    await this.setImageLocationInput('image_location');
+    expect(await this.getImageLocationInput()).to.match(/image_location/);
     await waitUntilDisplayed(this.saveButton);
-    await this.setImage_content_typeInput('image_content_type');
-    expect(await this.getImage_content_typeInput()).to.match(/image_content_type/);
+    await this.setImageContentTypeInput('image_content_type');
+    expect(await this.getImageContentTypeInput()).to.match(/image_content_type/);
     await waitUntilDisplayed(this.saveButton);
-    await this.setDashboard_datasource_idInput('5');
-    expect(await this.getDashboard_datasource_idInput()).to.eq('5');
+    await this.setDashboardDatasourceIdInput('5');
+    expect(await this.getDashboardDatasourceIdInput()).to.eq('5');
     await waitUntilDisplayed(this.saveButton);
-    await this.setCreated_byInput('created_by');
-    expect(await this.getCreated_byInput()).to.match(/created_by/);
+    await this.setCreatedByInput('created_by');
+    expect(await this.getCreatedByInput()).to.match(/created_by/);
     await waitUntilDisplayed(this.saveButton);
-    await this.setCreated_dateInput('01-01-2001');
-    expect(await this.getCreated_dateInput()).to.eq('2001-01-01');
+    await this.setCreatedDateInput('01-01-2001');
+    expect(await this.getCreatedDateInput()).to.eq('2001-01-01');
     await waitUntilDisplayed(this.saveButton);
-    await this.setLast_modified_byInput('last_modified_by');
-    expect(await this.getLast_modified_byInput()).to.match(/last_modified_by/);
+    await this.setLastModifiedByInput('last_modified_by');
+    expect(await this.getLastModifiedByInput()).to.match(/last_modified_by/);
     await waitUntilDisplayed(this.saveButton);
-    await this.setLast_modified_dateInput('01-01-2001');
-    expect(await this.getLast_modified_dateInput()).to.eq('2001-01-01');
+    await this.setLastModifiedDateInput('01-01-2001');
+    expect(await this.getLastModifiedDateInput()).to.eq('2001-01-01');
     await waitUntilDisplayed(this.saveButton);
-    await this.setCurrent_release_idInput('5');
-    expect(await this.getCurrent_release_idInput()).to.eq('5');
+    await this.setCurrentReleaseIdInput('5');
+    expect(await this.getCurrentReleaseIdInput()).to.eq('5');
     await this.save();
     await waitUntilHidden(this.saveButton);
     expect(await isVisible(this.saveButton)).to.be.false;
