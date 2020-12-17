@@ -2,7 +2,6 @@ import React from 'react';
 
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 import UserManagement from './user-management';
-import Users from './user-management/users/index';
 import Logs from './logs/logs';
 import Health from './health/health';
 import Metrics from './metrics/metrics';

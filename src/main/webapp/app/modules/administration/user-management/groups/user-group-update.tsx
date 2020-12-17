@@ -73,8 +73,7 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
 
   const redirectToPermissionPage = () => {
     handleClose();
-    // TODO : once permission page is done.this url will be updated
-    props.history.push('/administration/user-management/user-permission');
+    props.history.push('/administration/user-management/dashboard-permission');
   };
 
   return (

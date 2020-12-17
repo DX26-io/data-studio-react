@@ -1,7 +1,8 @@
 import React from 'react';
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
-import Users from './users';
-import UserGroups from './groups';
+import Users from './users/users';
+import UserGroups from './groups/user-groups';
+// import Permission from './permission/permission';
 import UserManagement from './user-management';
 
 
@@ -10,7 +11,7 @@ const Routes = ({ match }) => (
     <ErrorBoundaryRoute exact path={match.url} component={UserManagement} />
     <ErrorBoundaryRoute exact path={`${match.url}/users`} component={Users} />
     <ErrorBoundaryRoute exact path={`${match.url}/groups`} component={UserGroups} />
-    {/* user group,permission module root route will be kept here */}
+    {/* <ErrorBoundaryRoute exact path={`${match.url}/dashboard-permission`} component={Permission} /> */}
   </div>
 );
 

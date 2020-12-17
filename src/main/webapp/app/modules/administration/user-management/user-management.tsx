@@ -28,7 +28,7 @@ const UserManagement = (props: RouteComponentProps) => {
     },
     {
       icon: <UserLock size="L" />,
-      link: `${match.url}/user-permission`,
+      link: `${match.url}/dashboard-permission`,
       title: 'userManagement.dashboardPermission.title',
       description: 'userManagement.dashboardPermission.description',
     },
