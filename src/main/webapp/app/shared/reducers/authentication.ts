@@ -1,8 +1,11 @@
 import axios from 'axios';
 import { Storage } from 'react-jhipster';
+import firebase from 'firebase/app';
 
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { setLocale } from 'app/shared/reducers/locale';
+import config from 'app/config/constants';
+import { toast } from 'react-toastify';
 
 export const ACTION_TYPES = {
   LOGIN: 'authentication/LOGIN',
@@ -113,14 +116,30 @@ export const getSession: () => void = () => async (dispatch, getState) => {
   }
 };
 
-export const setAuthToken = (result, rememberMe) => {
+export const setAuthToken = async (result, rememberMe) => {
   const bearerToken = result.value.headers.authorization;
   if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
     const jwt = bearerToken.slice(7, bearerToken.length);
-    if (rememberMe) {
-      Storage.local.set(AUTH_TOKEN_KEY, jwt);
-    } else {
-      Storage.session.set(AUTH_TOKEN_KEY, jwt);
+
+    try {
+      let tkn: string;
+      if (config.CLOUD) {
+        await firebase.auth().signInWithCustomToken(jwt);
+        console.log('2');
+        tkn = await firebase.auth().currentUser.getIdToken(true);
+        console.log('3');
+      } else {
+        tkn = jwt;
+      }
+      if (rememberMe) {
+        Storage.local.set(AUTH_TOKEN_KEY, tkn);
+      } else {
+        Storage.session.set(AUTH_TOKEN_KEY, tkn);
+      }
+    } catch (error) {
+      console.log('4');
+      const errorMessage = error.message;
+      toast.error(errorMessage);
     }
   }
 };
@@ -134,7 +153,7 @@ export const login: (username: string, password: string, rememberMe?: boolean) =
     type: ACTION_TYPES.LOGIN,
     payload: axios.post('api/authenticate', { username, password, rememberMe }),
   });
-  setAuthToken(result, rememberMe);
+  await setAuthToken(result, rememberMe);
   await dispatch(getSession());
 };
 
@@ -147,8 +166,15 @@ export const clearAuthToken = () => {
   }
 };
 
+const firebaseLogout = () => {
+  if (config.CLOUD) {
+    firebase.auth().signOut();
+  }
+};
+
 export const logout: () => void = () => dispatch => {
   clearAuthToken();
+  firebaseLogout();
   dispatch({
     type: ACTION_TYPES.LOGOUT,
     payload: axios.get('api/logout'),
