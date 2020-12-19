@@ -157,6 +157,18 @@ export const login: (username: string, password: string, rememberMe?: boolean) =
   await dispatch(getSession());
 };
 
+export const loginWithProvider: (provider: string) => void = provider => async dispatch => {
+  const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+  try {
+    const result = await firebase.auth().signInWithPopup(googleAuthProvider);
+    const token = result.credential.accessToken;
+    const user = result.user;
+  } catch (error) {
+    const errorMessage = error.message;
+    toast.error(errorMessage);
+  }
+};
+
 export const clearAuthToken = () => {
   if (Storage.local.get(AUTH_TOKEN_KEY)) {
     Storage.local.remove(AUTH_TOKEN_KEY);

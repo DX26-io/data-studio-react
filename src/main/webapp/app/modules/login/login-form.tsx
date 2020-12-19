@@ -2,18 +2,26 @@ import React, { useState } from 'react';
 import { Button, Checkbox, Flex, Text, TextField, View, Link, Form } from '@adobe/react-spectrum';
 import Alert from '@spectrum-icons/workflow/Alert';
 import { Translate } from 'react-jhipster';
+import config from "app/config/constants";
 
 export interface ILoginProps {
   loginError: boolean;
   handleLogin: (username: string, password: string, rememberMe: boolean) => void;
+  handleProviderLogin: (provider: string) => void;
 }
 export const LoginForm = (props: ILoginProps) => {
+  const firebaseEnabled = config.CLOUD;
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
   const { handleLogin } = props;
+  const { handleProviderLogin } = props;
   const { loginError } = props;
+
+  const onGoogleClick = () => {
+    handleProviderLogin('google');
+  }
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -80,6 +88,12 @@ export const LoginForm = (props: ILoginProps) => {
           <Button data-testid="submit" variant="cta" marginStart="auto" type="submit">
             <Translate contentKey="login.form.button">Sign In</Translate>
           </Button>
+          {firebaseEnabled ?
+            <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onClick={onGoogleClick}>
+              <Translate contentKey="login.form.google">Google</Translate>
+            </Button>
+            :
+            null}
           <Link isQuiet={true}>
             <a href="/">
               <Translate contentKey="login.form.sso">Use Single Sign On (SSO)</Translate>

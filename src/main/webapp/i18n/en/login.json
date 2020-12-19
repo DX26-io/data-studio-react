@@ -6,6 +6,7 @@
       "password.placeholder": "Your password",
       "rememberMe": "Remember me",
       "button": "Sign in",
+      "google": "Google",
       "sso": "Use Single Sign On (SSO)"
     },
     "messages": {
