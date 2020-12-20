@@ -125,9 +125,7 @@ export const setAuthToken = async (result, rememberMe) => {
       let tkn: string;
       if (config.CLOUD) {
         await firebase.auth().signInWithCustomToken(jwt);
-        console.log('2');
         tkn = await firebase.auth().currentUser.getIdToken(true);
-        console.log('3');
       } else {
         tkn = jwt;
       }
@@ -137,11 +135,20 @@ export const setAuthToken = async (result, rememberMe) => {
         Storage.session.set(AUTH_TOKEN_KEY, tkn);
       }
     } catch (error) {
-      console.log('4');
       const errorMessage = error.message;
       toast.error(errorMessage);
     }
   }
+};
+
+const setAuthTokenWithProvider = result => {
+  const bearerToken = result.value.headers.authorization;
+  console.log('bearer', bearerToken);
+  if (!(bearerToken && bearerToken.slice(0, 7) === 'Bearer ')) {
+    return;
+  }
+  const jwt = bearerToken.slice(7, bearerToken.length);
+  Storage.local.set(AUTH_TOKEN_KEY, jwt);
 };
 
 export const login: (username: string, password: string, rememberMe?: boolean) => void = (
@@ -160,12 +167,17 @@ export const login: (username: string, password: string, rememberMe?: boolean) =
 export const loginWithProvider: (provider: string) => void = provider => async dispatch => {
   const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
   try {
-    const result = await firebase.auth().signInWithPopup(googleAuthProvider);
-    const token = result.credential.accessToken;
-    const user = result.user;
+    await firebase.auth().signInWithPopup(googleAuthProvider);
+    const tkn = await firebase.auth().currentUser.getIdToken(true);
+    const result = await dispatch({
+      type: ACTION_TYPES.LOGIN,
+      payload: axios.post('api/registerWithProvider', { idToken: tkn }),
+    });
+    console.log('result register with provider', result);
+    setAuthTokenWithProvider(result);
+    await dispatch(getSession());
   } catch (error) {
-    const errorMessage = error.message;
-    toast.error(errorMessage);
+    toast.error(error.message);
   }
 };
 

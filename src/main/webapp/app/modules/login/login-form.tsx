@@ -89,7 +89,7 @@ export const LoginForm = (props: ILoginProps) => {
             <Translate contentKey="login.form.button">Sign In</Translate>
           </Button>
           {firebaseEnabled ?
-            <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onClick={onGoogleClick}>
+            <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGoogleClick}>
               <Translate contentKey="login.form.google">Google</Translate>
             </Button>
             :
