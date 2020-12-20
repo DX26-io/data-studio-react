@@ -2,9 +2,11 @@
 
 exports[`SecondaryHeader Renders Secondary Header with children 1`] = `
 <ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
-  backgroundColor="default"
-  borderBottomColor="default"
+  backgroundColor="gray-75"
+  borderBottomColor="light"
   borderBottomWidth="thin"
+  borderTopColor="light"
+  borderTopWidth="thin"
   paddingX="size-150"
   paddingY="size-100"
 >
@@ -29,43 +31,28 @@ exports[`SecondaryHeader Renders Secondary Header with children 1`] = `
       justifyContent="start"
     >
       <ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)
+        onAction={[Function]}
         size="M"
       >
         <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="home"
+          key="/"
         >
-          <Link
-            to="/"
-          >
-            Home
-          </Link>
+          Home
         </$de85adf0b38f4f13e9cffd2f21$var$Item>
         <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="dashboards"
+          key="/dashboards"
         >
-          <Link
-            to="/dashboards"
-          >
-            Dashboards
-          </Link>
+          Dashboards
         </$de85adf0b38f4f13e9cffd2f21$var$Item>
         <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="d123"
+          key="/dashboards/d123"
         >
-          <Link
-            to="/dashboards/d123"
-          >
-            Inventory Dashboard
-          </Link>
+          Inventory Dashboard
         </$de85adf0b38f4f13e9cffd2f21$var$Item>
         <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="v123"
+          key="/dashboards/d123/v123"
         >
-          <Link
-            to="/dashboards/d123/v123"
-          >
-            Stock
-          </Link>
+          Stock
         </$de85adf0b38f4f13e9cffd2f21$var$Item>
       </ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)>
     </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
@@ -104,9 +91,11 @@ exports[`SecondaryHeader Renders Secondary Header with children 1`] = `
 
 exports[`SecondaryHeader Renders Secondary Header with default Props 1`] = `
 <ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
-  backgroundColor="default"
-  borderBottomColor="default"
+  backgroundColor="gray-75"
+  borderBottomColor="light"
   borderBottomWidth="thin"
+  borderTopColor="light"
+  borderTopWidth="thin"
   paddingX="size-150"
   paddingY="size-100"
 >
@@ -131,43 +120,28 @@ exports[`SecondaryHeader Renders Secondary Header with default Props 1`] = `
       justifyContent="start"
     >
       <ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)
+        onAction={[Function]}
         size="M"
       >
         <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="home"
+          key="/"
         >
-          <Link
-            to="/"
-          >
-            Home
-          </Link>
+          Home
         </$de85adf0b38f4f13e9cffd2f21$var$Item>
         <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="dashboards"
+          key="/dashboards"
         >
-          <Link
-            to="/dashboards"
-          >
-            Dashboards
-          </Link>
+          Dashboards
         </$de85adf0b38f4f13e9cffd2f21$var$Item>
         <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="d123"
+          key="/dashboards/d123"
         >
-          <Link
-            to="/dashboards/d123"
-          >
-            Inventory Dashboard
-          </Link>
+          Inventory Dashboard
         </$de85adf0b38f4f13e9cffd2f21$var$Item>
         <$de85adf0b38f4f13e9cffd2f21$var$Item
-          key="v123"
+          key="/dashboards/d123/v123"
         >
-          <Link
-            to="/dashboards/d123/v123"
-          >
-            Stock
-          </Link>
+          Stock
         </$de85adf0b38f4f13e9cffd2f21$var$Item>
       </ForwardRef($e2f01fb373fadb4c4bc7c0c3ead285a$var$Breadcrumbs)>
     </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>

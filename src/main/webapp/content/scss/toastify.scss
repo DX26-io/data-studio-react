@@ -1,0 +1,15 @@
+// This file contains custom background colors for React-Toastify
+@import './variables.scss';
+
+.Toastify__toast--info {
+  background: $spectrum-static-blue-400;
+}
+.Toastify__toast--success {
+  background: $spectrum-static-green-600;
+}
+.Toastify__toast--warning {
+  background: $spectrum-static-orange-600;
+}
+.Toastify__toast--error {
+  background: $spectrum-static-red-600;
+}
