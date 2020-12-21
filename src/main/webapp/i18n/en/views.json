@@ -22,7 +22,7 @@
     "updated": "A Views is updated with identifier {{ param }}",
     "deleted": "A Views is deleted with identifier {{ param }}",
     "delete": {
-      "question": "This will permanently delete the selected <strong>{{param}}</strong> view. continue?"
+      "question": "This will permanently delete the selected <strong>{{ param }}</strong> view. If you wish to continue type <em>{{ param }}</em> and click on delete."
     },
     "detail": {
       "title": "Views"
