@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AlertDialog,
   Button,
@@ -25,7 +25,7 @@ import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer'
 export interface IViewPropertiesModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string; viewId: string }> {}
 
 const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
-  const [isEdit, setEdit] = React.useState(false);
+  const [isEdit, setEdit] = useState(false);
   const [viewName, setViewNameText] = React.useState(props.viewEntity.viewName ? props.viewEntity.viewName : '');
   const [viewDescription, setDescriptionText] = React.useState(props.viewEntity.description ? props.viewEntity.description : '');
   const [isError, setErrorOpen] = React.useState(false);

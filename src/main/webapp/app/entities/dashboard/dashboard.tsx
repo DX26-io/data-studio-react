@@ -19,7 +19,7 @@ import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 export interface IDashboardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Dashboard = (props: IDashboardProps) => {
-  const [isDashboardCreateModelOpen, setDashboardCreateModelOpen] = React.useState(false);
+  const [isDashboardCreateModelOpen, setDashboardCreateModelOpen] = useState(false);
   const [paginationState, setPaginationState] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );

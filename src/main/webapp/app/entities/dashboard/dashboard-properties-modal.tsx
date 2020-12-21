@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AlertDialog,
   Button,
@@ -33,16 +33,16 @@ export interface IDashboardPropertiesModalProps extends StateProps, DispatchProp
 
 const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
   const history = useHistory();
-  const [isEdit, setEdit] = React.useState(false);
+  const [isEdit, setEdit] = useState(false);
 
-  const [dashboardName, setDashboardName] = React.useState(props.dashboardEntity.dashboardName ? props.dashboardEntity.dashboardName : '');
-  const [dashboardCategory, setCategory] = React.useState(props.dashboardEntity.category ? props.dashboardEntity.category : '');
-  const [dashboardDescription, setDescription] = React.useState(props.dashboardEntity.description ? props.dashboardEntity.description : '');
-  const [dashboardDataSource, setDataSource] = React.useState(
+  const [dashboardName, setDashboardName] = useState(props.dashboardEntity.dashboardName ? props.dashboardEntity.dashboardName : '');
+  const [dashboardCategory, setCategory] = useState(props.dashboardEntity.category ? props.dashboardEntity.category : '');
+  const [dashboardDescription, setDescription] = useState(props.dashboardEntity.description ? props.dashboardEntity.description : '');
+  const [dashboardDataSource, setDataSource] = useState(
     props.dashboardEntity.dashboardDatasource?.name ? props.dashboardEntity.dashboardDatasource?.name : ''
   );
-  const [isError, setErrorOpen] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [isError, setErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { DASHBOARD_LABEL, CATEGORY_LABEL, DESCRIPTION_LABEL, DATASOURCE_LABEL, DATASOURCE_PLACEHOLDER } = getDashboardFromTranslations();
   const { ERROR_LABEL, ERROR_CLOSE_LABEL } = getDashboardErrorTranslations();
   const { dashboardEntity, dataSourcesList, updating } = props;
