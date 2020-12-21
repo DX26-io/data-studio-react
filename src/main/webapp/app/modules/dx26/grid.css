@@ -4,10 +4,10 @@
 
 .header {
   /* height: 30px; */
-  background: #eee;
-  border-bottom: 1px solid #bbb;
+  /* background: #eee;
+  border-bottom: 1px solid #bbb; */
   margin: -5px -5px 0;
-  padding: 0 5px 0;
+  /* padding: 0 5px 0; */
   -webkit-box-flex: 0;
   cursor: move;
 }
@@ -30,4 +30,12 @@
 /* override react-grid-layout css for remove colour while resize */
 .react-grid-item.react-grid-placeholder {
   background: transparent;
+}
+
+/* override react-grid-layout css for remove animation of widget */
+.react-grid-item.cssTransforms {
+  transition-property: none;
+}
+.animated .react-grid-item.cssTransforms {
+  transition-property: transform;
 }

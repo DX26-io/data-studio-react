@@ -24,6 +24,14 @@ import datasources, {
 import views, {
   ViewsState
 } from 'app/entities/views/views.reducer';
+// prettier-ignore
+import feature, {
+  FeatureState
+} from 'app/entities/feature/feature.reducer';
+// prettier-ignore
+import visualizations, {
+  VisualizationsState
+} from 'app/entities/visualizations/visualizations.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -40,6 +48,8 @@ export interface IRootState {
   readonly dashboard: DashboardState;
   readonly datasources: DatasourcesState;
   readonly views: ViewsState;
+  readonly feature: FeatureState;
+  readonly visualizations: VisualizationsState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -58,6 +68,8 @@ const rootReducer = combineReducers<IRootState>({
   dashboard,
   datasources,
   views,
+  feature,
+  visualizations,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
 });

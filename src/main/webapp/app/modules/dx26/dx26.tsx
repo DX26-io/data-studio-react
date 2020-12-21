@@ -6,7 +6,7 @@ import { Redirect, RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import './grid.css';
 import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
-import { getEntity as getViewEntity } from '../../entities/views/views.reducer';
+import { getEntity as getViewEntity, getCurrentViewState } from '../../entities/views/views.reducer';
 import Settings from '@spectrum-icons/workflow/Settings';
 import Export from '@spectrum-icons/workflow/Export';
 import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
@@ -14,7 +14,6 @@ import Delete from '@spectrum-icons/workflow/Delete';
 import Edit from '@spectrum-icons/workflow/Edit';
 import Table from '@spectrum-icons/workflow/Table';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
-import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import { IRootState } from 'app/shared/reducers';
 import clusteredverticalbar from 'flair-visualizations/js/charts/clusteredverticalbar';
 import { Translate } from 'react-jhipster';
@@ -24,37 +23,16 @@ import $ from 'jquery';
 const ReactGridLayout = WidthProvider(RGL);
 export interface IDx26Prop extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
 
-const visualmetadata = [
-  { i: '1', x: 0, y: 0, w: 1, h: 2, minH: 2, maxH: Infinity, isBounded: true },
-  { i: '2', x: 1, y: 0, w: 1, h: 2, minH: 2, maxH: Infinity, isBounded: true },
-  { i: '3', x: 2, y: 0, w: 1, h: 2, minH: 2, maxH: Infinity, isBounded: true },
-];
-
 const Dx26 = (props: IDx26Prop) => {
-  const [visualmetaList, setvisualmetadata] = React.useState(visualmetadata);
+  // const [visualmetaList, setvisualmetadata] = React.useState(props.visualmetadata);
   const [redirect, setRedirect] = React.useState<ReactText>('');
 
-  
   const onLayoutChange = (_visualmetaList, all) => {
-    setvisualmetadata(_visualmetaList);
+    //  setvisualmetadata(_visualmetaList);
   };
 
   const onResize = _visualmetaList => {
-    setvisualmetadata(_visualmetaList);
-  };
-
-  const addWidget = () => {
-    visualmetadata.push({
-      i: (visualmetadata.length + 1).toString(),
-      x: 0, //(visualmetadata.length * 2) % (3 || 12),
-      y: Infinity,
-      w: 1,
-      h: 2,
-      minH: 2,
-      maxH: Infinity,
-      isBounded: true,
-    });
-    setvisualmetadata(visualmetadata);
+    // setvisualmetadata(_visualmetaList);
   };
 
   const onResizeStop = (layout, oldItem, newItem, placeholder, e, element) => {
@@ -63,18 +41,19 @@ const Dx26 = (props: IDx26Prop) => {
   useEffect(() => {
     if (props.match.params.viewId) {
       props.getViewEntity(props.match.params.viewId);
+      props.getCurrentViewState(props.match.params.viewId);
     }
   }, []);
 
   const generateWidge = () => {
-    return visualmetadata.map(function (l, i) {
+    return props.visualmetadata.visualMetadataSet.map(function (v, i) {
       return (
-        <div className="item widget" id={`widget-${i}`} key={l.i}>
+        <div className="item widget" id={`widget-${i}`} key={i} data-grid={{x: v.xPosition, y: v.yPosition, w: 1, h: 3,maxW:2 ,maxH: Infinity, isBounded: true}}>
           <div className="header">
-            <View>
+            <View backgroundColor="gray-200">
               <Flex direction="row" justifyContent="space-between" alignContent="center">
                 <Flex direction="column" alignItems="center" justifyContent="space-around">
-                  <span>clustered vertical bar chart</span>
+                  <span>{v.titleProperties.titleText}</span>
                 </Flex>
                 <Flex direction="column" justifyContent="space-around">
                   <MenuTrigger>
@@ -107,7 +86,7 @@ const Dx26 = (props: IDx26Prop) => {
                         </Text>
                       </Item>
                       <Item key="data" textValue="data">
-                      <Table size="M" />
+                        <Table size="M" />
                         <Text>
                           <Translate contentKey="entity.action.data">Data</Translate>
                         </Text>
@@ -129,7 +108,7 @@ const Dx26 = (props: IDx26Prop) => {
                   {redirect === 'Edit' && (
                     <Redirect
                       to={{
-                        pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/edit/5',
+                        pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/edit/' + v.id,
                       }}
                     />
                   )}
@@ -137,7 +116,9 @@ const Dx26 = (props: IDx26Prop) => {
               </Flex>
             </View>
           </div>
-          <div id={`demo-${i}`}></div>
+          <div id={`demo-${i}`}>
+            {v.titleProperties.titleText}
+          </div>
         </div>
       );
     });
@@ -145,36 +126,24 @@ const Dx26 = (props: IDx26Prop) => {
 
   return (
     <>
-      <SecondaryHeader
-        breadcrumbItems={[
-          { label: 'Home', route: '/' },
-          { label: 'Dashboards', route: '/dashboards' },
-          { label: 'Inventory Dashboard', route: '/dashboards/d12367' },
-        ]}
-        title={props.view.viewDashboard?.dashboardName + ' ' + props.view.viewName}
-      >
-        <Button variant="primary" marginX="size-150">
-          Edit
-        </Button>
-        <Button variant="secondary" onPress={addWidget}>
-          Add New visualization
-        </Button>
-      </SecondaryHeader>
-      <View>
-        <ReactGridLayout
-          rowHeight={120}
-          cols={2}
-          onResize={onResize}
-          layout={visualmetaList}
-          margin={[15, 15]}
-          verticalCompact={true}
-          onLayoutChange={onLayoutChange}
-          onResizeStop={onResizeStop}
-          draggableHandle=".header"
-          draggableCancel=".WidgetDragCancel"
-        >
-          {generateWidge()}
-        </ReactGridLayout>
+      <View borderWidth="thin" borderColor="default" borderRadius="regular">
+        {props.visualmetadata && props.visualmetadata?.visualMetadataSet?.length > 0 && (
+          <ReactGridLayout
+            className="layout"
+            rowHeight={120}
+            cols={2}
+            onResize={onResize}
+            layout={props.visualmetadata.visualMetadataSet}
+            margin={[10, 10]}
+            verticalCompact={true}
+            onLayoutChange={onLayoutChange}
+            onResizeStop={onResizeStop}
+            draggableHandle=".header"
+            draggableCancel=".WidgetDragCancel"
+          >
+            {generateWidge()}
+          </ReactGridLayout>
+        )}
       </View>
     </>
   );
@@ -184,9 +153,10 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   account: storeState.authentication.account,
   isAuthenticated: storeState.authentication.isAuthenticated,
+  visualmetadata: storeState.views.viewState,
 });
 
-const mapDispatchToProps = { getViewEntity };
+const mapDispatchToProps = { getViewEntity, getCurrentViewState };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

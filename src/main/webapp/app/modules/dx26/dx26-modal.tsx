@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Flex, Dialog, Heading, Divider, Content, ButtonGroup, Button, DialogContainer } from '@adobe/react-spectrum';
+import { View, Flex, Dialog, Heading, Divider, Content, Text,ButtonGroup, Button, DialogContainer } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import './dx26-modal.css';
@@ -7,7 +7,6 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 import IDx26Properties from './partials/dx26-properties';
 import IDx26Settings from './partials/dx26-settings';
 import { Translate } from 'react-jhipster';
-
 export interface IDx26ModalProps
   extends StateProps,
     DispatchProps,
@@ -37,9 +36,11 @@ const Dx26Modal = (props: IDx26ModalProps) => {
           </ButtonGroup>
           <Content>
             <Flex direction="row" height="100%" gap="size-75">
-              <View borderWidth="thin" borderColor="default" borderRadius="regular" flex>
+              <View flex>
                 <Flex direction="column" height="100%" flex gap="size-75">
-                  <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%" />
+                  <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%">
+                    
+                  </View>
                   <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%">
                     <IDx26Settings />
                   </View>

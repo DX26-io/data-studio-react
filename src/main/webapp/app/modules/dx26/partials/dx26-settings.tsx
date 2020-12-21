@@ -1,48 +1,33 @@
 import React from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import AppBar from '@material-ui/core/AppBar';
-import Tab from '@material-ui/core/Tab';
-import TabContext from '@material-ui/lab/TabContext';
-import TabList from '@material-ui/lab/TabList';
-import TabPanel from '@material-ui/lab/TabPanel';
 import Dx26QuerySettings from './dx26-settings/dx26-query-settings';
 import Dx26DataConstraintsSettings from './dx26-settings/dx26-data-constraints-settings';
 import Dx26DataSettings from './dx26-settings/dx26-data-settings';
 import Dx26ThresholdAlertSettings from './dx26-settings/dx26-threshold-alert-settings';
-import { translate } from 'react-jhipster';
+import { Content } from '@react-spectrum/view';
+import { Tabs, Item } from '@react-spectrum/tabs';
+import {  getSettingsTabTranslations} from './dx26-modal-util';
 
 export interface IDx26SettingsProps extends StateProps, DispatchProps {}
 
 const IDx26Settings = (props: IDx26SettingsProps) => {
-  const [activeTab, setTabValue] = React.useState('query');
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
+ 
+  const [activeTabId, setActiveTabId] = React.useState('query');
   return (
     <>
-      <TabContext value={activeTab}>
-        <AppBar position="static">
-          <TabList onChange={handleTabChange} aria-label="simple tabs example">
-            <Tab label={translate('views.editConfiguration.settings.query')} value="query" />
-            <Tab label={translate('views.editConfiguration.settings.dataConstraints')} value="dataConstraints" />
-            <Tab label={translate('views.editConfiguration.settings.thresholdAlert')} value="thresholdAlert" />
-            <Tab label={translate('views.editConfiguration.settings.data')} value="data" />
-          </TabList>
-        </AppBar>
-        <TabPanel value="query">
-          <Dx26QuerySettings />
-        </TabPanel>
-        <TabPanel value="dataConstraints">
-          <Dx26DataConstraintsSettings />
-        </TabPanel>
-        <TabPanel value="thresholdAlert">
-          <Dx26ThresholdAlertSettings />
-        </TabPanel>
-        <TabPanel value="data">
-          <Dx26DataSettings />
-        </TabPanel>
-      </TabContext>
+      <Tabs density={'compact'} items={getSettingsTabTranslations()} onSelectionChange={() => setActiveTabId}>
+        {item => (
+          <Item title={item.name} >
+            <Content marginTop="size-250" marginStart="size-125">
+              {activeTabId === 'query' && <Dx26QuerySettings />}
+              {activeTabId === 'dataConstraints' && <Dx26DataConstraintsSettings />}
+              {activeTabId === 'thresholdAlert' && <Dx26ThresholdAlertSettings />}
+              {activeTabId === 'data' &&     <Dx26DataSettings /> }
+            </Content>
+          </Item>
+        )}
+      </Tabs>
     </>
   );
 };

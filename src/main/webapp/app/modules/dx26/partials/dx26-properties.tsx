@@ -1,44 +1,31 @@
 import React from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import AppBar from '@material-ui/core/AppBar';
-import Tab from '@material-ui/core/Tab';
-import TabContext from '@material-ui/lab/TabContext';
-import TabList from '@material-ui/lab/TabList';
-import TabPanel from '@material-ui/lab/TabPanel';
 import Dx26ChartProperties from './dx26-properties/dx26-chart-properties';
 import Dx26DataProperties from './dx26-properties/dx26-data-properties';
 import Dx26Hierarchy from './dx26-properties/dx26-hierarchy';
-import { translate } from 'react-jhipster';
+import { Content } from '@react-spectrum/view';
+import { Tabs, Item } from '@react-spectrum/tabs';
+import {  getPropertiesTabTranslations} from './dx26-modal-util';
 
 export interface IDx26PropertiesProps extends StateProps, DispatchProps {}
 
 const IDx26Properties = (props: IDx26PropertiesProps) => {
-  const [activeTab, setTabValue] = React.useState('chartProperties');
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
+  const [activeTabId, setActiveTabId] = React.useState('chartProperties');
 
   return (
     <>
-        <TabContext value={activeTab}>
-          <AppBar position="static">
-            <TabList onChange={handleTabChange} aria-label="simple tabs example">
-              <Tab label={translate('views.editConfiguration.properties.chartProperties')} value="chartProperties" />
-              <Tab label={translate('views.editConfiguration.properties.dataProperties')} value="dataProperties" />
-              <Tab label={translate('views.editConfiguration.properties.hierarchy')} value="hierarchy" />
-            </TabList>
-          </AppBar>
-          <TabPanel value="chartProperties">
-            <Dx26ChartProperties />
-          </TabPanel>
-          <TabPanel value="dataProperties">
-            <Dx26DataProperties />
-          </TabPanel>
-          <TabPanel value="hierarchy">
-            <Dx26Hierarchy />
-          </TabPanel>
-        </TabContext>
+      <Tabs density={'compact'} aria-label="History of Ancient Rome" items={getPropertiesTabTranslations()} onSelectionChange={() => setActiveTabId}>
+        {item => (
+          <Item title={item.name}>
+            <Content marginTop="size-250" marginStart="size-125">
+              {activeTabId === 'chartProperties' && <Dx26ChartProperties />}
+              {activeTabId === 'dataProperties' && <Dx26DataProperties />}
+              {activeTabId === 'hierarchy' && <Dx26Hierarchy />}
+            </Content>
+          </Item>
+        )}
+      </Tabs>
     </>
   );
 };

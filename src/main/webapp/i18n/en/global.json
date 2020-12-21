@@ -10,6 +10,8 @@
         "dashboard": "Dashboard",
         "datasources": "Datasources",
         "views": "Views",
+        "feature": "Feature",
+        "visualizations": "Visualizations",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
