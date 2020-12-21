@@ -70,17 +70,17 @@ export const Views = (props: IViewsProps) => {
   };
   const viewsListElement = props.viewsList.map(view => {
     return (
-        <Card
-          key={view.id}
-          thumbnail={
-            <View height="size-3200">
-              <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName} />
-            </View>
-          }
-          content={
-            <ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} />
-          }
-        />
+      <Card
+        key={view.id}
+        thumbnail={
+          <View height="size-3200">
+            <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName} />
+          </View>
+        }
+        content={
+          <ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} />
+        }
+      />
     );
   });
 

@@ -19,11 +19,9 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute exact path={`${match.url}/create`} component={DashboardCreateModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/properties`} component={DashboardPropertiesModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={DashboardDeleteModal} />
-
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/properties`} component={ViewPropertiesModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/delete`} component={ViewDeleteModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/create`} component={ViewCreateModal} />
-
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={Views} />
       <ErrorBoundaryRoute path={match.url} component={Dashboard} />
     </Switch>

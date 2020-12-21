@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   AlertDialog,
   Button,
@@ -34,14 +34,13 @@ export interface IDashboardCreateModalProps extends StateProps, DispatchProps {}
 const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
   const history = useHistory();
   const dashboardNameInputEl = useRef(null);
-
-  const [dashboardName, setDashboardName] = React.useState('');
-  const [dashboardCategory, setCategory] = React.useState('');
-  const [dashboardDescription, setDescription] = React.useState('');
-  const [dashboardDataSource, setDatasource] = React.useState('');
-  const [createSuccessDialog, setCreateSuccessDialog] = React.useState(false);
-  const [createErrorDialog, setCreateErrorDialog] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [dashboardName, setDashboardName] = useState('');
+  const [dashboardCategory, setCategory] = useState('');
+  const [dashboardDescription, setDescription] = useState('');
+  const [dashboardDataSource, setDatasource] = useState('');
+  const [createSuccessDialog, setCreateSuccessDialog] = useState(false);
+  const [createErrorDialog, setCreateErrorDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { dashboardEntity, dataSourcesList, updating } = props;
   const { DASHBOARD_LABEL, CATEGORY_LABEL, DESCRIPTION_LABEL, DATASOURCE_LABEL, DATASOURCE_PLACEHOLDER } = getDashboardFromTranslations();
   const { SUCCESS_LABEL, SUCCESS_CLOSE_LABEL, PRIMARY_ACTION_LABEL } = getDashboardSuccessTranslations();
