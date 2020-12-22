@@ -162,10 +162,10 @@ const Dx26 = (props: IDx26Prop) => {
           { label: 'Home', route: '/' },
           { label: 'Dashboards', route: '/dashboards' },
         ]}
-        title={'DASHBOARDS_TITLE'}
+        title={props.view.name}
       >
         <Button variant="cta" onPress={() => setVisualizationsModelOpen(true)}>
-          <Translate contentKey="views.home.createLabel">Create visualizations</Translate>
+          <Translate contentKey="datastudioApp.visualizations.home.createLabel">Create visualizations</Translate>
         </Button>
         <DialogContainer type="fullscreen" onDismiss={() => setVisualizationsModelOpen(false)} {...props}>
           {isVisualizationsModelOpen && <VisualizationsList handleVisualizationClick={handleVisualizationClick} view={props.view} visualizations={props.visualizationsList} />}
