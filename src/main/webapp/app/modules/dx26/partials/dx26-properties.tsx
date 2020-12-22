@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import Dx26ChartProperties from './dx26-properties/dx26-chart-properties';
@@ -11,7 +11,7 @@ import {  getPropertiesTabTranslations} from './dx26-modal-util';
 export interface IDx26PropertiesProps extends StateProps, DispatchProps {}
 
 const IDx26Properties = (props: IDx26PropertiesProps) => {
-  const [activeTabId, setActiveTabId] = React.useState('chartProperties');
+  const [activeTabId, setActiveTabId] = useState('chartProperties');
 
   return (
     <>

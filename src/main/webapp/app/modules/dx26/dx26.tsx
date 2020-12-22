@@ -1,4 +1,4 @@
-import React, { ReactText, useEffect } from 'react';
+import React, { ReactText, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { ActionButton, Flex, Text, Item, Menu, MenuTrigger, View, Button } from '@adobe/react-spectrum';
 
@@ -24,8 +24,8 @@ const ReactGridLayout = WidthProvider(RGL);
 export interface IDx26Prop extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
 
 const Dx26 = (props: IDx26Prop) => {
-  // const [visualmetaList, setvisualmetadata] = React.useState(props.visualmetadata);
-  const [redirect, setRedirect] = React.useState<ReactText>('');
+  // const [visualmetaList, setvisualmetadata] = useState(props.visualmetadata);
+  const [redirect, setRedirect] = useState<ReactText>('');
 
   const onLayoutChange = (_visualmetaList, all) => {
     //  setvisualmetadata(_visualmetaList);

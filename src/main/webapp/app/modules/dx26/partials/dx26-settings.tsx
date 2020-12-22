@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import Dx26QuerySettings from './dx26-settings/dx26-query-settings';
@@ -13,7 +13,7 @@ export interface IDx26SettingsProps extends StateProps, DispatchProps {}
 
 const IDx26Settings = (props: IDx26SettingsProps) => {
  
-  const [activeTabId, setActiveTabId] = React.useState('query');
+  const [activeTabId, setActiveTabId] = useState('query');
   return (
     <>
       <Tabs density={'compact'} items={getSettingsTabTranslations()} onSelectionChange={() => setActiveTabId}>

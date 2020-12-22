@@ -26,10 +26,10 @@ export interface IViewPropertiesModalProps extends StateProps, DispatchProps, Ro
 
 const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
   const [isEdit, setEdit] = useState(false);
-  const [viewName, setViewNameText] = React.useState(props.viewEntity.viewName ? props.viewEntity.viewName : '');
-  const [viewDescription, setDescriptionText] = React.useState(props.viewEntity.description ? props.viewEntity.description : '');
-  const [isError, setErrorOpen] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [viewName, setViewNameText] = useState(props.viewEntity.viewName ? props.viewEntity.viewName : '');
+  const [viewDescription, setDescriptionText] = useState(props.viewEntity.description ? props.viewEntity.description : '');
+  const [isError, setErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { VIEW_LABEL, DESCRIPTION_LABEL } = getViewFromTranslations();
   const { ERROR_LABEL, ERROR_CLOSE_LABEL } = getViewErrorTranslations();
   const history = useHistory();
