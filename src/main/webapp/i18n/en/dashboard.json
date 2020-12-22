@@ -1,0 +1,35 @@
+{
+  "dashboard": {
+    "home": {
+      "title": "All dashboards",
+      "createLabel": "Create",
+      "notFound": {
+        "heading": "No dashboards found",
+        "content": "To create a new dashboard click on create"
+      },
+      "deleteDashboard": "Delete Dashboard",
+      "createNewDashboard": "Create new dashboard"
+    },
+    "created": {
+      "header": "Success",
+      "content": "Dashboard is created successfully. Click on open to create a new view."
+    },
+    "error": {
+      "header": "Error",
+      "content": "Error saving dashboard"
+    },
+    "delete": {
+      "question": "This will permanently delete the selected <strong>{{ name }}</strong> dashboard. If you wish to continue type <em>{{ name }}</em> and click on delete."
+    },
+    "dashboard_name": "Dashboard name",
+    "category": "Category",
+    "description": "Description",
+    "datasource": "Datasource",
+    "datasource_placeholder": "Select datasource",
+    "image_location": "Image Location",
+    "uniqueError": {
+      "create": "Dashboard already exists with <strong>{{param}}</strong> name please choose a different name and click on create.",
+      "update": "Dashboard already exists with <strong>{{param}}</strong> name please choose a different name and click on save."
+    }
+  }
+}

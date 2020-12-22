@@ -5,15 +5,21 @@ import { Breadcrumbs, Item, Button } from '@adobe/react-spectrum';
 
 import SecondaryHeader, { ISecondaryHeaderProps } from 'app/shared/layout/secondary-header/secondary-header';
 
+jest.mock('react-router-dom', () => ({
+  useHistory: () => ({
+    push: jest.fn(),
+  }),
+}));
+
 describe('SecondaryHeader', () => {
   let mountedWrapper;
 
   const defaultProps: ISecondaryHeaderProps = {
     breadcrumbItems: [
-      { key: 'home', label: 'Home', route: '/' },
-      { key: 'dashboards', label: 'Dashboards', route: '/dashboards' },
-      { key: 'd123', label: 'Inventory Dashboard', route: '/dashboards/d123' },
-      { key: 'v123', label: 'Stock', route: '/dashboards/d123/v123' },
+      { label: 'Home', route: '/' },
+      { label: 'Dashboards', route: '/dashboards' },
+      { label: 'Inventory Dashboard', route: '/dashboards/d123' },
+      { label: 'Stock', route: '/dashboards/d123/v123' },
     ],
     title: 'SH Unit Test',
   };

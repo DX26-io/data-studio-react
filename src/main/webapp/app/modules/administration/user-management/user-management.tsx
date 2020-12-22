@@ -1,7 +1,7 @@
 // import './secondary-header.scss';
 
 import React, { PropsWithChildren } from 'react';
-import { View, Flex, } from '@adobe/react-spectrum';
+import { View, Flex } from '@adobe/react-spectrum';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import User from '@spectrum-icons/workflow/User';
 import UserGroup from '@spectrum-icons/workflow/UserGroup';
@@ -43,8 +43,8 @@ const UserManagement = (props: RouteComponentProps) => {
     <View backgroundColor="default">
       <SecondaryHeader
         breadcrumbItems={[
-          { key: 'home', label: 'Home', route: '/' },
-          { key: 'user-management', label: 'User Management', route: '/administration/user-management' },
+          { label: 'Home', route: '/' },
+          { label: 'User Management', route: '/administration/user-management' },
         ]}
         title={'User Management'}
       ></SecondaryHeader>
