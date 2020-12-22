@@ -1,0 +1,15 @@
+{
+  "permission": {
+    "home": {
+      "administrators": "Administrators"
+    },
+    "dashboardPermission": {
+      "title": "Dashboard permissions",
+      "description": "Manage dashboards user and  group permissions"
+    },
+    "datasourcePermission": {
+      "title": "Datasource permissions",
+      "description": "Manage datasources user and  group permissions"
+    }
+  }
+}
