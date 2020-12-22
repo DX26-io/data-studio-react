@@ -7,6 +7,9 @@
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
         "main": "Entities",
+        "dashboard": "Dashboard",
+        "datasources": "Datasources",
+        "views": "Views",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
@@ -93,7 +96,7 @@
       "addblob": "Add blob",
       "addimage": "Add image",
       "back": "Back",
-      "cancel": "Cancel",
+      "cancel": "Close",
       "delete": "Delete",
       "edit": "Edit",
       "open": "Open",
@@ -102,6 +105,15 @@
       "manage": "Manage",
       "create": "Create",
       "dangerZone": "Danger Zone"
+      "create": "Create"
+    },
+    "options": {
+      "more_options": "More options",
+      "danger": "Danger",
+      "properties": "Properties",
+      "release": "Release",
+      "delete": "Delete",
+      "no_description": "no description"
     },
     "detail": {
       "field": "Field",

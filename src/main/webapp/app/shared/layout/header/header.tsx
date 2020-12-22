@@ -40,7 +40,7 @@ const Header = (props: IHeaderProps) => {
     <>
       {renderDevRibbon()}
       <LoadingBar className="loading-bar" />
-      <View padding="size-150" backgroundColor="gray-200">
+      <View padding="size-150" backgroundColor="default">
         <header>
           <Flex justifyContent="space-between">
             <Flex justifyContent="center" alignItems="center">

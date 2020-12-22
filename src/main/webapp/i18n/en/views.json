@@ -1,0 +1,47 @@
+{
+  "views": {
+    "home": {
+      "title": "Views",
+      "createLabel": "Create view",
+      "notFound": {
+        "heading": "No views found for this dashboard",
+        "content": "To create a new view click on create"
+      },
+      "createOrEditLabel": "Create or edit a Views",
+      "editLabel": "Edit",
+      "cancelLabel": "Cancel",
+      "deleteView": "Delete View",
+      "delete": "Delete",
+      "save": "Save",
+      "createNewView": "Create new view"
+    },
+    "created": {
+      "header": "Success",
+      "content": "View is created successfully. Click on open to create visualizations."
+    },
+    "updated": "A Views is updated with identifier {{ param }}",
+    "deleted": "A Views is deleted with identifier {{ param }}",
+    "delete": {
+      "question": "This will permanently delete the selected <strong>{{ param }}</strong> view. If you wish to continue type <em>{{ param }}</em> and click on delete."
+    },
+    "detail": {
+      "title": "Views"
+    },
+    "viewName": "View Name",
+    "description": "Description",
+    "createdBy": "Created By",
+    "lastModifiedBy": "Last Modified By",
+    "lastModifiedDate": "Last Modified Date",
+    "published": "Published",
+    "image": "Image",
+    "viewDashboard": "View Dashboard",
+    "uniqueError": {
+      "create": "View already exists with <strong>{{param}}</strong> name please choose a different name and click on create.",
+      "update": "View already exists with <strong>{{param}}</strong> name please choose a different name and click on save."
+    },
+    "error": {
+      "header": "Error",
+      "content": "Error saving view"
+    }
+  }
+}
