@@ -1,4 +1,4 @@
-import React, { ReactText } from 'react';
+import React, { ReactText, useState } from 'react';
 import { ActionButton, Flex, Item, Menu, MenuTrigger, Section, Text, Tooltip, TooltipTrigger, View } from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
@@ -15,7 +15,7 @@ interface IViewCardContentProps {
 
 const ViewCardContent: React.FC<IViewCardContentProps> = props => {
   const { viewName, viewId, description, viewDashboard } = props;
-  const [redirect, setRedirect] = React.useState<ReactText>('');
+  const [redirect, setRedirect] = useState<ReactText>('');
 
   return (
     <>

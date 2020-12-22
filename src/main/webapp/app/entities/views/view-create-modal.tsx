@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Flex,
@@ -25,11 +25,11 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 export interface IViewCreateModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 const ViewCreateModal = (props: IViewCreateModalProps) => {
-  const [createSuccessDialog, setCreateSuccessDialog] = React.useState(false);
-  const [createErrorDialog, setCreateErrorDialog] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
-  const [viewName, setViewNameText] = React.useState('');
-  const [viewDescription, setDescriptionText] = React.useState('');
+  const [createSuccessDialog, setCreateSuccessDialog] = useState(false);
+  const [createErrorDialog, setCreateErrorDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [viewName, setViewNameText] = useState('');
+  const [viewDescription, setDescriptionText] = useState('');
   const { viewEntity, updating } = props;
   const { VIEW_LABEL, DESCRIPTION_LABEL } = getViewFromTranslations();
   const { SUCCESS_LABEL, SUCCESS_CLOSE_LABEL, PRIMARY_ACTION_LABEL } = getViewSuccessTranslations();
@@ -69,7 +69,6 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
     // TODO
     // redirect to build page
   };
-
 
   useEffect(() => {
     props.reset();
