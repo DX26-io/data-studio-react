@@ -73,9 +73,9 @@ export const UserGroups = (props: IUserGroupsProps) => {
     <div>
       <SecondaryHeader
         breadcrumbItems={[
-          { key: 'home', label: 'Home', route: '/' },
-          { key: 'user-management', label: 'User Management', route: '/administration/user-management' },
-          { key: 'user-management-users', label: 'Groups', route: '/administration/user-management/groups' },
+          { label: 'Home', route: '/' },
+          { label: 'User Management', route: '/administration/user-management' },
+          { label: 'Groups', route: '/administration/user-management/groups' },
         ]}
         title={'Groups'}
       >
@@ -93,7 +93,13 @@ export const UserGroups = (props: IUserGroupsProps) => {
       </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
         {isOpen && (
-          <UserGroupUpdate setUpdateSuccess={setUpdateSuccess} isNew={isNew} setOpen={setOpen} groupName={groupName} {...props}></UserGroupUpdate>
+          <UserGroupUpdate
+            setUpdateSuccess={setUpdateSuccess}
+            isNew={isNew}
+            setOpen={setOpen}
+            groupName={groupName}
+            {...props}
+          ></UserGroupUpdate>
         )}
       </DialogContainer>
       <div className="dx26-container">

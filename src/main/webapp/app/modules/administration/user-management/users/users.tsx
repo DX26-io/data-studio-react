@@ -74,9 +74,9 @@ export const Users = (props: IUsersProps) => {
       {/* TODO : mapping of urls */}
       <SecondaryHeader
         breadcrumbItems={[
-          { key: 'home', label: 'Home', route: '/' },
-          { key: 'user-management', label: 'User Management', route: '/administration/user-management' },
-          { key: 'user-management-users', label: 'Users', route: '/administration/user-management/users' },
+          { label: 'Home', route: '/' },
+          { label: 'User Management', route: '/administration/user-management' },
+          { label: 'Users', route: '/administration/user-management/users' },
         ]}
         title={'User Management'}
       >
@@ -93,14 +93,7 @@ export const Users = (props: IUsersProps) => {
         </Button>
       </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && (
-          <UserUpdate
-            setUpdateSuccess={setUpdateSuccess}
-            isNew={isNew}
-            setOpen={setOpen}
-            loginID={loginID}
-          ></UserUpdate>
-        )}
+        {isOpen && <UserUpdate setUpdateSuccess={setUpdateSuccess} isNew={isNew} setOpen={setOpen} loginID={loginID}></UserUpdate>}
       </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">

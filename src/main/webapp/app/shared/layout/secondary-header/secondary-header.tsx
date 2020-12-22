@@ -28,15 +28,11 @@ const SecondaryHeader: React.FC<PropsWithChildren<ISecondaryHeaderProps>> = prop
       borderTopColor={'light'}
     >
       <Grid areas={['breadcrumbs title options']} columns={['1fr', '1fr', '1fr']} maxHeight={'size-600'}>
-
-        <Flex gridArea="breadcrumbs" justifyContent="start" alignItems="center">
-          <Breadcrumbs size="M" onAction={key => history.push(`${key}`)}>
-            {props.breadcrumbItems.map(item => (
-              <Item key={item.route}>{item.label}</Item>
-            ))}
-          </Breadcrumbs>
-        </Flex>
-
+        <Breadcrumbs size="M" onAction={key => history.push(`${key}`)}>
+          {props.breadcrumbItems.map(item => (
+            <Item key={item.route}>{item.label}</Item>
+          ))}
+        </Breadcrumbs>
         <Flex gridArea="title" justifyContent="center" alignItems="center">
           <Heading level={3} marginY="size-0">
             {props.title}
