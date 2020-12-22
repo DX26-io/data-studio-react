@@ -1,8 +1,6 @@
 export interface IVisualizations {
   id?: number;
   name?: string;
-  icon?: string;
-  customId?: number;
   functionname?: string;
 }
 

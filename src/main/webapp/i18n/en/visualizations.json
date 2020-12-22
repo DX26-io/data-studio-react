@@ -15,7 +15,9 @@
       },
       "detail": {
         "title": "Visualizations"
-      }
+      },
+      "name": "Name",
+      "functionname": "Functionname"
     }
   }
 }

@@ -1,12 +1,29 @@
 import React, { ReactText, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { ActionButton, Flex, Text, Item, Menu, MenuTrigger, View, Button } from '@adobe/react-spectrum';
+import {
+  ActionButton,
+  Flex,
+  Text,
+  Item,
+  Menu,
+  MenuTrigger,
+  View,
+  Button,
+  DialogContainer,
+  DialogTrigger,
+  Heading,
+  Dialog,
+  Content,
+  Divider,
+} from '@adobe/react-spectrum';
 
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import './grid.css';
 import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
 import { getEntity as getViewEntity, getCurrentViewState } from '../../entities/views/views.reducer';
+import { getEntities as getVisualizationsEntities } from '../../entities/visualizations/visualizations.reducer';
+
 import Settings from '@spectrum-icons/workflow/Settings';
 import Export from '@spectrum-icons/workflow/Export';
 import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
@@ -19,6 +36,9 @@ import clusteredverticalbar from 'flair-visualizations/js/charts/clusteredvertic
 import { Translate } from 'react-jhipster';
 
 import $ from 'jquery';
+import { Visualizations } from 'app/entities/visualizations/visualizations';
+import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
+import VisualizationsList from 'app/entities/visualizations/visualizations-list';
 
 const ReactGridLayout = WidthProvider(RGL);
 export interface IDx26Prop extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
@@ -26,29 +46,42 @@ export interface IDx26Prop extends StateProps, DispatchProps, RouteComponentProp
 const Dx26 = (props: IDx26Prop) => {
   // const [visualmetaList, setvisualmetadata] = useState(props.visualmetadata);
   const [redirect, setRedirect] = useState<ReactText>('');
+  const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
 
   const onLayoutChange = (_visualmetaList, all) => {
     //  setvisualmetadata(_visualmetaList);
   };
 
   const onResize = _visualmetaList => {
-    // setvisualmetadata(_visualmetaList);
+    //  setvisualmetadata(_visualmetaList);
   };
 
   const onResizeStop = (layout, oldItem, newItem, placeholder, e, element) => {
-    //To do
+    //  To do
   };
+
   useEffect(() => {
     if (props.match.params.viewId) {
+      props.getVisualizationsEntities();
       props.getViewEntity(props.match.params.viewId);
       props.getCurrentViewState(props.match.params.viewId);
     }
   }, []);
 
+  const handleVisualizationClick = (v)=>{
+    props.visualmetadata.visualMetadataSet.push(v);
+    setVisualizationsModelOpen(false);
+  }
+
   const generateWidge = () => {
     return props.visualmetadata.visualMetadataSet.map(function (v, i) {
       return (
-        <div className="item widget" id={`widget-${i}`} key={i} data-grid={{x: v.xPosition, y: v.yPosition, w: 1, h: 3,maxW:2 ,maxH: Infinity, isBounded: true}}>
+        <div
+          className="item widget"
+          id={`widget-${i}`}
+          key={i}
+          data-grid={{ x: v.xPosition, y: v.yPosition, w: 1, h: 3, maxW: 2, maxH: Infinity, isBounded: true }}
+        >
           <div className="header">
             <View backgroundColor="gray-200">
               <Flex direction="row" justifyContent="space-between" alignContent="center">
@@ -116,9 +149,7 @@ const Dx26 = (props: IDx26Prop) => {
               </Flex>
             </View>
           </div>
-          <div id={`demo-${i}`}>
-            {v.titleProperties.titleText}
-          </div>
+          <div id={`demo-${i}`}>{v.titleProperties.titleText}</div>
         </div>
       );
     });
@@ -126,15 +157,29 @@ const Dx26 = (props: IDx26Prop) => {
 
   return (
     <>
+      <SecondaryHeader
+        breadcrumbItems={[
+          { label: 'Home', route: '/' },
+          { label: 'Dashboards', route: '/dashboards' },
+        ]}
+        title={'DASHBOARDS_TITLE'}
+      >
+        <Button variant="cta" onPress={() => setVisualizationsModelOpen(true)}>
+          <Translate contentKey="views.home.createLabel">Create visualizations</Translate>
+        </Button>
+        <DialogContainer type="fullscreen" onDismiss={() => setVisualizationsModelOpen(false)} {...props}>
+          {isVisualizationsModelOpen && <VisualizationsList handleVisualizationClick={handleVisualizationClick} view={props.view} visualizations={props.visualizationsList} />}
+        </DialogContainer>
+      </SecondaryHeader>
       <View borderWidth="thin" borderColor="default" borderRadius="regular">
         {props.visualmetadata && props.visualmetadata?.visualMetadataSet?.length > 0 && (
           <ReactGridLayout
             className="layout"
             rowHeight={120}
-            cols={2}
+            cols={3}
             onResize={onResize}
             layout={props.visualmetadata.visualMetadataSet}
-            margin={[10, 10]}
+            margin={[15, 15]}
             verticalCompact={true}
             onLayoutChange={onLayoutChange}
             onResizeStop={onResizeStop}
@@ -154,9 +199,10 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
   isAuthenticated: storeState.authentication.isAuthenticated,
   visualmetadata: storeState.views.viewState,
+  visualizationsList: storeState.visualizations.entities,
 });
 
-const mapDispatchToProps = { getViewEntity, getCurrentViewState };
+const mapDispatchToProps = { getViewEntity, getCurrentViewState, getVisualizationsEntities };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

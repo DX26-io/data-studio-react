@@ -7,23 +7,22 @@ import Dx26DataSettings from './dx26-settings/dx26-data-settings';
 import Dx26ThresholdAlertSettings from './dx26-settings/dx26-threshold-alert-settings';
 import { Content } from '@react-spectrum/view';
 import { Tabs, Item } from '@react-spectrum/tabs';
-import {  getSettingsTabTranslations} from './dx26-modal-util';
+import { getSettingsTabTranslations } from './dx26-modal-util';
 
 export interface IDx26SettingsProps extends StateProps, DispatchProps {}
 
 const IDx26Settings = (props: IDx26SettingsProps) => {
- 
   const [activeTabId, setActiveTabId] = useState('query');
   return (
     <>
-      <Tabs density={'compact'} items={getSettingsTabTranslations()} onSelectionChange={() => setActiveTabId}>
+      <Tabs density={'compact'} items={getSettingsTabTranslations()} onSelectionChange={key => setActiveTabId(key)}>
         {item => (
-          <Item title={item.name} >
+          <Item title={item.name}>
             <Content marginTop="size-250" marginStart="size-125">
               {activeTabId === 'query' && <Dx26QuerySettings />}
               {activeTabId === 'dataConstraints' && <Dx26DataConstraintsSettings />}
               {activeTabId === 'thresholdAlert' && <Dx26ThresholdAlertSettings />}
-              {activeTabId === 'data' &&     <Dx26DataSettings /> }
+              {activeTabId === 'data' && <Dx26DataSettings />}
             </Content>
           </Item>
         )}

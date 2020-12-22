@@ -15,9 +15,9 @@ const IDx26Properties = (props: IDx26PropertiesProps) => {
 
   return (
     <>
-      <Tabs density={'compact'} aria-label="History of Ancient Rome" items={getPropertiesTabTranslations()} onSelectionChange={() => setActiveTabId}>
+      <Tabs density={'compact'} aria-label="History of Ancient Rome"  items={getPropertiesTabTranslations()} onSelectionChange={(key) => setActiveTabId(key)}>
         {item => (
-          <Item title={item.name}>
+          <Item title={item.name} key={item.id}>
             <Content marginTop="size-250" marginStart="size-125">
               {activeTabId === 'chartProperties' && <Dx26ChartProperties />}
               {activeTabId === 'dataProperties' && <Dx26DataProperties />}
