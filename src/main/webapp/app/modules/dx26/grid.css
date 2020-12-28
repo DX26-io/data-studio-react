@@ -28,9 +28,9 @@
 }
 
 /* override react-grid-layout css for remove colour while resize */
-.react-grid-item.react-grid-placeholder {
+/* .react-grid-item.react-grid-placeholder {
   background: transparent;
-}
+} */
 
 /* override react-grid-layout css for remove animation of widget */
 .react-grid-item.cssTransforms {

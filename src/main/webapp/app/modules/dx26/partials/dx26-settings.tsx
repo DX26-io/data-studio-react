@@ -9,13 +9,15 @@ import { Content } from '@react-spectrum/view';
 import { Tabs, Item } from '@react-spectrum/tabs';
 import { getSettingsTabTranslations } from './dx26-modal-util';
 
-export interface IDx26SettingsProps extends StateProps, DispatchProps {}
+export interface IDx26SettingsProps extends StateProps, DispatchProps {
+  visualizationId : React.ReactNode;
+}
 
 const IDx26Settings = (props: IDx26SettingsProps) => {
   const [activeTabId, setActiveTabId] = useState('query');
   return (
     <>
-      <Tabs density={'compact'} items={getSettingsTabTranslations()} onSelectionChange={key => setActiveTabId(key)}>
+      <Tabs isQuiet={true} density={'compact'} items={getSettingsTabTranslations()} onSelectionChange={key => setActiveTabId(key)}>
         {item => (
           <Item title={item.name}>
             <Content marginTop="size-250" marginStart="size-125">

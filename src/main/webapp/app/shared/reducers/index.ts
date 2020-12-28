@@ -32,6 +32,10 @@ import feature, {
 import visualizations, {
   VisualizationsState
 } from 'app/entities/visualizations/visualizations.reducer';
+// prettier-ignore
+import visualmetadata, {
+  VisualmetadataState
+} from 'app/entities/visualmetadata/visualmetadata.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -50,6 +54,7 @@ export interface IRootState {
   readonly views: ViewsState;
   readonly feature: FeatureState;
   readonly visualizations: VisualizationsState;
+  readonly visualmetadata: VisualmetadataState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -70,6 +75,7 @@ const rootReducer = combineReducers<IRootState>({
   views,
   feature,
   visualizations,
+  visualmetadata,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
 });

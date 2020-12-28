@@ -9,12 +9,7 @@ import {
   MenuTrigger,
   View,
   Button,
-  DialogContainer,
-  DialogTrigger,
-  Heading,
-  Dialog,
-  Content,
-  Divider,
+  DialogContainer
 } from '@adobe/react-spectrum';
 
 import { Redirect, RouteComponentProps } from 'react-router-dom';
@@ -23,6 +18,7 @@ import './grid.css';
 import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
 import { getEntity as getViewEntity, getCurrentViewState } from '../../entities/views/views.reducer';
 import { getEntities as getVisualizationsEntities } from '../../entities/visualizations/visualizations.reducer';
+import { getEntities as getfeatureEntities } from '../../entities/feature/feature.reducer';
 
 import Settings from '@spectrum-icons/workflow/Settings';
 import Export from '@spectrum-icons/workflow/Export';
@@ -34,6 +30,10 @@ import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import { IRootState } from 'app/shared/reducers';
 import clusteredverticalbar from 'flair-visualizations/js/charts/clusteredverticalbar';
 import { Translate } from 'react-jhipster';
+import {
+  createEntity as addVisualmetadataEntity,
+  deleteEntity as deleteVisualmetadataEntity,
+} from 'app/entities/visualmetadata/visualmetadata.reducer';
 
 import $ from 'jquery';
 import { Visualizations } from 'app/entities/visualizations/visualizations';
@@ -44,10 +44,9 @@ const ReactGridLayout = WidthProvider(RGL);
 export interface IDx26Prop extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
 
 const Dx26 = (props: IDx26Prop) => {
-  // const [visualmetaList, setvisualmetadata] = useState(props.visualmetadata);
   const [redirect, setRedirect] = useState<ReactText>('');
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
-
+ 
   const onLayoutChange = (_visualmetaList, all) => {
     //  setvisualmetadata(_visualmetaList);
   };
@@ -68,10 +67,14 @@ const Dx26 = (props: IDx26Prop) => {
     }
   }, []);
 
-  const handleVisualizationClick = (v)=>{
+  const handleVisualizationClick = v => {
     props.visualmetadata.visualMetadataSet.push(v);
+    // props.addVisualmetadataEntity({
+    //   viewId: props.view.id,
+    //   visualMetadata: v,
+    // });
     setVisualizationsModelOpen(false);
-  }
+  };
 
   const generateWidge = () => {
     return props.visualmetadata.visualMetadataSet.map(function (v, i) {
@@ -145,6 +148,13 @@ const Dx26 = (props: IDx26Prop) => {
                       }}
                     />
                   )}
+                  {redirect === 'Delete' && (
+                     <Redirect
+                     to={{
+                       pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/delete/' + v.id,
+                     }}
+                   />
+                  )}
                 </Flex>
               </Flex>
             </View>
@@ -162,13 +172,19 @@ const Dx26 = (props: IDx26Prop) => {
           { label: 'Home', route: '/' },
           { label: 'Dashboards', route: '/dashboards' },
         ]}
-        title={props.view.name}
+        title={props.view.viewName}
       >
         <Button variant="cta" onPress={() => setVisualizationsModelOpen(true)}>
           <Translate contentKey="datastudioApp.visualizations.home.createLabel">Create visualizations</Translate>
         </Button>
         <DialogContainer type="fullscreen" onDismiss={() => setVisualizationsModelOpen(false)} {...props}>
-          {isVisualizationsModelOpen && <VisualizationsList handleVisualizationClick={handleVisualizationClick} view={props.view} visualizations={props.visualizationsList} />}
+          {isVisualizationsModelOpen && (
+            <VisualizationsList
+              handleVisualizationClick={handleVisualizationClick}
+              view={props.view}
+              visualizations={props.visualizationsList}
+            />
+          )}
         </DialogContainer>
       </SecondaryHeader>
       <View borderWidth="thin" borderColor="default" borderRadius="regular">
@@ -200,9 +216,18 @@ const mapStateToProps = (storeState: IRootState) => ({
   isAuthenticated: storeState.authentication.isAuthenticated,
   visualmetadata: storeState.views.viewState,
   visualizationsList: storeState.visualizations.entities,
+  featuresList: storeState.feature.entities,
+  visualmetadataEntity: storeState.visualmetadata.entity,
 });
 
-const mapDispatchToProps = { getViewEntity, getCurrentViewState, getVisualizationsEntities };
+const mapDispatchToProps = {
+  getViewEntity,
+  getCurrentViewState,
+  getVisualizationsEntities,
+  getfeatureEntities,
+  addVisualmetadataEntity,
+  deleteVisualmetadataEntity,
+};
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

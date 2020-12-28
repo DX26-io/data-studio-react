@@ -14,6 +14,7 @@ import ViewDeleteModal from '../views/view-delete-modal';
 import ViewPropertiesModal from '../views/view-properties-modal';
 import Dx26 from '../../modules/dx26/dx26';
 import Dx26Modal from '../../modules/dx26/dx26-modal';
+import VisualizationsDeleteModal from '../../modules/dx26/visualizations-delete-modal';
 
 const Routes = ({ match }) => (
   <>
@@ -27,6 +28,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/build`} component={Dx26} />
 
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/edit/:visualizationId`} component={Dx26Modal} />
+      <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/delete/:visualizationId`} component={VisualizationsDeleteModal} />
 
 
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={Views} />

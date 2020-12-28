@@ -12,6 +12,7 @@
         "views": "Views",
         "feature": "Feature",
         "visualizations": "Visualizations",
+        "visualmetadata": "Visualmetadata",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

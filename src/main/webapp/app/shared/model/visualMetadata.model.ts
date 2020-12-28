@@ -172,3 +172,5 @@ export interface TitleProperties {
   borderBottom: string;
   //  color: Color;
 }
+
+export const defaultValue: Readonly<IVisualMetadataSet> = {};

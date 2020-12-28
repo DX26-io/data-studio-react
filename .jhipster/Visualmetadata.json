@@ -1,0 +1,27 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "height",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "width",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "visualBuildId",
+      "fieldType": "String"
+    }
+  ],
+  "dto": "no",
+  "searchEngine": false,
+  "service": "no",
+  "entityTableName": "visualmetadata",
+  "databaseType": "postgres",
+  "readOnly": false,
+  "jpaMetamodelFiltering": false,
+  "pagination": "no"
+}
