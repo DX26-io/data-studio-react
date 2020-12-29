@@ -14,6 +14,12 @@ export interface IVisualMetadataSet {
   width: number;
   xPosition: number;
   yPosition: number;
+
+  w: number;
+  x: number;
+  h: number;
+  y: number;
+
   conditionExpression: null;
   query: null;
   queryJson: null;
@@ -142,7 +148,7 @@ export interface Property {
   id: null;
   propertyType: PropertyTypePropertyType;
   order: number;
-  value: boolean | ValueElement | Color | number | null;
+  value: boolean | ValueElement | Color | number | null | string;
 }
 
 export interface MetadataVisual {
@@ -170,7 +176,7 @@ export interface TitleProperties {
   titleText: string;
   backgroundColor: string;
   borderBottom: string;
-  //  color: Color;
+  color: string;
 }
 
 export const defaultValue: Readonly<IVisualMetadataSet> = {};

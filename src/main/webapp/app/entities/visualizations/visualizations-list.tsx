@@ -21,6 +21,7 @@ interface IVisualizationsListProps {
   visualizations: IVisualizations[];
   handleVisualizationClick: (visualization) => void;
   view: IViews;
+  totalItem : number;
 }
 export const VisualizationsList = (props: IVisualizationsListProps) => {
   const { handleVisualizationClick } = props;
@@ -92,14 +93,14 @@ export const VisualizationsList = (props: IVisualizationsListProps) => {
         border: 'none',
       },
       visualBuildId: visualization.id + 'a' + Math.round(Math.random() * 1000000),
-      width: 5,
-      w: 5,
-      xPosition: 0,
-      x: 0,
-      height: 5,
-      h: 5,
-      yPosition: 1000,
-      y: 1000,
+      width: 1,
+      w: 1,
+      xPosition: (props.totalItem* 2) % (3 || 12),
+      x: (props.totalItem* 2) % (3 || 12),
+      height: 3,
+      h: 3,
+      yPosition: Infinity,
+      y: Infinity,
       metadataVisual: visualization,
       views: props.view,
       datasource: props.view.viewDashboard.dashboardDatasource.id,

@@ -1,3 +1,4 @@
+import { IVisualMetadata } from 'app/shared/model/visualMetadata.model';
 import { translate } from 'react-jhipster';
 import { IPayload, IPayloadResult } from 'react-jhipster/src/type/redux-action.type';
 
@@ -15,6 +16,16 @@ export type ICrudGetDashboardViewsAction<T> = (
   size?: number,
   sort?: string
 ) => IPayload<T> | ((dispatch: any) => IPayload<T>);
+
+/**
+ * This is a special type for store all data type
+ */
+export type ISaveViewState<T> = (visualmetaDataDTO: ISaveViewStateDTO) => IPayload<T> | ((dispatch: any) => IPayload<T>);
+
+export interface ISaveViewStateDTO {
+  visualMetadataSet: IVisualMetadata[];
+  _id: number;
+}
 
 /**
  * This method returns an object that contains view form labels

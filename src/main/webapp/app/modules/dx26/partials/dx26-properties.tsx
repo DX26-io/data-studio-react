@@ -24,7 +24,7 @@ const IDx26Properties = (props: IDx26PropertiesProps) => {
       <Tabs isQuiet={true} density={'compact'} aria-label="History of Ancient Rome"  items={getPropertiesTabTranslations()} onSelectionChange={(key) => setActiveTabId(key)}>
         {item => (
           <Item title={item.name} key={item.id}>
-            <Content marginTop="size-250" marginStart="size-125">
+            <Content margin="size-100">
               {activeTabId === 'chartProperties' && <Dx26VizProperties features={props.features} visual={props.visual}  />}
               {activeTabId === 'dataProperties' && <Dx26DataProperties features={props.features} visual={props.visual}  />}
               {activeTabId === 'hierarchy' && <Dx26Hierarchy />}

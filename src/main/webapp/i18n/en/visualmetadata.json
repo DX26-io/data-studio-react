@@ -12,7 +12,7 @@
       "updated": "A Visualmetadata is updated with identifier {{ param }}",
       "deleted": "A Visualmetadata is deleted with identifier {{ param }}",
       "delete": {
-        "question": "This will permanently delete the selected <strong>{{ name }}</strong> dashboard. If you wish to continue type <em>{{ name }}</em> and click on delete."
+        "question": "This will permanently delete the selected <strong>{{ name }}</strong> visualization. If you wish to continue type <em>{{ name }}</em> and click on delete."
       },
       "detail": {
         "title": "Visualmetadata"

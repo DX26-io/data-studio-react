@@ -16,7 +16,7 @@ import { Redirect, RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import './grid.css';
 import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
-import { getEntity as getViewEntity, getCurrentViewState } from '../../entities/views/views.reducer';
+import { getEntity as getViewEntity, getCurrentViewState,saveViewState } from '../../entities/views/views.reducer';
 import { getEntities as getVisualizationsEntities } from '../../entities/visualizations/visualizations.reducer';
 import { getEntities as getfeatureEntities } from '../../entities/feature/feature.reducer';
 
@@ -48,6 +48,20 @@ const Dx26 = (props: IDx26Prop) => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
  
   const onLayoutChange = (_visualmetaList, all) => {
+    debugger
+
+    props.visualmetadata.visualMetadataSet.map((item,i)=>{
+      item.x=_visualmetaList[i].x,
+      item.y=_visualmetaList[i].y,
+      item.h =_visualmetaList[i].h,
+      item.w=_visualmetaList[i].w,
+
+
+      item.xPosition=_visualmetaList[i].x,
+      item.yPosition=_visualmetaList[i].y,
+      item.height =_visualmetaList[i].h,
+      item.width=_visualmetaList[i].w
+    })
     //  setvisualmetadata(_visualmetaList);
   };
 
@@ -67,14 +81,33 @@ const Dx26 = (props: IDx26Prop) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (props.visualmetadata?.visualMetadataSet?.length>0) {
+      props.visualmetadata.visualMetadataSet.map(item=>{
+        item.x=item.xPosition,
+        item.y=item.yPosition,
+        item.h = item.height,
+        item.w=item.width
+      })
+    }
+  }, [props.visualmetadata]);
+
   const handleVisualizationClick = v => {
     props.visualmetadata.visualMetadataSet.push(v);
-    // props.addVisualmetadataEntity({
-    //   viewId: props.view.id,
-    //   visualMetadata: v,
-    // });
+    props.addVisualmetadataEntity({
+      viewId: props.view.id,
+      visualMetadata: v,
+    });
     setVisualizationsModelOpen(false);
   };
+
+  const saveAllVisualizations = ()=>{
+    debugger
+    props.saveViewState({
+      visualMetadataSet : props.visualmetadata.visualMetadataSet,
+      _id : props.view.id
+    })
+  }
 
   const generateWidge = () => {
     return props.visualmetadata.visualMetadataSet.map(function (v, i) {
@@ -83,7 +116,7 @@ const Dx26 = (props: IDx26Prop) => {
           className="item widget"
           id={`widget-${i}`}
           key={i}
-          data-grid={{ x: v.xPosition, y: v.yPosition, w: 1, h: 3, maxW: 2, maxH: Infinity, isBounded: true }}
+          data-grid={{ x: v.xPosition, y: v.yPosition, w: v.width, h: v.height, maxW: 2, maxH: Infinity, isBounded: true }}
         >
           <div className="header">
             <View backgroundColor="gray-200">
@@ -177,12 +210,16 @@ const Dx26 = (props: IDx26Prop) => {
         <Button variant="cta" onPress={() => setVisualizationsModelOpen(true)}>
           <Translate contentKey="datastudioApp.visualizations.home.createLabel">Create visualizations</Translate>
         </Button>
+        <Button variant="secondary" onPress={() => saveAllVisualizations()}>
+              <Translate contentKey="entity.action.save">Save</Translate>
+            </Button>
         <DialogContainer type="fullscreen" onDismiss={() => setVisualizationsModelOpen(false)} {...props}>
           {isVisualizationsModelOpen && (
             <VisualizationsList
               handleVisualizationClick={handleVisualizationClick}
               view={props.view}
               visualizations={props.visualizationsList}
+              totalItem = {props.visualmetadata?.visualMetadataSet?.length}
             />
           )}
         </DialogContainer>
@@ -227,6 +264,7 @@ const mapDispatchToProps = {
   getfeatureEntities,
   addVisualmetadataEntity,
   deleteVisualmetadataEntity,
+  saveViewState
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

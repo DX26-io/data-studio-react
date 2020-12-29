@@ -122,7 +122,7 @@ export const createEntity: ICrudPutAction<IVisualmetaDataDTO> = entity => async 
   return result;
 };
 
-export const updateEntity: ICrudPutAction<IVisualMetadata> = entity => async dispatch => {
+export const updateEntity: ICrudPutAction<IVisualmetaDataDTO> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_VISUALMETADATA,
     payload: axios.put(apiUrl, cleanEntity(entity)),

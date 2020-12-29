@@ -5,6 +5,11 @@ interface ITabData {
   name: string;
 }
 
+interface IBorderData {
+  value: string;
+  name: string;
+}
+
 /**
  * This method returns the list of properies tab
  */
@@ -24,9 +29,8 @@ export const getPropertiesTabTranslations = (): ITabData[] => {
     },
   ];
 };
-
 /**
- * This method returns the list of settings tab
+ * This method returns the list of border type
  */
 export const getSettingsTabTranslations = (): ITabData[] => {
   return [
@@ -45,6 +49,54 @@ export const getSettingsTabTranslations = (): ITabData[] => {
     {
       id: 'data',
       name: translate('views.editConfiguration.settings.data'),
+    },
+  ];
+};
+
+/**
+ * This method returns the list of settings tab
+ */
+export const getBorderList = (): IBorderData[] => {
+  return [
+    {
+      value: 'Dotted',
+      name: 'Dotted',
+    },
+    {
+      value: 'Dashed',
+      name: 'Dashed',
+    },
+    {
+      value: 'Solid',
+      name: 'Solid',
+    },
+    {
+      value: 'Double',
+      name: 'Double',
+    },
+    {
+      value: 'Groove',
+      name: 'Groove',
+    },
+    {
+      value: 'Ridge',
+      name: 'Ridge',
+    },
+    {
+      value: 'Inset',
+      name: 'Inset',
+    },
+    {
+      value: 'Outset',
+      name: 'Outset',
+    },
+    {
+      value: 'None',
+      name: 'None',
+    },
+    {
+      value: 'Hidden',
+      name: 'Hidden',
     },
   ];
 };

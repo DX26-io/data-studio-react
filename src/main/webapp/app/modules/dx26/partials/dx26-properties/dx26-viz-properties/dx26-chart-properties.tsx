@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { View, Well, Text, Heading } from '@adobe/react-spectrum';
+import { View, Well, Text, Heading, Form } from '@adobe/react-spectrum';
 import { IViews } from 'app/shared/model/views.model';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
@@ -16,14 +16,24 @@ const Dx26ChartProperties = (props: IDx26ChartPropertiesProps) => {
   return (
     <>
       <View>
-        <Heading level={4}>Chart Properties</Heading>
-        {props.visual.properties &&
-          props.visual.properties.length > 0 &&
-          props.visual.properties
-            .sort((a, b) => (a.order > b.order ? 1 : -1))
-            .map(property => (
-              <Properties key={property.id} property={property} propstype={'chart'} visual={props.visual} features={props.features} />
-            ))}
+        <Heading margin={0} level={4}>
+          Chart Properties
+        </Heading>
+        <Form>
+          {props.visual.properties &&
+            props.visual.properties.length > 0 &&
+            props.visual.properties
+              .sort((a, b) => (a.order > b.order ? 1 : -1))
+              .map(property => (
+                <Properties
+                  key={property.propertyType.id}
+                  property={property}
+                  propstype={'chart'}
+                  visual={props.visual}
+                  features={props.features}
+                />
+              ))}
+        </Form>
       </View>
     </>
   );

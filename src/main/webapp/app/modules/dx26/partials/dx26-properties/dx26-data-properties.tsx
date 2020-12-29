@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ActionButton, Flex, Heading, Item, ListBox, View } from '@adobe/react-spectrum';
+import { ActionButton, Button, ButtonGroup, Flex, Form, Heading, Item, ListBox, Picker, View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import TableAndChart from '@spectrum-icons/workflow/TableAndChart';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { Field } from 'app/shared/model/visualMetadata.model';
+
 import Properties from 'app/modules/dx26/partials/properties';
 
 export interface IDx26DataPropertiesProps extends StateProps, DispatchProps {
@@ -13,9 +15,31 @@ export interface IDx26DataPropertiesProps extends StateProps, DispatchProps {
 }
 
 const Dx26DataProperties = (props: IDx26DataPropertiesProps) => {
-  const [selected, setSelected] = useState(new Set());
-  const selectedField = props.visual.fields[0];
-  useEffect(() => {}, [selected]);
+  const [selectedField, setSelectedField] = useState(props.visual.fields[0]);
+  const [selectedFeatures, setSelectedFeatures] = useState();
+  const getDimensionList = () => {
+    return props.features.filter(item => {
+      if (item.featureType === 'DIMENSION') {
+        return item;
+      }
+    });
+  };
+  const getMeasureList = () => {
+    return props.features.filter(item => {
+      if (item.featureType === 'MEASURE') {
+        return item;
+      }
+    });
+  };
+  const dimensionList = getDimensionList();
+  const measureList = getMeasureList();
+
+  const selectedFieldChange = field => {
+    const selected = props.visual.fields.filter(item => {
+      return item.feature.id === field.feature.id;
+    });
+    setSelectedField(selected[0]);
+  };
 
   return (
     <>
@@ -35,24 +59,58 @@ const Dx26DataProperties = (props: IDx26DataPropertiesProps) => {
             </Flex>
           </Flex>
         </View>
-        <View>
-          <ListBox onSelectionChange={val => setSelected(val)} aria-label="Options" selectionMode="single">
+        <Form>
+          <View>
+            
+          </View>
+          <ButtonGroup orientation="vertical">
             {props.visual.fields &&
               props.visual.fields.length > 0 &&
               props.visual.fields
                 .sort((a, b) => (a.fieldType.order > b.fieldType.order ? 1 : -1))
-                .map(field => <Item key={field.feature.id}>{field.feature.name}</Item>)}
-          </ListBox>
-        </View>
-        <View>
+                .map((field, i) => (
+                  <Button
+                    onPress={() => {
+                      selectedFieldChange(field);
+                    }}
+                    isQuiet
+                    variant="secondary"
+                    key={field.feature?.id || 'field-' + i}
+                  >
+                    {field.feature?.name || ''}
+                  </Button>
+                ))}
+          </ButtonGroup>
+          <Picker label="Choose dimension">
+            {dimensionList &&
+              dimensionList.length > 0 &&
+              dimensionList
+                .sort((a, b) => (a.name > b.name ? 1 : -1))
+                .map((feature, i) => <Item key={feature.id || 'feature-' + i}> {feature.name} </Item>)}
+          </Picker>
+
+          <Picker label="Choose measure">
+            {measureList &&
+              measureList.length > 0 &&
+              measureList
+                .sort((a, b) => (a.name > b.name ? 1 : -1))
+                .map((feature, i) => <Item key={feature.id || 'feature-' + i}> {feature.name} </Item>)}
+          </Picker>
+
           {selectedField.properties &&
             selectedField.properties.length > 0 &&
             selectedField.properties
               .sort((a, b) => (a.order > b.order ? 1 : -1))
-              .map(property => (
-                <Properties key={property.id} property={property} propstype={'data'} visual={props.visual} features={props.features} />
+              .map((property, i) => (
+                <Properties
+                  key={property.propertyType.id ? property.propertyType.id : 'Properties-' + i}
+                  property={property}
+                  propstype={'data'}
+                  visual={props.visual}
+                  features={props.features}
+                />
               ))}
-        </View>
+        </Form>
       </View>
     </>
   );

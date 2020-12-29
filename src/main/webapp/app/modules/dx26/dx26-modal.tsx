@@ -7,8 +7,11 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 import IDx26Properties from './partials/dx26-properties';
 import IDx26Settings from './partials/dx26-settings';
 import { Translate } from 'react-jhipster';
-import { getEntity as getVisualmetadataEntity } from '../../entities/visualmetadata/visualmetadata.reducer';
-import { getEntities as getfeatureEntities } from '../../entities/feature/feature.reducer';
+import {
+  getEntity as getVisualmetadataEntity,
+  updateEntity as updateVisualmetadataEntity,
+} from '../../entities/visualmetadata/visualmetadata.reducer';
+import { getDatasourcesFeaturesEntities as getfeatureEntities } from '../../entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from '../../entities/views/views.reducer';
 
 export interface IDx26ModalProps
@@ -25,10 +28,16 @@ const Dx26Modal = (props: IDx26ModalProps) => {
     history.push('/dashboards/' + props.match.params.id + '/' + props.match.params.viewId + '/build');
   };
 
+  const handleSave = () => {
+    props.updateVisualmetadataEntity({
+      viewId: parseInt( viewId),
+      visualMetadata: props.visualmetadataEntity
+    });
+  };
   useEffect(() => {
     if (visualizationId) {
       props.getVisualmetadataEntity(visualizationId);
-      props.getfeatureEntities(parseInt(viewId));
+      props.getfeatureEntities(parseInt(viewId, 10));
       props.getViewEntity(viewId);
     }
   }, []);
@@ -37,13 +46,13 @@ const Dx26Modal = (props: IDx26ModalProps) => {
     <>
       <DialogContainer type="fullscreenTakeover" onDismiss={handleClose}>
         <Dialog>
-          <Heading level={6}>Visualization Title</Heading>
-          <Divider />
+          <Heading level={4}>{props.visualmetadataEntity?.titleProperties?.titleText}</Heading>
+          {/* <Divider  size={"S"} /> */}
           <ButtonGroup>
             <Button variant="secondary" onPress={handleClose}>
               <Translate contentKey="entity.action.discard">Discard</Translate>
             </Button>
-            <Button variant="secondary" onPress={handleClose}>
+            <Button variant="secondary" onPress={handleSave}>
               <Translate contentKey="entity.action.save">Save</Translate>
             </Button>
             <Button variant="cta" onPress={handleClose}>
@@ -55,12 +64,12 @@ const Dx26Modal = (props: IDx26ModalProps) => {
               <View flex>
                 <Flex direction="column" height="100%" flex gap="size-75">
                   <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%"></View>
-                  <View  borderWidth="thin" borderColor="default" borderRadius="regular" height="50%">
+                  <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%">
                     <IDx26Settings visualizationId={visualizationId} />
                   </View>
                 </Flex>
               </View>
-              <View borderWidth="thin" borderColor="default" borderRadius="regular" width="size-4000">
+              <View  borderWidth="thin" borderColor="default" borderRadius="regular" width="size-4000">
                 <IDx26Properties features={props.featuresList} visual={props.visualmetadataEntity} />
               </View>
             </Flex>
@@ -77,7 +86,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
 });
 
-const mapDispatchToProps = { getVisualmetadataEntity, getfeatureEntities, getViewEntity };
+const mapDispatchToProps = { getVisualmetadataEntity, getfeatureEntities, getViewEntity ,updateVisualmetadataEntity};
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
