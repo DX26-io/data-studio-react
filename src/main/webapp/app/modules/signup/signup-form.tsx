@@ -4,36 +4,32 @@ import Alert from '@spectrum-icons/workflow/Alert';
 import { Translate } from 'react-jhipster';
 import config from "app/config/constants";
 
-export interface ILoginProps {
-  loginError: boolean;
-  handleLogin: (username: string, password: string, rememberMe: boolean) => void;
+export interface ISignupProps {
+  signupError: boolean;
+  handleSignup: (username: string, email: string, password: string, firstname: string, lastname: string) => void;
   handleProviderLogin: (provider: string) => void;
-  handleSignup: () => void;
 }
-export const LoginForm = (props: ILoginProps) => {
+export const SignupForm = (props: ISignupProps) => {
   const firebaseEnabled = config.CLOUD;
-  const [username, setUserName] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
-  const { handleLogin } = props;
-  const { handleProviderLogin } = props;
   const { handleSignup } = props;
-  const { loginError } = props;
+  const { handleProviderLogin } = props;
+  const { signupError } = props;
 
   const onGoogleClick = () => {
     handleProviderLogin('google');
   }
 
-  const onSignup = () => {
-    handleSignup();
-  }
-
   const handleSubmit = event => {
     event.preventDefault();
-    if (username && password) {
+    if (email && password && username && firstname && lastname) {
       setEmptyFieldError(false);
-      handleLogin(username, password, rememberMe);
+      handleSignup(username, email, password, firstname, lastname);
     } else {
       setEmptyFieldError(true);
     }
@@ -41,22 +37,31 @@ export const LoginForm = (props: ILoginProps) => {
 
   return (
     <Flex alignItems="center" justifyContent="center" marginX="size-300">
-      <Form width="size-4600" isRequired isQuiet onSubmit={handleSubmit} data-testid="login-form">
+      <Form width="size-4600" isRequired isQuiet onSubmit={handleSubmit} data-testid="signup-form">
         <View marginBottom="size-600">
           <span className="spectrum-Heading spectrum-Heading--sizeXXL">
             <Text>
-              <Translate contentKey="login.title">Login</Translate>
+              <Translate contentKey="signup.title">Signup</Translate>
             </Text>
           </span>
         </View>
         <TextField
           width="100%"
           marginBottom="size-300"
-          label="Email Address"
+          label="Email"
+          type="email"
+          data-testid="email"
+          value={email}
+          onChange={setEmail}
+        />
+        <TextField
+          width="100%"
+          marginBottom="size-300"
+          label="Username"
           type="text"
           data-testid="username"
           value={username}
-          onChange={setUserName}
+          onChange={setUsername}
         />
         <TextField
           width="100%"
@@ -67,12 +72,30 @@ export const LoginForm = (props: ILoginProps) => {
           value={password}
           onChange={setPassword}
         />
-        {loginError && !emptyFieldError && (
-          <Flex gap="size-100" data-testid="login-error">
+        <TextField
+          width="100%"
+          marginBottom="size-300"
+          label="First name"
+          type="text"
+          data-testid="firstname"
+          value={firstname}
+          onChange={setFirstname}
+        />
+        <TextField
+          width="100%"
+          marginBottom="size-300"
+          label="Last name"
+          type="text"
+          data-testid="lastname"
+          value={lastname}
+          onChange={setLastname}
+        />
+        {signupError && !emptyFieldError && (
+          <Flex gap="size-100" data-testid="signup-error">
             <Alert color="negative" />
             <Text marginBottom="size-300">
               <span className="spectrum-Body-emphasis error-message">
-                <Translate contentKey="login.messages.error.authentication">Your username or password does not match any account</Translate>
+                <Translate contentKey="signup.messages.error.authentication">Your username or password does not match any account</Translate>
               </span>
             </Text>
           </Flex>
@@ -82,36 +105,25 @@ export const LoginForm = (props: ILoginProps) => {
             <Alert color="negative" />
             <Text marginBottom="size-300">
               <span className="spectrum-Body-emphasis error-message">
-                <Translate contentKey="login.messages.error.emptyUsernameOrPassword"> Username or password should not be empty</Translate>
+                <Translate contentKey="signup.messages.error.emptyFields"> Username or password should not be empty</Translate>
               </span>
             </Text>
           </Flex>
         )}
-        <Checkbox marginTop="static-size-25" isRequired={false} isSelected={rememberMe} onChange={setRememberMe} data-testid="remember-me">
-          <Translate contentKey="login.form.rememberMe">Remember me</Translate>
-        </Checkbox>
-        <Flex data-testid="login-action" marginTop="size-400" alignItems="center" justifyContent="center" direction="row-reverse">
+        <Flex data-testid="signup-action" marginTop="size-400" alignItems="center" justifyContent="center" direction="row-reverse">
           <Button data-testid="submit" variant="cta" marginStart="auto" type="submit">
-            <Translate contentKey="login.form.button">Sign In</Translate>
+            <Translate contentKey="signup.form.button">Sign In</Translate>
           </Button>
           {firebaseEnabled ?
             <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGoogleClick}>
-              <Translate contentKey="login.form.google">Google</Translate>
+              <Translate contentKey="signup.form.google">Google</Translate>
             </Button>
             :
             null}
-          <Link isQuiet={true}>
-            <a href="/">
-              <Translate contentKey="login.form.sso">Use Single Sign On (SSO)</Translate>
-            </a>
-          </Link>
-          <Button data-testid="signup" variant="secondary" marginStart="auto" type="button" onPress={onSignup}>
-            <Translate contentKey="login.form.signup">Sign up</Translate>
-          </Button>
         </Flex>
       </Form>
     </Flex>
   );
 };
 
-export default LoginForm;
+export default SignupForm;

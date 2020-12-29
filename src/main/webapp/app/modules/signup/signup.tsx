@@ -3,23 +3,19 @@ import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { Grid, View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
-import { login } from 'app/shared/reducers/authentication';
-import { loginWithProvider } from 'app/shared/reducers/authentication';
-import LoginForm from './login-form';
-import LoginFooter from './login-footer';
-import LoginHeader from './login-header';
-// TODO create login page image
-export interface ILoginProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
+import {loginWithProvider, signup} from "app/shared/reducers/authentication";
+import SignupHeader from "app/modules/signup/signup-header";
+import SignupForm from "app/modules/signup/signup-form";
+import SignupFooter from "app/modules/signup/signup-footer";
 
-export const Login: React.FC<ILoginProps> = props => {
-  const handleLogin = (username, password, rememberMe = false) => {
-    props.login(username, password, rememberMe);
+export interface ISignupProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
+
+export const Signup: React.FC<ISignupProps> = props => {
+  const handleSignup = (username: string, email: string, password: string, firstname: string, lastname: string) => {
+    props.signup(username, email, password, firstname, lastname);
   };
   const handleProviderLogin = (provider) => {
     props.loginWithProvider(provider);
-  };
-  const handleSignup = () => {
-    props.history.push('/signup');
   };
 
   return !props.isAuthenticated ? (
@@ -27,12 +23,9 @@ export const Login: React.FC<ILoginProps> = props => {
       {/* <Image src="https://i.imgur.com/Z7AzH2c.png" alt="alt-text" objectFit="cover" gridArea="image" />*/}
       <View gridArea="image" backgroundColor="gray-400" />
       <View gridArea="login">
-        <LoginHeader />
-        <LoginForm handleLogin={handleLogin}
-                   loginError={props.loginError}
-                   handleProviderLogin={handleProviderLogin}
-                   handleSignup={handleSignup}/>
-        <LoginFooter />
+        <SignupHeader />
+        <SignupForm handleSignup={handleSignup} signupError={props.signupError}  handleProviderLogin={handleProviderLogin}/>
+        <SignupFooter />
       </View>
     </Grid>
   ) : (
@@ -48,12 +41,12 @@ export const Login: React.FC<ILoginProps> = props => {
 
 const mapStateToProps = ({ authentication }: IRootState) => ({
   isAuthenticated: authentication.isAuthenticated,
-  loginError: authentication.loginError,
+  signupError: authentication.signupError,
 });
 
-const mapDispatchToProps = { login, loginWithProvider };
+const mapDispatchToProps = { signup, loginWithProvider };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

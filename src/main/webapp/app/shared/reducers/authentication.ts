@@ -22,6 +22,7 @@ const initialState = {
   isAuthenticated: false,
   loginSuccess: false,
   loginError: false, // Errors returned from server side
+  signupError: false, // Errors returned from server side
   logoutError: false, // Errors returned from server side
   account: {} as any,
   errorMessage: (null as unknown) as string, // Errors returned from server side
@@ -149,6 +150,27 @@ const setAuthTokenWithProvider = result => {
   }
   const jwt = bearerToken.slice(7, bearerToken.length);
   Storage.local.set(AUTH_TOKEN_KEY, jwt);
+};
+
+export const signup: (username: string, email: string, password: string, firstname: string, lastname: string) => void = (
+  username,
+  email,
+  password,
+  firstname,
+  lastname
+) => async dispatch => {
+  const result = await dispatch({
+    type: ACTION_TYPES.LOGIN,
+    payload: axios.post('api/signup', {
+      username,
+      email,
+      password,
+      firstname,
+      lastname,
+    }),
+  });
+  await setAuthToken(result, false);
+  await dispatch(getSession());
 };
 
 export const login: (username: string, password: string, rememberMe?: boolean) => void = (
