@@ -48,33 +48,6 @@ export const SignupForm = (props: ISignupProps) => {
         <TextField
           width="100%"
           marginBottom="size-300"
-          label="Email"
-          type="email"
-          data-testid="email"
-          value={email}
-          onChange={setEmail}
-        />
-        <TextField
-          width="100%"
-          marginBottom="size-300"
-          label="Username"
-          type="text"
-          data-testid="username"
-          value={username}
-          onChange={setUsername}
-        />
-        <TextField
-          width="100%"
-          marginBottom="size-300"
-          label="Password"
-          type="password"
-          data-testid="password"
-          value={password}
-          onChange={setPassword}
-        />
-        <TextField
-          width="100%"
-          marginBottom="size-300"
           label="First name"
           type="text"
           data-testid="firstname"
@@ -89,6 +62,33 @@ export const SignupForm = (props: ISignupProps) => {
           data-testid="lastname"
           value={lastname}
           onChange={setLastname}
+        />
+        <TextField
+          width="100%"
+          marginBottom="size-300"
+          label="Username"
+          type="text"
+          data-testid="username"
+          value={username}
+          onChange={setUsername}
+        />
+        <TextField
+          width="100%"
+          marginBottom="size-300"
+          label="Email"
+          type="email"
+          data-testid="email"
+          value={email}
+          onChange={setEmail}
+        />
+        <TextField
+          width="100%"
+          marginBottom="size-300"
+          label="Password"
+          type="password"
+          data-testid="password"
+          value={password}
+          onChange={setPassword}
         />
         {signupError && !emptyFieldError && (
           <Flex gap="size-100" data-testid="signup-error">
