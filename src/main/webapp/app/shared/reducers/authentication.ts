@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 
 export const ACTION_TYPES = {
   LOGIN: 'authentication/LOGIN',
+  SIGNUP: 'authentication/SIGNUP',
   GET_SESSION: 'authentication/GET_SESSION',
   LOGOUT: 'authentication/LOGOUT',
   CLEAR_AUTH: 'authentication/CLEAR_AUTH',
@@ -21,6 +22,7 @@ const initialState = {
   loading: false,
   isAuthenticated: false,
   loginSuccess: false,
+  signupSuccess: false,
   loginError: false, // Errors returned from server side
   signupError: false, // Errors returned from server side
   logoutError: false, // Errors returned from server side
@@ -39,6 +41,7 @@ export type AuthenticationState = Readonly<typeof initialState>;
 export default (state: AuthenticationState = initialState, action): AuthenticationState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.LOGIN):
+    case REQUEST(ACTION_TYPES.SIGNUP):
     case REQUEST(ACTION_TYPES.LOGOUT):
     case REQUEST(ACTION_TYPES.GET_SESSION):
       return {
@@ -50,6 +53,12 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...initialState,
         errorMessage: action.payload,
         loginError: true,
+      };
+    case FAILURE(ACTION_TYPES.SIGNUP):
+      return {
+        ...initialState,
+        errorMessage: action.payload,
+        signupError: true,
       };
     case FAILURE(ACTION_TYPES.LOGOUT):
       return {
@@ -71,6 +80,13 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         loading: false,
         loginError: false,
         loginSuccess: true,
+      };
+    case SUCCESS(ACTION_TYPES.SIGNUP):
+      return {
+        ...state,
+        loading: false,
+        signupError: false,
+        signupSuccess: true,
       };
     case SUCCESS(ACTION_TYPES.LOGOUT):
       return {
@@ -160,7 +176,7 @@ export const signup: (username: string, email: string, password: string, firstna
   lastname
 ) => async dispatch => {
   const result = await dispatch({
-    type: ACTION_TYPES.LOGIN,
+    type: ACTION_TYPES.SIGNUP,
     payload: axios.post('api/signup', {
       username,
       email,

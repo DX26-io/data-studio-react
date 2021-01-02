@@ -17,9 +17,7 @@ export const SignupForm = (props: ISignupProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emptyFieldError, setEmptyFieldError] = useState(false);
-  const { handleSignup } = props;
-  const { handleProviderLogin } = props;
-  const { signupError } = props;
+  const { handleSignup, handleProviderLogin, signupError } = props;
 
   const onGoogleClick = () => {
     handleProviderLogin('google');
