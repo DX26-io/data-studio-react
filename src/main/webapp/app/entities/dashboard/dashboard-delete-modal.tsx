@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactText, useEffect, useState } from 'react';
 import { Button, ButtonGroup, Content, Dialog, DialogContainer, Divider, Heading, TextField } from '@adobe/react-spectrum';
 import { deleteEntity, getEntity } from './dashboard.reducer';
 import { IRootState } from 'app/shared/reducers';
@@ -11,7 +11,7 @@ export interface IDashboardDeleteModalProps extends StateProps, DispatchProps, R
 const DashboardDeleteModal = (props: IDashboardDeleteModalProps) => {
   const dashboardNameLabel = translate('dashboard.dashboard_name');
   const history = useHistory();
-  const [dashboardNameConfirmation, setDashboardNameConfirmation] = useState<React.ReactText>('');
+  const [dashboardNameConfirmation, setDashboardNameConfirmation] = useState<ReactText>('');
   const handleDelete = () => {
     props.deleteEntity(props.match.params.id);
   };

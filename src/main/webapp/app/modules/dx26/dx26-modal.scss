@@ -1,0 +1,11 @@
+.properties-tab {
+  overflow-y: auto;
+}
+.properties-tabs {
+  ._spectrum-TabsPanel-collapseWrapper_0248f {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 5 !important;
+    background-color: var(--spectrum-alias-background-color-default, var(--spectrum-global-color-gray-100));
+  }
+}

@@ -16,6 +16,7 @@ import {
 import { IVisualizations } from 'app/shared/model/visualizations.model';
 import TableAndChart from '@spectrum-icons/workflow/TableAndChart';
 import { IViews } from 'app/shared/model/views.model';
+import { VisualWrap } from 'app/modules/dx26/util/visualmetadata-wrapper';
 
 interface IVisualizationsListProps {
   visualizations: IVisualizations[];
@@ -107,11 +108,11 @@ export const VisualizationsList = (props: IVisualizationsListProps) => {
     };
     newVM = createProperties(newVM);
     newVM = createFields(newVM);
-    return newVM;
+    return VisualWrap(newVM);
   };
 
   const addWidget = viz => {
-    handleVisualizationClick(createVisualMetadata(viz));
+    handleVisualizationClick( createVisualMetadata(viz));
   };
   return (
     <Dialog>

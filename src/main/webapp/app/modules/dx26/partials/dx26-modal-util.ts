@@ -59,43 +59,43 @@ export const getSettingsTabTranslations = (): ITabData[] => {
 export const getBorderList = (): IBorderData[] => {
   return [
     {
-      value: 'Dotted',
+      value: 'dotted',
       name: 'Dotted',
     },
     {
-      value: 'Dashed',
+      value: 'dashed',
       name: 'Dashed',
     },
     {
-      value: 'Solid',
+      value: 'solid',
       name: 'Solid',
     },
     {
-      value: 'Double',
+      value: 'double',
       name: 'Double',
     },
     {
-      value: 'Groove',
+      value: 'groove',
       name: 'Groove',
     },
     {
-      value: 'Ridge',
+      value: 'ridge',
       name: 'Ridge',
     },
     {
-      value: 'Inset',
+      value: 'inset',
       name: 'Inset',
     },
     {
-      value: 'Outset',
+      value: 'outset',
       name: 'Outset',
     },
     {
-      value: 'None',
+      value: 'none',
       name: 'None',
     },
     {
-      value: 'Hidden',
+      value: 'hidden',
       name: 'Hidden',
     },
   ];

@@ -60,9 +60,7 @@ const Dx26DataProperties = (props: IDx26DataPropertiesProps) => {
           </Flex>
         </View>
         <Form>
-          <View>
-            
-          </View>
+        
           <ButtonGroup orientation="vertical">
             {props.visual.fields &&
               props.visual.fields.length > 0 &&
@@ -97,19 +95,21 @@ const Dx26DataProperties = (props: IDx26DataPropertiesProps) => {
                 .map((feature, i) => <Item key={feature.id || 'feature-' + i}> {feature.name} </Item>)}
           </Picker>
 
-          {selectedField.properties &&
-            selectedField.properties.length > 0 &&
-            selectedField.properties
-              .sort((a, b) => (a.order > b.order ? 1 : -1))
-              .map((property, i) => (
-                <Properties
-                  key={property.propertyType.id ? property.propertyType.id : 'Properties-' + i}
-                  property={property}
-                  propstype={'data'}
-                  visual={props.visual}
-                  features={props.features}
-                />
-              ))}
+         
+            {selectedField.properties &&
+              selectedField.properties.length > 0 &&
+              selectedField.properties
+                .sort((a, b) => (a.order > b.order ? 1 : -1))
+                .map((property, i) => (
+                  <Properties
+                    key={property.propertyType.id ? property.propertyType.id : 'Properties-' + i}
+                    property={property}
+                    propstype={'data'}
+                    visual={props.visual}
+                    features={props.features}
+                  />
+                ))}
+         
         </Form>
       </View>
     </>

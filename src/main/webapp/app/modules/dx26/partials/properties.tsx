@@ -16,14 +16,19 @@ export interface IPropertiesProps extends StateProps, DispatchProps {
 }
 
 const Properties = (props: IPropertiesProps) => {
+
   return (
     <>
       {props.property.type === 'NUMBER' && (
-        <TextField type="NUMBER" value={props.property.value.toString() || ''} label={props.property.propertyType.name} />
+        <TextField
+          type="NUMBER"
+          value={props.property.value.toString() || ''}
+          label={props.property.propertyType.name}
+        />
       )}
       {props.property.type === 'SELECT' && (
         <Picker
-          selectedKey={props.property.value.value}
+          selectedKey={props.property.value['value']}
           label={props.property.propertyType.name}
           items={props.property.propertyType.possibleValues}
         >
@@ -40,10 +45,17 @@ const Properties = (props: IPropertiesProps) => {
         </Checkbox>
       )}
       {props.property.type === 'COLOR_PICKER' && (
-        <TextField value={parseString(props.property.value)} type="color" label={props.property.propertyType.name} />
+        <TextField
+          value={parseString(props.property.value)}
+          type="color"
+          label={props.property.propertyType.name}
+        />
       )}
       {props.property.type === 'TEXT' && (
-        <TextField value={parseString(props.property.value) || ''} label={props.property.propertyType.name} />
+        <TextField
+          value={parseString(props.property.value) || ''}
+          label={props.property.propertyType.name}
+        />
       )}
     </>
   );

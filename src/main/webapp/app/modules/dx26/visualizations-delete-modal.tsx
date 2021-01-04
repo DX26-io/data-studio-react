@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactText, useEffect, useState } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -19,7 +19,7 @@ interface IVisualizationsDeleteModalProps  extends StateProps, DispatchProps, Ro
 
 const VisualizationsDeleteModal = (props: IVisualizationsDeleteModalProps) => {
 
-  const [visualizationsTitleConfirmation, setvisualizationsTitleConfirmation] = useState<React.ReactText>('');
+  const [visualizationsTitleConfirmation, setvisualizationsTitleConfirmation] = useState<ReactText>('');
   const [visualizationsTitle, setvisualizationsTitle] = useState('');
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactText, useEffect, useState } from 'react';
 import { Dialog, Heading, Divider, Content, ButtonGroup, Button, DialogContainer, TextField } from '@adobe/react-spectrum';
 import { getEntity, deleteEntity } from './views.reducer';
 import { IRootState } from 'app/shared/reducers';
@@ -10,7 +10,7 @@ export interface IViewDeleteModalProps extends StateProps, DispatchProps, RouteC
 const ViewDeleteModal = (props: IViewDeleteModalProps) => {
   const viewNameLabel = translate('views.viewName');
   const history = useHistory();
-  const [viewNameConfirmation, setViewNameConfirmation] = useState<React.ReactText>('');
+  const [viewNameConfirmation, setViewNameConfirmation] = useState<ReactText>('');
   const viewId = props.match.params.viewId;
   const dashboardId = props.match.params.id;
 

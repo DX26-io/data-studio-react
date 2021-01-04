@@ -39,6 +39,7 @@ import $ from 'jquery';
 import { Visualizations } from 'app/entities/visualizations/visualizations';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import VisualizationsList from 'app/entities/visualizations/visualizations-list';
+import { VisualWrap } from 'app/modules/dx26/util/visualmetadata-wrapper';
 
 const ReactGridLayout = WidthProvider(RGL);
 export interface IDx26Prop extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
@@ -47,9 +48,8 @@ const Dx26 = (props: IDx26Prop) => {
   const [redirect, setRedirect] = useState<ReactText>('');
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
  
-  const onLayoutChange = (_visualmetaList, all) => {
-    debugger
-
+  const onLayoutChange = (_visualmetaList) => {
+    
     props.visualmetadata.visualMetadataSet.map((item,i)=>{
       item.x=_visualmetaList[i].x,
       item.y=_visualmetaList[i].y,
@@ -84,6 +84,8 @@ const Dx26 = (props: IDx26Prop) => {
   useEffect(() => {
     if (props.visualmetadata?.visualMetadataSet?.length>0) {
       props.visualmetadata.visualMetadataSet.map(item=>{
+
+        VisualWrap(item)
         item.x=item.xPosition,
         item.y=item.yPosition,
         item.h = item.height,
@@ -102,7 +104,6 @@ const Dx26 = (props: IDx26Prop) => {
   };
 
   const saveAllVisualizations = ()=>{
-    debugger
     props.saveViewState({
       visualMetadataSet : props.visualmetadata.visualMetadataSet,
       _id : props.view.id

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Flex, Dialog, Heading, Divider, Content, Text, ButtonGroup, Button, DialogContainer } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import './dx26-modal.css';
+import './dx26-modal.scss';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import IDx26Properties from './partials/dx26-properties';
 import IDx26Settings from './partials/dx26-settings';
@@ -30,8 +30,8 @@ const Dx26Modal = (props: IDx26ModalProps) => {
 
   const handleSave = () => {
     props.updateVisualmetadataEntity({
-      viewId: parseInt( viewId),
-      visualMetadata: props.visualmetadataEntity
+      viewId: parseInt(viewId,10),
+      visualMetadata: props.visualmetadataEntity,
     });
   };
   useEffect(() => {
@@ -47,7 +47,7 @@ const Dx26Modal = (props: IDx26ModalProps) => {
       <DialogContainer type="fullscreenTakeover" onDismiss={handleClose}>
         <Dialog>
           <Heading level={4}>{props.visualmetadataEntity?.titleProperties?.titleText}</Heading>
-          {/* <Divider  size={"S"} /> */}
+          <Divider  size={"S"} />
           <ButtonGroup>
             <Button variant="secondary" onPress={handleClose}>
               <Translate contentKey="entity.action.discard">Discard</Translate>
@@ -69,9 +69,11 @@ const Dx26Modal = (props: IDx26ModalProps) => {
                   </View>
                 </Flex>
               </View>
-              <View  borderWidth="thin" borderColor="default" borderRadius="regular" width="size-4000">
-                <IDx26Properties features={props.featuresList} visual={props.visualmetadataEntity} />
-              </View>
+              <div className="properties-tab">
+                <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight={"100%"} width="size-4000">
+                  <IDx26Properties features={props.featuresList} visual={props.visualmetadataEntity} />
+                </View>
+              </div>
             </Flex>
           </Content>
         </Dialog>
@@ -86,7 +88,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
 });
 
-const mapDispatchToProps = { getVisualmetadataEntity, getfeatureEntities, getViewEntity ,updateVisualmetadataEntity};
+const mapDispatchToProps = { getVisualmetadataEntity, getfeatureEntities, getViewEntity, updateVisualmetadataEntity };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

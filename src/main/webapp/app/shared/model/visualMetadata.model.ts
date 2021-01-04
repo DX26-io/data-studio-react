@@ -1,56 +1,56 @@
 export interface IVisualMetadata {
-  readOnly: boolean;
-  _id: string;
-  _rev: string;
-  visualMetadataSet: IVisualMetadataSet[];
+  readOnly?: boolean;
+  _id?: string;
+  _rev?: string;
+  visualMetadataSet?: IVisualMetadataSet[];
 }
 
 export interface IVisualMetadataSet {
-  createdBy: null;
-  createdDate: Date;
-  lastModifiedBy: null;
-  lastModifiedDate: Date;
-  height: number;
-  width: number;
-  xPosition: number;
-  yPosition: number;
+  createdBy?: null;
+  createdDate?: Date;
+  lastModifiedBy?: null;
+  lastModifiedDate?: Date;
+  height?: number;
+  width?: number;
+  xPosition?: number;
+  yPosition?: number;
 
-  w: number;
-  x: number;
-  h: number;
-  y: number;
+  w?: number;
+  x?: number;
+  h?: number;
+  y?: number;
 
-  conditionExpression: null;
-  query: null;
-  queryJson: null;
-  titleProperties: TitleProperties;
-  bodyProperties: BodyProperties;
-  metadataVisual: MetadataVisual;
-  properties: Property[];
-  fields: Field[];
-  isCardRevealed: boolean;
-  isSaved: boolean;
-  id: string;
+  conditionExpression?: null;
+  query?: null;
+  queryJson?: null;
+  titleProperties?: TitleProperties;
+  bodyProperties?: BodyProperties;
+  metadataVisual?: MetadataVisual;
+  properties?: Property[];
+  fields?: Field[];
+  isCardRevealed?: boolean;
+  isSaved?: boolean;
+  id?: string;
 }
 
 export interface BodyProperties {
-  backgroundColor: string;
-  border: string;
-  opacity: string;
+  backgroundColor?: string;
+  border?: string;
+  opacity?: number;
 }
 
 export interface Field {
-  createdBy: null;
-  createdDate: Date;
-  lastModifiedBy: null;
-  lastModifiedDate: Date;
-  id: number;
-  properties: Property[];
-  fieldType: FieldType;
-  feature: Feature;
-  hierarchy: null;
-  constraint: Constraint;
-  order: number;
+  createdBy?: null;
+  createdDate?: Date;
+  lastModifiedBy?: null;
+  lastModifiedDate?: Date;
+  id?: number;
+  properties?: Property[];
+  fieldType?: FieldType;
+  feature?: Feature;
+  hierarchy?: null;
+  constraint?: Constraint;
+  order?: number;
 }
 
 export enum Constraint {
@@ -59,22 +59,22 @@ export enum Constraint {
 }
 
 export interface Feature {
-  createdBy: null;
-  createdDate: Date;
-  lastModifiedBy: null;
-  lastModifiedDate: Date;
-  id: number;
-  name: string;
-  type: string;
-  functionId: null;
-  definition: string;
-  datasource: null;
-  featureType: FeatureType;
-  fields: any[];
-  favouriteFilter: null;
-  pin: null;
-  dateFilter: null;
-  featureCacheType: null;
+  createdBy?: null;
+  createdDate?: Date;
+  lastModifiedBy?: null;
+  lastModifiedDate?: Date;
+  id?: number;
+  name?: string;
+  type?: string;
+  functionId?: null;
+  definition?: string;
+  datasource?: null;
+  featureType?: FeatureType;
+  fields?: any[];
+  favouriteFilter?: null;
+  pin?: null;
+  dateFilter?: null;
+  featureCacheType?: null;
 }
 
 export enum FeatureType {
@@ -83,35 +83,35 @@ export enum FeatureType {
 }
 
 export interface FieldType {
-  createdBy: null;
-  createdDate: Date;
-  lastModifiedBy: null;
-  lastModifiedDate: Date;
-  id: number;
-  constraint: Constraint;
-  order: number;
-  propertyTypes: FieldTypePropertyType[];
-  featureType: FeatureType;
+  createdBy?: null;
+  createdDate?: Date;
+  lastModifiedBy?: null;
+  lastModifiedDate?: Date;
+  id?: number;
+  constraint?: Constraint;
+  order?: number;
+  propertyTypes?: FieldTypePropertyType[];
+  featureType?: FeatureType;
 }
 
 export interface FieldTypePropertyType {
-  fieldTypeId: number;
-  propertyTypeId: number;
-  order: number;
-  propertyType: PropertyTypePropertyType;
+  fieldTypeId?: number;
+  propertyTypeId?: number;
+  order?: number;
+  propertyType?: PropertyTypePropertyType;
 }
 
 export interface PropertyTypePropertyType {
-  type: PropertyType;
-  createdBy: null;
-  createdDate: Date;
-  lastModifiedBy: null;
-  lastModifiedDate: Date;
-  id: number;
-  name: string;
-  description: string;
+  type?: PropertyType;
+  createdBy?: null;
+  createdDate?: Date;
+  lastModifiedBy?: null;
+  lastModifiedDate?: Date;
+  id?: number;
+  name?: string;
+  description?: string;
   possibleValues?: ValueElement[];
-  defaultValue: boolean | ValueElement | Color | number | null;
+  defaultValue?: boolean | ValueElement | Color | number | null;
   dataType?: DataTypeEnum;
 }
 
@@ -120,9 +120,9 @@ export enum DataTypeEnum {
 }
 
 export interface ValueElement {
-  type: DataTypeEnum;
-  id: number;
-  value: string;
+  type?: DataTypeEnum;
+  id?: number;
+  value?: string;
 }
 
 export enum Color {
@@ -140,43 +140,43 @@ export enum PropertyType {
 }
 
 export interface Property {
-  type: PropertyType;
-  createdBy: null;
-  createdDate: Date;
-  lastModifiedBy: null;
-  lastModifiedDate: Date;
-  id: null;
-  propertyType: PropertyTypePropertyType;
-  order: number;
-  value: boolean | ValueElement | Color | number | null | string;
+  type?: PropertyType;
+  createdBy?: null;
+  createdDate?: Date;
+  lastModifiedBy?: null;
+  lastModifiedDate?: Date;
+  id?: null;
+  propertyType?: PropertyTypePropertyType;
+  order?: number;
+  value?: boolean | ValueElement | Color | number | null | string;
 }
 
 export interface MetadataVisual {
-  id: number;
-  name: string;
-  icon: string;
-  customId: number;
-  functionname: string;
-  fieldTypes: FieldType[];
-  propertyTypes: MetadataVisualPropertyType[];
+  id?: number;
+  name?: string;
+  icon?: string;
+  customId?: number;
+  functionname?: string;
+  fieldTypes?: FieldType[];
+  propertyTypes?: MetadataVisualPropertyType[];
 }
 
 export interface MetadataVisualPropertyType {
-  id: ID;
-  propertyType: PropertyTypePropertyType;
-  order: number;
+  id?: ID;
+  propertyType?: PropertyTypePropertyType;
+  order?: number;
 }
 
 export interface ID {
-  visualizationId: number;
-  propertyTypeId: number;
+  visualizationId?: number;
+  propertyTypeId?: number;
 }
 
 export interface TitleProperties {
-  titleText: string;
-  backgroundColor: string;
-  borderBottom: string;
-  color: string;
+  titleText?: string;
+  backgroundColor?: string;
+  borderBottom?: string;
+  color?: string;
 }
 
 export const defaultValue: Readonly<IVisualMetadataSet> = {};

@@ -20,7 +20,7 @@ const Dx26VizProperties = (props: IDx26VizPropertiesProps) => {
     <>
       <View>
           <Dx26TitleProperties titleProperties={props.visual.titleProperties} />
-          <Dx26BodyProperties />
+          <Dx26BodyProperties  bodyProperties={props.visual.bodyProperties} />
           <Dx26ChartProperties features={props.features} visual={props.visual} />
 
       </View>
