@@ -1,7 +1,7 @@
-import { IVisualMetadata } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
 import { translate } from 'react-jhipster';
 
 export interface IVisualmetaDataDTO {
-  visualMetadata: IVisualMetadata;
-  viewId: number;
+  visualMetadata?: IVisualMetadataSet;
+  viewId?: number;
 }

@@ -16,10 +16,10 @@ import {
 import { IVisualizations } from 'app/shared/model/visualizations.model';
 import TableAndChart from '@spectrum-icons/workflow/TableAndChart';
 import { IViews } from 'app/shared/model/views.model';
-import { VisualWrap } from 'app/modules/dx26/util/visualmetadata-wrapper';
+import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 
 interface IVisualizationsListProps {
-  visualizations: IVisualizations[];
+  visualizations: readonly IVisualizations[];
   handleVisualizationClick: (visualization) => void;
   view: IViews;
   totalItem : number;

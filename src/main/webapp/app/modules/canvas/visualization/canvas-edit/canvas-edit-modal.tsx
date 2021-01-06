@@ -2,24 +2,24 @@ import React, { useEffect } from 'react';
 import { View, Flex, Dialog, Heading, Divider, Content, Text, ButtonGroup, Button, DialogContainer } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import './dx26-modal.scss';
+import './canvas-edit-modal.scss';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-import IDx26Properties from './partials/dx26-properties';
-import IDx26Settings from './partials/dx26-settings';
+import VisualizationProperties from 'app/modules/canvas/visualization/visualization-properties/visualization-properties';
+import VisualizationSettings from 'app/modules/canvas/visualization/visualization-settings/visualization-settings';
 import { Translate } from 'react-jhipster';
 import {
   getEntity as getVisualmetadataEntity,
   updateEntity as updateVisualmetadataEntity,
-} from '../../entities/visualmetadata/visualmetadata.reducer';
-import { getDatasourcesFeaturesEntities as getfeatureEntities } from '../../entities/feature/feature.reducer';
-import { getEntity as getViewEntity } from '../../entities/views/views.reducer';
+} from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { getDatasourcesFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
+import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 
-export interface IDx26ModalProps
+export interface ICanvasEditModalProps
   extends StateProps,
     DispatchProps,
     RouteComponentProps<{ id: string; viewId: string; visualizationId: string }> {}
 
-const Dx26Modal = (props: IDx26ModalProps) => {
+const CanvasEditModal = (props: ICanvasEditModalProps) => {
   const history = useHistory();
   const visualizationId = props.match.params.visualizationId;
   const viewId = props.match.params.viewId;
@@ -65,13 +65,13 @@ const Dx26Modal = (props: IDx26ModalProps) => {
                 <Flex direction="column" height="100%" flex gap="size-75">
                   <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%"></View>
                   <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%">
-                    <IDx26Settings visualizationId={visualizationId} />
+                    <VisualizationSettings visualizationId={visualizationId} />
                   </View>
                 </Flex>
               </View>
               <div className="properties-tab">
                 <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight={"100%"} width="size-4000">
-                  <IDx26Properties features={props.featuresList} visual={props.visualmetadataEntity} />
+                  <VisualizationProperties features={props.featuresList} visual={props.visualmetadataEntity} />
                 </View>
               </div>
             </Flex>
@@ -93,4 +93,4 @@ const mapDispatchToProps = { getVisualmetadataEntity, getfeatureEntities, getVie
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dx26Modal);
+export default connect(mapStateToProps, mapDispatchToProps)(CanvasEditModal);

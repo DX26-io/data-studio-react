@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { View, Well, Text, Heading, Form } from '@adobe/react-spectrum';
-import { IViews } from 'app/shared/model/views.model';
+import { View,  Heading, Form } from '@adobe/react-spectrum';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
-import Properties from 'app/modules/dx26/partials/properties';
+import Properties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/properties';
 
-export interface IDx26ChartPropertiesProps extends StateProps, DispatchProps {
-  features: IFeature[];
+export interface IVisualizationChartConfigPropertiesProps extends StateProps, DispatchProps {
+  features: readonly IFeature[];
   visual: IVisualMetadataSet;
 }
 
-const Dx26ChartProperties = (props: IDx26ChartPropertiesProps) => {
+const VisualizationChartConfigProperties = (props: IVisualizationChartConfigPropertiesProps) => {
   return (
     <>
       <View>
@@ -46,4 +45,4 @@ const mapDispatchToProps = {};
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dx26ChartProperties);
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizationChartConfigProperties);

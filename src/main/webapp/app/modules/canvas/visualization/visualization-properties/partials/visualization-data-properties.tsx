@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActionButton, Button, ButtonGroup, Flex, Form, Heading, Item, ListBox, Picker, View } from '@adobe/react-spectrum';
+import { ActionButton, Text, Button, ButtonGroup, Flex, Form, Heading, Item, ListBox, Picker, View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import TableAndChart from '@spectrum-icons/workflow/TableAndChart';
@@ -7,16 +7,18 @@ import { IFeature } from 'app/shared/model/feature.model';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
 import { Field } from 'app/shared/model/visualMetadata.model';
 
-import Properties from 'app/modules/dx26/partials/properties';
+import Properties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/properties';
+import Brush from '@spectrum-icons/workflow/Brush';
+import Select from '@spectrum-icons/workflow/Select';
+import RegionSelect from '@spectrum-icons/workflow/RegionSelect';
 
-export interface IDx26DataPropertiesProps extends StateProps, DispatchProps {
-  features: IFeature[];
+export interface IVisualizationDataPropertiesProps extends StateProps, DispatchProps {
+  features: readonly IFeature[];
   visual: IVisualMetadataSet;
 }
 
-const Dx26DataProperties = (props: IDx26DataPropertiesProps) => {
+const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) => {
   const [selectedField, setSelectedField] = useState(props.visual.fields[0]);
-  const [selectedFeatures, setSelectedFeatures] = useState();
   const getDimensionList = () => {
     return props.features.filter(item => {
       if (item.featureType === 'DIMENSION') {
@@ -60,7 +62,6 @@ const Dx26DataProperties = (props: IDx26DataPropertiesProps) => {
           </Flex>
         </View>
         <Form>
-        
           <ButtonGroup orientation="vertical">
             {props.visual.fields &&
               props.visual.fields.length > 0 &&
@@ -68,14 +69,15 @@ const Dx26DataProperties = (props: IDx26DataPropertiesProps) => {
                 .sort((a, b) => (a.fieldType.order > b.fieldType.order ? 1 : -1))
                 .map((field, i) => (
                   <Button
+                    width={'100%'}
+                    variant="secondary"
                     onPress={() => {
                       selectedFieldChange(field);
                     }}
-                    isQuiet
-                    variant="secondary"
                     key={field.feature?.id || 'field-' + i}
                   >
-                    {field.feature?.name || ''}
+                    <TableAndChart />
+                    <Text alignSelf={'start'}> {field.feature?.name || ''}</Text>
                   </Button>
                 ))}
           </ButtonGroup>
@@ -94,22 +96,21 @@ const Dx26DataProperties = (props: IDx26DataPropertiesProps) => {
                 .sort((a, b) => (a.name > b.name ? 1 : -1))
                 .map((feature, i) => <Item key={feature.id || 'feature-' + i}> {feature.name} </Item>)}
           </Picker>
-
-         
-            {selectedField.properties &&
-              selectedField.properties.length > 0 &&
-              selectedField.properties
-                .sort((a, b) => (a.order > b.order ? 1 : -1))
-                .map((property, i) => (
-                  <Properties
-                    key={property.propertyType.id ? property.propertyType.id : 'Properties-' + i}
-                    property={property}
-                    propstype={'data'}
-                    visual={props.visual}
-                    features={props.features}
-                  />
-                ))}
-         
+        </Form>
+        <Form>
+          {selectedField.properties &&
+            selectedField.properties.length > 0 &&
+            selectedField.properties
+              .sort((a, b) => (a.order > b.order ? 1 : -1))
+              .map((property, i) => (
+                <Properties
+                  key={property.propertyType.id ? property.propertyType.id : 'Properties-' + i}
+                  property={property}
+                  propstype={'data'}
+                  visual={props.visual}
+                  features={props.features}
+                />
+              ))}
         </Form>
       </View>
     </>
@@ -123,4 +124,4 @@ const mapDispatchToProps = {};
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dx26DataProperties);
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizationDataProperties);

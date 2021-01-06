@@ -1,18 +1,17 @@
 import React, { ReactText, useEffect, useState } from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { getBorderList } from 'app/modules/dx26/partials/dx26-modal-util';
-
+import { getBorderList } from 'app/modules/canvas/visualization/canvas-edit/canvas-edit-modal-util';
 import { Form, Heading, Item, Picker, TextField, View } from '@adobe/react-spectrum';
 import { Slider } from '@react-spectrum/slider';
 import { BodyProperties } from 'app/shared/model/visualMetadata.model';
 // import {Slider} from '@adobe/react-spectrum';
 
-export interface IDx26BodyPropertiesProps extends StateProps, DispatchProps {
+export interface IVisualizationBodyPropertiesProps extends StateProps, DispatchProps {
   bodyProperties: BodyProperties;
 }
 
-const Dx26BodyProperties = (props: IDx26BodyPropertiesProps) => {
+const VisualizationBodyProperties = (props: IVisualizationBodyPropertiesProps) => {
   const borderList = getBorderList();
   const [border, setBorder] = useState(props.bodyProperties?.border || '');
   const [backgroundColor, setBackgroundColor] = useState(props.bodyProperties?.backgroundColor || '');
@@ -60,4 +59,4 @@ const mapDispatchToProps = {};
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dx26BodyProperties);
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizationBodyProperties);

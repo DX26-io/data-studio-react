@@ -3,12 +3,12 @@ import { View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 
-export interface IDx26ThresholdAlertSettingsProps extends StateProps, DispatchProps {}
+export interface IVisualizationDataConstraintsSettingProps extends StateProps, DispatchProps {}
 
-const Dx26ThresholdAlertSettings = (props: IDx26ThresholdAlertSettingsProps) => {
+const VisualizationDataConstraintsSetting = (props: IVisualizationDataConstraintsSettingProps) => {
   return (
     <>
-      <View>Threshold Alert display here</View>
+      <View>Data Constraints display here</View>
     </>
   );
 };
@@ -20,4 +20,4 @@ const mapDispatchToProps = {};
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dx26ThresholdAlertSettings);
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizationDataConstraintsSetting);

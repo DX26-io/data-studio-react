@@ -3,12 +3,12 @@ import { View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 
-export interface IDx26DataConstraintsSettingsProps extends StateProps, DispatchProps {}
+export interface IVisualizationDataSettingProps extends StateProps, DispatchProps {}
 
-const Dx26DataConstraintsSettings = (props: IDx26DataConstraintsSettingsProps) => {
+const VisualizationDataSetting = (props: IVisualizationDataSettingProps) => {
   return (
     <>
-      <View>Data Constraints display here</View>
+      <View>Data display here</View>
     </>
   );
 };
@@ -20,4 +20,4 @@ const mapDispatchToProps = {};
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dx26DataConstraintsSettings);
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizationDataSetting);

@@ -2,20 +2,20 @@ import React, { ReactText, useEffect, useState } from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { Form, Heading, Item, Picker, TextField, View, Well } from '@adobe/react-spectrum';
-import { getBorderList } from 'app/modules/dx26/partials/dx26-modal-util';
+import { getBorderList } from 'app/modules/canvas/visualization/canvas-edit/canvas-edit-modal-util';
 import { TitleProperties } from 'app/shared/model/visualMetadata.model';
 
-export interface IDx26TitlePropertiesProps extends StateProps, DispatchProps {
+export interface IVisualizationTitlePropertiesProps extends StateProps, DispatchProps {
   titleProperties: TitleProperties;
 }
 
-const Dx26TitleProperties = (props: IDx26TitlePropertiesProps) => {
+const VisualizationTitleProperties = (props: IVisualizationTitlePropertiesProps) => {
   const borderList = getBorderList();
   const [border, setBorder] = useState(props.titleProperties?.borderBottom || '');
   const [titleText, setTitleText] = useState(props.titleProperties?.titleText || '');
   const [backgroundColor, setBackgroundColor] = useState(props.titleProperties?.backgroundColor || '');
   const [color, setColor] = useState(props.titleProperties?.color || '');
-  
+
   useEffect(() => {
     if (props.titleProperties) {
       setBorder(props.titleProperties?.borderBottom);
@@ -24,7 +24,7 @@ const Dx26TitleProperties = (props: IDx26TitlePropertiesProps) => {
       setColor(props.titleProperties?.color);
     }
   }, [props.titleProperties]);
-  
+
   return (
     <>
       <View>
@@ -51,4 +51,4 @@ const mapDispatchToProps = {};
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dx26TitleProperties);
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizationTitleProperties);

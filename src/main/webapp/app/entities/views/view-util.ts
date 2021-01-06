@@ -1,4 +1,4 @@
-import { IVisualMetadata } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
 import { translate } from 'react-jhipster';
 import { IPayload, IPayloadResult } from 'react-jhipster/src/type/redux-action.type';
 
@@ -23,7 +23,7 @@ export type ICrudGetDashboardViewsAction<T> = (
 export type ISaveViewState<T> = (visualmetaDataDTO: ISaveViewStateDTO) => IPayload<T> | ((dispatch: any) => IPayload<T>);
 
 export interface ISaveViewStateDTO {
-  visualMetadataSet: IVisualMetadata[];
+  visualMetadataSet: IVisualMetadataSet[];
   _id: number;
 }
 

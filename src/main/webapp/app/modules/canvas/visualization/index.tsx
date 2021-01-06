@@ -2,7 +2,7 @@ import React from 'react';
 
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 
-import Dx26 from './dx26';
+import Dx26 from './canvas';
 
 const Routes = ({ match }) => (
   <div>

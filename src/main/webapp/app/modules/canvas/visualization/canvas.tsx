@@ -14,11 +14,11 @@ import {
 
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
-import './grid.css';
+import './canvas.css';
 import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
-import { getEntity as getViewEntity, getCurrentViewState,saveViewState } from '../../entities/views/views.reducer';
-import { getEntities as getVisualizationsEntities } from '../../entities/visualizations/visualizations.reducer';
-import { getEntities as getfeatureEntities } from '../../entities/feature/feature.reducer';
+import { getEntity as getViewEntity, getCurrentViewState,saveViewState } from 'app/entities/views/views.reducer';
+import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
+import { getEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 
 import Settings from '@spectrum-icons/workflow/Settings';
 import Export from '@spectrum-icons/workflow/Export';
@@ -39,12 +39,12 @@ import $ from 'jquery';
 import { Visualizations } from 'app/entities/visualizations/visualizations';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import VisualizationsList from 'app/entities/visualizations/visualizations-list';
-import { VisualWrap } from 'app/modules/dx26/util/visualmetadata-wrapper';
+import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 
 const ReactGridLayout = WidthProvider(RGL);
-export interface IDx26Prop extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
+export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
 
-const Dx26 = (props: IDx26Prop) => {
+const Canvas = (props: VisualizationProp) => {
   const [redirect, setRedirect] = useState<ReactText>('');
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
  
@@ -271,4 +271,4 @@ const mapDispatchToProps = {
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dx26);
+export default connect(mapStateToProps, mapDispatchToProps)(Canvas);
