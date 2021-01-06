@@ -5,7 +5,16 @@
     },
     "dashboardPermission": {
       "title": "Dashboard permissions",
-      "description": "Manage dashboards user and  group permissions"
+      "description": "Manage dashboards user and  group permissions",
+      "dashboard": "DASHBOARD",
+      "read": "READ",
+      "write": "WRITE",
+      "update": "UPDATE",
+      "delete": "DELETE",
+      "manage": "MANAGE",
+      "allow": "allow",
+      "deny": "deny",
+      "partial": "partial"
     },
     "datasourcePermission": {
       "title": "Datasource permissions",
