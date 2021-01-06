@@ -16,6 +16,9 @@ export interface IDashboardsProps extends StateProps, DispatchProps {
 }
 
 export const Dashboards = (props: IDashboardsProps) => {
+  const [user, setUser] = React.useState(null);
+  const [group, setGroup] = React.useState(null);
+
   const { dashboardPermissions, totalDashboardPermissions, permissionProps } = props;
 
   const [pagination, setPagination] = useState(
@@ -23,10 +26,6 @@ export const Dashboards = (props: IDashboardsProps) => {
   );
 
   const fetchPermissions = () => {
-    const params = new URLSearchParams(permissionProps.location.search);
-    const page = params.get('page');
-    const group = params.get('group');
-    const user = params.get('user');
     let endURL = '';
     if (user) {
       endURL = `?page=${pagination.activePage}&user=${user}`;
@@ -42,28 +41,26 @@ export const Dashboards = (props: IDashboardsProps) => {
 
   useEffect(() => {
     fetchPermissions();
-  }, [pagination.activePage, pagination.itemsPerPage, permissionProps.location.search]);
+  }, [pagination.activePage, pagination.itemsPerPage, user, group]);
 
-  // useEffect(() => {
-  //   // const params = new URLSearchParams(permissionProps.location.search);
-  //   // const page = params.get('page');
-  //   // const group = params.get('group');
-  //   // const user = params.get('user');
-  //   // if (user) {
-  //   //   props.getUserDashboardPermissions(ACTIVE_PAGE, ITEMS_PER_PAGE, user);
-  //   // } else {
-  //   //   props.getUserGroupDashboardPermissions(ACTIVE_PAGE, ITEMS_PER_PAGE, group);
-  //   // }
-  //   // if (page && sort) {
-  //   //   const sortSplit = sort.split(',');
-  //   //   setPagination({
-  //   //     ...pagination,
-  //   //     activePage: +page,
-  //   //     sort: sortSplit[0],
-  //   //     order: sortSplit[1],
-  //   //   });
-  //   // }
-  // }, [permissionProps.location.search]);
+  useEffect(() => {
+    const params = new URLSearchParams(permissionProps.location.search);
+    const page = params.get('page');
+    const groupName = params.get('group');
+    const login = params.get('user');
+    if (page) {
+      setPagination({
+        ...pagination,
+        activePage: +page,
+      });
+    }
+    if (login) {
+      setUser(login);
+    }
+    if (groupName) {
+      setGroup(groupName);
+    }
+  }, [permissionProps.location.search]);
 
   const handleChangePage = (event, newPage) => {
     setPagination({
@@ -84,7 +81,7 @@ export const Dashboards = (props: IDashboardsProps) => {
       <Paper className="dx26-table-pager">
         <TableContainer>
           <Table aria-label="customized table">
-            <TableHead>
+            <TableHead style={{ backgroundColor: '#f5f5f5' }}>
               <TableCell align="center">
                 <Translate contentKey="permission.dashboardPermission.dashboard">DASHBOARD</Translate>
               </TableCell>
@@ -106,7 +103,7 @@ export const Dashboards = (props: IDashboardsProps) => {
             </TableHead>
             <TableBody>
               {dashboardPermissions.map((dashboard, i) => (
-                <TableRow key={`dashboard-${dashboard.id}`}>
+                <TableRow key={`dashboard-${dashboard.info.dashboardName}`}>
                   <TableCell align="center">{dashboard.info.dashboardName}</TableCell>
                   {dashboard.info.permissionMetadata.slice(0, 4).map((p, j) => (
                     <TableCell align="center" key={`permission-${p.permission.key.action}`}>

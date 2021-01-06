@@ -7,7 +7,6 @@ import { Flex, Text, SearchField, ListBox, Item, Section, Content } from '@adobe
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import User from '@spectrum-icons/workflow/User';
 import UserGroup from '@spectrum-icons/workflow/UserGroup';
-import ArrowRight from '@spectrum-icons/workflow/ArrowRight';
 import { makeStyles } from '@material-ui/core/styles';
 import { useAsyncList } from '@react-stately/data';
 import { Tabs } from '@react-spectrum/tabs';
@@ -108,7 +107,7 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
                     <Section>
                       {groups.map((group, i) => (
                         <Item textValue="Read" key={`${group.name}`}>
-                          <User size="M" />
+                          <UserGroup size="M" />
                           <Text>{group.name}</Text>
                           <Text slot="description">100 todo</Text>
                         </Item>
