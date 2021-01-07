@@ -38,5 +38,20 @@
         "emptyFields": "All fields are required"
       }
     }
+  },
+  "realm": {
+    "create": {
+      "title": "Create realm",
+      "form": {
+        "realmName": "Realm name",
+        "button": "Create"
+      },
+      "messages": {
+        "error": {
+          "create": "Failed to create a realm",
+          "emptyFields": "All fields are required"
+        }
+      }
+    }
   }
 }

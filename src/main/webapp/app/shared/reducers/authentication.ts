@@ -21,6 +21,7 @@ const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
 const initialState = {
   loading: false,
   isAuthenticated: false,
+  realmCreateError: false,
   loginSuccess: false,
   signupSuccess: false,
   loginError: false, // Errors returned from server side

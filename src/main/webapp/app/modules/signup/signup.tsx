@@ -4,13 +4,13 @@ import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { Grid, View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import {loginWithProvider, signup} from "app/shared/reducers/authentication";
-import SignupHeader from "app/modules/signup/signup-header";
 import SignupForm from "app/modules/signup/signup-form";
-import SignupFooter from "app/modules/signup/signup-footer";
+import LoginFooter from "app/modules/login/login-footer";
+import LoginHeader from "app/modules/login/login-header";
 
 export interface ISignupProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
-export const Signup: React.FC<ISignupProps> = props => {
+const Signup: React.FC<ISignupProps> = props => {
   const handleSignup = (username: string, email: string, password: string, firstname: string, lastname: string) => {
     props.signup(username, email, password, firstname, lastname);
   };
@@ -23,9 +23,9 @@ export const Signup: React.FC<ISignupProps> = props => {
       {/* <Image src="https://i.imgur.com/Z7AzH2c.png" alt="alt-text" objectFit="cover" gridArea="image" />*/}
       <View gridArea="image" backgroundColor="gray-400" />
       <View gridArea="login">
-        <SignupHeader />
+        <LoginHeader />
         <SignupForm handleSignup={handleSignup} signupError={props.signupError}  handleProviderLogin={handleProviderLogin}/>
-        <SignupFooter />
+        <LoginFooter />
       </View>
     </Grid>
   ) : (

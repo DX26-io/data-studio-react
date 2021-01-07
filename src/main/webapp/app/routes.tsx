@@ -14,6 +14,7 @@ import PageNotFound from 'app/shared/error/page-not-found';
 import { AUTHORITIES } from 'app/config/constants';
 import Login from 'app/modules/login/login';
 import Signup from "app/modules/signup/signup";
+import Realm from "app/modules/signup/realm/realm";
 
 const Account = Loadable({
   loader: () => import(/* webpackChunkName: "account" */ 'app/modules/account'),
@@ -29,8 +30,9 @@ const Routes = () => (
   <div className="view-routes">
     <Switch>
       <ErrorBoundaryRoute path="/login" component={Login} />
-      <ErrorBoundaryRoute path="/signup" component={Signup} />
       <ErrorBoundaryRoute path="/logout" component={Logout} />
+      <ErrorBoundaryRoute path="/signup" exact component={Signup} />
+      <ErrorBoundaryRoute path="/signup/realm" exact component={Realm} />
       <ErrorBoundaryRoute path="/account/register" component={Register} />
       <ErrorBoundaryRoute path="/account/activate/:key?" component={Activate} />
       <ErrorBoundaryRoute path="/account/reset/request" component={PasswordResetInit} />
