@@ -161,7 +161,6 @@ export const setAuthToken = async (result, rememberMe) => {
 
 const setAuthTokenWithProvider = result => {
   const bearerToken = result.value.headers.authorization;
-  console.log('bearer', bearerToken);
   if (!(bearerToken && bearerToken.slice(0, 7) === 'Bearer ')) {
     return;
   }

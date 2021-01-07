@@ -32,7 +32,7 @@ const Routes = () => (
       <ErrorBoundaryRoute path="/login" component={Login} />
       <ErrorBoundaryRoute path="/logout" component={Logout} />
       <ErrorBoundaryRoute path="/signup" exact component={Signup} />
-      <ErrorBoundaryRoute path="/signup/realm" exact component={Realm} />
+      <ErrorBoundaryRoute path="/signup/realm" component={Realm} />
       <ErrorBoundaryRoute path="/account/register" component={Register} />
       <ErrorBoundaryRoute path="/account/activate/:key?" component={Activate} />
       <ErrorBoundaryRoute path="/account/reset/request" component={PasswordResetInit} />
