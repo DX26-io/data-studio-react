@@ -5,13 +5,10 @@ import { Grid, View, Text } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import UsersGroups from './users-groups';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import PermissionTitle from './permission-title';
-import Dashboards from './dashboards';
+import PermissionsTitle from './permissions-title';
+import Dashboards from './dashboards-permissions';
 
-export interface IDashboardPermissionProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
-
-export const DashboardPermission = (props: IDashboardPermissionProps) => {
-
+export const DashboardPermissionContainer = (props: RouteComponentProps) => {
   return (
     <div>
       <SecondaryHeader
@@ -20,7 +17,7 @@ export const DashboardPermission = (props: IDashboardPermissionProps) => {
           { label: 'User Management', route: '/administration/user-management' },
           {
             label: 'Dashboard Permissions',
-            route: '/administration/user-management/dashboard-permission',
+            route: '/administration/user-management/dashboard-permissions',
           },
         ]}
         title={'Dashboard Permissions'}
@@ -31,22 +28,12 @@ export const DashboardPermission = (props: IDashboardPermissionProps) => {
           <UsersGroups permissionProps={props} />
         </View>
         <View gridArea="dashboards" borderXWidth="thin" borderColor="default" height="100vh">
-          <PermissionTitle />
-          <Dashboards permissionProps={props}/>
+          <PermissionsTitle />
+          <Dashboards permissionProps={props} />
         </View>
       </Grid>
     </div>
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({
-  // groups: storeState.userGroups.groups,
-  // users: storeState.userManagement.users,
-});
-
-const mapDispatchToProps = {};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardPermission);
+export default DashboardPermissionContainer;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getUserGroupDashboardPermissions, getUserDashboardPermissions } from './permission.reducer';
+import { getUserGroupDashboardPermissions, getUserDashboardPermissions } from './permissions.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Flex, Text, SearchField } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
@@ -11,11 +11,13 @@ import { Translate, getSortState } from 'react-jhipster';
 import { StatusLight } from '@adobe/react-spectrum';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 
+// TODO : when hit the url,params should be visible
+
 export interface IDashboardsProps extends StateProps, DispatchProps {
   permissionProps: any;
 }
 
-export const Dashboards = (props: IDashboardsProps) => {
+export const DashboardsPermissions = (props: IDashboardsProps) => {
   const [user, setUser] = React.useState(null);
   const [group, setGroup] = React.useState(null);
 
@@ -32,9 +34,9 @@ export const Dashboards = (props: IDashboardsProps) => {
       props.getUserDashboardPermissions(pagination.activePage, pagination.itemsPerPage, user);
     } else if (group) {
       endURL = `?page=${pagination.activePage}&group=${group}`;
-      props.getUserGroupDashboardPermissions(ACTIVE_PAGE, pagination.itemsPerPage, group);
+      props.getUserGroupDashboardPermissions(pagination.activePage, pagination.itemsPerPage, group);
     }
-    if (permissionProps.location.search !== endURL) {
+    if (permissionProps.location.search && permissionProps.location.search !== endURL) {
       permissionProps.history.push(`${permissionProps.location.pathname}${endURL}`);
     }
   };
@@ -44,20 +46,18 @@ export const Dashboards = (props: IDashboardsProps) => {
   }, [pagination.activePage, pagination.itemsPerPage, user, group]);
 
   useEffect(() => {
-    const params = new URLSearchParams(permissionProps.location.search);
-    const page = params.get('page');
-    const groupName = params.get('group');
-    const login = params.get('user');
-    if (page) {
-      setPagination({
-        ...pagination,
-        activePage: +page,
-      });
-    }
-    if (login) {
+    if (permissionProps.location.search) {
+      const params = new URLSearchParams(permissionProps.location.search);
+      const page = params.get('page');
+      const groupName = params.get('group');
+      const login = params.get('user');
+      if (page) {
+        setPagination({
+          ...pagination,
+          activePage: +page,
+        });
+      }
       setUser(login);
-    }
-    if (groupName) {
       setGroup(groupName);
     }
   }, [permissionProps.location.search]);
@@ -83,22 +83,22 @@ export const Dashboards = (props: IDashboardsProps) => {
           <Table aria-label="customized table">
             <TableHead style={{ backgroundColor: '#f5f5f5' }}>
               <TableCell align="center">
-                <Translate contentKey="permission.dashboardPermission.dashboard">DASHBOARD</Translate>
+                <Translate contentKey="permissions.dashboardPermissions.dashboard">DASHBOARD</Translate>
               </TableCell>
               <TableCell align="center">
-                <Translate contentKey="permission.dashboardPermission.read">READ</Translate>
+                <Translate contentKey="permissions.dashboardPermissions.read">READ</Translate>
               </TableCell>
               <TableCell align="center">
-                <Translate contentKey="permission.dashboardPermission.write">WRITE</Translate>
+                <Translate contentKey="permissions.dashboardPermissions.write">WRITE</Translate>
               </TableCell>
               <TableCell align="center">
-                <Translate contentKey="permission.dashboardPermission.update">UPDATE</Translate>
+                <Translate contentKey="permissions.dashboardPermissions.update">UPDATE</Translate>
               </TableCell>
               <TableCell align="center">
-                <Translate contentKey="permission.dashboardPermission.delete">DELETE</Translate>
+                <Translate contentKey="permissions.dashboardPermissions.delete">DELETE</Translate>
               </TableCell>
               <TableCell align="center">
-                <Translate contentKey="permission.dashboardPermission.manage">MANAGE</Translate>
+                <Translate contentKey="permissions.dashboardPermissions.manage">MANAGE</Translate>
               </TableCell>
             </TableHead>
             <TableBody>
@@ -109,11 +109,11 @@ export const Dashboards = (props: IDashboardsProps) => {
                     <TableCell align="center" key={`permission-${p.permission.key.action}`}>
                       {p.hasIt ? (
                         <StatusLight variant="positive">
-                          <Translate contentKey="permission.dashboardPermission.allow">allow</Translate>
+                          <Translate contentKey="permissions.dashboardPermissions.allow">allow</Translate>
                         </StatusLight>
                       ) : (
                         <StatusLight variant="negative">
-                          <Translate contentKey="permission.dashboardPermission.deny">deny</Translate>
+                          <Translate contentKey="permissions.dashboardPermissions.deny">deny</Translate>
                         </StatusLight>
                       )}
                     </TableCell>
@@ -145,8 +145,8 @@ export const Dashboards = (props: IDashboardsProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  dashboardPermissions: storeState.permission.dashboardPermissions,
-  totalDashboardPermissions: storeState.permission.totalDashboardPermissions,
+  dashboardPermissions: storeState.permissions.dashboardPermissions,
+  totalDashboardPermissions: storeState.permissions.totalDashboardPermissions,
 });
 
 const mapDispatchToProps = { getUserDashboardPermissions, getUserGroupDashboardPermissions };
@@ -154,4 +154,4 @@ const mapDispatchToProps = { getUserDashboardPermissions, getUserGroupDashboardP
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboards);
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardsPermissions);

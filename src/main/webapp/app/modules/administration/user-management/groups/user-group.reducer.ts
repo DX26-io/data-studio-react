@@ -117,6 +117,7 @@ export default (state: UserGroupsState = initialState, action): UserGroupsState 
 };
 
 const apiUrl = 'api/userGroups';
+const searchApiUrl = apiUrl + '/search';
 // Actions
 export const getUserGroups: ICrudGetAllAction<IUserGroup> = (page, size, sort) => {
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
@@ -168,3 +169,11 @@ export const deleteUserGroup: ICrudDeleteAction<IUserGroup> = name => async disp
 export const reset = () => ({
   type: ACTION_TYPES.RESET,
 });
+
+export const searchUserGroups = (page, size, sort, name) => {
+  const requestUrl = `${searchApiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}&name=${name}` : ''}`;
+  return {
+    type: ACTION_TYPES.FETCH_USER_GROUPS,
+    payload: axios.get<IUserGroup>(requestUrl),
+  };
+};

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getUserGroups } from '../groups/user-group.reducer';
+import { getUserGroups, searchUserGroups } from '../groups/user-group.reducer';
 import { getUsers, searchUsers } from '../users/user.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Flex, Text, SearchField, ListBox, Item, Section, Content } from '@adobe/react-spectrum';
@@ -18,9 +18,13 @@ export interface IUsersGroupsProps extends StateProps, DispatchProps {
 }
 
 export const UsersGroups = (props: IUsersGroupsProps) => {
+  const tabs = [
+    { id: 1, name: 'Users' },
+    { id: 2, name: 'Groups' },
+  ];
+
   const [searchValue, setSearchValue] = React.useState('');
   const [tabId, setTabId] = React.useState();
-
 
   const { permissionProps, groups, users } = props;
 
@@ -47,11 +51,6 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
     pushParams(endURL);
   };
 
-  const tabs = [
-    { id: 1, name: 'Users' },
-    { id: 2, name: 'Groups' },
-  ];
-
   const fetchUsersGroups = () => {
     props.getUserGroups(ACTIVE_PAGE, ITEMS_PER_PAGE, 'name,asc');
     props.getUsers(ACTIVE_PAGE, ITEMS_PER_PAGE, 'login,asc');
@@ -62,8 +61,12 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
   }, []);
 
   useEffect(() => {
-    props.searchUsers(ACTIVE_PAGE, ITEMS_PER_PAGE, 'login,asc', searchValue);
-    // TODO : search group api does not exist so kalyan/venkat needs to confirm whether it has to be created or not
+    if (searchValue.length > 1 || searchValue.length === 0)
+      if (tabId === 1) {
+        props.searchUsers(ACTIVE_PAGE, ITEMS_PER_PAGE, 'login,asc', searchValue);
+      } else {
+        // props.searchUserGroups(ACTIVE_PAGE, ITEMS_PER_PAGE, 'name,asc', searchValue);
+      }
   }, [searchValue]);
 
   const useStyles = makeStyles({
@@ -90,7 +93,7 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
         <Tabs aria-label="roles" items={tabs} onSelectionChange={setTabId}>
           {item => (
             <Item title={item.name}>
-              <Content marginTop="size-250" marginStart="size-125">
+              <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
                 {tabId === 1 ? (
                   <ListBox width="size-static-size-3600" aria-label="users" selectionMode="single" onSelectionChange={setLogin}>
                     <Section>
@@ -129,7 +132,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   users: storeState.userManagement.users,
 });
 
-const mapDispatchToProps = { getUserGroups, getUsers, searchUsers };
+const mapDispatchToProps = { getUserGroups, getUsers, searchUsers, searchUserGroups };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

@@ -8,7 +8,7 @@ import applicationProfile, { ApplicationProfileState } from './application-profi
 import administration, { AdministrationState } from 'app/modules/administration/administration.reducer';
 import userManagement, { UserManagementState } from 'app/modules/administration/user-management/users/user.reducer';
 import userGroups, { UserGroupsState } from 'app/modules/administration/user-management/groups/user-group.reducer';
-import permission, { PermissionState } from 'app/modules/administration/user-management/permission/permission.reducer';
+import permissions, { PermissionsState } from 'app/modules/administration/user-management/permission/permissions.reducer';
 import register, { RegisterState } from 'app/modules/account/register/register.reducer';
 import activate, { ActivateState } from 'app/modules/account/activate/activate.reducer';
 import password, { PasswordState } from 'app/modules/account/password/password.reducer';
@@ -35,7 +35,7 @@ export interface IRootState {
   readonly administration: AdministrationState;
   readonly userManagement: UserManagementState;
   readonly userGroups: UserGroupsState;
-  readonly permission: PermissionState;
+  readonly permissions: PermissionsState;
   readonly register: RegisterState;
   readonly activate: ActivateState;
   readonly passwordReset: PasswordResetState;
@@ -55,7 +55,7 @@ const rootReducer = combineReducers<IRootState>({
   administration,
   userManagement,
   userGroups,
-  permission,
+  permissions,
   register,
   activate,
   passwordReset,

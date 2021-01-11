@@ -28,15 +28,15 @@ const UserManagement = (props: RouteComponentProps) => {
     },
     {
       icon: <UserLock size="L" />,
-      link: `${match.url}/dashboard-permission`,
-      title: 'permission.dashboardPermission.title',
-      description: 'permission.dashboardPermission.description',
+      link: `${match.url}/dashboard-permissions`,
+      title: 'permissions.dashboardPermissions.title',
+      description: 'permissions.dashboardPermissions.description',
     },
     {
       icon: <DataSettings size="L" />,
-      link: `${match.url}/datasource-permission`,
-      title: 'permission.datasourcePermission.title',
-      description: 'permission.datasourcePermission.description',
+      link: `${match.url}/datasource-permissions`,
+      title: 'permissions.datasourcePermissions.title',
+      description: 'permissions.datasourcePermissions.description',
     },
   ];
   return (
