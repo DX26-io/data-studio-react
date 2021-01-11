@@ -1,3 +1,5 @@
+import { IFeature } from './feature.model';
+
 export interface IVisualMetadata {
   readOnly?: boolean;
   _id?: string;
@@ -47,7 +49,7 @@ export interface Field {
   id?: number;
   properties?: Property[];
   fieldType?: FieldType;
-  feature?: Feature;
+  feature?: IFeature;
   hierarchy?: null;
   constraint?: Constraint;
   order?: number;

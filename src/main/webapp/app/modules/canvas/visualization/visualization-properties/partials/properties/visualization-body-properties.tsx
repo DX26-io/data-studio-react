@@ -1,11 +1,10 @@
 import React, { ReactText, useEffect, useState } from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { getBorderList } from 'app/modules/canvas/visualization/canvas-edit/canvas-edit-modal-util';
+import { getBorderList } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 import { Form, Heading, Item, Picker, TextField, View } from '@adobe/react-spectrum';
 import { Slider } from '@react-spectrum/slider';
 import { BodyProperties } from 'app/shared/model/visualMetadata.model';
-// import {Slider} from '@adobe/react-spectrum';
 
 export interface IVisualizationBodyPropertiesProps extends StateProps, DispatchProps {
   bodyProperties: BodyProperties;
@@ -13,17 +12,12 @@ export interface IVisualizationBodyPropertiesProps extends StateProps, DispatchP
 
 const VisualizationBodyProperties = (props: IVisualizationBodyPropertiesProps) => {
   const borderList = getBorderList();
-  const [border, setBorder] = useState(props.bodyProperties?.border || '');
-  const [backgroundColor, setBackgroundColor] = useState(props.bodyProperties?.backgroundColor || '');
-  const [opacity, setOpacity] = useState(props.bodyProperties?.opacity || 1);
-  
-  useEffect(() => {
-    if (props.bodyProperties) {
-      setBorder(props.bodyProperties?.border);
-      setOpacity(props.bodyProperties?.opacity);
-      setBackgroundColor(props.bodyProperties?.backgroundColor);
-    }
-  }, [props.bodyProperties]);
+  const [properties, setProperty] = useState([]);
+
+  const handleValueChange = (value, property) => {
+    props.bodyProperties[property] = value;
+    setProperty([props.bodyProperties[property]]);
+  };
   return (
     <>
       <View>
@@ -31,16 +25,28 @@ const VisualizationBodyProperties = (props: IVisualizationBodyPropertiesProps) =
           Body Properties
         </Heading>
         <Form>
-          <Picker selectedKey={border} onSelectionChange={selected => setBorder(selected.toString())} label="Border" items={borderList}>
+          <Picker
+            selectedKey={props.bodyProperties?.border || ''}
+            onSelectionChange={text => {
+              handleValueChange(text, 'border');
+            }}
+            label="Border"
+            items={borderList}
+          >
             {item => <Item key={item.value}>{item.name}</Item>}
           </Picker>
-          <TextField value={backgroundColor} onChange={setBackgroundColor} type="color" label={'Background Color'} />
+          <TextField
+            onChange={text => {
+              handleValueChange(text, 'backgroundColor');
+            }}
+            value={props.bodyProperties?.backgroundColor || ''}
+            type="color"
+            label={'Background Color'}
+          />
           <Slider
             width={'100%'}
             maxValue={1}
             step={0.001}
-            value={opacity}
-            onChange={setOpacity}
             formatOptions={{ style: 'percent', minimumFractionDigits: 1 }}
             defaultValue={1}
             label="Opacity"

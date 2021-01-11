@@ -7,7 +7,7 @@ import VisualizationDataSetting from 'app/modules/canvas/visualization/visualiza
 import VisualizationThresholdAlertSetting from 'app/modules/canvas/visualization/visualization-settings/partials/visualization-threshold-alert-setting';
 import { Content } from '@react-spectrum/view';
 import { Tabs, Item } from '@react-spectrum/tabs';
-import { getSettingsTabTranslations } from 'app/modules/canvas/visualization/canvas-edit/canvas-edit-modal-util';
+import { getSettingsTabTranslations } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 
 export interface IVisualizationSettingsProps extends StateProps, DispatchProps {
   visualizationId : ReactNode;

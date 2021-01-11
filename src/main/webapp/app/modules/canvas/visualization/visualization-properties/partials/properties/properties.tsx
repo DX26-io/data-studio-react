@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { IFeature } from 'app/shared/model/feature.model';
 import { IVisualMetadataSet, Property } from 'app/shared/model/visualMetadata.model';
-import {  Checkbox, Item, Picker, TextField } from '@adobe/react-spectrum';
+import { Checkbox, Switch, Item, Picker, TextField } from '@adobe/react-spectrum';
 import { parseBool, parseString } from 'app/shared/util/common-utils.ts';
 
 export interface IPropertiesProps extends StateProps, DispatchProps {
@@ -15,12 +15,33 @@ export interface IPropertiesProps extends StateProps, DispatchProps {
 }
 
 const Properties = (props: IPropertiesProps) => {
-  
+  const [property, setProperty] = useState([]);
+
+  const handleCheckboxChange = e => {
+    props.property.value = !props.property.value;
+    setProperty([props.property.value]);
+  };
+
+  const handleValueChange = (value, possibleValues = null) => {
+    if (possibleValues) {
+      const selectedValue = possibleValues.filter(item => {
+        return item.value === value;
+      });
+      props.property.value = selectedValue[0];
+    } else {
+      props.property.value = value;
+    }
+    setProperty([props.property.value]);
+  };
+
   return (
     <>
       {props.property.type === 'NUMBER' && (
         <TextField
           type="NUMBER"
+          onChange={text => {
+            handleValueChange(text);
+          }}
           value={props.property.value.toString() || ''}
           label={props.property.propertyType.name}
         />
@@ -30,21 +51,28 @@ const Properties = (props: IPropertiesProps) => {
           selectedKey={props.property.value['value']}
           label={props.property.propertyType.name}
           items={props.property.propertyType.possibleValues}
+          onSelectionChange={selected => handleValueChange(selected.toString(), props.property.propertyType.possibleValues)}
         >
           {item => <Item key={item.value}>{item.value}</Item>}
         </Picker>
       )}
       {props.property.type === 'CHECKBOX' && (
-        <Checkbox
-          defaultSelected={parseBool(props.property.propertyType.defaultValue)}
-          isSelected={parseBool(props.property.value)}
+        <Switch
           isEmphasized
+          onChange={() => {
+            handleCheckboxChange(props.property);
+          }}
+          isSelected={parseBool(props.property.value)}
+          defaultSelected={parseBool(props.property.propertyType.defaultValue)}
         >
           {props.property.propertyType.name}
-        </Checkbox>
+        </Switch>
       )}
       {props.property.type === 'COLOR_PICKER' && (
         <TextField
+          onChange={text => {
+            handleValueChange(text);
+          }}
           value={parseString(props.property.value)}
           type="color"
           label={props.property.propertyType.name}
@@ -52,6 +80,9 @@ const Properties = (props: IPropertiesProps) => {
       )}
       {props.property.type === 'TEXT' && (
         <TextField
+          onChange={text => {
+            handleValueChange(text);
+          }}
           value={parseString(props.property.value) || ''}
           label={props.property.propertyType.name}
         />

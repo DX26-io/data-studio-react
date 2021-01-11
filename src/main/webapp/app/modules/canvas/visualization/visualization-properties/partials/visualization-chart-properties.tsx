@@ -1,7 +1,7 @@
 import React from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { View,  Heading, Form } from '@adobe/react-spectrum';
+import { View } from '@adobe/react-spectrum';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
 import VisualizationTitleProperties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/visualization-title-properties';

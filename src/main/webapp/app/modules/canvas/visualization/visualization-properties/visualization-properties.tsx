@@ -5,9 +5,7 @@ import { connect } from 'react-redux';''
 import VisualizationChartProperties from 'app/modules/canvas/visualization/visualization-properties/partials/visualization-chart-properties';
 import VisualizationDataProperties from 'app/modules/canvas/visualization/visualization-properties/partials/visualization-data-properties';
 import VisualizationHierarchy from 'app/modules/canvas/visualization/visualization-properties/partials/visualization-hierarchy';
-
-import { getPropertiesTabTranslations } from 'app/modules/canvas/visualization/canvas-edit/canvas-edit-modal-util';
-
+import { getPropertiesTabTranslations } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IViews } from 'app/shared/model/views.model';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';

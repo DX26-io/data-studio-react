@@ -13,8 +13,8 @@ import ViewCreateModal from '../views/view-create-modal';
 import ViewDeleteModal from '../views/view-delete-modal';
 import ViewPropertiesModal from '../views/view-properties-modal';
 import Canvas from 'app/modules/canvas/visualization/canvas';
-import CanvasEditModal from 'app/modules/canvas/visualization/canvas-edit/canvas-edit-modal';
-import VisualizationsDeleteModal from 'app/modules/canvas/visualization/visualizations-delete-modal';
+import VisualizationEditModal from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal';
+import VisualizationsDeleteModal from 'app/modules/canvas/visualization/visualization-modal/visualization-delete-modal/visualizations-delete-modal';
 
 const Routes = ({ match }) => (
   <>
@@ -27,7 +27,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute exact path={`${match.url}/:id/create`} component={ViewCreateModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/build`} component={Canvas} />
 
-      <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/edit/:visualizationId`} component={CanvasEditModal} />
+      <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/edit/:visualizationId`} component={VisualizationEditModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/delete/:visualizationId`} component={VisualizationsDeleteModal} />
 
 

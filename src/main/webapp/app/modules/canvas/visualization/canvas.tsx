@@ -14,7 +14,7 @@ import {
 
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
-import './canvas.css';
+import './canvas.scss';
 import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
 import { getEntity as getViewEntity, getCurrentViewState,saveViewState } from 'app/entities/views/views.reducer';
 import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
@@ -193,12 +193,14 @@ const Canvas = (props: VisualizationProp) => {
               </Flex>
             </View>
           </div>
-          <div id={`demo-${i}`}>{v.titleProperties.titleText}</div>
+          <div id={`demo-${i}`}>{v?.titleProperties?.titleText}</div>
         </div>
       );
     });
   };
-
+ const  handleMessage=(stompMessage)=> {
+    debugger
+  }
   return (
     <>
       <SecondaryHeader

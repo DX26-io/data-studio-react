@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Flex, Dialog, Heading, Divider, Content, Text, ButtonGroup, Button, DialogContainer } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import './canvas-edit-modal.scss';
+import './visualization-edit-modal.scss';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import VisualizationProperties from 'app/modules/canvas/visualization/visualization-properties/visualization-properties';
 import VisualizationSettings from 'app/modules/canvas/visualization/visualization-settings/visualization-settings';
@@ -14,12 +14,12 @@ import {
 import { getDatasourcesFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 
-export interface ICanvasEditModalProps
+export interface IVisualizationEditModalProps
   extends StateProps,
     DispatchProps,
     RouteComponentProps<{ id: string; viewId: string; visualizationId: string }> {}
 
-const CanvasEditModal = (props: ICanvasEditModalProps) => {
+const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
   const history = useHistory();
   const visualizationId = props.match.params.visualizationId;
   const viewId = props.match.params.viewId;
@@ -93,4 +93,4 @@ const mapDispatchToProps = { getVisualmetadataEntity, getfeatureEntities, getVie
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(CanvasEditModal);
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizationEditModal);
