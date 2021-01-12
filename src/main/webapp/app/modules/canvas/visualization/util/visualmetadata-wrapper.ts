@@ -42,7 +42,7 @@ const resolveOrElse = orElse => {
 
 const getProperty = (properties, propertyName, orElse = null) => {
   const props = properties.filter(function (item) {
-    //return item.propertyType.name === propertyName;
+    // return item.propertyType.name === propertyName;
     return item.propertyType.name.indexOf(propertyName) !== -1;
   });
 
@@ -87,22 +87,6 @@ const fieldPropertyExists = (fields, fieldOrder, propertyName) => {
   return !!getFieldPropertyValue(fields, fieldOrder, propertyName);
 };
 
-const constructDimensionField = (fieldDimension, filters) => {
-  if (fieldDimension.hierarchy) {
-    fieldDimension.hierarchy.drilldown = fieldDimension.hierarchy.drilldown.sort(function (a, b) {
-      return a.order - b.order;
-    });
-    const featureDrillDown = fieldDimension.hierarchy.drilldown.filter(function (item, index) {
-      return fieldDimension.feature.name === item.feature.name;
-    })[0];
-
-    // if (featureDrillDown) {
-    //     return { name: drillDown(featureDrillDown, fieldDimension.hierarchy, filters) };
-    // }
-  }
-  return { name: fieldDimension.feature.name };
-};
-
 const haveFilter = (start, drilldowns, filters) => {
   for (let index = start + 1; index < drilldowns.length; index++) {
     const element = drilldowns[index];
@@ -112,6 +96,33 @@ const haveFilter = (start, drilldowns, filters) => {
     }
   }
   return false;
+};
+
+const drillDown = (drillDownFeature, hierarchy, filters) => {
+  const filter = filters[drillDownFeature.feature.name] || filters[drillDownFeature.feature.name.toLowerCase()];
+  if ((filter && filter.length > 0) || haveFilter(drillDownFeature.order, hierarchy.drilldown, filters)) {
+    const next = hierarchy.drilldown[drillDownFeature.order + 1];
+    if (next) {
+      return drillDown(next, hierarchy, filters);
+    }
+  }
+  return drillDownFeature.feature.name;
+};
+
+const constructDimensionField = (fieldDimension, filters) => {
+  if (fieldDimension.hierarchy) {
+    fieldDimension.hierarchy.drilldown = fieldDimension.hierarchy.drilldown.sort(function (a, b) {
+      return a.order - b.order;
+    });
+    const featureDrillDown = fieldDimension.hierarchy.drilldown.filter(function (item, index) {
+      return fieldDimension.feature.name === item.feature.name;
+    })[0];
+
+    if (featureDrillDown) {
+      return { name: drillDown(featureDrillDown, fieldDimension.hierarchy, filters) };
+    }
+  }
+  return { name: fieldDimension.feature.name };
 };
 
 const isDimension = item => {
@@ -153,24 +164,24 @@ const constructHavingField = fieldMeasure => {
 
 const getQueryParametersWithFields = (fields, filters, conditionExpression) => {
   const query = {
-    fields: Object,
+    fields,
     groupBy: Object,
     limit: Object,
     orders: Object,
-    conditionExpressions: Object,
+    conditionExpressions: null,
+    offset: null,
   };
 
-  //   if (conditionExpression && conditionExpression.conditionExpression ) {
-  //       query.conditionExpressions = [conditionExpression];
-  //   }
+  if (conditionExpression && conditionExpression.conditionExpression) {
+    query.conditionExpressions = [conditionExpression];
+  }
 
   return query;
 };
 
-const getQueryParameters = (fields, filters, conditionExpression, offset) => {
+const getQueryParameters = (visual, filters, conditionExpression, offset) => {
+  const fields = visual.fields;
   const dimensions = fields.filter(isDimension);
-
-  const d = getDimension(dimensions);
 
   const measures = fields.filter(isMeasure);
 
@@ -190,12 +201,14 @@ const getQueryParameters = (fields, filters, conditionExpression, offset) => {
     limit: Object,
     orders: Object,
     conditionExpressions: Object,
+    offset: null,
   };
+
   query = getQueryParametersWithFields(dimensionFields.concat(measureFields), filters, conditionExpression);
 
-  // if (this.metadataVisual.name == "Table" || this.metadataVisual.name == "Pivot Table") {
-  //     query.offset = this.getChartPropertyValue('Limit', 20) * offset;
-  // }
+  if (visual.metadataVisual.name === 'Table' || visual.metadataVisual.name === 'Pivot Table') {
+    query.offset = getChartPropertyValue('Limit', 20) * offset;
+  }
 
   const aggExists = !!measureFields.filter(function (item) {
     return item.aggregation;
@@ -205,8 +218,8 @@ const getQueryParameters = (fields, filters, conditionExpression, offset) => {
     query.groupBy = dimensionFields;
   }
 
-  if (getChartPropertyValue('Limit', 20) !== 0) {
-    query.limit = getChartPropertyValue('Limit', 20);
+  if (getChartPropertyValue(visual.properties, 'Limit', 20) !== 0) {
+    query.limit = getChartPropertyValue(visual.properties, 'Limit', 20);
   }
 
   const ordersListSortMeasures = measures

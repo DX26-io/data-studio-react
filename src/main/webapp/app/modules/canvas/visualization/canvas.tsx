@@ -1,22 +1,12 @@
 import React, { ReactText, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import {
-  ActionButton,
-  Flex,
-  Text,
-  Item,
-  Menu,
-  MenuTrigger,
-  View,
-  Button,
-  DialogContainer
-} from '@adobe/react-spectrum';
+import { ActionButton, Flex, Text, Item, Menu, MenuTrigger, View, Button, DialogContainer } from '@adobe/react-spectrum';
 
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import './canvas.scss';
 import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
-import { getEntity as getViewEntity, getCurrentViewState,saveViewState } from 'app/entities/views/views.reducer';
+import { getEntity as getViewEntity, getCurrentViewState, saveViewState } from 'app/entities/views/views.reducer';
 import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
 import { getEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 
@@ -28,7 +18,6 @@ import Edit from '@spectrum-icons/workflow/Edit';
 import Table from '@spectrum-icons/workflow/Table';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import { IRootState } from 'app/shared/reducers';
-import clusteredverticalbar from 'flair-visualizations/js/charts/clusteredverticalbar';
 import { Translate } from 'react-jhipster';
 import {
   createEntity as addVisualmetadataEntity,
@@ -36,10 +25,10 @@ import {
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 
 import $ from 'jquery';
-import { Visualizations } from 'app/entities/visualizations/visualizations';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import VisualizationsList from 'app/entities/visualizations/visualizations-list';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
+import { renderVisualization } from 'app/modules/canvas/visualization/util/visualization-render-utils';
 
 const ReactGridLayout = WidthProvider(RGL);
 export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
@@ -47,22 +36,23 @@ export interface VisualizationProp extends StateProps, DispatchProps, RouteCompo
 const Canvas = (props: VisualizationProp) => {
   const [redirect, setRedirect] = useState<ReactText>('');
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
- 
-  const onLayoutChange = (_visualmetaList) => {
-    
-    props.visualmetadata.visualMetadataSet.map((item,i)=>{
-      item.x=_visualmetaList[i].x,
-      item.y=_visualmetaList[i].y,
-      item.h =_visualmetaList[i].h,
-      item.w=_visualmetaList[i].w,
+  const [visualmetaList, setvisualmetadata] = useState(props.visualmetadata.visualMetadataSet);
 
+  const onLayoutChange = _visualmetaList => {
+    props.visualmetadata.visualMetadataSet.map((item, i) => {
+      (item.x = _visualmetaList[i].x),
+        (item.y = _visualmetaList[i].y),
+        (item.h = _visualmetaList[i].h),
+        (item.w = _visualmetaList[i].w),
+        (item.xPosition = _visualmetaList[i].x),
+        (item.yPosition = _visualmetaList[i].y),
+        (item.height = _visualmetaList[i].h),
+        (item.width = _visualmetaList[i].w);
+      VisualWrap(item);
 
-      item.xPosition=_visualmetaList[i].x,
-      item.yPosition=_visualmetaList[i].y,
-      item.height =_visualmetaList[i].h,
-      item.width=_visualmetaList[i].w
-    })
-    //  setvisualmetadata(_visualmetaList);
+      renderVisualization(item);
+    });
+    setvisualmetadata(_visualmetaList);
   };
 
   const onResize = _visualmetaList => {
@@ -82,15 +72,10 @@ const Canvas = (props: VisualizationProp) => {
   }, []);
 
   useEffect(() => {
-    if (props.visualmetadata?.visualMetadataSet?.length>0) {
-      props.visualmetadata.visualMetadataSet.map(item=>{
-
-        VisualWrap(item)
-        item.x=item.xPosition,
-        item.y=item.yPosition,
-        item.h = item.height,
-        item.w=item.width
-      })
+    if (props.visualmetadata?.visualMetadataSet?.length > 0) {
+      props.visualmetadata.visualMetadataSet.map(item => {
+        (item.x = item.xPosition), (item.y = item.yPosition), (item.h = item.height), (item.w = item.width);
+      });
     }
   }, [props.visualmetadata]);
 
@@ -103,21 +88,21 @@ const Canvas = (props: VisualizationProp) => {
     setVisualizationsModelOpen(false);
   };
 
-  const saveAllVisualizations = ()=>{
+  const saveAllVisualizations = () => {
     props.saveViewState({
-      visualMetadataSet : props.visualmetadata.visualMetadataSet,
-      _id : props.view.id
-    })
-  }
+      visualMetadataSet: props.visualmetadata.visualMetadataSet,
+      _id: props.view.id,
+    });
+  };
 
   const generateWidge = () => {
     return props.visualmetadata.visualMetadataSet.map(function (v, i) {
       return (
         <div
           className="item widget"
-          id={`widget-${i}`}
-          key={i}
-          data-grid={{ x: v.xPosition, y: v.yPosition, w: v.width, h: v.height, maxW: 2, maxH: Infinity, isBounded: true }}
+          id={`widget-${v.id}`}
+          key={v.id}
+          data-grid={{ i: v.id, x: v.xPosition, y: v.yPosition, w: v.width, h: v.height, maxW: 2, maxH: Infinity, isBounded: true }}
         >
           <div className="header">
             <View backgroundColor="gray-200">
@@ -176,31 +161,29 @@ const Canvas = (props: VisualizationProp) => {
                     </Menu>
                   </MenuTrigger>
                   {redirect === 'Edit' && (
-                    <Redirect
+                    <Redirect push={true}
                       to={{
                         pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/edit/' + v.id,
                       }}
                     />
                   )}
                   {redirect === 'Delete' && (
-                     <Redirect
-                     to={{
-                       pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/delete/' + v.id,
-                     }}
-                   />
+                    <Redirect
+                      to={{
+                        pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/delete/' + v.id,
+                      }}
+                    />
                   )}
                 </Flex>
               </Flex>
             </View>
           </div>
-          <div id={`demo-${i}`}>{v?.titleProperties?.titleText}</div>
+          <div id={`visualBody-${i}`}>{/* <VisualizationRender visual={v} ></VisualizationRender> */}</div>
         </div>
       );
     });
   };
- const  handleMessage=(stompMessage)=> {
-    debugger
-  }
+
   return (
     <>
       <SecondaryHeader
@@ -214,15 +197,15 @@ const Canvas = (props: VisualizationProp) => {
           <Translate contentKey="datastudioApp.visualizations.home.createLabel">Create visualizations</Translate>
         </Button>
         <Button variant="secondary" onPress={() => saveAllVisualizations()}>
-              <Translate contentKey="entity.action.save">Save</Translate>
-            </Button>
+          <Translate contentKey="entity.action.save">Save</Translate>
+        </Button>
         <DialogContainer type="fullscreen" onDismiss={() => setVisualizationsModelOpen(false)} {...props}>
           {isVisualizationsModelOpen && (
             <VisualizationsList
               handleVisualizationClick={handleVisualizationClick}
               view={props.view}
               visualizations={props.visualizationsList}
-              totalItem = {props.visualmetadata?.visualMetadataSet?.length}
+              totalItem={props.visualmetadata?.visualMetadataSet?.length}
             />
           )}
         </DialogContainer>
@@ -267,7 +250,7 @@ const mapDispatchToProps = {
   getfeatureEntities,
   addVisualmetadataEntity,
   deleteVisualmetadataEntity,
-  saveViewState
+  saveViewState,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
