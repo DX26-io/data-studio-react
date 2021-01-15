@@ -1,8 +1,9 @@
 import $ from 'jquery';
 import clusteredverticalbar from 'flair-visualizations/js/charts/clusteredverticalbar';
 import configuration from 'flair-visualizations/js/extras/configs/configuration';
+import { forwardCall } from 'app/modules/canvas/visualization/util/proxy-grpc-service';
 
-export const renderVisualization = visual => {
+export const renderVisualization = (visual, view) => {
   const widget = $('#widget-' + visual.id);
   const height = widget[0].clientHeight - 30;
   const width = widget[0].clientWidth;
@@ -40,6 +41,17 @@ export const renderVisualization = visual => {
     { order_status: 'CANCELED', order_item_subtotal: 3519, order_item_product_price: 3519 },
     { order_status: 'PAYMENT_REVIEW', order_item_subtotal: 1797, order_item_product_price: 1797 },
   ];
+
+  const body = {
+    queryDTO: queryDTO,
+    visualMetadata: visual,
+    validationType: 'REQUIRED_FIELDS',
+    actionType: null,
+    type: visual.viewId ? null : 'share-link',
+  };
+
+  forwardCall(view.viewDashboard.dashboardDatasource.id, body, view.id);
+
   if (config) {
     const clusteredverticalBarChartObj = clusteredverticalbar().config(config).tooltip(true).print(false).notification(false).data(data);
     clusteredverticalBarChartObj(div[0]);

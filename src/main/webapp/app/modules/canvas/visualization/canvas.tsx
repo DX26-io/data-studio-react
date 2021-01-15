@@ -19,6 +19,7 @@ import Table from '@spectrum-icons/workflow/Table';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import { IRootState } from 'app/shared/reducers';
 import { Translate } from 'react-jhipster';
+import {  Storage } from 'react-jhipster';
 import {
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
@@ -29,6 +30,7 @@ import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header
 import VisualizationsList from 'app/entities/visualizations/visualizations-list';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 import { renderVisualization } from 'app/modules/canvas/visualization/util/visualization-render-utils';
+import { connect as connectWebSocket, subscribe } from 'app/modules/canvas/visualization/util/stomp-client';
 
 const ReactGridLayout = WidthProvider(RGL);
 export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
@@ -49,8 +51,7 @@ const Canvas = (props: VisualizationProp) => {
         (item.height = _visualmetaList[i].h),
         (item.width = _visualmetaList[i].w);
       VisualWrap(item);
-
-      renderVisualization(item);
+      renderVisualization(item, props.view);
     });
     setvisualmetadata(_visualmetaList);
   };
@@ -63,7 +64,17 @@ const Canvas = (props: VisualizationProp) => {
     //  To do
   };
 
+  const onExchangeMetadata = data => {
+  };
+
   useEffect(() => {
+    const token = Storage.local.get('jhi-authenticationToken') || Storage.session.get('jhi-authenticationToken');
+
+    connectWebSocket({ token }, frame => {
+      // console.log('flair-bi controller connected web socket');
+      subscribe('/user/exchange/metaData', onExchangeMetadata);
+      subscribe('/user/exchange/metaDataError', onExchangeMetadata);
+    });
     if (props.match.params.viewId) {
       props.getVisualizationsEntities();
       props.getViewEntity(props.match.params.viewId);
@@ -102,7 +113,7 @@ const Canvas = (props: VisualizationProp) => {
           className="item widget"
           id={`widget-${v.id}`}
           key={v.id}
-          data-grid={{ i: v.id, x: v.xPosition, y: v.yPosition, w: v.width, h: v.height, maxW: 2, maxH: Infinity, isBounded: true }}
+          data-grid={{ i: v.id, x: v.xPosition, y: v.yPosition, w: v.width, h: v.height, maxW: Infinity, maxH: Infinity, isBounded: true }}
         >
           <div className="header">
             <View backgroundColor="gray-200">
@@ -161,7 +172,8 @@ const Canvas = (props: VisualizationProp) => {
                     </Menu>
                   </MenuTrigger>
                   {redirect === 'Edit' && (
-                    <Redirect push={true}
+                    <Redirect
+                      push={true}
                       to={{
                         pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/edit/' + v.id,
                       }}
@@ -210,7 +222,7 @@ const Canvas = (props: VisualizationProp) => {
           )}
         </DialogContainer>
       </SecondaryHeader>
-      <View borderWidth="thin" borderColor="default" borderRadius="regular">
+      <View>
         {props.visualmetadata && props.visualmetadata?.visualMetadataSet?.length > 0 && (
           <ReactGridLayout
             className="layout"
