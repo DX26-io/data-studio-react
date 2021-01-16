@@ -7,6 +7,7 @@ import {loginWithProvider, signup} from "app/shared/reducers/authentication";
 import SignupForm from "app/modules/signup/signup-form";
 import LoginFooter from "app/modules/login/login-footer";
 import LoginHeader from "app/modules/login/login-header";
+import SignupDoneForm from "app/modules/signup/signup-done-form";
 
 export interface ISignupProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -24,8 +25,17 @@ const Signup: React.FC<ISignupProps> = props => {
       <View gridArea="image" backgroundColor="gray-400" />
       <View gridArea="login">
         <LoginHeader />
-        <SignupForm handleSignup={handleSignup} signupError={props.signupError}  handleProviderLogin={handleProviderLogin}/>
-        <LoginFooter />
+        {
+          props.signupSuccess
+            ?
+            <SignupDoneForm />
+            :
+            <SignupForm
+              handleSignup={handleSignup}
+              signupError={props.signupError}
+              handleProviderLogin={handleProviderLogin}/>
+        }
+        <LoginFooter/>
       </View>
     </Grid>
   ) : (
@@ -41,6 +51,7 @@ const Signup: React.FC<ISignupProps> = props => {
 
 const mapStateToProps = ({ authentication }: IRootState) => ({
   isAuthenticated: authentication.isAuthenticated,
+  signupSuccess: authentication.signupSuccess,
   signupError: authentication.signupError,
 });
 

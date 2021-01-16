@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { Grid, View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
-import {loginWithProvider, signup} from "app/shared/reducers/authentication";
+import {createRealm} from "app/shared/reducers/authentication";
 import LoginHeader from "app/modules/login/login-header";
 import LoginFooter from "app/modules/login/login-footer";
 import RealmForm from "app/modules/signup/realm/realm-form";
@@ -12,8 +12,19 @@ export interface IRealmProps extends StateProps, DispatchProps, RouteComponentPr
 
 const Realm: React.FC<IRealmProps> = props => {
   const handleCreate = (realmName: string) => {
-    // props.signup(realmName);
+    const search = props.location.search;
+    const token = new URLSearchParams(search).get('token');
+    props.createRealm(realmName, token);
   };
+
+  if (props.redirectTo) {
+    // return <Redirect to={props.redirectTo}
+    //                  to={{
+    //   pathname: "/signup/confirm",
+    //   search: "?utm=your+face",
+    //   state: { referrer: currentLocation }
+    // }}/>;
+  }
 
   return (
     <Grid areas={['image login']} columns={['1fr', '2fr']} rows={['auto']} minHeight={window.innerHeight} data-testid="realm-create-container">
@@ -29,9 +40,10 @@ const Realm: React.FC<IRealmProps> = props => {
 
 const mapStateToProps = ({ authentication }: IRootState) => ({
   realmCreateError: authentication.realmCreateError,
+  redirectTo: authentication.redirectTo,
 });
 
-const mapDispatchToProps = { signup };
+const mapDispatchToProps = { createRealm };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

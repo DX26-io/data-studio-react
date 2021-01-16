@@ -22,6 +22,7 @@
   },
   "signup": {
     "title": "Sign up",
+    "done": "Sign up completed successfully. Please check your email to complete verification.",
     "form": {
       "password": "Password",
       "password.placeholder": "Your password",

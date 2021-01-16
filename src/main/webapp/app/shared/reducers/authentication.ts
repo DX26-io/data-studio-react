@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Storage } from 'react-jhipster';
 import firebase from 'firebase/app';
 
-import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
+import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
 import { setLocale } from 'app/shared/reducers/locale';
 import config from 'app/config/constants';
 import { toast } from 'react-toastify';
@@ -10,6 +10,9 @@ import { toast } from 'react-toastify';
 export const ACTION_TYPES = {
   LOGIN: 'authentication/LOGIN',
   SIGNUP: 'authentication/SIGNUP',
+  CREATE_REALM: 'authentication/CREATE_REALM',
+  REGISTER_USER: 'authentication/REGISTER_USER',
+  REALM_CREATED: 'authentication/REALM_CREATED',
   GET_SESSION: 'authentication/GET_SESSION',
   LOGOUT: 'authentication/LOGOUT',
   CLEAR_AUTH: 'authentication/CLEAR_AUTH',
@@ -22,10 +25,16 @@ const initialState = {
   loading: false,
   isAuthenticated: false,
   realmCreateError: false,
+  redirectTo: (null as unknown) as object,
   loginSuccess: false,
+  registerUserSuccess: false,
+  createRealmSuccess: false,
+  realm: {} as any,
   signupSuccess: false,
+  verifyEmailToken: (null as unknown) as string,
   loginError: false, // Errors returned from server side
   signupError: false, // Errors returned from server side
+  createRealmError: false, // Errors returned from server side
   logoutError: false, // Errors returned from server side
   account: {} as any,
   errorMessage: (null as unknown) as string, // Errors returned from server side
@@ -43,6 +52,8 @@ export default (state: AuthenticationState = initialState, action): Authenticati
   switch (action.type) {
     case REQUEST(ACTION_TYPES.LOGIN):
     case REQUEST(ACTION_TYPES.SIGNUP):
+    case REQUEST(ACTION_TYPES.CREATE_REALM):
+    case REQUEST(ACTION_TYPES.REGISTER_USER):
     case REQUEST(ACTION_TYPES.LOGOUT):
     case REQUEST(ACTION_TYPES.GET_SESSION):
       return {
@@ -60,6 +71,13 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...initialState,
         errorMessage: action.payload,
         signupError: true,
+      };
+    case FAILURE(ACTION_TYPES.CREATE_REALM):
+    case FAILURE(ACTION_TYPES.REGISTER_USER):
+      return {
+        ...initialState,
+        errorMessage: action.payload,
+        createRealmError: true,
       };
     case FAILURE(ACTION_TYPES.LOGOUT):
       return {
@@ -89,6 +107,21 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         signupError: false,
         signupSuccess: true,
       };
+    case SUCCESS(ACTION_TYPES.CREATE_REALM):
+      return {
+        ...state,
+        loading: false,
+        createRealmError: false,
+        createRealmSuccess: true,
+        realm: action.payload.data,
+      };
+    case SUCCESS(ACTION_TYPES.REGISTER_USER):
+      return {
+        ...state,
+        loading: false,
+        createRealmError: false,
+        registerUserSuccess: true,
+      };
     case SUCCESS(ACTION_TYPES.LOGOUT):
       return {
         ...initialState,
@@ -113,6 +146,15 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...state,
         loading: false,
         isAuthenticated: false,
+      };
+    case ACTION_TYPES.REALM_CREATED:
+      return {
+        ...state,
+        redirectTo: {
+          pathname: '/login',
+          search: '?utm=your+face',
+          // state: { referrer: currentLocation }
+        },
       };
     default:
       return state;
@@ -175,7 +217,7 @@ export const signup: (username: string, email: string, password: string, firstna
   firstname,
   lastname
 ) => async dispatch => {
-  const result = await dispatch({
+  await dispatch({
     type: ACTION_TYPES.SIGNUP,
     payload: axios.post('api/signup', {
       username,
@@ -185,8 +227,40 @@ export const signup: (username: string, email: string, password: string, firstna
       lastname,
     }),
   });
-  await setAuthToken(result, false);
-  await dispatch(getSession());
+};
+
+export const createRealm: (realmName: string, token: string) => void = (realmName, emailVerificationToken) => async (
+  dispatch,
+  getState
+) => {
+  await dispatch({
+    type: ACTION_TYPES.CREATE_REALM,
+    payload: axios.post('api/realms-anonym', {
+      name: realmName,
+    }),
+  });
+  const realm = getState().authentication.realm;
+  await dispatch({
+    type: ACTION_TYPES.REGISTER_USER,
+    payload: axios.post('api/confirm_user', {
+      realmId: realm.id,
+      realmCreationToken: realm.token,
+      emailVerificationToken,
+    }),
+  });
+};
+
+export const redirect: () => void = () => async (dispatch, getState) => {
+  await dispatch({
+    type: ACTION_TYPES.GET_SESSION,
+    payload: axios.get('api/account'),
+  });
+
+  const { account } = getState().authentication;
+  if (account && account.langKey) {
+    const langKey = Storage.session.get('locale', account.langKey);
+    await dispatch(setLocale(langKey));
+  }
 };
 
 export const login: (username: string, password: string, rememberMe?: boolean) => void = (
@@ -211,7 +285,6 @@ export const loginWithProvider: (provider: string) => void = provider => async d
       type: ACTION_TYPES.LOGIN,
       payload: axios.post('api/registerWithProvider', { idToken: tkn }),
     });
-    console.log('result register with provider', result);
     setAuthTokenWithProvider(result);
     await dispatch(getSession());
   } catch (error) {
