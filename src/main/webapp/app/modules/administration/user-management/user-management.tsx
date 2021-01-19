@@ -1,8 +1,8 @@
 // import './secondary-header.scss';
 
-import React, { PropsWithChildren } from 'react';
-import { View, Flex } from '@adobe/react-spectrum';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import React from 'react';
+import { Flex, View } from '@adobe/react-spectrum';
+import { RouteComponentProps } from 'react-router-dom';
 import User from '@spectrum-icons/workflow/User';
 import UserGroup from '@spectrum-icons/workflow/UserGroup';
 import UserLock from '@spectrum-icons/workflow/UserLock';
@@ -40,20 +40,20 @@ const UserManagement = (props: RouteComponentProps) => {
     },
   ];
   return (
-    <View backgroundColor="default">
+    <>
       <SecondaryHeader
         breadcrumbItems={[
           { label: 'Home', route: '/' },
           { label: 'User Management', route: '/administration/user-management' },
         ]}
         title={'User Management'}
-      ></SecondaryHeader>
-      <Flex direction="row" gap="size-700" alignItems="center" justifyContent="center" height="100%" marginTop="10%">
+      />
+      <Flex direction="row" gap="size-700" justifyContent="center" height="100%" marginTop="10%">
         {userManagementList.map(card => (
           <AdminCard key={card.link} icon={card.icon} link={card.link} title={card.title} description={card.description} />
         ))}
       </Flex>
-    </View>
+    </>
   );
 };
 
