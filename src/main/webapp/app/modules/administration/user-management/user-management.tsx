@@ -8,7 +8,7 @@ import UserGroup from '@spectrum-icons/workflow/UserGroup';
 import UserLock from '@spectrum-icons/workflow/UserLock';
 import DataSettings from '@spectrum-icons/workflow/DataSettings';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import AdminCard from 'app/shared/components/admin/admin-card';
+import LinkCard from 'app/shared/components/link-card/link-card';
 
 const UserManagement = (props: RouteComponentProps) => {
   const { match } = props;
@@ -50,7 +50,7 @@ const UserManagement = (props: RouteComponentProps) => {
       />
       <Flex direction="row" gap="size-700" justifyContent="center" height="100%" marginTop="10%">
         {userManagementList.map(card => (
-          <AdminCard key={card.link} icon={card.icon} link={card.link} title={card.title} description={card.description} />
+          <LinkCard key={card.link} icon={card.icon} link={card.link} title={card.title} description={card.description} />
         ))}
       </Flex>
     </>

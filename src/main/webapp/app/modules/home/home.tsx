@@ -29,7 +29,7 @@ export const Home = (props: IHomeProp) => {
             <ViewGrid />
             <Text>Dashboards</Text>
           </ActionButton>
-          <ActionButton onPress={() => history.push('/administration/user-management')}>
+          <ActionButton onPress={() => history.push('/administration/user-management')} marginY="size-100">
             <ViewGrid />
             <Text>User Management</Text>
           </ActionButton>

@@ -10,12 +10,19 @@ interface IAdminCardProps {
   description?: string;
 }
 
-const AdminCard: React.FC<IAdminCardProps> = ({ icon, link, title, description }) => {
+const LinkCard: React.FC<IAdminCardProps> = ({ icon, link, title, description }) => {
   return (
     <View width="size-2400">
       <SpectrumLink variant="secondary">
         <Link to={link}>
-          <View paddingY="size-1000" paddingX="size-700" backgroundColor="gray-75" borderRadius="medium">
+          <View
+            paddingY="size-1000"
+            paddingX="size-700"
+            backgroundColor="gray-75"
+            borderRadius="medium"
+            borderColor="light"
+            borderWidth="thin"
+          >
             <Flex alignItems="center" justifyContent="center">
               {icon}
             </Flex>
@@ -38,4 +45,4 @@ const AdminCard: React.FC<IAdminCardProps> = ({ icon, link, title, description }
   );
 };
 
-export default AdminCard;
+export default LinkCard;
