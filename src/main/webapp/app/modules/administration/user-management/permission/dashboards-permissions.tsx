@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getUserGroupDashboardPermissions, getUserDashboardPermissions } from './permissions.reducer';
 import { IRootState } from 'app/shared/reducers';
-import { Flex, Text, SearchField } from '@adobe/react-spectrum';
+import { Flex, Text, SearchField, DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import Edit from '@spectrum-icons/workflow/Edit';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,16 +10,20 @@ import { ITEMS_PER_PAGE, ACTIVE_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/
 import { Translate, getSortState } from 'react-jhipster';
 import { StatusLight } from '@adobe/react-spectrum';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
+import ViewsPermissions from './views-permissions';
 
 // TODO : when hit the url,params should be visible
 
-export interface IDashboardsProps extends StateProps, DispatchProps {
+export interface IDashboardsPermissionsProps extends StateProps, DispatchProps {
   permissionProps: any;
 }
 
-export const DashboardsPermissions = (props: IDashboardsProps) => {
+export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
   const [user, setUser] = React.useState(null);
   const [group, setGroup] = React.useState(null);
+  const [isOpen, setOpen] = React.useState(false);
+  const [id, setId] = React.useState();
+  const [dashboardName , setDashboardName] = React.useState();
 
   const { dashboardPermissions, totalDashboardPermissions, permissionProps } = props;
 
@@ -78,6 +82,9 @@ export const DashboardsPermissions = (props: IDashboardsProps) => {
 
   return (
     <div className="dx26-container">
+      <DialogContainer onDismiss={() => setOpen(false)}>
+        {isOpen && <ViewsPermissions dashboardName={dashboardName} setOpen={setOpen} group={group} user={user} id={id} {...props}></ViewsPermissions>}
+      </DialogContainer>
       <Paper className="dx26-table-pager">
         <TableContainer>
           <Table aria-label="customized table">
@@ -86,19 +93,19 @@ export const DashboardsPermissions = (props: IDashboardsProps) => {
                 <Translate contentKey="permissions.dashboardPermissions.dashboard">DASHBOARD</Translate>
               </TableCell>
               <TableCell align="center">
-                <Translate contentKey="permissions.dashboardPermissions.read">READ</Translate>
+                <Translate contentKey="permissions.read">READ</Translate>
               </TableCell>
               <TableCell align="center">
-                <Translate contentKey="permissions.dashboardPermissions.write">WRITE</Translate>
+                <Translate contentKey="permissions.write">WRITE</Translate>
               </TableCell>
               <TableCell align="center">
-                <Translate contentKey="permissions.dashboardPermissions.update">UPDATE</Translate>
+                <Translate contentKey="permissions.update">UPDATE</Translate>
               </TableCell>
               <TableCell align="center">
-                <Translate contentKey="permissions.dashboardPermissions.delete">DELETE</Translate>
+                <Translate contentKey="permissions.delete">DELETE</Translate>
               </TableCell>
               <TableCell align="center">
-                <Translate contentKey="permissions.dashboardPermissions.manage">MANAGE</Translate>
+                <Translate contentKey="permissions.manage">MANAGE</Translate>
               </TableCell>
             </TableHead>
             <TableBody>
@@ -120,7 +127,13 @@ export const DashboardsPermissions = (props: IDashboardsProps) => {
                   ))}
                   <TableCell>
                     <Flex gap="size-100" justifyContent="center">
-                      <a onClick={() => {}}>
+                      <a
+                        onClick={() => {
+                          setOpen(true);
+                          setId(dashboard.info.id);
+                          setDashboardName(dashboard.info.dashboardName);
+                        }}
+                      >
                         <Edit size="S" />
                       </a>
                     </Flex>

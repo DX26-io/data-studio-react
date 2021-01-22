@@ -3,11 +3,10 @@ import { connect } from 'react-redux';
 import { getUserGroups, searchUserGroups } from '../groups/user-group.reducer';
 import { getUsers, searchUsers } from '../users/user.reducer';
 import { IRootState } from 'app/shared/reducers';
-import { Flex, Text, SearchField, ListBox, Item, Section, Content } from '@adobe/react-spectrum';
+import { Flex, Text, SearchField, ListBox, Item, Section, Content, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import User from '@spectrum-icons/workflow/User';
 import UserGroup from '@spectrum-icons/workflow/UserGroup';
-import { makeStyles } from '@material-ui/core/styles';
 import { useAsyncList } from '@react-stately/data';
 import { Tabs } from '@react-spectrum/tabs';
 import { Translate } from 'react-jhipster';
@@ -65,31 +64,16 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
       if (tabId === 1) {
         props.searchUsers(ACTIVE_PAGE, ITEMS_PER_PAGE, 'login,asc', searchValue);
       } else {
-        // props.searchUserGroups(ACTIVE_PAGE, ITEMS_PER_PAGE, 'name,asc', searchValue);
+        props.searchUserGroups(ACTIVE_PAGE, ITEMS_PER_PAGE, 'name,asc', searchValue);
       }
   }, [searchValue]);
 
-  const useStyles = makeStyles({
-    search: {
-      marginLeft: '7%',
-      marginTop: '20px',
-    },
-    root: {
-      backgroundColor: '#fff',
-      width: '85%',
-      margin: '20px auto',
-    },
-  });
-
-  const classes = useStyles();
-
   return (
     <div>
-      <div className={classes.search}>
+      <div style={{ marginLeft: '7%', marginTop: '20px' }}>
         <SearchField value={searchValue} onChange={setSearchValue} placeholder="User or Group" label="Search" />
       </div>
-
-      <div className={classes.root}>
+      <View backgroundColor="gray-75" width="85%" margin="20px auto">
         <Tabs aria-label="roles" items={tabs} onSelectionChange={setTabId}>
           {item => (
             <Item title={item.name}>
@@ -122,7 +106,7 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
             </Item>
           )}
         </Tabs>
-      </div>
+      </View>
     </div>
   );
 };

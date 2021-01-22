@@ -3,18 +3,27 @@
     "home": {
       "administrators": "Administrators"
     },
+    "write": "WRITE",
+    "read": "READ",
+    "update": "UPDATE",
+    "delete": "DELETE",
+    "manage": "MANAGE",
+    "read_published": "READ PUBLISHED",
+    "delete_published": "DELETE PUBLISHED",
+    "release_published": "RELEASE PUBLISHED",
+    "request_published": "REQUEST PUBLISHED",
+    "manage_published": "MANAGE PUBLISHED",
     "dashboardPermissions": {
       "title": "Dashboard permissions",
       "description": "Manage dashboards user and  group permissions",
       "dashboard": "DASHBOARD",
-      "read": "READ",
-      "write": "WRITE",
-      "update": "UPDATE",
-      "delete": "DELETE",
-      "manage": "MANAGE",
       "allow": "allow",
       "deny": "deny",
       "partial": "partial"
+    },
+    "viewsPermissions": {
+      "title": "Edit permissions for Administrators - ",
+      "viewName": "VIEW NAME"
     },
     "datasourcePermissions": {
       "title": "Datasource permissions",
