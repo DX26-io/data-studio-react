@@ -111,7 +111,8 @@
       "export": "Export",
       "data": "Data",
       "more": "More",
-      "share": "Share"
+      "share": "Share",
+      "copy": "Copy"
     },
     "options": {
       "more_options": "More options",

@@ -19,7 +19,7 @@ import Table from '@spectrum-icons/workflow/Table';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import { IRootState } from 'app/shared/reducers';
 import { Translate } from 'react-jhipster';
-import {  Storage } from 'react-jhipster';
+import { Storage } from 'react-jhipster';
 import {
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
@@ -30,7 +30,9 @@ import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header
 import VisualizationsList from 'app/entities/visualizations/visualizations-list';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 import { renderVisualization } from 'app/modules/canvas/visualization/util/visualization-render-utils';
-import { connect as connectWebSocket, subscribe } from 'app/modules/canvas/visualization/util/stomp-client';
+import { create as connectWebSocket } from 'app/modules/canvas/visualization/util/stomp-client-factory';
+import VisualizationHeader from './visualization-modal/visualization-header';
+import 'app/modules/canvas/visualization/canvas.scss';
 
 const ReactGridLayout = WidthProvider(RGL);
 export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
@@ -64,17 +66,12 @@ const Canvas = (props: VisualizationProp) => {
     //  To do
   };
 
-  const onExchangeMetadata = data => {
-  };
+  const onExchangeMetadata = data => {};
 
   useEffect(() => {
     const token = Storage.local.get('jhi-authenticationToken') || Storage.session.get('jhi-authenticationToken');
 
-    connectWebSocket({ token }, frame => {
-      // console.log('flair-bi controller connected web socket');
-      subscribe('/user/exchange/metaData', onExchangeMetadata);
-      subscribe('/user/exchange/metaDataError', onExchangeMetadata);
-    });
+    connectWebSocket(token);
     if (props.match.params.viewId) {
       props.getVisualizationsEntities();
       props.getViewEntity(props.match.params.viewId);
@@ -106,95 +103,27 @@ const Canvas = (props: VisualizationProp) => {
     });
   };
 
-  const generateWidge = () => {
-    return props.visualmetadata.visualMetadataSet.map(function (v, i) {
-      return (
-        <div
-          className="item widget"
-          id={`widget-${v.id}`}
-          key={v.id}
-          data-grid={{ i: v.id, x: v.xPosition, y: v.yPosition, w: v.width, h: v.height, maxW: Infinity, maxH: Infinity, isBounded: true }}
-        >
-          <div className="header">
-            <View backgroundColor="gray-200">
-              <Flex direction="row" justifyContent="space-between" alignContent="center">
-                <Flex direction="column" alignItems="center" justifyContent="space-around">
-                  <span>{v.titleProperties.titleText}</span>
-                </Flex>
-                <Flex direction="column" justifyContent="space-around">
-                  <MenuTrigger>
-                    <ActionButton isQuiet height="size-300">
-                      <Settings size={'XS'} aria-label="Default Alert" />
-                    </ActionButton>
-                    <Menu onAction={key => setRedirect(key)}>
-                      <Item key="Edit" textValue="Edit">
-                        <Edit size="M" />
-                        <Text>
-                          <Translate contentKey="entity.action.edit">Edit</Translate>
-                        </Text>
-                      </Item>
-                      <Item key="Share" textValue="Share">
-                        <ShareAndroid size="M" />
-                        <Text>
-                          <Translate contentKey="entity.action.share">Share</Translate>
-                        </Text>
-                      </Item>
-                      <Item key="Export" textValue="Export">
-                        <Export size="M" />
-                        <Text>
-                          <Translate contentKey="entity.action.export">Export</Translate>
-                        </Text>
-                      </Item>
-                      <Item key="View" textValue="View">
-                        <ViewedMarkAs size="M" />
-                        <Text>
-                          <Translate contentKey="entity.action.view">View</Translate>
-                        </Text>
-                      </Item>
-                      <Item key="data" textValue="data">
-                        <Table size="M" />
-                        <Text>
-                          <Translate contentKey="entity.action.data">Data</Translate>
-                        </Text>
-                      </Item>
-                      <Item key="More" textValue="More">
-                        <MoreSmallListVert size="M" />
-                        <Text>
-                          <Translate contentKey="entity.action.more">More</Translate>
-                        </Text>
-                      </Item>
-                      <Item key="Delete" textValue="Delete">
-                        <Delete size="M" />
-                        <Text>
-                          <Translate contentKey="entity.action.delete">Delete</Translate>
-                        </Text>
-                      </Item>
-                    </Menu>
-                  </MenuTrigger>
-                  {redirect === 'Edit' && (
-                    <Redirect
-                      push={true}
-                      to={{
-                        pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/edit/' + v.id,
-                      }}
-                    />
-                  )}
-                  {redirect === 'Delete' && (
-                    <Redirect
-                      to={{
-                        pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/delete/' + v.id,
-                      }}
-                    />
-                  )}
-                </Flex>
-              </Flex>
-            </View>
-          </div>
-          <div id={`visualBody-${i}`}>{/* <VisualizationRender visual={v} ></VisualizationRender> */}</div>
+  const generateWidge = props.visualmetadata?.visualMetadataSet?.map(v => {
+    return (
+      <div
+        className="item widget"
+        id={`widget-${v.id}`}
+        key={v.id}
+        data-grid={{ i: v.id, x: v.xPosition, y: v.yPosition, w: v.width, h: v.height, maxW: Infinity, maxH: Infinity, isBounded: true }}
+      >
+        <div className="header">
+          <VisualizationHeader
+            key={v.id}
+            visual={v}
+            handleVisualizationClick={handleVisualizationClick}
+            view={props.view}
+            totalItem={props.visualmetadata?.visualMetadataSet?.length}
+          ></VisualizationHeader>
         </div>
-      );
-    });
-  };
+        <div id={`visualBody-${v.id}`}>{/* <VisualizationRender visual={v} ></VisualizationRender> */}</div>
+      </div>
+    );
+  });
 
   return (
     <>
@@ -237,7 +166,7 @@ const Canvas = (props: VisualizationProp) => {
             draggableHandle=".header"
             draggableCancel=".WidgetDragCancel"
           >
-            {generateWidge()}
+            {generateWidge}
           </ReactGridLayout>
         )}
       </View>

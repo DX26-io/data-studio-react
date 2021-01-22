@@ -1,5 +1,6 @@
 import 'react-toastify/dist/ReactToastify.css';
 import '../content/scss/main.scss';
+import 'flair-visualizations/styles/stylesheets/screen.css'
 import '@spectrum-css/typography/dist/index-vars.css';
 import 'flair-visualizations/dist/main.bundle.js'
 import 'react-grid-layout/css/styles.css';

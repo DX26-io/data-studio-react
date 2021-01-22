@@ -48,11 +48,16 @@ module.exports = (options) => webpackMerge(commonConfig({ env: ENV }), {
         '/swagger-resources',
         '/v2/api-docs',
         '/h2-console',
-        '/auth'
+        '/auth',
+        '/flair-ws'
       ],
       target: `http${options.tls ? 's' : ''}://localhost:8002`,
       secure: false,
-      changeOrigin: options.tls
+      changeOrigin: options.tls,
+      '/websocket': {
+        target: 'ws://localhost:8002',
+        ws: true // important
+     },
     }],
     watchOptions: {
       ignored: /node_modules/
