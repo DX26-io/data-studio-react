@@ -11,7 +11,7 @@ export const ACTION_TYPES = {
   LOGIN: 'authentication/LOGIN',
   SIGNUP: 'authentication/SIGNUP',
   CREATE_REALM: 'authentication/CREATE_REALM',
-  REGISTER_USER: 'authentication/REGISTER_USER',
+  VERIFY_USER: 'authentication/VERIFY_USER',
   REALM_CREATED: 'authentication/REALM_CREATED',
   GET_SESSION: 'authentication/GET_SESSION',
   LOGOUT: 'authentication/LOGOUT',
@@ -27,7 +27,7 @@ const initialState = {
   realmCreateError: false,
   redirectTo: (null as unknown) as object,
   loginSuccess: false,
-  registerUserSuccess: false,
+  verifyUserSuccess: false,
   createRealmSuccess: false,
   realm: {} as any,
   signupSuccess: false,
@@ -53,7 +53,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
     case REQUEST(ACTION_TYPES.LOGIN):
     case REQUEST(ACTION_TYPES.SIGNUP):
     case REQUEST(ACTION_TYPES.CREATE_REALM):
-    case REQUEST(ACTION_TYPES.REGISTER_USER):
+    case REQUEST(ACTION_TYPES.VERIFY_USER):
     case REQUEST(ACTION_TYPES.LOGOUT):
     case REQUEST(ACTION_TYPES.GET_SESSION):
       return {
@@ -73,7 +73,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         signupError: true,
       };
     case FAILURE(ACTION_TYPES.CREATE_REALM):
-    case FAILURE(ACTION_TYPES.REGISTER_USER):
+    case FAILURE(ACTION_TYPES.VERIFY_USER):
       return {
         ...initialState,
         errorMessage: action.payload,
@@ -115,12 +115,12 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         createRealmSuccess: true,
         realm: action.payload.data,
       };
-    case SUCCESS(ACTION_TYPES.REGISTER_USER):
+    case SUCCESS(ACTION_TYPES.VERIFY_USER):
       return {
         ...state,
         loading: false,
         createRealmError: false,
-        registerUserSuccess: true,
+        verifyUserSuccess: true,
       };
     case SUCCESS(ACTION_TYPES.LOGOUT):
       return {
@@ -151,9 +151,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
       return {
         ...state,
         redirectTo: {
-          pathname: '/login',
-          search: '?utm=your+face',
-          // state: { referrer: currentLocation }
+          pathname: '/',
         },
       };
     default:
@@ -239,28 +237,24 @@ export const createRealm: (realmName: string, token: string) => void = (realmNam
       name: realmName,
     }),
   });
+
   const realm = getState().authentication.realm;
-  await dispatch({
-    type: ACTION_TYPES.REGISTER_USER,
+
+  const result = await dispatch({
+    type: ACTION_TYPES.VERIFY_USER,
     payload: axios.post('api/confirm_user', {
       realmId: realm.id,
       realmCreationToken: realm.token,
       emailVerificationToken,
     }),
   });
-};
 
-export const redirect: () => void = () => async (dispatch, getState) => {
-  await dispatch({
-    type: ACTION_TYPES.GET_SESSION,
-    payload: axios.get('api/account'),
+  await setAuthToken(result, false);
+  await dispatch(getSession());
+
+  dispatch({
+    type: ACTION_TYPES.REALM_CREATED,
   });
-
-  const { account } = getState().authentication;
-  if (account && account.langKey) {
-    const langKey = Storage.session.get('locale', account.langKey);
-    await dispatch(setLocale(langKey));
-  }
 };
 
 export const login: (username: string, password: string, rememberMe?: boolean) => void = (

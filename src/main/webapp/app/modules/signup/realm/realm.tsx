@@ -18,12 +18,7 @@ const Realm: React.FC<IRealmProps> = props => {
   };
 
   if (props.redirectTo) {
-    // return <Redirect to={props.redirectTo}
-    //                  to={{
-    //   pathname: "/signup/confirm",
-    //   search: "?utm=your+face",
-    //   state: { referrer: currentLocation }
-    // }}/>;
+    return <Redirect to={props.redirectTo} />;
   }
 
   return (
