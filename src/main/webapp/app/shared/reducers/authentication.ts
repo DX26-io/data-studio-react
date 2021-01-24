@@ -25,7 +25,7 @@ const initialState = {
   loading: false,
   isAuthenticated: false,
   realmCreateError: false,
-  redirectTo: (null as unknown) as object,
+  redirectTo: (null as unknown) as string,
   loginSuccess: false,
   verifyUserSuccess: false,
   createRealmSuccess: false,
@@ -150,9 +150,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
     case ACTION_TYPES.REALM_CREATED:
       return {
         ...state,
-        redirectTo: {
-          pathname: '/',
-        },
+        redirectTo: '/',
       };
     default:
       return state;

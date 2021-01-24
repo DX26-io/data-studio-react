@@ -18,7 +18,11 @@ const Realm: React.FC<IRealmProps> = props => {
   };
 
   if (props.redirectTo) {
-    return <Redirect to={props.redirectTo} />;
+    return <Redirect
+      to={{
+        pathname: props.redirectTo,
+      }}
+    />
   }
 
   return (
