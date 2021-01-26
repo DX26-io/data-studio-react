@@ -10,7 +10,7 @@ const Footer = props => (
   <View paddingY={'size-75'} paddingX={'size-150'} height={'size-400'}>
     <Flex justifyContent={'end'} alignItems="center">
       <Text>
-        {CommonConstants.DX26} {CommonConstants.COPYRIGHT} 2020
+        {CommonConstants.DX26} {CommonConstants.COPYRIGHT} 2021
       </Text>
     </Flex>
   </View>
