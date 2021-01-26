@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
-  getUserGroupDashboardPermissions,
-  getUserDashboardPermissions,
   getUserViewsPermissions,
   getUserGroupViewsPermissions,
+  updateUserGroupPermissions,
+  updateUserPermissions,
+  resetViewsPermissions
 } from './permissions.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
@@ -24,6 +25,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { ITEMS_PER_PAGE, ACTIVE_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/pagination.constants';
 import { Translate, getSortState } from 'react-jhipster';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
+import { findViewsPermissionsChanges } from './permissions-util';
 
 export interface IViewsPermissionsProps extends StateProps, DispatchProps {
   permissionProps: any;
@@ -32,10 +34,23 @@ export interface IViewsPermissionsProps extends StateProps, DispatchProps {
   user: string;
   id: number;
   dashboardName: string;
+  setUpdateSuccess: () => void;
 }
 
 export const ViewsPermissions = (props: IViewsPermissionsProps) => {
-  const { viewsPermissions, totalViewsPermissions, permissionProps, group, user, id, setOpen, dashboardName, updating } = props;
+  const {
+    viewsPermissions,
+    totalViewsPermissions,
+    updating,
+    updateSuccess,
+    permissionProps,
+    group,
+    user,
+    id,
+    setOpen,
+    dashboardName,
+    setUpdateSuccess,
+  } = props;
   const dialog = useDialogContainer();
   const [pagination, setPagination] = useState(
     overridePaginationStateWithQueryParams(getSortState(permissionProps.location, ITEMS_PER_PAGE), permissionProps.location.search)
@@ -52,11 +67,19 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
   const handleClose = () => {
     setOpen(false);
     dialog.dismiss();
+    props.resetViewsPermissions();
   };
 
   useEffect(() => {
+    if (updateSuccess) {
+      handleClose();
+      setUpdateSuccess();
+    }
+  }, [updateSuccess]);
+
+  useEffect(() => {
     fetchPermissions();
-  }, [pagination.activePage, pagination.itemsPerPage, user, group]);
+  }, [pagination.activePage, pagination.itemsPerPage, user, group, id]);
 
   const handleChangePage = (event, newPage) => {
     setPagination({
@@ -72,10 +95,13 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
     });
   };
 
-  const save = () => {};
-
-  const changePermission = hasIt => {
-    // hasIt = !hasIt;
+  const save = () => {
+    const permissionChanges = findViewsPermissionsChanges(viewsPermissions);
+    if (user) {
+      props.updateUserPermissions(permissionChanges, user);
+    } else if (group) {
+      props.updateUserGroupPermissions(permissionChanges, group);
+    }
   };
 
   return (
@@ -140,15 +166,18 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
             <TableBody>
               {viewsPermissions.map((view, i) => (
                 <TableRow key={`view-${view.info.viewName}`}>
-                  <TableCell align="center">{view.info.viewName}</TableCell>
+                  <TableCell align="center">
+                    {view.info.viewName}
+                  </TableCell>
                   {view.info.permissionMetadata.map((p, j) => (
                     <TableCell align="center" key={`permission-${p.permission.key.action}`}>
                       <Checkbox
-                        isSelected={p.hasIt}
-                        onChange={changePermission}
+                        defaultSelected={p.hasIt}
                         isEmphasized
-                        data-testid="activated"
-                        // value={p.hasIt}
+                        onChange={() => {
+                          p.value = p.hasIt;
+                          p.hasIt = !p.hasIt;
+                        }}
                       ></Checkbox>
                     </TableCell>
                   ))}
@@ -173,13 +202,15 @@ const mapStateToProps = (storeState: IRootState) => ({
   viewsPermissions: storeState.permissions.viewsPermissions,
   totalViewsPermissions: storeState.permissions.totalViewsPermissions,
   updating: storeState.permissions.updating,
+  updateSuccess: storeState.permissions.updateSuccess,
 });
 
 const mapDispatchToProps = {
-  getUserDashboardPermissions,
-  getUserGroupDashboardPermissions,
   getUserViewsPermissions,
   getUserGroupViewsPermissions,
+  updateUserGroupPermissions,
+  updateUserPermissions,
+  resetViewsPermissions
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

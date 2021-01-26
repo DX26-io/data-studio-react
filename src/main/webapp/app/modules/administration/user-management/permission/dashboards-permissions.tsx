@@ -23,7 +23,7 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
   const [group, setGroup] = React.useState(null);
   const [isOpen, setOpen] = React.useState(false);
   const [id, setId] = React.useState();
-  const [dashboardName , setDashboardName] = React.useState();
+  const [dashboardName, setDashboardName] = React.useState();
 
   const { dashboardPermissions, totalDashboardPermissions, permissionProps } = props;
 
@@ -80,10 +80,24 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
     });
   };
 
+  const setUpdateSuccess = () => {
+    fetchPermissions();
+  };
+
   return (
     <div className="dx26-container">
       <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && <ViewsPermissions dashboardName={dashboardName} setOpen={setOpen} group={group} user={user} id={id} {...props}></ViewsPermissions>}
+        {isOpen && (
+          <ViewsPermissions
+            dashboardName={dashboardName}
+            setOpen={setOpen}
+            group={group}
+            user={user}
+            id={id}
+            setUpdateSuccess={setUpdateSuccess}
+            {...props}
+          ></ViewsPermissions>
+        )}
       </DialogContainer>
       <Paper className="dx26-table-pager">
         <TableContainer>
@@ -114,6 +128,7 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
                   <TableCell align="center">{dashboard.info.dashboardName}</TableCell>
                   {dashboard.info.permissionMetadata.slice(0, 4).map((p, j) => (
                     <TableCell align="center" key={`permission-${p.permission.key.action}`}>
+                      {/* Todo : allow,deny and partial need to be decided during save of view permission. api change is required and one more field will be added in json */}
                       {p.hasIt ? (
                         <StatusLight variant="positive">
                           <Translate contentKey="permissions.dashboardPermissions.allow">allow</Translate>

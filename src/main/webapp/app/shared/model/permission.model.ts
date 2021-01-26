@@ -1,4 +1,4 @@
 export interface IPermission {
-  id?: any;
+  id?: string;
   action?: string;
 }
