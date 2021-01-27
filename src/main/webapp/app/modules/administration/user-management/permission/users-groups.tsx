@@ -9,7 +9,7 @@ import User from '@spectrum-icons/workflow/User';
 import UserGroup from '@spectrum-icons/workflow/UserGroup';
 import { useAsyncList } from '@react-stately/data';
 import { Tabs } from '@react-spectrum/tabs';
-import { translate, Translate } from 'react-jhipster';
+import { Translate,translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE, ACTIVE_PAGE } from 'app/shared/util/pagination.constants';
 
 export interface IUsersGroupsProps extends StateProps, DispatchProps {
@@ -23,10 +23,7 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
   ];
 
   const [searchValue, setSearchValue] = React.useState('');
-  {
-    /* onSelectionChange is throwing compilation error hence null is added in useState */
-  }
-  const [tab, setTab] = React.useState(null);
+  const [tabId, setTabId] = React.useState(1);
 
   const { permissionProps, groups, users } = props;
 
@@ -64,7 +61,7 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
 
   useEffect(() => {
     if (searchValue.length > 1 || searchValue.length === 0)
-      if (tab && tab.id === 1) {
+      if (tabId === 1) {
         props.searchUsers(ACTIVE_PAGE, ITEMS_PER_PAGE, 'login,asc', searchValue);
       } else {
         props.searchUserGroups(ACTIVE_PAGE, ITEMS_PER_PAGE, 'name,asc', searchValue);
@@ -74,15 +71,15 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
   return (
     <div>
       <div style={{ marginLeft: '7%', marginTop: '20px' }}>
-        <SearchField value={searchValue} onChange={setSearchValue} placeholder="User or Group" label="Search" />
+        <SearchField value={searchValue} onChange={setSearchValue}  placeholder="User or Group" label="Search" />
       </div>
       <View backgroundColor="gray-75" width="85%" margin="20px auto">
-        <Tabs aria-label="roles" items={tabs} onSelectionChange={setTab}>
+        {/* TODO : need to check the issue of this component. onSelectionChange throws compilation issue */}
+        <Tabs aria-label="roles" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
           {item => (
             <Item title={translate(item.name)}>
               <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-                {/* onSelectionChange is throwing compilation error hence null is added in condition and in useState */}
-                {tab == null || (tab && tab.id === 1) ? (
+                {tabId === 1 ? (
                   <ListBox width="size-static-size-3600" aria-label="users" selectionMode="single" onSelectionChange={setLogin}>
                     <Section>
                       {users.map((user, i) => (
