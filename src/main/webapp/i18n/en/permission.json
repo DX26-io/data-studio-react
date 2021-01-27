@@ -14,7 +14,7 @@
     "request_published": "REQUEST PUBLISHED",
     "manage_published": "MANAGE PUBLISHED",
     "dashboardPermissions": {
-      "title": "Dashboard permissions",
+      "title": "Dashboard Permissions",
       "description": "Manage dashboards user and  group permissions",
       "dashboard": "DASHBOARD",
       "allow": "allow",
@@ -26,7 +26,7 @@
       "viewName": "VIEW NAME"
     },
     "datasourcePermissions": {
-      "title": "Datasource permissions",
+      "title": "Datasource Permissions",
       "description": "Manage datasources user and  group permissions"
     }
   }
