@@ -53,7 +53,7 @@ const executeQueue = () => {
 export const connect = (params, connectionHandler) => {
   stompClient = createStompClient();
   // console.log('STOMP connect', stompClient);
-  stompClient.connect(params, function (data) {
+  stompClient.connect(params, data => {
     console.log('STOMP connected handler');
     connectionHandler(data);
     executeQueue();

@@ -13,7 +13,6 @@ import {
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getDatasourcesFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
-
 export interface IVisualizationEditModalProps
   extends StateProps,
     DispatchProps,
@@ -30,7 +29,7 @@ const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
 
   const handleSave = () => {
     props.updateVisualmetadataEntity({
-      viewId: parseInt(viewId,10),
+      viewId: parseInt(viewId, 10),
       visualMetadata: props.visualmetadataEntity,
     });
   };
@@ -41,13 +40,13 @@ const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
       props.getViewEntity(viewId);
     }
   }, []);
-
+ 
   return (
     <>
       <DialogContainer type="fullscreenTakeover" onDismiss={handleClose}>
         <Dialog>
           <Heading level={4}>{props.visualmetadataEntity?.titleProperties?.titleText}</Heading>
-          <Divider  size={"S"} />
+          <Divider size={'S'} />
           <ButtonGroup>
             <Button variant="secondary" onPress={handleClose}>
               <Translate contentKey="entity.action.discard">Discard</Translate>
@@ -65,12 +64,12 @@ const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
                 <Flex direction="column" height="100%" flex gap="size-75">
                   <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%"></View>
                   <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%">
-                    <VisualizationSettings visualizationId={visualizationId} />
+                    <VisualizationSettings visual={props.visualmetadataEntity} view={props.view} visualizationId={visualizationId} />
                   </View>
                 </Flex>
               </View>
               <div className="properties-tab">
-                <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight={"100%"} width="size-4000">
+                <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight={'100%'} width="size-4000">
                   <VisualizationProperties features={props.featuresList} visual={props.visualmetadataEntity} />
                 </View>
               </div>
@@ -85,7 +84,7 @@ const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   visualmetadataEntity: storeState.visualmetadata.entity,
   featuresList: storeState.feature.entities,
-  view: storeState.views.entity,
+  view: storeState.views.entity
 });
 
 const mapDispatchToProps = { getVisualmetadataEntity, getfeatureEntities, getViewEntity, updateVisualmetadataEntity };
