@@ -163,18 +163,13 @@ const constructHavingField = fieldMeasure => {
 };
 
 const getQueryParametersWithFields = (fields, filters, conditionExpression) => {
-  const query = {
+  var query = {
     fields,
-    groupBy: Object,
-    limit: Object,
-    orders: Object,
-    conditionExpressions: null,
-    offset: null,
   };
 
-  if (conditionExpression && conditionExpression.conditionExpression) {
-    query.conditionExpressions = [conditionExpression];
-  }
+  // if (conditionExpression && conditionExpression.conditionExpression) {
+  //   query.conditionExpressions = [conditionExpression];
+  // }
 
   return query;
 };
@@ -195,14 +190,7 @@ const getQueryParameters = (visual, filters, conditionExpression, offset) => {
     return constructMeasureField(item);
   });
 
-  let query = {
-    fields: Object,
-    groupBy: Object,
-    limit: Object,
-    orders: Object,
-    conditionExpressions: Object,
-    offset: null,
-  };
+  var query;
 
   query = getQueryParametersWithFields(dimensionFields.concat(measureFields), filters, conditionExpression);
 
@@ -217,11 +205,7 @@ const getQueryParameters = (visual, filters, conditionExpression, offset) => {
   if (aggExists) {
     query.groupBy = dimensionFields;
   }
-
-  if (getChartPropertyValue(visual.properties, 'Limit', 20) !== 0) {
-    query.limit = getChartPropertyValue(visual.properties, 'Limit', 20);
-  }
-
+  query.limit = getChartPropertyValue(visual.properties, 'Limit', 20);
   const ordersListSortMeasures = measures
     .filter(function (item) {
       const property = getProperty(item.properties, 'Sort', null);

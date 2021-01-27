@@ -30,7 +30,7 @@ import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header
 import VisualizationsList from 'app/entities/visualizations/visualizations-list';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 import { renderVisualization } from 'app/modules/canvas/visualization/util/visualization-render-utils';
-import { create as connectWebSocket } from 'app/modules/canvas/visualization/util/stomp-client-factory';
+import { connect as connectWebSocket, subscribe } from 'app/modules/canvas/visualization/util/stomp-client';
 import VisualizationHeader from './visualization-modal/visualization-header';
 import 'app/modules/canvas/visualization/canvas.scss';
 
@@ -66,12 +66,21 @@ const Canvas = (props: VisualizationProp) => {
     //  To do
   };
 
-  const onExchangeMetadata = data => {};
+  const onExchangeMetadata = data => {
+    debugger
+  };
+  const onExchangeMetadataError = data => {
+    debugger
+  };
 
   useEffect(() => {
     const token = Storage.local.get('jhi-authenticationToken') || Storage.session.get('jhi-authenticationToken');
 
-    connectWebSocket(token);
+    connectWebSocket({ token:token}, (frame)=> {
+      console.log('flair-bi controller connected web socket');
+      subscribe("/user/exchange/metaData", onExchangeMetadata);
+      subscribe("/user/exchange/metaDataError", onExchangeMetadataError);
+  });
     if (props.match.params.viewId) {
       props.getVisualizationsEntities();
       props.getViewEntity(props.match.params.viewId);

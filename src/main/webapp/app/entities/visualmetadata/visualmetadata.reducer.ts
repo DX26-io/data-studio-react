@@ -5,7 +5,7 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 
 import { IVisualMetadata, defaultValue } from 'app/shared/model/visualMetadata.model';
-import { IVisualmetaDataDTO } from './visualmetadata-util';
+import { IValidateDTO, IVisualmetaDataDTO } from './visualmetadata-util';
 
 export const ACTION_TYPES = {
   FETCH_VISUALMETADATA_LIST: 'visualmetadata/FETCH_VISUALMETADATA_LIST',
@@ -14,6 +14,7 @@ export const ACTION_TYPES = {
   UPDATE_VISUALMETADATA: 'visualmetadata/UPDATE_VISUALMETADATA',
   DELETE_VISUALMETADATA: 'visualmetadata/DELETE_VISUALMETADATA',
   RESET: 'visualmetadata/RESET',
+  VALIDATE_QUERY: 'visualmetadata/VALIDATE_QUERYDTO',
 };
 
 const initialState = {
@@ -23,6 +24,7 @@ const initialState = {
   entity: defaultValue,
   updating: false,
   updateSuccess: false,
+  rowQuery: null,
 };
 
 export type VisualmetadataState = Readonly<typeof initialState>;
@@ -48,11 +50,13 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         updateSuccess: false,
         updating: true,
       };
+    case REQUEST(ACTION_TYPES.VALIDATE_QUERY):
     case FAILURE(ACTION_TYPES.FETCH_VISUALMETADATA_LIST):
     case FAILURE(ACTION_TYPES.FETCH_VISUALMETADATA):
     case FAILURE(ACTION_TYPES.CREATE_VISUALMETADATA):
     case FAILURE(ACTION_TYPES.UPDATE_VISUALMETADATA):
     case FAILURE(ACTION_TYPES.DELETE_VISUALMETADATA):
+    case FAILURE(ACTION_TYPES.VALIDATE_QUERY):
       return {
         ...state,
         loading: false,
@@ -87,6 +91,11 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         updateSuccess: true,
         entity: {},
       };
+    case SUCCESS(ACTION_TYPES.VALIDATE_QUERY):
+      return {
+        ...state,
+        rowQuery: action.payload.data,
+      };
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
@@ -119,6 +128,15 @@ export const createEntity: ICrudPutAction<IVisualmetaDataDTO> = entity => async 
     payload: axios.post(apiUrl, cleanEntity(entity)),
   });
   dispatch(getEntities());
+  return result;
+};
+
+export const validate: ICrudPutAction<IValidateDTO> = entity => async dispatch => {
+  const requestUrl = `${apiUrl}/${'validate'}`;
+  const result = await dispatch({
+    type: ACTION_TYPES.VALIDATE_QUERY,
+    payload: axios.post(requestUrl, entity),
+  });
   return result;
 };
 

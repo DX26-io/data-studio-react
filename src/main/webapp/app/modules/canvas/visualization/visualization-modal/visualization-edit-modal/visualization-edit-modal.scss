@@ -14,3 +14,7 @@
     text-align: left;
   }
 }
+.query {
+  color: var(--spectrum-alias-background-color-default, var(--spectrum-global-color-gray-100));
+  background-color: var(--spectrum-global-color-gray-800);
+}

@@ -8,9 +8,13 @@ import VisualizationThresholdAlertSetting from 'app/modules/canvas/visualization
 import { Content } from '@react-spectrum/view';
 import { Tabs, Item } from '@react-spectrum/tabs';
 import { getSettingsTabTranslations } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
+import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { IViews } from 'app/shared/model/views.model';
 
 export interface IVisualizationSettingsProps extends StateProps, DispatchProps {
   visualizationId : ReactNode;
+  visual: IVisualMetadataSet;
+  view: IViews;
 }
 
 const VisualizationSettings = (props: IVisualizationSettingsProps) => {
@@ -21,7 +25,7 @@ const VisualizationSettings = (props: IVisualizationSettingsProps) => {
         {item => (
           <Item title={item.name}>
             <Content marginTop="size-250" marginStart="size-125">
-              {activeTabId === 'query' && <VisualizationQuerySetting />}
+              {activeTabId === 'query' && <VisualizationQuerySetting   visual={props.visual} view={props.view}/>}
               {activeTabId === 'dataConstraints' && <VisualizationDataConstraintsSetting />}
               {activeTabId === 'thresholdAlert' && <VisualizationThresholdAlertSetting />}
               {activeTabId === 'data' && <VisualizationDataSetting />}
