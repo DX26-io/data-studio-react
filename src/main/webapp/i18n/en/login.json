@@ -6,7 +6,9 @@
       "password.placeholder": "Your password",
       "rememberMe": "Remember me",
       "button": "Sign in",
-      "sso": "Use Single Sign On (SSO)"
+      "google": "Google",
+      "sso": "Use Single Sign On (SSO)",
+      "signup": "Sign up"
     },
     "messages": {
       "error": {
@@ -16,6 +18,41 @@
     },
     "password": {
       "forgot": "Did you forget your password?"
+    }
+  },
+  "signup": {
+    "title": "Sign up",
+    "done": "Sign up completed successfully. Please check your email to complete verification.",
+    "form": {
+      "password": "Password",
+      "password.placeholder": "Your password",
+      "username": "Username",
+      "email": "Email",
+      "firstname": "First name",
+      "lastname": "Last name",
+      "button": "Sign up",
+      "google": "Google"
+    },
+    "messages": {
+      "error": {
+        "authentication": "Failed to sign up",
+        "emptyFields": "All fields are required"
+      }
+    }
+  },
+  "realm": {
+    "create": {
+      "title": "Create realm",
+      "form": {
+        "realmName": "Realm name",
+        "button": "Create"
+      },
+      "messages": {
+        "error": {
+          "create": "Failed to create a realm",
+          "emptyFields": "All fields are required"
+        }
+      }
     }
   }
 }

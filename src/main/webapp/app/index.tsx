@@ -11,7 +11,12 @@ import { clearAuthentication } from './shared/reducers/authentication';
 import ErrorBoundary from './shared/error/error-boundary';
 import AppComponent from './app';
 import { loadIcons } from './config/icon-loader';
-import { defaultTheme,darkTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
+import firebaseConfig from './config/firebase';
+import { defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
+import firebase from "firebase/app";
+import "firebase/auth";
+import {FirebaseAuthProvider} from "@react-firebase/auth";
+import {loadConfig} from "app/config/config-loader";
 
 const devTools = process.env.NODE_ENV === 'development' ? <DevTools /> : null;
 
@@ -21,25 +26,32 @@ registerLocale(store);
 const actions = bindActionCreators({ clearAuthentication }, store.dispatch);
 setupAxiosInterceptors(() => actions.clearAuthentication('login.error.unauthorized'));
 
-loadIcons();
+async function init() {
+  loadIcons();
+  await loadConfig();
 
-const rootEl = document.getElementById('root');
+  const rootEl = document.getElementById('root');
 
-const render = Component =>
-  // eslint-disable-next-line react/no-render-return-value
-  ReactDOM.render(
-    <ErrorBoundary>
-      <SpectrumProvider theme={defaultTheme}>
-        <Provider store={store}>
-          <div>
-            {/* If this slows down the app in dev disable it and enable when required  */}
-            {devTools}
-            <Component />
-          </div>
-        </Provider>
-      </SpectrumProvider>
-    </ErrorBoundary>,
-    rootEl
-  );
+  const render = Component =>
+    // eslint-disable-next-line react/no-render-return-value
+    ReactDOM.render(
+      <ErrorBoundary>
+        <SpectrumProvider theme={defaultTheme}>
+          <Provider store={store}>
+            <FirebaseAuthProvider {...firebaseConfig} firebase={firebase}>
+              <div>
+                {/* If this slows down the app in dev disable it and enable when required  */}
+                {devTools}
+                <Component/>
+              </div>
+            </FirebaseAuthProvider>
+          </Provider>
+        </SpectrumProvider>
+      </ErrorBoundary>,
+      rootEl
+    );
 
-render(AppComponent);
+  render(AppComponent);
+}
+
+init();
