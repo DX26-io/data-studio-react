@@ -18,7 +18,16 @@
     },
     "datasourcePermissions": {
       "title": "Datasource permissions",
-      "description": "Manage datasources user and  group permissions"
+      "description": "Manage datasources user and  group permissions",
+      "datasource": "DATASOURCE",
+      "read": "READ",
+      "write": "WRITE",
+      "update": "UPDATE",
+      "delete": "DELETE",
+      "manage": "MANAGE",
+      "allow": "allow",
+      "deny": "deny",
+      "partial": "partial"
     }
   }
 }

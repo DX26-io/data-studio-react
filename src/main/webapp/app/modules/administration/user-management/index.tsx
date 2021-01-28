@@ -3,6 +3,8 @@ import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 import Users from './users/users';
 import UserGroups from './groups/user-groups';
 import Permission from './permission/dashboard-permissions-container';
+import DatasourcePermissionContainer from './permission/datasource-permissions-container';
+
 import UserManagement from './user-management';
 
 
@@ -12,6 +14,8 @@ const Routes = ({ match }) => (
     <ErrorBoundaryRoute exact path={`${match.url}/users`} component={Users} />
     <ErrorBoundaryRoute exact path={`${match.url}/groups`} component={UserGroups} />
     <ErrorBoundaryRoute exact path={`${match.url}/dashboard-permissions`} component={Permission} />
+    <ErrorBoundaryRoute exact path={`${match.url}/datasource-permissions`} component={DatasourcePermissionContainer} />
+
   </div>
 );
 
