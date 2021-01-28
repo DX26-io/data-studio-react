@@ -24,11 +24,11 @@ const VisualizationQuerySetting = (props: IVisualizationQuerySettingProps) => {
     }
     if (props.visual.id && props.view?.id) {
       wrap = VisualWrap(props.visual);
-      // props.validateQuery({
-      //   datasourceId: props.view.viewDashboard.dashboardDatasource.id,
-      //   visualMetadataId: props.visual.id,
-      //   queryDTO: wrap.getQueryParameters(props.visual, null, null, null),
-      // });
+      props.validateQuery({
+        datasourceId: props.view.viewDashboard.dashboardDatasource.id,
+        visualMetadataId: props.visual.id,
+        queryDTO: wrap.getQueryParameters(props.visual, null, null, null),
+      });
     }
   }, [props.rowQuery, props.visual,props.view]);
 

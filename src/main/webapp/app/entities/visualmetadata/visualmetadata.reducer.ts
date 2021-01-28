@@ -140,6 +140,15 @@ export const validate: ICrudPutAction<IValidateDTO> = entity => async dispatch =
   return result;
 };
 
+export const validate: ICrudPutAction<IValidateDTO> = entity => async dispatch => {
+  const requestUrl = `${apiUrl}/${'validate'}`;
+  const result = await dispatch({
+    type: ACTION_TYPES.VALIDATE_QUERY,
+    payload: axios.post(requestUrl, entity),
+  });
+  return result;
+};
+
 export const updateEntity: ICrudPutAction<IVisualmetaDataDTO> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_VISUALMETADATA,
