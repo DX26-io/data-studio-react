@@ -127,7 +127,7 @@ export const createEntity: ICrudPutAction<IVisualmetaDataDTO> = entity => async 
     type: ACTION_TYPES.CREATE_VISUALMETADATA,
     payload: axios.post(apiUrl, cleanEntity(entity)),
   });
-  dispatch(getEntities());
+  //dispatch(getEntities());
   return result;
 };
 

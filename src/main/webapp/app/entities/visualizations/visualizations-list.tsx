@@ -22,13 +22,13 @@ interface IVisualizationsListProps {
   visualizations: readonly IVisualizations[];
   handleVisualizationClick: (visualization) => void;
   view: IViews;
-  totalItem : number;
+  totalItem: number;
 }
 export const VisualizationsList = (props: IVisualizationsListProps) => {
   const { handleVisualizationClick } = props;
 
   const createFields = newVM => {
-    // let order = 0;
+    let order = 0;
     newVM.fields = newVM.metadataVisual.fieldTypes
       .filter(function (item) {
         return item.constraint === 'REQUIRED';
@@ -38,29 +38,21 @@ export const VisualizationsList = (props: IVisualizationsListProps) => {
           fieldType: item,
           feature: null,
           constraint: item.constraint,
+          properties: item.propertyTypes,
         };
       });
-    // newVM.fields.forEach(function (field) {
-    //   Visualizations.getFieldType(
-    //     {
-    //       id: newVM.metadataVisual.id,
-    //       fieldTypeId: field.fieldType.id,
-    //     },
-    //     function (result) {
-    //       field.fieldType = result;
-    //       field.order = order + 1;
-    //       field.properties = field.fieldType.propertyTypes.map(function (item) {
-    //         return {
-    //           propertyType: item.propertyType,
-    //           value: item.propertyType.defaultValue,
-    //           type: item.propertyType.type,
-    //           order: item.order,
-    //         };
-    //       });
-    //     },
-    //     function (error) {}
-    //   );
-    // });
+    newVM.fields.forEach(function (field) {
+      field.fieldType = field.fieldType;
+      field.order = order + 1;
+      field.properties = field.fieldType.propertyTypes.map(function (item) {
+        return {
+          propertyType: item.propertyType,
+          value: item.propertyType.defaultValue,
+          type: item.propertyType.type,
+          order: item.order,
+        };
+      });
+    });
 
     return newVM;
   };
@@ -96,8 +88,8 @@ export const VisualizationsList = (props: IVisualizationsListProps) => {
       visualBuildId: visualization.id + 'a' + Math.round(Math.random() * 1000000),
       width: 1,
       w: 1,
-      xPosition: (props.totalItem* 2) % (3 || 12),
-      x: (props.totalItem* 2) % (3 || 12),
+      xPosition: (props.totalItem * 2) % (3 || 12),
+      x: (props.totalItem * 2) % (3 || 12),
       height: 3,
       h: 3,
       yPosition: 0,
@@ -112,14 +104,14 @@ export const VisualizationsList = (props: IVisualizationsListProps) => {
   };
 
   const addWidget = viz => {
-    handleVisualizationClick( createVisualMetadata(viz));
+    handleVisualizationClick(createVisualMetadata(viz));
   };
   return (
     <Dialog>
       <Heading>Select Visualizations</Heading>
       <Divider />
       <Content>
-        <Flex direction="row" gap="size-250" wrap  alignItems="center" justifyContent="start">
+        <Flex direction="row" gap="size-250" wrap alignItems="center" justifyContent="start">
           {props.visualizations &&
             props.visualizations.length > 0 &&
             props.visualizations.map(viz => (
@@ -141,7 +133,10 @@ export const VisualizationsList = (props: IVisualizationsListProps) => {
                     </Tooltip>
                   </TooltipTrigger>
                   <Divider size="S" />
-                  <Text margin={"size-100"} alignSelf={"center"}> {viz.name}</Text>
+                  <Text margin={'size-100'} alignSelf={'center'}>
+                    {' '}
+                    {viz.name}
+                  </Text>
                 </View>
               </Flex>
             ))}

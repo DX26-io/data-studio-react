@@ -5,18 +5,9 @@ import { ActionButton, Flex, Text, Item, Menu, MenuTrigger, View, Button, Dialog
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import './canvas.scss';
-import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
 import { getEntity as getViewEntity, getCurrentViewState, saveViewState } from 'app/entities/views/views.reducer';
 import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
 import { getEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
-
-import Settings from '@spectrum-icons/workflow/Settings';
-import Export from '@spectrum-icons/workflow/Export';
-import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
-import Delete from '@spectrum-icons/workflow/Delete';
-import Edit from '@spectrum-icons/workflow/Edit';
-import Table from '@spectrum-icons/workflow/Table';
-import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import { IRootState } from 'app/shared/reducers';
 import { Translate } from 'react-jhipster';
 import { Storage } from 'react-jhipster';
@@ -24,8 +15,6 @@ import {
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-
-import $ from 'jquery';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import VisualizationsList from 'app/entities/visualizations/visualizations-list';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
@@ -33,14 +22,14 @@ import { renderVisualization } from 'app/modules/canvas/visualization/util/visua
 import { connect as connectWebSocket, subscribe } from 'app/modules/canvas/visualization/util/stomp-client';
 import VisualizationHeader from './visualization-modal/visualization-header';
 import 'app/modules/canvas/visualization/canvas.scss';
+import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
 
 const ReactGridLayout = WidthProvider(RGL);
 export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
 
 const Canvas = (props: VisualizationProp) => {
-  const [redirect, setRedirect] = useState<ReactText>('');
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
-  const [visualmetaList, setvisualmetadata] = useState(props.visualmetadata.visualMetadataSet);
+  const [visualmetadataList, setvisualmetadata] = useState<IVisualMetadataSet[]>();
 
   const onLayoutChange = _visualmetaList => {
     props.visualmetadata.visualMetadataSet.map((item, i) => {
@@ -55,7 +44,7 @@ const Canvas = (props: VisualizationProp) => {
       VisualWrap(item);
       renderVisualization(item, props.view);
     });
-    setvisualmetadata(_visualmetaList);
+    //setvisualmetadata(_visualmetaList);
   };
 
   const onResize = _visualmetaList => {
@@ -67,20 +56,20 @@ const Canvas = (props: VisualizationProp) => {
   };
 
   const onExchangeMetadata = data => {
-    debugger
+    debugger;
   };
   const onExchangeMetadataError = data => {
-    debugger
+    debugger;
   };
 
   useEffect(() => {
     const token = Storage.local.get('jhi-authenticationToken') || Storage.session.get('jhi-authenticationToken');
 
-    connectWebSocket({ token:token}, (frame)=> {
+    connectWebSocket({ token: token }, frame => {
       console.log('flair-bi controller connected web socket');
-      subscribe("/user/exchange/metaData", onExchangeMetadata);
-      subscribe("/user/exchange/metaDataError", onExchangeMetadataError);
-  });
+      subscribe('/user/exchange/metaData', onExchangeMetadata);
+      subscribe('/user/exchange/metaDataError', onExchangeMetadataError);
+    });
     if (props.match.params.viewId) {
       props.getVisualizationsEntities();
       props.getViewEntity(props.match.params.viewId);
@@ -93,11 +82,15 @@ const Canvas = (props: VisualizationProp) => {
       props.visualmetadata.visualMetadataSet.map(item => {
         (item.x = item.xPosition), (item.y = item.yPosition), (item.h = item.height), (item.w = item.width);
       });
+      setvisualmetadata(props.visualmetadata.visualMetadataSet);
     }
-  }, [props.visualmetadata]);
+    if (props.isCreated) {
+      //props.getCurrentViewState(props.match.params.viewId);
+      props.visualmetadata.visualMetadataSet.push(props.visualmetadataEntity);
+    }
+  }, [props.visualmetadata, props.isCreated]);
 
   const handleVisualizationClick = v => {
-    props.visualmetadata.visualMetadataSet.push(v);
     props.addVisualmetadataEntity({
       viewId: props.view.id,
       visualMetadata: v,
@@ -112,27 +105,38 @@ const Canvas = (props: VisualizationProp) => {
     });
   };
 
-  const generateWidge = props.visualmetadata?.visualMetadataSet?.map(v => {
-    return (
-      <div
-        className="item widget"
-        id={`widget-${v.id}`}
-        key={v.id}
-        data-grid={{ i: v.id, x: v.xPosition, y: v.yPosition, w: v.width, h: v.height, maxW: Infinity, maxH: Infinity, isBounded: true }}
-      >
-        <div className="header">
-          <VisualizationHeader
-            key={v.id}
-            visual={v}
-            handleVisualizationClick={handleVisualizationClick}
-            view={props.view}
-            totalItem={props.visualmetadata?.visualMetadataSet?.length}
-          ></VisualizationHeader>
+  const generateWidge =
+    visualmetadataList &&
+    visualmetadataList.map(v => {
+      return (
+        <div
+          className="item widget"
+          id={`widget-${v.id}`}
+          key={v.id}
+          data-grid={{
+            i: v.id,
+            x: v.xPosition || 0,
+            y: v.yPosition || 0,
+            w: v.width,
+            h: v.height,
+            maxW: Infinity,
+            maxH: Infinity,
+            isBounded: true,
+          }}
+        >
+          <div className="header">
+            <VisualizationHeader
+              key={v.id}
+              visual={v}
+              handleVisualizationClick={handleVisualizationClick}
+              view={props.view}
+              totalItem={visualmetadataList?.length || 0}
+            ></VisualizationHeader>
+          </div>
+          <div id={`visualBody-${v.id}`}>{/* <VisualizationRender visual={v} ></VisualizationRender> */}</div>
         </div>
-        <div id={`visualBody-${v.id}`}>{/* <VisualizationRender visual={v} ></VisualizationRender> */}</div>
-      </div>
-    );
-  });
+      );
+    });
 
   return (
     <>
@@ -140,6 +144,8 @@ const Canvas = (props: VisualizationProp) => {
         breadcrumbItems={[
           { label: 'Home', route: '/' },
           { label: 'Dashboards', route: '/dashboards' },
+          { label: 'Views', route: `/dashboards/${props.view?.viewDashboard?.id}` },
+          { label: 'Canvas', route: `/dashboards/${props.view?.viewDashboard?.id}/${props.view?.id}/build`  }
         ]}
         title={props.view.viewName}
       >
@@ -155,19 +161,19 @@ const Canvas = (props: VisualizationProp) => {
               handleVisualizationClick={handleVisualizationClick}
               view={props.view}
               visualizations={props.visualizationsList}
-              totalItem={props.visualmetadata?.visualMetadataSet?.length}
+              totalItem={visualmetadataList?.length || 0}
             />
           )}
         </DialogContainer>
       </SecondaryHeader>
       <View>
-        {props.visualmetadata && props.visualmetadata?.visualMetadataSet?.length > 0 && (
+        {visualmetadataList && visualmetadataList.length > 0 && (
           <ReactGridLayout
             className="layout"
             rowHeight={120}
             cols={3}
             onResize={onResize}
-            layout={props.visualmetadata.visualMetadataSet}
+            layout={visualmetadataList}
             margin={[15, 15]}
             verticalCompact={true}
             onLayoutChange={onLayoutChange}
@@ -188,6 +194,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
   isAuthenticated: storeState.authentication.isAuthenticated,
   visualmetadata: storeState.views.viewState,
+  isCreated: storeState.visualmetadata.updateSuccess,
   visualizationsList: storeState.visualizations.entities,
   featuresList: storeState.feature.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,

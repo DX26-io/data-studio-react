@@ -70,6 +70,8 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
         order: fieldType.order,
       };
       props.visual.fields.push(field);
+      setShowMeasure(true);
+      setShowDimension(false);
       setSelectedField(field);
     }
   };
@@ -92,6 +94,8 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
         order: fieldType.order,
       };
       props.visual.fields.push(field);
+      setShowDimension(true);
+      setShowMeasure(false);
     }
   };
 
