@@ -1,12 +1,30 @@
 import React, { useEffect } from 'react';
-import {  RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { Grid, View, Text } from '@adobe/react-spectrum';
 import UsersGroups from './users-groups';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import PermissionsTitle from './permissions-title';
 import Datasource from './datasource-permissions';
+import { IRootState } from 'app/shared/reducers';
+import { updateUserGroupPermissions, updateUserPermissions, resetViewsPermissions } from './permissions.reducer';
+import { connect } from 'react-redux';
+import { findViewsPermissionsChanges } from './permissions-util';
 
-export const DatasourcePermissionContainer = (props: RouteComponentProps) => {
+export interface IDatasourcePermissionContainerProps extends StateProps, DispatchProps, RouteComponentProps {}
+
+export const DatasourcePermissionContainer = (props: IDatasourcePermissionContainerProps) => {
+  const handleSaveClick = () => {
+    const params = new URLSearchParams(props.location.search);
+    const groupName = params.get('group');
+    const login = params.get('user');
+    const permissionChanges = findViewsPermissionsChanges(props.datasourcePermissions);
+    if (login) {
+      props.updateUserPermissions(permissionChanges, login);
+    } else if (groupName) {
+      props.updateUserGroupPermissions(permissionChanges, groupName);
+    }
+  };
+
   return (
     <div>
       <SecondaryHeader
@@ -26,12 +44,23 @@ export const DatasourcePermissionContainer = (props: RouteComponentProps) => {
           <UsersGroups permissionProps={props} />
         </View>
         <View gridArea="datasources" borderXWidth="thin" borderColor="default" height="100vh">
-          <PermissionsTitle />
+          <PermissionsTitle handleSaveClick={handleSaveClick} />
           <Datasource permissionProps={props} />
         </View>
       </Grid>
     </div>
   );
 };
+const mapStateToProps = (storeState: IRootState) => ({
+  datasourcePermissions: storeState.permissions.datasourcePermissions,
+  totalDatasourcePermissions: storeState.permissions.totalDatasourcePermissions,
+});
+const mapDispatchToProps = {
+  updateUserGroupPermissions,
+  updateUserPermissions,
+  resetViewsPermissions,
+};
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
 
-export default DatasourcePermissionContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(DatasourcePermissionContainer);

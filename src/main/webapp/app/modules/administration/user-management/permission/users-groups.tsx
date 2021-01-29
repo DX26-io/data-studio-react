@@ -3,14 +3,13 @@ import { connect } from 'react-redux';
 import { getUserGroups, searchUserGroups } from '../groups/user-group.reducer';
 import { getUsers, searchUsers } from '../users/user.reducer';
 import { IRootState } from 'app/shared/reducers';
-import { Flex, Text, SearchField, ListBox, Item, Section, Content } from '@adobe/react-spectrum';
+import { Flex, Text, SearchField, ListBox, Item, Section, Content, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import User from '@spectrum-icons/workflow/User';
 import UserGroup from '@spectrum-icons/workflow/UserGroup';
-import { makeStyles } from '@material-ui/core/styles';
 import { useAsyncList } from '@react-stately/data';
 import { Tabs } from '@react-spectrum/tabs';
-import { Translate } from 'react-jhipster';
+import { Translate,translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE, ACTIVE_PAGE } from 'app/shared/util/pagination.constants';
 
 export interface IUsersGroupsProps extends StateProps, DispatchProps {
@@ -19,12 +18,12 @@ export interface IUsersGroupsProps extends StateProps, DispatchProps {
 
 export const UsersGroups = (props: IUsersGroupsProps) => {
   const tabs = [
-    { id: 1, name: 'Users' },
-    { id: 2, name: 'Groups' },
+    { id: 1, name: 'userManagement.home.title' },
+    { id: 2, name: 'userGroups.home.title' },
   ];
 
   const [searchValue, setSearchValue] = React.useState('');
-  const [tabId, setTabId] = React.useState();
+  const [tabId, setTabId] = React.useState(1);
 
   const { permissionProps, groups, users } = props;
 
@@ -65,34 +64,20 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
       if (tabId === 1) {
         props.searchUsers(ACTIVE_PAGE, ITEMS_PER_PAGE, 'login,asc', searchValue);
       } else {
-        // props.searchUserGroups(ACTIVE_PAGE, ITEMS_PER_PAGE, 'name,asc', searchValue);
+        props.searchUserGroups(ACTIVE_PAGE, ITEMS_PER_PAGE, 'name,asc', searchValue);
       }
   }, [searchValue]);
 
-  const useStyles = makeStyles({
-    search: {
-      marginLeft: '7%',
-      marginTop: '20px',
-    },
-    root: {
-      backgroundColor: '#fff',
-      width: '85%',
-      margin: '20px auto',
-    },
-  });
-
-  const classes = useStyles();
-
   return (
     <div>
-      <div className={classes.search}>
-        <SearchField value={searchValue} onChange={setSearchValue} placeholder="User or Group" label="Search" />
+      <div style={{ marginLeft: '7%', marginTop: '20px' }}>
+        <SearchField value={searchValue} onChange={setSearchValue}  placeholder="User or Group" label="Search" />
       </div>
-
-      <div className={classes.root}>
-        <Tabs aria-label="roles" items={tabs} onSelectionChange={setTabId}>
+      <View backgroundColor="gray-75" width="85%" margin="20px auto">
+        {/* TODO : need to check the issue of this component. onSelectionChange throws compilation issue */}
+        <Tabs aria-label="roles" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
           {item => (
-            <Item title={item.name}>
+            <Item title={translate(item.name)}>
               <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
                 {tabId === 1 ? (
                   <ListBox width="size-static-size-3600" aria-label="users" selectionMode="single" onSelectionChange={setLogin}>
@@ -122,7 +107,7 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
             </Item>
           )}
         </Tabs>
-      </div>
+      </View>
     </div>
   );
 };

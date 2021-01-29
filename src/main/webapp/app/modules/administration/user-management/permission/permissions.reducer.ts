@@ -6,7 +6,9 @@ import { IPermission } from 'app/shared/model/permission.model';
 export const ACTION_TYPES = {
   FETCH_DASHBOARD_PERMISSIONS: 'permission/FETCH_DASHBOARD_PERMISSIONS',
   FETCH_DATASOURCE_PERMISSIONS: 'permission/FETCH_DATASOURCE_PERMISSIONS',
+  FETCH_VIEWS_PERMISSIONS: 'permission/FETCH_VIEWS_PERMISSIONS',
   UPDATE_PERMISSIONS: 'permission/UPDATE_PERMISSIONS',
+  RESET_VIEWS_PERMISSIONS: 'permission/RESET_VIEWS_PERMISSIONS',
 };
 
 const initialState = {
@@ -16,7 +18,10 @@ const initialState = {
   totalDashboardPermissions: 0,
   datasourcePermissions: [],
   totalDatasourcePermissions: 0,
+  viewsPermissions: [],
+  totalViewsPermissions: 0,
   updateSuccess: false,
+  updating: false,
 };
 
 export type PermissionsState = Readonly<typeof initialState>;
@@ -33,12 +38,27 @@ export default (state: PermissionsState = initialState, action): PermissionsStat
         loading: false,
         errorMessage: action.payload,
       };
+    case REQUEST(ACTION_TYPES.FETCH_VIEWS_PERMISSIONS):
+    case FAILURE(ACTION_TYPES.FETCH_VIEWS_PERMISSIONS):
+      return {
+        ...state,
+        loading: false,
+        errorMessage: action.payload,
+      };
     case REQUEST(ACTION_TYPES.UPDATE_PERMISSIONS):
+      return {
+        ...state,
+        errorMessage: null,
+        updateSuccess: false,
+        updating: true,
+      };
     case FAILURE(ACTION_TYPES.UPDATE_PERMISSIONS):
       return {
         ...state,
         loading: false,
         errorMessage: action.payload,
+        updateSuccess: false,
+        updating: false,
       };
 
     case SUCCESS(ACTION_TYPES.FETCH_DASHBOARD_PERMISSIONS):
@@ -55,11 +75,27 @@ export default (state: PermissionsState = initialState, action): PermissionsStat
         datasourcePermissions: action.payload.data,
         totalDatasourcePermissions: parseInt(action.payload.headers['x-total-count'], 10),
       };
+    case SUCCESS(ACTION_TYPES.FETCH_VIEWS_PERMISSIONS):
+      return {
+        ...state,
+        loading: false,
+        viewsPermissions: action.payload.data,
+        totalViewsPermissions: parseInt(action.payload.headers['x-total-count'], 10),
+      };
     case SUCCESS(ACTION_TYPES.UPDATE_PERMISSIONS):
       return {
         ...state,
         loading: false,
         updateSuccess: true,
+        updating: false,
+      };
+    case ACTION_TYPES.RESET_VIEWS_PERMISSIONS:
+      return {
+        ...state,
+        loading: false,
+        updateSuccess: false,
+        viewsPermissions: [],
+        totalViewsPermissions: 0,
       };
     default:
       return state;
@@ -93,11 +129,26 @@ export const updateGroupPermissions = (permissions: Array<IPermission>, name: st
   });
   return result;
 };
+export const getUserGroupViewsPermissions = (page: number, size: number, name: string, id: number) => ({
+  type: ACTION_TYPES.FETCH_VIEWS_PERMISSIONS,
+  payload: axios.get(`api/userGroups/${name}/dashboardPermissions/${id}/viewPermissions?page=${page}&size=${size}`),
+});
 
-export const updateUserPermissions = (permissions: Array<IPermission>, login: string) => async dispatch => {
-  const result = await dispatch({
-    type: ACTION_TYPES.UPDATE_PERMISSIONS,
-    payload: axios.put(`api/users/${login}/changePermissions`, permissions),
-  });
-  return result;
-};
+export const getUserViewsPermissions = (page: number, size: number, login: string, id: number) => ({
+  type: ACTION_TYPES.FETCH_VIEWS_PERMISSIONS,
+  payload: axios.get(`api/users/${login}/dashboardPermissions/${id}/viewPermissions?page=${page}&size=${size}`),
+});
+
+export const updateUserGroupPermissions = (permissions: Array<IPermission>, name: string) => ({
+  type: ACTION_TYPES.UPDATE_PERMISSIONS,
+  payload: axios.put(`api/userGroups/${name}/changePermissions`, permissions),
+});
+
+export const updateUserPermissions = (permissions: Array<IPermission>, login: string) => ({
+  type: ACTION_TYPES.UPDATE_PERMISSIONS,
+  payload: axios.put(`api/users/${login}/changePermissions`, permissions),
+});
+
+export const resetViewsPermissions = () => ({
+  type: ACTION_TYPES.RESET_VIEWS_PERMISSIONS,
+});

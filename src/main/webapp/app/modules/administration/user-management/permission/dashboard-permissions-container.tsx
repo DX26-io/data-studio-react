@@ -7,6 +7,7 @@ import UsersGroups from './users-groups';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import PermissionsTitle from './permissions-title';
 import Dashboards from './dashboards-permissions';
+import { translate,Translate } from 'react-jhipster';
 
 export const DashboardPermissionContainer = (props: RouteComponentProps) => {
   return (
@@ -20,7 +21,7 @@ export const DashboardPermissionContainer = (props: RouteComponentProps) => {
             route: '/administration/user-management/dashboard-permissions',
           },
         ]}
-        title={'Dashboard Permissions'}
+        title={translate('permissions.dashboardPermissions.title')}
       ></SecondaryHeader>
 
       <Grid areas={['users dashboards']} columns={['1fr', '2fr']} rows={['auto']} data-testid="permission-container">
