@@ -13,8 +13,6 @@ const commonConfig = require('./webpack.common.js');
 
 const ENV = 'development';
 
-const proxyRoutes = ['/api', '/services', '/management', '/swagger-resources', '/v2/api-docs', '/h2-console', '/auth'];
-
 module.exports = options =>
   webpackMerge(commonConfig({ env: ENV }), {
     devtool: 'cheap-module-source-map', // https://reactjs.org/docs/cross-origin-errors.html
@@ -47,16 +45,16 @@ module.exports = options =>
       contentBase: './build/resources/main/static/',
       proxy: [
         {
-          context: ['/api', '/services', '/management', '/swagger-resources', '/v2/api-docs', '/h2-console', '/auth', '/flair-ws'],
-          // target: `http${options.tls ? 's' : ''}://localhost:8002`,
-          target: proxyRoutes.map(function (r) {
-            var isWebsocket = r.indexOf('flair-ws') != -1,
-              route = (isWebsocket ? 'ws://localhost:8002' : `http${options.tls ? 's' : ''}://localhost:8002`) ;
-
-            return route;
-          }),
+          context: ['/api', '/services', '/management', '/swagger-resources', '/v2/api-docs', '/h2-console', '/auth','/flair-ws'],
+          target: `http${options.tls ? 's' : ''}://localhost:8002`,
+          bypass: function(req, res, proxyOptions) {
+            console.log("req.url=="+req.url);
+            let isWebsocket = req.url.indexOf('flair-ws') != -1;
+            proxyOptions.target = isWebsocket ? 'ws://localhost:8002' : proxyOptions.target;
+          },
           secure: false,
           changeOrigin: options.tls,
+          ws: true,
         },
       ],
       watchOptions: {

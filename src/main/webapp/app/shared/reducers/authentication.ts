@@ -320,3 +320,7 @@ export const isTokenExist = () => {
   const token = Storage.local.get(AUTH_TOKEN_KEY) || Storage.session.get(AUTH_TOKEN_KEY);
   return token ? true : false;
 };
+
+export const getToken = () => {
+  return Storage.local.get(AUTH_TOKEN_KEY) || Storage.session.get(AUTH_TOKEN_KEY);
+};

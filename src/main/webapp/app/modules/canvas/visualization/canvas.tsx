@@ -42,7 +42,7 @@ const Canvas = (props: VisualizationProp) => {
         (item.height = _visualmetaList[i].h),
         (item.width = _visualmetaList[i].w);
       VisualWrap(item);
-      renderVisualization(item, props.view);
+      //renderVisualization(item, props.view);
     });
     //setvisualmetadata(_visualmetaList);
   };
