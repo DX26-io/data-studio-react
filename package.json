@@ -26,6 +26,7 @@
     "loaders.css": "0.1.2",
     "lodash": "4.17.15",
     "moment": "2.24.0",
+    "net": "^1.0.2",
     "react": "16.13.1",
     "react-aria": "^3.0.0",
     "react-dom": "16.13.1",
@@ -46,7 +47,9 @@
     "redux-promise-middleware": "6.1.2",
     "redux-query-sync": "^0.1.10",
     "redux-thunk": "2.3.0",
+    "sockjs": "^0.3.21",
     "sonar-scanner": "3.1.0",
+    "stomp-websocket": "^2.3.4-next",
     "tslib": "1.11.1",
     "uuid": "7.0.3"
   },
