@@ -7,7 +7,7 @@ import { connectWebSocket } from 'app/shared/websocket/stomp-client.service';
 export const TestWebSocket = () => {
   const connectWeb = () => {
     connectWebSocket({ token: getToken() }, function (frame) {
-      console.log(' connected web socket');
+    //   console.log(' connected web socket');
     });
   };
 
