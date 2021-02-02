@@ -27,6 +27,11 @@ export type PermissionsState = Readonly<typeof initialState>;
 export default (state: PermissionsState = initialState, action): PermissionsState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_DASHBOARD_PERMISSIONS):
+      return {
+        ...state,
+        errorMessage: null,
+        loading: true,
+      };
     case FAILURE(ACTION_TYPES.FETCH_DASHBOARD_PERMISSIONS):
       return {
         ...state,
@@ -34,6 +39,11 @@ export default (state: PermissionsState = initialState, action): PermissionsStat
         errorMessage: action.payload,
       };
     case REQUEST(ACTION_TYPES.FETCH_VIEWS_PERMISSIONS):
+      return {
+        ...state,
+        errorMessage: null,
+        loading: true,
+      };
     case FAILURE(ACTION_TYPES.FETCH_VIEWS_PERMISSIONS):
       return {
         ...state,
