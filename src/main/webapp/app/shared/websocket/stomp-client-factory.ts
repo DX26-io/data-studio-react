@@ -7,7 +7,7 @@ export const create = () => {
   if (window.location.protocol === 'https') {
     origin = origin.replace('http://', 'https://');
   }
-  const connectionUrl = origin + window.location.pathname + 'flair-ws';
+  const connectionUrl = origin + '/' + 'flair-ws';
   console.log('StompClient connectionUrl', connectionUrl);
   const sockClient = new SockJS(connectionUrl);
   const client = Stomp.over(sockClient);

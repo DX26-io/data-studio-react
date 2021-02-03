@@ -1,6 +1,7 @@
 import { create } from './stomp-client-factory';
 
-let stompClient;
+/* eslint no-var: 0 */
+var stompClient;
 let messageQueue = [];
 
 // TODO : remove all console logs when done with debugging
