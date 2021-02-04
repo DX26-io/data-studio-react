@@ -102,7 +102,9 @@
       "open": "Open",
       "save": "Save",
       "view": "View",
-      "create": "Create"
+      "manage": "Manage",
+      "create": "Create",
+      "dangerZone": "Danger Zone"
     },
     "options": {
       "more_options": "More options",

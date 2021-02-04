@@ -2,8 +2,21 @@
   "userManagement": {
     "home": {
       "title": "Users",
-      "createLabel": "Create a new user",
-      "createOrEditLabel": "Create or edit a user"
+      "createLabel": "Create User",
+      "editLabel": "Edit user",
+      "description": "Manage your users"
+    },
+    "userGroup": {
+      "title": "Groups",
+      "description": "Manage your groups"
+    },
+    "dashboardPermission": {
+      "title": "Dashboard permissions",
+      "description": "Manage dashboards user and  group permissions"
+    },
+    "datasourcePermission": {
+      "title": "Datasource permissions",
+      "description": "Manage datasources user and  group permissions"
     },
     "created": "A new user is created with identifier {{ param }}",
     "updated": "A user is updated with identifier {{ param }}",
@@ -14,17 +27,26 @@
     "detail": {
       "title": "User"
     },
+    "error": {
+      "login": "Login can be minimum 1 and maximum 50 characters long.",
+      "email": "Email can be maximum 100 characters long.",
+      "firstName": "First Name can be maximum 100 characters long.",
+      "lastName": "Last Name can be maximum 100 characters long."
+    },
     "login": "Login",
     "firstName": "First name",
     "lastName": "Last name",
     "email": "Email",
-    "activated": "Activated",
-    "deactivated": "Deactivated",
+    "activated": "Enabled",
+    "deactivated": "Disabled",
+    "activate": "Activate",
     "profiles": "Profiles",
     "langKey": "Language",
     "createdBy": "Created by",
     "createdDate": "Created date",
     "lastModifiedBy": "Modified by",
-    "lastModifiedDate": "Modified date"
+    "lastModifiedDate": "Modified date",
+    "status": "Status",
+    "userType": "User Type"
   }
 }

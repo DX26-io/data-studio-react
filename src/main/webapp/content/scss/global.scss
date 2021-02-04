@@ -16,6 +16,23 @@ body {
   height: 100%;
 }
 
+a {
+  text-decoration: none;
+}
+
+.dx26-link {
+  color: $primary-color;
+  text-decoration: none;
+}
+
 .error-message {
   color: $spectrum-red-600;
+}
+
+.dx26-table-pager {
+  width: '100%';
+}
+
+.dx26-container {
+  padding: 20px;
 }
