@@ -7,22 +7,19 @@ import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 //  this is just for testing websocket connection. remove this file when it's not needed
 
 export const TestWebSocket = () => {
-
   const onExchangeMetadataError = data => {
     const body = JSON.parse(data.body || '{}');
-    console.log("received data="+body);
-    console.log("received error="+body);
-  };
-  
-  const onExchangeMetadata = data => {
-    const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
-    console.log("received data="+metaData);
+     // console.log('received error=' + body);
   };
 
+  const onExchangeMetadata = data => {
+    const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
+     // console.log('received data=' + metaData);
+  };
 
   const connectWeb = () => {
     connectWebSocket({ token: getToken() }, function (frame) {
-      console.log(' connected web socket');
+       // console.log(' connected web socket');
       subscribeWebSocket('/user/exchange/metaData', onExchangeMetadata);
       subscribeWebSocket('/user/exchange/metaDataError', onExchangeMetadataError);
     });
@@ -43,7 +40,7 @@ export const TestWebSocket = () => {
     connectWeb();
     return () => {
       disconnectWebSocket();
-      console.log("cleaned up");
+       // console.log('cleaned up');
     };
   }, []);
 

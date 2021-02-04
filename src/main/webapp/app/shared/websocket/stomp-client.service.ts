@@ -1,4 +1,5 @@
 import { create } from './stomp-client-factory';
+import { IWebsocketToken } from 'app/shared/model/websocket-token-model';
 
 /* eslint no-var: 0 */
 var stompClient;
@@ -19,7 +20,7 @@ const addToMessageQueue = (url, header, body) => {
   });
 };
 
-export const sendToWebSocket = (url, header, body) => {
+export const sendToWebSocket = (url: string, header: any, body: any) => {
   if (!isConnected()) {
     addToMessageQueue(url, header, body);
   } else {
@@ -40,7 +41,7 @@ const executeQueue = () => {
   });
 };
 
-export const subscribeWebSocket = (url, handler) => {
+export const subscribeWebSocket = (url: string, handler: any) => {
   // console.log('STOMP subscribe');
   stompClient.subscribe(url, function (data) {
     // console.log('STOMP subscribed handler');
@@ -52,7 +53,7 @@ const createStompClient = () => {
   return create();
 };
 
-export const connectWebSocket = (params, connectionHandler) => {
+export const connectWebSocket = (params: IWebsocketToken, connectionHandler: Function) => {
   stompClient = createStompClient();
   // console.log('STOMP connect', stompClient);
   stompClient.connect(params, function (data) {
