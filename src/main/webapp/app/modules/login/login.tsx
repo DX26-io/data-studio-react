@@ -4,6 +4,7 @@ import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { Grid, View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { login } from 'app/shared/reducers/authentication';
+import { loginWithProvider } from 'app/shared/reducers/authentication';
 import LoginForm from './login-form';
 import LoginFooter from './login-footer';
 import LoginHeader from './login-header';
@@ -14,6 +15,12 @@ export const Login: React.FC<ILoginProps> = props => {
   const handleLogin = (username, password, rememberMe = false) => {
     props.login(username, password, rememberMe);
   };
+  const handleProviderLogin = (provider) => {
+    props.loginWithProvider(provider);
+  };
+  const handleSignup = () => {
+    props.history.push('/signup');
+  };
 
   return !props.isAuthenticated ? (
     <Grid areas={['image login']} columns={['1fr', '2fr']} rows={['auto']} minHeight={window.innerHeight} data-testid="login-container">
@@ -21,7 +28,10 @@ export const Login: React.FC<ILoginProps> = props => {
       <View gridArea="image" backgroundColor="gray-400" />
       <View gridArea="login">
         <LoginHeader />
-        <LoginForm handleLogin={handleLogin} loginError={props.loginError} />
+        <LoginForm handleLogin={handleLogin}
+                   loginError={props.loginError}
+                   handleProviderLogin={handleProviderLogin}
+                   handleSignup={handleSignup}/>
         <LoginFooter />
       </View>
     </Grid>
@@ -41,7 +51,7 @@ const mapStateToProps = ({ authentication }: IRootState) => ({
   loginError: authentication.loginError,
 });
 
-const mapDispatchToProps = { login };
+const mapDispatchToProps = { login, loginWithProvider };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

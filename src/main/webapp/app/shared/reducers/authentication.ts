@@ -1,11 +1,18 @@
 import axios from 'axios';
 import { Storage } from 'react-jhipster';
+import firebase from 'firebase/app';
 
-import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
+import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
 import { setLocale } from 'app/shared/reducers/locale';
+import config from 'app/config/constants';
+import { toast } from 'react-toastify';
 
 export const ACTION_TYPES = {
   LOGIN: 'authentication/LOGIN',
+  SIGNUP: 'authentication/SIGNUP',
+  CREATE_REALM: 'authentication/CREATE_REALM',
+  VERIFY_USER: 'authentication/VERIFY_USER',
+  REALM_CREATED: 'authentication/REALM_CREATED',
   GET_SESSION: 'authentication/GET_SESSION',
   LOGOUT: 'authentication/LOGOUT',
   CLEAR_AUTH: 'authentication/CLEAR_AUTH',
@@ -17,8 +24,17 @@ const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
 const initialState = {
   loading: false,
   isAuthenticated: false,
+  realmCreateError: false,
+  redirectTo: (null as unknown) as string,
   loginSuccess: false,
+  verifyUserSuccess: false,
+  createRealmSuccess: false,
+  realm: {} as any,
+  signupSuccess: false,
+  verifyEmailToken: (null as unknown) as string,
   loginError: false, // Errors returned from server side
+  signupError: false, // Errors returned from server side
+  createRealmError: false, // Errors returned from server side
   logoutError: false, // Errors returned from server side
   account: {} as any,
   errorMessage: (null as unknown) as string, // Errors returned from server side
@@ -35,6 +51,9 @@ export type AuthenticationState = Readonly<typeof initialState>;
 export default (state: AuthenticationState = initialState, action): AuthenticationState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.LOGIN):
+    case REQUEST(ACTION_TYPES.SIGNUP):
+    case REQUEST(ACTION_TYPES.CREATE_REALM):
+    case REQUEST(ACTION_TYPES.VERIFY_USER):
     case REQUEST(ACTION_TYPES.LOGOUT):
     case REQUEST(ACTION_TYPES.GET_SESSION):
       return {
@@ -46,6 +65,19 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...initialState,
         errorMessage: action.payload,
         loginError: true,
+      };
+    case FAILURE(ACTION_TYPES.SIGNUP):
+      return {
+        ...initialState,
+        errorMessage: action.payload,
+        signupError: true,
+      };
+    case FAILURE(ACTION_TYPES.CREATE_REALM):
+    case FAILURE(ACTION_TYPES.VERIFY_USER):
+      return {
+        ...initialState,
+        errorMessage: action.payload,
+        createRealmError: true,
       };
     case FAILURE(ACTION_TYPES.LOGOUT):
       return {
@@ -67,6 +99,28 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         loading: false,
         loginError: false,
         loginSuccess: true,
+      };
+    case SUCCESS(ACTION_TYPES.SIGNUP):
+      return {
+        ...state,
+        loading: false,
+        signupError: false,
+        signupSuccess: true,
+      };
+    case SUCCESS(ACTION_TYPES.CREATE_REALM):
+      return {
+        ...state,
+        loading: false,
+        createRealmError: false,
+        createRealmSuccess: true,
+        realm: action.payload.data,
+      };
+    case SUCCESS(ACTION_TYPES.VERIFY_USER):
+      return {
+        ...state,
+        loading: false,
+        createRealmError: false,
+        verifyUserSuccess: true,
       };
     case SUCCESS(ACTION_TYPES.LOGOUT):
       return {
@@ -93,6 +147,11 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         loading: false,
         isAuthenticated: false,
       };
+    case ACTION_TYPES.REALM_CREATED:
+      return {
+        ...state,
+        redirectTo: '/',
+      };
     default:
       return state;
   }
@@ -113,16 +172,87 @@ export const getSession: () => void = () => async (dispatch, getState) => {
   }
 };
 
-export const setAuthToken = (result, rememberMe) => {
+export const setAuthToken = async (result, rememberMe) => {
   const bearerToken = result.value.headers.authorization;
   if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
     const jwt = bearerToken.slice(7, bearerToken.length);
-    if (rememberMe) {
-      Storage.local.set(AUTH_TOKEN_KEY, jwt);
-    } else {
-      Storage.session.set(AUTH_TOKEN_KEY, jwt);
+
+    try {
+      let tkn: string;
+      if (config.CLOUD) {
+        await firebase.auth().signInWithCustomToken(jwt);
+        tkn = await firebase.auth().currentUser.getIdToken(true);
+      } else {
+        tkn = jwt;
+      }
+      if (rememberMe) {
+        Storage.local.set(AUTH_TOKEN_KEY, tkn);
+      } else {
+        Storage.session.set(AUTH_TOKEN_KEY, tkn);
+      }
+    } catch (error) {
+      const errorMessage = error.message;
+      toast.error(errorMessage);
     }
   }
+};
+
+const setAuthTokenWithProvider = result => {
+  const bearerToken = result.value.headers.authorization;
+  if (!(bearerToken && bearerToken.slice(0, 7) === 'Bearer ')) {
+    return;
+  }
+  const jwt = bearerToken.slice(7, bearerToken.length);
+  Storage.local.set(AUTH_TOKEN_KEY, jwt);
+};
+
+export const signup: (username: string, email: string, password: string, firstname: string, lastname: string) => void = (
+  username,
+  email,
+  password,
+  firstname,
+  lastname
+) => async dispatch => {
+  await dispatch({
+    type: ACTION_TYPES.SIGNUP,
+    payload: axios.post('api/signup', {
+      username,
+      email,
+      password,
+      firstname,
+      lastname,
+    }),
+  });
+};
+
+export const createRealm: (realmName: string, token: string) => void = (realmName, emailVerificationToken) => async (
+  dispatch,
+  getState
+) => {
+  await dispatch({
+    type: ACTION_TYPES.CREATE_REALM,
+    payload: axios.post('api/realms-anonym', {
+      name: realmName,
+    }),
+  });
+
+  const realm = getState().authentication.realm;
+
+  const result = await dispatch({
+    type: ACTION_TYPES.VERIFY_USER,
+    payload: axios.post('api/confirm_user', {
+      realmId: realm.id,
+      realmCreationToken: realm.token,
+      emailVerificationToken,
+    }),
+  });
+
+  await setAuthToken(result, false);
+  await dispatch(getSession());
+
+  dispatch({
+    type: ACTION_TYPES.REALM_CREATED,
+  });
 };
 
 export const login: (username: string, password: string, rememberMe?: boolean) => void = (
@@ -134,8 +264,24 @@ export const login: (username: string, password: string, rememberMe?: boolean) =
     type: ACTION_TYPES.LOGIN,
     payload: axios.post('api/authenticate', { username, password, rememberMe }),
   });
-  setAuthToken(result, rememberMe);
+  await setAuthToken(result, rememberMe);
   await dispatch(getSession());
+};
+
+export const loginWithProvider: (provider: string) => void = provider => async dispatch => {
+  const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+  try {
+    await firebase.auth().signInWithPopup(googleAuthProvider);
+    const tkn = await firebase.auth().currentUser.getIdToken(true);
+    const result = await dispatch({
+      type: ACTION_TYPES.LOGIN,
+      payload: axios.post('api/registerWithProvider', { idToken: tkn }),
+    });
+    setAuthTokenWithProvider(result);
+    await dispatch(getSession());
+  } catch (error) {
+    toast.error(error.message);
+  }
 };
 
 export const clearAuthToken = () => {
@@ -147,8 +293,15 @@ export const clearAuthToken = () => {
   }
 };
 
+const firebaseLogout = () => {
+  if (config.CLOUD) {
+    firebase.auth().signOut();
+  }
+};
+
 export const logout: () => void = () => dispatch => {
   clearAuthToken();
+  firebaseLogout();
   dispatch({
     type: ACTION_TYPES.LOGOUT,
     payload: axios.get('api/logout'),
