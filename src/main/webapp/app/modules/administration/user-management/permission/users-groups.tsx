@@ -71,7 +71,7 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
   return (
     <div>
       <div style={{ marginLeft: '7%', marginTop: '20px' }}>
-        <SearchField value={searchValue} onChange={setSearchValue}  placeholder="User or Group" label="Search" />
+        <SearchField value={searchValue} onChange={setSearchValue}  placeholder="User or Group" label="Search" data-testid="search" />
       </div>
       <View backgroundColor="gray-75" width="85%" margin="20px auto">
         {/* TODO : need to check the issue of this component. onSelectionChange throws compilation issue */}

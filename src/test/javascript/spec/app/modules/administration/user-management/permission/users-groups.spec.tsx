@@ -93,4 +93,15 @@ describe('Users Groups', () => {
     expect(receivedProps.getUserGroups.mock.calls.length).toEqual(1);
     expect(receivedProps.getUsers.mock.calls.length).toEqual(1);
   });
+
+  it('on search user', () => {
+    const tree = wrapper(null);
+    const searchElement = tree.getByTestId('search');
+    userEvent.click(searchElement);
+    userEvent.type(document.activeElement, "t");
+    expect(receivedProps.searchUsers.mock.calls.length).toEqual(2);
+  });
+
+  //TODO : need to find a way to test on change tab and list items
+
 });
