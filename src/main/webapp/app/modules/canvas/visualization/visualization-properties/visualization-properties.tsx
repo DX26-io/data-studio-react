@@ -36,7 +36,7 @@ const VisualizationProperties = (props: IVisualizationPropertiesProps) => {
               <Content margin="size-100">
                 {activeTabId === 'chartProperties' &&<VisualizationChartProperties features={props.features} visual={props.visual}  />}
                 {activeTabId === 'dataProperties' && <VisualizationDataProperties features={props.features} visual={props.visual} />}
-                {activeTabId === 'hierarchy' && <VisualizationHierarchy />}
+                {/* {activeTabId === 'hierarchy' && <VisualizationHierarchy />} */}
               </Content>
             </Item>
           )}

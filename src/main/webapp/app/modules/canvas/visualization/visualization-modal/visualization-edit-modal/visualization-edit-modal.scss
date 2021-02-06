@@ -8,6 +8,19 @@
     z-index: 5 !important;
     background-color: var(--spectrum-alias-background-color-default, var(--spectrum-global-color-gray-100));
   }
+  .field {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    position: relative;
+    top: 3px;
+  }
+  .fieldKey {
+    display: flex;
+  }
+  .fieldKey > div {
+    margin-left: 5px;
+  }
 }
 .featureName {
   ._spectrum-Button-label_7a745 {

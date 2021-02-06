@@ -1,5 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { ActionButton, Text, Button, ButtonGroup, Flex, Form, Heading, Item, ListBox, Picker, View } from '@adobe/react-spectrum';
+import {
+  ActionButton,
+  Text,
+  Button,
+  ButtonGroup,
+  Flex,
+  Form,
+  Heading,
+  Item,
+  ListBox,
+  Picker,
+  View,
+  TooltipTrigger,
+  Tooltip,
+  Section,
+} from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import TableAndChart from '@spectrum-icons/workflow/TableAndChart';
@@ -9,6 +24,8 @@ import { Field } from 'app/shared/model/visualMetadata.model';
 import uuid from 'react-uuid';
 import Properties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/properties';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
+import LockClosed from '@spectrum-icons/workflow/LockClosed';
+import Delete from '@spectrum-icons/workflow/Delete';
 
 export interface IVisualizationDataPropertiesProps extends StateProps, DispatchProps {
   features: readonly IFeature[];
@@ -112,20 +129,30 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
       <View>
         <Heading level={4}>Data Properties</Heading>
         <View>
-          <Flex direction="row" justifyContent="space-between">
+          <Flex direction="row" justifyContent="space-around">
             <Flex direction="column" gap="size-50" justifyContent="space-around">
-              <ActionButton onPress={addFieldDimension} isQuiet={true}>
-                <TableAndChart size="XXL" />
-              </ActionButton>
+              <TooltipTrigger delay={0}>
+                <ActionButton onPress={addFieldDimension} isQuiet={true}>
+                  <TableAndChart size="XXL" />
+                </ActionButton>
+                <Tooltip variant="info" showIcon>
+                  {'Add Dimension'}
+                </Tooltip>
+              </TooltipTrigger>
             </Flex>
             <Flex direction="column" gap="size-50" justifyContent="space-around">
-              <ActionButton onPress={addFieldMeasure} isQuiet={true}>
-                <TableAndChart size="XXL" />
-              </ActionButton>
+              <TooltipTrigger delay={0}>
+                <ActionButton onPress={addFieldMeasure} isQuiet={true}>
+                  <TableAndChart size="XXL" />
+                </ActionButton>
+                <Tooltip variant="info" showIcon>
+                  {'Add Measure'}
+                </Tooltip>
+              </TooltipTrigger>
             </Flex>
           </Flex>
         </View>
-        <Form>
+        <Form>         
           <ButtonGroup orientation="vertical">
             {props.visual.fields &&
               props.visual.fields.length > 0 &&
@@ -141,9 +168,20 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
                     }}
                     key={uuid()}
                   >
-                    <TableAndChart />
-
-                    <Text> {field.feature?.name || ''}</Text>
+                    <div className={'field'}>
+                      <div className={'fieldKey'}>
+                        <div>
+                          <TableAndChart />
+                        </div>
+                        <div>
+                          <Text> {field.feature?.name || ''}</Text>
+                        </div>
+                      </div>
+                      <div>
+                        {field.fieldType.constraint === 'REQUIRED' && <LockClosed aria-label="Locked" />}
+                        {field.fieldType.constraint === 'OPTIONAL' && <Delete aria-label="Locked" />}
+                      </div>
+                    </div>
                   </Button>
                 ))}
           </ButtonGroup>

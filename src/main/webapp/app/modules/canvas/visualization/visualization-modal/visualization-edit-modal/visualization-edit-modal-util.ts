@@ -23,10 +23,10 @@ export const getPropertiesTabTranslations = (): ITabData[] => {
       id: 'dataProperties',
       name: translate('views.editConfiguration.properties.dataProperties'),
     },
-    {
-      id: 'hierarchy',
-      name: translate('views.editConfiguration.properties.hierarchy'),
-    },
+    // {
+    //   id: 'hierarchy',
+    //   name: translate('views.editConfiguration.properties.hierarchy'),
+    // },
   ];
 };
 /**

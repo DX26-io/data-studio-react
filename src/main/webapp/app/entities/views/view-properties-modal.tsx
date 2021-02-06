@@ -21,6 +21,7 @@ import { translate, Translate } from 'react-jhipster';
 import { getViewErrorTranslations, getViewFromTranslations } from 'app/entities/views/view-util';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer';
+import { hasAuthority } from 'app/shared/auth/permissions-dispatch.service';
 
 export interface IViewPropertiesModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string; viewId: string }> {}
 
@@ -114,7 +115,7 @@ const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
             <Button variant="secondary" onPress={handleClose}>
               <Translate contentKey="entity.action.cancel">Cancel</Translate>
             </Button>
-            {!isEdit && (
+            {props.account && hasAuthority('DELETE_' + viewId + '_VIEW') && !isEdit && (
               <Button
                 variant="cta"
                 onPress={() => {
@@ -150,6 +151,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   updateSuccess: storeState.views.updateSuccess,
   errorMessage: storeState.views.errorMessage,
   dashboardEntity: storeState.dashboard.entity,
+  account: storeState.authentication.account,
+
 });
 
 const mapDispatchToProps = {

@@ -3,6 +3,7 @@ import { Content, Flex, Heading, IllustratedMessage, Text, View } from '@adobe/r
 import { getFirstLettersFromString } from 'app/shared/util/common-utils.ts';
 import NotFound from '@spectrum-icons/illustrations/NotFound';
 import { Translate } from 'react-jhipster';
+import NoSearchResults from '@spectrum-icons/illustrations/NoSearchResults';
 
 interface IDisplayNamePlaceholderProps {
   displayName: string;
@@ -36,6 +37,18 @@ export const NoItemsFoundPlaceHolder: React.FC<INoItemsFoundPlaceHolder> = ({ he
         <Content>
           <Translate contentKey={contentTranslationKey}>No items found content</Translate>
         </Content>
+      </IllustratedMessage>
+    </Flex>
+  );
+};
+
+export const NoDataFoundPlaceHolder = () => {
+  return (
+    <Flex direction="row" alignItems="center" justifyContent="center" marginY="size-800">
+      <IllustratedMessage>
+        <NoSearchResults />
+        <Heading>No matching results</Heading>
+        <Content>Try another search.</Content>
       </IllustratedMessage>
     </Flex>
   );

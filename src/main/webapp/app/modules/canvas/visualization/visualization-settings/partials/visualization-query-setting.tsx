@@ -22,7 +22,7 @@ const VisualizationQuerySetting = (props: IVisualizationQuerySettingProps) => {
     if (props.rowQuery && props.rowQuery.validationResultType === 'SUCCESS') {
       setRowQuery(props.rowQuery.rawQuery);
     }
-    if (props.visual.id && props.view?.id) {
+    if ((props.visual.id && props.view?.id && rowQuery==="") ||( props.updateSuccess)) {
       wrap = VisualWrap(props.visual);
       props.validateQuery({
         datasourceId: props.view.viewDashboard.dashboardDatasource.id,
@@ -43,6 +43,8 @@ const VisualizationQuerySetting = (props: IVisualizationQuerySettingProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   rowQuery: storeState.visualmetadata.rowQuery,
+  updateSuccess: storeState.visualmetadata.updateSuccess,
+
 });
 
 const mapDispatchToProps = { validateQuery };

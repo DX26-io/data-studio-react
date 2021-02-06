@@ -24,6 +24,7 @@ const initialState = {
   entity: defaultValue,
   updating: false,
   updateSuccess: false,
+  newCreated: false,
   rowQuery: null,
 };
 
@@ -42,6 +43,12 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         loading: true,
       };
     case REQUEST(ACTION_TYPES.CREATE_VISUALMETADATA):
+      return {
+        ...state,
+        errorMessage: null,
+        newCreated: false,
+        updating: true,
+      };
     case REQUEST(ACTION_TYPES.UPDATE_VISUALMETADATA):
     case REQUEST(ACTION_TYPES.DELETE_VISUALMETADATA):
       return {
@@ -54,6 +61,13 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
     case FAILURE(ACTION_TYPES.FETCH_VISUALMETADATA_LIST):
     case FAILURE(ACTION_TYPES.FETCH_VISUALMETADATA):
     case FAILURE(ACTION_TYPES.CREATE_VISUALMETADATA):
+      return {
+        ...state,
+        loading: false,
+        updating: false,
+        newCreated: false,
+        errorMessage: action.payload,
+      };
     case FAILURE(ACTION_TYPES.UPDATE_VISUALMETADATA):
     case FAILURE(ACTION_TYPES.DELETE_VISUALMETADATA):
     case FAILURE(ACTION_TYPES.VALIDATE_QUERY):
@@ -77,6 +91,14 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         entity: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.CREATE_VISUALMETADATA):
+      return {
+        ...state,
+        loading: false,
+        updating: false,
+        newCreated: true,
+        errorMessage: action.payload,
+        entity: action.payload.data,
+      };
     case SUCCESS(ACTION_TYPES.UPDATE_VISUALMETADATA):
       return {
         ...state,

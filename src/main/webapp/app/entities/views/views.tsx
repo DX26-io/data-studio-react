@@ -15,6 +15,7 @@ import ViewCardContent from './view-card/view-card-content';
 import Pagination from '@material-ui/lab/Pagination';
 import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
+import { hasAuthority } from 'app/shared/auth/permissions-dispatch.service';
 
 export interface IViewsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -23,7 +24,7 @@ export const Views = (props: IViewsProps) => {
   const [paginationState, setPaginationState] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
-  const { viewsList, totalItems, dashboardEntity } = props;
+  const { viewsList, totalItems, dashboardEntity,account } = props;
 
   const getAllEntities = () => {
     const dashboardId = props.match.params['id'];
@@ -70,17 +71,21 @@ export const Views = (props: IViewsProps) => {
   };
   const viewsListElement = props.viewsList.map(view => {
     return (
-        <Card
-          key={view.id}
-          thumbnail={
-            <View height="size-3200">
-              <ViewCardThumbnail  url={`${props.match.url}/${view.id}/build`} thumbnailImagePath={view.imageLocation} viewName={view.viewName} />
-            </View>
-          }
-          content={
-            <ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} />
-          }
-        />
+      <Card
+        key={view.id}
+        thumbnail={
+          <View height="size-3200">
+            <ViewCardThumbnail
+              url={`${props.match.url}/${view.id}/build`}
+              thumbnailImagePath={view.imageLocation}
+              viewName={view.viewName}
+            />
+          </View>
+        }
+        content={
+          <ViewCardContent account={account} viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} />
+        }
+      />
     );
   });
 
@@ -95,9 +100,11 @@ export const Views = (props: IViewsProps) => {
           ]}
           title={dashboardEntity.dashboardName}
         >
-          <Button variant="cta" onPress={() => props.history.push(`${props.match.url}/create`)}>
-            <Translate contentKey="views.home.createLabel">Create View</Translate>
-          </Button>
+          {props.account && hasAuthority(`WRITE_${dashboardEntity.id}_DASHBOARD`) && (
+            <Button variant="cta" onPress={() => props.history.push(`${props.match.url}/create`)}>
+              <Translate contentKey="views.home.createLabel">Create View</Translate>
+            </Button>
+          )}
           <></>
         </SecondaryHeader>
         {viewsList && viewsList.length > 0 ? (
@@ -126,6 +133,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   loading: storeState.views.loading,
   totalItems: storeState.views.totalItems,
   dashboardEntity: storeState.dashboard.entity,
+  account: storeState.authentication.account,
 });
 
 const mapDispatchToProps = {

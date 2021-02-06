@@ -28,6 +28,7 @@ import {
 } from 'app/entities/dashboard/dashboard-util';
 import { RouteComponentProps } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
+import { hasAuthority } from 'app/shared/auth/permissions-dispatch.service';
 
 export interface IDashboardPropertiesModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -46,7 +47,7 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
   const { DASHBOARD_LABEL, CATEGORY_LABEL, DESCRIPTION_LABEL, DATASOURCE_LABEL, DATASOURCE_PLACEHOLDER } = getDashboardFromTranslations();
   const { ERROR_LABEL, ERROR_CLOSE_LABEL } = getDashboardErrorTranslations();
   const { dashboardEntity, dataSourcesList, updating } = props;
-
+  const dashboardId = props.match.params.id;
   const getDatasourceByName = id => {
     const _datasource = dataSourcesList.filter(function (item) {
       return item.name === id;
@@ -72,7 +73,6 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
   };
 
   useEffect(() => {
-    const dashboardId = props.match.params.id;
     if (dashboardId) {
       props.getEntity(dashboardId);
     }
@@ -163,7 +163,8 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
             <Button variant="secondary" onPress={handlePropertiesModelClose}>
               <Translate contentKey="entity.action.cancel">Close</Translate>
             </Button>
-            {!isEdit && (
+
+            {props.account && hasAuthority('DELETE_' + dashboardId + '_DASHBOARDS') && !isEdit && (
               <Button variant="cta" onPress={handleEdit}>
                 <Translate contentKey="entity.action.edit">Edit</Translate>
               </Button>
@@ -197,6 +198,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.dashboard.updating,
   errorMessage: storeState.dashboard.errorMessage,
   dataSourcesList: storeState.datasources.entities,
+  account: storeState.authentication.account,
 });
 
 const mapDispatchToProps = { getEntity, updateEntity, getDataSourceEntities, reset };

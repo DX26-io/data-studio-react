@@ -1,5 +1,17 @@
 import React, { ReactText, useEffect, useState } from 'react';
-import { ActionButton, Flex, Item, Menu, MenuTrigger, Section, Text, Tooltip, TooltipTrigger, View } from '@adobe/react-spectrum';
+import {
+  ActionButton,
+  DialogContainer,
+  Flex,
+  Item,
+  Menu,
+  MenuTrigger,
+  Section,
+  Text,
+  Tooltip,
+  TooltipTrigger,
+  View,
+} from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
@@ -17,6 +29,10 @@ import Copy from '@spectrum-icons/workflow/Copy';
 import 'app/modules/canvas/visualization/canvas.scss';
 import { IViews } from 'app/shared/model/views.model';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
+import { VisualMetadataContainerAdd } from '../util/visualmetadata-container.service';
+import { VisualizationEditModal } from './visualization-edit-modal/visualization-edit-modal-popup';
+import { getVisual } from '../util/VisualDispatchService';
+import { getVisualizationData } from '../util/visualization-render-utils';
 
 interface IVisualizationHeaderProps {
   visual: IVisualMetadataSet;
@@ -27,6 +43,8 @@ interface IVisualizationHeaderProps {
 
 const VisualizationHeader: React.FC<IVisualizationHeaderProps> = props => {
   const [redirect, setRedirect] = useState<ReactText>('');
+  const [isOpen, setOpen] = useState(false);
+
   const { handleVisualizationClick } = props;
   const createFields = newVM => {
     // let order = 0;
@@ -41,27 +59,6 @@ const VisualizationHeader: React.FC<IVisualizationHeaderProps> = props => {
           constraint: item.constraint,
         };
       });
-    // newVM.fields.forEach(function (field) {
-    //   Visualizations.getFieldType(
-    //     {
-    //       id: newVM.metadataVisual.id,
-    //       fieldTypeId: field.fieldType.id,
-    //     },
-    //     function (result) {
-    //       field.fieldType = result;
-    //       field.order = order + 1;
-    //       field.properties = field.fieldType.propertyTypes.map(function (item) {
-    //         return {
-    //           propertyType: item.propertyType,
-    //           value: item.propertyType.defaultValue,
-    //           type: item.propertyType.type,
-    //           order: item.order,
-    //         };
-    //       });
-    //     },
-    //     function (error) {}
-    //   );
-    // });
 
     return newVM;
   };
@@ -112,14 +109,11 @@ const VisualizationHeader: React.FC<IVisualizationHeaderProps> = props => {
     return VisualWrap(newVM);
   };
 
-  const setVisualProps = (v, clonedV) => {
-    clonedV.bodyProperties = v.bodyProperties;
-    clonedV.properties = v.properties;
-    clonedV.titleProperties = v.titleProperties;
-    clonedV.fields = v.fields;
-    return clonedV;
+  const closeDialog = () => {
+    const visual = getVisual();
+    setOpen(false);
+    getVisualizationData(visual, props.view)
   };
-
   useEffect(() => {
     if (redirect === 'Copy') {
       const viz = createVisualMetadata(props.visual.metadataVisual);
@@ -129,9 +123,23 @@ const VisualizationHeader: React.FC<IVisualizationHeaderProps> = props => {
       viz.fields = props.visual.fields;
       handleVisualizationClick(viz);
     }
+    if (redirect === 'Edit') {
+      setOpen(true);
+    }
   }, [redirect]);
   return (
     <>
+      <DialogContainer type="fullscreenTakeover" onDismiss={closeDialog}>
+        {isOpen && (
+          <VisualizationEditModal
+            id={props.view.viewDashboard.id}
+            setOpen={setOpen}
+            viewId={props.view.id}
+            visualizationId={props.visual.id}
+            {...props}
+          ></VisualizationEditModal>
+        )}
+      </DialogContainer>
       <View backgroundColor="gray-200">
         <Flex direction="row" justifyContent="space-between" alignContent="center">
           <Flex direction="column" alignItems="center" justifyContent="space-around">
@@ -193,14 +201,15 @@ const VisualizationHeader: React.FC<IVisualizationHeaderProps> = props => {
                 </Item>
               </Menu>
             </MenuTrigger>
-            {redirect === 'Edit' && (
+            {/* open with modal popup */}
+            {/* {redirect === 'Edit' && (
               <Redirect
                 push={true}
                 to={{
                   pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/edit/' + props.visual.id,
                 }}
               />
-            )}
+            )} */}
             {redirect === 'Delete' && (
               <Redirect
                 to={{

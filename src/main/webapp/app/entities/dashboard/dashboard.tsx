@@ -15,6 +15,7 @@ import DashboardCreateModal from './dashboard-create-modal';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+import { hasAuthority, saveAccount } from 'app/shared/auth/permissions-dispatch.service';
 
 export interface IDashboardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -52,7 +53,10 @@ export const Dashboard = (props: IDashboardProps) => {
         order: sortSplit[1],
       });
     }
-  }, [props.location.search]);
+    if(props.account){
+      saveAccount(props.account)
+    }
+  }, [props.location.search,props.account]);
 
   const handleChangePage = (event, newPage) => {
     setPaginationState({
@@ -81,6 +85,7 @@ export const Dashboard = (props: IDashboardProps) => {
             dashboardType={dashboard.category}
             dashboardId={dashboard.id}
             datasource={dashboard.dashboardDatasource.name}
+            account={props.account}
           />
         }
       />
@@ -97,9 +102,11 @@ export const Dashboard = (props: IDashboardProps) => {
           ]}
           title={DASHBOARDS_TITLE}
         >
-          <Button variant="cta" onPress={() => props.history.push(`${match.url}/create`)}>
-            <Translate contentKey="dashboard.home.createLabel">Create</Translate>
-          </Button>
+          {props.account && hasAuthority("WRITE_DASHBOARDS_APPLICATION") && (
+            <Button variant="cta" onPress={() => props.history.push(`${match.url}/create`)}>
+              <Translate contentKey="dashboard.home.createLabel">Create</Translate>
+            </Button>
+          )}
           <DialogContainer type="fullscreenTakeover" onDismiss={() => setDashboardCreateModelOpen(false)} {...props}>
             {isDashboardCreateModelOpen && <DashboardCreateModal />}
           </DialogContainer>
@@ -130,10 +137,11 @@ export const Dashboard = (props: IDashboardProps) => {
   );
 };
 
-const mapStateToProps = ({ dashboard }: IRootState) => ({
-  dashboardList: dashboard.entities,
-  loading: dashboard.loading,
-  totalItems: dashboard.totalItems,
+const mapStateToProps = (storeState: IRootState) => ({
+  dashboardList: storeState.dashboard.entities,
+  loading: storeState.dashboard.loading,
+  totalItems: storeState.dashboard.totalItems,
+  account: storeState.authentication.account,
 });
 
 const mapDispatchToProps = {

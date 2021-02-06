@@ -4,7 +4,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ActionButton, Flex, Heading, Text, View } from '@adobe/react-spectrum';
 import ViewGrid from '@spectrum-icons/workflow/ViewGrid';
-
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import { useHistory } from 'react-router-dom';
 

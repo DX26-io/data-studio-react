@@ -13,6 +13,8 @@ import {
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getDatasourcesFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
+import { VisualMetadataContainerUpdate } from '../../util/visualmetadata-container.service';
+import { setVisual } from '../../util/VisualDispatchService';
 export interface IVisualizationEditModalProps
   extends StateProps,
     DispatchProps,
@@ -32,7 +34,9 @@ const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
       viewId: parseInt(viewId, 10),
       visualMetadata: props.visualmetadataEntity,
     });
+    VisualMetadataContainerUpdate(props.visualmetadataEntity.id, props.visualmetadataEntity, 'id');
   };
+
   useEffect(() => {
     if (visualizationId) {
       props.getVisualmetadataEntity(visualizationId);
@@ -40,7 +44,10 @@ const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
       props.getViewEntity(viewId);
     }
   }, []);
- 
+  
+  useEffect(() => {
+    setVisual(props.visualmetadataEntity);
+  }, [props.visualmetadataEntity]);
   return (
     <>
       <DialogContainer type="fullscreenTakeover" onDismiss={handleClose}>
@@ -84,7 +91,7 @@ const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   visualmetadataEntity: storeState.visualmetadata.entity,
   featuresList: storeState.feature.entities,
-  view: storeState.views.entity
+  view: storeState.views.entity,
 });
 
 const mapDispatchToProps = { getVisualmetadataEntity, getfeatureEntities, getViewEntity, updateVisualmetadataEntity };

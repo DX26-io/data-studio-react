@@ -1,7 +1,7 @@
 import React, { ReactText, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { ActionButton, Flex, Text, Item, Menu, MenuTrigger, View, Button, DialogContainer } from '@adobe/react-spectrum';
-
+import { View, Button, DialogContainer } from '@adobe/react-spectrum';
+import $ from 'jquery';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import './canvas.scss';
@@ -17,18 +17,34 @@ import {
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import VisualizationsList from 'app/entities/visualizations/visualizations-list';
-import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
-import { renderVisualization } from 'app/modules/canvas/visualization/util/visualization-render-utils';
-import { connect as connectWebSocket, subscribe } from 'app/modules/canvas/visualization/util/stomp-client';
+import {
+  getVisualizationData,
+  renderVisualization,
+  ValidateFields,
+} from 'app/modules/canvas/visualization/util/visualization-render-utils';
+import {
+  VisualMetadataContainerAdd,
+  VisualMetadataContainerGetOne,
+} from 'app/modules/canvas/visualization/util/visualmetadata-container.service';
+import {
+  getEntity as getVisualmetadataEntity,
+  updateEntity as updateVisualmetadataEntity,
+} from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { connectWebSocket, subscribeWebSocket } from 'app/shared/websocket/stomp-client.service';
 import VisualizationHeader from './visualization-modal/visualization-header';
 import 'app/modules/canvas/visualization/canvas.scss';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { getToken } from 'app/shared/reducers/authentication';
+import { NoDataFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
+import Loader from 'app/shared/components/card/loader/loader';
+import { getVisual } from './util/VisualDispatchService';
 
 const ReactGridLayout = WidthProvider(RGL);
 export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
 
 const Canvas = (props: VisualizationProp) => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
+  const [isSocketConnaction, setSocketConnaction] = useState(false);
   const [visualmetadataList, setvisualmetadata] = useState<IVisualMetadataSet[]>();
 
   const onLayoutChange = _visualmetaList => {
@@ -41,10 +57,7 @@ const Canvas = (props: VisualizationProp) => {
         (item.yPosition = _visualmetaList[i].y),
         (item.height = _visualmetaList[i].h),
         (item.width = _visualmetaList[i].w);
-      VisualWrap(item);
-      //renderVisualization(item, props.view);
     });
-    //setvisualmetadata(_visualmetaList);
   };
 
   const onResize = _visualmetaList => {
@@ -52,24 +65,56 @@ const Canvas = (props: VisualizationProp) => {
   };
 
   const onResizeStop = (layout, oldItem, newItem, placeholder, e, element) => {
-    //  To do
+    const v = VisualMetadataContainerGetOne(oldItem.i);
+    if (v && v.data?.length > 0) {
+      renderVisualization(v, v.data);
+    }
+  };
+
+  const onExchangeMetadataError = data => {
+    const body = JSON.parse(data.body || '{}');
+    // console.log('received error=' + body);
   };
 
   const onExchangeMetadata = data => {
-    debugger;
+    const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
+    if (data.headers.request === 'filters') {
+    } else {
+      const v = VisualMetadataContainerGetOne(data.headers.queryId);
+      if (v && metaData.data.length > 0) {
+        v.data = metaData.data;
+        $(`.loader-${v.id}`).hide();
+        $(`.dataNotFound-${v.id}`).hide();
+        renderVisualization(v, metaData.data);
+      } else {
+        $(`.dataNotFound-${v.id}`).show();
+        $(`.loader-${v.id}`).hide();
+      }
+    }
   };
-  const onExchangeMetadataError = data => {
-    debugger;
+
+  const renderVisualizationById = item => {
+    if (ValidateFields(item.fields)) {
+      getVisualizationData(item, props.view);
+    } else {
+      $(`.loader-${item.id}`).hide();
+    }
+  };
+
+  const connectWeb = () => {
+    connectWebSocket({ token: getToken() }, function (frame) {
+      // console.log(' connected web socket');
+      subscribeWebSocket('/user/exchange/metaData', onExchangeMetadata);
+      subscribeWebSocket('/user/exchange/metaDataError', onExchangeMetadataError);
+      setSocketConnaction(true);
+      VisualMetadataContainerAdd(props.visualmetadata?.visualMetadataSet);
+      props.visualmetadata.visualMetadataSet.map((item, i) => {
+        renderVisualizationById(item);
+      });
+    });
   };
 
   useEffect(() => {
-    const token = Storage.local.get('jhi-authenticationToken') || Storage.session.get('jhi-authenticationToken');
-
-    connectWebSocket({ token: token }, frame => {
-      console.log('flair-bi controller connected web socket');
-      subscribe('/user/exchange/metaData', onExchangeMetadata);
-      subscribe('/user/exchange/metaDataError', onExchangeMetadataError);
-    });
     if (props.match.params.viewId) {
       props.getVisualizationsEntities();
       props.getViewEntity(props.match.params.viewId);
@@ -79,16 +124,20 @@ const Canvas = (props: VisualizationProp) => {
 
   useEffect(() => {
     if (props.visualmetadata?.visualMetadataSet?.length > 0) {
+      if (!isSocketConnaction) {
+        connectWeb();
+      }
       props.visualmetadata.visualMetadataSet.map(item => {
         (item.x = item.xPosition), (item.y = item.yPosition), (item.h = item.height), (item.w = item.width);
       });
       setvisualmetadata(props.visualmetadata.visualMetadataSet);
     }
     if (props.isCreated) {
-      //props.getCurrentViewState(props.match.params.viewId);
-      props.visualmetadata.visualMetadataSet.push(props.visualmetadataEntity);
+      const visualMetadata = VisualMetadataContainerAdd(props.visualmetadataEntity);
+      setvisualmetadata(visualMetadata);
+      renderVisualizationById(props.visualmetadataEntity);
     }
-  }, [props.visualmetadata, props.isCreated]);
+  }, [props.visualmetadata, props.isCreated, isSocketConnaction, props.visualmetadataEntity]);
 
   const handleVisualizationClick = v => {
     props.addVisualmetadataEntity({
@@ -131,9 +180,20 @@ const Canvas = (props: VisualizationProp) => {
               handleVisualizationClick={handleVisualizationClick}
               view={props.view}
               totalItem={visualmetadataList?.length || 0}
+              {...props}
             ></VisualizationHeader>
           </div>
-          <div id={`visualBody-${v.id}`}>{/* <VisualizationRender visual={v} ></VisualizationRender> */}</div>
+          <div id={`visualBody-${v.id}`}>
+            <div className="illustrate">
+              <div className={`loader loader-${v.id}`}>
+                <Loader />
+              </div>
+              <div className={`dataNotFound dataNotFound-${v.id}`}>
+                <NoDataFoundPlaceHolder />
+              </div>
+            </div>
+            <div id={`visualization-${v.id}`} className="visualization"></div>
+          </div>
         </div>
       );
     });
@@ -145,7 +205,7 @@ const Canvas = (props: VisualizationProp) => {
           { label: 'Home', route: '/' },
           { label: 'Dashboards', route: '/dashboards' },
           { label: 'Views', route: `/dashboards/${props.view?.viewDashboard?.id}` },
-          { label: 'Canvas', route: `/dashboards/${props.view?.viewDashboard?.id}/${props.view?.id}/build`  }
+          { label: 'Canvas', route: `/dashboards/${props.view?.viewDashboard?.id}/${props.view?.id}/build` },
         ]}
         title={props.view.viewName}
       >
@@ -180,6 +240,7 @@ const Canvas = (props: VisualizationProp) => {
             onResizeStop={onResizeStop}
             draggableHandle=".header"
             draggableCancel=".WidgetDragCancel"
+            isBounded={false}
           >
             {generateWidge}
           </ReactGridLayout>
@@ -194,7 +255,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
   isAuthenticated: storeState.authentication.isAuthenticated,
   visualmetadata: storeState.views.viewState,
-  isCreated: storeState.visualmetadata.updateSuccess,
+  isCreated: storeState.visualmetadata.newCreated,
   visualizationsList: storeState.visualizations.entities,
   featuresList: storeState.feature.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
@@ -208,6 +269,9 @@ const mapDispatchToProps = {
   addVisualmetadataEntity,
   deleteVisualmetadataEntity,
   saveViewState,
+
+  getVisualmetadataEntity,
+  updateVisualmetadataEntity,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
