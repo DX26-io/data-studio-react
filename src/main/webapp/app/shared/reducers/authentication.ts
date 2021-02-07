@@ -280,7 +280,7 @@ export const login: (username: string, password: string, rememberMe?: boolean) =
   await dispatch(getSession());
 };
 
-export const loginWithProvider: (provider: string) => void = provider => async dispatch => {
+export const loginWithProvider: (provider: string) => void = provider => async (dispatch, getState) => {
   const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
   try {
     await firebase.auth().signInWithPopup(googleAuthProvider);
@@ -290,7 +290,9 @@ export const loginWithProvider: (provider: string) => void = provider => async d
       payload: axios.post('api/registerWithProvider', { idToken: tkn }),
     });
     setAuthTokenWithProvider(result);
-    await dispatch(getSession());
+    if (!getState().authentication.loginProviderEmailConfirmationToken) {
+      await dispatch(getSession());
+    }
   } catch (error) {
     toast.error(error.message);
   }
