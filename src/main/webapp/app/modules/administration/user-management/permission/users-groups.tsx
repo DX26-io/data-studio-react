@@ -74,7 +74,6 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
         <SearchField value={searchValue} onChange={setSearchValue} placeholder="User or Group" label="Search" data-testid="search" />
       </div>
       <View backgroundColor="gray-75" width="85%" margin="20px auto">
-        {/* TODO : need to check the issue of this component. onSelectionChange throws compilation issue */}
         <Tabs aria-label="roles" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
           {item => (
             <Item title={translate(item.name)}>
