@@ -19,6 +19,7 @@ export const getInitialState = () => {
     permissions: {
       dashboardPermissions: [],
       totalDashboardPermissions: 0,
+      viewsPermissions:[]
     },
   };
 };
@@ -201,6 +202,7 @@ describe('Dashboards Permissions', () => {
         },
       ],
       totalDashboardPermissions: 1,
+      viewsPermissions:[]
   }
 
   const wrapper = (props: IDashboardsPermissionsProps) => {
@@ -229,4 +231,13 @@ describe('Dashboards Permissions', () => {
     expect(tree).toBeDefined();
     expect(receivedProps.getUserDashboardPermissions.mock.calls.length).toEqual(1);
   });
+
+  it('on views permissions dialog open', () => {
+    const tree = wrapper(null);
+    const updatePermissions = tree.getByTestId('update-views-permissions-1002');
+    userEvent.click(updatePermissions);
+    const dialog = tree.getByTestId('views-permissions-dialog');
+    expect(dialog).toBeDefined();
+  });
+
 });

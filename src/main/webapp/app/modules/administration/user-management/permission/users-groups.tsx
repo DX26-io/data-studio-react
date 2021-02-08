@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactText } from 'react';
 import { connect } from 'react-redux';
 import { getUserGroups, searchUserGroups } from '../groups/user-group.reducer';
 import { getUsers, searchUsers } from '../users/user.reducer';
@@ -9,7 +9,7 @@ import User from '@spectrum-icons/workflow/User';
 import UserGroup from '@spectrum-icons/workflow/UserGroup';
 import { useAsyncList } from '@react-stately/data';
 import { Tabs } from '@react-spectrum/tabs';
-import { Translate,translate } from 'react-jhipster';
+import { Translate, translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE, ACTIVE_PAGE } from 'app/shared/util/pagination.constants';
 
 export interface IUsersGroupsProps extends StateProps, DispatchProps {
@@ -23,7 +23,7 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
   ];
 
   const [searchValue, setSearchValue] = React.useState('');
-  const [tabId, setTabId] = React.useState(1);
+  const [tabId, setTabId] = useState<ReactText>(1);
 
   const { permissionProps, groups, users } = props;
 
@@ -71,7 +71,7 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
   return (
     <div>
       <div style={{ marginLeft: '7%', marginTop: '20px' }}>
-        <SearchField value={searchValue} onChange={setSearchValue}  placeholder="User or Group" label="Search" data-testid="search" />
+        <SearchField value={searchValue} onChange={setSearchValue} placeholder="User or Group" label="Search" data-testid="search" />
       </div>
       <View backgroundColor="gray-75" width="85%" margin="20px auto">
         {/* TODO : need to check the issue of this component. onSelectionChange throws compilation issue */}

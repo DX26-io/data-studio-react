@@ -231,4 +231,23 @@ describe('View Permissions dialog', () => {
     expect(receivedProps.getUserViewsPermissions.mock.calls.length).toEqual(1);
   });
 
+  //checkbox
+
+  it('on save permissions', () => {
+    const tree = wrapper(null);
+    const checkboxElement = tree.getByTestId('checkbox-WRITE');
+    userEvent.click(checkboxElement);
+    userEvent.type(document.activeElement, "false");
+    const submitButton = tree.getByTestId('permissions-submit');
+    userEvent.click(submitButton);
+    expect(receivedProps.updateUserPermissions.mock.calls.length).toEqual(1);
+  });
+
+  it('on views permissions dialog close', () => {
+    const tree = wrapper(null);
+    const cancelButton = tree.getByTestId('permissions-cancel');
+    userEvent.click(cancelButton);
+    expect(viewsPermissionsProps.setOpen.mock.calls.length).toEqual(1);
+  });
+
 });

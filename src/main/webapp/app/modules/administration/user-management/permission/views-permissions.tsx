@@ -105,7 +105,7 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
   };
 
   return (
-    <Dialog data-testid="group-form-dialog" width="90vw" top="3vh">
+    <Dialog data-testid="views-permissions-dialog" width="90vw" top="3vh">
       <Heading>
         <Flex alignItems="center" gap="size-100" data-testid="group-form-heading">
           <Translate contentKey="permissions.viewsPermissions.title">Edit permissions for Administrators - </Translate>
@@ -114,10 +114,10 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
       </Heading>
       <Header data-testid="group-form-action">
         <Flex alignItems="center" gap="size-100">
-          <Button variant="secondary" onPress={handleClose} data-testid="group-form-cancel">
+          <Button variant="secondary" onPress={handleClose} data-testid="permissions-cancel">
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
-          <Button variant="cta" onPress={save} isDisabled={updating} data-testid="group-form-submit">
+          <Button variant="cta" onPress={save} isDisabled={updating} data-testid="permissions-submit">
             <Translate contentKey="entity.action.save">Save</Translate>
           </Button>
         </Flex>
@@ -142,11 +142,6 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
               <TableCell align="center">
                 <Translate contentKey="permissions.delete">DELETE</Translate>
               </TableCell>
-              {/* "read_published" : "READ PUBLISHED",
-    "delete_published" : "DELETE PUBLISHED",
-    "release_published" : "RELEASE PUBLISHED",
-    "request_published" : "REQUEST PUBLISHED",
-    "manage_published" : "MANAGE PUBLISHED", */}
               <TableCell align="center">
                 <Translate contentKey="permissions.read_published"></Translate>
               </TableCell>
@@ -172,6 +167,7 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
                   {view.info.permissionMetadata.map((p, j) => (
                     <TableCell align="center" key={`permission-${p.permission.key.action}`}>
                       <Checkbox
+                        data-testid = {`checkbox-${p.permission.key.action}`}
                         defaultSelected={p.hasIt}
                         isEmphasized
                         onChange={() => {
