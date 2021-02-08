@@ -1,5 +1,6 @@
 const config = {
   VERSION: process.env.VERSION,
+  CLOUD: false,
 };
 
 export default config;
