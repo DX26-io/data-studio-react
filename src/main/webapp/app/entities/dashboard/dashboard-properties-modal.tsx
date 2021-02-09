@@ -20,7 +20,7 @@ import { getEntity, updateEntity, reset } from './dashboard.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { translate, Translate } from 'react-jhipster';
-import { getEntities as getDataSourceEntities } from '../datasources/datasources.reducer';
+import { getEntities as getDataSourceEntities } from 'app/modules/administration/sources/datasources/datasources.reducer';
 import {
   getDashboardErrorTranslations,
   getDashboardFromTranslations,
@@ -196,7 +196,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updateSuccess: storeState.dashboard.updateSuccess,
   updating: storeState.dashboard.updating,
   errorMessage: storeState.dashboard.errorMessage,
-  dataSourcesList: storeState.datasources.entities,
+  dataSourcesList: storeState.datasources.datasources,
 });
 
 const mapDispatchToProps = { getEntity, updateEntity, getDataSourceEntities, reset };

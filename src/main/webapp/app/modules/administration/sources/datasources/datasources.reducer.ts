@@ -18,7 +18,7 @@ export const ACTION_TYPES = {
 const initialState = {
   loading: false,
   errorMessage: null,
-  entities: [] as ReadonlyArray<IDatasources>,
+  datasources: [] as ReadonlyArray<IDatasources>,
   entity: defaultValue,
   updating: false,
   totalItems: 0,
@@ -64,7 +64,7 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
       return {
         ...state,
         loading: false,
-        entities: action.payload.data,
+        datasources: action.payload.data,
         totalItems: parseInt(action.payload.headers['x-total-count'], 10),
       };
     case SUCCESS(ACTION_TYPES.FETCH_DATASOURCES):

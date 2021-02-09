@@ -8,19 +8,18 @@ import applicationProfile, { ApplicationProfileState } from './application-profi
 import administration, { AdministrationState } from 'app/modules/administration/administration.reducer';
 import userManagement, { UserManagementState } from 'app/modules/administration/user-management/users/user.reducer';
 import userGroups, { UserGroupsState } from 'app/modules/administration/user-management/groups/user-group.reducer';
+import connections, { ConnectionsState } from 'app/modules/administration/sources/connections/connections.reducer';
+import datasources, { DatasourcesState } from 'app/modules/administration/sources/datasources/datasources.reducer';
 import register, { RegisterState } from 'app/modules/account/register/register.reducer';
 import activate, { ActivateState } from 'app/modules/account/activate/activate.reducer';
 import password, { PasswordState } from 'app/modules/account/password/password.reducer';
 import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
+
 // prettier-ignore
 import dashboard, {
   DashboardState
 } from 'app/entities/dashboard/dashboard.reducer';
-// prettier-ignore
-import datasources, {
-  DatasourcesState
-} from 'app/entities/datasources/datasources.reducer';
 // prettier-ignore
 import views, {
   ViewsState
@@ -34,6 +33,7 @@ export interface IRootState {
   readonly administration: AdministrationState;
   readonly userManagement: UserManagementState;
   readonly userGroups: UserGroupsState;
+  readonly connections: ConnectionsState;
   readonly register: RegisterState;
   readonly activate: ActivateState;
   readonly passwordReset: PasswordResetState;
@@ -53,6 +53,7 @@ const rootReducer = combineReducers<IRootState>({
   administration,
   userManagement,
   userGroups,
+  connections,
   register,
   activate,
   passwordReset,

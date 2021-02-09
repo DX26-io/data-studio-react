@@ -1,0 +1,11 @@
+{
+  "connections": {
+    "home": {
+      "title": "Connections",
+      "description": "Manage your datasource connections"
+    },
+    "id": "ID",
+    "name": "Name",
+    "type": "Type"
+  }
+}
