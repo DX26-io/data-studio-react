@@ -22,7 +22,25 @@ export const Login: React.FC<ILoginProps> = props => {
     props.history.push('/signup');
   };
 
-  return !props.isAuthenticated ? (
+  if (props.loginProviderEmailConfirmationToken) {
+    return (<Redirect
+      to={{
+        pathname: '/signup/realm',
+      }}
+    />);
+  }
+
+  if (props.isAuthenticated) {
+    return <Redirect
+      to={{
+        pathname: '/',
+        search: props.location.search,
+        state: {from: props.location},
+      }}
+    />;
+  }
+
+  return (
     <Grid areas={['image login']} columns={['1fr', '2fr']} rows={['auto']} minHeight={window.innerHeight} data-testid="login-container">
       {/* <Image src="https://i.imgur.com/Z7AzH2c.png" alt="alt-text" objectFit="cover" gridArea="image" />*/}
       <View gridArea="image" backgroundColor="gray-400" />
@@ -35,20 +53,13 @@ export const Login: React.FC<ILoginProps> = props => {
         <LoginFooter />
       </View>
     </Grid>
-  ) : (
-    <Redirect
-      to={{
-        pathname: '/',
-        search: props.location.search,
-        state: { from: props.location },
-      }}
-    />
   );
 };
 
 const mapStateToProps = ({ authentication }: IRootState) => ({
   isAuthenticated: authentication.isAuthenticated,
   loginError: authentication.loginError,
+  loginProviderEmailConfirmationToken: authentication.loginProviderEmailConfirmationToken,
 });
 
 const mapDispatchToProps = { login, loginWithProvider };
