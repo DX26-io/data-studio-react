@@ -13,7 +13,7 @@ import reducer, {
   getEntity,
   updateEntity,
   reset,
-} from 'app/entities/datasources/datasources.reducer';
+} from 'app/modules/administration/sources/datasources/datasources.reducer';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IDatasources, defaultValue } from 'app/shared/model/datasources.model';
 
@@ -87,7 +87,7 @@ describe('Entities reducer tests', () => {
     it('should reset the state', () => {
       expect(
         reducer(
-          { ...initialState, loading: true },
+          { ...initialState, loading: true, datasources: [] },
           {
             type: ACTION_TYPES.RESET,
           }

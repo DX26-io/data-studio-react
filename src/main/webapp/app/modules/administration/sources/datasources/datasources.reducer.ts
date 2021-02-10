@@ -105,7 +105,7 @@ export const getEntities: ICrudGetAllAction<IDatasources> = (page, size, sort) =
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_DATASOURCES_LIST,
-    payload: axios.get<IDatasources>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
+    payload: axios.get<IDatasources>(`${requestUrl}`),
   };
 };
 

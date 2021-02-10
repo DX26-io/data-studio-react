@@ -1,31 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table } from 'reactstrap';
-import { Translate, ICrudGetAllAction, TextFormat, getSortState, IPaginationBaseState, JhiPagination, JhiItemCount } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { RouteComponentProps } from 'react-router-dom';
+import { getEntities } from './datasources.reducer';
+import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
+
+import { Translate, getSortState, translate } from 'react-jhipster';
+import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
 import { IRootState } from 'app/shared/reducers';
-import { getEntities } from './datasources.reducer';
-import { IDatasources } from 'app/shared/model/datasources.model';
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
-import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
-import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
+import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
+import Edit from '@spectrum-icons/workflow/Edit';
 
 export interface IDatasourcesProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Datasources = (props: IDatasourcesProps) => {
-  const [paginationState, setPaginationState] = useState(
+  const [pagination, setPagination] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
 
   const getAllEntities = () => {
-    props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
+    props.getEntities(pagination.activePage - 1, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
   };
 
   const sortEntities = () => {
     getAllEntities();
-    const endURL = `?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`;
+    const endURL = `?page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
     if (props.location.search !== endURL) {
       props.history.push(`${props.location.pathname}${endURL}`);
     }
@@ -33,7 +34,7 @@ export const Datasources = (props: IDatasourcesProps) => {
 
   useEffect(() => {
     sortEntities();
-  }, [paginationState.activePage, paginationState.order, paginationState.sort]);
+  }, [pagination.activePage, pagination.order, pagination.sort]);
 
   useEffect(() => {
     const params = new URLSearchParams(props.location.search);
@@ -41,8 +42,8 @@ export const Datasources = (props: IDatasourcesProps) => {
     const sort = params.get('sort');
     if (page && sort) {
       const sortSplit = sort.split(',');
-      setPaginationState({
-        ...paginationState,
+      setPagination({
+        ...pagination,
         activePage: +page,
         sort: sortSplit[0],
         order: sortSplit[1],
@@ -51,21 +52,121 @@ export const Datasources = (props: IDatasourcesProps) => {
   }, [props.location.search]);
 
   const sort = p => () => {
-    setPaginationState({
-      ...paginationState,
-      order: paginationState.order === 'asc' ? 'desc' : 'asc',
+    setPagination({
+      ...pagination,
+      order: pagination.order === 'asc' ? 'desc' : 'asc',
       sort: p,
     });
   };
 
-  const handlePagination = currentPage =>
-    setPaginationState({
-      ...paginationState,
-      activePage: currentPage,
+  const handleChangePage = (event, newPage) => {
+    setPagination({
+      ...pagination,
+      activePage: newPage,
     });
+  };
 
-  const { datasources, match, loading, totalItems } = props;
-  return <div>datasources</div>;
+  const handleChangeRowsPerPage = event => {
+    setPagination({
+      ...pagination,
+      itemsPerPage: +event.target.value,
+    });
+  };
+
+  const { datasources, loading, totalItems } = props;
+  return (
+    <div>
+      <SecondaryHeader
+        breadcrumbItems={[
+          { label: 'Home', route: '/' },
+          { label: 'Sources', route: '/administration/sources' },
+          { label: 'Datasources', route: '/administration/sources/datasources' },
+        ]}
+        title={translate('datasources.home.title')}
+      >
+        {/* <Button
+          variant="cta"
+          onPress={() => {
+            setOpen(true);
+            setNew(true);
+            setGroupName('');
+          }}
+          data-testid="create-group"
+        >
+          <Translate contentKey="entity.action.create">Create</Translate>
+        </Button> */}
+      </SecondaryHeader>
+      {/* <DialogContainer onDismiss={() => setOpen(false)}>
+        {isOpen && (
+          <UserGroupUpdate
+            setUpdateSuccess={setUpdateSuccess}
+            isNew={isNew}
+            setOpen={setOpen}
+            groupName={groupName}
+            {...props}
+          ></UserGroupUpdate>
+        )}
+      </DialogContainer> */}
+      <div className="dx26-container">
+        <Paper className="dx26-table-pager">
+          <TableContainer>
+            <Table aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">
+                    <Translate contentKey="global.field.id">ID</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="datasources.name">Name</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="datasources.connectionName">Name</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="entity.action.manage">Manage</Translate>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {datasources.map((datasource, i) => (
+                  <TableRow key={`datasource-${i}`}>
+                    <TableCell component="th" scope="row" align="center">
+                      {datasource.id}
+                    </TableCell>
+                    <TableCell align="center">{datasource.name}</TableCell>
+                    <TableCell align="center">{datasource.connectionName}</TableCell>
+                    <TableCell align="center">
+                      <Flex gap="size-100" justifyContent="center">
+                        <a
+                        // onClick={() => {
+                        //   setOpen(true);
+                        //   setNew(false);
+                        //   setGroupName(userGroup.name);
+                        // }}
+                        >
+                          <Edit size="S" />
+                        </a>
+                      </Flex>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {/* TODO : api pagination is not implemented so commenting the below code for time being */}
+          {/* <TablePagination
+            rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
+            component="div"
+            count={totalItems}
+            rowsPerPage={pagination.itemsPerPage}
+            page={pagination.activePage}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          /> */}
+        </Paper>
+      </div>
+    </div>
+  );
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
