@@ -62,6 +62,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
       return {
         ...state,
         loading: true,
+        redirectTo: null,
       };
     case FAILURE(ACTION_TYPES.LOGIN):
     case FAILURE(ACTION_TYPES.LOGIN_WITH_PROVIDER):
@@ -157,6 +158,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...state,
         loading: false,
         isAuthenticated: false,
+        redirectTo: '/',
       };
     case ACTION_TYPES.REALM_CREATED:
       return {
@@ -281,9 +283,13 @@ export const login: (username: string, password: string, rememberMe?: boolean) =
 };
 
 export const loginWithProvider: (provider: string) => void = provider => async (dispatch, getState) => {
-  const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+  const firebaseProviders = {
+    google: new firebase.auth.GoogleAuthProvider(),
+    github: new firebase.auth.GithubAuthProvider(),
+  };
+  const authProvider = firebaseProviders[provider];
   try {
-    await firebase.auth().signInWithPopup(googleAuthProvider);
+    await firebase.auth().signInWithPopup(authProvider);
     const tkn = await firebase.auth().currentUser.getIdToken(true);
     const result = await dispatch({
       type: ACTION_TYPES.LOGIN_WITH_PROVIDER,
