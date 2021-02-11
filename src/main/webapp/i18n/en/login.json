@@ -56,5 +56,10 @@
         }
       }
     }
+  },
+  "flairbiApp": {
+    "realm": {
+      "created": "Realm created"
+    }
   }
 }
