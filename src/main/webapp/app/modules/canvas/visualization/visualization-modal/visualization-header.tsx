@@ -6,10 +6,7 @@ import {
   Item,
   Menu,
   MenuTrigger,
-  Section,
   Text,
-  Tooltip,
-  TooltipTrigger,
   View,
 } from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
@@ -32,12 +29,10 @@ import { VisualizationEditModal } from './visualization-edit-modal/visualization
 import { getVisual } from '../util/VisualDispatchService';
 import { getVisualizationData } from '../util/visualization-render-utils';
 import { VisualizationDataModal } from './visualization-data-modal/visualizations-data-modal';
-import { printWidgets } from '../util/print.service';
 import { CSVLink } from 'react-csv';
 
 interface IVisualizationHeaderProps {
   visual: IVisualMetadataSet;
-  data: any;
   view: IViews;
   totalItem: number;
   handleVisualizationClick: (visualization) => void;

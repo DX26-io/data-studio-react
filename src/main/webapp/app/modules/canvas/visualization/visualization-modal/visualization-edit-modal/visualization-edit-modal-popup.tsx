@@ -6,17 +6,14 @@ import {
   Heading,
   Divider,
   Content,
-  Text,
   ButtonGroup,
   Button,
-  DialogContainer,
-  Header,
   useDialogContainer,
 } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import './visualization-edit-modal.scss';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import {  useHistory } from 'react-router-dom';
 import VisualizationProperties from 'app/modules/canvas/visualization/visualization-properties/visualization-properties';
 import VisualizationSettings from 'app/modules/canvas/visualization/visualization-settings/visualization-settings';
 import { Translate } from 'react-jhipster';
@@ -28,7 +25,7 @@ import { getDatasourcesFeaturesEntities as getfeatureEntities } from 'app/entiti
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 import { VisualMetadataContainerUpdate } from '../../util/visualmetadata-container.service';
 import { setVisual } from '../../util/VisualDispatchService';
-import { getVisualizationData, renderVisualization, ValidateFields } from '../../util/visualization-render-utils';
+import {  renderVisualization, ValidateFields } from '../../util/visualization-render-utils';
 import { VisualWrap } from '../../util/visualmetadata-wrapper';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { subscribeWebSocket } from 'app/shared/websocket/stomp-client.service';
@@ -41,12 +38,10 @@ export interface IVisualizationEditModalProps extends StateProps, DispatchProps 
 }
 
 export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
-  const [data, setData] = useState<any>();
+  const [getData, setData] = useState<any>();
   const dialog = useDialogContainer();
-  const history = useHistory();
   const visualizationId = props.visualizationId;
   const viewId = props.viewId;
-  let metaData = [];
 
   const handleClose = () => {
     props.setOpen(false);
@@ -56,7 +51,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
 
   const handleSave = () => {
     props.updateVisualmetadataEntity({
-      viewId: viewId,
+      viewId,
       visualMetadata: props.visualmetadataEntity,
     });
     VisualMetadataContainerUpdate(props.visualmetadataEntity.id, props.visualmetadataEntity, 'id');
@@ -74,6 +69,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
     const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
     setData(metaData.data);
     if (data.headers.request === 'filters') {
+       // console.log('filter data');
     } else {
       renderVisualization(props.visualmetadataEntity, metaData.data, 'visualization-edit');
     }
@@ -94,7 +90,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
       };
       forwardCall(props.view?.viewDashboard?.dashboardDatasource?.id, body, props.view.id);
     }
-  }, [props.visualmetadataEntity, data]);
+  }, [props.visualmetadataEntity, getData]);
 
   return (
     <Dialog>
@@ -121,7 +117,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
               <div className="settings-tab">
                 <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="50%">
                   <VisualizationSettings
-                    data={data}
+                    data={getData}
                     visual={props.visualmetadataEntity}
                     view={props.view}
                     visualizationId={visualizationId}

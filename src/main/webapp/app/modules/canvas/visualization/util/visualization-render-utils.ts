@@ -3,7 +3,6 @@ import flairVisualizations from 'flair-visualizations/js/main';
 import Configuration from 'flair-visualizations/js/extras/configs/configuration';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { VisualWrap } from './visualmetadata-wrapper';
-import { VisualMetadataContainerGetOne } from './visualmetadata-container.service';
 const configuration = Configuration();
 
 export const ValidateFields = fields => {

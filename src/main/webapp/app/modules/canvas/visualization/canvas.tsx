@@ -1,22 +1,18 @@
-import React, { ReactText, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { View, Button, DialogContainer } from '@adobe/react-spectrum';
+import { View } from '@adobe/react-spectrum';
 import $ from 'jquery';
-import { Redirect, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import './canvas.scss';
 import { getEntity as getViewEntity, getCurrentViewState, saveViewState } from 'app/entities/views/views.reducer';
 import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
 import { getEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { IRootState } from 'app/shared/reducers';
-import { Translate } from 'react-jhipster';
-import { Storage } from 'react-jhipster';
 import {
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import VisualizationsList from 'app/entities/visualizations/visualizations-list';
 import {
   getVisualizationData,
   renderVisualization,
@@ -37,7 +33,6 @@ import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
 import { getToken } from 'app/shared/reducers/authentication';
 import { NoDataFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import Loader from 'app/shared/components/card/loader/loader';
-import { getVisual } from './util/VisualDispatchService';
 
 const ReactGridLayout = WidthProvider(RGL);
 export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
@@ -75,6 +70,7 @@ const Canvas = (props: VisualizationProp) => {
   const onExchangeMetadata = data => {
     const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
     if (data.headers.request === 'filters') {
+      // console.log('filter data');
     } else {
       const v = VisualMetadataContainerGetOne(data.headers.queryId);
       if (v && metaData.data.length > 0) {
@@ -141,13 +137,6 @@ const Canvas = (props: VisualizationProp) => {
       visualMetadata: v,
     });
     setVisualizationsModelOpen(false);
-  };
-
-  const saveAllVisualizations = () => {
-    props.saveViewState({
-      visualMetadataSet: props.visualmetadata.visualMetadataSet,
-      _id: props.view.id,
-    });
   };
 
   const generateWidge =
