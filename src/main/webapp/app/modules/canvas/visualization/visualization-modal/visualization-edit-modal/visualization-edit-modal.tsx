@@ -15,12 +15,12 @@ import { getDatasourcesFeaturesEntities as getfeatureEntities } from 'app/entiti
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 import { VisualMetadataContainerUpdate } from '../../util/visualmetadata-container.service';
 import { setVisual } from '../../util/VisualDispatchService';
-export interface IVisualizationEditModalProps
+export interface IVisualizationEditModalProps1
   extends StateProps,
     DispatchProps,
     RouteComponentProps<{ id: string; viewId: string; visualizationId: string }> {}
 
-const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
+const VisualizationEditModal = (props: IVisualizationEditModalProps1) => {
   const history = useHistory();
   const visualizationId = props.match.params.visualizationId;
   const viewId = props.match.params.viewId;

@@ -1,4 +1,4 @@
-import React, { ReactText, useEffect, useState } from 'react';
+import React, { FC, ReactText, useEffect, useRef, useState } from 'react';
 import {
   ActionButton,
   DialogContainer,
@@ -13,7 +13,6 @@ import {
   View,
 } from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
-import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
 import { Redirect } from 'react-router-dom';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
@@ -29,22 +28,26 @@ import Copy from '@spectrum-icons/workflow/Copy';
 import 'app/modules/canvas/visualization/canvas.scss';
 import { IViews } from 'app/shared/model/views.model';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
-import { VisualMetadataContainerAdd } from '../util/visualmetadata-container.service';
 import { VisualizationEditModal } from './visualization-edit-modal/visualization-edit-modal-popup';
 import { getVisual } from '../util/VisualDispatchService';
 import { getVisualizationData } from '../util/visualization-render-utils';
+import { VisualizationDataModal } from './visualization-data-modal/visualizations-data-modal';
+import { printWidgets } from '../util/print.service';
+import { CSVLink } from 'react-csv';
 
 interface IVisualizationHeaderProps {
   visual: IVisualMetadataSet;
+  data: any;
   view: IViews;
   totalItem: number;
   handleVisualizationClick: (visualization) => void;
+  isEditMode: boolean;
 }
 
-const VisualizationHeader: React.FC<IVisualizationHeaderProps> = props => {
-  const [redirect, setRedirect] = useState<ReactText>('');
-  const [isOpen, setOpen] = useState(false);
-
+const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
+  const [dialog, setDialog] = useState<ReactText>();
+  const [transactionData, setTransactionData] = useState([]);
+  const csvLink = useRef(null);
   const { handleVisualizationClick } = props;
   const createFields = newVM => {
     // let order = 0;
@@ -109,114 +112,152 @@ const VisualizationHeader: React.FC<IVisualizationHeaderProps> = props => {
     return VisualWrap(newVM);
   };
 
-  const closeDialog = () => {
+  const closeEditDialog = () => {
     const visual = getVisual();
-    setOpen(false);
-    getVisualizationData(visual, props.view)
+    getVisualizationData(visual, props.view);
   };
+
+  const getTransactionData = async () => {
+    await setTransactionData(props.visual.data);
+    csvLink.current.link.click();
+  };
+
   useEffect(() => {
-    if (redirect === 'Copy') {
+    if (dialog === 'Copy') {
       const viz = createVisualMetadata(props.visual.metadataVisual);
       viz.bodyProperties = props.visual.bodyProperties;
       viz.properties = props.visual.properties;
       viz.titleProperties = props.visual.titleProperties;
       viz.fields = props.visual.fields;
       handleVisualizationClick(viz);
+    } else if (dialog === 'Export') {
+      getTransactionData();
     }
-    if (redirect === 'Edit') {
-      setOpen(true);
-    }
-  }, [redirect]);
+  }, [dialog]);
   return (
     <>
-      <DialogContainer type="fullscreenTakeover" onDismiss={closeDialog}>
-        {isOpen && (
-          <VisualizationEditModal
-            id={props.view.viewDashboard.id}
-            setOpen={setOpen}
-            viewId={props.view.id}
-            visualizationId={props.visual.id}
-            {...props}
-          ></VisualizationEditModal>
-        )}
-      </DialogContainer>
       <View backgroundColor="gray-200">
         <Flex direction="row" justifyContent="space-between" alignContent="center">
           <Flex direction="column" alignItems="center" justifyContent="space-around">
             <span>{props.visual.titleProperties.titleText}</span>
+            {props.visual?.data?.length > 0 && (
+              <CSVLink
+                data={transactionData}
+                filename={`${props.visual.titleProperties.titleText}.csv`}
+                className="hidden"
+                ref={csvLink}
+                target="_blank"
+              />
+            )}
           </Flex>
           <Flex direction="column" justifyContent="space-around">
             <MenuTrigger>
               <ActionButton isQuiet height="size-300">
                 <Settings size={'XS'} aria-label="Default Alert" />
               </ActionButton>
-              <Menu onAction={key => setRedirect(key)}>
-                <Item key="Edit" textValue="Edit">
-                  <Edit size="M" />
-                  <Text>
-                    <Translate contentKey="entity.action.edit">Edit</Translate>
-                  </Text>
-                </Item>
-                <Item key="Share" textValue="Share">
-                  <ShareAndroid size="M" />
-                  <Text>
-                    <Translate contentKey="entity.action.share">Share</Translate>
-                  </Text>
-                </Item>
-                <Item key="Copy" textValue="Copy">
-                  <Copy size="M" />
-                  <Text>
-                    <Translate contentKey="entity.action.copy">Copy</Translate>
-                  </Text>
-                </Item>
-                <Item key="Export" textValue="Export">
-                  <Export size="M" />
-                  <Text>
-                    <Translate contentKey="entity.action.export">Export</Translate>
-                  </Text>
-                </Item>
-                <Item key="View" textValue="View">
-                  <ViewedMarkAs size="M" />
-                  <Text>
-                    <Translate contentKey="entity.action.view">View</Translate>
-                  </Text>
-                </Item>
-                <Item key="data" textValue="data">
-                  <Table size="M" />
-                  <Text>
-                    <Translate contentKey="entity.action.data">Data</Translate>
-                  </Text>
-                </Item>
-                <Item key="More" textValue="More">
-                  <MoreSmallListVert size="M" />
-                  <Text>
-                    <Translate contentKey="entity.action.more">More</Translate>
-                  </Text>
-                </Item>
-                <Item key="Delete" textValue="Delete">
-                  <Delete size="M" />
-                  <Text>
-                    <Translate contentKey="entity.action.delete">Delete</Translate>
-                  </Text>
-                </Item>
-              </Menu>
+
+              {props.isEditMode ? (
+                <Menu onAction={key => setDialog(key)}>
+                  <Item key="Edit" textValue="Edit">
+                    <Edit size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.edit">Edit</Translate>
+                    </Text>
+                  </Item>
+
+                  <Item key="Copy" textValue="Copy">
+                    <Copy size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.copy">Copy</Translate>
+                    </Text>
+                  </Item>
+
+                  <Item key="View" textValue="View">
+                    <ViewedMarkAs size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.view">View</Translate>
+                    </Text>
+                  </Item>
+                  <Item key="Data" textValue="Data">
+                    <Table size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.data">Data</Translate>
+                    </Text>
+                  </Item>
+                  <Item key="Print" textValue="Print">
+                    <MoreSmallListVert size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.more">Print</Translate>
+                    </Text>
+                  </Item>
+                  <Item key="Delete" textValue="Delete">
+                    <Delete size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.delete">Delete</Translate>
+                    </Text>
+                  </Item>
+                  <Item key="Export" textValue="Export">
+                    <Export size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.export">Export</Translate>
+                    </Text>
+                  </Item>
+                </Menu>
+              ) : (
+                <Menu onAction={key => setDialog(key)}>
+                  <Item key="Share" textValue="Share">
+                    <ShareAndroid size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.share">Share</Translate>
+                    </Text>
+                  </Item>
+                  <Item key="Export" textValue="Export">
+                    <Export size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.export">Export</Translate>
+                    </Text>
+                  </Item>
+                  <Item key="View" textValue="View">
+                    <ViewedMarkAs size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.view">View</Translate>
+                    </Text>
+                  </Item>
+                  <Item key="Print" textValue="Print">
+                    <MoreSmallListVert size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.more">Print</Translate>
+                    </Text>
+                  </Item>
+                  <Item key="Data" textValue="Data">
+                    <Table size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.data">Data</Translate>
+                    </Text>
+                  </Item>
+                </Menu>
+              )}
             </MenuTrigger>
-            {/* open with modal popup */}
-            {/* {redirect === 'Edit' && (
-              <Redirect
-                push={true}
-                to={{
-                  pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/edit/' + props.visual.id,
-                }}
-              />
-            )} */}
-            {redirect === 'Delete' && (
+
+            {dialog === 'Delete' && (
               <Redirect
                 to={{
                   pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/delete/' + props.visual.id,
                 }}
               />
             )}
+            <DialogContainer type={dialog === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => setDialog(null)}>
+              {dialog === 'Edit' && (
+                <VisualizationEditModal
+                  id={props.view.viewDashboard.id}
+                  setOpen={closeEditDialog}
+                  viewId={props.view.id}
+                  visualizationId={props.visual.id}
+                  {...props}
+                ></VisualizationEditModal>
+              )}
+              {dialog === 'Data' && <VisualizationDataModal visual={props.visual} />}
+            </DialogContainer>
           </Flex>
         </Flex>
       </View>

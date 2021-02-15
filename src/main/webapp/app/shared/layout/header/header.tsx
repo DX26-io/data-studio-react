@@ -6,7 +6,9 @@ import LoadingBar from 'react-redux-loading-bar';
 import Notifications from 'app/shared/layout/header/partials/notifications';
 import DataStudioAvatar from 'app/shared/layout/header/partials/data-studio-avatar';
 import Logo from 'app/shared/components/logo/logo';
-import { Flex, View } from '@adobe/react-spectrum';
+import { Divider, Flex, View } from '@adobe/react-spectrum';
+import CanvasHeader from './canvas-header';
+import { isCanvas } from 'app/shared/util/common-utils';
 
 export interface IHeaderProps {
   isAuthenticated: boolean;
@@ -16,6 +18,7 @@ export interface IHeaderProps {
   isSwaggerEnabled: boolean;
   currentLocale: string;
   onLocaleChange: Function;
+  isCanvas: boolean;
 }
 
 const Header = (props: IHeaderProps) => {
@@ -47,6 +50,12 @@ const Header = (props: IHeaderProps) => {
               <Logo />
             </Flex>
             <Flex alignItems="end">
+              {props.isCanvas && (
+                  <CanvasHeader />
+              )}
+              {props.isCanvas && (
+                  <Divider size={'M'} orientation={'vertical'} />
+              )}
               <Notifications />
               <DataStudioAvatar />
             </Flex>

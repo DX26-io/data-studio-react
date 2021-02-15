@@ -22,6 +22,8 @@ export interface IVisualMetadataSet {
   h?: number;
   y?: number;
 
+  data: any;
+
   conditionExpression?: null;
   query?: null;
   queryJson?: null;

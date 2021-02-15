@@ -6,6 +6,7 @@ import { validate as validateQuery } from 'app/entities/visualmetadata/visualmet
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 import { IViews } from 'app/shared/model/views.model';
+import { ValidateFields } from '../../util/visualization-render-utils';
 export interface IVisualizationQuerySettingProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
   view: IViews;
@@ -14,23 +15,23 @@ export interface IVisualizationQuerySettingProps extends StateProps, DispatchPro
 const VisualizationQuerySetting = (props: IVisualizationQuerySettingProps) => {
   const [rowQuery, setRowQuery] = useState<ReactText>('');
   let wrap;
-  useEffect(() => {
-   
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
     if (props.rowQuery && props.rowQuery.validationResultType === 'SUCCESS') {
       setRowQuery(props.rowQuery.rawQuery);
     }
-    if ((props.visual.id && props.view?.id && rowQuery==="") ||( props.updateSuccess)) {
-      wrap = VisualWrap(props.visual);
-      props.validateQuery({
-        datasourceId: props.view.viewDashboard.dashboardDatasource.id,
-        visualMetadataId: props.visual.id,
-        queryDTO: wrap.getQueryParameters(props.visual, null, null, null),
-      });
+    if ((props.visual.id && props.view?.id && rowQuery === '') || props.updateSuccess) {
+      if (props.visual.fields && ValidateFields(props.visual.fields)) {
+        wrap = VisualWrap(props.visual);
+        props.validateQuery({
+          datasourceId: props.view.viewDashboard.dashboardDatasource.id,
+          visualMetadataId: props.visual.id,
+          queryDTO: wrap.getQueryParameters(props.visual, null, null, null),
+        });
+      }
     }
-  }, [props.rowQuery, props.visual,props.view]);
+  }, [props.rowQuery, props.visual, props.view]);
 
   return (
     <>
@@ -44,7 +45,6 @@ const VisualizationQuerySetting = (props: IVisualizationQuerySettingProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   rowQuery: storeState.visualmetadata.rowQuery,
   updateSuccess: storeState.visualmetadata.updateSuccess,
-
 });
 
 const mapDispatchToProps = { validateQuery };

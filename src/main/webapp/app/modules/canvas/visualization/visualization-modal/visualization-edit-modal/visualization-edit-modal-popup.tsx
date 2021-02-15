@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Flex,
@@ -41,10 +41,12 @@ export interface IVisualizationEditModalProps extends StateProps, DispatchProps 
 }
 
 export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
+  const [data, setData] = useState<any>();
   const dialog = useDialogContainer();
   const history = useHistory();
   const visualizationId = props.visualizationId;
   const viewId = props.viewId;
+  let metaData = [];
 
   const handleClose = () => {
     props.setOpen(false);
@@ -70,6 +72,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
 
   const onExchangeMetadata = data => {
     const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
+    setData(metaData.data);
     if (data.headers.request === 'filters') {
     } else {
       renderVisualization(props.visualmetadataEntity, metaData.data, 'visualization-edit');
@@ -91,7 +94,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
       };
       forwardCall(props.view?.viewDashboard?.dashboardDatasource?.id, body, props.view.id);
     }
-  }, [props.visualmetadataEntity]);
+  }, [props.visualmetadataEntity, data]);
 
   return (
     <Dialog>
@@ -112,12 +115,19 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
         <Flex direction="row" height="100%" gap="size-75">
           <View flex>
             <Flex direction="column" height="100%" flex gap="size-75">
-              <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%">
-                <div style={{height: "100%"}} id={`visualization-edit-${props.visualmetadataEntity.id}`} className="visualization"></div>
+              <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="50%">
+                <div style={{ height: '100%' }} id={`visualization-edit-${props.visualmetadataEntity.id}`} className="visualization"></div>
               </View>
-              <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%">
-                <VisualizationSettings visual={props.visualmetadataEntity} view={props.view} visualizationId={visualizationId} />
-              </View>
+              <div className="settings-tab">
+                <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="50%">
+                  <VisualizationSettings
+                    data={data}
+                    visual={props.visualmetadataEntity}
+                    view={props.view}
+                    visualizationId={visualizationId}
+                  />
+                </View>
+              </div>
             </Flex>
           </View>
           <div className="properties-tab">

@@ -19,10 +19,10 @@ import { IViews } from 'app/shared/model/views.model';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 
 interface IVisualizationsListProps {
-  visualizations: readonly IVisualizations[];
-  handleVisualizationClick: (visualization) => void;
-  view: IViews;
-  totalItem: number;
+  visualizations?: readonly IVisualizations[];
+  handleVisualizationClick?: (visualization) => void;
+  view?: IViews;
+  totalItem?: number;
 }
 export const VisualizationsList = (props: IVisualizationsListProps) => {
   const { handleVisualizationClick } = props;

@@ -60,10 +60,6 @@ const Canvas = (props: VisualizationProp) => {
     });
   };
 
-  const onResize = _visualmetaList => {
-    //  setvisualmetadata(_visualmetaList);
-  };
-
   const onResizeStop = (layout, oldItem, newItem, placeholder, e, element) => {
     const v = VisualMetadataContainerGetOne(oldItem.i);
     if (v && v.data?.length > 0) {
@@ -200,39 +196,12 @@ const Canvas = (props: VisualizationProp) => {
 
   return (
     <>
-      <SecondaryHeader
-        breadcrumbItems={[
-          { label: 'Home', route: '/' },
-          { label: 'Dashboards', route: '/dashboards' },
-          { label: 'Views', route: `/dashboards/${props.view?.viewDashboard?.id}` },
-          { label: 'Canvas', route: `/dashboards/${props.view?.viewDashboard?.id}/${props.view?.id}/build` },
-        ]}
-        title={props.view.viewName}
-      >
-        <Button variant="cta" onPress={() => setVisualizationsModelOpen(true)}>
-          <Translate contentKey="datastudioApp.visualizations.home.createLabel">Create visualizations</Translate>
-        </Button>
-        <Button variant="secondary" onPress={() => saveAllVisualizations()}>
-          <Translate contentKey="entity.action.save">Save</Translate>
-        </Button>
-        <DialogContainer type="fullscreen" onDismiss={() => setVisualizationsModelOpen(false)} {...props}>
-          {isVisualizationsModelOpen && (
-            <VisualizationsList
-              handleVisualizationClick={handleVisualizationClick}
-              view={props.view}
-              visualizations={props.visualizationsList}
-              totalItem={visualmetadataList?.length || 0}
-            />
-          )}
-        </DialogContainer>
-      </SecondaryHeader>
       <View>
         {visualmetadataList && visualmetadataList.length > 0 && (
           <ReactGridLayout
             className="layout"
             rowHeight={120}
             cols={3}
-            onResize={onResize}
             layout={visualmetadataList}
             margin={[15, 15]}
             verticalCompact={true}
@@ -241,6 +210,8 @@ const Canvas = (props: VisualizationProp) => {
             draggableHandle=".header"
             draggableCancel=".WidgetDragCancel"
             isBounded={false}
+            isDraggable={props.isEditMode}
+            isResizable={props.isEditMode}
           >
             {generateWidge}
           </ReactGridLayout>
@@ -259,6 +230,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualizationsList: storeState.visualizations.entities,
   featuresList: storeState.feature.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
+  isEditMode: storeState.applicationProfile.isEditMode,
 });
 
 const mapDispatchToProps = {

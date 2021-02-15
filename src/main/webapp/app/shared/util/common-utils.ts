@@ -29,3 +29,11 @@ export const parseString = str => {
     return '';
   }
 };
+
+export const isCanvas = () => {
+  if (window.location.href.endsWith('build')) {
+    return true;
+  } else {
+    return false;
+  }
+};

@@ -15,6 +15,7 @@ export interface IVisualizationSettingsProps extends StateProps, DispatchProps {
   visualizationId : ReactNode;
   visual: IVisualMetadataSet;
   view: IViews;
+  data?: any;
 }
 
 const VisualizationSettings = (props: IVisualizationSettingsProps) => {
@@ -28,7 +29,7 @@ const VisualizationSettings = (props: IVisualizationSettingsProps) => {
               {activeTabId === 'query' && <VisualizationQuerySetting   visual={props.visual} view={props.view}/>}
               {activeTabId === 'dataConstraints' && <VisualizationDataConstraintsSetting />}
               {activeTabId === 'thresholdAlert' && <VisualizationThresholdAlertSetting />}
-              {activeTabId === 'data' && <VisualizationDataSetting />}
+              {activeTabId === 'data' && <VisualizationDataSetting data={props.data} />}
             </Content>
           </Item>
         )}

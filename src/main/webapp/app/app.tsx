@@ -22,6 +22,7 @@ import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import ErrorBoundary from 'app/shared/error/error-boundary';
 import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
+import { isCanvas } from './shared/util/common-utils';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
 
@@ -53,6 +54,8 @@ export const App = (props: IAppProps) => {
               ribbonEnv={props.ribbonEnv}
               isInProduction={props.isInProduction}
               isSwaggerEnabled={props.isSwaggerEnabled}
+              isCanvas={props.isCanvas}
+
             />
           </ErrorBoundary>
         </View>
@@ -82,9 +85,10 @@ const mapStateToProps = ({ authentication, applicationProfile, locale }: IRootSt
   ribbonEnv: applicationProfile.ribbonEnv,
   isInProduction: applicationProfile.inProduction,
   isSwaggerEnabled: applicationProfile.isSwaggerEnabled,
+  isCanvas: isCanvas()
 });
 
-const mapDispatchToProps = { setLocale, getSession, getProfile };
+const mapDispatchToProps = { setLocale, getSession, getProfile};
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
