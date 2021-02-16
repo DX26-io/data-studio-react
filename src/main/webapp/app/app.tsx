@@ -20,13 +20,17 @@ import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
+const noSessionPathNames = ['/realm'];
 
 export interface IAppProps extends StateProps, DispatchProps {}
 
 // TODO: Test Cases
 export const App = (props: IAppProps) => {
   useEffect(() => {
-    props.getSession();
+    const pathname = window.location.pathname;
+    if (!noSessionPathNames.includes(pathname)) {
+      props.getSession();
+    }
     props.getProfile();
   }, []);
 

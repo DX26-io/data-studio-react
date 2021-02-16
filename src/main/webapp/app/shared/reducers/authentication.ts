@@ -170,6 +170,11 @@ export default (state: AuthenticationState = initialState, action): Authenticati
   }
 };
 
+export const isTokenExist = () => {
+  const token = Storage.local.get(AUTH_TOKEN_KEY) || Storage.session.get(AUTH_TOKEN_KEY);
+  return token ? true : false;
+};
+
 export const displayAuthError = message => ({ type: ACTION_TYPES.ERROR_MESSAGE, message });
 
 export const getSession: () => void = () => async (dispatch, getState) => {
@@ -334,11 +339,6 @@ export const clearAuthentication = messageKey => (dispatch, getState) => {
   dispatch({
     type: ACTION_TYPES.CLEAR_AUTH,
   });
-};
-
-export const isTokenExist = () => {
-  const token = Storage.local.get(AUTH_TOKEN_KEY) || Storage.session.get(AUTH_TOKEN_KEY);
-  return token ? true : false;
 };
 
 export const getToken = () => {

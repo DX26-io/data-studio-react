@@ -22,7 +22,7 @@ const Signup: React.FC<ISignupProps> = props => {
   if (props.loginProviderEmailConfirmationToken) {
     return (<Redirect
       to={{
-        pathname: '/signup/realm',
+        pathname: '/realm',
       }}
     />);
   }

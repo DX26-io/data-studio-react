@@ -25,6 +25,10 @@ export const LoginForm = (props: ILoginProps) => {
     handleProviderLogin('google');
   }
 
+  const onGitHubClick = () => {
+    handleProviderLogin('github');
+  }
+
   const onSignup = () => {
     handleSignup();
   }
@@ -95,9 +99,14 @@ export const LoginForm = (props: ILoginProps) => {
             <Translate contentKey="login.form.button">Sign In</Translate>
           </Button>
           {firebaseEnabled ?
-            <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGoogleClick}>
-              <Translate contentKey="login.form.google">Google</Translate>
-            </Button>
+            (
+              <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGoogleClick}>
+                <Translate contentKey="login.form.google">Google</Translate>
+              </Button>
+              // <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGitHubClick}>
+              //   <Translate contentKey="login.form.github">GitHub</Translate>
+              // </Button>
+            )
             :
             null}
           <Link isQuiet={true}>

@@ -23,6 +23,10 @@ export const SignupForm = (props: ISignupProps) => {
     handleProviderLogin('google');
   }
 
+  const onGitHubClick = () => {
+    handleProviderLogin('github');
+  }
+
   const handleSubmit = event => {
     event.preventDefault();
     if (email && password && username && firstname && lastname) {
@@ -113,9 +117,14 @@ export const SignupForm = (props: ISignupProps) => {
             <Translate contentKey="signup.form.button">Sign In</Translate>
           </Button>
           {firebaseEnabled ?
-            <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGoogleClick}>
-              <Translate contentKey="signup.form.google">Google</Translate>
-            </Button>
+            (
+              <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGoogleClick}>
+                <Translate contentKey="signup.form.google">Google</Translate>
+              </Button>
+              // <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGitHubClick}>
+              //   <Translate contentKey="signup.form.github">GitHub</Translate>
+              // </Button>
+            )
             :
             null}
         </Flex>
