@@ -20,7 +20,7 @@ import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
-const noSessionPathNames = ['/realm'];
+const noSessionPathNames = ['/realm', '/login', '/signup'];
 
 export interface IAppProps extends StateProps, DispatchProps {}
 
@@ -68,6 +68,7 @@ export const App = (props: IAppProps) => {
     </Router>
   ) : (
     <Router basename={baseHref}>
+      <ToastContainer position={toast.POSITION.BOTTOM_CENTER} className="toastify-container" toastClassName="toastify-toast" />
       <ErrorBoundary>
         <AppRoutes />
       </ErrorBoundary>

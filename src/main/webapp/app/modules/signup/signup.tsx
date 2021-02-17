@@ -15,17 +15,6 @@ const Signup: React.FC<ISignupProps> = props => {
   const handleSignup = (username: string, email: string, password: string, firstname: string, lastname: string) => {
     props.signup(username, email, password, firstname, lastname);
   };
-  const handleProviderLogin = (provider) => {
-    props.loginWithProvider(provider);
-  };
-
-  if (props.loginProviderEmailConfirmationToken) {
-    return (<Redirect
-      to={{
-        pathname: '/realm',
-      }}
-    />);
-  }
 
   if (props.isAuthenticated) {
     return <Redirect
@@ -50,8 +39,7 @@ const Signup: React.FC<ISignupProps> = props => {
             :
             <SignupForm
               handleSignup={handleSignup}
-              signupError={props.signupError}
-              handleProviderLogin={handleProviderLogin}/>
+              signupError={props.signupError}/>
         }
         <LoginFooter/>
       </View>
@@ -63,10 +51,9 @@ const mapStateToProps = ({ authentication }: IRootState) => ({
   isAuthenticated: authentication.isAuthenticated,
   signupSuccess: authentication.signupSuccess,
   signupError: authentication.signupError,
-  loginProviderEmailConfirmationToken: authentication.loginProviderEmailConfirmationToken,
 });
 
-const mapDispatchToProps = { signup, loginWithProvider };
+const mapDispatchToProps = { signup };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

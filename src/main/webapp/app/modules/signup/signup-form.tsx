@@ -7,7 +7,6 @@ import config from "app/config/constants";
 export interface ISignupProps {
   signupError: boolean;
   handleSignup: (username: string, email: string, password: string, firstname: string, lastname: string) => void;
-  handleProviderLogin: (provider: string) => void;
 }
 export const SignupForm = (props: ISignupProps) => {
   const firebaseEnabled = config.CLOUD;
@@ -17,15 +16,7 @@ export const SignupForm = (props: ISignupProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emptyFieldError, setEmptyFieldError] = useState(false);
-  const { handleSignup, handleProviderLogin, signupError } = props;
-
-  const onGoogleClick = () => {
-    handleProviderLogin('google');
-  }
-
-  const onGitHubClick = () => {
-    handleProviderLogin('github');
-  }
+  const { handleSignup, signupError } = props;
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -116,17 +107,6 @@ export const SignupForm = (props: ISignupProps) => {
           <Button data-testid="submit" variant="cta" marginStart="auto" type="submit">
             <Translate contentKey="signup.form.button">Sign In</Translate>
           </Button>
-          {firebaseEnabled ?
-            (
-              <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGoogleClick}>
-                <Translate contentKey="signup.form.google">Google</Translate>
-              </Button>
-              // <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGitHubClick}>
-              //   <Translate contentKey="signup.form.github">GitHub</Translate>
-              // </Button>
-            )
-            :
-            null}
         </Flex>
       </Form>
     </Flex>
