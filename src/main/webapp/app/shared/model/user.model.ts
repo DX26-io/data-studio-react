@@ -6,12 +6,13 @@ export interface IUser {
   email?: string;
   activated?: boolean;
   langKey?: string;
-  authorities?: any[];
+  userGroups?: any[];
   createdBy?: string;
   createdDate?: Date | null;
   lastModifiedBy?: string;
   lastModifiedDate?: Date | null;
   password?: string;
+  userType?: string;
 }
 
 export const defaultValue: Readonly<IUser> = {
@@ -21,11 +22,12 @@ export const defaultValue: Readonly<IUser> = {
   lastName: '',
   email: '',
   activated: true,
-  langKey: '',
-  authorities: [],
+  langKey: 'en',
+  userGroups: [],
   createdBy: '',
   createdDate: null,
   lastModifiedBy: '',
   lastModifiedDate: null,
   password: '',
+  userType: 'internal',
 };

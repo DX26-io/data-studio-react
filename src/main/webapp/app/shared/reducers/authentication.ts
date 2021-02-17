@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 
 export const ACTION_TYPES = {
   LOGIN: 'authentication/LOGIN',
+  LOGIN_WITH_PROVIDER: 'authentication/LOGIN_WITH_PROVIDER',
   SIGNUP: 'authentication/SIGNUP',
   CREATE_REALM: 'authentication/CREATE_REALM',
   VERIFY_USER: 'authentication/VERIFY_USER',
@@ -27,6 +28,7 @@ const initialState = {
   realmCreateError: false,
   redirectTo: (null as unknown) as string,
   loginSuccess: false,
+  loginProviderEmailConfirmationToken: (null as unknown) as string,
   verifyUserSuccess: false,
   createRealmSuccess: false,
   realm: {} as any,
@@ -51,6 +53,7 @@ export type AuthenticationState = Readonly<typeof initialState>;
 export default (state: AuthenticationState = initialState, action): AuthenticationState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.LOGIN):
+    case REQUEST(ACTION_TYPES.LOGIN_WITH_PROVIDER):
     case REQUEST(ACTION_TYPES.SIGNUP):
     case REQUEST(ACTION_TYPES.CREATE_REALM):
     case REQUEST(ACTION_TYPES.VERIFY_USER):
@@ -61,6 +64,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         loading: true,
       };
     case FAILURE(ACTION_TYPES.LOGIN):
+    case FAILURE(ACTION_TYPES.LOGIN_WITH_PROVIDER):
       return {
         ...initialState,
         errorMessage: action.payload,
@@ -99,6 +103,13 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         loading: false,
         loginError: false,
         loginSuccess: true,
+      };
+    case SUCCESS(ACTION_TYPES.LOGIN_WITH_PROVIDER):
+      return {
+        ...state,
+        loading: false,
+        loginError: false,
+        loginProviderEmailConfirmationToken: action.payload.data.token,
       };
     case SUCCESS(ACTION_TYPES.SIGNUP):
       return {
@@ -225,7 +236,7 @@ export const signup: (username: string, email: string, password: string, firstna
   });
 };
 
-export const createRealm: (realmName: string, token: string) => void = (realmName, emailVerificationToken) => async (
+export const createRealm: (realmName: string, emailVerificationToken: string) => void = (realmName, emailVerificationToken) => async (
   dispatch,
   getState
 ) => {
@@ -237,13 +248,14 @@ export const createRealm: (realmName: string, token: string) => void = (realmNam
   });
 
   const realm = getState().authentication.realm;
+  const emailToken = getState().authentication.loginProviderEmailConfirmationToken || emailVerificationToken;
 
   const result = await dispatch({
     type: ACTION_TYPES.VERIFY_USER,
     payload: axios.post('api/confirm_user', {
       realmId: realm.id,
       realmCreationToken: realm.token,
-      emailVerificationToken,
+      emailVerificationToken: emailToken,
     }),
   });
 
@@ -268,17 +280,19 @@ export const login: (username: string, password: string, rememberMe?: boolean) =
   await dispatch(getSession());
 };
 
-export const loginWithProvider: (provider: string) => void = provider => async dispatch => {
+export const loginWithProvider: (provider: string) => void = provider => async (dispatch, getState) => {
   const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
   try {
     await firebase.auth().signInWithPopup(googleAuthProvider);
     const tkn = await firebase.auth().currentUser.getIdToken(true);
     const result = await dispatch({
-      type: ACTION_TYPES.LOGIN,
+      type: ACTION_TYPES.LOGIN_WITH_PROVIDER,
       payload: axios.post('api/registerWithProvider', { idToken: tkn }),
     });
     setAuthTokenWithProvider(result);
-    await dispatch(getSession());
+    if (!getState().authentication.loginProviderEmailConfirmationToken) {
+      await dispatch(getSession());
+    }
   } catch (error) {
     toast.error(error.message);
   }

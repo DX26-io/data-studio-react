@@ -1,5 +1,6 @@
 import pick from 'lodash/pick';
 import { IPaginationBaseState } from 'react-jhipster';
+import { ACTIVE_PAGE, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
 /**
  * Removes fields with an 'id' field that equals ''.
@@ -28,11 +29,26 @@ export const overridePaginationStateWithQueryParams = (paginationBaseState: IPag
   const params = new URLSearchParams(locationSearch);
   const page = params.get('page');
   const sort = params.get('sort');
+  paginationBaseState.itemsPerPage = paginationBaseState.itemsPerPage ? paginationBaseState.itemsPerPage : ITEMS_PER_PAGE;
   if (page && sort) {
     const sortSplit = sort.split(',');
     paginationBaseState.activePage = +page;
     paginationBaseState.sort = sortSplit[0];
     paginationBaseState.order = sortSplit[1];
+  } else {
+    paginationBaseState.activePage = ACTIVE_PAGE;
   }
   return paginationBaseState;
+};
+
+export const setItemsPerPagePerPage = itemsPerPage => {
+  return itemsPerPage ? itemsPerPage : ITEMS_PER_PAGE;
+};
+
+export const generateOptions = (data = []) => {
+  const options = [];
+  data.forEach(function (option) {
+    options.push({ value: option, label: option });
+  });
+  return options;
 };

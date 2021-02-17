@@ -3,6 +3,7 @@ import promiseMiddleware from 'redux-promise-middleware';
 import axios from 'axios';
 import thunk from 'redux-thunk';
 import sinon from 'sinon';
+import { generateOptions } from 'app/shared/util/entity-utils';
 
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import userManagement, {
@@ -14,13 +15,12 @@ import userManagement, {
   updateUser,
   deleteUser,
   reset,
-} from 'app/modules/administration/user-management/user-management.reducer';
+} from 'app/modules/administration/user-management/users/user.reducer';
 import { defaultValue } from 'app/shared/model/user.model';
 import { AUTHORITIES } from 'app/config/constants';
 
 describe('User management reducer tests', () => {
   const username = process.env.E2E_USERNAME || 'admin';
-
   function isEmpty(element): boolean {
     if (element instanceof Array) {
       return element.length === 0;
@@ -122,12 +122,30 @@ describe('User management reducer tests', () => {
     });
 
     it('should update state according to a successful fetch user request', () => {
-      const payload = { data: 'some handsome user' };
+      const payload = {
+        data: {
+          id: '',
+          login: '',
+          firstName: '',
+          lastName: '',
+          email: '',
+          activated: true,
+          langKey: 'en',
+          userGroups: [],
+          createdBy: '',
+          createdDate: null,
+          lastModifiedBy: '',
+          lastModifiedDate: null,
+          password: '',
+          userType: 'internal',
+        },
+      };
       const toTest = userManagement(undefined, { type: SUCCESS(ACTION_TYPES.FETCH_USER), payload });
 
       expect(toTest).toMatchObject({
         loading: false,
-        user: payload.data,
+        user: { ...payload.data, userGroups: generateOptions(payload.data.userGroups) },
+        fetchSuccess: true,
       });
     });
 
@@ -137,16 +155,34 @@ describe('User management reducer tests', () => {
 
       expect(toTest).toMatchObject({
         loading: false,
-        authorities: payload.data,
+        authorities: generateOptions(payload.data),
       });
     });
 
     it('should set state to successful update', () => {
-      testMultipleTypes([SUCCESS(ACTION_TYPES.CREATE_USER), SUCCESS(ACTION_TYPES.UPDATE_USER)], { data: 'some handsome user' }, types => {
+      const payload = {
+        data: {
+          id: '',
+          login: '',
+          firstName: '',
+          lastName: '',
+          email: '',
+          activated: true,
+          langKey: 'en',
+          userGroups: [],
+          createdBy: '',
+          createdDate: null,
+          lastModifiedBy: '',
+          lastModifiedDate: null,
+          password: '',
+          userType: 'internal',
+        },
+      };
+      testMultipleTypes([SUCCESS(ACTION_TYPES.CREATE_USER), SUCCESS(ACTION_TYPES.UPDATE_USER)], payload, types => {
         expect(types).toMatchObject({
           updating: false,
           updateSuccess: true,
-          user: 'some handsome user',
+          user: payload.data,
         });
       });
     });
@@ -172,11 +208,15 @@ describe('User management reducer tests', () => {
         user: defaultValue,
         updating: false,
         updateSuccess: false,
+        fetchSuccess: false,
         totalItems: 0,
       };
       const payload = {
         ...initialState,
-        loading: true,
+        user: defaultValue,
+        fetchSuccess: false,
+        updateSuccess: false,
+        updating: false,
       };
       expect(
         userManagement(payload, {
@@ -256,13 +296,6 @@ describe('User management reducer tests', () => {
           type: SUCCESS(ACTION_TYPES.CREATE_USER),
           payload: resolvedObject,
         },
-        {
-          type: REQUEST(ACTION_TYPES.FETCH_USERS),
-        },
-        {
-          type: SUCCESS(ACTION_TYPES.FETCH_USERS),
-          payload: resolvedObject,
-        },
       ];
       await store.dispatch(createUser()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
@@ -275,13 +308,6 @@ describe('User management reducer tests', () => {
           type: SUCCESS(ACTION_TYPES.UPDATE_USER),
           payload: resolvedObject,
         },
-        {
-          type: REQUEST(ACTION_TYPES.FETCH_USERS),
-        },
-        {
-          type: SUCCESS(ACTION_TYPES.FETCH_USERS),
-          payload: resolvedObject,
-        },
       ];
       await store.dispatch(updateUser({ login: username })).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
@@ -292,13 +318,6 @@ describe('User management reducer tests', () => {
         },
         {
           type: SUCCESS(ACTION_TYPES.DELETE_USER),
-          payload: resolvedObject,
-        },
-        {
-          type: REQUEST(ACTION_TYPES.FETCH_USERS),
-        },
-        {
-          type: SUCCESS(ACTION_TYPES.FETCH_USERS),
           payload: resolvedObject,
         },
       ];

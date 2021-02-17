@@ -6,6 +6,7 @@ import { ActionButton, Flex, Heading, Text, View } from '@adobe/react-spectrum';
 import ViewGrid from '@spectrum-icons/workflow/ViewGrid';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import { useHistory } from 'react-router-dom';
+import User from '@spectrum-icons/workflow/User';
 
 export type IHomeProp = StateProps;
 
@@ -27,6 +28,10 @@ export const Home = (props: IHomeProp) => {
           <ActionButton onPress={() => history.push('/dashboards')}>
             <ViewGrid />
             <Text>Dashboards</Text>
+          </ActionButton>
+          <ActionButton onPress={() => history.push('/administration/user-management')} marginY="size-100">
+            <ViewGrid />
+            <Text>User Management</Text>
           </ActionButton>
         </Flex>
       </View>
