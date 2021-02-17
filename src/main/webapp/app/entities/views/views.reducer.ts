@@ -131,6 +131,14 @@ export const getEntities: ICrudGetAllAction<IViews> = (page, size, sort) => {
   };
 };
 
+export const getAllEntities: ICrudGetAllAction<IViews> = id => {
+  const requestUrl = `${apiUrl}`;
+  return {
+    type: ACTION_TYPES.FETCH_VIEWS_LIST,
+    payload: axios.get<IViews>(`${requestUrl}?paginate=false&&viewDashboard=${id}&cacheBuster=${new Date().getTime()}`),
+  };
+};
+
 export const getEntity: ICrudGetAction<IViews> = id => {
   const requestUrl = `${apiUrl}/${id}`;
   return {
