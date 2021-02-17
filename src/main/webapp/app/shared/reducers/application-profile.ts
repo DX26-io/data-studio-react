@@ -4,12 +4,14 @@ import { SUCCESS } from 'app/shared/reducers/action-type.util';
 
 export const ACTION_TYPES = {
   GET_PROFILE: 'applicationProfile/GET_PROFILE',
+  TOGGLE_EDIT_MODE: 'applicationProfile/TOGGLE_EDIT_MODE',
 };
 
 const initialState = {
   ribbonEnv: '',
   inProduction: true,
   isSwaggerEnabled: false,
+  isEditMode: false,
 };
 
 export type ApplicationProfileState = Readonly<typeof initialState>;
@@ -25,6 +27,11 @@ export default (state: ApplicationProfileState = initialState, action): Applicat
         isSwaggerEnabled: data.activeProfiles.includes('swagger'),
       };
     }
+    case ACTION_TYPES.TOGGLE_EDIT_MODE:
+      return {
+        ...state,
+        isEditMode: !state.isEditMode,
+      };
     default:
       return state;
   }
@@ -33,4 +40,8 @@ export default (state: ApplicationProfileState = initialState, action): Applicat
 export const getProfile = () => ({
   type: ACTION_TYPES.GET_PROFILE,
   payload: axios.get('management/info'),
+});
+
+export const toggleEditMode = () => ({
+  type: ACTION_TYPES.TOGGLE_EDIT_MODE,
 });
