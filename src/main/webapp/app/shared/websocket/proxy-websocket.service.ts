@@ -9,6 +9,6 @@ const sendMsg = (sourceId: number, body: any, viewId?: number) => {
   }
 };
 
-export const forwardCall = (sourceId: number, body: any, viewId?: number) => {
+export const forwardCall = (sourceId: number, body: any, viewId: any) => {
   sendMsg(sourceId, body, viewId);
 };
