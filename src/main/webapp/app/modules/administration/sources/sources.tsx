@@ -10,7 +10,7 @@ import { translate } from 'react-jhipster';
 const Sources = (props: RouteComponentProps) => {
   const { match } = props;
 
-  const userManagementList = [
+  const sourcesList = [
     {
       icon: <PlatformDataMapping size="L" />,
       link: `${match.url}/connections`,
@@ -34,7 +34,7 @@ const Sources = (props: RouteComponentProps) => {
         title={translate('global.menu.admin.sources')}
       />
       <Flex direction="row" gap="size-700" justifyContent="center" height="100%" marginTop="10%">
-        {userManagementList.map(card => (
+        {sourcesList.map(card => (
           <LinkCard key={card.link} icon={card.icon} link={card.link} title={card.title} description={card.description} />
         ))}
       </Flex>

@@ -19,7 +19,6 @@ import { selectConnection } from './datasource-steps.reducer';
 
 export interface IDataConnectionProps extends StateProps, DispatchProps {
   connectionType: any;
-  // connection: any;
   disabledDataConnection: boolean;
 }
 
@@ -34,16 +33,7 @@ export const DataConnection = (props: IDataConnectionProps) => {
     setConnectionName(c.name);
     setUserName(c.connectionUsername);
     setPassword(c.connectionPassword);
-    console.log(connectionId);
-    console.log(c.id);
-    // setConnection(c.id.toString);
   };
-
-  // const setConnectionId = connectionId => {
-  //   const result = connections.filter(con => con.id.toString() === connectionId)[0];
-  //   setFields(result);
-  //   props.selectConnection(result);
-  // };
 
   useEffect(() => {
     if (props.connection) {
@@ -51,10 +41,6 @@ export const DataConnection = (props: IDataConnectionProps) => {
     }
     props.getConnectionsByConnectionTypeId(connectionType.id);
   }, []);
-
-  useEffect(() => {
-    console.log(connectionId);
-  }, [connectionId]);
 
   return (
     <Flex direction="column" gap="size-100" alignItems="center">
