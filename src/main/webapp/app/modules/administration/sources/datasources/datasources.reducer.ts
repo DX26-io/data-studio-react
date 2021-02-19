@@ -13,6 +13,8 @@ export const ACTION_TYPES = {
   UPDATE_DATASOURCES: 'datasources/UPDATE_DATASOURCES',
   DELETE_DATASOURCES: 'datasources/DELETE_DATASOURCES',
   RESET: 'datasources/RESET',
+  SELECT_CONNECTION_TYPE: 'connections/SELECT_CONNECTION_TYPE',
+  BUILD_DATASOURCE: 'connections/BUILD_DATASOURCE',
 };
 
 const initialState = {
@@ -23,6 +25,8 @@ const initialState = {
   updating: false,
   totalItems: 0,
   updateSuccess: false,
+  datasourceConnection: {},
+  connectionType: {},
 };
 
 export type DatasourcesState = Readonly<typeof initialState>;
@@ -146,4 +150,8 @@ export const deleteEntity: ICrudDeleteAction<IDatasources> = id => async dispatc
 
 export const reset = () => ({
   type: ACTION_TYPES.RESET,
+});
+
+export const selectConnectionType = () => ({
+  type: ACTION_TYPES.SELECT_CONNECTION_TYPE,
 });

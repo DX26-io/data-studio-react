@@ -12,10 +12,16 @@ import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
+import DatasourceStepper from './steps/datasource-stepper';
 
 export interface IDatasourcesProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Datasources = (props: IDatasourcesProps) => {
+
+  const [isOpen, setOpen] = React.useState(false);
+  const [isNew, setNew] = React.useState(false);
+  const [groupName, setGroupName] = React.useState('');
+
   const [pagination, setPagination] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
@@ -73,6 +79,9 @@ export const Datasources = (props: IDatasourcesProps) => {
     });
   };
 
+  const setUpdateSuccess = () => {
+  };
+
   const { datasources, loading, totalItems } = props;
   return (
     <div>
@@ -84,7 +93,7 @@ export const Datasources = (props: IDatasourcesProps) => {
         ]}
         title={translate('datasources.home.title')}
       >
-        {/* <Button
+        <Button
           variant="cta"
           onPress={() => {
             setOpen(true);
@@ -94,19 +103,18 @@ export const Datasources = (props: IDatasourcesProps) => {
           data-testid="create-group"
         >
           <Translate contentKey="entity.action.create">Create</Translate>
-        </Button> */}
+        </Button>
       </SecondaryHeader>
-      {/* <DialogContainer onDismiss={() => setOpen(false)}>
+      <DialogContainer onDismiss={() => setOpen(false)}>
         {isOpen && (
-          <UserGroupUpdate
+          <DatasourceStepper
             setUpdateSuccess={setUpdateSuccess}
-            isNew={isNew}
             setOpen={setOpen}
-            groupName={groupName}
+            isNew = {true}
             {...props}
-          ></UserGroupUpdate>
+          ></DatasourceStepper>
         )}
-      </DialogContainer> */}
+      </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
           <TableContainer>

@@ -10,6 +10,7 @@ import userManagement, { UserManagementState } from 'app/modules/administration/
 import userGroups, { UserGroupsState } from 'app/modules/administration/user-management/groups/user-group.reducer';
 import connections, { ConnectionsState } from 'app/modules/administration/sources/connections/connections.reducer';
 import datasources, { DatasourcesState } from 'app/modules/administration/sources/datasources/datasources.reducer';
+import datasourceSteps, { DatasourceStepsState } from 'app/modules/administration/sources/datasources/steps/datasource-steps.reducer';
 import register, { RegisterState } from 'app/modules/account/register/register.reducer';
 import activate, { ActivateState } from 'app/modules/account/activate/activate.reducer';
 import password, { PasswordState } from 'app/modules/account/password/password.reducer';
@@ -41,6 +42,7 @@ export interface IRootState {
   readonly settings: SettingsState;
   readonly dashboard: DashboardState;
   readonly datasources: DatasourcesState;
+  readonly datasourceSteps: DatasourceStepsState;
   readonly views: ViewsState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
@@ -54,6 +56,7 @@ const rootReducer = combineReducers<IRootState>({
   userManagement,
   userGroups,
   connections,
+  datasourceSteps,
   register,
   activate,
   passwordReset,

@@ -104,7 +104,10 @@
       "view": "View",
       "manage": "Manage",
       "create": "Create",
-      "dangerZone": "Danger Zone"
+      "dangerZone": "Danger Zone",
+      "next": "Next",
+      "finish": "Finish",
+      "reset": "Reset"
     },
     "options": {
       "more_options": "More options",
