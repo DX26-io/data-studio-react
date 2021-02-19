@@ -17,10 +17,8 @@ import DatasourceStepper from './steps/datasource-stepper';
 export interface IDatasourcesProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Datasources = (props: IDatasourcesProps) => {
-
   const [isOpen, setOpen] = React.useState(false);
   const [isNew, setNew] = React.useState(false);
-  const [groupName, setGroupName] = React.useState('');
 
   const [pagination, setPagination] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
@@ -79,8 +77,7 @@ export const Datasources = (props: IDatasourcesProps) => {
     });
   };
 
-  const setUpdateSuccess = () => {
-  };
+  const setUpdateSuccess = () => {};
 
   const { datasources, loading, totalItems } = props;
   return (
@@ -98,7 +95,6 @@ export const Datasources = (props: IDatasourcesProps) => {
           onPress={() => {
             setOpen(true);
             setNew(true);
-            setGroupName('');
           }}
           data-testid="create-group"
         >
@@ -106,14 +102,7 @@ export const Datasources = (props: IDatasourcesProps) => {
         </Button>
       </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && (
-          <DatasourceStepper
-            setUpdateSuccess={setUpdateSuccess}
-            setOpen={setOpen}
-            isNew = {true}
-            {...props}
-          ></DatasourceStepper>
-        )}
+        {isOpen && <DatasourceStepper setUpdateSuccess={setUpdateSuccess} setOpen={setOpen} isNew={true} {...props}></DatasourceStepper>}
       </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
@@ -147,9 +136,6 @@ export const Datasources = (props: IDatasourcesProps) => {
                       <Flex gap="size-100" justifyContent="center">
                         <a
                         // onClick={() => {
-                        //   setOpen(true);
-                        //   setNew(false);
-                        //   setGroupName(userGroup.name);
                         // }}
                         >
                           <Edit size="S" />
