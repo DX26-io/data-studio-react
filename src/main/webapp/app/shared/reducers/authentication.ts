@@ -20,6 +20,11 @@ export const ACTION_TYPES = {
   ERROR_MESSAGE: 'authentication/ERROR_MESSAGE',
 };
 
+export interface RealmDTO {
+  name: string;
+  id: number;
+}
+
 const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
 
 const initialState = {
@@ -28,6 +33,7 @@ const initialState = {
   realmCreateError: false,
   redirectTo: (null as unknown) as string,
   loginSuccess: false,
+  realms: (null as unknown) as Array<RealmDTO>,
   loginProviderEmailConfirmationToken: (null as unknown) as string,
   verifyUserSuccess: false,
   createRealmSuccess: false,
@@ -103,7 +109,8 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...state,
         loading: false,
         loginError: false,
-        loginSuccess: true,
+        loginSuccess: action.payload.data.stage === 'SUCCESS',
+        realms: action.payload.data.realms,
       };
     case SUCCESS(ACTION_TYPES.LOGIN_WITH_PROVIDER):
       return {
@@ -172,7 +179,15 @@ export default (state: AuthenticationState = initialState, action): Authenticati
 
 export const isTokenExist = () => {
   const token = Storage.local.get(AUTH_TOKEN_KEY) || Storage.session.get(AUTH_TOKEN_KEY);
-  return token ? true : false;
+  return !!token;
+};
+
+const getBearerToken = headers => {
+  const bearerToken = headers.authorization;
+  if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
+    return bearerToken.slice(7, bearerToken.length);
+  }
+  return null;
 };
 
 export const displayAuthError = message => ({ type: ACTION_TYPES.ERROR_MESSAGE, message });
@@ -190,28 +205,23 @@ export const getSession: () => void = () => async (dispatch, getState) => {
   }
 };
 
-export const setAuthToken = async (result, rememberMe) => {
-  const bearerToken = result.value.headers.authorization;
-  if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
-    const jwt = bearerToken.slice(7, bearerToken.length);
-
-    try {
-      let tkn: string;
-      if (config.CLOUD) {
-        await firebase.auth().signInWithCustomToken(jwt);
-        tkn = await firebase.auth().currentUser.getIdToken(true);
-      } else {
-        tkn = jwt;
-      }
-      if (rememberMe) {
-        Storage.local.set(AUTH_TOKEN_KEY, tkn);
-      } else {
-        Storage.session.set(AUTH_TOKEN_KEY, tkn);
-      }
-    } catch (error) {
-      const errorMessage = error.message;
-      toast.error(errorMessage);
+export const setAuthToken = async (bearerToken, rememberMe) => {
+  try {
+    let tkn: string;
+    if (config.CLOUD) {
+      await firebase.auth().signInWithCustomToken(bearerToken);
+      tkn = await firebase.auth().currentUser.getIdToken(true);
+    } else {
+      tkn = bearerToken;
     }
+    if (rememberMe) {
+      Storage.local.set(AUTH_TOKEN_KEY, tkn);
+    } else {
+      Storage.session.set(AUTH_TOKEN_KEY, tkn);
+    }
+    return tkn;
+  } catch (error) {
+    toast.error(error.message);
   }
 };
 
@@ -266,7 +276,8 @@ export const createRealm: (realmName: string, emailVerificationToken: string) =>
     }),
   });
 
-  await setAuthToken(result, false);
+  const bearerToken = getBearerToken(result.value.headers);
+  await setAuthToken(bearerToken, false);
   await dispatch(getSession());
 
   dispatch({
@@ -274,17 +285,21 @@ export const createRealm: (realmName: string, emailVerificationToken: string) =>
   });
 };
 
-export const login: (username: string, password: string, rememberMe?: boolean) => void = (
+export const login: (username: string, password: string, rememberMe: boolean, realmId: number) => void = (
   username,
   password,
-  rememberMe = false
+  rememberMe,
+  realmId
 ) => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.LOGIN,
-    payload: axios.post('api/authenticate', { username, password, rememberMe }),
+    payload: axios.post('api/authenticate', { username, password, rememberMe, realmId }),
   });
-  await setAuthToken(result, rememberMe);
-  await dispatch(getSession());
+  const bearerToken = getBearerToken(result.value.headers);
+  if (bearerToken) {
+    await setAuthToken(bearerToken, rememberMe);
+    await dispatch(getSession());
+  }
 };
 
 export const loginWithProvider: (provider: string) => void = provider => async (dispatch, getState) => {

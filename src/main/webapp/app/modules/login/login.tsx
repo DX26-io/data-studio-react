@@ -12,8 +12,8 @@ import LoginHeader from './login-header';
 export interface ILoginProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export const Login: React.FC<ILoginProps> = props => {
-  const handleLogin = (username, password, rememberMe = false) => {
-    props.login(username, password, rememberMe);
+  const handleLogin = (username, password, rememberMe: boolean, realmId: number) => {
+    props.login(username, password, rememberMe, realmId);
   };
   const handleProviderLogin = (provider) => {
     props.loginWithProvider(provider);
@@ -48,6 +48,7 @@ export const Login: React.FC<ILoginProps> = props => {
         <LoginHeader />
         <LoginForm handleLogin={handleLogin}
                    loginError={props.loginError}
+                   realms={props.realms}
                    handleProviderLogin={handleProviderLogin}
                    handleSignup={handleSignup}/>
         <LoginFooter />
@@ -59,6 +60,7 @@ export const Login: React.FC<ILoginProps> = props => {
 const mapStateToProps = ({ authentication }: IRootState) => ({
   isAuthenticated: authentication.isAuthenticated,
   loginError: authentication.loginError,
+  realms: authentication.realms,
   loginProviderEmailConfirmationToken: authentication.loginProviderEmailConfirmationToken,
 });
 
