@@ -76,6 +76,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...initialState,
         errorMessage: action.payload,
         loginError: true,
+        realms: null,
       };
     case FAILURE(ACTION_TYPES.SIGNUP):
       return {
