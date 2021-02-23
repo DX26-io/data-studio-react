@@ -15,7 +15,12 @@ interface ConnectionPropertyProps extends DispatchProps {
 
 const ConnectionProperty = (props: ConnectionPropertyProps) => {
   const { property, disabled, connection } = props;
-  const [propValue, setPropValue] = React.useState();
+
+  const setPropertyValue = value => {
+    if (value) {
+      connection.details[property.fieldName] = value;
+    }
+  };
 
   return (
     <React.Fragment>
@@ -24,8 +29,8 @@ const ConnectionProperty = (props: ConnectionPropertyProps) => {
           isDisabled={disabled}
           isRequired={!disabled && property.required && property.fieldType === 'Text'}
           label={property.displayName}
-          onChange={setPropValue}
-          value={connection ? connection.details[property.fieldName] : propValue}
+          onChange={setPropertyValue}
+          value={connection ? connection.details[property.fieldName] : ''}
         />
       ) : null}
       {property.fieldType === 'String' ? (
@@ -34,8 +39,8 @@ const ConnectionProperty = (props: ConnectionPropertyProps) => {
           isDisabled={disabled}
           label={property.displayName}
           isRequired={!disabled && property.required && property.fieldType === 'String'}
-          onChange={setPropValue}
-          value={connection ? connection.details[property.fieldName] : propValue}
+          onChange={setPropertyValue}
+          value={connection ? connection.details[property.fieldName] : ''}
         />
       ) : null}
       {property.fieldType === 'Integer' ? (
@@ -44,15 +49,15 @@ const ConnectionProperty = (props: ConnectionPropertyProps) => {
           isDisabled={disabled}
           label={property.displayName}
           isRequired={!disabled && property.required && property.fieldType === 'Integer'}
-          onChange={setPropValue}
-          value={connection ? connection.details[property.fieldName] : propValue}
+          onChange={setPropertyValue}
+          value={connection ? connection.details[property.fieldName] : 0}
         />
       ) : null}
       {property.fieldType === 'Boolean' ? (
         <Checkbox
           isRequired={!disabled && property.required && property.fieldType === 'Boolean'}
-          onChange={setPropValue}
-          isSelected={connection ? connection.details[property.fieldName] : propValue}
+          onChange={setPropertyValue}
+          isSelected={connection ? connection.details[property.fieldName] : false}
           isEmphasized
         >
           {property.displayName}

@@ -19,3 +19,15 @@ export const getSteps = () => {
     translate('datasources.steps.dimensionsMeasures'),
   ];
 };
+
+export const prepareConnection = (connection, connectionType) => {
+  const con = connection;
+  con.connectionType = connectionType.name;
+  con.connectionTypeId = connectionType.id;
+  con.connectionType = connectionType.name;
+  con.connectionParameters = connection.connectionParameters;
+  con.details['@type'] = connectionType.connectionPropertiesSchema.connectionDetailsType;
+  return con;
+};
+
+export const isNextDisabled = () => {};

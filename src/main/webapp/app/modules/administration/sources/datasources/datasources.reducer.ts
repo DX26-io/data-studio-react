@@ -13,8 +13,7 @@ export const ACTION_TYPES = {
   UPDATE_DATASOURCES: 'datasources/UPDATE_DATASOURCES',
   DELETE_DATASOURCES: 'datasources/DELETE_DATASOURCES',
   RESET: 'datasources/RESET',
-  SELECT_CONNECTION_TYPE: 'connections/SELECT_CONNECTION_TYPE',
-  BUILD_DATASOURCE: 'connections/BUILD_DATASOURCE',
+  TEST_CONNECTION: 'datasources/TEST_CONNECTION',
 };
 
 const initialState = {
@@ -27,6 +26,7 @@ const initialState = {
   updateSuccess: false,
   datasourceConnection: {},
   connectionType: {},
+  isConnected: false,
 };
 
 export type DatasourcesState = Readonly<typeof initialState>;
@@ -52,6 +52,12 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         updateSuccess: false,
         updating: true,
       };
+    case REQUEST(ACTION_TYPES.TEST_CONNECTION):
+      return {
+        ...state,
+        errorMessage: null,
+        loading: true,
+      };
     case FAILURE(ACTION_TYPES.FETCH_DATASOURCES_LIST):
     case FAILURE(ACTION_TYPES.FETCH_DATASOURCES):
     case FAILURE(ACTION_TYPES.CREATE_DATASOURCES):
@@ -63,6 +69,13 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         updating: false,
         updateSuccess: false,
         errorMessage: action.payload,
+      };
+    case FAILURE(ACTION_TYPES.TEST_CONNECTION):
+      return {
+        ...state,
+        errorMessage: action.payload,
+        isConnected: false,
+        loading: false,
       };
     case SUCCESS(ACTION_TYPES.FETCH_DATASOURCES_LIST):
       return {
@@ -91,6 +104,13 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         updating: false,
         updateSuccess: true,
         entity: {},
+      };
+    case SUCCESS(ACTION_TYPES.TEST_CONNECTION):
+      return {
+        ...state,
+        isConnected: true,
+        loading: false,
+        errorMessage: null,
       };
     case ACTION_TYPES.RESET:
       return {
@@ -152,6 +172,7 @@ export const reset = () => ({
   type: ACTION_TYPES.RESET,
 });
 
-export const selectConnectionType = () => ({
-  type: ACTION_TYPES.SELECT_CONNECTION_TYPE,
+export const queryToConnection = (connection: any) => ({
+  type: ACTION_TYPES.TEST_CONNECTION,
+  payload: axios.post('api/query/test', connection),
 });

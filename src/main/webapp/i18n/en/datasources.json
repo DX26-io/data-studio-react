@@ -27,7 +27,9 @@
       "connectionParams": "Connection params",
       "userName": "User Name",
       "password": "Password",
-      "testConnection": "Test Connection"
+      "testConnection": "Test Connection",
+      "connectionSuccess": "Connection Success",
+      "connectionFailure": "Connection Error. Please check configurations"
     }
   }
 }

@@ -49,7 +49,7 @@ export interface IDatasourceStepperProps extends StateProps, DispatchProps {
 }
 
 const DatasourceStepper = (props: IDatasourceStepperProps) => {
-  const { setUpdateSuccess, setOpen, isNew, connectionsTypes, connectionType, disabledDataConnection } = props;
+  const { setUpdateSuccess, setOpen, isNew, connectionsTypes, connectionType, connection } = props;
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
@@ -61,7 +61,7 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
       case 0:
         return <ConnectionsTypes connectionsTypes={connectionsTypes} />;
       case 1:
-        return <DataConnection connectionType={connectionType}  disabledDataConnection={disabledDataConnection} />;
+        return <DataConnection connectionType={connectionType} />;
       case 2:
         return 'This is the bit I really care about!';
       default:
@@ -146,7 +146,7 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
                   <Button variant="secondary" isDisabled={activeStep === 0} onPress={handleBack}>
                     <Translate contentKey="entity.action.back">Back</Translate>
                   </Button>
-                  <Button variant="cta" isDisabled={connectionType === null} onPress={handleNext}>
+                  <Button variant="cta" isDisabled={connectionType.id === '' } onPress={handleNext}>
                     {activeStep === steps.length - 1 ? translate('entity.action.finish') : translate('entity.action.next')}
                   </Button>
                 </Flex>
@@ -162,7 +162,7 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   connectionsTypes: storeState.connections.connectionsTypes,
   connectionType: storeState.datasourceSteps.connectionType,
-  disabledDataConnection: storeState.datasourceSteps.disabledDataConnection,
+  connection: storeState.datasourceSteps.connection,
 });
 
 const mapDispatchToProps = { getConnectionsTypes, reset };

@@ -13,7 +13,6 @@ interface IImgLinkCardProps extends DispatchProps {
 const ImgLinkCard = (props: IImgLinkCardProps) => {
   const { connectionType } = props;
   const select = () => {
-    console.log(connectionType);
     props.selectConnectionType(connectionType);
   };
   return (
