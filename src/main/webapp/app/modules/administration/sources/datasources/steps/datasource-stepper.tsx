@@ -25,7 +25,7 @@ import {
 import { getConnectionsTypes } from '../../connections/connections.reducer';
 import ConnectionsTypes from './connections-types';
 import DataConnection from './data-connection';
-import { getSteps } from './datasource-util';
+import { getSteps,isNextDisabled } from './datasource-util';
 import { reset } from './datasource-steps.reducer';
 
 const useStyles = makeStyles(theme => ({
@@ -146,7 +146,7 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
                   <Button variant="secondary" isDisabled={activeStep === 0} onPress={handleBack}>
                     <Translate contentKey="entity.action.back">Back</Translate>
                   </Button>
-                  <Button variant="cta" isDisabled={connectionType.id === '' } onPress={handleNext}>
+                  <Button variant="cta" isDisabled={isNextDisabled(connection,connectionType,activeStep) } onPress={handleNext}>
                     {activeStep === steps.length - 1 ? translate('entity.action.finish') : translate('entity.action.next')}
                   </Button>
                 </Flex>
