@@ -24,8 +24,6 @@ const initialState = {
   updating: false,
   totalItems: 0,
   updateSuccess: false,
-  datasourceConnection: {},
-  connectionType: {},
   isConnected: false,
 };
 
@@ -114,7 +112,13 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
       };
     case ACTION_TYPES.RESET:
       return {
-        ...initialState,
+        ...state,
+        loading: false,
+        errorMessage: null,
+        entity: defaultValue,
+        updating: false,
+        updateSuccess: false,
+        isConnected: false,
       };
     default:
       return state;

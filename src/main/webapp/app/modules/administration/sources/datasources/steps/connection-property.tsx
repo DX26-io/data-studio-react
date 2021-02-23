@@ -1,11 +1,8 @@
 import React from 'react';
 import { TextField, TextArea, Checkbox } from '@adobe/react-spectrum';
-import { Translate } from 'react-jhipster';
-import { Link } from 'react-router-dom';
-import { selectConnectionType } from './datasource-steps.reducer';
 import { connect } from 'react-redux';
 import './img-link-card.scss';
-import { IRootState } from 'app/shared/reducers';
+import { updateConnection } from './datasource-steps.reducer';
 
 interface ConnectionPropertyProps extends DispatchProps {
   property: any;
@@ -19,6 +16,7 @@ const ConnectionProperty = (props: ConnectionPropertyProps) => {
   const setPropertyValue = value => {
     if (value) {
       connection.details[property.fieldName] = value;
+      props.updateConnection(connection);
     }
   };
 
@@ -67,7 +65,7 @@ const ConnectionProperty = (props: ConnectionPropertyProps) => {
   );
 };
 
-const mapDispatchToProps = { selectConnectionType };
+const mapDispatchToProps = { updateConnection };
 
 type DispatchProps = typeof mapDispatchToProps;
 

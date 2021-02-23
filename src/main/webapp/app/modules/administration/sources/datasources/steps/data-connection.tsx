@@ -16,7 +16,7 @@ import {
   prepareConnection,
 } from './datasource-util';
 import ConnectionProperty from './connection-property';
-import { selectConnection } from './datasource-steps.reducer';
+import { selectConnection, updateConnection } from './datasource-steps.reducer';
 import { queryToConnection } from '../datasources.reducer';
 import { Translate } from 'react-jhipster';
 import Checkmark from '@spectrum-icons/workflow/Checkmark';
@@ -31,7 +31,7 @@ export const DataConnection = (props: IDataConnectionProps) => {
   const [connectionName, setConnectionName] = React.useState();
   const [userName, setUserName] = React.useState();
   const [password, setPassword] = React.useState();
-  const [connectionId, setConnection] = React.useState<ReactText>(props.connection ? props.connection.id.toString() : '');
+  const [connectionId, setConnection] = React.useState<ReactText>(props.connection.id !== '' ? props.connection.id.toString() : '');
 
   const setFields = c => {
     setConnectionName(c.name);
@@ -52,6 +52,22 @@ export const DataConnection = (props: IDataConnectionProps) => {
     props.getConnectionsByConnectionTypeId(connectionType.id);
   }, []);
 
+  useEffect(() => {
+    if (!connectionId) {
+      const payload = props.connection;
+      if (userName) {
+        payload['connectionUsername'] = userName;
+      }
+      if (password) {
+        payload['connectionPassword'] = password;
+      }
+      if (connectionName) {
+        payload['name'] = connectionName;
+      }
+      props.updateConnection(payload);
+    }
+  }, [userName, password, connectionName]);
+
   return (
     <Flex direction="column" gap="size-100" alignItems="center">
       <Form isRequired necessityIndicator="icon" minWidth="size-4600">
@@ -71,6 +87,14 @@ export const DataConnection = (props: IDataConnectionProps) => {
         >
           {item => <Item key={item.id}>{item.name}</Item>}
         </Picker>
+        <div style={{textAlign:'center',marginTop:'14px'}}>
+          {/* TODO : OR needs to be badge component or something else */}
+          <span
+            className="spectrum-Heading.spectrum-Heading--sizeL.spectrum-Heading--heavy"
+          >
+            <Translate contentKey="datasources.dataConnection.or">OR</Translate>
+          </span>
+        </div>
         <TextField
           label={CONNECTION_NAME_LABEL}
           onChange={setConnectionName}
@@ -101,7 +125,8 @@ export const DataConnection = (props: IDataConnectionProps) => {
             value={password}
           />
         ) : null}
-        <Flex direction="row" gap="size-200" alignItems="center">
+        <br/>
+        <Flex direction="row" gap="size-200" alignItems="center" >
           <Button variant="cta" isDisabled={connectionName === null} onPress={testConnection}>
             <Translate contentKey="datasources.dataConnection.testConnection">Test Connection</Translate>
           </Button>
@@ -145,7 +170,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   loading: storeState.datasources.loading,
 });
 
-const mapDispatchToProps = { getConnectionsByConnectionTypeId, selectConnection, queryToConnection };
+const mapDispatchToProps = { getConnectionsByConnectionTypeId, selectConnection, updateConnection, queryToConnection };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

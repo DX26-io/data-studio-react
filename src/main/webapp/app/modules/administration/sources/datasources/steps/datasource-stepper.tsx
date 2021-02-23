@@ -25,8 +25,9 @@ import {
 import { getConnectionsTypes } from '../../connections/connections.reducer';
 import ConnectionsTypes from './connections-types';
 import DataConnection from './data-connection';
-import { getSteps,isNextDisabled } from './datasource-util';
-import { reset } from './datasource-steps.reducer';
+import { getSteps, isNextDisabled } from './datasource-util';
+import { resetSteps } from './datasource-steps.reducer';
+import { reset } from '../datasources.reducer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,7 +50,7 @@ export interface IDatasourceStepperProps extends StateProps, DispatchProps {
 }
 
 const DatasourceStepper = (props: IDatasourceStepperProps) => {
-  const { setUpdateSuccess, setOpen, isNew, connectionsTypes, connectionType, connection } = props;
+  const { setUpdateSuccess, setOpen, isNew, connectionsTypes, connectionType, connection, isConnected } = props;
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
@@ -88,6 +89,7 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
   const handleClose = () => {
     setOpen(false);
     dialog.dismiss();
+    props.resetSteps();
     props.reset();
   };
 
@@ -146,7 +148,11 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
                   <Button variant="secondary" isDisabled={activeStep === 0} onPress={handleBack}>
                     <Translate contentKey="entity.action.back">Back</Translate>
                   </Button>
-                  <Button variant="cta" isDisabled={isNextDisabled(connection,connectionType,activeStep) } onPress={handleNext}>
+                  <Button
+                    variant="cta"
+                    isDisabled={isNextDisabled(connection, connectionType, isConnected, activeStep)}
+                    onPress={handleNext}
+                  >
                     {activeStep === steps.length - 1 ? translate('entity.action.finish') : translate('entity.action.next')}
                   </Button>
                 </Flex>
@@ -163,9 +169,10 @@ const mapStateToProps = (storeState: IRootState) => ({
   connectionsTypes: storeState.connections.connectionsTypes,
   connectionType: storeState.datasourceSteps.connectionType,
   connection: storeState.datasourceSteps.connection,
+  isConnected: storeState.datasources.isConnected,
 });
 
-const mapDispatchToProps = { getConnectionsTypes, reset };
+const mapDispatchToProps = { getConnectionsTypes, reset, resetSteps };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

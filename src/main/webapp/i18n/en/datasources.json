@@ -29,7 +29,8 @@
       "password": "Password",
       "testConnection": "Test Connection",
       "connectionSuccess": "Connection Success",
-      "connectionFailure": "Connection Error. Please check configurations"
+      "connectionFailure": "Connection Error. Please check configurations",
+      "or": "OR"
     }
   }
 }

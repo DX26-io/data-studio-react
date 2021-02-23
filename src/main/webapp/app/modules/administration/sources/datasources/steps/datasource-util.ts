@@ -30,10 +30,10 @@ export const prepareConnection = (connection, connectionType) => {
   return con;
 };
 
-export const isNextDisabled = (connection: any, connectionType: any, step: number) => {
+export const isNextDisabled = (connection: any, connectionType: any, isConnected: boolean, step: number) => {
   if (connectionType.id === '' && step === 0) {
     return true;
-  } else if (connection.name === '' && step === 1) {
+  } else if (connection.name === '' && isConnected === false && step === 1) {
     return true;
   } else {
     return false;

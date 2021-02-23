@@ -1,7 +1,7 @@
 export const ACTION_TYPES = {
   SELECT_CONNECTION_TYPE: 'datasourceSteps/SELECT_CONNECTION_TYPE',
   SELECT_CONNECTION: 'datasourceSteps/SELECT_CONNECTION',
-  SET_CONNECTION: 'datasourceSteps/SET_CONNECTION',
+  UPDATE_CONNECTION: 'datasourceSteps/UPDATE_CONNECTION',
   RESET: 'datasourceSteps/RESET',
   BUILD_DATASOURCE: 'datasourceSteps/BUILD_DATASOURCE',
 };
@@ -33,7 +33,7 @@ export default (state: DatasourceStepsState = initialState, action): DatasourceS
         connection: action.payload,
         disabledDataConnection: true,
       };
-    case ACTION_TYPES.SET_CONNECTION:
+    case ACTION_TYPES.UPDATE_CONNECTION:
       return {
         ...state,
         connection: action.payload,
@@ -67,13 +67,13 @@ export const selectConnection = connection => {
     payload: connection,
   };
 };
-export const setConnection = connection => {
+export const updateConnection = connection => {
   return {
-    type: ACTION_TYPES.SET_CONNECTION,
+    type: ACTION_TYPES.UPDATE_CONNECTION,
     payload: connection,
   };
 };
-export const reset = () => {
+export const resetSteps = () => {
   return {
     type: ACTION_TYPES.RESET,
   };
