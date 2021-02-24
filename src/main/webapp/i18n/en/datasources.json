@@ -31,6 +31,12 @@
       "connectionSuccess": "Connection Success",
       "connectionFailure": "Connection Error. Please check configurations",
       "or": "OR"
+    },
+    "cacheProperty": {
+      "cacheEnabled": "Enable cache",
+      "cachePurgeAfterMinutes": "Purge after minutes",
+      "refreshAfterTimesRead": "Refresh after times read",
+      "refreshAfterMinutes": "Refresh after minutes"
     }
   }
 }

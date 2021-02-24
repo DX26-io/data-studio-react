@@ -14,7 +14,14 @@ const initialState = {
     },
     id: '',
   },
-  connection: { id: '', name: '', details: {}, connectionType: '', connectionTypeId: 0, connectionParameters: '' },
+  connection: {
+    id: '',
+    name: '',
+    details: {},
+    connectionType: '',
+    connectionTypeId: 0,
+    connectionParameters: { cacheEnabled: false, cachePurgeAfterMinutes: 0, refreshAfterTimesRead: 0, refreshAfterMinutes: 0 },
+  },
   disabledDataConnection: false,
 };
 
@@ -40,15 +47,7 @@ export default (state: DatasourceStepsState = initialState, action): DatasourceS
       };
     case ACTION_TYPES.RESET:
       return {
-        connectionType: {
-          connectionPropertiesSchema: {
-            connectionProperties: [],
-            config: {},
-          },
-          id: '',
-        },
-        connection: { id: '', name: '', details: {}, connectionType: '', connectionTypeId: 0, connectionParameters: '' },
-        disabledDataConnection: false,
+        ...initialState,
       };
     default:
       return state;

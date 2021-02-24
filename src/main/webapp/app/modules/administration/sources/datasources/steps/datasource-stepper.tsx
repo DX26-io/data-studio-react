@@ -28,6 +28,7 @@ import DataConnection from './data-connection';
 import { getSteps, isNextDisabled } from './datasource-util';
 import { resetSteps } from './datasource-steps.reducer';
 import { reset } from '../datasources.reducer';
+import  CacheProperty  from "./cache-property";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -64,7 +65,7 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
       case 1:
         return <DataConnection connectionType={connectionType} />;
       case 2:
-        return 'This is the bit I really care about!';
+        return <CacheProperty connection={connection} />;
       default:
         return 'Unknown stepIndex';
     }

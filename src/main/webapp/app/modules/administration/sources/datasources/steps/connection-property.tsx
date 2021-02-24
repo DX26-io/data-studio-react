@@ -44,6 +44,7 @@ const ConnectionProperty = (props: ConnectionPropertyProps) => {
       {property.fieldType === 'Integer' ? (
         <TextField
           inputMode="numeric"
+          type="number"
           isDisabled={disabled}
           label={property.displayName}
           isRequired={!disabled && property.required && property.fieldType === 'Integer'}

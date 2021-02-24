@@ -10,6 +10,10 @@ export const PASSWORD_LABEL = translate('datasources.dataConnection.password');
 export const TEST_CONNECTION_LABEL = translate('datasources.dataConnection.testConnection');
 export const CONNECTION_NAME_LABEL = translate('datasources.dataConnection.connectionName');
 
+export const CACHE_PURGE_AFTER_MINUTES_LABEL = translate('datasources.cacheProperty.cachePurgeAfterMinutes');
+export const REFRESH_AFTER_TIME_READ_LABEL = translate('datasources.cacheProperty.refreshAfterTimesRead');
+export const REFRESH_AFTER_MINUTES_LABEL = translate('datasources.cacheProperty.refreshAfterMinutes');
+
 export const getSteps = () => {
   return [
     translate('datasources.steps.connectionType'),
