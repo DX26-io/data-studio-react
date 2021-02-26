@@ -25,7 +25,7 @@ export const Login: React.FC<ILoginProps> = props => {
   if (props.loginProviderEmailConfirmationToken) {
     return (<Redirect
       to={{
-        pathname: '/signup/realm',
+        pathname: '/realm',
       }}
     />);
   }
