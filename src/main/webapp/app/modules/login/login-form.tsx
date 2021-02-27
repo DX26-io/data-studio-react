@@ -61,7 +61,7 @@ export const LoginForm = (props: ILoginProps) => {
         <TextField
           width="100%"
           marginBottom="size-300"
-          label="Email Address"
+          label="Username"
           type="text"
           data-testid="username"
           value={username}
