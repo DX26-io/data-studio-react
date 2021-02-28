@@ -10,7 +10,7 @@ export interface ILoginProps {
   loginError: boolean;
   realms: Array<RealmDTO>;
   handleLogin: (username: string, password: string, rememberMe: boolean, realmId: number) => void;
-  handleProviderLogin: (provider: string) => void;
+  handleProviderLogin: (provider: string, realmId: number) => void;
   handleSignup: () => void;
 }
 export const LoginForm = (props: ILoginProps) => {
@@ -27,11 +27,11 @@ export const LoginForm = (props: ILoginProps) => {
   const { loginError } = props;
 
   const onGoogleClick = () => {
-    handleProviderLogin('google');
+    handleProviderLogin('google', realmId);
   }
 
   const onGitHubClick = () => {
-    handleProviderLogin('github');
+    handleProviderLogin('github', realmId);
   }
 
   const onSignup = () => {

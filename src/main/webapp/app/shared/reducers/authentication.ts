@@ -110,7 +110,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...state,
         loading: false,
         loginError: false,
-        loginSuccess: action.payload.data.stage === 'SUCCESS',
+        loginSuccess: !action.payload.data.realms,
         realms: action.payload.data.realms,
       };
     case SUCCESS(ACTION_TYPES.LOGIN_WITH_PROVIDER):
@@ -119,6 +119,8 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         loading: false,
         loginError: false,
         loginProviderEmailConfirmationToken: action.payload.data.token,
+        loginSuccess: !action.payload.data.realms && !action.payload.data.token,
+        realms: action.payload.data.realms,
       };
     case SUCCESS(ACTION_TYPES.SIGNUP):
       return {
@@ -207,32 +209,16 @@ export const getSession: () => void = () => async (dispatch, getState) => {
 };
 
 export const setAuthToken = async (bearerToken, rememberMe) => {
-  try {
-    let tkn: string;
-    if (config.CLOUD) {
-      await firebase.auth().signInWithCustomToken(bearerToken);
-      tkn = await firebase.auth().currentUser.getIdToken(true);
-    } else {
-      tkn = bearerToken;
-    }
-    if (rememberMe) {
-      Storage.local.set(AUTH_TOKEN_KEY, tkn);
-    } else {
-      Storage.session.set(AUTH_TOKEN_KEY, tkn);
-    }
-    return tkn;
-  } catch (error) {
-    toast.error(error.message);
+  if (config.CLOUD) {
+    await firebase.auth().signInWithCustomToken(bearerToken);
   }
-};
-
-const setAuthTokenWithProvider = result => {
-  const bearerToken = result.value.headers.authorization;
-  if (!(bearerToken && bearerToken.slice(0, 7) === 'Bearer ')) {
-    return;
+  const tkn: string = bearerToken;
+  if (rememberMe) {
+    Storage.local.set(AUTH_TOKEN_KEY, tkn);
+  } else {
+    Storage.session.set(AUTH_TOKEN_KEY, tkn);
   }
-  const jwt = bearerToken.slice(7, bearerToken.length);
-  Storage.local.set(AUTH_TOKEN_KEY, jwt);
+  return tkn;
 };
 
 export const signup: (username: string, email: string, password: string, firstname: string, lastname: string) => void = (
@@ -303,25 +289,24 @@ export const login: (username: string, password: string, rememberMe: boolean, re
   }
 };
 
-export const loginWithProvider: (provider: string) => void = provider => async (dispatch, getState) => {
+export const loginWithProvider: (provider: string, realmId: number) => void = (provider, realmId) => async (dispatch, getState) => {
   const firebaseProviders = {
     google: new firebase.auth.GoogleAuthProvider(),
     github: new firebase.auth.GithubAuthProvider(),
   };
   const authProvider = firebaseProviders[provider];
-  try {
-    await firebase.auth().signInWithPopup(authProvider);
-    const tkn = await firebase.auth().currentUser.getIdToken(true);
-    const result = await dispatch({
-      type: ACTION_TYPES.LOGIN_WITH_PROVIDER,
-      payload: axios.post('api/registerWithProvider', { idToken: tkn }),
-    });
-    setAuthTokenWithProvider(result);
-    if (!getState().authentication.loginProviderEmailConfirmationToken) {
-      await dispatch(getSession());
-    }
-  } catch (error) {
-    toast.error(error.message);
+  await firebase.auth().signInWithPopup(authProvider);
+  const tkn = await firebase.auth().currentUser.getIdToken(true);
+  const result = await dispatch({
+    type: ACTION_TYPES.LOGIN_WITH_PROVIDER,
+    payload: axios.post('api/registerWithProvider', { idToken: tkn, realmId }),
+  });
+  const bearerToken = getBearerToken(result.value.headers);
+  if (bearerToken) {
+    await setAuthToken(bearerToken, false);
+    await dispatch(getSession());
+  } else if (!getState().authentication.loginProviderEmailConfirmationToken && !getState().authentication.realms) {
+    await dispatch(getSession());
   }
 };
 

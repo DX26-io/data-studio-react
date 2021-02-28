@@ -15,8 +15,8 @@ export const Login: React.FC<ILoginProps> = props => {
   const handleLogin = (username, password, rememberMe: boolean, realmId: number) => {
     props.login(username, password, rememberMe, realmId);
   };
-  const handleProviderLogin = (provider) => {
-    props.loginWithProvider(provider);
+  const handleProviderLogin = (provider, realmId) => {
+    props.loginWithProvider(provider, realmId);
   };
   const handleSignup = () => {
     props.history.push('/signup');
