@@ -1,0 +1,9 @@
+export const REQUIRED_FIELDS = 'REQUIRED_FIELDS';
+export const Ascending = 'Ascending';
+export const ASC = 'ASC';
+export const DESC = 'DESC';
+export const DIMENSION = 'DIMENSION';
+export const MEASURE = 'MEASURE';
+export const AggregationType = 'Aggregation type';
+export const Limit = 'Limit';
+export const Sort = 'Sort';

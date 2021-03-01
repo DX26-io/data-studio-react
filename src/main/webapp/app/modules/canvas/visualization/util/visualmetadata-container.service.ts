@@ -1,12 +1,12 @@
 let visualMetadataContainerList = [];
 
-export const VisualMetadataContainerGetOne = id => {
+export const VisualMetadataContainerGetOne = (id: string) => {
   return visualMetadataContainerList.filter(function (item) {
     return item.id === id;
   })[0];
 };
 
-export const VisualMetadataContainerAdd = widget => {
+export const VisualMetadataContainerAdd = (widget: any) => {
   if (widget.constructor === Array) {
     const widgetCont = widget.map(function (item) {
       item.visualBuildId = item.visualBuildId || item.id;
@@ -22,7 +22,7 @@ export const VisualMetadataContainerAdd = widget => {
   return visualMetadataContainerList;
 };
 
-const addConfigs = (widgetNew, widgetOld) => {
+const addConfigs = (widgetNew: any, widgetOld: any) => {
   Object.keys(widgetNew).forEach(function (key, index) {
     if (key !== '$promise' && key !== '$resolved') {
       widgetOld[key] = widgetNew[key];
@@ -30,7 +30,7 @@ const addConfigs = (widgetNew, widgetOld) => {
   });
 };
 
-export const VisualMetadataContainerUpdate = (id, widget, key) => {
+export const VisualMetadataContainerUpdate = (id: string, widget: any, key: string) => {
   let index = -1;
   visualMetadataContainerList.some(function (item, i) {
     return item[key] === id ? (index = i) : false;

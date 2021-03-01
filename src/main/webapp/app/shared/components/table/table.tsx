@@ -28,7 +28,7 @@ const TableView: React.FC<ITableProps> = props => {
                     return (
                       <TableRow key={uuid()}>
                         {Object.keys(row).map(col => {
-                          return <TableCell align="left">{row[col]}</TableCell>;
+                          return <TableCell key={uuid()} align="left">{row[col]}</TableCell>;
                         })}
                       </TableRow>
                     );
