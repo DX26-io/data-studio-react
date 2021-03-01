@@ -110,17 +110,17 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...state,
         loading: false,
         loginError: false,
-        loginSuccess: !action.payload.data.realms,
-        realms: action.payload.data.realms,
+        loginSuccess: !action.payload?.data?.realms,
+        realms: action.payload?.data?.realms,
       };
     case SUCCESS(ACTION_TYPES.LOGIN_WITH_PROVIDER):
       return {
         ...state,
         loading: false,
         loginError: false,
-        loginProviderEmailConfirmationToken: action.payload.data.token,
-        loginSuccess: !action.payload.data.realms && !action.payload.data.token,
-        realms: action.payload.data.realms,
+        loginProviderEmailConfirmationToken: action.payload?.data?.token,
+        loginSuccess: !action.payload?.data?.realms && !action.payload?.data?.token,
+        realms: action.payload?.data?.realms,
       };
     case SUCCESS(ACTION_TYPES.SIGNUP):
       return {
@@ -135,7 +135,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         loading: false,
         createRealmError: false,
         createRealmSuccess: true,
-        realm: action.payload.data,
+        realm: action.payload?.data,
       };
     case SUCCESS(ACTION_TYPES.VERIFY_USER):
       return {
@@ -149,13 +149,13 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...initialState,
       };
     case SUCCESS(ACTION_TYPES.GET_SESSION): {
-      const isAuthenticated = action.payload && action.payload.data && action.payload.data.activated;
+      const isAuthenticated = action.payload?.data?.activated;
       return {
         ...state,
         isAuthenticated,
         loading: false,
         sessionHasBeenFetched: true,
-        account: action.payload.data,
+        account: action.payload?.data,
       };
     }
     case ACTION_TYPES.ERROR_MESSAGE:
