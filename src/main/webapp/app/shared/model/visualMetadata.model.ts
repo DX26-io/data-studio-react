@@ -24,7 +24,7 @@ export interface IVisualMetadataSet {
 
   data?: any;
 
-  conditionExpression?: null;
+  conditionExpression?: any;
   query?: null;
   queryJson?: null;
   titleProperties?: TitleProperties;

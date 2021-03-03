@@ -1,19 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Flex,
-  Dialog,
-  Heading,
-  Divider,
-  Content,
-  ButtonGroup,
-  Button,
-  useDialogContainer,
-} from '@adobe/react-spectrum';
+import { View, Flex, Dialog, Heading, Divider, Content, ButtonGroup, Button, useDialogContainer } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import './visualization-edit-modal.scss';
-import {  useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import VisualizationProperties from 'app/modules/canvas/visualization/visualization-properties/visualization-properties';
 import VisualizationSettings from 'app/modules/canvas/visualization/visualization-settings/visualization-settings';
 import { Translate } from 'react-jhipster';
@@ -21,11 +11,11 @@ import {
   getEntity as getVisualmetadataEntity,
   updateEntity as updateVisualmetadataEntity,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { getDatasourcesFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
+import { getDatasourcesFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 import { VisualMetadataContainerUpdate } from '../../util/visualmetadata-container.service';
-import { setVisual } from '../../util/VisualDispatchService';
-import {  renderVisualization, ValidateFields } from '../../util/visualization-render-utils';
+import { setEditAction, setVisual } from '../../util/VisualDispatchService';
+import { renderVisualization, ValidateFields } from '../../util/visualization-render-utils';
 import { VisualWrap } from '../../util/visualmetadata-wrapper';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { subscribeWebSocket } from 'app/shared/websocket/stomp-client.service';
@@ -35,6 +25,7 @@ export interface IVisualizationEditModalProps extends StateProps, DispatchProps 
   viewId: number;
   visualizationId: string;
   setOpen: (isOpen: boolean) => void;
+  filterData: any;
 }
 
 export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
@@ -43,7 +34,8 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
   const visualizationId = props.visualizationId;
   const viewId = props.viewId;
 
-  const handleClose = () => {
+  const handleClose = action => {
+    setEditAction(action)
     props.setOpen(false);
     setVisual(props.visualmetadataEntity);
     dialog.dismiss();
@@ -55,12 +47,12 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
       visualMetadata: props.visualmetadataEntity,
     });
     VisualMetadataContainerUpdate(props.visualmetadataEntity.id, props.visualmetadataEntity, 'id');
-    handleClose();
+    handleClose('save');
   };
   useEffect(() => {
     if (visualizationId) {
       props.getVisualmetadataEntity(visualizationId);
-      props.getfeatureEntities(viewId);
+      props.getDatasourcesFeaturesEntities(viewId);
       props.getViewEntity(viewId);
     }
   }, []);
@@ -69,16 +61,21 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
     const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
     setData(metaData.data);
     if (data.headers.request === 'filters') {
-       // console.log('filter data');
+      // console.log('filter data');
     } else {
       renderVisualization(props.visualmetadataEntity, metaData.data, 'visualization-edit');
     }
+  };
+
+  const onExchangeMetadataError = data => {
+    const body = JSON.parse(data.body || '{}');
   };
 
   useEffect(() => {
     setVisual(props.visualmetadataEntity);
     if (props.visualmetadataEntity.fields && ValidateFields(props.visualmetadataEntity.fields)) {
       subscribeWebSocket('/user/exchange/metaData/' + props.visualmetadataEntity.id, onExchangeMetadata);
+      subscribeWebSocket('/user/exchange/metaDataError', onExchangeMetadataError);
       const visualMetadata = VisualWrap(props.visualmetadataEntity);
       const queryDTO = visualMetadata.getQueryParameters(props.visualmetadataEntity, null, null, null);
       const body = {
@@ -97,13 +94,23 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
       <Heading level={4}>{props.visualmetadataEntity?.titleProperties?.titleText}</Heading>
       <Divider size={'S'} />
       <ButtonGroup>
-        <Button variant="secondary" onPress={handleClose}>
+        <Button
+          variant="secondary"
+          onPress={() => {
+            handleClose('discard');
+          }}
+        >
           <Translate contentKey="entity.action.discard">Discard</Translate>
         </Button>
         <Button variant="secondary" onPress={handleSave}>
           <Translate contentKey="entity.action.save">Save</Translate>
         </Button>
-        <Button variant="cta" onPress={handleClose}>
+        <Button
+          variant="cta"
+          onPress={() => {
+            handleClose('apply');
+          }}
+        >
           <Translate contentKey="entity.action.apply">Apply</Translate>
         </Button>
       </ButtonGroup>
@@ -121,6 +128,9 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
                     visual={props.visualmetadataEntity}
                     view={props.view}
                     visualizationId={visualizationId}
+                    features={props.featuresList}
+                    datasource={props.view.viewDashboard.dashboardDatasource}
+                    filterData={props.filterData}
                   />
                 </View>
               </div>
@@ -143,7 +153,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
 });
 
-const mapDispatchToProps = { getVisualmetadataEntity, getfeatureEntities, getViewEntity, updateVisualmetadataEntity };
+const mapDispatchToProps = { getVisualmetadataEntity, getDatasourcesFeaturesEntities, getViewEntity, updateVisualmetadataEntity };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

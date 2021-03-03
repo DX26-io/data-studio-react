@@ -10,24 +10,36 @@ import { Tabs, Item } from '@react-spectrum/tabs';
 import { getSettingsTabTranslations } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
 import { IViews } from 'app/shared/model/views.model';
+import { IFeature } from 'app/shared/model/feature.model';
+import { IDatasources } from 'app/shared/model/datasources.model';
 
 export interface IVisualizationSettingsProps extends StateProps, DispatchProps {
-  visualizationId : ReactNode;
+  visualizationId: ReactNode;
   visual: IVisualMetadataSet;
   view: IViews;
   data?: any;
+  features: readonly IFeature[];
+  datasource: IDatasources;
+  filterData: any;
 }
 
 const VisualizationSettings = (props: IVisualizationSettingsProps) => {
-  const [activeTabId, setActiveTabId] =  useState<ReactText>('query');
+  const [activeTabId, setActiveTabId] = useState<ReactText>('query');
   return (
     <>
       <Tabs isQuiet={true} density={'compact'} items={getSettingsTabTranslations()} onSelectionChange={key => setActiveTabId(key)}>
         {item => (
           <Item title={item.name}>
             <Content marginTop="size-250" marginStart="size-125">
-              {activeTabId === 'query' && <VisualizationQuerySetting   visual={props.visual} view={props.view}/>}
-              {activeTabId === 'dataConstraints' && <VisualizationDataConstraintsSetting />}
+              {activeTabId === 'query' && <VisualizationQuerySetting visual={props.visual} view={props.view} />}
+              {activeTabId === 'dataConstraints' && (
+                <VisualizationDataConstraintsSetting
+                  filterData={props.filterData}
+                  features={props.features}
+                  datasource={props.datasource}
+                  visualMetaData={props.visual}
+                />
+              )}
               {activeTabId === 'thresholdAlert' && <VisualizationThresholdAlertSetting />}
               {activeTabId === 'data' && <VisualizationDataSetting data={props.data} />}
             </Content>

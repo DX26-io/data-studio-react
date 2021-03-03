@@ -7,13 +7,14 @@ import ViewGrid from '@spectrum-icons/workflow/ViewGrid';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import { useHistory } from 'react-router-dom';
 import User from '@spectrum-icons/workflow/User';
+import DateRangeComponent from '../canvas/data-constraints/date-range-component';
 
 export type IHomeProp = StateProps;
 
 // TODO: Test Cases
 export const Home = (props: IHomeProp) => {
   const history = useHistory();
- 
+
   const { account } = props;
   return (
     <>

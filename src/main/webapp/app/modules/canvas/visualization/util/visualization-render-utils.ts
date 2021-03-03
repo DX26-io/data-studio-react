@@ -37,13 +37,14 @@ export const renderVisualization = (visual, metaData, element = 'widget') => {
     if (widget.length > 0) {
       let height = widget[0].clientHeight;
       const width = widget[0].clientWidth;
+      const chartId = `chart-${element}-${visual.id}`;
 
-      $('#chart-' + visual.id).remove('');
+      $('#' + chartId).remove('');
       if (element === 'widget') {
         height = height - 30;
         $('#visualization-' + visual.id).append(
-          '<div id="chart-' +
-            visual.id +
+          '<div id="' +
+            chartId +
             '" height="' +
             height +
             '" width="' +
@@ -56,8 +57,8 @@ export const renderVisualization = (visual, metaData, element = 'widget') => {
         );
       } else {
         $('#visualization-edit-' + visual.id).append(
-          '<div id="chart-' +
-            visual.id +
+          '<div id="' +
+            chartId +
             '" height="' +
             height +
             '" width="' +
@@ -70,7 +71,7 @@ export const renderVisualization = (visual, metaData, element = 'widget') => {
         );
       }
 
-      const div = $('#chart-' + visual.id);
+      const div = $('#' + chartId);
 
       if (visual.metadataVisual.name === 'Clustered Vertical Bar Chart') {
         const config = configuration.GetVerticalBarChartConfig(visual);

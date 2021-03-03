@@ -7,7 +7,7 @@ import RGL, { WidthProvider } from 'react-grid-layout';
 import './canvas.scss';
 import { getEntity as getViewEntity, getCurrentViewState, saveViewState } from 'app/entities/views/views.reducer';
 import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
-import { getEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
+import { getEntities as getfeatureEntities, getDatasourcesFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
   createEntity as addVisualmetadataEntity,
@@ -70,7 +70,19 @@ const Canvas = (props: VisualizationProp) => {
   const onExchangeMetadata = data => {
     const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
     if (data.headers.request === 'filters') {
-      // console.log('filter data');
+      var obj = metaData.data[0];
+      var dimensionName = '';
+      for (var i in obj) {
+        dimensionName = i;
+        break;
+      }
+      var retVal = metaData.data.map(function (item) {
+        return {
+          value: item[dimensionName],
+          label: item[dimensionName]
+        };
+      });
+      props.filterData[dimensionName] = retVal;
     } else {
       const v = VisualMetadataContainerGetOne(data.headers.queryId);
       if (v && metaData.data.length > 0) {
@@ -165,6 +177,7 @@ const Canvas = (props: VisualizationProp) => {
               handleVisualizationClick={handleVisualizationClick}
               view={props.view}
               totalItem={visualmetadataList?.length || 0}
+              filterData={props.filterData}
               {...props}
             ></VisualizationHeader>
           </div>
@@ -220,6 +233,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   featuresList: storeState.feature.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
   isEditMode: storeState.applicationProfile.isEditMode,
+  filterData: storeState.visualmetadata.filterData
 });
 
 const mapDispatchToProps = {
@@ -230,7 +244,7 @@ const mapDispatchToProps = {
   addVisualmetadataEntity,
   deleteVisualmetadataEntity,
   saveViewState,
-
+  getDatasourcesFeaturesEntities,
   getVisualmetadataEntity,
   updateVisualmetadataEntity,
 };

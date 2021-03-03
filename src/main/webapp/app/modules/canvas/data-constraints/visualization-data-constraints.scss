@@ -1,0 +1,16 @@
+.condition-component-wrapper {
+  padding: 1vw;
+  margin-bottom: 0.5vw;
+  border-width: var(--spectrum-alias-border-size-thin);
+  border-color: var(--spectrum-alias-border-color);
+  border-radius: var(--spectrum-alias-border-radius-regular);
+  border-style: solid;
+  box-sizing: border-box;
+}
+.data-constraints-select {
+  width: 350px;
+}
+.condition-row > div {
+  display: flex;
+  align-items: center;
+}

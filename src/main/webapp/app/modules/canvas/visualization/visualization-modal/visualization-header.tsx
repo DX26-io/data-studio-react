@@ -1,14 +1,5 @@
 import React, { FC, ReactText, useEffect, useRef, useState } from 'react';
-import {
-  ActionButton,
-  DialogContainer,
-  Flex,
-  Item,
-  Menu,
-  MenuTrigger,
-  Text,
-  View,
-} from '@adobe/react-spectrum';
+import { ActionButton, DialogContainer, Flex, Item, Menu, MenuTrigger, Text, View } from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import { Translate } from 'react-jhipster';
 import { Redirect } from 'react-router-dom';
@@ -26,7 +17,7 @@ import 'app/modules/canvas/visualization/canvas.scss';
 import { IViews } from 'app/shared/model/views.model';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 import { VisualizationEditModal } from './visualization-edit-modal/visualization-edit-modal-popup';
-import { getVisual } from '../util/VisualDispatchService';
+import { getEditAction, getVisual } from '../util/VisualDispatchService';
 import { getVisualizationData } from '../util/visualization-render-utils';
 import { VisualizationDataModal } from './visualization-data-modal/visualizations-data-modal';
 import { CSVLink } from 'react-csv';
@@ -37,6 +28,8 @@ interface IVisualizationHeaderProps {
   totalItem: number;
   handleVisualizationClick: (visualization) => void;
   isEditMode: boolean;
+  filterData: any;
+  editAction: (setEditAction) => void;
 }
 
 const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
@@ -108,8 +101,10 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
   };
 
   const closeEditDialog = () => {
-    const visual = getVisual();
-    getVisualizationData(visual, props.view);
+    if (getEditAction() === 'save') {
+      const visual = getVisual();
+      getVisualizationData(visual, props.view);
+    }
   };
 
   const getTransactionData = async () => {
@@ -248,6 +243,7 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                   setOpen={closeEditDialog}
                   viewId={props.view.id}
                   visualizationId={props.visual.id}
+                  filterData={props.filterData}
                   {...props}
                 ></VisualizationEditModal>
               )}

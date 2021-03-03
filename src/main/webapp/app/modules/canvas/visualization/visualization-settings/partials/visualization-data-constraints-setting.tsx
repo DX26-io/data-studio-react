@@ -1,14 +1,43 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-
-export interface IVisualizationDataConstraintsSettingProps extends StateProps, DispatchProps {}
+import VisualizationDataConstraints from 'app/modules/canvas/data-constraints/visualization-data-constraints';
+import { IFeature } from 'app/shared/model/feature.model';
+import { IDatasources } from 'app/shared/model/datasources.model';
+import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+export interface IVisualizationDataConstraintsSettingProps extends StateProps, DispatchProps {
+  features: readonly IFeature[];
+  datasource: IDatasources;
+  visualMetaData: IVisualMetadataSet;
+  filterData: any;
+  reloadDataConstraints: () => void;
+}
 
 const VisualizationDataConstraintsSetting = (props: IVisualizationDataConstraintsSettingProps) => {
+  const reloadDataConstraints = () => {
+    return (
+      <VisualizationDataConstraints
+        features={props.features}
+        datasource={props.datasource}
+        visualMetaData={props.visualMetaData}
+        condition={props.visualMetaData.conditionExpression}
+        filterData={props.filterData}
+      ></VisualizationDataConstraints>
+    );
+  };
   return (
     <>
-      <View>Data Constraints display here</View>
+      <View>
+        <VisualizationDataConstraints
+          features={props.features}
+          datasource={props.datasource}
+          visualMetaData={props.visualMetaData}
+          condition={props.visualMetaData.conditionExpression}
+          filterData={props.filterData}
+          reloadDataConstraints={reloadDataConstraints}
+        ></VisualizationDataConstraints>
+      </View>
     </>
   );
 };
