@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { Button, Checkbox, Flex, Text, TextField, View, Link, Form } from '@adobe/react-spectrum';
+import { ComboBox, Item } from '@react-spectrum/combobox';
 import Alert from '@spectrum-icons/workflow/Alert';
 import { Translate } from 'react-jhipster';
 import config from "app/config/constants";
+import { RealmDTO } from "app/shared/reducers/authentication";
 
 export interface ILoginProps {
   loginError: boolean;
-  handleLogin: (username: string, password: string, rememberMe: boolean) => void;
-  handleProviderLogin: (provider: string) => void;
+  realms: Array<RealmDTO>;
+  handleLogin: (username: string, password: string, rememberMe: boolean, realmId: number) => void;
+  handleProviderLogin: (provider: string, realmId: number) => void;
   handleSignup: () => void;
 }
 export const LoginForm = (props: ILoginProps) => {
@@ -16,17 +19,19 @@ export const LoginForm = (props: ILoginProps) => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [emptyFieldError, setEmptyFieldError] = useState(false);
+  const [realmId, setRealmId] = useState(null);
   const { handleLogin } = props;
+  const { realms } = props;
   const { handleProviderLogin } = props;
   const { handleSignup } = props;
   const { loginError } = props;
 
   const onGoogleClick = () => {
-    handleProviderLogin('google');
+    handleProviderLogin('google', realmId);
   }
 
   const onGitHubClick = () => {
-    handleProviderLogin('github');
+    handleProviderLogin('github', realmId);
   }
 
   const onSignup = () => {
@@ -37,7 +42,7 @@ export const LoginForm = (props: ILoginProps) => {
     event.preventDefault();
     if (username && password) {
       setEmptyFieldError(false);
-      handleLogin(username, password, rememberMe);
+      handleLogin(username, password, rememberMe, realmId);
     } else {
       setEmptyFieldError(true);
     }
@@ -56,7 +61,7 @@ export const LoginForm = (props: ILoginProps) => {
         <TextField
           width="100%"
           marginBottom="size-300"
-          label="Email Address"
+          label="Username"
           type="text"
           data-testid="username"
           value={username}
@@ -71,6 +76,14 @@ export const LoginForm = (props: ILoginProps) => {
           value={password}
           onChange={setPassword}
         />
+        {realms && (
+          <ComboBox
+            label="Realm"
+            defaultItems={realms}
+            onSelectionChange={setRealmId}>
+            {(item) => <Item>{item.name}</Item>}
+          </ComboBox>
+        )}
         {loginError && !emptyFieldError && (
           <Flex gap="size-100" data-testid="login-error">
             <Alert color="negative" />
