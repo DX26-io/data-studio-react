@@ -1,19 +1,5 @@
 import { translate } from 'react-jhipster';
 
-export const SELECT_CONNECTION_PLACEHOLDER = translate('datasources.dataConnection.selectConnectionPlaceholder');
-export const CONFIGURE_DATABASE_SERVER_LABEL = translate('datasources.dataConnection.configDatabaseServer');
-export const SERVER_ADDRESS_LABEL = translate('datasources.dataConnection.serverAddress');
-export const PORT_LABEL = translate('datasources.dataConnection.port');
-export const DATABASE_NAME_LABEL = translate('datasources.dataConnection.databaseName');
-export const USERNAME_LABEL = translate('datasources.dataConnection.userName');
-export const PASSWORD_LABEL = translate('datasources.dataConnection.password');
-export const TEST_CONNECTION_LABEL = translate('datasources.dataConnection.testConnection');
-export const CONNECTION_NAME_LABEL = translate('datasources.dataConnection.connectionName');
-
-export const CACHE_PURGE_AFTER_MINUTES_LABEL = translate('datasources.cacheProperty.cachePurgeAfterMinutes');
-export const REFRESH_AFTER_TIME_READ_LABEL = translate('datasources.cacheProperty.refreshAfterTimesRead');
-export const REFRESH_AFTER_MINUTES_LABEL = translate('datasources.cacheProperty.refreshAfterMinutes');
-
 export const getSteps = () => {
   return [
     translate('datasources.steps.connectionType'),
@@ -42,4 +28,12 @@ export const isNextDisabled = (connection: any, connectionType: any, isConnected
   } else {
     return false;
   }
+};
+
+export const generateDatasourcesOptions = (datasources = []) => {
+  const options = [];
+  datasources.forEach(function (datasource) {
+    options.push({ value: datasource.sql ? datasource.sql : datasource.name, label: datasource.name });
+  });
+  return options;
 };

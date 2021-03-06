@@ -3,7 +3,7 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-
+import { generateDatasourcesOptions } from '../datasources/steps/datasource-util';
 import { IDatasources, defaultValue } from 'app/shared/model/datasources.model';
 
 export const ACTION_TYPES = {
@@ -14,6 +14,8 @@ export const ACTION_TYPES = {
   DELETE_DATASOURCES: 'datasources/DELETE_DATASOURCES',
   RESET: 'datasources/RESET',
   TEST_CONNECTION: 'datasources/TEST_CONNECTION',
+  LIST_TABLE: 'datasources/LIST_TABLE',
+  UPDATE_CONNECTION: 'datasources/UPDATE_CONNECTION',
 };
 
 const initialState = {
@@ -25,6 +27,8 @@ const initialState = {
   totalItems: 0,
   updateSuccess: false,
   isConnected: false,
+  tables: [],
+  updateError: null,
 };
 
 export type DatasourcesState = Readonly<typeof initialState>;
@@ -38,11 +42,15 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
       return {
         ...state,
         errorMessage: null,
-        updateSuccess: false,
         loading: true,
       };
     case REQUEST(ACTION_TYPES.CREATE_DATASOURCES):
     case REQUEST(ACTION_TYPES.UPDATE_DATASOURCES):
+      return {
+        ...state,
+        updateSuccess: false,
+        updating: true,
+      };
     case REQUEST(ACTION_TYPES.DELETE_DATASOURCES):
       return {
         ...state,
@@ -56,10 +64,17 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         errorMessage: null,
         loading: true,
       };
+    case REQUEST(ACTION_TYPES.LIST_TABLE):
+      return {
+        ...state,
+        loading: true,
+      };
     case FAILURE(ACTION_TYPES.FETCH_DATASOURCES_LIST):
     case FAILURE(ACTION_TYPES.FETCH_DATASOURCES):
     case FAILURE(ACTION_TYPES.CREATE_DATASOURCES):
+      return { ...state, errorMessage: action.payload.data };
     case FAILURE(ACTION_TYPES.UPDATE_DATASOURCES):
+      return { ...state, errorMessage: action.payload.data };
     case FAILURE(ACTION_TYPES.DELETE_DATASOURCES):
       return {
         ...state,
@@ -75,6 +90,13 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         isConnected: false,
         loading: false,
       };
+    case FAILURE(ACTION_TYPES.LIST_TABLE):
+      return {
+        ...state,
+        loading: false,
+        errorMessage: action.payload,
+      };
+
     case SUCCESS(ACTION_TYPES.FETCH_DATASOURCES_LIST):
       return {
         ...state,
@@ -89,11 +111,14 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         entity: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.CREATE_DATASOURCES):
+      return { ...state, updateError: action.payload.error, entity: action.payload.data, errorMessage: null };
     case SUCCESS(ACTION_TYPES.UPDATE_DATASOURCES):
       return {
         ...state,
         updating: false,
         updateSuccess: true,
+        updateError: null,
+        errorMessage: null,
         entity: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.DELETE_DATASOURCES):
@@ -109,6 +134,12 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         isConnected: true,
         loading: false,
         errorMessage: null,
+      };
+    case SUCCESS(ACTION_TYPES.LIST_TABLE):
+      return {
+        ...state,
+        loading: false,
+        tables: generateDatasourcesOptions(action.payload.data.tables),
       };
     case ACTION_TYPES.RESET:
       return {
@@ -145,14 +176,10 @@ export const getEntity: ICrudGetAction<IDatasources> = id => {
   };
 };
 
-export const createEntity: ICrudPutAction<IDatasources> = entity => async dispatch => {
-  const result = await dispatch({
-    type: ACTION_TYPES.CREATE_DATASOURCES,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
-  });
-  dispatch(getEntities());
-  return result;
-};
+export const createEntity: ICrudPutAction<IDatasources> = entity => ({
+  type: ACTION_TYPES.CREATE_DATASOURCES,
+  payload: axios.post(apiUrl, entity),
+});
 
 export const updateEntity: ICrudPutAction<IDatasources> = entity => async dispatch => {
   const result = await dispatch({
@@ -179,4 +206,9 @@ export const reset = () => ({
 export const queryToConnection = (connection: any) => ({
   type: ACTION_TYPES.TEST_CONNECTION,
   payload: axios.post('api/query/test', connection),
+});
+
+export const listTables = (body: any) => ({
+  type: ACTION_TYPES.LIST_TABLE,
+  payload: axios.post('api/datasources/listTables', body),
 });

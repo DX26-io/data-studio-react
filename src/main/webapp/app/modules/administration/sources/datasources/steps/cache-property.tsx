@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
 import { TextField, TextArea, Checkbox, Flex, Form } from '@adobe/react-spectrum';
 import { connect } from 'react-redux';
-import './img-link-card.scss';
-import { updateConnection } from './datasource-steps.reducer';
+import { setConnection } from './datasource-steps.reducer';
 import { Translate, translate } from 'react-jhipster';
-import { CACHE_PURGE_AFTER_MINUTES_LABEL, REFRESH_AFTER_MINUTES_LABEL, REFRESH_AFTER_TIME_READ_LABEL } from './datasource-util';
 
 //   TODO: enable next button conditions
 
@@ -15,9 +13,7 @@ interface CachePropertyProps extends DispatchProps {
 const CacheProperty = (props: CachePropertyProps) => {
   const { connection } = props;
 
-  const setPropertyValue = value => {};
-
-  const [cacheEnabled, setEnableCache] = React.useState(connection.connectionParameters.cacheEnabled);
+  const [cacheEnabled, setEnableCache] = React.useState(Boolean(connection.connectionParameters.cacheEnabled));
   const [cachePurgeAfterMinutes, setCachePurgeAfterMinutes] = React.useState(connection.connectionParameters.cachePurgeAfterMinutes);
   const [refreshAfterTimesRead, setRefreshAfterTimesRead] = React.useState(connection.connectionParameters.refreshAfterTimesRead);
   const [refreshAfterMinutes, setRefreshAfterMinutes] = React.useState(connection.connectionParameters.refreshAfterMinutes);
@@ -38,7 +34,7 @@ const CacheProperty = (props: CachePropertyProps) => {
         setRefreshAfterMinutes(0);
         setRefreshAfterTimesRead(0);
     }
-    props.updateConnection(payload);
+    props.setConnection(payload);
   }, [cacheEnabled, cachePurgeAfterMinutes, refreshAfterMinutes, refreshAfterTimesRead]);
 
   return (
@@ -50,7 +46,7 @@ const CacheProperty = (props: CachePropertyProps) => {
         <TextField
           type="number"
           isDisabled={!cacheEnabled}
-          label={CACHE_PURGE_AFTER_MINUTES_LABEL}
+          label={translate('datasources.cacheProperty.cachePurgeAfterMinutes')}
           isRequired={cacheEnabled}
           onChange={setCachePurgeAfterMinutes}
           value={cachePurgeAfterMinutes}
@@ -58,7 +54,7 @@ const CacheProperty = (props: CachePropertyProps) => {
         <TextField
           type="number"
           isDisabled={!cacheEnabled}
-          label={REFRESH_AFTER_TIME_READ_LABEL}
+          label={translate('datasources.cacheProperty.refreshAfterTimesRead')}
           isRequired={cacheEnabled}
           onChange={setRefreshAfterTimesRead}
           value={refreshAfterTimesRead}
@@ -66,7 +62,7 @@ const CacheProperty = (props: CachePropertyProps) => {
         <TextField
           type="number"
           isDisabled={!cacheEnabled}
-          label={REFRESH_AFTER_TIME_READ_LABEL}
+          label={translate('datasources.cacheProperty.refreshAfterMinutes')}
           isRequired={cacheEnabled}
           onChange={setRefreshAfterMinutes}
           value={refreshAfterMinutes}
@@ -76,7 +72,7 @@ const CacheProperty = (props: CachePropertyProps) => {
   );
 };
 
-const mapDispatchToProps = { updateConnection };
+const mapDispatchToProps = { setConnection };
 
 type DispatchProps = typeof mapDispatchToProps;
 

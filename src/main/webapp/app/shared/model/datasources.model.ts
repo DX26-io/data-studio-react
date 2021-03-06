@@ -3,7 +3,7 @@ import { Moment } from 'moment';
 export interface IDatasources {
   id?: number;
   name?: string;
-  lastUpdated?: string;
+  lastUpdated?: Date;
   connectionName?: string;
   queryPath?: string;
 }

@@ -4,21 +4,12 @@ import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, Picker, Item, TextField, Form, ProgressBar, Text } from '@adobe/react-spectrum';
 import { getConnectionsByConnectionTypeId } from '../../connections/connections.reducer';
 import {
-  SELECT_CONNECTION_PLACEHOLDER,
-  CONFIGURE_DATABASE_SERVER_LABEL,
-  DATABASE_NAME_LABEL,
-  PASSWORD_LABEL,
-  PORT_LABEL,
-  SERVER_ADDRESS_LABEL,
-  TEST_CONNECTION_LABEL,
-  USERNAME_LABEL,
-  CONNECTION_NAME_LABEL,
   prepareConnection,
 } from './datasource-util';
 import ConnectionProperty from './connection-property';
-import { selectConnection, updateConnection } from './datasource-steps.reducer';
+import { selectConnection, setConnection } from './datasource-steps.reducer';
 import { queryToConnection } from '../datasources.reducer';
-import { Translate } from 'react-jhipster';
+import { Translate,translate } from 'react-jhipster';
 import Checkmark from '@spectrum-icons/workflow/Checkmark';
 import Alert from '@spectrum-icons/workflow/Alert';
 
@@ -28,10 +19,10 @@ export interface IDataConnectionProps extends StateProps, DispatchProps {
 
 export const DataConnection = (props: IDataConnectionProps) => {
   const { connections, connectionType, errorMessage, isConnected, loading } = props;
-  const [connectionName, setConnectionName] = React.useState();
-  const [userName, setUserName] = React.useState();
-  const [password, setPassword] = React.useState();
-  const [connectionId, setConnection] = React.useState<ReactText>(props.connection.id !== '' ? props.connection.id.toString() : '');
+  const [connectionName, setConnectionName] = React.useState('');
+  const [userName, setUserName] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [connectionId, setConnectionId] = React.useState<ReactText>(props.connection.id !== '' ? props.connection.id.toString() : '');
 
   const setFields = c => {
     setConnectionName(c.name);
@@ -64,7 +55,7 @@ export const DataConnection = (props: IDataConnectionProps) => {
       if (connectionName) {
         payload['name'] = connectionName;
       }
-      props.updateConnection(payload);
+      props.setConnection(payload);
     }
   }, [userName, password, connectionName]);
 
@@ -73,13 +64,13 @@ export const DataConnection = (props: IDataConnectionProps) => {
       <Form isRequired necessityIndicator="icon" minWidth="size-4600">
         <Picker
           disallowEmptySelection={false}
-          placeholder={SELECT_CONNECTION_PLACEHOLDER}
-          label={CONFIGURE_DATABASE_SERVER_LABEL}
+          placeholder={translate('datasources.dataConnection.selectConnectionPlaceholder')}
+          label={translate('datasources.dataConnection.configDatabaseServer')}
           items={connections}
           selectedKey={connectionId}
           defaultSelectedKey={connectionId}
           onSelectionChange={selected => {
-            setConnection(selected);
+            setConnectionId(selected);
             const result = connections.filter(con => con.id.toString() === selected.toString())[0];
             setFields(result);
             props.selectConnection(result);
@@ -96,21 +87,21 @@ export const DataConnection = (props: IDataConnectionProps) => {
           </span>
         </div>
         <TextField
-          label={CONNECTION_NAME_LABEL}
+          label={translate('datasources.dataConnection.connectionName')}
           onChange={setConnectionName}
           value={connectionName}
-          isDisabled={props.disabledDataConnection}
-          isRequired={!props.disabledDataConnection}
+          isDisabled={props.isConnectionSelected}
+          isRequired={!props.isConnectionSelected}
         />
         {connectionType.connectionPropertiesSchema.connectionProperties.map((p, i) => (
-          <ConnectionProperty connection={props.connection} key={p.fieldName} property={p} disabled={props.disabledDataConnection} />
+          <ConnectionProperty connection={props.connection} key={p.fieldName} property={p} disabled={props.isConnectionSelected} />
         ))}
         {connectionType.connectionPropertiesSchema.config['disableUsername'] !== 'true' ? (
           <TextField
             type="text"
-            isDisabled={props.disabledDataConnection}
-            isRequired={!props.disabledDataConnection}
-            label={USERNAME_LABEL}
+            isDisabled={props.isConnectionSelected}
+            isRequired={!props.isConnectionSelected}
+            label={translate('datasources.dataConnection.userName')}
             onChange={setUserName}
             value={userName}
           />
@@ -118,9 +109,9 @@ export const DataConnection = (props: IDataConnectionProps) => {
         {connectionType.connectionPropertiesSchema.config['disablePassword'] !== 'true' ? (
           <TextField
             type="password"
-            isDisabled={props.disabledDataConnection}
-            isRequired={!props.disabledDataConnection}
-            label={PASSWORD_LABEL}
+            isDisabled={props.isConnectionSelected}
+            isRequired={!props.isConnectionSelected}
+            label={translate('datasources.dataConnection.password')}
             onChange={setPassword}
             value={password}
           />
@@ -164,13 +155,13 @@ export const DataConnection = (props: IDataConnectionProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   connections: storeState.connections.connections,
   connection: storeState.datasourceSteps.connection,
-  disabledDataConnection: storeState.datasourceSteps.disabledDataConnection,
+  isConnectionSelected: storeState.datasourceSteps.isConnectionSelected,
   isConnected: storeState.datasources.isConnected,
   errorMessage: storeState.datasources.errorMessage,
   loading: storeState.datasources.loading,
 });
 
-const mapDispatchToProps = { getConnectionsByConnectionTypeId, selectConnection, updateConnection, queryToConnection };
+const mapDispatchToProps = { getConnectionsByConnectionTypeId, selectConnection, setConnection, queryToConnection };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

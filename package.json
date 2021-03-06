@@ -50,6 +50,7 @@
     "redux-thunk": "2.3.0",
     "sockjs": "^0.3.21",
     "sonar-scanner": "3.1.0",
+    "sql-formatter": "^4.0.2",
     "stomp-websocket": "^2.3.4-next",
     "tslib": "1.11.1",
     "uuid": "7.0.3"

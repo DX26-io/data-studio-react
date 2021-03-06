@@ -37,6 +37,17 @@
       "cachePurgeAfterMinutes": "Purge after minutes",
       "refreshAfterTimesRead": "Refresh after times read",
       "refreshAfterMinutes": "Refresh after minutes"
+    },
+    "exploreDataModel": {
+      "regular.name": "Datasource",
+      "sqlmode.name": "SQL Query",
+      "formatQuery": "Format Query",
+      "sqlmode.enterquery": "Enter query",
+      "sqlmode.enterdatasource": "Enter datasource name",
+      "service": "Service",
+      "selectDatasource": "Search Available Data Sources",
+      "showData": "Show Data",
+      "updateError": "The table from the same data source already exists"
     }
   }
 }

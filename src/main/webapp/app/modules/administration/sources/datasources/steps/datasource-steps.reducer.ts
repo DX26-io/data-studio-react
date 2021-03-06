@@ -1,9 +1,11 @@
+import datasources from '../datasources';
+
 export const ACTION_TYPES = {
   SELECT_CONNECTION_TYPE: 'datasourceSteps/SELECT_CONNECTION_TYPE',
   SELECT_CONNECTION: 'datasourceSteps/SELECT_CONNECTION',
-  UPDATE_CONNECTION: 'datasourceSteps/UPDATE_CONNECTION',
+  SET_CONNECTION: 'datasourceSteps/SET_CONNECTION',
   RESET: 'datasourceSteps/RESET',
-  BUILD_DATASOURCE: 'datasourceSteps/BUILD_DATASOURCE',
+  SET_DATASOURCE: 'datasources/SET_DATASOURCE',
 };
 
 const initialState = {
@@ -20,9 +22,11 @@ const initialState = {
     details: {},
     connectionType: '',
     connectionTypeId: 0,
+    linkId: '',
     connectionParameters: { cacheEnabled: false, cachePurgeAfterMinutes: 0, refreshAfterTimesRead: 0, refreshAfterMinutes: 0 },
   },
-  disabledDataConnection: false,
+  isConnectionSelected: false,
+  datasource: { sql: '', name: '', queryPath: '', lastUpdated: new Date() },
 };
 
 export type DatasourceStepsState = Readonly<typeof initialState>;
@@ -38,12 +42,17 @@ export default (state: DatasourceStepsState = initialState, action): DatasourceS
       return {
         ...state,
         connection: action.payload,
-        disabledDataConnection: true,
+        isConnectionSelected: true,
       };
-    case ACTION_TYPES.UPDATE_CONNECTION:
+    case ACTION_TYPES.SET_CONNECTION:
       return {
         ...state,
         connection: action.payload,
+      };
+    case ACTION_TYPES.SET_DATASOURCE:
+      return {
+        ...state,
+        datasource: action.payload,
       };
     case ACTION_TYPES.RESET:
       return {
@@ -66,14 +75,21 @@ export const selectConnection = connection => {
     payload: connection,
   };
 };
-export const updateConnection = connection => {
+export const setConnection = connection => {
   return {
-    type: ACTION_TYPES.UPDATE_CONNECTION,
+    type: ACTION_TYPES.SET_CONNECTION,
     payload: connection,
   };
 };
 export const resetSteps = () => {
   return {
     type: ACTION_TYPES.RESET,
+  };
+};
+
+export const setDatasource = datasource => {
+  return {
+    type: ACTION_TYPES.SET_DATASOURCE,
+    payload: datasource,
   };
 };
