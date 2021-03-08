@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { Grid, View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
-import {loginWithProvider, signup} from "app/shared/reducers/authentication";
+import { signup } from "app/shared/reducers/authentication";
 import SignupForm from "app/modules/signup/signup-form";
 import LoginFooter from "app/modules/login/login-footer";
 import LoginHeader from "app/modules/login/login-header";
