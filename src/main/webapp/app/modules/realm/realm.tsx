@@ -6,7 +6,7 @@ import { IRootState } from 'app/shared/reducers';
 import {createRealm} from "app/shared/reducers/authentication";
 import LoginHeader from "app/modules/login/login-header";
 import LoginFooter from "app/modules/login/login-footer";
-import RealmForm from "app/modules/signup/realm/realm-form";
+import RealmForm from "app/modules/realm/realm-form";
 
 export interface IRealmProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
