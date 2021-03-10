@@ -29,7 +29,7 @@ const Admin = Loadable({
 const Routes = () => (
   <div className="view-routes">
     <Switch>
-      <ErrorBoundaryRoute path="/login" component={Login} />
+      <ErrorBoundaryRoute path="/signin" component={Login} />
       <ErrorBoundaryRoute path="/logout" component={Logout} />
       <ErrorBoundaryRoute path="/signup" exact component={Signup} />
       <ErrorBoundaryRoute path="/realm" component={Realm} />

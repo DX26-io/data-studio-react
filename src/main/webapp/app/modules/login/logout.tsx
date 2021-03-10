@@ -27,7 +27,7 @@ export const Logout = (props: ILogoutProps) => {
   });
 
   const handleNavigateToLogin = () => {
-    history.push('/login');
+    history.push('/signin');
   };
 
   return (

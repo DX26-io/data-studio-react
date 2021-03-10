@@ -20,7 +20,7 @@ import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
-const noSessionPathNames = ['/realm', '/login', '/signup'];
+const noSessionPathNames = ['/realm', '/signin', '/signup'];
 
 export interface IAppProps extends StateProps, DispatchProps {}
 
