@@ -14,6 +14,7 @@ export const ACTION_TYPES = {
   DELETE_DATASOURCES: 'datasources/DELETE_DATASOURCES',
   RESET: 'datasources/RESET',
   TEST_CONNECTION: 'datasources/TEST_CONNECTION',
+  QUERY_EXECUTE: 'datasources/QUERY_EXECUTE',
   LIST_TABLE: 'datasources/LIST_TABLE',
   UPDATE_CONNECTION: 'datasources/UPDATE_CONNECTION',
 };
@@ -29,6 +30,7 @@ const initialState = {
   isConnected: false,
   tables: [],
   updateError: null,
+  sampleData: [],
 };
 
 export type DatasourcesState = Readonly<typeof initialState>;
@@ -45,6 +47,11 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         loading: true,
       };
     case REQUEST(ACTION_TYPES.CREATE_DATASOURCES):
+      return {
+        ...state,
+        updateSuccess: false,
+        updating: true,
+      };
     case REQUEST(ACTION_TYPES.UPDATE_DATASOURCES):
       return {
         ...state,
@@ -64,6 +71,12 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         errorMessage: null,
         loading: true,
       };
+    case REQUEST(ACTION_TYPES.QUERY_EXECUTE):
+      return {
+        ...state,
+        errorMessage: null,
+        loading: true,
+      };
     case REQUEST(ACTION_TYPES.LIST_TABLE):
       return {
         ...state,
@@ -72,9 +85,9 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
     case FAILURE(ACTION_TYPES.FETCH_DATASOURCES_LIST):
     case FAILURE(ACTION_TYPES.FETCH_DATASOURCES):
     case FAILURE(ACTION_TYPES.CREATE_DATASOURCES):
-      return { ...state, errorMessage: action.payload.data };
+      return { ...state, errorMessage: action.payload.data, updateSuccess: false, updateError: null };
     case FAILURE(ACTION_TYPES.UPDATE_DATASOURCES):
-      return { ...state, errorMessage: action.payload.data };
+      return { ...state, errorMessage: action.payload.data, updateSuccess: false, updateError: null };
     case FAILURE(ACTION_TYPES.DELETE_DATASOURCES):
       return {
         ...state,
@@ -86,8 +99,14 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
     case FAILURE(ACTION_TYPES.TEST_CONNECTION):
       return {
         ...state,
-        errorMessage: action.payload,
+        errorMessage: action.payload.data,
         isConnected: false,
+        loading: false,
+      };
+    case FAILURE(ACTION_TYPES.QUERY_EXECUTE):
+      return {
+        ...state,
+        errorMessage: action.payload.data,
         loading: false,
       };
     case FAILURE(ACTION_TYPES.LIST_TABLE):
@@ -111,7 +130,7 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         entity: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.CREATE_DATASOURCES):
-      return { ...state, updateError: action.payload.error, entity: action.payload.data, errorMessage: null };
+      return { ...state, updateError: action.payload.data, errorMessage: null, updateSuccess: true };
     case SUCCESS(ACTION_TYPES.UPDATE_DATASOURCES):
       return {
         ...state,
@@ -133,6 +152,13 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         ...state,
         isConnected: true,
         loading: false,
+        errorMessage: null,
+      };
+    case SUCCESS(ACTION_TYPES.QUERY_EXECUTE):
+      return {
+        ...state,
+        loading: false,
+        sampleData: action.payload.data.data,
         errorMessage: null,
       };
     case SUCCESS(ACTION_TYPES.LIST_TABLE):
@@ -176,18 +202,15 @@ export const getEntity: ICrudGetAction<IDatasources> = id => {
   };
 };
 
-export const createEntity: ICrudPutAction<IDatasources> = entity => ({
+export const createDatasource: ICrudPutAction<IDatasources> = entity => ({
   type: ACTION_TYPES.CREATE_DATASOURCES,
-  payload: axios.post(apiUrl, entity),
+  payload: axios.post(apiUrl, { datasource: entity }),
 });
 
-export const updateEntity: ICrudPutAction<IDatasources> = entity => async dispatch => {
-  const result = await dispatch({
-    type: ACTION_TYPES.UPDATE_DATASOURCES,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
-  });
-  return result;
-};
+export const updateEntity: ICrudPutAction<IDatasources> = entity => ({
+  type: ACTION_TYPES.UPDATE_CONNECTION,
+  payload: axios.put(apiUrl, entity),
+});
 
 export const deleteEntity: ICrudDeleteAction<IDatasources> = id => async dispatch => {
   const requestUrl = `${apiUrl}/${id}`;
@@ -203,12 +226,17 @@ export const reset = () => ({
   type: ACTION_TYPES.RESET,
 });
 
+export const listTables = (body: any) => ({
+  type: ACTION_TYPES.LIST_TABLE,
+  payload: axios.post('api/datasources/listTables', body),
+});
+
 export const queryToConnection = (connection: any) => ({
   type: ACTION_TYPES.TEST_CONNECTION,
   payload: axios.post('api/query/test', connection),
 });
 
-export const listTables = (body: any) => ({
-  type: ACTION_TYPES.LIST_TABLE,
-  payload: axios.post('api/datasources/listTables', body),
+export const executeQuery = (body: any) => ({
+  type: ACTION_TYPES.QUERY_EXECUTE,
+  payload: axios.post('api/query/execute', body),
 });

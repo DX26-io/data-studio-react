@@ -26,7 +26,7 @@ const initialState = {
     connectionParameters: { cacheEnabled: false, cachePurgeAfterMinutes: 0, refreshAfterTimesRead: 0, refreshAfterMinutes: 0 },
   },
   isConnectionSelected: false,
-  datasource: { sql: '', name: '', queryPath: '', lastUpdated: new Date() },
+  datasource: { sql: '', name: '', queryPath: '', lastUpdated: new Date(), id: null },
 };
 
 export type DatasourceStepsState = Readonly<typeof initialState>;

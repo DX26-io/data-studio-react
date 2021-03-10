@@ -47,7 +47,8 @@
       "service": "Service",
       "selectDatasource": "Search Available Data Sources",
       "showData": "Show Data",
-      "updateError": "The table from the same data source already exists"
+      "updateError": "The table from the same data source already exists",
+      "sampleData": "Sample Data"
     }
   }
 }

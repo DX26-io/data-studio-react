@@ -13,6 +13,8 @@ export const ACTION_TYPES = {
   CREATE_CONNECTION: 'connections/CREATE_CONNECTION',
   UPDATE_CONNECTION: 'connections/UPDATE_CONNECTION',
   DELETE_CONNECTION: 'connections/DELETE_CONNECTION',
+  FETCH_FEATURES: 'connections/FETCH_FEATURES',
+  RESET: 'connections/RESET',
 };
 
 const initialState = {
@@ -23,6 +25,7 @@ const initialState = {
   totalItems: 0,
   updateSuccess: false,
   connection: null,
+  features: [],
 };
 
 export type ConnectionsState = Readonly<typeof initialState>;
@@ -101,6 +104,11 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
         errorMessage: null,
       };
     case REQUEST(ACTION_TYPES.CREATE_CONNECTION):
+      return {
+        ...state,
+        errorMessage: null,
+        updateSuccess: false,
+      };
     case FAILURE(ACTION_TYPES.CREATE_CONNECTION):
       return {
         ...state,
@@ -111,6 +119,7 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
       return {
         ...state,
         updateSuccess: true,
+        errorMessage: null,
         connection: action.payload.data,
       };
     case REQUEST(ACTION_TYPES.DELETE_CONNECTION):
@@ -125,6 +134,28 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
         ...state,
         updateSuccess: true,
       };
+    case REQUEST(ACTION_TYPES.FETCH_FEATURES):
+      return {
+        ...state,
+        loading: true,
+      };
+    case FAILURE(ACTION_TYPES.FETCH_FEATURES):
+      return {
+        ...state,
+        loading: true,
+        errorMessage: action.payload.data,
+      };
+    case SUCCESS(ACTION_TYPES.FETCH_FEATURES):
+      return {
+        ...state,
+        loading: true,
+        features: action.payload.data,
+      };
+    case ACTION_TYPES.RESET:
+      return {
+        ...initialState,
+      };
+
     default:
       return state;
   }
@@ -160,4 +191,13 @@ export const updateConnection = (connection: any) => ({
 export const deleteConnection = (id: string) => ({
   type: ACTION_TYPES.DELETE_CONNECTION,
   payload: axios.delete(`${apiUrl}/${id}`),
+});
+
+export const resetConnection = () => ({
+  type: ACTION_TYPES.RESET,
+});
+
+export const getFeatures = (datasourceId: number) => ({
+  type: ACTION_TYPES.FETCH_FEATURES,
+  payload: axios.get(`${apiUrl}/features/${datasourceId}`),
 });

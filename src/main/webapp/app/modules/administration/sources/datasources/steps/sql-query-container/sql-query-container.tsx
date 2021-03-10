@@ -16,13 +16,15 @@ const SqlQueryContainer: React.FC<ISqlQueryContainerProps> = ({ sqlQuery, dispat
 
   const [sqlQuerylength, setSqlQuerylength] = React.useState(0);
 
-  const formatQuery = event => {
-    if (event.target.value) {
-      const result = format(event.target.value);
+  const formatQuery = () => {
+    if (sql) {
+      const result = format(sql);
       setSqlLines(result.split('\n'));
       setSqlQuerylength(sqlLines.length + 1);
-      setSql(format(result));
+      setSql(result);
       dispatchQuery(sql);
+    } else {
+      setSql('');
     }
   };
 
@@ -38,10 +40,13 @@ const SqlQueryContainer: React.FC<ISqlQueryContainerProps> = ({ sqlQuery, dispat
           <textarea
             className="form-control sql-query-area"
             rows={sqlQuerylength}
-            value={sqlQuery ? sqlQuery : sql}
+            value={sql ? sql : sqlQuery}
             onBlur={formatQuery}
             onPaste={formatQuery}
-            onChange={formatQuery}
+            onChange={event => {
+              setSql(event.target.value);
+              dispatchQuery(event.target.value);
+            }}
             style={{ width: '30vw' }}
           ></textarea>
         </div>

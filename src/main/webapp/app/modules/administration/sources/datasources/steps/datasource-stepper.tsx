@@ -22,12 +22,18 @@ import {
   Text,
   useDialogContainer,
 } from '@adobe/react-spectrum';
-import { getConnectionsTypes, createConnection, updateConnection, deleteConnection } from '../../connections/connections.reducer';
+import {
+  getConnectionsTypes,
+  createConnection,
+  updateConnection,
+  deleteConnection,
+  resetConnection,
+} from '../../connections/connections.reducer';
 import ConnectionsTypes from './connections-types';
 import DataConnection from './data-connection';
 import { getSteps, isNextDisabled, prepareConnection } from './datasource-util';
 import { resetSteps } from './datasource-steps.reducer';
-import { reset, createEntity } from '../datasources.reducer';
+import { reset, createDatasource } from '../datasources.reducer';
 import CacheProperty from './cache-property';
 import ExploreDataModel from './explore-data-model';
 
@@ -63,8 +69,8 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
     isConnected,
     datasource,
     connectionUpdateSuccess,
-    updateError,
     datasourceError,
+    datasourceUpdateSuccess,
   } = props;
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -93,19 +99,11 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
     }
   };
 
-  // const today = (): string => {
-  //   // Today + 1 day - needed if the current day must be included
-  //   const day: Date = new Date();
-  //   day.setDate(day.getDate() + 1);
-  //   const toDate = new Date(day.getFullYear(), day.getMonth(), day.getDate());
-  //   return toDate.toISOString().slice(0, 10);
-  // };
-
-  const createDatasource = () => {
+  const create = () => {
     datasource['queryPath'] = '/api/queries';
     datasource['connectionName'] = connection.linkId;
     datasource['lastUpdated'] = new Date();
-    props.createEntity(datasource);
+    props.createDatasource(datasource);
   };
 
   const saveConnection = () => {
@@ -115,14 +113,14 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
     } else {
       props.updateConnection(conn);
     }
-    createDatasource();
   };
 
   const handleNext = () => {
     if (activeStep === 3) {
       saveConnection();
+    } else {
+      setActiveStep(prevActiveStep => prevActiveStep + 1);
     }
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
 
   const handleBack = () => {
@@ -137,20 +135,28 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
     props.getConnectionsTypes();
   }, []);
 
-  // useEffect(() => {
-  //   if (connectionUpdateSuccess) {
-  //     createDatasource();
-  //   }
-  //   // if (datasourceError) {
-  //   //   rollbackConnection();
-  //   // }
-  // }, [connectionUpdateSuccess]);
+  useEffect(() => {
+    if (connectionUpdateSuccess) {
+      create();
+    }
+    // if (datasourceError) {
+    //   rollbackConnection();
+    // }
+  }, [connectionUpdateSuccess]);
+
+  useEffect(() => {
+    if (datasourceUpdateSuccess) {
+      setActiveStep(prevActiveStep => prevActiveStep + 1);
+    }
+  }, [datasourceUpdateSuccess]);
+
 
   const handleClose = () => {
     setOpen(false);
     dialog.dismiss();
     props.resetSteps();
     props.reset();
+    props.resetConnection();
   };
 
   const isDisabled = () => {
@@ -205,17 +211,6 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
                   {getStepContent(activeStep)}
                 </View>
                 <Flex justifyContent="end" gap="size-100">
-                  {updateError ? (
-                    <React.Fragment>
-                      <Text marginBottom="size-300">
-                        <span className="spectrum-Body-emphasis">
-                          <Translate contentKey="datasources.exploreDataModel.updateError">
-                            The table from the same data source already exists.
-                          </Translate>
-                        </span>
-                      </Text>
-                    </React.Fragment>
-                  ) : null}
                   <Button variant="secondary" isDisabled={activeStep === 0} onPress={handleBack}>
                     <Translate contentKey="entity.action.back">Back</Translate>
                   </Button>
@@ -245,7 +240,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   connectionType: storeState.datasourceSteps.connectionType,
   connection: storeState.datasourceSteps.connection,
   isConnected: storeState.datasources.isConnected,
-  updateError: storeState.datasources.updateError,
+  datasourceUpdateSuccess: storeState.datasources.updateSuccess,
   datasourceError: storeState.datasources.errorMessage,
   datasource: storeState.datasourceSteps.datasource,
   isConnectionSelected: storeState.datasourceSteps.isConnectionSelected,
@@ -257,9 +252,10 @@ const mapDispatchToProps = {
   reset,
   resetSteps,
   deleteConnection,
-  createEntity,
+  createDatasource,
   createConnection,
   updateConnection,
+  resetConnection,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
