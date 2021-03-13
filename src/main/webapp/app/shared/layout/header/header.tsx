@@ -6,8 +6,9 @@ import LoadingBar from 'react-redux-loading-bar';
 import Notifications from 'app/shared/layout/header/partials/notifications';
 import DataStudioAvatar from 'app/shared/layout/header/partials/data-studio-avatar';
 import Logo from 'app/shared/components/logo/logo';
-import { Flex, View } from '@adobe/react-spectrum';
-
+import { Divider, Flex, View } from '@adobe/react-spectrum';
+import CanvasHeader from './canvas-header';
+import { isCanvas } from 'app/shared/util/common-utils';
 export interface IHeaderProps {
   isAuthenticated: boolean;
   isAdmin: boolean;
