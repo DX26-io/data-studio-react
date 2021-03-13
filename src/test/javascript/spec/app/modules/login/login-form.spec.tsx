@@ -25,6 +25,7 @@ describe('Login Form', () => {
     handleLogin: jest.fn(),
     handleProviderLogin: jest.fn(),
     handleSignup: jest.fn(),
+    realms: [],
     loginError: false,
   };
 
