@@ -13,15 +13,9 @@ import { COMPARABLE_DATA_TYPES } from 'app/shared/util/data-constraints.constant
 import VisualizationDataConstraints from '../data-constraints/visualization-data-constraints';
 import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from '../data-constraints/utils/date-util';
-
-export interface IFilterState {
-  featureName: string;
-  filterList: string[];
-}
-
+import $ from 'jquery';
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
-  defaultValue: string[];
 }
 
 const FilterElement = (props: IFilterElementProp) => {
@@ -53,12 +47,24 @@ const FilterElement = (props: IFilterElementProp) => {
   // };
   const [defaultValues, setdefaultValues] = useState<string[]>();
 
+  const updateDefaultValues = data => {
+    const filterValues = [];
+    data.forEach(item => {
+      filterValues.push({
+        label: item,
+        value: item,
+      });
+    });
+    setdefaultValues(filterValues);
+  };
+
   useEffect(() => {
-    setdefaultValues(['abc,xyz']);
+    if (props.selectedFilter[props.feature.name]) {
+      updateDefaultValues(props.selectedFilter[props.feature.name]);
+    } else {
+      setdefaultValues([]);
+    }
   }, [props.filterStateChange]);
-  useEffect(() => {
-    setdefaultValues(props.defaultValue);
-  }, []);
 
   const load = (q, dimension) => {
     const vId = props.view?.id;
@@ -106,7 +112,7 @@ const FilterElement = (props: IFilterElementProp) => {
   };
 
   const addValueInFilter = value => {
-    const filterParameters = FilterParameterService.getSelectedFilter();
+    const filterParameters = props.selectedFilter;
     if (!filterParameters[props.feature.name]) {
       filterParameters[props.feature.name] = [];
     }
@@ -115,6 +121,7 @@ const FilterElement = (props: IFilterElementProp) => {
       dataType: props.feature.type,
       valueType: 'valueType',
     };
+    updateDefaultValues(filterParameters[props.feature.name]);
     FilterParameterService.saveSelectedFilter(filterParameters);
   };
 
@@ -128,9 +135,11 @@ const FilterElement = (props: IFilterElementProp) => {
         array.splice(index, 1);
         filterParameters[props.feature.name] = array;
         if (filterParameters[props.feature.name].length === 0) delete filterParameters[props.feature.name];
+        updateDefaultValues(filterParameters[props.feature.name]);
         return filterParameters;
       }
     }
+    updateDefaultValues(filterParameters[props.feature.name]);
     return filterParameters;
   }
 
@@ -138,9 +147,7 @@ const FilterElement = (props: IFilterElementProp) => {
     if (actionMeta.action === 'select-option') {
       addValueInFilter(actionMeta.option.value);
     } else if (actionMeta.action === 'remove-value') {
-      FilterParameterService.saveSelectedFilter(
-        removeTagFromFilterList(FilterParameterService.getSelectedFilter(), actionMeta.removedValue.value)
-      );
+      FilterParameterService.saveSelectedFilter(removeTagFromFilterList(props.selectedFilter, actionMeta.removedValue.value));
     }
   };
 
@@ -156,13 +163,13 @@ const FilterElement = (props: IFilterElementProp) => {
     filterParameters[filter] = [];
     FilterParameterService.save(filterParameters);
 
-    filterParameters = FilterParameterService.getSelectedFilter();
+    filterParameters = props.selectedFilter;
     filterParameters[filter] = [];
     FilterParameterService.saveSelectedFilter(filterParameters);
   }
 
   const addDateRangeFilter = date => {
-    const filterParameters = FilterParameterService.getSelectedFilter();
+    const filterParameters = props.selectedFilter;
     if (!filterParameters[props.feature.name]) {
       filterParameters[props.feature.name] = [];
     }
@@ -213,6 +220,7 @@ const FilterElement = (props: IFilterElementProp) => {
           <View>
             <AsyncSelect
               cacheOptions
+              value={defaultValues}
               isMulti
               isSearchable={true}
               classNamePrefix="select"
@@ -234,8 +242,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   filterData: storeState.visualmetadata.filterData,
   isFilterOpen: storeState.applicationProfile.isFilterOpen,
   featuresList: storeState.feature.entities,
-  selectedFilter: storeState.visualmetadata.selectedFilter,
-  filterStateChange: storeState.visualmetadata.filterStateChange,
+  selectedFilter: storeState.filter.selectedFilter,
+  filterStateChange: storeState.filter.filterStateChange,
 });
 const mapDispatchToProps = {
   getfeatureEntities,

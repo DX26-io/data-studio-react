@@ -7,12 +7,12 @@ import './filter-panel.scss';
 import Minimize from '@spectrum-icons/workflow/Minimize';
 import Search from '@spectrum-icons/workflow/Search';
 import Maximize from '@spectrum-icons/workflow/Maximize';
-import FilterElement, { IFilterState } from 'app/modules/canvas/filter/filter-element';
+import FilterElement from 'app/modules/canvas/filter/filter-element';
 import uuid from 'react-uuid';
 import { getDatasourcesFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { getVisualizationData, ValidateFields } from '../visualization/util/visualization-render-utils';
 import { FilterParameterService } from './filter-parameters-service';
-import { updateSelectedFilter } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { updateSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 
 export interface IFilterPanelProp extends StateProps, DispatchProps {}
 
@@ -35,51 +35,14 @@ const FilterPanel = (props: IFilterPanelProp) => {
   };
 
   const applyFilter = () => {
-    FilterParameterService.save(FilterParameterService.getSelectedFilter());
+    FilterParameterService.save(props.selectedFilter);
     props.updateSelectedFilter();
     loadVisualization();
   };
 
-  const [defaultValues, setdefaultValues] = useState<IFilterState[]>();
-
-  const updateFeatureValue = () => {
-    let data = [];
-    props.featuresList.forEach(element => {
-      if (props.selectedFilter[element.name]) {
-        const list = [];
-        props.selectedFilter[element.name].forEach(item => {
-          list.push(item);
-        });
-        const obj = {
-          featureName: element.name,
-          filterList: list,
-        };
-        data.push(obj);
-      } else {
-        const obj = {
-          featureName: element.name,
-          filterList: [],
-        };
-        data.push(obj);
-      }
-    });
-
-    setdefaultValues(data);
-  };
-  useEffect(() => {
-    updateFeatureValue();
-  }, [props.filterStateChange]);
-
   useEffect(() => {
     props.getfeatureEntities(props.view.id);
   }, [props.view]);
-
-  useEffect(() => {
-    if (props.featuresList.length > 0) {
-      debugger;
-      updateFeatureValue();
-    }
-  }, [props.featuresList]);
 
   useEffect(() => {
     setFilterPanelClose(props.isFilterOpen);
@@ -120,12 +83,10 @@ const FilterPanel = (props: IFilterPanelProp) => {
             <View>
               <div className="filter-body">
                 {props.featuresList &&
-                  defaultValues &&
-                  defaultValues.length > 0 &&
                   props.featuresList.length > 0 &&
                   props.featuresList.map((item, i) => {
                     if (item.featureType === 'DIMENSION') {
-                      return <FilterElement key={item.id} defaultValue={defaultValues[i].filterList} feature={item} />;
+                      return <FilterElement key={item.id} feature={item} />;
                     }
                   })}
               </div>
@@ -150,8 +111,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   isFilterOpen: storeState.applicationProfile.isFilterOpen,
   featuresList: storeState.feature.entities,
   visualmetadata: storeState.views.viewState,
-  selectedFilter: storeState.visualmetadata.selectedFilter,
-  filterStateChange: storeState.visualmetadata.filterStateChange,
+  selectedFilter: storeState.filter.selectedFilter,
+  filterStateChange: storeState.filter.filterStateChange,
 });
 const mapDispatchToProps = {
   getfeatureEntities,

@@ -37,6 +37,8 @@ import visualizations, {
 import visualmetadata, {
   VisualmetadataState
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import filter, { FilterState } from 'app/modules/canvas/filter/filter.reducer';
+import scheduler, { SchedulerState } from 'app/modules/canvas/scheduler/scheduler.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -59,6 +61,8 @@ export interface IRootState {
   readonly visualmetadata: VisualmetadataState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
+  readonly filter: FilterState;
+  readonly scheduler: SchedulerState;
 }
 
 const rootReducer = combineReducers<IRootState>({
@@ -81,6 +85,8 @@ const rootReducer = combineReducers<IRootState>({
   visualmetadata,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
+  filter,
+  scheduler,
 });
 
 export default rootReducer;

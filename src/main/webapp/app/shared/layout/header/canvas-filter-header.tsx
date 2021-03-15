@@ -6,17 +6,14 @@ import { connect } from 'react-redux';
 import {
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
-  modifyFilterState
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { toggleEditMode, toggleFilterPanel } from 'app/shared/reducers/application-profile';
 import { saveViewState } from 'app/entities/views/views.reducer';
-import Filter from '@spectrum-icons/workflow/Filter';
-import { FilterParameterService } from 'app/modules/canvas/filter/filter-parameters-service';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
-import Edit from '@spectrum-icons/workflow/Edit';
 import { getVisualizationData, ValidateFields } from 'app/modules/canvas/visualization/util/visualization-render-utils';
 import Close from '@spectrum-icons/workflow/Close';
+import { modifyFilterState } from 'app/modules/canvas/filter/filter.reducer';
 
 const CanvasFilterHeader = props => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean[]>();
@@ -37,7 +34,7 @@ const CanvasFilterHeader = props => {
       });
       setDropdownOpen(dropdownStatus);
     }
-  }, [props.selectedFilter]);
+  }, [props.selectedFilter, props.isUpdateValueInFilter]);
 
   const renderVisualizationById = item => {
     if (ValidateFields(item.fields)) {
@@ -106,7 +103,8 @@ const CanvasFilterHeader = props => {
 const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   isAuthenticated: storeState.authentication.isAuthenticated,
-  selectedFilter: storeState.visualmetadata.selectedFilter,
+  selectedFilter: storeState.filter.selectedFilter,
+  isUpdateValueInFilter: storeState.filter.isUpdateValueInFilter,
   visualmetadata: storeState.views.viewState,
 });
 
@@ -115,7 +113,7 @@ const mapDispatchToProps = {
   toggleEditMode,
   toggleFilterPanel,
   saveViewState,
-  modifyFilterState
+  modifyFilterState,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
