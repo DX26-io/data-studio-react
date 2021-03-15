@@ -18,7 +18,6 @@ const DatePicker: React.FC<IDatePickerProps> = props => {
         id={uuid()}
         label={props.label}
         value={props.value}
-        defaultValue={props.value}
         onChange={event => {
           dateChange(event.target.value);
         }}

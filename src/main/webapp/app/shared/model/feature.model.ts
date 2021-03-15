@@ -11,6 +11,9 @@ export interface IFeature {
   name?: string;
   pin?: boolean;
   type?: string;
+  metadata?: null;
+  selected?: string;
+  selected2?: string;
 }
 
 export const defaultValue: Readonly<IFeature> = {

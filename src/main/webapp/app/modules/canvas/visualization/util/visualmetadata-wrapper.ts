@@ -163,15 +163,20 @@ const constructHavingField = fieldMeasure => {
 };
 
 const getQueryParametersWithFields = (fields, filters, conditionExpression) => {
-  var query = {
+  const query = {
     fields,
+    conditionExpressions: null,
   };
 
-  // if (conditionExpression && conditionExpression.conditionExpression) {
-  //   query.conditionExpressions = [conditionExpression];
-  // }
-
-  return query;
+  if (conditionExpression && conditionExpression.conditionExpression) {
+    query.conditionExpressions = [conditionExpression];
+  }
+  if (query.conditionExpressions) {
+    return query;
+  } else {
+    delete query['conditionExpressions'];
+    return query;
+  }
 };
 
 const getQueryParameters = (visual, filters, conditionExpression, offset) => {
@@ -190,7 +195,7 @@ const getQueryParameters = (visual, filters, conditionExpression, offset) => {
     return constructMeasureField(item);
   });
 
-  var query;
+  let query;
 
   query = getQueryParametersWithFields(dimensionFields.concat(measureFields), filters, conditionExpression);
 

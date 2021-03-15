@@ -1,8 +1,6 @@
 import { Content, Picker, Section, Text, TextField, View } from '@adobe/react-spectrum';
 import { Item, Tabs } from '@react-spectrum/tabs';
 import React, { FC, ReactText, useEffect, useRef, useState } from 'react';
-// import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import {
   formatDate,
   resetTimezone,

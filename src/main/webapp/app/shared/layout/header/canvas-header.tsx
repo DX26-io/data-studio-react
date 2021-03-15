@@ -12,11 +12,13 @@ import {
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { toggleEditMode } from 'app/shared/reducers/application-profile';
-import {saveViewState } from 'app/entities/views/views.reducer';
+import { toggleEditMode, toggleFilterPanel } from 'app/shared/reducers/application-profile';
+import { saveViewState } from 'app/entities/views/views.reducer';
+import Filter from '@spectrum-icons/workflow/Filter';
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
+  const [isFilterPanelClose, setFilterPanelClose] = useState(true);
 
   const handleVisualizationClick = v => {
     props.addVisualmetadataEntity({
@@ -26,7 +28,10 @@ const CanvasHeader = props => {
     setVisualizationsModelOpen(false);
   };
   const handleToggleEditMode = () => {
-    props.toggleEditMode()
+    props.toggleEditMode();
+  };
+  const handleToggleFilterPanel = () => {
+    props.toggleFilterPanel();
   };
 
   const saveAllVisualizations = () => {
@@ -39,8 +44,8 @@ const CanvasHeader = props => {
     <>
       <View>
         <TooltipTrigger>
-          <ActionButton  onPress={() => handleToggleEditMode()} aria-label="Notifications" isQuiet={true} marginEnd="size-5">
-            <div  className={(props.isEditMode ? 'enableEdit' : 'disableEdit')}>
+          <ActionButton onPress={() => handleToggleEditMode()} aria-label="Notifications" isQuiet={true} marginEnd="size-5">
+            <div className={props.isEditMode ? 'enableEdit' : 'disableEdit'}>
               <CollectionEdit color="informative" size="M" />
             </div>
           </ActionButton>
@@ -60,7 +65,7 @@ const CanvasHeader = props => {
           <Tooltip>Add Visualization</Tooltip>
         </TooltipTrigger>
         <TooltipTrigger>
-          <ActionButton  onPress={() => saveAllVisualizations()} aria-label="Notifications" isQuiet={true} marginEnd="size-5">
+          <ActionButton onPress={() => saveAllVisualizations()} aria-label="Notifications" isQuiet={true} marginEnd="size-5">
             <SaveAsFloppy size="M" />
           </ActionButton>
           <Tooltip>Save</Tooltip>
@@ -78,6 +83,13 @@ const CanvasHeader = props => {
             </Menu>
           </MenuTrigger>
           <Tooltip>More</Tooltip>
+        </TooltipTrigger>
+
+        <TooltipTrigger>
+          <ActionButton onPress={() => handleToggleFilterPanel()} isQuiet={true} marginEnd="size-5">
+            <Filter size="M" />
+          </ActionButton>
+          <Tooltip>Filter</Tooltip>
         </TooltipTrigger>
 
         <DialogContainer type="fullscreen" onDismiss={() => setVisualizationsModelOpen(false)} {...props}>
@@ -101,13 +113,15 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualmetadata: storeState.views.viewState,
   visualizationsList: storeState.visualizations.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
-  isEditMode: storeState.applicationProfile.isEditMode
+  isEditMode: storeState.applicationProfile.isEditMode,
+  isFilterOpen: storeState.applicationProfile.isFilterOpen,
 });
 
 const mapDispatchToProps = {
   addVisualmetadataEntity,
   toggleEditMode,
-  saveViewState
+  toggleFilterPanel,
+  saveViewState,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

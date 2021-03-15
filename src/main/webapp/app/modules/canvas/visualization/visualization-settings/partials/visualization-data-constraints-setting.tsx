@@ -11,21 +11,9 @@ export interface IVisualizationDataConstraintsSettingProps extends StateProps, D
   datasource: IDatasources;
   visualMetaData: IVisualMetadataSet;
   filterData: any;
-  reloadDataConstraints: () => void;
 }
 
 const VisualizationDataConstraintsSetting = (props: IVisualizationDataConstraintsSettingProps) => {
-  const reloadDataConstraints = () => {
-    return (
-      <VisualizationDataConstraints
-        features={props.features}
-        datasource={props.datasource}
-        visualMetaData={props.visualMetaData}
-        condition={props.visualMetaData.conditionExpression}
-        filterData={props.filterData}
-      ></VisualizationDataConstraints>
-    );
-  };
   return (
     <>
       <View>
@@ -35,7 +23,6 @@ const VisualizationDataConstraintsSetting = (props: IVisualizationDataConstraint
           visualMetaData={props.visualMetaData}
           condition={props.visualMetaData.conditionExpression}
           filterData={props.filterData}
-          reloadDataConstraints={reloadDataConstraints}
         ></VisualizationDataConstraints>
       </View>
     </>

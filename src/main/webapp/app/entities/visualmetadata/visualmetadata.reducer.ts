@@ -6,6 +6,7 @@ import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util'
 
 import { IVisualMetadata, defaultValue } from 'app/shared/model/visualMetadata.model';
 import { IValidateDTO, IVisualmetaDataDTO } from './visualmetadata-util';
+import { FilterParameterService } from 'app/modules/canvas/filter/filter-parameters-service';
 
 export const ACTION_TYPES = {
   FETCH_VISUALMETADATA_LIST: 'visualmetadata/FETCH_VISUALMETADATA_LIST',
@@ -15,6 +16,8 @@ export const ACTION_TYPES = {
   DELETE_VISUALMETADATA: 'visualmetadata/DELETE_VISUALMETADATA',
   RESET: 'visualmetadata/RESET',
   VALIDATE_QUERY: 'visualmetadata/VALIDATE_QUERYDTO',
+  UPDATE_SELECTED_FILTER: 'visualmetadata/UPDATE_SELECTED_FILTER',
+  FILTER_STATE_CHANGE: 'visualmetadata/FILTER_STATE_CHANGE',
 };
 
 const initialState = {
@@ -27,6 +30,8 @@ const initialState = {
   newCreated: false,
   rowQuery: null,
   filterData: {},
+  selectedFilter: {},
+  filterStateChange: false,
 };
 
 export type VisualmetadataState = Readonly<typeof initialState>;
@@ -119,6 +124,16 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         ...state,
         rowQuery: action.payload.data,
       };
+    case ACTION_TYPES.UPDATE_SELECTED_FILTER:
+      return {
+        ...state,
+        selectedFilter: FilterParameterService.getSelectedFilter(),
+      };
+    case ACTION_TYPES.FILTER_STATE_CHANGE:
+      return {
+        ...state,
+        filterStateChange: !state.filterStateChange,
+      };
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
@@ -183,4 +198,12 @@ export const deleteEntity: ICrudDeleteAction<IVisualMetadata> = id => async disp
 
 export const reset = () => ({
   type: ACTION_TYPES.RESET,
+});
+
+export const updateSelectedFilter = () => ({
+  type: ACTION_TYPES.UPDATE_SELECTED_FILTER,
+});
+
+export const modifyFilterState = () => ({
+  type: ACTION_TYPES.FILTER_STATE_CHANGE,
 });

@@ -29,7 +29,6 @@ interface IVisualizationHeaderProps {
   handleVisualizationClick: (visualization) => void;
   isEditMode: boolean;
   filterData: any;
-  editAction: (setEditAction) => void;
 }
 
 const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {

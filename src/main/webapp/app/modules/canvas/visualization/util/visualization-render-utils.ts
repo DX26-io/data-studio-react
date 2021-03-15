@@ -3,6 +3,7 @@ import flairVisualizations from 'flair-visualizations/js/main';
 import Configuration from 'flair-visualizations/js/extras/configs/configuration';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { VisualWrap } from './visualmetadata-wrapper';
+import { FilterParameterService } from '../../filter/filter-parameters-service';
 const configuration = Configuration();
 
 export const ValidateFields = fields => {
@@ -15,11 +16,15 @@ export const ValidateFields = fields => {
   });
   return isValid;
 };
-
 export const getVisualizationData = (visual, view) => {
   if (visual.fields && ValidateFields(visual.fields)) {
     const visualMetadata = VisualWrap(visual);
-    const queryDTO = visualMetadata.getQueryParameters(visual, null, null, null);
+    const queryDTO = visualMetadata.getQueryParameters(
+      visual,
+      FilterParameterService.get(),
+      FilterParameterService.getConditionExpression(),
+      0
+    );
     const body = {
       queryDTO,
       visualMetadata,

@@ -9,7 +9,6 @@ import Logo from 'app/shared/components/logo/logo';
 import { Divider, Flex, View } from '@adobe/react-spectrum';
 import CanvasHeader from './canvas-header';
 import { isCanvas } from 'app/shared/util/common-utils';
-
 export interface IHeaderProps {
   isAuthenticated: boolean;
   isAdmin: boolean;

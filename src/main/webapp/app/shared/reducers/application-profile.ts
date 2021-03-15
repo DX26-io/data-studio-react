@@ -5,6 +5,7 @@ import { SUCCESS } from 'app/shared/reducers/action-type.util';
 export const ACTION_TYPES = {
   GET_PROFILE: 'applicationProfile/GET_PROFILE',
   TOGGLE_EDIT_MODE: 'applicationProfile/TOGGLE_EDIT_MODE',
+  TOGGLE_FILTER_PANEL: 'applicationProfile/TOGGLE_FILTER_PANEL',
 };
 
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
   inProduction: true,
   isSwaggerEnabled: false,
   isEditMode: false,
+  isFilterOpen: false,
 };
 
 export type ApplicationProfileState = Readonly<typeof initialState>;
@@ -32,6 +34,11 @@ export default (state: ApplicationProfileState = initialState, action): Applicat
         ...state,
         isEditMode: !state.isEditMode,
       };
+    case ACTION_TYPES.TOGGLE_FILTER_PANEL:
+      return {
+        ...state,
+        isFilterOpen: !state.isFilterOpen,
+      };
     default:
       return state;
   }
@@ -44,4 +51,8 @@ export const getProfile = () => ({
 
 export const toggleEditMode = () => ({
   type: ACTION_TYPES.TOGGLE_EDIT_MODE,
+});
+
+export const toggleFilterPanel = () => ({
+  type: ACTION_TYPES.TOGGLE_FILTER_PANEL,
 });

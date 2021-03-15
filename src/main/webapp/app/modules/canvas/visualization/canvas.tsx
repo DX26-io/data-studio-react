@@ -33,14 +33,25 @@ import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
 import { getToken } from 'app/shared/reducers/authentication';
 import { NoDataFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import Loader from 'app/shared/components/card/loader/loader';
-
+import FilterPanel from 'app/modules/canvas/filter/filter-panel';
+import CanvasFilterHeader from 'app/shared/layout/header/canvas-filter-header';
 const ReactGridLayout = WidthProvider(RGL);
+
 export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
 
 const Canvas = (props: VisualizationProp) => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
   const [isSocketConnaction, setSocketConnaction] = useState(false);
   const [visualmetadataList, setvisualmetadata] = useState<IVisualMetadataSet[]>();
+
+  const [filters, setFilters] = useState<string[]>();
+
+  useEffect(() => {
+    if (props.selectedFilter) {
+      const filterList = Object.keys(props.selectedFilter);
+      setFilters(filterList);
+    }
+  }, [props.selectedFilter]);
 
   const onLayoutChange = _visualmetaList => {
     props.visualmetadata.visualMetadataSet.map((item, i) => {
@@ -70,16 +81,16 @@ const Canvas = (props: VisualizationProp) => {
   const onExchangeMetadata = data => {
     const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
     if (data.headers.request === 'filters') {
-      var obj = metaData.data[0];
-      var dimensionName = '';
-      for (var i in obj) {
+      const obj = metaData.data[0];
+      let dimensionName = '';
+      for (const i in obj) {
         dimensionName = i;
         break;
       }
-      var retVal = metaData.data.map(function (item) {
+      const retVal = metaData.data.map(function (item) {
         return {
           value: item[dimensionName],
-          label: item[dimensionName]
+          label: item[dimensionName],
         };
       });
       props.filterData[dimensionName] = retVal;
@@ -105,6 +116,11 @@ const Canvas = (props: VisualizationProp) => {
     }
   };
 
+  const loadVisualization = () => {
+    props.visualmetadata.visualMetadataSet.map((item, i) => {
+      renderVisualizationById(item);
+    });
+  };
   const connectWeb = () => {
     connectWebSocket({ token: getToken() }, function (frame) {
       // console.log(' connected web socket');
@@ -112,9 +128,7 @@ const Canvas = (props: VisualizationProp) => {
       subscribeWebSocket('/user/exchange/metaDataError', onExchangeMetadataError);
       setSocketConnaction(true);
       VisualMetadataContainerAdd(props.visualmetadata?.visualMetadataSet);
-      props.visualmetadata.visualMetadataSet.map((item, i) => {
-        renderVisualizationById(item);
-      });
+      loadVisualization();
     });
   };
 
@@ -198,6 +212,10 @@ const Canvas = (props: VisualizationProp) => {
 
   return (
     <>
+      {isSocketConnaction && <FilterPanel />}
+      <View>
+        <CanvasFilterHeader />
+      </View>
       <View>
         {visualmetadataList && visualmetadataList.length > 0 && (
           <ReactGridLayout
@@ -233,7 +251,9 @@ const mapStateToProps = (storeState: IRootState) => ({
   featuresList: storeState.feature.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
   isEditMode: storeState.applicationProfile.isEditMode,
-  filterData: storeState.visualmetadata.filterData
+  filterData: storeState.visualmetadata.filterData,
+
+  selectedFilter: storeState.visualmetadata.selectedFilter,
 });
 
 const mapDispatchToProps = {
