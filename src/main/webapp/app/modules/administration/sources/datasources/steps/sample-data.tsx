@@ -5,7 +5,7 @@ import { prepareConnection } from './datasource-util';
 import { IRootState } from 'app/shared/reducers';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import { executeQuery } from '../datasources.reducer';
-import { Flex, Dialog, Heading, Divider, Content, Button, Header, useDialogContainer } from '@adobe/react-spectrum';
+import { Flex, Dialog, Heading, Divider, Content, Button, Header, useDialogContainer, ProgressBar } from '@adobe/react-spectrum';
 
 interface ISampleDataprops extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
@@ -14,7 +14,7 @@ interface ISampleDataprops extends StateProps, DispatchProps {
 export const SampleData = (props: ISampleDataprops) => {
   const dialog = useDialogContainer();
 
-  const { setOpen, isConnectionSelected, connection, connectionType, datasource, sampleData, sampleDataHeader } = props;
+  const { setOpen, isConnectionSelected, connection, connectionType, datasource, sampleData, sampleDataHeader, loading } = props;
 
   useEffect(() => {
     const body = {
@@ -81,26 +81,28 @@ export const SampleData = (props: ISampleDataprops) => {
       </Header>
       <Divider />
       <Content>
-        <div>
-          <div className="dx26-container">
-            <Paper className="dx26-table-pager">
-              <TableContainer>
-                <Table aria-label="customized table">
-                  <TableHead>
-                    <TableRow>{generateTableHead()}</TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {sampleData.map((row, i) => (
-                      <TableRow key={`row-${i}`}>
-                        {generateTableBody(row)}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Paper>
+        {loading ? (
+          <ProgressBar label="Loading…" isIndeterminate />
+        ) : (
+          <div>
+            <div className="dx26-container">
+              <Paper className="dx26-table-pager">
+                <TableContainer>
+                  <Table aria-label="customized table">
+                    <TableHead>
+                      <TableRow>{generateTableHead()}</TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {sampleData.map((row, i) => (
+                        <TableRow key={`row-${i}`}>{generateTableBody(row)}</TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Paper>
+            </div>
           </div>
-        </div>
+        )}
       </Content>
     </Dialog>
   );
@@ -112,6 +114,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   connection: storeState.datasourceSteps.connection,
   connectionType: storeState.datasourceSteps.connectionType,
   sampleData: storeState.datasources.sampleData,
+  loading: storeState.datasources.loading,
   sampleDataHeader: storeState.datasources.sampleData.length > 0 ? storeState.datasources.sampleData[0] : null,
 });
 

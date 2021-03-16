@@ -9,6 +9,7 @@ export const ACTION_TYPES = {
   SET_EXPLORE_MODEL_ID: 'datasourceSteps/SET_EXPLORE_MODEL_ID',
   SET_FEATURES: 'datasourceSteps/SET_FEATURES',
   IS_ADD_FEATURES: 'datasourceSteps/IS_ADD_FEATURES',
+  IS_SAVE_CONNECTION: 'datasourceSteps/IS_SAVE_CONNECTION',
 };
 
 const initialState = {
@@ -33,6 +34,7 @@ const initialState = {
   exploreModelTabId: 1,
   features: [],
   isAddFeaturesCalled: false,
+  isSaveConnectionCalled: false,
 };
 
 export type DatasourceStepsState = Readonly<typeof initialState>;
@@ -74,6 +76,11 @@ export default (state: DatasourceStepsState = initialState, action): DatasourceS
       return {
         ...state,
         isAddFeaturesCalled: action.payload,
+      };
+    case ACTION_TYPES.IS_SAVE_CONNECTION:
+      return {
+        ...state,
+        isSaveConnectionCalled: action.payload,
       };
     case ACTION_TYPES.RESET:
       return {
@@ -133,5 +140,12 @@ export const setIsAddFeaturesCalled = isAddFeaturesCalled => {
   return {
     type: ACTION_TYPES.IS_ADD_FEATURES,
     payload: isAddFeaturesCalled,
+  };
+};
+
+export const setIsSaveConnectionCalled = isSaveConnectionCalled => {
+  return {
+    type: ACTION_TYPES.IS_SAVE_CONNECTION,
+    payload: isSaveConnectionCalled,
   };
 };

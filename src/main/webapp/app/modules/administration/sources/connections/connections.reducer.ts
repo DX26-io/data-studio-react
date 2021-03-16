@@ -31,6 +31,7 @@ const initialState = {
   features: [],
   updateError: null,
   updatedFeatures: false,
+  updatedFeaturesRequest: false,
 };
 
 export type ConnectionsState = Readonly<typeof initialState>;
@@ -166,17 +167,20 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
       return {
         ...state,
         updatedFeatures: false,
+        updatedFeaturesRequest: true,
       };
     case FAILURE(ACTION_TYPES.CREATE_FEATURES):
       return {
         ...state,
         errorMessage: action.payload.data,
         updatedFeatures: false,
+        updatedFeaturesRequest: false,
       };
     case SUCCESS(ACTION_TYPES.CREATE_FEATURES):
       return {
         ...state,
         updatedFeatures: true,
+        updatedFeaturesRequest: false,
       };
     case ACTION_TYPES.RESET:
       return {

@@ -3,37 +3,22 @@ import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-// import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { translate, Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import {
-  View,
-  Flex,
-  Dialog,
-  Heading,
-  Divider,
-  Content,
-  Form,
-  Button,
-  TextField,
-  Header,
-  Text,
-  useDialogContainer,
-} from '@adobe/react-spectrum';
+import { View, Flex, Dialog, Heading, Divider, Content, Button, Header, useDialogContainer } from '@adobe/react-spectrum';
 import {
   getConnectionsTypes,
   createConnection,
   updateConnection,
   deleteConnection,
   resetConnection,
-  addFeatures,
 } from '../../connections/connections.reducer';
 import ConnectionsTypes from './connections-types';
 import DataConnection from './data-connection';
 import { getSteps, isNextDisabled, prepareConnection } from './datasource-util';
-import { resetSteps,setIsAddFeaturesCalled } from './datasource-steps.reducer';
+import { resetSteps, setIsAddFeaturesCalled, setIsSaveConnectionCalled } from './datasource-steps.reducer';
 import { reset, createDatasource } from '../datasources.reducer';
 import CacheProperty from './cache-property';
 import ExploreDataModel from './explore-data-model';
@@ -61,7 +46,6 @@ export interface IDatasourceStepperProps extends StateProps, DispatchProps {
 
 const DatasourceStepper = (props: IDatasourceStepperProps) => {
   const {
-    isConnectionSelected,
     setUpdateSuccess,
     setOpen,
     isNew,
@@ -69,9 +53,6 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
     connectionType,
     connection,
     isConnected,
-    datasource,
-    connectionUpdateSuccess,
-    connectionUpdateError,
     datasourceUpdateSuccess,
     datasourceUpdateError,
     createdDatasource,
@@ -109,31 +90,9 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
     props.resetConnection();
   };
 
-  const rollbackConnection = () => {
-    if (!isConnectionSelected) {
-      props.deleteConnection(connection.id);
-    }
-  };
-
-  const create = () => {
-    datasource['queryPath'] = '/api/queries';
-    datasource['connectionName'] = connection.linkId;
-    datasource['lastUpdated'] = new Date();
-    props.createDatasource(datasource);
-  };
-
-  const saveConnection = () => {
-    const conn = prepareConnection(connection, connectionType);
-    if (!isConnectionSelected) {
-      props.createConnection(conn);
-    } else {
-      props.updateConnection(conn);
-    }
-  };
-
   const handleNext = () => {
     if (activeStep === 3) {
-      saveConnection();
+      props.setIsSaveConnectionCalled(true);
     }
     if (activeStep === 4) {
       props.setIsAddFeaturesCalled(true);
@@ -154,21 +113,10 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
   useEffect(() => {
     props.getConnectionsTypes();
   }, []);
-
-  useEffect(() => {
-    if (connectionUpdateSuccess && connectionUpdateError === null) {
-      create();
-    }
-  }, [connectionUpdateSuccess]);
-
-  useEffect(() => {
-    if (connectionUpdateError && !connectionUpdateSuccess) {
-      rollbackConnection();
-    }
-  }, [connectionUpdateError]);
-
+  
   useEffect(() => {
     if (datasourceUpdateSuccess && datasourceUpdateError === null) {
+      setIsSaveConnectionCalled(false);
       setActiveStep(prevActiveStep => prevActiveStep + 1);
     }
   }, [datasourceUpdateSuccess]);
@@ -228,7 +176,7 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
                   {getStepContent(activeStep)}
                 </View>
                 <Flex justifyContent="end" gap="size-100">
-                  <Button variant="secondary" isDisabled={activeStep === 0} onPress={handleBack}>
+                  <Button variant="secondary" isDisabled={activeStep === 0 || activeStep===4} onPress={handleBack}>
                     <Translate contentKey="entity.action.back">Back</Translate>
                   </Button>
                   <Button
@@ -259,10 +207,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isConnected: storeState.datasources.isConnected,
   createdDatasource: storeState.datasources.entity,
   datasourceUpdateSuccess: storeState.datasources.updateSuccess,
-  connectionUpdateError: storeState.connections.updateError,
-  datasource: storeState.datasourceSteps.datasource,
   isConnectionSelected: storeState.datasourceSteps.isConnectionSelected,
-  connectionUpdateSuccess: storeState.connections.updateSuccess,
   datasourceUpdateError: storeState.datasources.updateError,
   features: storeState.datasourceSteps.features,
   updatedFeatures: storeState.connections.updatedFeatures,
@@ -272,13 +217,10 @@ const mapDispatchToProps = {
   getConnectionsTypes,
   reset,
   resetSteps,
-  deleteConnection,
   createDatasource,
-  createConnection,
-  updateConnection,
   resetConnection,
-  addFeatures,
-  setIsAddFeaturesCalled
+  setIsAddFeaturesCalled,
+  setIsSaveConnectionCalled,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

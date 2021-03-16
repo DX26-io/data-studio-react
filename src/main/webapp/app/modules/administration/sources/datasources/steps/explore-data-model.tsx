@@ -16,14 +16,15 @@ import {
   Text,
 } from '@adobe/react-spectrum';
 import { prepareConnection } from './datasource-util';
-import { setConnection, setDatasource, setExploreModelId } from './datasource-steps.reducer';
-import { listTables } from '../datasources.reducer';
+import { setConnection, setDatasource, setExploreModelId, setIsSaveConnectionCalled } from './datasource-steps.reducer';
+import { listTables, createDatasource } from '../datasources.reducer';
 import { Translate, translate } from 'react-jhipster';
 import { Tabs } from '@react-spectrum/tabs';
 import Select from 'react-select';
 import SqlQueryContainer from './sql-query-container/sql-query-container';
 import Alert from '@spectrum-icons/workflow/Alert';
 import SampleData from './sample-data';
+import { createConnection, updateConnection, deleteConnection } from '../../connections/connections.reducer';
 
 export interface IExploreDataModelProps extends StateProps, DispatchProps {
   connectionType: any;
@@ -31,7 +32,20 @@ export interface IExploreDataModelProps extends StateProps, DispatchProps {
 }
 
 export const ExploreDataModel = (props: IExploreDataModelProps) => {
-  const { connectionType, connection, isConnectionSelected, tables, loading, datasource, updateError, exploreModelTabId } = props;
+  const {
+    connectionUpdateSuccess,
+    connectionUpdateError,
+    connectionType,
+    connection,
+    isConnectionSelected,
+    tables,
+    loading,
+    datasource,
+    updateError,
+    exploreModelTabId,
+    isSaveConnectionCalled,
+    datasourceUpdateSuccess,
+  } = props;
 
   const [searchedText, setSearchedText] = React.useState('');
 
@@ -108,12 +122,62 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
     control: styles => ({ ...styles, minWidth: '305px' }),
   };
 
+  const rollbackConnection = () => {
+    if (!isConnectionSelected) {
+      props.deleteConnection(connection.id);
+    }
+  };
+
+  const create = () => {
+    datasource['queryPath'] = '/api/queries';
+    datasource['connectionName'] = connection.linkId;
+    datasource['lastUpdated'] = new Date();
+    props.createDatasource(datasource);
+  };
+
+  const saveConnection = () => {
+    const conn = prepareConnection(connection, connectionType);
+    if (!isConnectionSelected) {
+      props.createConnection(conn);
+    } else {
+      props.updateConnection(conn);
+    }
+  };
+
+  useEffect(() => {
+    if (connectionUpdateSuccess && connectionUpdateError === null) {
+      create();
+    }else{
+      props.setIsSaveConnectionCalled(false);
+    }
+  }, [connectionUpdateSuccess]);
+
+  useEffect(() => {
+    if (connectionUpdateError && !connectionUpdateSuccess) {
+      rollbackConnection();
+      props.setIsSaveConnectionCalled(false);
+    }
+  }, [connectionUpdateError]);
+
+  useEffect(() => {
+    if (isSaveConnectionCalled) {
+      saveConnection();
+    }
+  }, [isSaveConnectionCalled]);
+
+  useEffect(() => {
+    if (updateError) {
+      props.setIsSaveConnectionCalled(false);
+    }
+  }, [updateError]);
+
   return (
     <React.Fragment>
       <DialogContainer onDismiss={() => setSampleTableOpen(false)}>
         {isSampleTableOpen && <SampleData setOpen={setSampleTableOpen} />}
       </DialogContainer>
       <Flex direction="column" gap="size-100" alignItems="center">
+        {isSaveConnectionCalled ? <ProgressBar label="Creating..." isIndeterminate /> : null}
         <Form isRequired necessityIndicator="icon" minWidth="size-4600">
           <Tabs aria-label="roles" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
             {item => (
@@ -185,9 +249,23 @@ const mapStateToProps = (storeState: IRootState) => ({
   loading: storeState.datasources.loading,
   updateError: storeState.datasources.updateError,
   exploreModelTabId: storeState.datasourceSteps.exploreModelTabId,
+  isSaveConnectionCalled: storeState.datasourceSteps.isSaveConnectionCalled,
+  connectionUpdateError: storeState.connections.updateError,
+  connectionUpdateSuccess: storeState.connections.updateSuccess,
+  datasourceUpdateSuccess: storeState.datasources.updateSuccess,
 });
 
-const mapDispatchToProps = { setConnection, listTables, setDatasource, setExploreModelId };
+const mapDispatchToProps = {
+  setConnection,
+  listTables,
+  setDatasource,
+  setExploreModelId,
+  createDatasource,
+  createConnection,
+  updateConnection,
+  deleteConnection,
+  setIsSaveConnectionCalled,
+};
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

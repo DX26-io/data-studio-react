@@ -12,6 +12,7 @@ import { queryToConnection } from '../datasources.reducer';
 import { Translate,translate } from 'react-jhipster';
 import Checkmark from '@spectrum-icons/workflow/Checkmark';
 import Alert from '@spectrum-icons/workflow/Alert';
+import Close from '@spectrum-icons/workflow/Close';
 
 export interface IDataConnectionProps extends StateProps, DispatchProps {
   connectionType: any;

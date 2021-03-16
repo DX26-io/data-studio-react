@@ -5,7 +5,7 @@ import { getFeatureTypes } from './datasource-util';
 import { IRootState } from 'app/shared/reducers';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import { getFeatures, addFeatures } from '../../connections/connections.reducer';
-import { Flex, Picker, Item, Checkbox, Text } from '@adobe/react-spectrum';
+import { Flex, Picker, Item, Checkbox, Text, ProgressBar } from '@adobe/react-spectrum';
 import { COMPARABLE_DATA_TYPES } from 'app/config/constants';
 
 interface IDimensionsMeasures extends StateProps, DispatchProps {
@@ -13,7 +13,7 @@ interface IDimensionsMeasures extends StateProps, DispatchProps {
 }
 
 export const DimensionsMeasures = (props: IDimensionsMeasures) => {
-  const { datasourceId, features, isAddFeaturesCalled } = props;
+  const { datasourceId, features, isAddFeaturesCalled, loading, updatedFeaturesRequest } = props;
 
   useEffect(() => {
     if (features.length === 0) {
@@ -40,8 +40,11 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
   };
 
   return (
-    <div>
-      <div className="dx26-container">
+    <div className="dx26-container">
+      {updatedFeaturesRequest ? <ProgressBar label="Creating…" isIndeterminate /> : null}
+      {loading ? (
+        <ProgressBar label="Loading…" isIndeterminate />
+      ) : (
         <Paper className="dx26-table-pager">
           <TableContainer>
             <Table aria-label="customized table">
@@ -116,14 +119,16 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
             </Table>
           </TableContainer>
         </Paper>
-      </div>
+      )}
     </div>
   );
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
   features: storeState.connections.features,
+  loading: storeState.connections.loading,
   isAddFeaturesCalled: storeState.datasourceSteps.isAddFeaturesCalled,
+  updatedFeaturesRequest: storeState.connections.updatedFeaturesRequest,
 });
 
 const mapDispatchToProps = { getFeatures, addFeatures };
