@@ -51,12 +51,14 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         ...state,
         updateSuccess: false,
         updating: true,
+        updateError: null,
       };
     case REQUEST(ACTION_TYPES.UPDATE_DATASOURCES):
       return {
         ...state,
         updateSuccess: false,
         updating: true,
+        updateError: null,
       };
     case REQUEST(ACTION_TYPES.DELETE_DATASOURCES):
       return {
@@ -85,9 +87,9 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
     case FAILURE(ACTION_TYPES.FETCH_DATASOURCES_LIST):
     case FAILURE(ACTION_TYPES.FETCH_DATASOURCES):
     case FAILURE(ACTION_TYPES.CREATE_DATASOURCES):
-      return { ...state, errorMessage: action.payload.data, updateSuccess: false, updateError: null };
+      return { ...state, updateSuccess: false, updateError: action.payload.data };
     case FAILURE(ACTION_TYPES.UPDATE_DATASOURCES):
-      return { ...state, errorMessage: action.payload.data, updateSuccess: false, updateError: null };
+      return { ...state, updateSuccess: false, updateError: action.payload.data };
     case FAILURE(ACTION_TYPES.DELETE_DATASOURCES):
       return {
         ...state,
@@ -130,14 +132,18 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         entity: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.CREATE_DATASOURCES):
-      return { ...state, updateError: action.payload.data, errorMessage: null, updateSuccess: true };
+      return {
+        ...state,
+        entity: action.payload.data,
+        updateError: action.payload.data.error ? action.payload.data.error : null,
+        updateSuccess: true,
+      };
     case SUCCESS(ACTION_TYPES.UPDATE_DATASOURCES):
       return {
         ...state,
         updating: false,
         updateSuccess: true,
-        updateError: null,
-        errorMessage: null,
+        updateError: action.payload.data.error ? action.payload.data.error : null,
         entity: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.DELETE_DATASOURCES):

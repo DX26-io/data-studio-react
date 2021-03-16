@@ -16,7 +16,7 @@ import {
   Text,
 } from '@adobe/react-spectrum';
 import { prepareConnection } from './datasource-util';
-import { setConnection, setDatasource } from './datasource-steps.reducer';
+import { setConnection, setDatasource, setExploreModelId } from './datasource-steps.reducer';
 import { listTables } from '../datasources.reducer';
 import { Translate, translate } from 'react-jhipster';
 import { Tabs } from '@react-spectrum/tabs';
@@ -31,7 +31,7 @@ export interface IExploreDataModelProps extends StateProps, DispatchProps {
 }
 
 export const ExploreDataModel = (props: IExploreDataModelProps) => {
-  const { connectionType, connection, isConnectionSelected, tables, loading, datasource, updateError } = props;
+  const { connectionType, connection, isConnectionSelected, tables, loading, datasource, updateError, exploreModelTabId } = props;
 
   const [searchedText, setSearchedText] = React.useState('');
 
@@ -46,12 +46,10 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
     { id: 2, name: 'datasources.exploreDataModel.sqlmode.name' },
   ];
 
-  const [tabId, setTabId] = useState<ReactText>(1);
+  const [tabId, setTabId] = useState<ReactText>(exploreModelTabId);
 
   const search = (inputValue, { action }) => {
-    console.log(inputValue, action);
     setSearchedText(inputValue);
-
     if (inputValue) {
       const body = {
         searchTerm: inputValue,
@@ -64,25 +62,13 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
       }
       props.listTables(body);
     }
-    //  TODO : we might need this code in future let it be commented
-    // switch (action) {
-    //   case 'input-change':
-    //     this.setState({ inputValue });
-    //     return;
-    //   case 'menu-close':
-    //     console.log(this.state.inputValue);
-    //     let menuIsOpen = undefined;
-    //     if (this.state.inputValue) {
-    //       menuIsOpen = true;
-    //     }
-    //     this.setState({
-    //       menuIsOpen,
-    //     });
-    //     return;
-    //   default:
-    //     return;
-    // }
   };
+
+  useEffect(() => {
+    if (tabId === 1) {
+      setSql('');
+    }
+  }, [tabId]);
 
   useEffect(() => {
     if (tabId === 2 && tables.length === 0) {
@@ -97,12 +83,6 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
       setSqlOptions(tables);
     }
   }, [loading]);
-
-  useEffect(() => {
-    if (tabId === 1) {
-      setSql('');
-    }
-  }, [tabId]);
 
   const dispatchQuery = sqlQuery => {
     setSql(sqlQuery);
@@ -121,6 +101,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
     } else {
       setSql('');
     }
+    props.setExploreModelId(tabId);
   };
 
   const selectStyles = {
@@ -148,6 +129,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
                           onInputChange={search}
                           onChange={selectDatasource}
                           styles={selectStyles}
+                          defaultValue={{ value: datasource.name, label: datasource.name }}
                         />
                         <Button variant="cta" isDisabled={false} onPress={() => setSampleTableOpen(true)}>
                           <Translate contentKey="datasources.exploreDataModel.showData">Show Data</Translate>
@@ -164,6 +146,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
                           onInputChange={search}
                           onChange={selectDatasource}
                           styles={selectStyles}
+                          defaultValue={{ value: datasource.sql, label: datasource.name }}
                         />
                         <Button variant="cta" isDisabled={false} onPress={() => setSampleTableOpen(true)}>
                           <Translate contentKey="datasources.exploreDataModel.showData">Show Data</Translate>
@@ -201,9 +184,10 @@ const mapStateToProps = (storeState: IRootState) => ({
   tables: storeState.datasources.tables,
   loading: storeState.datasources.loading,
   updateError: storeState.datasources.updateError,
+  exploreModelTabId: storeState.datasourceSteps.exploreModelTabId,
 });
 
-const mapDispatchToProps = { setConnection, listTables, setDatasource };
+const mapDispatchToProps = { setConnection, listTables, setDatasource, setExploreModelId };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

@@ -49,6 +49,13 @@
       "showData": "Show Data",
       "updateError": "The table from the same data source already exists",
       "sampleData": "Sample Data"
+    },
+    "dimensionsAndMeasures": {
+      "name": "Name",
+      "type": "Type",
+      "enableDateFilter": "Enable Date Time Filter",
+      "cache": "Cache",
+      "selectFeatureType": "Select Feature Type"
     }
   }
 }

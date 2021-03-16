@@ -77,7 +77,9 @@ export const Datasources = (props: IDatasourcesProps) => {
     });
   };
 
-  const setUpdateSuccess = () => {};
+  const setUpdateSuccess = () => {
+    getAllEntities();
+  };
 
   const { datasources, loading, totalItems } = props;
   return (

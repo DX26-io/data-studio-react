@@ -6,6 +6,8 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 
 import { IConnection, defaultValue } from 'app/shared/model/connection.model';
 
+import { onFeaturesFetched } from './connections.util';
+
 export const ACTION_TYPES = {
   FETCH_CONNECTIONS: 'connections/FETCH_CONNECTIONS',
   FETCH_CONNECTIONS_BY_ID: 'connections/FETCH_CONNECTIONS_BY_ID',
@@ -14,6 +16,7 @@ export const ACTION_TYPES = {
   UPDATE_CONNECTION: 'connections/UPDATE_CONNECTION',
   DELETE_CONNECTION: 'connections/DELETE_CONNECTION',
   FETCH_FEATURES: 'connections/FETCH_FEATURES',
+  CREATE_FEATURES: 'connections/CREATE_FEATURES',
   RESET: 'connections/RESET',
 };
 
@@ -26,6 +29,8 @@ const initialState = {
   updateSuccess: false,
   connection: null,
   features: [],
+  updateError: null,
+  updatedFeatures: false,
 };
 
 export type ConnectionsState = Readonly<typeof initialState>;
@@ -87,42 +92,47 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
     case REQUEST(ACTION_TYPES.UPDATE_CONNECTION):
       return {
         ...state,
-        errorMessage: null,
+        updateError: null,
         updateSuccess: false,
       };
     case FAILURE(ACTION_TYPES.UPDATE_CONNECTION):
       return {
         ...state,
         updateSuccess: false,
-        errorMessage: action.payload.data,
+        updateError: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.UPDATE_CONNECTION):
       return {
         ...state,
         updateSuccess: true,
         connection: action.payload.data,
-        errorMessage: null,
+        updateError: null,
       };
     case REQUEST(ACTION_TYPES.CREATE_CONNECTION):
       return {
         ...state,
-        errorMessage: null,
+        updateError: null,
         updateSuccess: false,
       };
     case FAILURE(ACTION_TYPES.CREATE_CONNECTION):
       return {
         ...state,
         updateSuccess: false,
-        errorMessage: action.payload.data,
+        updateError: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.CREATE_CONNECTION):
       return {
         ...state,
         updateSuccess: true,
-        errorMessage: null,
+        updateError: null,
         connection: action.payload.data,
       };
     case REQUEST(ACTION_TYPES.DELETE_CONNECTION):
+      return {
+        ...state,
+        updateSuccess: false,
+        errorMessage: null,
+      };
     case FAILURE(ACTION_TYPES.DELETE_CONNECTION):
       return {
         ...state,
@@ -133,6 +143,7 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
       return {
         ...state,
         updateSuccess: true,
+        errorMessage: null,
       };
     case REQUEST(ACTION_TYPES.FETCH_FEATURES):
       return {
@@ -142,14 +153,30 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
     case FAILURE(ACTION_TYPES.FETCH_FEATURES):
       return {
         ...state,
-        loading: true,
+        loading: false,
         errorMessage: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.FETCH_FEATURES):
       return {
         ...state,
-        loading: true,
-        features: action.payload.data,
+        loading: false,
+        features: onFeaturesFetched(action.payload.data),
+      };
+    case REQUEST(ACTION_TYPES.CREATE_FEATURES):
+      return {
+        ...state,
+        updatedFeatures: false,
+      };
+    case FAILURE(ACTION_TYPES.CREATE_FEATURES):
+      return {
+        ...state,
+        errorMessage: action.payload.data,
+        updatedFeatures: false,
+      };
+    case SUCCESS(ACTION_TYPES.CREATE_FEATURES):
+      return {
+        ...state,
+        updatedFeatures: true,
       };
     case ACTION_TYPES.RESET:
       return {
@@ -197,7 +224,14 @@ export const resetConnection = () => ({
   type: ACTION_TYPES.RESET,
 });
 
-export const getFeatures = (datasourceId: number) => ({
+export const getFeatures = (datasourceId: number, body: any) => ({
   type: ACTION_TYPES.FETCH_FEATURES,
-  payload: axios.get(`${apiUrl}/features/${datasourceId}`),
+  payload: axios.post(`${apiUrl}/features/${datasourceId}`, body),
+});
+
+// TODO: this needs to be moved in features reducer
+
+export const addFeatures = (featureList: any) => ({
+  type: ACTION_TYPES.CREATE_FEATURES,
+  payload: axios.post(`api/features/list`, featureList),
 });

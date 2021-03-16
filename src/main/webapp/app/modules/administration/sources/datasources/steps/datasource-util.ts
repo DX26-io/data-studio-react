@@ -10,6 +10,10 @@ export const getSteps = () => {
   ];
 };
 
+export const getFeatureTypes = () => {
+  return [{ name: 'DIMENSION' }, { name: 'MEASURE' }];
+};
+
 export const prepareConnection = (connection, connectionType) => {
   const con = connection;
   con.connectionType = connectionType.name;

@@ -28,14 +28,16 @@ import {
   updateConnection,
   deleteConnection,
   resetConnection,
+  addFeatures,
 } from '../../connections/connections.reducer';
 import ConnectionsTypes from './connections-types';
 import DataConnection from './data-connection';
 import { getSteps, isNextDisabled, prepareConnection } from './datasource-util';
-import { resetSteps } from './datasource-steps.reducer';
+import { resetSteps,setIsAddFeaturesCalled } from './datasource-steps.reducer';
 import { reset, createDatasource } from '../datasources.reducer';
 import CacheProperty from './cache-property';
 import ExploreDataModel from './explore-data-model';
+import DimensionMeasures from './dimensions-measures';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -69,8 +71,12 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
     isConnected,
     datasource,
     connectionUpdateSuccess,
-    datasourceError,
+    connectionUpdateError,
     datasourceUpdateSuccess,
+    datasourceUpdateError,
+    createdDatasource,
+    features,
+    updatedFeatures,
   } = props;
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -88,9 +94,19 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
         return <CacheProperty connection={connection} />;
       case 3:
         return <ExploreDataModel connection={connection} connectionType={connectionType} />;
+      case 4:
+        return <DimensionMeasures datasourceId={createdDatasource.id} />;
       default:
-        return 'Unknown stepIndex';
+        return 'wrong step selected';
     }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    dialog.dismiss();
+    props.resetSteps();
+    props.reset();
+    props.resetConnection();
   };
 
   const rollbackConnection = () => {
@@ -118,7 +134,11 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
   const handleNext = () => {
     if (activeStep === 3) {
       saveConnection();
-    } else {
+    }
+    if (activeStep === 4) {
+      props.setIsAddFeaturesCalled(true);
+    }
+    if (activeStep === 0 || activeStep === 1 || activeStep === 2) {
       setActiveStep(prevActiveStep => prevActiveStep + 1);
     }
   };
@@ -136,34 +156,34 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
   }, []);
 
   useEffect(() => {
-    if (connectionUpdateSuccess) {
+    if (connectionUpdateSuccess && connectionUpdateError === null) {
       create();
     }
-    // if (datasourceError) {
-    //   rollbackConnection();
-    // }
   }, [connectionUpdateSuccess]);
 
   useEffect(() => {
-    if (datasourceUpdateSuccess) {
+    if (connectionUpdateError && !connectionUpdateSuccess) {
+      rollbackConnection();
+    }
+  }, [connectionUpdateError]);
+
+  useEffect(() => {
+    if (datasourceUpdateSuccess && datasourceUpdateError === null) {
       setActiveStep(prevActiveStep => prevActiveStep + 1);
     }
   }, [datasourceUpdateSuccess]);
 
-
-  const handleClose = () => {
-    setOpen(false);
-    dialog.dismiss();
-    props.resetSteps();
-    props.reset();
-    props.resetConnection();
-  };
+  useEffect(() => {
+    if (updatedFeatures) {
+      handleClose();
+      setUpdateSuccess();
+      setIsAddFeaturesCalled(false);
+    }
+  }, [updatedFeatures]);
 
   const isDisabled = () => {
     // connectionType
   };
-
-  const save = () => {};
 
   return (
     <Dialog data-testid="datasource-stepper-dialog" width="80vw" size="L" minHeight="90vh">
@@ -180,9 +200,6 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
         <Flex alignItems="center" gap="size-100">
           <Button variant="secondary" onPress={handleClose} data-testid="group-form-cancel">
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
-          </Button>
-          <Button variant="cta" onPress={save} data-testid="group-form-submit">
-            <Translate contentKey="entity.action.save">Save</Translate>
           </Button>
         </Flex>
       </Header>
@@ -240,11 +257,15 @@ const mapStateToProps = (storeState: IRootState) => ({
   connectionType: storeState.datasourceSteps.connectionType,
   connection: storeState.datasourceSteps.connection,
   isConnected: storeState.datasources.isConnected,
+  createdDatasource: storeState.datasources.entity,
   datasourceUpdateSuccess: storeState.datasources.updateSuccess,
-  datasourceError: storeState.datasources.errorMessage,
+  connectionUpdateError: storeState.connections.updateError,
   datasource: storeState.datasourceSteps.datasource,
   isConnectionSelected: storeState.datasourceSteps.isConnectionSelected,
   connectionUpdateSuccess: storeState.connections.updateSuccess,
+  datasourceUpdateError: storeState.datasources.updateError,
+  features: storeState.datasourceSteps.features,
+  updatedFeatures: storeState.connections.updatedFeatures,
 });
 
 const mapDispatchToProps = {
@@ -256,6 +277,8 @@ const mapDispatchToProps = {
   createConnection,
   updateConnection,
   resetConnection,
+  addFeatures,
+  setIsAddFeaturesCalled
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

@@ -25,7 +25,6 @@ export const SampleData = (props: ISampleDataprops) => {
         source: datasource.name,
       },
       sql: datasource.sql ? datasource.sql : null,
-      // sourceId: datasource.id,
     };
     if (isConnectionSelected) {
       body['connectionLinkId'] = connection.linkId;
@@ -33,7 +32,6 @@ export const SampleData = (props: ISampleDataprops) => {
       body['connection'] = prepareConnection(connection, connectionType);
     }
     props.executeQuery(body);
-    // props.executeQuery({"query":{"fields":[],"distinct":true,"limit":10,"source":"public.ecommerce"},"sql":null,"connectionLinkId":"1715917d-fff8-44a1-af02-ee2cd41a3609"});
   }, []);
 
   const generateTableHead = () => {
@@ -61,20 +59,6 @@ export const SampleData = (props: ISampleDataprops) => {
       : null;
     return cells;
   };
-
-  // const generateTableBody = () => {
-  //   const rows = sampleData.map((row, i) => (
-  //     <TableRow key={`row-${i}`}>
-  //       {Object.keys(row).map(function (key) {
-  //         <TableCell align="center" key={key}>
-  //           {row[key]}
-  //         </TableCell>;
-  //       })}
-  //     </TableRow>
-  //   ));
-  //   return rows;
-  // };
-
   return (
     <Dialog data-testid="sample-data-dialog" width="80vw" size="L" minHeight="90vh">
       <Heading>
