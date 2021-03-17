@@ -1,4 +1,5 @@
 import datasources from '../datasources';
+import { IConnection, connectionDefaultValue } from 'app/shared/model/connection.model';
 
 export const ACTION_TYPES = {
   SELECT_CONNECTION_TYPE: 'datasourceSteps/SELECT_CONNECTION_TYPE',
@@ -10,6 +11,7 @@ export const ACTION_TYPES = {
   SET_FEATURES: 'datasourceSteps/SET_FEATURES',
   IS_ADD_FEATURES: 'datasourceSteps/IS_ADD_FEATURES',
   IS_SAVE_CONNECTION: 'datasourceSteps/IS_SAVE_CONNECTION',
+  IS_CONNECTION_SELECTED: 'datasourceSteps/IS_CONNECTION_SELECTED',
 };
 
 const initialState = {
@@ -20,15 +22,7 @@ const initialState = {
     },
     id: '',
   },
-  connection: {
-    id: '',
-    name: '',
-    details: {},
-    connectionType: '',
-    connectionTypeId: 0,
-    linkId: '',
-    connectionParameters: { cacheEnabled: false, cachePurgeAfterMinutes: 0, refreshAfterTimesRead: 0, refreshAfterMinutes: 0 },
-  },
+  connection: connectionDefaultValue,
   isConnectionSelected: false,
   datasource: { sql: '', name: '', queryPath: '', lastUpdated: new Date(), id: null },
   exploreModelTabId: 1,
@@ -51,6 +45,11 @@ export default (state: DatasourceStepsState = initialState, action): DatasourceS
         ...state,
         connection: action.payload,
         isConnectionSelected: true,
+      };
+    case ACTION_TYPES.IS_CONNECTION_SELECTED:
+      return {
+        ...state,
+        isConnectionSelected: action.payload,
       };
     case ACTION_TYPES.SET_CONNECTION:
       return {
@@ -103,6 +102,14 @@ export const selectConnection = connection => {
     payload: connection,
   };
 };
+
+export const setIsConnectionSelected = isConnectionSelected => {
+  return {
+    type: ACTION_TYPES.IS_CONNECTION_SELECTED,
+    payload: isConnectionSelected,
+  };
+};
+
 export const setConnection = connection => {
   return {
     type: ACTION_TYPES.SET_CONNECTION,

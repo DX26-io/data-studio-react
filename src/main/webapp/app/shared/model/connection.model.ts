@@ -1,6 +1,8 @@
 export interface IConnection {
   id: string;
   name: string;
+  connectionUsername: string;
+  connectionPassword: string;
   details: any;
   connectionType: string;
   connectionTypeId: number;
@@ -8,9 +10,11 @@ export interface IConnection {
   connectionParameters: any;
 }
 
-export const defaultValue: Readonly<IConnection> = {
+export const connectionDefaultValue: Readonly<IConnection> = {
   id: '',
   name: '',
+  connectionUsername: '',
+  connectionPassword: '',
   details: {},
   connectionType: '',
   connectionTypeId: 0,

@@ -45,6 +45,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
     exploreModelTabId,
     isSaveConnectionCalled,
     datasourceUpdateSuccess,
+    createdConnection,
   } = props;
 
   const [searchedText, setSearchedText] = React.useState('');
@@ -130,7 +131,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
 
   const create = () => {
     datasource['queryPath'] = '/api/queries';
-    datasource['connectionName'] = connection.linkId;
+    datasource['connectionName'] = connection.linkId ? connection.linkId : createdConnection.linkId;
     datasource['lastUpdated'] = new Date();
     props.createDatasource(datasource);
   };
@@ -147,7 +148,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
   useEffect(() => {
     if (connectionUpdateSuccess && connectionUpdateError === null) {
       create();
-    }else{
+    } else {
       props.setIsSaveConnectionCalled(false);
     }
   }, [connectionUpdateSuccess]);
@@ -253,6 +254,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   connectionUpdateError: storeState.connections.updateError,
   connectionUpdateSuccess: storeState.connections.updateSuccess,
   datasourceUpdateSuccess: storeState.datasources.updateSuccess,
+  createdConnection: storeState.connections.connection,
 });
 
 const mapDispatchToProps = {

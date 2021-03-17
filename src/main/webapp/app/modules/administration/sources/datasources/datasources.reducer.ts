@@ -5,7 +5,7 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { generateDatasourcesOptions } from '../datasources/steps/datasource-util';
 import { IDatasources, defaultValue } from 'app/shared/model/datasources.model';
-
+import { IConnection } from 'app/shared/model/connection.model';
 export const ACTION_TYPES = {
   FETCH_DATASOURCES_LIST: 'datasources/FETCH_DATASOURCES_LIST',
   FETCH_DATASOURCES: 'datasources/FETCH_DATASOURCES',
@@ -237,7 +237,7 @@ export const listTables = (body: any) => ({
   payload: axios.post('api/datasources/listTables', body),
 });
 
-export const queryToConnection = (connection: any) => ({
+export const queryToConnection = (connection: IConnection) => ({
   type: ACTION_TYPES.TEST_CONNECTION,
   payload: axios.post('api/query/test', connection),
 });

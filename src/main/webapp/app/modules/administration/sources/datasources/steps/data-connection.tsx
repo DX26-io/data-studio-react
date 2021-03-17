@@ -3,16 +3,13 @@ import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, Picker, Item, TextField, Form, ProgressBar, Text } from '@adobe/react-spectrum';
 import { getConnectionsByConnectionTypeId } from '../../connections/connections.reducer';
-import {
-  prepareConnection,
-} from './datasource-util';
+import { prepareConnection } from './datasource-util';
 import ConnectionProperty from './connection-property';
-import { selectConnection, setConnection } from './datasource-steps.reducer';
+import { selectConnection, setConnection, setIsConnectionSelected } from './datasource-steps.reducer';
 import { queryToConnection } from '../datasources.reducer';
-import { Translate,translate } from 'react-jhipster';
+import { Translate, translate } from 'react-jhipster';
 import Checkmark from '@spectrum-icons/workflow/Checkmark';
 import Alert from '@spectrum-icons/workflow/Alert';
-import Close from '@spectrum-icons/workflow/Close';
 
 export interface IDataConnectionProps extends StateProps, DispatchProps {
   connectionType: any;
@@ -44,22 +41,6 @@ export const DataConnection = (props: IDataConnectionProps) => {
     props.getConnectionsByConnectionTypeId(connectionType.id);
   }, []);
 
-  useEffect(() => {
-    if (!connectionId) {
-      const payload = props.connection;
-      if (userName) {
-        payload['connectionUsername'] = userName;
-      }
-      if (password) {
-        payload['connectionPassword'] = password;
-      }
-      if (connectionName) {
-        payload['name'] = connectionName;
-      }
-      props.setConnection(payload);
-    }
-  }, [userName, password, connectionName]);
-
   return (
     <Flex direction="column" gap="size-100" alignItems="center">
       <Form isRequired necessityIndicator="icon" minWidth="size-4600">
@@ -74,22 +55,28 @@ export const DataConnection = (props: IDataConnectionProps) => {
             setConnectionId(selected);
             const result = connections.filter(con => con.id.toString() === selected.toString())[0];
             setFields(result);
-            props.selectConnection(result);
+            props.setConnection(result);
+            if (selected) {
+              props.setIsConnectionSelected(true);
+            } else {
+              props.setIsConnectionSelected(false);
+            }
           }}
         >
           {item => <Item key={item.id}>{item.name}</Item>}
         </Picker>
-        <div style={{textAlign:'center',marginTop:'14px'}}>
+        <div style={{ textAlign: 'center', marginTop: '14px' }}>
           {/* TODO : OR needs to be badge component or something else */}
-          <span
-            className="spectrum-Heading.spectrum-Heading--sizeL.spectrum-Heading--heavy"
-          >
+          <span className="spectrum-Heading.spectrum-Heading--sizeL.spectrum-Heading--heavy">
             <Translate contentKey="datasources.dataConnection.or">OR</Translate>
           </span>
         </div>
         <TextField
           label={translate('datasources.dataConnection.connectionName')}
-          onChange={setConnectionName}
+          onChange={(event) => {
+            props.setConnection({ ...props.connection, name: event });
+            setConnectionName(event);
+          }}
           value={connectionName}
           isDisabled={props.isConnectionSelected}
           isRequired={!props.isConnectionSelected}
@@ -103,7 +90,10 @@ export const DataConnection = (props: IDataConnectionProps) => {
             isDisabled={props.isConnectionSelected}
             isRequired={!props.isConnectionSelected}
             label={translate('datasources.dataConnection.userName')}
-            onChange={setUserName}
+            onChange={(event) => {
+              props.setConnection({ ...props.connection, connectionUsername: event });
+              setUserName(event);
+            }}
             value={userName}
           />
         ) : null}
@@ -113,12 +103,15 @@ export const DataConnection = (props: IDataConnectionProps) => {
             isDisabled={props.isConnectionSelected}
             isRequired={!props.isConnectionSelected}
             label={translate('datasources.dataConnection.password')}
-            onChange={setPassword}
+            onChange={(event) => {
+              props.setConnection({ ...props.connection, connectionPassword: event });
+              setPassword(event);
+            }}
             value={password}
           />
         ) : null}
-        <br/>
-        <Flex direction="row" gap="size-200" alignItems="center" >
+        <br />
+        <Flex direction="row" gap="size-200" alignItems="center">
           <Button variant="cta" isDisabled={connectionName === null} onPress={testConnection}>
             <Translate contentKey="datasources.dataConnection.testConnection">Test Connection</Translate>
           </Button>
@@ -162,7 +155,13 @@ const mapStateToProps = (storeState: IRootState) => ({
   loading: storeState.datasources.loading,
 });
 
-const mapDispatchToProps = { getConnectionsByConnectionTypeId, selectConnection, setConnection, queryToConnection };
+const mapDispatchToProps = {
+  setIsConnectionSelected,
+  getConnectionsByConnectionTypeId,
+  selectConnection,
+  setConnection,
+  queryToConnection,
+};
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

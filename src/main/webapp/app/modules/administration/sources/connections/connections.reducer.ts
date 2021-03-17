@@ -4,7 +4,7 @@ import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util'
 
 import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
 
-import { IConnection, defaultValue } from 'app/shared/model/connection.model';
+import { IConnection, connectionDefaultValue } from 'app/shared/model/connection.model';
 
 import { onFeaturesFetched } from './connections.util';
 
@@ -71,7 +71,7 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
       return {
         ...state,
         loading: false,
-        connections: action.payload.data,
+        connections: [connectionDefaultValue, ...action.payload.data],
       };
     case REQUEST(ACTION_TYPES.FETCH_CONNECTIONS_TYPES):
       return {
@@ -194,12 +194,12 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
 
 const apiUrl = 'api/connection';
 
-export const getConnections = () => ({
+export const getConnections: ICrudGetAllAction<IConnection> = () => ({
   type: ACTION_TYPES.FETCH_CONNECTIONS,
   payload: axios.get(`${apiUrl}`),
 });
 
-export const getConnectionsByConnectionTypeId = (connectionTypeId: number) => ({
+export const getConnectionsByConnectionTypeId: ICrudGetAllAction<IConnection> = (connectionTypeId: number) => ({
   type: ACTION_TYPES.FETCH_CONNECTIONS_BY_ID,
   payload: axios.get(`${apiUrl}?connectionType=${connectionTypeId}`),
 });
@@ -209,12 +209,12 @@ export const getConnectionsTypes = () => ({
   payload: axios.get('api/connection-type'),
 });
 
-export const createConnection = (connection: any) => ({
+export const createConnection: ICrudPutAction<IConnection> = (connection: IConnection) => ({
   type: ACTION_TYPES.CREATE_CONNECTION,
   payload: axios.post(`${apiUrl}`, connection),
 });
 
-export const updateConnection = (connection: any) => ({
+export const updateConnection: ICrudPutAction<IConnection> = (connection: IConnection) => ({
   type: ACTION_TYPES.UPDATE_CONNECTION,
   payload: axios.put(`${apiUrl}`, connection),
 });
