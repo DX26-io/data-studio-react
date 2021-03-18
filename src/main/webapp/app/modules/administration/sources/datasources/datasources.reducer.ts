@@ -4,7 +4,7 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { generateDatasourcesOptions } from '../datasources/steps/datasource-util';
-import { IDatasources, defaultValue } from 'app/shared/model/datasources.model';
+import { IDatasources, defaultDatasourceValue } from 'app/shared/model/datasources.model';
 import { IConnection } from 'app/shared/model/connection.model';
 export const ACTION_TYPES = {
   FETCH_DATASOURCES_LIST: 'datasources/FETCH_DATASOURCES_LIST',
@@ -23,7 +23,7 @@ const initialState = {
   loading: false,
   errorMessage: null,
   datasources: [] as ReadonlyArray<IDatasources>,
-  entity: defaultValue,
+  entity: defaultDatasourceValue,
   updating: false,
   totalItems: 0,
   updateSuccess: false,
@@ -178,7 +178,7 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         ...state,
         loading: false,
         errorMessage: null,
-        entity: defaultValue,
+        entity: defaultDatasourceValue,
         updating: false,
         updateSuccess: false,
         isConnected: false,
@@ -208,12 +208,12 @@ export const getEntity: ICrudGetAction<IDatasources> = id => {
   };
 };
 
-export const createDatasource: ICrudPutAction<IDatasources> = entity => ({
+export const createDatasource: ICrudPutAction<IDatasources> = (entity: IDatasources) => ({
   type: ACTION_TYPES.CREATE_DATASOURCES,
   payload: axios.post(apiUrl, { datasource: entity }),
 });
 
-export const updateEntity: ICrudPutAction<IDatasources> = entity => ({
+export const updateEntity: ICrudPutAction<IDatasources> = (entity: IDatasources) => ({
   type: ACTION_TYPES.UPDATE_CONNECTION,
   payload: axios.put(apiUrl, entity),
 });

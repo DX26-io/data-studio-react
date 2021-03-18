@@ -6,6 +6,8 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 
 import { IConnection, connectionDefaultValue } from 'app/shared/model/connection.model';
 
+import { IConnectionType, defaultConnectionTypeValue } from 'app/shared/model/connection-type.model';
+
 import { onFeaturesFetched } from './connections.util';
 
 export const ACTION_TYPES = {
@@ -23,8 +25,8 @@ export const ACTION_TYPES = {
 const initialState = {
   loading: false,
   errorMessage: null,
-  connections: [] as any[],
-  connectionsTypes: [] as any[],
+  connections: [] as IConnection[],
+  connectionsTypes: [] as IConnectionType[],
   totalItems: 0,
   updateSuccess: false,
   connection: null,
@@ -204,7 +206,7 @@ export const getConnectionsByConnectionTypeId: ICrudGetAllAction<IConnection> = 
   payload: axios.get(`${apiUrl}?connectionType=${connectionTypeId}`),
 });
 
-export const getConnectionsTypes = () => ({
+export const getConnectionsTypes: ICrudGetAllAction<IConnectionType> = () => ({
   type: ACTION_TYPES.FETCH_CONNECTIONS_TYPES,
   payload: axios.get('api/connection-type'),
 });

@@ -1,6 +1,7 @@
 import datasources from '../datasources';
 import { IConnection, connectionDefaultValue } from 'app/shared/model/connection.model';
-
+import { IDatasources, defaultDatasourceValue } from 'app/shared/model/datasources.model';
+import { IConnectionType, defaultConnectionTypeValue } from 'app/shared/model/connection-type.model';
 export const ACTION_TYPES = {
   SELECT_CONNECTION_TYPE: 'datasourceSteps/SELECT_CONNECTION_TYPE',
   SELECT_CONNECTION: 'datasourceSteps/SELECT_CONNECTION',
@@ -15,16 +16,10 @@ export const ACTION_TYPES = {
 };
 
 const initialState = {
-  connectionType: {
-    connectionPropertiesSchema: {
-      connectionProperties: [],
-      config: {},
-    },
-    id: '',
-  },
+  connectionType: defaultConnectionTypeValue,
   connection: connectionDefaultValue,
   isConnectionSelected: false,
-  datasource: { sql: '', name: '', queryPath: '', lastUpdated: new Date(), id: null },
+  datasource: defaultDatasourceValue,
   exploreModelTabId: 1,
   features: [],
   isAddFeaturesCalled: false,
@@ -90,13 +85,13 @@ export default (state: DatasourceStepsState = initialState, action): DatasourceS
   }
 };
 
-export const selectConnectionType = connectionType => {
+export const selectConnectionType = (connectionType: IConnectionType) => {
   return {
     type: ACTION_TYPES.SELECT_CONNECTION_TYPE,
     payload: connectionType,
   };
 };
-export const selectConnection = connection => {
+export const selectConnection = (connection: IConnection) => {
   return {
     type: ACTION_TYPES.SELECT_CONNECTION,
     payload: connection,
@@ -110,7 +105,7 @@ export const setIsConnectionSelected = isConnectionSelected => {
   };
 };
 
-export const setConnection = connection => {
+export const setConnection = (connection: IConnection) => {
   return {
     type: ACTION_TYPES.SET_CONNECTION,
     payload: connection,
@@ -122,7 +117,7 @@ export const resetSteps = () => {
   };
 };
 
-export const setDatasource = datasource => {
+export const setDatasource = (datasource: IDatasources) => {
   return {
     type: ACTION_TYPES.SET_DATASOURCE,
     payload: datasource,
