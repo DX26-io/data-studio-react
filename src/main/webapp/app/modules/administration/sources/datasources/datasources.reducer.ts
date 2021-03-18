@@ -17,6 +17,7 @@ export const ACTION_TYPES = {
   QUERY_EXECUTE: 'datasources/QUERY_EXECUTE',
   LIST_TABLE: 'datasources/LIST_TABLE',
   UPDATE_CONNECTION: 'datasources/UPDATE_CONNECTION',
+  SET_IS_CONNECTED: 'datasources/SET_IS_CONNECTED',
 };
 
 const initialState = {
@@ -183,6 +184,11 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         updateSuccess: false,
         isConnected: false,
       };
+    case ACTION_TYPES.SET_IS_CONNECTED:
+      return {
+        ...state,
+        isConnected: action.payload,
+      };
     default:
       return state;
   }
@@ -237,7 +243,14 @@ export const listTables = (body: any) => ({
   payload: axios.post('api/datasources/listTables', body),
 });
 
-export const queryToConnection = (connection: IConnection) => ({
+export const setIsConnected = (isConnected: boolean) => ({
+  type: ACTION_TYPES.SET_IS_CONNECTED,
+  payload: isConnected,
+});
+
+// TODO : Need to move below services to connection reducer
+
+export const queryToConnection = (connection: any) => ({
   type: ACTION_TYPES.TEST_CONNECTION,
   payload: axios.post('api/query/test', connection),
 });

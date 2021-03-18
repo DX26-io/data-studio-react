@@ -8,13 +8,7 @@ import { translate, Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { View, Flex, Dialog, Heading, Divider, Content, Button, Header, useDialogContainer } from '@adobe/react-spectrum';
-import {
-  getConnectionsTypes,
-  createConnection,
-  updateConnection,
-  deleteConnection,
-  resetConnection,
-} from '../../connections/connections.reducer';
+import { getConnectionsTypes, resetConnection } from '../../connections/connections.reducer';
 import ConnectionsTypes from './connections-types';
 import DataConnection from './data-connection';
 import { getSteps, isNextDisabled, prepareConnection } from './datasource-util';
@@ -56,8 +50,9 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
     datasourceUpdateSuccess,
     datasourceUpdateError,
     createdDatasource,
-    features,
     updatedFeatures,
+    datasource,
+    exploreModelTabId,
   } = props;
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -113,7 +108,7 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
   useEffect(() => {
     props.getConnectionsTypes();
   }, []);
-  
+
   useEffect(() => {
     if (datasourceUpdateSuccess && datasourceUpdateError === null) {
       setIsSaveConnectionCalled(false);
@@ -176,12 +171,12 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
                   {getStepContent(activeStep)}
                 </View>
                 <Flex justifyContent="end" gap="size-100">
-                  <Button variant="secondary" isDisabled={activeStep === 0 || activeStep===4} onPress={handleBack}>
+                  <Button variant="secondary" isDisabled={activeStep === 0 || activeStep === 4} onPress={handleBack}>
                     <Translate contentKey="entity.action.back">Back</Translate>
                   </Button>
                   <Button
                     variant="cta"
-                    isDisabled={isNextDisabled(connection, connectionType, isConnected, activeStep)}
+                    isDisabled={isNextDisabled(connection, connectionType, datasource, isConnected, exploreModelTabId, activeStep)}
                     onPress={handleNext}
                   >
                     {activeStep === 3
@@ -211,6 +206,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   datasourceUpdateError: storeState.datasources.updateError,
   features: storeState.datasourceSteps.features,
   updatedFeatures: storeState.connections.updatedFeatures,
+  datasource: storeState.datasourceSteps.datasource,
+  exploreModelTabId: storeState.datasourceSteps.exploreModelTabId,
 });
 
 const mapDispatchToProps = {

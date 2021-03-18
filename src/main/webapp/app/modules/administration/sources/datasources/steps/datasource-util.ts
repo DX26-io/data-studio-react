@@ -1,4 +1,7 @@
 import { translate } from 'react-jhipster';
+import { IConnection } from 'app/shared/model/connection.model';
+import { IConnectionType } from 'app/shared/model/connection-type.model';
+import { IDatasources } from 'app/shared/model/datasources.model';
 
 export const getSteps = () => {
   return [
@@ -24,10 +27,31 @@ export const prepareConnection = (connection, connectionType) => {
   return con;
 };
 
-export const isNextDisabled = (connection: any, connectionType: any, isConnected: boolean, step: number) => {
-  if (connectionType.id === '' && step === 0) {
+export const isNextDisabled = (
+  connection: IConnection,
+  connectionType: IConnectionType,
+  datasource: IDatasources,
+  isConnected: boolean,
+  exploreModelTabId: number,
+  step: number
+) => {
+  if (connectionType.id === null && step === 0) {
     return true;
-  } else if ((connection.name === '' || !isConnected) && step === 1) {
+  } else if (!isConnected && step === 1) {
+    return true;
+  } else if (!connection.connectionParameters.cacheEnabled && step === 2) {
+    return false;
+  } else if (
+    (Number(connection.connectionParameters.cachePurgeAfterMinutes) === 0 ||
+      Number(connection.connectionParameters.refreshAfterTimesRead) === 0 ||
+      Number(connection.connectionParameters.refreshAfterMinutes) === 0) &&
+    step === 2
+  ) {
+    return true;
+  } else if (
+    ((exploreModelTabId === 1 && !datasource.name) || (exploreModelTabId === 2 && (!datasource.name || !datasource.sql))) &&
+    step === 3
+  ) {
     return true;
   } else {
     return false;

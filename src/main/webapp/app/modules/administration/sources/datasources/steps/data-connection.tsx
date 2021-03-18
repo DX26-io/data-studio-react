@@ -6,7 +6,7 @@ import { getConnectionsByConnectionTypeId } from '../../connections/connections.
 import { prepareConnection } from './datasource-util';
 import ConnectionProperty from './connection-property';
 import { selectConnection, setConnection, setIsConnectionSelected } from './datasource-steps.reducer';
-import { queryToConnection } from '../datasources.reducer';
+import { queryToConnection,setIsConnected } from '../datasources.reducer';
 import { Translate, translate } from 'react-jhipster';
 import Checkmark from '@spectrum-icons/workflow/Checkmark';
 import Alert from '@spectrum-icons/workflow/Alert';
@@ -60,6 +60,7 @@ export const DataConnection = (props: IDataConnectionProps) => {
               props.setIsConnectionSelected(true);
             } else {
               props.setIsConnectionSelected(false);
+              props.setIsConnected(false);
             }
           }}
         >
@@ -161,6 +162,7 @@ const mapDispatchToProps = {
   selectConnection,
   setConnection,
   queryToConnection,
+  setIsConnected,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

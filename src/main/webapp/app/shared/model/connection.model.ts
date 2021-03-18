@@ -1,3 +1,4 @@
+import { cacheDefaultValue, ICache } from './cache.model';
 export interface IConnection {
   id: string;
   name: string;
@@ -7,7 +8,7 @@ export interface IConnection {
   connectionType: string;
   connectionTypeId: number;
   linkId: string;
-  connectionParameters: any;
+  connectionParameters: ICache;
 }
 
 export const connectionDefaultValue: Readonly<IConnection> = {
@@ -19,5 +20,5 @@ export const connectionDefaultValue: Readonly<IConnection> = {
   connectionType: '',
   connectionTypeId: 0,
   linkId: '',
-  connectionParameters: { cacheEnabled: false, cachePurgeAfterMinutes: 0, refreshAfterTimesRead: 0, refreshAfterMinutes: 0 },
+  connectionParameters: cacheDefaultValue,
 };

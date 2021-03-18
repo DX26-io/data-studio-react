@@ -115,6 +115,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
       props.setDatasource(datasource);
     } else {
       setSql('');
+      datasource['name'] = '';
     }
     props.setExploreModelId(tabId);
   };
