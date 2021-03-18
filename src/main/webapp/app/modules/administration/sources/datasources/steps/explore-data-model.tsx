@@ -101,23 +101,24 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
 
   const dispatchQuery = sqlQuery => {
     setSql(sqlQuery);
-    datasource['sql'] = sqlQuery;
-    props.setDatasource(datasource);
+    props.setDatasource({ ...datasource, sql: sqlQuery });
   };
 
   const selectDatasource = selectedOption => {
+    let datasourceSql = '';
+    let datasourceName = '';
     if (selectedOption) {
       if (tabId === 2) {
-        datasource['sql'] = selectedOption.value ? selectedOption.value : sql;
-        setSql(datasource['sql']);
+        datasourceSql = selectedOption.value ? selectedOption.value : sql;
       }
-      datasource['name'] = selectedOption.label;
-      props.setDatasource(datasource);
+      datasourceName = selectedOption.label;
     } else {
-      setSql('');
-      datasource['name'] = '';
+      datasourceSql = '';
+      datasourceName = '';
     }
+    props.setDatasource({ ...datasource, sql: datasourceSql, name: datasourceName });
     props.setExploreModelId(tabId);
+    setSql(datasourceSql);
   };
 
   const selectStyles = {
@@ -131,10 +132,12 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
   };
 
   const create = () => {
-    datasource['queryPath'] = '/api/queries';
-    datasource['connectionName'] = connection.linkId ? connection.linkId : createdConnection.linkId;
-    datasource['lastUpdated'] = new Date();
-    props.createDatasource(datasource);
+    props.createDatasource({
+      ...datasource,
+      queryPath: '/api/queries',
+      connectionName: connection.linkId ? connection.linkId : createdConnection.linkId,
+      lastUpdated: new Date(),
+    });
   };
 
   const saveConnection = () => {
