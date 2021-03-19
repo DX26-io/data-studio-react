@@ -17,6 +17,9 @@
       "exploreDataModel": "Explore & Data Model",
       "dimensionsMeasures": "Dimensions Measures"
     },
+    "connectionsTypes": {
+      "select": "Select"
+    },
     "dataConnection": {
       "selectConnectionPlaceholder": "Select Existing Connection",
       "configDatabaseServer": "Configure database server",

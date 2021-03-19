@@ -1,7 +1,6 @@
 import React from 'react';
 import { TextField, TextArea, Checkbox } from '@adobe/react-spectrum';
 import { connect } from 'react-redux';
-import './img-link-card.scss';
 import { setConnection } from './datasource-steps.reducer';
 
 interface ConnectionPropertyProps extends DispatchProps {
