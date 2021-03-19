@@ -20,7 +20,7 @@ export interface IFilterElementProp extends StateProps, DispatchProps {
 
 const FilterElement = (props: IFilterElementProp) => {
   // const onExchangeMetadata = data => {
-  //   debugger
+  //   
   //   const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
   //   if (data.headers.request === 'filters') {
   //     const obj = metaData.data[0];

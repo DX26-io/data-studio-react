@@ -211,3 +211,8 @@ export const renderVisualization = (visual, metaData, element = 'widget') => {
     }
   }
 };
+
+export const buildQueryDTO = visualMetaData => {
+  const viz = VisualWrap(visualMetaData);
+  return viz.getQueryParameters(visualMetaData, FilterParameterService.get(), FilterParameterService.getConditionExpression([]));
+};
