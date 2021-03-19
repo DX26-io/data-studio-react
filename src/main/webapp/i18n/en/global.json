@@ -104,7 +104,14 @@
       "view": "View",
       "manage": "Manage",
       "create": "Create",
-      "dangerZone": "Danger Zone"
+      "apply": "Apply",
+      "discard": "Discard",
+      "export": "Export",
+      "data": "Data",
+      "more": "More",
+      "share": "Share",
+      "copy": "Copy",
+      "runnow": "Run Now"
     },
     "options": {
       "more_options": "More options",

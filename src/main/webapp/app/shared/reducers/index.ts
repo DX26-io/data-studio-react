@@ -25,6 +25,22 @@ import datasources, {
 import views, {
   ViewsState
 } from 'app/entities/views/views.reducer';
+// prettier-ignore
+import feature, {
+  FeatureState
+} from 'app/entities/feature/feature.reducer';
+// prettier-ignore
+import visualizations, {
+  VisualizationsState
+} from 'app/entities/visualizations/visualizations.reducer';
+// prettier-ignore
+import visualmetadata, {
+  VisualmetadataState
+} from 'app/entities/visualmetadata/visualmetadata.reducer';
+import filter, { FilterState } from 'app/modules/canvas/filter/filter.reducer';
+import scheduler, { SchedulerState } from 'app/modules/canvas/scheduler/scheduler.reducer';
+import notification, { notificationState } from 'app/modules/canvas/scheduler/notification.reducer';
+
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -44,6 +60,9 @@ export interface IRootState {
   readonly views: ViewsState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
+  readonly filter: FilterState;
+  readonly scheduler: SchedulerState;
+  readonly notification: notificationState;
 }
 
 const rootReducer = combineReducers<IRootState>({
@@ -63,6 +82,9 @@ const rootReducer = combineReducers<IRootState>({
   views,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
+  filter,
+  scheduler,
+  notification,
 });
 
 export default rootReducer;
