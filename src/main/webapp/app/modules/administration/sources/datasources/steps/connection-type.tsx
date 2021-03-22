@@ -1,8 +1,8 @@
 import React from 'react';
 import { Flex, View, Link as SpectrumLink, Text, Divider, Button } from '@adobe/react-spectrum';
 import { Translate } from 'react-jhipster';
-import { Link } from 'react-router-dom';
 import { selectConnectionType } from './datasource-steps.reducer';
+import { updateIsSelectedConnectionType } from '../../connections/connections.reducer';
 import { connect } from 'react-redux';
 
 interface IConnectionTypeProps extends DispatchProps {
@@ -11,12 +11,11 @@ interface IConnectionTypeProps extends DispatchProps {
 
 const ConnectionType = (props: IConnectionTypeProps) => {
   const { connectionType } = props;
-  const [isSelected, setIsSelected] = React.useState(false);
   const imgUrl = 'content/images/databases/' + connectionType.name + '.svg';
 
   return (
     <View borderColor="light" borderWidth="thin" margin="size-100" padding="size-100" backgroundColor="gray-50">
-      <Flex alignItems="center" justifyContent="center" gap="size-200">
+      <Flex alignItems="center" justifyContent="center" gap="size-500">
         <img style={{ width: '60px', height: '60px' }} src={imgUrl} />
         <Text>
           <strong>{connectionType.connectionPropertiesSchema.connectionDetailsType}</strong>
@@ -25,10 +24,11 @@ const ConnectionType = (props: IConnectionTypeProps) => {
       <Divider size="M" marginTop="size-100" marginBottom="size-100" />
       <Flex alignItems="end" justifyContent="end">
         <Button
-          variant={isSelected ? 'cta' : 'primary'}
+          variant={connectionType.isSelected ? 'cta' : 'primary'}
           onPress={() => {
-            setIsSelected(!isSelected);
+            connectionType.isSelected = !connectionType.isSelected;
             props.selectConnectionType(connectionType);
+            props.updateIsSelectedConnectionType(connectionType.id);
           }}
         >
           <Translate contentKey="datasources.connectionsTypes.select">Select</Translate>
@@ -38,7 +38,7 @@ const ConnectionType = (props: IConnectionTypeProps) => {
   );
 };
 
-const mapDispatchToProps = { selectConnectionType };
+const mapDispatchToProps = { selectConnectionType, updateIsSelectedConnectionType };
 
 type DispatchProps = typeof mapDispatchToProps;
 

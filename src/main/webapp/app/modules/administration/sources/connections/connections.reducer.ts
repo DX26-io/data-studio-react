@@ -8,12 +8,13 @@ import { IConnection, connectionDefaultValue } from 'app/shared/model/connection
 
 import { IConnectionType, defaultConnectionTypeValue } from 'app/shared/model/connection-type.model';
 
-import { onFeaturesFetched } from './connections.util';
+import { onFeaturesFetched, onConnectionTypeFetched, setIsSelectedConnectionType } from './connections.util';
 
 export const ACTION_TYPES = {
   FETCH_CONNECTIONS: 'connections/FETCH_CONNECTIONS',
   FETCH_CONNECTIONS_BY_ID: 'connections/FETCH_CONNECTIONS_BY_ID',
   FETCH_CONNECTIONS_TYPES: 'connections/FETCH_CONNECTIONS_TYPES',
+  SET_IS_SELECTED_CONNECTION_TYPE: 'connections/SET_IS_SELECTED_CONNECTION_TYPE',
   CREATE_CONNECTION: 'connections/CREATE_CONNECTION',
   UPDATE_CONNECTION: 'connections/UPDATE_CONNECTION',
   DELETE_CONNECTION: 'connections/DELETE_CONNECTION',
@@ -90,7 +91,7 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
       return {
         ...state,
         loading: false,
-        connectionsTypes: action.payload.data,
+        connectionsTypes: onConnectionTypeFetched(action.payload.data),
       };
     case REQUEST(ACTION_TYPES.UPDATE_CONNECTION):
       return {
@@ -184,6 +185,11 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
         updatedFeatures: true,
         updatedFeaturesRequest: false,
       };
+    case ACTION_TYPES.SET_IS_SELECTED_CONNECTION_TYPE:
+      return {
+        ...state,
+        connectionsTypes: setIsSelectedConnectionType(state.connectionsTypes, action.payload),
+      };
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
@@ -228,6 +234,11 @@ export const deleteConnection = (id: string) => ({
 
 export const resetConnection = () => ({
   type: ACTION_TYPES.RESET,
+});
+
+export const updateIsSelectedConnectionType = (id: number) => ({
+  type: ACTION_TYPES.SET_IS_SELECTED_CONNECTION_TYPE,
+  payload: id,
 });
 
 export const getFeatures = (datasourceId: number, body: any) => ({

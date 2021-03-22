@@ -144,6 +144,20 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
           <Button variant="secondary" onPress={handleClose} data-testid="group-form-cancel">
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
+          <Button variant="secondary" isDisabled={activeStep === 0 || activeStep === 4} onPress={handleBack}>
+            <Translate contentKey="entity.action.back">Back</Translate>
+          </Button>
+          <Button
+            variant="cta"
+            isDisabled={isNextDisabled(connection, connectionType, datasource, isConnected, exploreModelTabId, activeStep)}
+            onPress={handleNext}
+          >
+            {activeStep === 3
+              ? translate('datasources.home.create')
+              : activeStep === steps.length - 1
+              ? translate('entity.action.finish')
+              : translate('entity.action.next')}
+          </Button>
         </Flex>
       </Header>
       <Divider />
