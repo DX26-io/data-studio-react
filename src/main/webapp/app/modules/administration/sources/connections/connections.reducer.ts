@@ -243,7 +243,7 @@ export const updateIsSelectedConnectionType = (id: number) => ({
 
 export const getFeatures = (datasourceId: number, body: any) => ({
   type: ACTION_TYPES.FETCH_FEATURES,
-  payload: axios.post(`${apiUrl}/features/${datasourceId}`, body),
+  payload: axios.post(`${apiUrl}/features/${datasourceId}?cacheBuster=${new Date().getTime()}`, body),
 });
 
 // TODO: this needs to be moved in features reducer

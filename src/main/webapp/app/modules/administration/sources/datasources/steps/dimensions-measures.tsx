@@ -10,6 +10,7 @@ import { COMPARABLE_DATA_TYPES } from 'app/config/constants';
 
 interface IDimensionsMeasures extends StateProps, DispatchProps {
   datasourceId: number;
+  features: any
 }
 
 export const DimensionsMeasures = (props: IDimensionsMeasures) => {

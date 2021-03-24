@@ -2,29 +2,29 @@ import React, { useState, useEffect, ReactText } from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
 import {
+  ActionButton,
   DialogContainer,
   View,
-  TextArea,
   Button,
   Flex,
-  Picker,
   Item,
-  TextField,
   Form,
   ProgressBar,
   Content,
-  Text,
+  AlertDialog,
+  DialogTrigger,
 } from '@adobe/react-spectrum';
-import { prepareConnection } from './datasource-util';
-import { setConnection, setDatasource, setExploreModelId, setIsSaveConnectionCalled } from './datasource-steps.reducer';
-import { listTables, createDatasource } from '../datasources.reducer';
+import { prepareConnection } from '../datasource-util';
+import { setConnection, setDatasource, setExploreModelId, setIsSaveConnectionCalled } from '../datasource-steps.reducer';
+import { listTables, createDatasource, resetUpdateError } from '../../datasources.reducer';
 import { Translate, translate } from 'react-jhipster';
 import { Tabs } from '@react-spectrum/tabs';
 import Select from 'react-select';
-import SqlQueryContainer from './sql-query-container/sql-query-container';
+import SqlQueryContainer from '../sql-query-container/sql-query-container';
 import Alert from '@spectrum-icons/workflow/Alert';
 import SampleData from './sample-data';
-import { createConnection, updateConnection, deleteConnection } from '../../connections/connections.reducer';
+import { createConnection, updateConnection, deleteConnection } from '../../../connections/connections.reducer';
+import DuplicateDatasourceDialog from './duplicate-datasource-dialog';
 
 export interface IExploreDataModelProps extends StateProps, DispatchProps {
   connectionType: any;
@@ -46,6 +46,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
     isSaveConnectionCalled,
     datasourceUpdateSuccess,
     createdConnection,
+    datasourceError,
   } = props;
 
   const [searchedText, setSearchedText] = React.useState('');
@@ -116,7 +117,14 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
       datasourceSql = '';
       datasourceName = '';
     }
-    props.setDatasource({ ...datasource, sql: datasourceSql, name: datasourceName });
+    props.setDatasource({
+      ...datasource,
+      sql: datasourceSql ? datasourceSql : null,
+      name: datasourceName,
+      queryPath: '/api/queries',
+      connectionName: connection.linkId ? connection.linkId : createdConnection.linkId,
+      lastUpdated: new Date(),
+    });
     props.setExploreModelId(tabId);
     setSql(datasourceSql);
   };
@@ -132,12 +140,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
   };
 
   const create = () => {
-    props.createDatasource({
-      ...datasource,
-      queryPath: '/api/queries',
-      connectionName: connection.linkId ? connection.linkId : createdConnection.linkId,
-      lastUpdated: new Date(),
-    });
+    props.createDatasource(datasource);
   };
 
   const saveConnection = () => {
@@ -225,14 +228,16 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
                       <SqlQueryContainer dispatchQuery={dispatchQuery} sqlQuery={sql} />
                     </View>
                   )}
-                  {updateError ? (
+
+                  <DialogContainer onDismiss={() => props.resetUpdateError()}>
+                    {updateError === 'SAME_NAME_EXISTS' && <DuplicateDatasourceDialog datasource={datasource} />}
+                  </DialogContainer>
+                  {datasourceError || connectionUpdateError ? (
                     <React.Fragment>
                       <br />
                       <Alert color="notice" />
                       <span className="spectrum-Body-emphasis" style={{ verticalAlign: '6px', marginLeft: '5px' }}>
-                        <Translate contentKey="datasources.exploreDataModel.updateError">
-                          The table from the same data source already exists.
-                        </Translate>
+                        {datasourceError}
                       </span>
                       <br />
                     </React.Fragment>
@@ -259,6 +264,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   connectionUpdateSuccess: storeState.connections.updateSuccess,
   datasourceUpdateSuccess: storeState.datasources.updateSuccess,
   createdConnection: storeState.connections.connection,
+  datasourceError: storeState.datasources.errorMessage,
 });
 
 const mapDispatchToProps = {
@@ -271,6 +277,7 @@ const mapDispatchToProps = {
   updateConnection,
   deleteConnection,
   setIsSaveConnectionCalled,
+  resetUpdateError,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

@@ -50,7 +50,8 @@
       "service": "Service",
       "selectDatasource": "Search Available Data Sources",
       "showData": "Show Data",
-      "updateError": "The table from the same data source already exists",
+      "duplicateDatasourceAlert": "The table name {{datasourceName}} from the same data source exists.Please delete old datasource or edit new one",
+      "duplicateDatasource": "Datasource Error",
       "sampleData": "Sample Data"
     },
     "dimensionsAndMeasures": {

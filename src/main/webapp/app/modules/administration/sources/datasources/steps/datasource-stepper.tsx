@@ -11,11 +11,11 @@ import { View, Flex, Dialog, Heading, Divider, Content, Button, Header, useDialo
 import { getConnectionsTypes, resetConnection } from '../../connections/connections.reducer';
 import ConnectionsTypes from './connections-types';
 import DataConnection from './data-connection';
-import { getSteps, isNextDisabled, prepareConnection } from './datasource-util';
+import { getSteps, isNextDisabled } from './datasource-util';
 import { resetSteps, setIsAddFeaturesCalled, setIsSaveConnectionCalled } from './datasource-steps.reducer';
 import { reset, createDatasource } from '../datasources.reducer';
 import CacheProperty from './cache-property';
-import ExploreDataModel from './explore-data-model';
+import ExploreDataModel from './explore-data-model/explore-data-model';
 import DimensionMeasures from './dimensions-measures';
 
 const useStyles = makeStyles(theme => ({

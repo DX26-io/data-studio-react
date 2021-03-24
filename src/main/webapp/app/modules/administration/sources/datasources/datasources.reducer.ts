@@ -18,6 +18,7 @@ export const ACTION_TYPES = {
   LIST_TABLE: 'datasources/LIST_TABLE',
   UPDATE_CONNECTION: 'datasources/UPDATE_CONNECTION',
   SET_IS_CONNECTED: 'datasources/SET_IS_CONNECTED',
+  RESET_UPDATE_ERROR: 'datasources/RESET_UPDATE_ERROR',
 };
 
 const initialState = {
@@ -88,9 +89,9 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
     case FAILURE(ACTION_TYPES.FETCH_DATASOURCES_LIST):
     case FAILURE(ACTION_TYPES.FETCH_DATASOURCES):
     case FAILURE(ACTION_TYPES.CREATE_DATASOURCES):
-      return { ...state, updateSuccess: false, updateError: action.payload.data };
+      return { ...state, updateSuccess: false, errorMessage: action.payload.data };
     case FAILURE(ACTION_TYPES.UPDATE_DATASOURCES):
-      return { ...state, updateSuccess: false, updateError: action.payload.data };
+      return { ...state, updateSuccess: false, errorMessage: action.payload.data };
     case FAILURE(ACTION_TYPES.DELETE_DATASOURCES):
       return {
         ...state,
@@ -183,11 +184,17 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         updating: false,
         updateSuccess: false,
         isConnected: false,
+        updateError: null,
       };
     case ACTION_TYPES.SET_IS_CONNECTED:
       return {
         ...state,
         isConnected: action.payload,
+      };
+    case ACTION_TYPES.RESET_UPDATE_ERROR:
+      return {
+        ...state,
+        updateError: null,
       };
     default:
       return state;
@@ -219,6 +226,11 @@ export const createDatasource: ICrudPutAction<IDatasources> = (entity: IDatasour
   payload: axios.post(apiUrl, { datasource: entity }),
 });
 
+export const createDatasourceWithAction = (entity: IDatasources, action: string) => ({
+  type: ACTION_TYPES.CREATE_DATASOURCES,
+  payload: axios.post(apiUrl, { datasource: entity, action }),
+});
+
 export const updateEntity: ICrudPutAction<IDatasources> = (entity: IDatasources) => ({
   type: ACTION_TYPES.UPDATE_CONNECTION,
   payload: axios.put(apiUrl, entity),
@@ -236,6 +248,10 @@ export const deleteEntity: ICrudDeleteAction<IDatasources> = id => async dispatc
 
 export const reset = () => ({
   type: ACTION_TYPES.RESET,
+});
+
+export const resetUpdateError = () => ({
+  type: ACTION_TYPES.RESET_UPDATE_ERROR,
 });
 
 export const listTables = (body: any) => ({
