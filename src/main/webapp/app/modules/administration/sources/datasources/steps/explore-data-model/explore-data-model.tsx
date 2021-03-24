@@ -23,7 +23,7 @@ import Select from 'react-select';
 import SqlQueryContainer from '../sql-query-container/sql-query-container';
 import Alert from '@spectrum-icons/workflow/Alert';
 import SampleData from './sample-data';
-import { createConnection, updateConnection, deleteConnection } from '../../../connections/connections.reducer';
+import { createConnection, updateConnection, deleteConnection } from '../../../connections/connection.reducer';
 import DuplicateDatasourceDialog from './duplicate-datasource-dialog';
 
 export interface IExploreDataModelProps extends StateProps, DispatchProps {

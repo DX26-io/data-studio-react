@@ -8,7 +8,7 @@ import { translate, Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { View, Flex, Dialog, Heading, Divider, Content, Button, Header, useDialogContainer } from '@adobe/react-spectrum';
-import { getConnectionsTypes, resetConnection } from '../../connections/connections.reducer';
+import { getConnectionsTypes, resetConnection } from '../../connections/connection.reducer';
 import ConnectionsTypes from './connections-types';
 import DataConnection from './data-connection';
 import { getSteps, isNextDisabled } from './datasource-util';

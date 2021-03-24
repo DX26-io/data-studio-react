@@ -8,7 +8,7 @@ import applicationProfile, { ApplicationProfileState } from './application-profi
 import administration, { AdministrationState } from 'app/modules/administration/administration.reducer';
 import userManagement, { UserManagementState } from 'app/modules/administration/user-management/users/user.reducer';
 import userGroups, { UserGroupsState } from 'app/modules/administration/user-management/groups/user-group.reducer';
-import connections, { ConnectionsState } from 'app/modules/administration/sources/connections/connections.reducer';
+import connections, { ConnectionsState } from 'app/modules/administration/sources/connections/connection.reducer';
 import datasources, { DatasourcesState } from 'app/modules/administration/sources/datasources/datasources.reducer';
 import datasourceSteps, { DatasourceStepsState } from 'app/modules/administration/sources/datasources/steps/datasource-steps.reducer';
 import register, { RegisterState } from 'app/modules/account/register/register.reducer';

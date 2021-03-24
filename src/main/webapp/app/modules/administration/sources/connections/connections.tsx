@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState, translate } from 'react-jhipster';
-import { getConnections } from './connections.reducer';
+import { getConnections } from './connection.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';

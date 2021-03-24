@@ -2,7 +2,7 @@ import React, { useState, useEffect, ReactText } from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, Picker, Item, TextField, Form, ProgressBar, Text } from '@adobe/react-spectrum';
-import { getConnectionsByConnectionTypeId } from '../../connections/connections.reducer';
+import { getConnectionsByConnectionTypeId } from '../../connections/connection.reducer';
 import { prepareConnection } from './datasource-util';
 import ConnectionProperty from './connection-property';
 import { selectConnection, setConnection, setIsConnectionSelected } from './datasource-steps.reducer';
