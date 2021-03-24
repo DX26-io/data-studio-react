@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, TextArea, Checkbox } from '@adobe/react-spectrum';
 import { connect } from 'react-redux';
-import { setConnection } from './datasource-steps.reducer';
+import { setConnection } from '../datasource-steps.reducer';
 
 interface ConnectionPropertyProps extends DispatchProps {
   property: any;

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Flex, View, Link as SpectrumLink, Text, Divider, Button } from '@adobe/react-spectrum';
 import { Translate } from 'react-jhipster';
-import { selectConnectionType } from './datasource-steps.reducer';
-import { updateIsSelectedConnectionType } from '../../connections/connection.reducer';
+import { selectConnectionType } from '../datasource-steps.reducer';
+import { updateIsSelectedConnectionType } from '../../../connections/connection.reducer';
 import { connect } from 'react-redux';
 
 interface IConnectionTypeProps extends DispatchProps {
