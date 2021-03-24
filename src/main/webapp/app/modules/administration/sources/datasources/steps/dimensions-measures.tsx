@@ -10,7 +10,6 @@ import { COMPARABLE_DATA_TYPES } from 'app/config/constants';
 
 interface IDimensionsMeasures extends StateProps, DispatchProps {
   datasourceId: number;
-  features: any
 }
 
 export const DimensionsMeasures = (props: IDimensionsMeasures) => {
@@ -42,9 +41,8 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
 
   return (
     <div className="dx26-container">
-      {updatedFeaturesRequest ? <ProgressBar label="Creating…" isIndeterminate /> : null}
-      {loading ? (
-        <ProgressBar label="Loading…" isIndeterminate />
+      {loading || updatedFeaturesRequest ? (
+        <ProgressBar label={features.length > 0 ? 'Creating…' : 'Loading…'} isIndeterminate />
       ) : (
         <Paper className="dx26-table-pager">
           <TableContainer>
