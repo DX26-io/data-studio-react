@@ -20,13 +20,17 @@ import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
+const noSessionPathNames = ['/realm', '/signin', '/signup'];
 
 export interface IAppProps extends StateProps, DispatchProps {}
 
 // TODO: Test Cases
 export const App = (props: IAppProps) => {
   useEffect(() => {
-    props.getSession();
+    const pathname = window.location.pathname;
+    if (!noSessionPathNames.includes(pathname)) {
+      props.getSession();
+    }
     props.getProfile();
   }, []);
 
@@ -64,6 +68,7 @@ export const App = (props: IAppProps) => {
     </Router>
   ) : (
     <Router basename={baseHref}>
+      <ToastContainer position={toast.POSITION.BOTTOM_CENTER} className="toastify-container" toastClassName="toastify-toast" />
       <ErrorBoundary>
         <AppRoutes />
       </ErrorBoundary>
