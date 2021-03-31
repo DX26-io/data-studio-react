@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState, translate } from 'react-jhipster';
 import { getConnections } from './connection.reducer';
 import { IRootState } from 'app/shared/reducers';
@@ -8,19 +8,22 @@ import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
+import ConnectionUpdate from './connection-update';
+import { IConnection, connectionDefaultValue } from 'app/shared/model/connection.model';
 
 export interface IConnectionsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export const Connections = (props: IConnectionsProps) => {
   const [isOpen, setOpen] = React.useState(false);
-  const [isNew, setNew] = React.useState(false);
-  const [groupName, setGroupName] = React.useState('');
+  const [connection, setConnection] = React.useState<IConnection>(connectionDefaultValue);
 
   useEffect(() => {
     props.getConnections();
   }, []);
 
-  const setUpdateSuccess = () => {};
+  const setUpdateSuccess = () => {
+    props.getConnections();
+  };
 
   const { connections } = props;
 
@@ -38,25 +41,18 @@ export const Connections = (props: IConnectionsProps) => {
           variant="cta"
           onPress={() => {
             setOpen(true);
-            setNew(true);
-            setGroupName('');
+            props.history.push('/administration/sources/datasources');
           }}
-          data-testid="create-group"
+          data-testid="create-datasource"
         >
-          <Translate contentKey="datasources.home.create">Create Datasource</Translate>
+          <Translate contentKey="datasources.home.create" >Create Datasource</Translate>
         </Button>
       </SecondaryHeader>
-      {/* <DialogContainer onDismiss={() => setOpen(false)}>
+      <DialogContainer onDismiss={() => setOpen(false)}>
         {isOpen && (
-          <UserGroupUpdate
-            setUpdateSuccess={setUpdateSuccess}
-            isNew={isNew}
-            setOpen={setOpen}
-            groupName={groupName}
-            {...props}
-          ></UserGroupUpdate>
+          <ConnectionUpdate setUpdateSuccess={setUpdateSuccess} setOpen={setOpen} connection={connection} {...props}></ConnectionUpdate>
         )}
-      </DialogContainer> */}
+      </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
           <TableContainer>
@@ -78,20 +74,19 @@ export const Connections = (props: IConnectionsProps) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {connections.map((connection, i) => (
-                  <TableRow key={`connection-${i}`}>
+                {connections.map((conn, i) => (
+                  <TableRow key={`conn-${i}`}>
                     <TableCell component="th" scope="row" align="center">
-                      {connection.id}
+                      {conn.id}
                     </TableCell>
-                    <TableCell align="center">{connection.name}</TableCell>
-                    <TableCell align="center">{connection.details['@type']}</TableCell>
+                    <TableCell align="center">{conn.name}</TableCell>
+                    <TableCell align="center">{conn.details['@type']}</TableCell>
                     <TableCell align="center">
                       <Flex gap="size-100" justifyContent="center">
                         <a
                           onClick={() => {
                             setOpen(true);
-                            setNew(false);
-                            setGroupName(connection.name);
+                            setConnection(conn);
                           }}
                         >
                           <Edit size="S" />

@@ -21,20 +21,22 @@ export const ACTION_TYPES = {
   FETCH_FEATURES: 'connections/FETCH_FEATURES',
   CREATE_FEATURES: 'connections/CREATE_FEATURES',
   RESET: 'connections/RESET',
+  SET_CONNECTION: 'connections/SET_CONNECTION',
 };
 
 const initialState = {
   loading: false,
   errorMessage: null,
   connections: [] as IConnection[],
+  connection: connectionDefaultValue,
   connectionsTypes: [] as IConnectionType[],
   totalItems: 0,
   updateSuccess: false,
-  connection: null,
   features: [],
   updateError: null,
   updatedFeatures: false,
   updatedFeaturesRequest: false,
+  updating: false,
 };
 
 export type ConnectionsState = Readonly<typeof initialState>;
@@ -98,12 +100,14 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
         ...state,
         updateError: null,
         updateSuccess: false,
+        updating: true,
       };
     case FAILURE(ACTION_TYPES.UPDATE_CONNECTION):
       return {
         ...state,
         updateSuccess: false,
         updateError: action.payload.data,
+        updating: false,
       };
     case SUCCESS(ACTION_TYPES.UPDATE_CONNECTION):
       return {
@@ -111,18 +115,21 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
         updateSuccess: true,
         connection: action.payload.data,
         updateError: null,
+        updating: false,
       };
     case REQUEST(ACTION_TYPES.CREATE_CONNECTION):
       return {
         ...state,
         updateError: null,
         updateSuccess: false,
+        updating: true,
       };
     case FAILURE(ACTION_TYPES.CREATE_CONNECTION):
       return {
         ...state,
         updateSuccess: false,
         updateError: action.payload.data,
+        updating: false,
       };
     case SUCCESS(ACTION_TYPES.CREATE_CONNECTION):
       return {
@@ -130,6 +137,7 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
         updateSuccess: true,
         updateError: null,
         connection: action.payload.data,
+        updating: false,
       };
     case REQUEST(ACTION_TYPES.DELETE_CONNECTION):
       return {
@@ -192,7 +200,17 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
       };
     case ACTION_TYPES.RESET:
       return {
-        ...initialState,
+        ...state,
+        loading: false,
+        errorMessage: null,
+        connection: connectionDefaultValue,
+        updateSuccess: false,
+        updating: false,
+      };
+    case ACTION_TYPES.SET_CONNECTION:
+      return {
+        ...state,
+        connection: action.payload,
       };
 
     default:
@@ -245,6 +263,13 @@ export const getFeatures = (datasourceId: number, body: any) => ({
   type: ACTION_TYPES.FETCH_FEATURES,
   payload: axios.post(`${apiUrl}/features/${datasourceId}?cacheBuster=${new Date().getTime()}`, body),
 });
+
+export const setConnection = (connection: IConnection) => {
+  return {
+    type: ACTION_TYPES.SET_CONNECTION,
+    payload: connection,
+  };
+};
 
 // TODO: this needs to be moved in features reducer
 

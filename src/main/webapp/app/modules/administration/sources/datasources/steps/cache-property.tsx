@@ -13,7 +13,11 @@ interface CachePropertyProps extends DispatchProps {
 const CacheProperty = (props: CachePropertyProps) => {
   const { connection } = props;
 
-  const [cacheEnabled, setEnableCache] = React.useState(Boolean(connection.connectionParameters.cacheEnabled));
+  const [cacheEnabled, setEnableCache] = React.useState(
+    connection.connectionParameters.cacheEnabled && typeof connection.connectionParameters.cacheEnabled === 'string'
+      ? JSON.parse(connection.connectionParameters.cacheEnabled)
+      : false
+  );
   const [cachePurgeAfterMinutes, setCachePurgeAfterMinutes] = React.useState(connection.connectionParameters.cachePurgeAfterMinutes);
   const [refreshAfterTimesRead, setRefreshAfterTimesRead] = React.useState(connection.connectionParameters.refreshAfterTimesRead);
   const [refreshAfterMinutes, setRefreshAfterMinutes] = React.useState(connection.connectionParameters.refreshAfterMinutes);
@@ -21,18 +25,17 @@ const CacheProperty = (props: CachePropertyProps) => {
   useEffect(() => {
     const payload = connection;
     payload.connectionParameters['cacheEnabled'] = cacheEnabled;
-    if(cacheEnabled){
-        payload.connectionParameters['cachePurgeAfterMinutes'] = cachePurgeAfterMinutes;
-        payload.connectionParameters['refreshAfterMinutes'] = refreshAfterMinutes;
-        payload.connectionParameters['refreshAfterTimesRead'] = refreshAfterTimesRead;
-    }else{
-        payload.connectionParameters['cachePurgeAfterMinutes'] = 0;
-        payload.connectionParameters['refreshAfterMinutes'] = 0;
-        payload.connectionParameters['refreshAfterTimesRead'] = 0;
-        setRefreshAfterMinutes(0);
-        setCachePurgeAfterMinutes(0);
-        setRefreshAfterMinutes(0);
-        setRefreshAfterTimesRead(0);
+    if (cacheEnabled) {
+      payload.connectionParameters['cachePurgeAfterMinutes'] = cachePurgeAfterMinutes;
+      payload.connectionParameters['refreshAfterMinutes'] = refreshAfterMinutes;
+      payload.connectionParameters['refreshAfterTimesRead'] = refreshAfterTimesRead;
+    } else {
+      payload.connectionParameters['cachePurgeAfterMinutes'] = 0;
+      payload.connectionParameters['refreshAfterMinutes'] = 0;
+      payload.connectionParameters['refreshAfterTimesRead'] = 0;
+      setRefreshAfterMinutes(0);
+      setCachePurgeAfterMinutes(0);
+      setRefreshAfterTimesRead(0);
     }
     props.setConnection(payload);
   }, [cacheEnabled, cachePurgeAfterMinutes, refreshAfterMinutes, refreshAfterTimesRead]);

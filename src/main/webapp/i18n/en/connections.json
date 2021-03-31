@@ -2,10 +2,15 @@
   "connections": {
     "home": {
       "title": "Connections",
-      "description": "Manage your datasource connections"
+      "description": "Manage your datasource connections",
+      "updateLabel": "Update Connection"
     },
     "id": "ID",
     "name": "Name",
-    "type": "Type"
+    "type": "Type",
+    "error": {
+      "cache": "all fields of cache config are mandatory",
+      "name": "Connection name is required"
+    }
   }
 }
