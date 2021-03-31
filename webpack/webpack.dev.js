@@ -45,7 +45,7 @@ module.exports = options =>
       contentBase: './build/resources/main/static/',
       proxy: [
         {
-          context: ['/api', '/services', '/management', '/swagger-resources', '/v2/api-docs', '/h2-console', '/auth','/flair-ws'],
+          context: ['/login', '/api', '/services', '/management', '/swagger-resources', '/v2/api-docs', '/h2-console', '/auth','/flair-ws'],
           target: `http${options.tls ? 's' : ''}://localhost:8002`,
           bypass: function(req, res, proxyOptions) {
             console.log("req.url=="+req.url);
