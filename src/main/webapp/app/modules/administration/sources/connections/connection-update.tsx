@@ -64,8 +64,7 @@ export const ConnectionUpdate = (props: IConnectionUpdateProps) => {
   };
 
   const raiseError = (conn: IConnection) => {
-    const errorObj = isFormValid(conn);
-    setError(errorObj);
+    setError(isFormValid(conn));
   };
 
   return (
@@ -120,6 +119,7 @@ export const ConnectionUpdate = (props: IConnectionUpdateProps) => {
             onChange={event => {
               connection.connectionParameters.cacheEnabled = event;
               setEnableCache(connection.connectionParameters.cacheEnabled);
+              raiseError(connection);
             }}
             isSelected={Boolean(cacheEnabled)}
             isEmphasized

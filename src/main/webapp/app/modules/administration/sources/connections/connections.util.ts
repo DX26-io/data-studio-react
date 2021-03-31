@@ -41,8 +41,11 @@ export const isFormValid = (connection: IConnection): IError => {
   if (
     connection.connectionParameters.cacheEnabled &&
     (Number(connection.connectionParameters.cachePurgeAfterMinutes) === 0 ||
+      connection.connectionParameters.cachePurgeAfterMinutes === undefined ||
       Number(connection.connectionParameters.refreshAfterTimesRead) === 0 ||
-      Number(connection.connectionParameters.refreshAfterMinutes) === 0)
+      connection.connectionParameters.refreshAfterTimesRead === undefined ||
+      Number(connection.connectionParameters.refreshAfterMinutes) === 0 ||
+      connection.connectionParameters.refreshAfterMinutes === undefined)
   ) {
     error = { translationKey: 'connections.error.cache', isValid: false };
   } else if (connection.name === '') {

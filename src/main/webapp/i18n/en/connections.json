@@ -9,7 +9,7 @@
     "name": "Name",
     "type": "Type",
     "error": {
-      "cache": "all fields of cache config are mandatory",
+      "cache": "please fill all the fields of cache",
       "name": "Connection name is required"
     }
   }
