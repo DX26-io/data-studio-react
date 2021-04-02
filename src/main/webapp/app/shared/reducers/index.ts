@@ -8,6 +8,7 @@ import applicationProfile, { ApplicationProfileState } from './application-profi
 import administration, { AdministrationState } from 'app/modules/administration/administration.reducer';
 import userManagement, { UserManagementState } from 'app/modules/administration/user-management/users/user.reducer';
 import userGroups, { UserGroupsState } from 'app/modules/administration/user-management/groups/user-group.reducer';
+import permissions, { PermissionsState } from 'app/modules/administration/user-management/permission/permissions.reducer';
 import connections, { ConnectionsState } from 'app/modules/administration/sources/connections/connection.reducer';
 import datasources, { DatasourcesState } from 'app/modules/administration/sources/datasources/datasources.reducer';
 import datasourceSteps, { DatasourceStepsState } from 'app/modules/administration/sources/datasources/steps/datasource-steps.reducer';
@@ -34,6 +35,7 @@ export interface IRootState {
   readonly administration: AdministrationState;
   readonly userManagement: UserManagementState;
   readonly userGroups: UserGroupsState;
+  readonly permissions: PermissionsState;
   readonly connections: ConnectionsState;
   readonly register: RegisterState;
   readonly activate: ActivateState;
@@ -55,6 +57,7 @@ const rootReducer = combineReducers<IRootState>({
   administration,
   userManagement,
   userGroups,
+  permissions,
   connections,
   datasourceSteps,
   register,

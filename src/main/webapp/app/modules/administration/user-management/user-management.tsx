@@ -23,20 +23,20 @@ const UserManagement = (props: RouteComponentProps) => {
     {
       icon: <UserGroup size="L" />,
       link: `${match.url}/groups`,
-      title: 'userManagement.userGroup.title',
-      description: 'userManagement.userGroup.description',
+      title: 'userGroups.home.title',
+      description: 'userGroups.home.description',
     },
     {
       icon: <UserLock size="L" />,
-      link: `${match.url}/dashboard-permission`,
-      title: 'userManagement.dashboardPermission.title',
-      description: 'userManagement.dashboardPermission.description',
+      link: `${match.url}/dashboard-permissions`,
+      title: 'permissions.dashboardPermissions.title',
+      description: 'permissions.dashboardPermissions.description',
     },
     {
       icon: <DataSettings size="L" />,
-      link: `${match.url}/datasource-permission`,
-      title: 'userManagement.datasourcePermission.title',
-      description: 'userManagement.datasourcePermission.description',
+      link: `${match.url}/datasource-permissions`,
+      title: 'permissions.datasourcePermissions.title',
+      description: 'permissions.datasourcePermissions.description',
     },
   ];
   return (
