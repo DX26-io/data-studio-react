@@ -33,6 +33,10 @@ export const Home = (props: IHomeProp) => {
             <ViewGrid />
             <Text>User Management</Text>
           </ActionButton>
+          <ActionButton onPress={() => history.push('/administration/sources')} marginY="size-100">
+            <ViewGrid />
+            <Text>Sources</Text>
+          </ActionButton>
         </Flex>
       </View>
     </>

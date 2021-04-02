@@ -3,14 +3,14 @@ import { Flex, View, Link as SpectrumLink } from '@adobe/react-spectrum';
 import { Translate } from 'react-jhipster';
 import { Link } from 'react-router-dom';
 
-interface IAdminCardProps {
+interface ILinkCardProps {
   icon: React.ReactElement;
   link: string;
   title: string;
   description?: string;
 }
 
-const LinkCard: React.FC<IAdminCardProps> = ({ icon, link, title, description }) => {
+const LinkCard: React.FC<ILinkCardProps> = ({ icon, link, title, description }) => {
   return (
     <View width="size-2400">
       <SpectrumLink variant="secondary">
