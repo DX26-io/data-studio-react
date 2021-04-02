@@ -1,5 +1,5 @@
 import React from 'react';
-import  { Connections,IConnectionsProps } from 'app/modules/administration/sources/connections/connections';
+import { Connections, IConnectionsProps } from 'app/modules/administration/sources/connections/connections';
 import userEvent from '@testing-library/user-event';
 import { DialogContainer, defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
 import { render } from '@testing-library/react';
@@ -26,20 +26,15 @@ describe('Connections', () => {
     match: {} as any,
     connections: [
       {
-        id: 1,
-        name: 'Postgres-connection',
+        id: '1',
+        name: 'test',
         connectionUsername: 'test',
         connectionPassword: 'test',
-        connectionTypeId: 1,
-        linkId: '1715917d-fff8-44a1-af02-ee2cd41a3609',
-        realmId: 0,
-        details: {
-          databaseName: 'services',
-          type: 'Postgres',
-          serverIp: 'flair-pgsql',
-          serverPort: '5432',
-        },
-        connectionParameters: { cacheEnabled: 'false', cachePurgeAfterMinutes: '0', refreshAfterMinutes: '0', refreshAfterTimesRead: '0' },
+        details: {},
+        connectionType: 'test',
+        connectionTypeId: 0,
+        linkId: 'xyz',
+        connectionParameters: { cacheEnabled: false, cachePurgeAfterMinutes: 0, refreshAfterTimesRead: 0, refreshAfterMinutes: 0 },
       },
     ],
     getConnections: jest.fn(),
