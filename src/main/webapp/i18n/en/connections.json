@@ -1,0 +1,16 @@
+{
+  "connections": {
+    "home": {
+      "title": "Connections",
+      "description": "Manage your datasource connections",
+      "updateLabel": "Update Connection"
+    },
+    "id": "ID",
+    "name": "Name",
+    "type": "Type",
+    "error": {
+      "cache": "please fill all the fields of cache",
+      "name": "Connection name is required"
+    }
+  }
+}
