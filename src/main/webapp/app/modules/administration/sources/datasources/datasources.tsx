@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { getEntities } from './datasources.reducer';
+import { getDatasources } from './datasources.reducer';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 
 import { Translate, getSortState, translate } from 'react-jhipster';
@@ -25,7 +25,7 @@ export const Datasources = (props: IDatasourcesProps) => {
   );
 
   const getAllEntities = () => {
-    props.getEntities(pagination.activePage - 1, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
+    props.getDatasources(pagination.activePage - 1, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
   };
 
   const sortEntities = () => {
@@ -172,7 +172,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-  getEntities,
+  getDatasources,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Connections, IConnectionsProps } from 'app/modules/administration/sources/connections/connections';
+import Connections, { IConnectionsProps } from 'app/modules/administration/sources/connections/connections';
 import userEvent from '@testing-library/user-event';
 import { DialogContainer, defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
 import { render } from '@testing-library/react';
