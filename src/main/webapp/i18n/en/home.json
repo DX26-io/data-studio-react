@@ -8,11 +8,37 @@
     "header": {
       "search": "Search dashboards and views"
     },
-    "tabs": {
-      "top": {
-        "quickStart": "Quick Start",
-        "admin": "Admin",
-        "quickView": "Quick View"
+    "top": {
+      "tabs": {
+        "quickStart": {
+          "title": "Quick Start",
+          "newDashboard": "New Dashboard",
+          "newDatasource": "New Datasource",
+          "viewDashboards": "View Dashboards",
+          "reportManagement": "Report Management",
+          "bookmarks": "Bookmarks"
+        },
+        "admin": "Admin"
+      }
+    },
+    "bottom": {
+      "tabs": {
+        "accessed": {
+          "title": "Accessed",
+          "tabs": {
+            "recentlyAccessedBookmarks": "Recently accessed Bookmarks",
+            "recentlyAccessedViews": "Recently accessed Views",
+            "overallMostPopularViews": "Overall most popular Views",
+            "overallMostPopularBookmarks": "Overall most popular Bookmarks"
+          }
+        },
+        "created": {
+          "title": "Created",
+          "tabs": {
+            "recentlyCreatedBookmarks": "Recently created Bookmarks",
+            "recentlyCreatedViews": "Recently created Views"
+          }
+        }
       }
     }
   }
