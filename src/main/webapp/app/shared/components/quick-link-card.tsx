@@ -11,7 +11,7 @@ interface IQuickLinkCardProps {
 
 const QuickLinkCard: React.FC<IQuickLinkCardProps> = ({ link, title, icon }) => {
   return (
-    <View width="size-2400" minWidth="size-3000"  borderColor="light" borderWidth="thin"  paddingX="size-175" paddingY="size-500" backgroundColor="gray-75"  >
+    <View width="size-2400" minWidth="18vw"  borderColor="light" borderWidth="thin"  paddingX="size-175" paddingY="size-500" backgroundColor="gray-75"  >
       <SpectrumLink isQuiet>
         <Link to={link}>
           <Flex alignItems="center" justifyContent="space-between">

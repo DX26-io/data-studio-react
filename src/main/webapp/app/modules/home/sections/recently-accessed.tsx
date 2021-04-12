@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Item, Content, View, Flex, ProgressBar } from '@adobe/react-spectrum';
 import { Tabs } from '@react-spectrum/tabs';
 import { translate } from 'react-jhipster';
-import { getMostPopularViews, getRecentBookmarks, getRecentViews } from './recent.reducer';
+import { getMostPopularViews, getRecentlyAccessedBookmarks, getRecentViews } from './recent.reducer';
 import ViewCardContent from 'app/entities/views/view-card/view-card-content';
 import ViewCardThumbnail from 'app/entities/views/view-card/view-card-thumbnail';
 import Card from 'app/shared/components/card/card';
@@ -23,7 +23,8 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
   const recentlyAccessed = {
     '1': {
       getData() {
-        props.getRecentBookmarks(0, 5, 'watchTime,desc');
+        // TODO
+        // props.getRecentlyAccessedBookmarks(0, 5, 'watchTime,desc');
       },
     },
     '2': {
@@ -38,12 +39,13 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
     },
     '4': {
       getData() {
-        props.getRecentBookmarks(0, 5, 'watchCount,desc');
+        // TODO
+        // props.getRecentlyAccessedBookmarks(0, 5, 'watchCount,desc');
       },
     },
   };
 
-  const recentViewsList = props.recentViews.map(recent => {
+  const recentlyAccessedViewsListElement = props.recentlyAccessedViews.map(recent => {
     return (
       <Card
         key={recent.view.id}
@@ -64,7 +66,7 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
     );
   });
 
-  const popularViewsList = props.popularViews.map(view => {
+  const popularViewsListElement = props.popularViews.map(view => {
     return (
       <Card
         key={view.id}
@@ -85,7 +87,7 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
   }, [tabId]);
 
   return (
-    <Tabs aria-label="top-tabs" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
+    <Tabs aria-label="recent-tabs" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
       {item => (
         <Item title={translate(item.name)}>
           <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
@@ -94,8 +96,9 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
             ) : (
               <View>
                 <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
-                  {tabId === 2 && props.recentViews.length > 0 ? recentViewsList : null}
-                  {tabId === 3 && props.popularViews.length > 0 ? popularViewsList : null}
+                  {tabId === 2 && props.recentlyAccessedViews.length > 0 ? recentlyAccessedViewsListElement : null}
+                  {tabId === 3 && props.popularViews.length > 0 ? popularViewsListElement : null}
+                  {/* TODO : recent bookmark will be implemented when build page is completely done*/}
                 </Flex>
               </View>
             )}
@@ -107,12 +110,12 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
 };
 
 const mapStateToProps = storeState => ({
-  recentViews: storeState.recent.recentViews,
+  recentlyAccessedViews: storeState.recent.recentlyAccessedViews,
   popularViews: storeState.recent.popularViews,
   loading: storeState.recent.loading,
 });
 
-const mapDispatchToProps = { getMostPopularViews, getRecentBookmarks, getRecentViews };
+const mapDispatchToProps = { getMostPopularViews, getRecentlyAccessedBookmarks, getRecentViews };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

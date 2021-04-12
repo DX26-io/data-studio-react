@@ -49,7 +49,7 @@ const Admin: React.FC = () => {
     },
   ];
   return (
-    <Flex direction="row" gap="size-225" justifyContent="start" alignItems="start" wrap>
+    <Flex direction="row" gap="size-175" justifyContent="start" alignItems="start" wrap>
       {adminList.map(card => (
         <LinkCard
           key={card.link}
