@@ -7,19 +7,19 @@ import ViewGrid from '@spectrum-icons/workflow/ViewGrid';
 
 import { useHistory } from 'react-router-dom';
 import User from '@spectrum-icons/workflow/User';
-import { setIsHome } from 'app/modules/home/home.reducer';
+import { setIsHome,updateSearchedText } from 'app/modules/home/home.reducer';
 import { Tabs } from '@react-spectrum/tabs';
 import { translate } from 'react-jhipster';
 import { RouteComponentProps } from 'react-router-dom';
 import QuickStart from './sections/quick-start';
 import Admin from './sections/admin';
-import RecentlyAccessed from "./sections/recently-accessed";
-import RecentlyCreated from "./sections/recently-created";
+import RecentlyAccessed from './sections/recently-accessed';
+import RecentlyCreated from './sections/recently-created';
+import SearchResult from './sections/search-results';
 
 export interface IHomeProp extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export const Home = (props: IHomeProp) => {
-  const history = useHistory();
   const { account } = props;
   const [topTabId, setTopTabId] = useState<ReactText>();
   const [bottomTabId, setBottomTabId] = useState<ReactText>();
@@ -28,6 +28,7 @@ export const Home = (props: IHomeProp) => {
     props.setIsHome(true);
     return () => {
       props.setIsHome(false);
+      props.updateSearchedText('');
     };
   }, []);
 
@@ -43,41 +44,48 @@ export const Home = (props: IHomeProp) => {
 
   return (
     <View padding={'size-150'}>
-      <Tabs aria-label="top-tabs" items={topTabs} selectedKey={topTabId} onSelectionChange={setTopTabId}>
-        {item => (
-          <Item title={translate(item.name)}>
-            <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-              {topTabId === 1 ? (
-                <View>
-                  <QuickStart />
-                </View>
-              ) : (
-                <View>
-                  <Admin />
-                </View>
-              )}
-            </Content>
-          </Item>
-        )}
-      </Tabs>
-      <br/>
-      <Tabs aria-label="bottom-tabs" items={bottomTabs} selectedKey={bottomTabId} onSelectionChange={setBottomTabId}>
-        {item => (
-          <Item title={translate(item.name)}>
-            <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-              {bottomTabId === 1 ? (
-                <View>
-                  <RecentlyAccessed />
-                </View>
-              ) : (
-                <View>
-                  <RecentlyCreated />
-                </View>
-              )}
-            </Content>
-          </Item>
-        )}
-      </Tabs>
+      {props.searchedText ? (
+        <SearchResult match={props.match} />
+      ) : (
+        <React.Fragment>
+          {' '}
+          <Tabs aria-label="top-tabs" items={topTabs} selectedKey={topTabId} onSelectionChange={setTopTabId}>
+            {item => (
+              <Item title={translate(item.name)}>
+                <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+                  {topTabId === 1 ? (
+                    <View>
+                      <QuickStart />
+                    </View>
+                  ) : (
+                    <View>
+                      <Admin />
+                    </View>
+                  )}
+                </Content>
+              </Item>
+            )}
+          </Tabs>
+          <br />
+          <Tabs aria-label="bottom-tabs" items={bottomTabs} selectedKey={bottomTabId} onSelectionChange={setBottomTabId}>
+            {item => (
+              <Item title={translate(item.name)}>
+                <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+                  {bottomTabId === 1 ? (
+                    <View>
+                      <RecentlyAccessed />
+                    </View>
+                  ) : (
+                    <View>
+                      <RecentlyCreated />
+                    </View>
+                  )}
+                </Content>
+              </Item>
+            )}
+          </Tabs>
+        </React.Fragment>
+      )}
     </View>
   );
 };
@@ -85,9 +93,10 @@ export const Home = (props: IHomeProp) => {
 const mapStateToProps = storeState => ({
   account: storeState.authentication.account,
   isAuthenticated: storeState.authentication.isAuthenticated,
+  searchedText: storeState.home.searchedText,
 });
 
-const mapDispatchToProps = { setIsHome };
+const mapDispatchToProps = { setIsHome,updateSearchedText };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

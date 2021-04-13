@@ -9,27 +9,27 @@ const QuickStart: React.FC = () => {
     {
       link: `/dashboards/create`,
       title: 'home.top.tabs.quickStart.newDashboard',
-      icon: <AddCircle size="M" color="informative" />,
+      icon: <AddCircle size="M" />,
     },
     {
       link: `/administration/sources/datasources`,
       title: 'home.top.tabs.quickStart.newDatasource',
-      icon: <AddCircle size="M" color="informative" />,
+      icon: <AddCircle size="M" />,
     },
     {
       link: `/dashboards`,
       title: 'home.top.tabs.quickStart.viewDashboards',
-      icon: <Visibility size="M" color="informative" />,
+      icon: <Visibility size="M" />,
     },
     {
       link: `/reports`,
       title: 'home.top.tabs.quickStart.reportManagement',
-      icon: <Visibility size="M" color="informative" />,
+      icon: <Visibility size="M" />,
     },
     {
       link: `/`,
       title: 'home.top.tabs.quickStart.bookmarks',
-      icon: <Visibility size="M" color="informative" />,
+      icon: <Visibility size="M" />,
     },
   ];
 

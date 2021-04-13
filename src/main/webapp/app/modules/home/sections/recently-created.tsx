@@ -31,7 +31,7 @@ import { connect } from 'react-redux';
 import { Item, Content, View, Flex, ProgressBar } from '@adobe/react-spectrum';
 import { Tabs } from '@react-spectrum/tabs';
 import { translate } from 'react-jhipster';
-import { getRecentlyCreatedViews,getRecentlyCreatedBookmarks } from './recent.reducer';
+import { getRecentlyCreatedViews, getRecentlyCreatedBookmarks } from './recent.reducer';
 import ViewCardContent from 'app/entities/views/view-card/view-card-content';
 import ViewCardThumbnail from 'app/entities/views/view-card/view-card-thumbnail';
 import Card from 'app/shared/components/card/card';
@@ -42,20 +42,20 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
   const [tabId, setTabId] = useState<ReactText>('1');
 
   const tabs = [
-    { id: 1, name: 'home.bottom.tabs.created.tabs.recentlyCreatedBookmarks' },
-    { id: 2, name: 'home.bottom.tabs.created.tabs.recentlyCreatedViews' },
+    { id: 1, name: 'home.bottom.tabs.created.tabs.recentlyCreatedViews' },
+    { id: 2, name: 'home.bottom.tabs.created.tabs.recentlyCreatedBookmarks' },
   ];
 
   const recentlyCreated = {
     '1': {
       getData() {
-        // TODO
-        // props.getRecentlyCreatedBookmarks(0, 5, 'watchCreatedTime,desc');
+        props.getRecentlyCreatedViews();
       },
     },
     '2': {
       getData() {
-        props.getRecentlyCreatedViews();
+        // TODO
+        // props.getRecentlyCreatedBookmarks(0, 5, 'watchCreatedTime,desc');
       },
     },
   };
@@ -90,7 +90,7 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
             ) : (
               <View>
                 <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
-                  {tabId === 2 && props.recentlyCreatedViews.length > 0 ? recentlyCreatedViewsListElement : null}
+                  {tabId === 1 && props.recentlyCreatedViews.length > 0 ? recentlyCreatedViewsListElement : null}
                   {/* TODO : recent bookmark will be implemented when build page is completely done*/}
                 </Flex>
               </View>
@@ -107,7 +107,7 @@ const mapStateToProps = storeState => ({
   loading: storeState.recent.loading,
 });
 
-const mapDispatchToProps = { getRecentlyCreatedViews,getRecentlyCreatedBookmarks };
+const mapDispatchToProps = { getRecentlyCreatedViews, getRecentlyCreatedBookmarks };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

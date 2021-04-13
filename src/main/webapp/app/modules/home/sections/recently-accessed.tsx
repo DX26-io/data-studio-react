@@ -14,27 +14,27 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
   const [tabId, setTabId] = useState<ReactText>('2');
 
   const tabs = [
-    { id: 1, name: 'home.bottom.tabs.accessed.tabs.recentlyAccessedBookmarks' },
-    { id: 2, name: 'home.bottom.tabs.accessed.tabs.recentlyAccessedViews' },
-    { id: 3, name: 'home.bottom.tabs.accessed.tabs.overallMostPopularViews' },
+    { id: 1, name: 'home.bottom.tabs.accessed.tabs.recentlyAccessedViews' },
+    { id: 2, name: 'home.bottom.tabs.accessed.tabs.overallMostPopularViews' },
+    { id: 3, name: 'home.bottom.tabs.accessed.tabs.recentlyAccessedBookmarks' },
     { id: 4, name: 'home.bottom.tabs.accessed.tabs.overallMostPopularBookmarks' },
   ];
 
   const recentlyAccessed = {
     '1': {
       getData() {
-        // TODO
-        // props.getRecentlyAccessedBookmarks(0, 5, 'watchTime,desc');
+        props.getRecentViews(0, 5, 'watchTime,desc');
       },
     },
     '2': {
       getData() {
-        props.getRecentViews(0, 5, 'watchTime,desc');
+        props.getMostPopularViews();
       },
     },
     '3': {
       getData() {
-        props.getMostPopularViews();
+        // TODO
+        // props.getRecentlyAccessedBookmarks(0, 5, 'watchTime,desc');
       },
     },
     '4': {
@@ -96,8 +96,8 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
             ) : (
               <View>
                 <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
-                  {tabId === 2 && props.recentlyAccessedViews.length > 0 ? recentlyAccessedViewsListElement : null}
-                  {tabId === 3 && props.popularViews.length > 0 ? popularViewsListElement : null}
+                  {tabId === 1 && props.recentlyAccessedViews.length > 0 ? recentlyAccessedViewsListElement : null}
+                  {tabId === 2 && props.popularViews.length > 0 ? popularViewsListElement : null}
                   {/* TODO : recent bookmark will be implemented when build page is completely done*/}
                 </Flex>
               </View>

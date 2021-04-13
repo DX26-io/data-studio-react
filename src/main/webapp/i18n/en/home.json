@@ -40,6 +40,9 @@
           }
         }
       }
+    },
+    "search": {
+      "title": "Search Results"
     }
   }
 }

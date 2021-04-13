@@ -148,3 +148,10 @@ export const deleteEntity: ICrudDeleteAction<IDashboard> = id => async dispatch 
 export const reset = () => ({
   type: ACTION_TYPES.RESET,
 });
+
+export const getDashboardsByName = (dashboardName: string) => {
+  return {
+    type: ACTION_TYPES.FETCH_DASHBOARD_LIST,
+    payload: axios.get<IDashboard>(`${apiUrl}?dashboardName=${dashboardName}`),
+  };
+};
