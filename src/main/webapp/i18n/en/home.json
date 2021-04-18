@@ -5,15 +5,44 @@
     "logged": {
       "message": "You are logged in as user \"{{username}}\"."
     },
-    "question": "If you have any question on JHipster:",
-    "link": {
-      "homepage": "JHipster homepage",
-      "stackoverflow": "JHipster on Stack Overflow",
-      "bugtracker": "JHipster bug tracker",
-      "chat": "JHipster public chat room",
-      "follow": "follow @jhipster on Twitter"
+    "header": {
+      "search": "Search dashboards and views"
     },
-    "like": "If you like JHipster, don't forget to give us a star on",
-    "github": "GitHub"
+    "top": {
+      "tabs": {
+        "quickStart": {
+          "title": "Quick Start",
+          "newDashboard": "New Dashboard",
+          "newDatasource": "New Datasource",
+          "viewDashboards": "View Dashboards",
+          "reportManagement": "Report Management",
+          "bookmarks": "Bookmarks"
+        },
+        "admin": "Admin"
+      }
+    },
+    "bottom": {
+      "tabs": {
+        "accessed": {
+          "title": "Accessed",
+          "tabs": {
+            "recentlyAccessedBookmarks": "Recently accessed Bookmarks",
+            "recentlyAccessedViews": "Recently accessed Views",
+            "overallMostPopularViews": "Overall most popular Views",
+            "overallMostPopularBookmarks": "Overall most popular Bookmarks"
+          }
+        },
+        "created": {
+          "title": "Created",
+          "tabs": {
+            "recentlyCreatedBookmarks": "Recently created Bookmarks",
+            "recentlyCreatedViews": "Recently created Views"
+          }
+        }
+      }
+    },
+    "search": {
+      "title": "Search Results"
+    }
   }
 }

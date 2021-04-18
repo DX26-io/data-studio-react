@@ -17,6 +17,8 @@ import activate, { ActivateState } from 'app/modules/account/activate/activate.r
 import password, { PasswordState } from 'app/modules/account/password/password.reducer';
 import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
+import home, { HomeState } from 'app/modules/home/home.reducer';
+import recent, { RecentState } from 'app/modules/home/sections/recent.reducer';
 
 // prettier-ignore
 import dashboard, {
@@ -46,6 +48,8 @@ export interface IRootState {
   readonly datasources: DatasourcesState;
   readonly datasourceSteps: DatasourceStepsState;
   readonly views: ViewsState;
+  readonly home: HomeState;
+  readonly recent: RecentState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -68,8 +72,10 @@ const rootReducer = combineReducers<IRootState>({
   dashboard,
   datasources,
   views,
+  home,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
+  recent,
 });
 
 export default rootReducer;

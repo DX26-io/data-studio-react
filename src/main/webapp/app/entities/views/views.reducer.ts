@@ -176,3 +176,10 @@ export const setBlob = (name, data, contentType?) => ({
 export const reset = () => ({
   type: ACTION_TYPES.RESET,
 });
+
+export const getViewsByName = (viewName: string) => {
+  return {
+    type: ACTION_TYPES.FETCH_VIEWS_LIST,
+    payload: axios.get<IViews>(`${apiUrl}?viewName=${viewName}`),
+  };
+};

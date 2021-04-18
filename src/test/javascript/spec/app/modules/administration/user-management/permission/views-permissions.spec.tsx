@@ -231,8 +231,6 @@ describe('View Permissions dialog', () => {
     expect(receivedProps.getUserViewsPermissions.mock.calls.length).toEqual(1);
   });
 
-  //checkbox
-
   it('on save permissions', () => {
     const tree = wrapper(null);
     const checkboxElement = tree.getByTestId('checkbox-WRITE');

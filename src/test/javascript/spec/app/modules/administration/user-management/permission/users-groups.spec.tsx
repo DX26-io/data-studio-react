@@ -102,6 +102,6 @@ describe('Users Groups', () => {
     expect(receivedProps.searchUsers.mock.calls.length).toEqual(2);
   });
 
-  //TODO : need to find a way to test on change tab and list items
+  // TODO : need to find a way to test on change tab and list items
 
 });

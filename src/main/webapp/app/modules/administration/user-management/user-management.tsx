@@ -50,7 +50,15 @@ const UserManagement = (props: RouteComponentProps) => {
       />
       <Flex direction="row" gap="size-700" justifyContent="center" height="100%" marginTop="10%">
         {userManagementList.map(card => (
-          <LinkCard key={card.link} icon={card.icon} link={card.link} title={card.title} description={card.description} />
+          <LinkCard
+            key={card.link}
+            icon={card.icon}
+            link={card.link}
+            title={card.title}
+            description={card.description}
+            paddingXStyle="size-700"
+            paddingYStyle="size-1000"
+          />
         ))}
       </Flex>
     </>
