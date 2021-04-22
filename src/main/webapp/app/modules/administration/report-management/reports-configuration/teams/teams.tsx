@@ -38,10 +38,10 @@ export const Teams = (props: ITeamsProps) => {
         breadcrumbItems={[
           { label: translate('home.title'), route: '/' },
           { label: translate('reports.home.title'), route: '/administration/report-management' },
-          { label: translate('reports.reportConfiguration.title'), route: '/administration/report-management/report-configuration' },
+          { label: translate('reports.reportConfiguration.title'), route: '/administration/report-management/reports-configuration' },
           {
             label: translate('reports.reportConfiguration.teams.title'),
-            route: '/administration/report-management/report-configuration/teams',
+            route: '/administration/report-management/reports-configuration/teams',
           },
         ]}
         title={translate('reports.reportConfiguration.teams.title')}
