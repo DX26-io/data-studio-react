@@ -5,8 +5,7 @@ import { IRootState } from 'app/shared/reducers';
 import { Flex, Text, SearchField, DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import Edit from '@spectrum-icons/workflow/Edit';
-import { makeStyles } from '@material-ui/core/styles';
-import { ITEMS_PER_PAGE, ACTIVE_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/pagination.constants';
+import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/pagination.constants';
 import { Translate, getSortState } from 'react-jhipster';
 import { StatusLight } from '@adobe/react-spectrum';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
@@ -128,7 +127,8 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
                   <TableCell align="center">{dashboard.info.dashboardName}</TableCell>
                   {dashboard.info.permissionMetadata.slice(0, 4).map((p, j) => (
                     <TableCell align="center" key={`permission-${p.permission.key.action}`}>
-                      {/* Todo : allow,deny and partial need to be decided during save of view permission. api change is required and one more field will be added in json */}
+                      {/* Todo : allow,deny and partial need to be decided during save of view permission. api change is required and one more field will be added in json 
+                      once sergei done with the api,hasIt will be replaced with status*/}
                       {p.hasIt ? (
                         <StatusLight variant="positive">
                           <Translate contentKey="permissions.dashboardPermissions.allow">allow</Translate>
@@ -143,6 +143,7 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
                   <TableCell>
                     <Flex gap="size-100" justifyContent="center">
                       <a
+                        data-testid = {`update-views-permissions-${dashboard.info.id}`}
                         onClick={() => {
                           setOpen(true);
                           setId(dashboard.info.id);

@@ -23,6 +23,9 @@ describe('Login Form', () => {
 
   const defaultProps = {
     handleLogin: jest.fn(),
+    handleProviderLogin: jest.fn(),
+    handleSignup: jest.fn(),
+    realms: [],
     loginError: false,
   };
 

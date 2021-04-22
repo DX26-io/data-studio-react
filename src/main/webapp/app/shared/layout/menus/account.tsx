@@ -22,7 +22,7 @@ const accountMenuItemsAuthenticated = (
 
 const accountMenuItems = (
   <>
-    <MenuItem id="login-item" icon="sign-in-alt" to="/login">
+    <MenuItem id="login-item" icon="sign-in-alt" to="/signin">
       <Translate contentKey="global.menu.account.login">Sign in</Translate>
     </MenuItem>
     <MenuItem icon="sign-in-alt" to="/account/register">

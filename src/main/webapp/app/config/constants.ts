@@ -1,5 +1,6 @@
 const config = {
   VERSION: process.env.VERSION,
+  CLOUD: false,
 };
 
 export default config;
@@ -14,6 +15,8 @@ export const AUTHORITIES = {
 export const messages = {
   DATA_ERROR_ALERT: 'Internal Error',
 };
+
+export const COMPARABLE_DATA_TYPES = ['timestamp', 'date', 'datetime'];
 
 export const APP_DATE_FORMAT = 'DD/MM/YY HH:mm';
 export const APP_TIMESTAMP_FORMAT = 'DD/MM/YY HH:mm:ss';

@@ -16,7 +16,7 @@ export default class SignInPage extends BasePage {
   }
 
   async get() {
-    await browser.get('/login');
+    await browser.get('/signin');
     await this.waitUntilDisplayed();
   }
 

@@ -13,6 +13,7 @@ import { getSession } from 'app/shared/reducers/authentication';
 import { getProfile } from 'app/shared/reducers/application-profile';
 import { setLocale } from 'app/shared/reducers/locale';
 import Header from 'app/shared/layout/header/header';
+import HomeHeader from 'app/modules/home/home-header';
 import Footer from 'app/shared/layout/footer/footer';
 import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import ErrorBoundary from 'app/shared/error/error-boundary';
@@ -20,13 +21,17 @@ import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
+const noSessionPathNames = ['/realm', '/signin', '/signup'];
 
 export interface IAppProps extends StateProps, DispatchProps {}
 
 // TODO: Test Cases
 export const App = (props: IAppProps) => {
   useEffect(() => {
-    props.getSession();
+    const pathname = window.location.pathname;
+    if (!noSessionPathNames.includes(pathname)) {
+      props.getSession();
+    }
     props.getProfile();
   }, []);
 
@@ -41,15 +46,27 @@ export const App = (props: IAppProps) => {
       >
         <View gridArea="header">
           <ErrorBoundary>
-            <Header
-              isAuthenticated={props.isAuthenticated}
-              isAdmin={props.isAdmin}
-              currentLocale={props.currentLocale}
-              onLocaleChange={props.setLocale}
-              ribbonEnv={props.ribbonEnv}
-              isInProduction={props.isInProduction}
-              isSwaggerEnabled={props.isSwaggerEnabled}
-            />
+            {props.isHome ? (
+              <HomeHeader
+                isAuthenticated={props.isAuthenticated}
+                isAdmin={props.isAdmin}
+                currentLocale={props.currentLocale}
+                onLocaleChange={props.setLocale}
+                ribbonEnv={props.ribbonEnv}
+                isInProduction={props.isInProduction}
+                isSwaggerEnabled={props.isSwaggerEnabled}
+              />
+            ) : (
+              <Header
+                isAuthenticated={props.isAuthenticated}
+                isAdmin={props.isAdmin}
+                currentLocale={props.currentLocale}
+                onLocaleChange={props.setLocale}
+                ribbonEnv={props.ribbonEnv}
+                isInProduction={props.isInProduction}
+                isSwaggerEnabled={props.isSwaggerEnabled}
+              />
+            )}
           </ErrorBoundary>
         </View>
         <View gridArea="content" flex={true} alignSelf={'stretch'} backgroundColor="default">
@@ -64,6 +81,7 @@ export const App = (props: IAppProps) => {
     </Router>
   ) : (
     <Router basename={baseHref}>
+      <ToastContainer position={toast.POSITION.BOTTOM_CENTER} className="toastify-container" toastClassName="toastify-toast" />
       <ErrorBoundary>
         <AppRoutes />
       </ErrorBoundary>
@@ -71,13 +89,14 @@ export const App = (props: IAppProps) => {
   );
 };
 
-const mapStateToProps = ({ authentication, applicationProfile, locale }: IRootState) => ({
+const mapStateToProps = ({ authentication, applicationProfile, locale, home }: IRootState) => ({
   currentLocale: locale.currentLocale,
   isAuthenticated: authentication.isAuthenticated,
   isAdmin: hasAnyAuthority(authentication.account.userGroups, [AUTHORITIES.ADMIN]),
   ribbonEnv: applicationProfile.ribbonEnv,
   isInProduction: applicationProfile.inProduction,
   isSwaggerEnabled: applicationProfile.isSwaggerEnabled,
+  isHome: home.isHome,
 });
 
 const mapDispatchToProps = { setLocale, getSession, getProfile };

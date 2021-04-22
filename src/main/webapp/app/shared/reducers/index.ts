@@ -9,19 +9,21 @@ import administration, { AdministrationState } from 'app/modules/administration/
 import userManagement, { UserManagementState } from 'app/modules/administration/user-management/users/user.reducer';
 import userGroups, { UserGroupsState } from 'app/modules/administration/user-management/groups/user-group.reducer';
 import permissions, { PermissionsState } from 'app/modules/administration/user-management/permission/permissions.reducer';
+import connections, { ConnectionsState } from 'app/modules/administration/sources/connections/connection.reducer';
+import datasources, { DatasourcesState } from 'app/modules/administration/sources/datasources/datasources.reducer';
+import datasourceSteps, { DatasourceStepsState } from 'app/modules/administration/sources/datasources/steps/datasource-steps.reducer';
 import register, { RegisterState } from 'app/modules/account/register/register.reducer';
 import activate, { ActivateState } from 'app/modules/account/activate/activate.reducer';
 import password, { PasswordState } from 'app/modules/account/password/password.reducer';
 import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
+import home, { HomeState } from 'app/modules/home/home.reducer';
+import recent, { RecentState } from 'app/modules/home/sections/recent.reducer';
+
 // prettier-ignore
 import dashboard, {
   DashboardState
 } from 'app/entities/dashboard/dashboard.reducer';
-// prettier-ignore
-import datasources, {
-  DatasourcesState
-} from 'app/entities/datasources/datasources.reducer';
 // prettier-ignore
 import views, {
   ViewsState
@@ -36,6 +38,7 @@ export interface IRootState {
   readonly userManagement: UserManagementState;
   readonly userGroups: UserGroupsState;
   readonly permissions: PermissionsState;
+  readonly connections: ConnectionsState;
   readonly register: RegisterState;
   readonly activate: ActivateState;
   readonly passwordReset: PasswordResetState;
@@ -43,7 +46,10 @@ export interface IRootState {
   readonly settings: SettingsState;
   readonly dashboard: DashboardState;
   readonly datasources: DatasourcesState;
+  readonly datasourceSteps: DatasourceStepsState;
   readonly views: ViewsState;
+  readonly home: HomeState;
+  readonly recent: RecentState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -56,6 +62,8 @@ const rootReducer = combineReducers<IRootState>({
   userManagement,
   userGroups,
   permissions,
+  connections,
+  datasourceSteps,
   register,
   activate,
   passwordReset,
@@ -64,8 +72,10 @@ const rootReducer = combineReducers<IRootState>({
   dashboard,
   datasources,
   views,
+  home,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
+  recent,
 });
 
 export default rootReducer;
