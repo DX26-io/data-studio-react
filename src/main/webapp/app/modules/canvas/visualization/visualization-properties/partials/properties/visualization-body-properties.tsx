@@ -6,7 +6,7 @@ import { Form, Heading, Item, Picker, TextField, View } from '@adobe/react-spect
 import { Slider } from '@react-spectrum/slider';
 import { BodyProperties } from 'app/shared/model/visualMetadata.model';
 
-export interface IVisualizationBodyPropertiesProps extends StateProps, DispatchProps {
+export interface IVisualizationBodyPropertiesProps {
   bodyProperties: BodyProperties;
 }
 
@@ -58,11 +58,4 @@ const VisualizationBodyProperties = (props: IVisualizationBodyPropertiesProps) =
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({});
-
-const mapDispatchToProps = {};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(VisualizationBodyProperties);
+export default (VisualizationBodyProperties);

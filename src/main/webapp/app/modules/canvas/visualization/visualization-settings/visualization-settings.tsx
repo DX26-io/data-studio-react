@@ -13,7 +13,7 @@ import { IViews } from 'app/shared/model/views.model';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IDatasources } from 'app/shared/model/datasources.model';
 
-export interface IVisualizationSettingsProps extends StateProps, DispatchProps {
+export interface IVisualizationSettingsProps {
   visualizationId: ReactNode;
   visual: IVisualMetadataSet;
   view: IViews;
@@ -40,7 +40,7 @@ const VisualizationSettings = (props: IVisualizationSettingsProps) => {
                   visualMetaData={props.visual}
                 />
               )}
-              {activeTabId === 'thresholdAlert' && <VisualizationThresholdAlertSetting visual={props.visual}/>}
+              {activeTabId === 'thresholdAlert' && <VisualizationThresholdAlertSetting visual={props.visual} />}
               {activeTabId === 'data' && <VisualizationDataSetting data={props.data} />}
             </Content>
           </Item>
@@ -50,11 +50,4 @@ const VisualizationSettings = (props: IVisualizationSettingsProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({});
-
-const mapDispatchToProps = {};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(VisualizationSettings);
+export default VisualizationSettings;

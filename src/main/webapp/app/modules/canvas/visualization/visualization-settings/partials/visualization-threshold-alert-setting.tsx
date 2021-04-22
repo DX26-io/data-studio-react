@@ -4,7 +4,7 @@ import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import Scheduler from 'app/modules/canvas/scheduler/scheduler';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
-export interface IVisualizationThresholdAlertSettingProps extends StateProps, DispatchProps {
+export interface IVisualizationThresholdAlertSettingProps  {
   visual: IVisualMetadataSet;
 }
 
@@ -18,11 +18,4 @@ const VisualizationThresholdAlertSetting = (props: IVisualizationThresholdAlertS
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({});
-
-const mapDispatchToProps = {};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(VisualizationThresholdAlertSetting);
+export default (VisualizationThresholdAlertSetting);

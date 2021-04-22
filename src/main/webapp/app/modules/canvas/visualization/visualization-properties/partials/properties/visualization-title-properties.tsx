@@ -5,7 +5,7 @@ import { Form, Heading, Item, Picker, TextField, View, Well } from '@adobe/react
 import { getBorderList } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 import { TitleProperties } from 'app/shared/model/visualMetadata.model';
 
-export interface IVisualizationTitlePropertiesProps extends StateProps, DispatchProps {
+export interface IVisualizationTitlePropertiesProps {
   titleProperties: TitleProperties;
 }
 
@@ -64,11 +64,4 @@ const VisualizationTitleProperties = (props: IVisualizationTitlePropertiesProps)
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({});
-
-const mapDispatchToProps = {};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(VisualizationTitleProperties);
+export default (VisualizationTitleProperties);

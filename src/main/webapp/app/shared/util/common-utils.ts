@@ -11,7 +11,7 @@ export const getFirstLettersFromString = (stringText: string): string => {
 };
 
 export const parseBool = str => {
-  if (str.length === null) {
+  if (!str && str.length === 0) {
     return str === 1 ? true : false;
   } else {
     if (typeof str === 'boolean') {

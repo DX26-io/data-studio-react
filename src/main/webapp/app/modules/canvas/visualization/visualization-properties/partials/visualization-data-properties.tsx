@@ -27,7 +27,7 @@ import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata
 import LockClosed from '@spectrum-icons/workflow/LockClosed';
 import Delete from '@spectrum-icons/workflow/Delete';
 
-export interface IVisualizationDataPropertiesProps extends StateProps, DispatchProps {
+export interface IVisualizationDataPropertiesProps {
   features: readonly IFeature[];
   visual: IVisualMetadataSet;
 }
@@ -66,8 +66,6 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
     }
     setSelectedField(field);
   };
-
-  useEffect(() => {}, [props.visual]);
 
   const addFieldMeasure = () => {
     const fieldType = visualWrap.nextFieldMeasure(props.visual.fields, props.visual.metadataVisual);
@@ -229,11 +227,4 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({});
-
-const mapDispatchToProps = {};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(VisualizationDataProperties);
+export default (VisualizationDataProperties);

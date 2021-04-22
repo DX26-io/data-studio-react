@@ -8,7 +8,7 @@ import VisualizationTitleProperties from 'app/modules/canvas/visualization/visua
 import VisualizationChartConfigProperties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/visualization-chart-config-properties';
 import VisualizationBodyProperties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/visualization-body-properties';
 
-export interface IVisualizationChartPropertiesProps extends StateProps, DispatchProps {
+export interface IVisualizationChartPropertiesProps  {
   features:readonly IFeature[];
   visual: IVisualMetadataSet;
 }
@@ -26,11 +26,4 @@ const VisualizationChartProperties = (props: IVisualizationChartPropertiesProps)
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({});
-
-const mapDispatchToProps = {};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(VisualizationChartProperties);
+export default (VisualizationChartProperties);

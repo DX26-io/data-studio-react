@@ -6,7 +6,7 @@ import VisualizationDataConstraints from 'app/modules/canvas/data-constraints/vi
 import { IFeature } from 'app/shared/model/feature.model';
 import { IDatasources } from 'app/shared/model/datasources.model';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
-export interface IVisualizationDataConstraintsSettingProps extends StateProps, DispatchProps {
+export interface IVisualizationDataConstraintsSettingProps {
   features: readonly IFeature[];
   datasource: IDatasources;
   visualMetaData: IVisualMetadataSet;
@@ -29,11 +29,4 @@ const VisualizationDataConstraintsSetting = (props: IVisualizationDataConstraint
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({});
-
-const mapDispatchToProps = {};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(VisualizationDataConstraintsSetting);
+export default VisualizationDataConstraintsSetting;

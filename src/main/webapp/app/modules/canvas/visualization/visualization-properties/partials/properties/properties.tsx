@@ -7,7 +7,7 @@ import { IVisualMetadataSet, Property } from 'app/shared/model/visualMetadata.mo
 import { Checkbox, Switch, Item, Picker, TextField } from '@adobe/react-spectrum';
 import { parseBool, parseString } from 'app/shared/util/common-utils.ts';
 
-export interface IPropertiesProps extends StateProps, DispatchProps {
+export interface IPropertiesProps {
   features: readonly IFeature[];
   visual: IVisualMetadataSet;
   propstype: string;
@@ -38,7 +38,7 @@ const Properties = (props: IPropertiesProps) => {
     <>
       {props.property.type === 'NUMBER' && (
         <TextField
-          type="NUMBER"
+          type="number"
           onChange={text => {
             handleValueChange(text);
           }}
@@ -91,11 +91,4 @@ const Properties = (props: IPropertiesProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({});
-
-const mapDispatchToProps = {};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(Properties);
+export default Properties

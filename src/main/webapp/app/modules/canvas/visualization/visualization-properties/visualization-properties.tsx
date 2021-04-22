@@ -11,7 +11,7 @@ import { IViews } from 'app/shared/model/views.model';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
 import { Tabs } from '@react-spectrum/tabs';
 
-export interface IVisualizationPropertiesProps extends StateProps, DispatchProps {
+export interface IVisualizationPropertiesProps  {
   features: readonly IFeature[];
   visual: IVisualMetadataSet;
 }
@@ -46,11 +46,4 @@ const VisualizationProperties = (props: IVisualizationPropertiesProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({});
-
-const mapDispatchToProps = {};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(VisualizationProperties);
+export default (VisualizationProperties);

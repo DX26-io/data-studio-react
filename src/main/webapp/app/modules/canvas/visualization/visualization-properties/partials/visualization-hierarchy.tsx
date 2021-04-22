@@ -3,7 +3,7 @@ import { View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 
-export interface IVisualizationHierarchyProps extends StateProps, DispatchProps {}
+export interface IVisualizationHierarchyProps {}
 
 const VisualizationHierarchy = (props: IVisualizationHierarchyProps) => {
   return (
@@ -13,11 +13,4 @@ const VisualizationHierarchy = (props: IVisualizationHierarchyProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({});
-
-const mapDispatchToProps = {};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(VisualizationHierarchy);
+export default (VisualizationHierarchy);

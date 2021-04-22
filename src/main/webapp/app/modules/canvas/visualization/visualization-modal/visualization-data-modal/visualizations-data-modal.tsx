@@ -6,7 +6,7 @@ import { Translate } from 'react-jhipster';
 import TableView from 'app/shared/components/table/table';
 import { CSVLink } from 'react-csv';
 
-export interface IVisualizationDataModalProps extends StateProps, DispatchProps {
+export interface IVisualizationDataModalProps {
   visual: any;
 }
 
@@ -50,11 +50,4 @@ export const VisualizationDataModal = (props: IVisualizationDataModalProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({});
-
-const mapDispatchToProps = {};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(VisualizationDataModal);
+export default (VisualizationDataModal);
