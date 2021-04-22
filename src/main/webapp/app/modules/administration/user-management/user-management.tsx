@@ -23,20 +23,20 @@ const UserManagement = (props: RouteComponentProps) => {
     {
       icon: <UserGroup size="L" />,
       link: `${match.url}/groups`,
-      title: 'userManagement.userGroup.title',
-      description: 'userManagement.userGroup.description',
+      title: 'userGroups.home.title',
+      description: 'userGroups.home.description',
     },
     {
       icon: <UserLock size="L" />,
-      link: `${match.url}/dashboard-permission`,
-      title: 'userManagement.dashboardPermission.title',
-      description: 'userManagement.dashboardPermission.description',
+      link: `${match.url}/dashboard-permissions`,
+      title: 'permissions.dashboardPermissions.title',
+      description: 'permissions.dashboardPermissions.description',
     },
     {
       icon: <DataSettings size="L" />,
-      link: `${match.url}/datasource-permission`,
-      title: 'userManagement.datasourcePermission.title',
-      description: 'userManagement.datasourcePermission.description',
+      link: `${match.url}/datasource-permissions`,
+      title: 'permissions.datasourcePermissions.title',
+      description: 'permissions.datasourcePermissions.description',
     },
   ];
   return (
@@ -50,7 +50,15 @@ const UserManagement = (props: RouteComponentProps) => {
       />
       <Flex direction="row" gap="size-700" justifyContent="center" height="100%" marginTop="10%">
         {userManagementList.map(card => (
-          <LinkCard key={card.link} icon={card.icon} link={card.link} title={card.title} description={card.description} />
+          <LinkCard
+            key={card.link}
+            icon={card.icon}
+            link={card.link}
+            title={card.title}
+            description={card.description}
+            paddingXStyle="size-700"
+            paddingYStyle="size-1000"
+          />
         ))}
       </Flex>
     </>

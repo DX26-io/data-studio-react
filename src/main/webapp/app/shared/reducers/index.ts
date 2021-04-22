@@ -8,19 +8,22 @@ import applicationProfile, { ApplicationProfileState } from './application-profi
 import administration, { AdministrationState } from 'app/modules/administration/administration.reducer';
 import userManagement, { UserManagementState } from 'app/modules/administration/user-management/users/user.reducer';
 import userGroups, { UserGroupsState } from 'app/modules/administration/user-management/groups/user-group.reducer';
+import permissions, { PermissionsState } from 'app/modules/administration/user-management/permission/permissions.reducer';
+import connections, { ConnectionsState } from 'app/modules/administration/sources/connections/connection.reducer';
+import datasources, { DatasourcesState } from 'app/modules/administration/sources/datasources/datasources.reducer';
+import datasourceSteps, { DatasourceStepsState } from 'app/modules/administration/sources/datasources/steps/datasource-steps.reducer';
 import register, { RegisterState } from 'app/modules/account/register/register.reducer';
 import activate, { ActivateState } from 'app/modules/account/activate/activate.reducer';
 import password, { PasswordState } from 'app/modules/account/password/password.reducer';
 import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
+import home, { HomeState } from 'app/modules/home/home.reducer';
+import recent, { RecentState } from 'app/modules/home/sections/recent.reducer';
+
 // prettier-ignore
 import dashboard, {
   DashboardState
 } from 'app/entities/dashboard/dashboard.reducer';
-// prettier-ignore
-import datasources, {
-  DatasourcesState
-} from 'app/entities/datasources/datasources.reducer';
 // prettier-ignore
 import views, {
   ViewsState
@@ -50,6 +53,8 @@ export interface IRootState {
   readonly administration: AdministrationState;
   readonly userManagement: UserManagementState;
   readonly userGroups: UserGroupsState;
+  readonly permissions: PermissionsState;
+  readonly connections: ConnectionsState;
   readonly register: RegisterState;
   readonly activate: ActivateState;
   readonly passwordReset: PasswordResetState;
@@ -57,6 +62,7 @@ export interface IRootState {
   readonly settings: SettingsState;
   readonly dashboard: DashboardState;
   readonly datasources: DatasourcesState;
+  readonly datasourceSteps: DatasourceStepsState;
   readonly views: ViewsState;
   readonly feature: FeatureState;
   readonly visualizations: VisualizationsState;
@@ -75,6 +81,9 @@ const rootReducer = combineReducers<IRootState>({
   administration,
   userManagement,
   userGroups,
+  permissions,
+  connections,
+  datasourceSteps,
   register,
   activate,
   passwordReset,

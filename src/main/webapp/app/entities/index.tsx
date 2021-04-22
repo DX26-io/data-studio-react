@@ -5,7 +5,6 @@ import { Switch } from 'react-router-dom';
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 
 import Dashboard from './dashboard';
-import Datasources from './datasources';
 import Views from './views';
 import Visualizations from './visualizations';
 
@@ -17,7 +16,6 @@ const Routes = ({ match }) => (
     <Switch>
       {/* prettier-ignore */}
       <ErrorBoundaryRoute path={`${match.url}dashboards`} component={Dashboard} />
-      <ErrorBoundaryRoute path={`${match.url}datasources`} component={Datasources} />
       <ErrorBoundaryRoute path={`${match.url}views`} component={Views} />
       <ErrorBoundaryRoute exact path={`${match.url}visualizations`} component={Visualizations} />
 
