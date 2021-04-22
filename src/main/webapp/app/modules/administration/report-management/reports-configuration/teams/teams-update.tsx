@@ -2,81 +2,84 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
+import { isFormValid } from '../reports-configuration.util';
 import Alert from '@spectrum-icons/workflow/Alert';
+import AlertCircle from '@spectrum-icons/workflow/AlertCircle';
 import { Flex, useDialogContainer, Dialog, Heading, Divider, Content, Form, Button, TextField, Header, Text } from '@adobe/react-spectrum';
-import { fetchEmailConfig, createEmailConfig, deleteChannelConfig } from './reports-configuration.reducer';
-import ChannelProperty from './channel-property';
-import { isFormValid } from './reports-configuration.util';
+import { ITeamConfig } from 'app/shared/model/team-config.model';
+import ChannelProperty from '../channel-property';
+import { createTeamConfig, updateTeamConfig, deleteChannelConfig, resetTeamConfig } from '../reports-configuration.reducer';
 
-export interface IEmailConfigUpdateProps extends StateProps, DispatchProps {
+export interface ITeamsUpdateProps extends StateProps, DispatchProps {
+  setUpdateSuccess: () => void;
   setOpen: (isOpen: boolean) => void;
   properties: any;
-  history: any;
-  match: any
 }
 
-export const EmailConfigUpdate = (props: IEmailConfigUpdateProps) => {
-  const { setOpen, properties, emailConfig, updating, updateSuccess,history,match } = props;
-  const [error, setError] = React.useState({ message: '', isValid: false });
+export const TeamsUpdate = (props: ITeamsUpdateProps) => {
+  const { setOpen, setUpdateSuccess, updating, updateSuccess, teamConfig, properties } = props;
+  const [name, setName] = useState('');
+  const [error, setError] = useState({ message: '', isValid: false });
 
   const dialog = useDialogContainer();
-
-  useEffect(() => {
-    props.fetchEmailConfig(0);
-  }, []);
 
   const handleClose = () => {
     setOpen(false);
     dialog.dismiss();
-    history.push(`${match.url}?channel=`);
+    props.resetTeamConfig();
   };
 
   useEffect(() => {
     if (updateSuccess) {
       handleClose();
+      setUpdateSuccess();
     }
   }, [updateSuccess]);
 
   const save = () => {
-    const errorObj = isFormValid(emailConfig, properties);
+    const errorObj = isFormValid(teamConfig, properties);
     setError(errorObj);
-    if (errorObj.isValid) {
-      props.createEmailConfig(emailConfig);
+    {
+      if (teamConfig.id) {
+        props.updateTeamConfig(teamConfig);
+      } else {
+        props.createTeamConfig(teamConfig);
+      }
     }
   };
 
   const remove = () => {
-    props.deleteChannelConfig(emailConfig.id);
+    props.deleteChannelConfig(teamConfig.id);
   };
 
   return (
-    <Dialog data-testid="email-config-form-dialog">
+    <Dialog data-testid="team-config-form-dialog">
       <Heading>
-        <Flex alignItems="center" gap="size-100" data-testid="email-config-form-heading">
-          {emailConfig.id ? (
-            <Translate contentKey="reports.reportConfiguration.email.updateLabel">Update Email Configurationp</Translate>
+        <Flex alignItems="center" gap="size-100" data-testid="team-config-form-heading">
+          {teamConfig.id ? (
+            <Translate contentKey="reports.reportConfiguration.teams.updateLabel">Update MS Teams Configurationp</Translate>
           ) : (
-            <Translate contentKey="reports.reportConfiguration.email.createLabel">Create Email Configuration</Translate>
+            <Translate contentKey="reports.reportConfiguration.teams.createLabel">Create MS Teams Configuration</Translate>
           )}
         </Flex>
       </Heading>
-      <Header data-testid="email-config-form-action">
+      <Header data-testid="team-config-form-action">
         <Flex alignItems="center" gap="size-100">
-          <Button variant="secondary" onPress={handleClose} data-testid="email-config-form-cancel">
+          <Button variant="secondary" onPress={handleClose} data-testid="team-config-form-cancel">
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
-          <Button variant="cta" onPress={save} isDisabled={updating} data-testid="email-config-form-submit">
+          <Button variant="cta" onPress={save} isDisabled={updating} data-testid="team-config-form-submit">
             <Translate contentKey="entity.action.save">Save</Translate>
           </Button>
         </Flex>
       </Header>
       <Divider />
       <Content>
-        <Form data-testid="email-config-form">
+        <Form data-testid="team-config-form">
           {properties.map(property => (
-            <ChannelProperty key={property.fieldName} property={property} config={emailConfig} />
+            <ChannelProperty key={property.fieldName} property={property} config={teamConfig} />
           ))}
-          {emailConfig.id ? (
+          {teamConfig.id ? (
             <React.Fragment>
               <span className="spectrum-Heading spectrum-Heading--sizeXXS">
                 <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
@@ -85,7 +88,7 @@ export const EmailConfigUpdate = (props: IEmailConfigUpdateProps) => {
             </React.Fragment>
           ) : null}
         </Form>
-        {emailConfig.id ? (
+        {teamConfig.id ? (
           <Button data-testid="delete" variant="negative" onPress={remove} marginTop="size-175">
             <Translate contentKey="entity.action.delete">Delete</Translate>
           </Button>
@@ -104,15 +107,14 @@ export const EmailConfigUpdate = (props: IEmailConfigUpdateProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  emailConfig: storeState.reportConfiguration.emailConfig,
-  loading: storeState.reportConfiguration.loading,
-  updating: storeState.reportConfiguration.updating,
+  teamConfig: storeState.reportConfiguration.teamConfig,
   updateSuccess: storeState.reportConfiguration.updateSuccess,
+  updating: storeState.reportConfiguration.updating,
 });
 
-const mapDispatchToProps = { fetchEmailConfig, createEmailConfig, deleteChannelConfig };
+const mapDispatchToProps = { createTeamConfig, updateTeamConfig, deleteChannelConfig, resetTeamConfig };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(EmailConfigUpdate);
+export default connect(mapStateToProps, mapDispatchToProps)(TeamsUpdate);

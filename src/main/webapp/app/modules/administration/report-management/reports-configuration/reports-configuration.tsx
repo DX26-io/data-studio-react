@@ -20,7 +20,6 @@ const ReportsConfiguration = (props: IReportsConfigurationProps) => {
   const [isEmailConfigOpen, setEmailConfigOpen] = React.useState(false);
   const [isJiraConfigOpen, setJiraConfigOpen] = React.useState(false);
   const [emailChannelConfig, setEmailChannelConfig] = React.useState();
-  const [teamChannelConfig, setTeamChannelConfig] = React.useState();
   const [jiraConfig, setJiraConfig] = React.useState();
 
   useEffect(() => {
@@ -36,7 +35,6 @@ const ReportsConfiguration = (props: IReportsConfigurationProps) => {
   useEffect(() => {
     if (channelParametersFetched) {
       setEmailChannelConfig(channelParameters.filter(item => item.id === 'Email')[0]);
-      setTeamChannelConfig(channelParameters.filter(item => item.id === 'Teams')[0]);
       setJiraConfig(channelParameters.filter(item => item.id === 'Jira')[0]);
     }
   }, [channelParametersFetched]);
@@ -51,9 +49,9 @@ const ReportsConfiguration = (props: IReportsConfigurationProps) => {
     },
     {
       icon: <PeopleGroup size="L" />,
-      link: `${match.url}/team`,
-      title: 'reports.reportConfiguration.team.title',
-      description: 'reports.reportConfiguration.team.description',
+      link: `${match.url}/teams`,
+      title: 'reports.reportConfiguration.teams.title',
+      description: 'reports.reportConfiguration.teams.description',
     },
     {
       icon: <ExcludeOverlap size="L" />,

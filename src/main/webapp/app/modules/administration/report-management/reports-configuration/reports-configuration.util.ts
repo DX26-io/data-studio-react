@@ -9,9 +9,6 @@ export const isFormValid = (config: any, properties: any) => {
       error = { message: property.displayName + ' is required', isValid: false };
       return error;
     }
-    // else {
-    //   return { message: '', isValid: true };
-    // }
   });
   return error;
 };

@@ -2,19 +2,20 @@ import React from 'react';
 import { TextField, TextArea, Checkbox } from '@adobe/react-spectrum';
 import { connect } from 'react-redux';
 import { IEmailConfig } from 'app/shared/model/email-config.model';
-import { setEmailConfig } from './reports-configuration.reducer';
+import { ITeamConfig } from 'app/shared/model/team-config.model';
+import { setConfig } from './reports-configuration.reducer';
 
 interface ChannelPropertyProps extends DispatchProps {
   property: any;
-  emailConfig: IEmailConfig;
+  config: IEmailConfig | ITeamConfig;
 }
 
 const ChannelProperty = (props: ChannelPropertyProps) => {
-  const { property, emailConfig } = props;
+  const { property, config } = props;
 
   const setPropertyValue = value => {
-    emailConfig[property.fieldName] = value;
-    props.setEmailConfig(emailConfig);
+    config[property.fieldName] = value;
+    props.setConfig(config);
   };
 
   return (
@@ -25,7 +26,7 @@ const ChannelProperty = (props: ChannelPropertyProps) => {
           label={property.displayName}
           isRequired={property.required}
           onChange={setPropertyValue}
-          value={emailConfig[property.fieldName] ? emailConfig[property.fieldName] : ''}
+          value={config[property.fieldName] ? config[property.fieldName] : ''}
         />
       ) : null}
       {property.fieldType === 'Password' ? (
@@ -34,7 +35,7 @@ const ChannelProperty = (props: ChannelPropertyProps) => {
           label={property.displayName}
           isRequired={property.required}
           onChange={setPropertyValue}
-          value={emailConfig[property.fieldName] ? emailConfig[property.fieldName] : ''}
+          value={config[property.fieldName] ? config[property.fieldName] : ''}
         />
       ) : null}
       {property.fieldType === 'Integer' ? (
@@ -44,14 +45,14 @@ const ChannelProperty = (props: ChannelPropertyProps) => {
           label={property.displayName}
           isRequired={property.required}
           onChange={setPropertyValue}
-          value={emailConfig[property.fieldName] ? emailConfig[property.fieldName] : 0}
+          value={config[property.fieldName] ? config[property.fieldName] : 0}
         />
       ) : null}
       {property.fieldType === 'Boolean' ? (
         <Checkbox
           isRequired={property.required}
           onChange={setPropertyValue}
-          isSelected={emailConfig[property.displayName] ? emailConfig[property.displayName] : false}
+          isSelected={config[property.displayName] ? config[property.displayName] : false}
           isEmphasized
         ></Checkbox>
       ) : null}
@@ -59,7 +60,7 @@ const ChannelProperty = (props: ChannelPropertyProps) => {
   );
 };
 
-const mapDispatchToProps = { setEmailConfig };
+const mapDispatchToProps = { setConfig };
 
 type DispatchProps = typeof mapDispatchToProps;
 
