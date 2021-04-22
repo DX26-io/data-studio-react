@@ -14,6 +14,7 @@ export const ACTION_TYPES = {
   CREATE_REALM: 'authentication/CREATE_REALM',
   VERIFY_USER: 'authentication/VERIFY_USER',
   REALM_CREATED: 'authentication/REALM_CREATED',
+  AUTH_FAILURE: 'authentication/AUTH_FAILURE',
   GET_SESSION: 'authentication/GET_SESSION',
   LOGOUT: 'authentication/LOGOUT',
   CLEAR_AUTH: 'authentication/CLEAR_AUTH',
@@ -175,6 +176,11 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...state,
         redirectTo: '/',
       };
+    case ACTION_TYPES.AUTH_FAILURE:
+      return {
+        ...state,
+        redirectTo: '/signin',
+      };
     default:
       return state;
   }
@@ -206,6 +212,14 @@ export const getSession: () => void = () => async (dispatch, getState) => {
     const langKey = Storage.session.get('locale', account.langKey);
     await dispatch(setLocale(langKey));
   }
+};
+
+export const getSessionWithPath: (pathname: string) => void = (pathname: string) => async (dispatch, getState) => {
+  const noSessionPathNames = ['/realm', '/signin', '/signup'];
+  if (noSessionPathNames.includes(pathname)) {
+    return;
+  }
+  return await dispatch(getSession());
 };
 
 export const setAuthToken = async (bearerToken, rememberMe) => {
@@ -331,6 +345,14 @@ export const logout: () => void = () => dispatch => {
   dispatch({
     type: ACTION_TYPES.LOGOUT,
     payload: axios.get('api/logout'),
+  });
+};
+
+export const authFailure: () => void = () => dispatch => {
+  clearAuthToken();
+  firebaseLogout();
+  dispatch({
+    type: ACTION_TYPES.AUTH_FAILURE,
   });
 };
 

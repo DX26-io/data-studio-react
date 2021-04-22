@@ -13,7 +13,7 @@ export interface ILogoutProps extends StateProps, DispatchProps {
   logoutUrl: string;
 }
 
-export const Logout = (props: ILogoutProps) => {
+const Logout = (props: ILogoutProps) => {
   const history = useHistory();
   useLayoutEffect(() => {
     props.logout();
