@@ -72,6 +72,8 @@ export interface IRootState {
   readonly filter: FilterState;
   readonly scheduler: SchedulerState;
   readonly notification: notificationState;
+  readonly home: HomeState;
+  readonly recent: RecentState;
 }
 
 const rootReducer = combineReducers<IRootState>({
@@ -100,6 +102,8 @@ const rootReducer = combineReducers<IRootState>({
   filter,
   scheduler,
   notification,
+  home,
+  recent,
 });
 
 export default rootReducer;
