@@ -6,6 +6,7 @@ import { IUser, defaultValue } from 'app/shared/model/user.model';
 
 export const ACTION_TYPES = {
   FETCH_ROLES: 'userManagement/FETCH_ROLES',
+  SEARCH_USERS: 'userManagement/SEARCH_USERS',
   FETCH_USERS: 'userManagement/FETCH_USERS',
   FETCH_USER: 'userManagement/FETCH_USER',
   CREATE_USER: 'userManagement/CREATE_USER',
@@ -35,6 +36,10 @@ export default (state: UserManagementState = initialState, action): UserManageme
       return {
         ...state,
       };
+    case REQUEST(ACTION_TYPES.SEARCH_USERS):
+      return {
+        ...state,
+      };
     case REQUEST(ACTION_TYPES.FETCH_USERS):
     case REQUEST(ACTION_TYPES.FETCH_USER):
       return {
@@ -55,6 +60,7 @@ export default (state: UserManagementState = initialState, action): UserManageme
     case FAILURE(ACTION_TYPES.FETCH_USERS):
     case FAILURE(ACTION_TYPES.FETCH_USER):
     case FAILURE(ACTION_TYPES.FETCH_ROLES):
+    case FAILURE(ACTION_TYPES.SEARCH_USERS):
     case FAILURE(ACTION_TYPES.CREATE_USER):
     case FAILURE(ACTION_TYPES.UPDATE_USER):
     case FAILURE(ACTION_TYPES.DELETE_USER):
@@ -69,6 +75,12 @@ export default (state: UserManagementState = initialState, action): UserManageme
       return {
         ...state,
         authorities: generateOptions(action.payload.data),
+      };
+    case SUCCESS(ACTION_TYPES.SEARCH_USERS):
+      return {
+        ...state,
+        loading: false,
+        users: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.FETCH_USERS):
       return {
@@ -117,9 +129,18 @@ export default (state: UserManagementState = initialState, action): UserManageme
 };
 
 const apiUrl = 'api/users';
+const searchApiUrl = apiUrl + '/search/';
 // Actions
 export const getUsers: ICrudGetAllAction<IUser> = (page, size, sort) => {
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  return {
+    type: ACTION_TYPES.FETCH_USERS,
+    payload: axios.get<IUser>(requestUrl),
+  };
+};
+
+export const searchUsers = (page, size, sort, login) => {
+  const requestUrl = `${searchApiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}&login=${login}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_USERS,
     payload: axios.get<IUser>(requestUrl),

@@ -8,7 +8,6 @@
       "entities": {
         "main": "Entities",
         "dashboard": "Dashboard",
-        "datasources": "Datasources",
         "views": "Views",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
@@ -32,6 +31,7 @@
         "audits": "Audits",
         "apidocs": "API",
         "database": "Database",
+        "sources": "Sources",
         "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
       },
       "language": "Language"
@@ -104,7 +104,10 @@
       "view": "View",
       "manage": "Manage",
       "create": "Create",
-      "dangerZone": "Danger Zone"
+      "dangerZone": "Danger Zone",
+      "next": "Next",
+      "finish": "Finish",
+      "reset": "Reset"
     },
     "options": {
       "more_options": "More options",

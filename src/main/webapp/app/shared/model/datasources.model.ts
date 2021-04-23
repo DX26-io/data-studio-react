@@ -3,9 +3,17 @@ import { Moment } from 'moment';
 export interface IDatasources {
   id?: number;
   name?: string;
-  lastUpdated?: string;
+  lastUpdated?: Date;
   connectionName?: string;
   queryPath?: string;
+  sql?: string;
 }
 
-export const defaultValue: Readonly<IDatasources> = {};
+export const defaultDatasourceValue: Readonly<IDatasources> = {
+  id: null,
+  name: '',
+  lastUpdated: new Date(),
+  connectionName: '',
+  queryPath: '',
+  sql: '',
+};

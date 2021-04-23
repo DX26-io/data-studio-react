@@ -19,7 +19,7 @@ import {
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { createEntity, getEntity, reset, updateEntity } from './dashboard.reducer';
-import { getEntities as getDataSourceEntities } from '../datasources/datasources.reducer';
+import { getDatasources as getDataSourceEntities } from 'app/modules/administration/sources/datasources/datasources.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
   isCreateEditFormNotValid,
@@ -197,7 +197,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.dashboard.updating,
   updateSuccess: storeState.dashboard.updateSuccess,
   errorMessage: storeState.dashboard.errorMessage,
-  dataSourcesList: storeState.datasources.entities,
+  dataSourcesList: storeState.datasources.datasources,
 });
 
 const mapDispatchToProps = {

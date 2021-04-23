@@ -38,7 +38,7 @@ export default class NavBarPage extends BasePage {
 
   async getSignInPage() {
     await this.clickOnAccountMenu();
-    await this.clickOnTabMenu('/login');
+    await this.clickOnTabMenu('/signin');
     return this.signInPage;
   }
 
