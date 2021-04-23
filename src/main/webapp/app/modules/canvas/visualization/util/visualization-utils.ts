@@ -1,3 +1,5 @@
+import { translate } from 'react-jhipster';
+
 const getFormattedNumber = (value, format) => {
   switch (format) {
     case 'Actual':
@@ -87,12 +89,7 @@ const getDimensionsAndMeasuresForNotification = fields => {
   };
 };
 
-const getPropertyValue = (properties, propertyName, orElse) => {
-  const _properties = properties.filter(function (item) {
-    return item.propertyType.name === propertyName;
-  });
-  const property = _properties[0];
-
+const getFilterPropertyValue = (property, orElse) => {
   if (!property) {
     if (isFunction(orElse)) {
       return orElse();
@@ -107,12 +104,20 @@ const getPropertyValue = (properties, propertyName, orElse) => {
     }
   }
 };
-
-const setPropertyValue = (properties, propertyName, orElse) => {
-  const _properties = properties.filter(function (item) {
+const getPropertyValue = (properties, propertyName, orElse) => {
+  const filterProperty = properties.filter(function (item) {
     return item.propertyType.name === propertyName;
   });
-  const property = _properties[0];
+  const property = filterProperty[0];
+
+  return getFilterPropertyValue(property, orElse);
+};
+
+const setPropertyValue = (properties, propertyName: string, orElse) => {
+  const filterProperty = properties.filter(function (item) {
+    return item.propertyType.name === propertyName;
+  });
+  const property = filterProperty[0];
   if (property) {
     if (property.value && property.value.value) {
       property.value.value = 0;
@@ -126,6 +131,18 @@ const getFieldPropertyValue = (field, propertyName, orElse) => {
   return getPropertyValue(field.properties, propertyName, orElse);
 };
 
+const getMaxValue = values => {
+  return values.reduce(function (a, b) {
+    return Math.max(a, b);
+  });
+};
+
+const getMinValue = values => {
+  return values.reduce(function (a, b) {
+    return Math.min(a, b);
+  });
+};
+
 /**
  * Normalize data according to given range
  *
@@ -136,20 +153,24 @@ const getFieldPropertyValue = (field, propertyName, orElse) => {
  * @returns normalized value to given interval
  */
 const normalize = (values, lowBoundry, highBoundry, x) => {
-  const maxValue = values.reduce(function (a, b) {
-    return Math.max(a, b);
-  });
-
-  const minValue = values.reduce(function (a, b) {
-    return Math.min(a, b);
-  });
+  const maxValue = getMaxValue(values);
+  const minValue = getMinValue(values);
   const xStd = (x - minValue) / (maxValue - minValue);
-
   return xStd * (highBoundry - lowBoundry) + lowBoundry;
 };
 
 const sortBySequenceNumber = (a, b) => {
   return a.order - b.order;
+};
+
+/**
+ * This method returns an object that contains dashboard form labels
+ */
+export const getVisualizationFromTranslations = (): any => {
+  return {
+    SelectDimension: translate('datastudioApp.visualmetadata.SelectDimension'),
+    SelectMeasure: translate('datastudioApp.visualmetadata.SelectMeasure'),
+  };
 };
 
 export const VisualizationUtils = () => {

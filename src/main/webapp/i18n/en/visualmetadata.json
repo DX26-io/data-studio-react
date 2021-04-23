@@ -19,7 +19,9 @@
       },
       "height": "Height",
       "width": "Width",
-      "visualBuildId": "Visual Build Id"
+      "visualBuildId": "Visual Build Id",
+      "SelectMeasure": "Select measure",
+      "SelectDimension": "Select dimension"
     }
   }
 }

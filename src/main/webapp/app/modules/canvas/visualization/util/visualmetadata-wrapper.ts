@@ -61,7 +61,7 @@ const getProperty = (properties, propertyName, orElse = null) => {
   }
 };
 
-const getChartPropertyValue = (properties, propertyName, orElse = null) => {
+const getChartPropertyValue = (properties: any, propertyName: any, orElse = null) => {
   return getProperty(properties, propertyName, orElse);
 };
 

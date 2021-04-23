@@ -195,7 +195,7 @@ const Canvas = (props: VisualizationProp) => {
               {...props}
             ></VisualizationHeader>
           </div>
-          <div id={`visualBody-${v.id}`}>
+          <div style={{backgroundColor: v.bodyProperties.backgroundColor}} className="visualBody" id={`visualBody-${v.id}`}>
             <div className="illustrate">
               <div className={`loader loader-${v.id}`}>
                 <Loader />

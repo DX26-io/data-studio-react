@@ -26,7 +26,7 @@ import Properties from 'app/modules/canvas/visualization/visualization-propertie
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 import LockClosed from '@spectrum-icons/workflow/LockClosed';
 import Delete from '@spectrum-icons/workflow/Delete';
-
+import { getVisualizationFromTranslations } from 'app/modules/canvas/visualization/util/visualization-utils';
 export interface IVisualizationDataPropertiesProps {
   features: readonly IFeature[];
   visual: IVisualMetadataSet;
@@ -37,6 +37,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
   const [showDimension, setShowDimension] = useState(false);
   const [showMeasure, setShowMeasure] = useState(false);
   const [properties, setProperty] = useState([]);
+  const { SelectDimension, SelectMeasure } = getVisualizationFromTranslations();
 
   const visualWrap = VisualWrap(props.visual);
   const getDimensionList = () => {
@@ -69,7 +70,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
 
   const addFieldMeasure = () => {
     const fieldType = visualWrap.nextFieldMeasure(props.visual.fields, props.visual.metadataVisual);
-    if (fieldType !== undefined) {
+    if (!fieldType) {
       const field = {
         fieldType,
         feature: null,
@@ -93,7 +94,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
 
   const addFieldDimension = () => {
     const fieldType = visualWrap.nextFieldDimension(props.visual.fields, props.visual.metadataVisual);
-    if (fieldType !== undefined) {
+    if (!fieldType) {
       const field = {
         fieldType,
         feature: null,
@@ -150,7 +151,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
             </Flex>
           </Flex>
         </View>
-        <Form>         
+        <Form>
           <ButtonGroup orientation="vertical">
             {props.visual.fields &&
               props.visual.fields.length > 0 &&
@@ -187,7 +188,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
           {showDimension && (
             <Picker
               onSelectionChange={selected => featureChange(selected.toString())}
-              label="Select dimension"
+              label={SelectDimension}
               selectedKey={selectedField?.feature?.name || ''}
             >
               {dimensionList &&
@@ -201,7 +202,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
           {showMeasure && (
             <Picker
               onSelectionChange={selected => featureChange(selected.toString())}
-              label="Select measure"
+              label={SelectMeasure}
               selectedKey={selectedField?.feature?.name || ''}
             >
               {measureList &&
@@ -227,4 +228,4 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
   );
 };
 
-export default (VisualizationDataProperties);
+export default VisualizationDataProperties;

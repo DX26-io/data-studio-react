@@ -78,7 +78,7 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
       },
       bodyProperties: {
         opacity: 1,
-        backgroundColor: '#ffffff',
+        backgroundColor: `var(--spectrum-global-color-static-gray-50)`,
         border: 'none',
       },
       visualBuildId: visualization.id + 'a' + Math.round(Math.random() * 1000000),

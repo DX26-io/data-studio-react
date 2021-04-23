@@ -29,7 +29,7 @@ export interface IVisualizationEditModalProps extends StateProps, DispatchProps 
 }
 
 export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
-  const [getData, setData] = useState<any>();
+  const [visualizationData, setData] = useState<any>();
   const dialog = useDialogContainer();
   const visualizationId = props.visualizationId;
   const viewId = props.viewId;
@@ -87,7 +87,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
       };
       forwardCall(props.view?.viewDashboard?.dashboardDatasource?.id, body, props.view.id);
     }
-  }, [props.visualmetadataEntity, getData]);
+  }, [props.visualmetadataEntity]);
 
   return (
     <Dialog>
@@ -116,7 +116,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
       </ButtonGroup>
       <Content>
         <Flex direction="row" height="100%" gap="size-75">
-          <View flex>
+          <Flex flex>
             <Flex direction="column" height="100%" flex gap="size-75">
               <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="50%">
                 <div style={{ height: '100%' }} id={`visualization-edit-${props.visualmetadataEntity.id}`} className="visualization"></div>
@@ -124,7 +124,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
               <div className="settings-tab">
                 <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="50%">
                   <VisualizationSettings
-                    data={getData}
+                    data={visualizationData}
                     visual={props.visualmetadataEntity}
                     view={props.view}
                     visualizationId={visualizationId}
@@ -135,7 +135,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
                 </View>
               </div>
             </Flex>
-          </View>
+          </Flex>
           <div className="properties-tab">
             <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight={'100%'} width="size-4000">
               <VisualizationProperties features={props.featuresList} visual={props.visualmetadataEntity} />

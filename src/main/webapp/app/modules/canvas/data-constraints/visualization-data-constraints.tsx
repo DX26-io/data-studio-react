@@ -126,7 +126,16 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
 
   const handleChange = (value, actionMeta) => {
     if (actionMeta.action === 'select-option') {
-      props.condition?.values?.push(actionMeta.option.value);
+      const dimension = getDimension(props.condition.featureName);
+      props.condition.valueTypes.push({
+        '@type': 'valueType',
+        value: actionMeta.option.value,
+        type: dimension.type,
+      });
+      props.condition.values = [];
+      props.condition.valueTypes.forEach(item => {
+        props.condition.values.push(actionMeta.option.value);
+      });
     } else if (actionMeta.action === 'remove-value') {
       props.condition?.values.splice(props.condition?.values.indexOf(actionMeta.removedValue.value), 1);
     }
@@ -343,7 +352,6 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
       </>
     );
   };
-
 
   const showCondition = condition => {
     return (

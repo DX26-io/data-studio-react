@@ -26,8 +26,6 @@ const VisualizationProperties = (props: IVisualizationPropertiesProps) => {
           isQuiet={true}
           density={'compact'}
           position={"sticky"}
-          top={0}
-          aria-label="History of Ancient Rome"
           items={getPropertiesTabTranslations()}
           onSelectionChange={key => setActiveTabId(key)}
         >
