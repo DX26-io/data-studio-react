@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import { IEmailConfig } from 'app/shared/model/email-config.model';
 import { ITeamConfig } from 'app/shared/model/team-config.model';
 import { setConfig } from './reports-configuration.reducer';
+import { IChannelProperty } from 'app/shared/model/channel-parameters.model';
 
 interface ChannelPropertyProps extends DispatchProps {
-  property: any;
+  property: IChannelProperty;
   config: IEmailConfig | ITeamConfig;
 }
 

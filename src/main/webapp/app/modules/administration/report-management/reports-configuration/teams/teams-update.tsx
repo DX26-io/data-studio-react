@@ -6,7 +6,6 @@ import { isFormValid } from '../reports-configuration.util';
 import Alert from '@spectrum-icons/workflow/Alert';
 import AlertCircle from '@spectrum-icons/workflow/AlertCircle';
 import { Flex, useDialogContainer, Dialog, Heading, Divider, Content, Form, Button, TextField, Header, Text } from '@adobe/react-spectrum';
-import { ITeamConfig } from 'app/shared/model/team-config.model';
 import ChannelProperty from '../channel-property';
 import { createTeamConfig, updateTeamConfig, deleteChannelConfig, resetTeamConfig } from '../reports-configuration.reducer';
 

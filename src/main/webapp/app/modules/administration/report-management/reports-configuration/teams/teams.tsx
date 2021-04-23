@@ -9,12 +9,13 @@ import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header
 import Edit from '@spectrum-icons/workflow/Edit';
 import { fetchTeamConfig, fetchChannelParameters,setTeamConfig } from '../reports-configuration.reducer';
 import TeamsUpdate from './teams-update';
+import { IChannel, defaultValue as channelDefaultValue } from 'app/shared/model/channel.model';
 
 export interface ITeamsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export const Teams = (props: ITeamsProps) => {
   const { teams, loading, channelParametersFetched, channelParameters } = props;
-  const [teamChannelConfig, setTeamChannelConfig] = React.useState();
+  const [teamChannelConfig, setTeamChannelConfig] = React.useState<IChannel>(channelDefaultValue);
   const [isOpen,setOpen] = React.useState(false);
 
   useEffect(() => {

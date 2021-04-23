@@ -11,6 +11,7 @@ import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import EmailConfigUpdate from './email-config-update';
 import { fetchChannelParameters } from './reports-configuration.reducer';
+import { IChannel, defaultValue as channelDefaultValue } from 'app/shared/model/channel.model';
 
 interface IReportsConfigurationProps extends StateProps, DispatchProps, RouteComponentProps {}
 
@@ -19,8 +20,8 @@ const ReportsConfiguration = (props: IReportsConfigurationProps) => {
 
   const [isEmailConfigOpen, setEmailConfigOpen] = React.useState(false);
   const [isJiraConfigOpen, setJiraConfigOpen] = React.useState(false);
-  const [emailChannelConfig, setEmailChannelConfig] = React.useState();
-  const [jiraConfig, setJiraConfig] = React.useState();
+  const [emailChannelConfig, setEmailChannelConfig] = React.useState<IChannel>(channelDefaultValue);
+  const [jiraChannelConfig, setJiraChannelConfig] = React.useState<IChannel>(channelDefaultValue);
 
   useEffect(() => {
     if (props.location.search.includes('email') && !isEmailConfigOpen && channelParametersFetched) {
@@ -35,7 +36,7 @@ const ReportsConfiguration = (props: IReportsConfigurationProps) => {
   useEffect(() => {
     if (channelParametersFetched) {
       setEmailChannelConfig(channelParameters.filter(item => item.id === 'Email')[0]);
-      setJiraConfig(channelParameters.filter(item => item.id === 'Jira')[0]);
+      setJiraChannelConfig(channelParameters.filter(item => item.id === 'Jira')[0]);
     }
   }, [channelParametersFetched]);
   
