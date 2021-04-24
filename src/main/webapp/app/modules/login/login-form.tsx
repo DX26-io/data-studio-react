@@ -128,7 +128,7 @@ export const LoginForm = (props: ILoginProps) => {
               null
           }
           <Link isQuiet={true}>
-            <a href="/login">
+            <a href="/signin">
               <Translate contentKey="login.form.sso">Use Single Sign On (SSO)</Translate>
             </a>
           </Link>
