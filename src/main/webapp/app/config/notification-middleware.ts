@@ -54,7 +54,7 @@ export default ({ dispatch }) => next => action => {
       } else if (error && error.response) {
         const response = error.response;
         const data = response.data;
-        const url = response.config.url;
+        const url = response.config?.url;
         let i;
         let showAlert = true;
         switch (response.status) {
