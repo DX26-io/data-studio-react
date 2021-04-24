@@ -9,7 +9,7 @@ import Search from '@spectrum-icons/workflow/Search';
 import Maximize from '@spectrum-icons/workflow/Maximize';
 import FilterElement from 'app/modules/canvas/filter/filter-element';
 import uuid from 'react-uuid';
-import { getDatasourcesFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
+import { getViewFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { getVisualizationData, ValidateFields } from '../visualization/util/visualization-render-utils';
 import { FilterParameterService } from './filter-parameters-service';
 import { updateSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';

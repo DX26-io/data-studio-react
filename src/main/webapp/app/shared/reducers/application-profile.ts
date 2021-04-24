@@ -6,6 +6,7 @@ export const ACTION_TYPES = {
   GET_PROFILE: 'applicationProfile/GET_PROFILE',
   TOGGLE_EDIT_MODE: 'applicationProfile/TOGGLE_EDIT_MODE',
   TOGGLE_FILTER_PANEL: 'applicationProfile/TOGGLE_FILTER_PANEL',
+  TOGGLE_FEATURES_PANEL: 'applicationProfile/TOGGLE_FEATURES_PANEL',
 };
 
 const initialState = {
@@ -14,6 +15,7 @@ const initialState = {
   isSwaggerEnabled: false,
   isEditMode: false,
   isFilterOpen: false,
+  isFeaturesPanelOpen: false,
 };
 
 export type ApplicationProfileState = Readonly<typeof initialState>;
@@ -39,6 +41,11 @@ export default (state: ApplicationProfileState = initialState, action): Applicat
         ...state,
         isFilterOpen: !state.isFilterOpen,
       };
+    case ACTION_TYPES.TOGGLE_FEATURES_PANEL:
+      return {
+        ...state,
+        isFeaturesPanelOpen: !state.isFeaturesPanelOpen,
+      };
     default:
       return state;
   }
@@ -56,3 +63,9 @@ export const toggleEditMode = () => ({
 export const toggleFilterPanel = () => ({
   type: ACTION_TYPES.TOGGLE_FILTER_PANEL,
 });
+
+export const toggleFeaturesPanel: () => void = () => (dispatch, getState) => {
+  dispatch({
+    type: ACTION_TYPES.TOGGLE_FEATURES_PANEL,
+  });
+};

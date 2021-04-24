@@ -11,7 +11,7 @@ import {
   getEntity as getVisualmetadataEntity,
   updateEntity as updateVisualmetadataEntity,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { getDatasourcesFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
+import { getViewFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 import { VisualMetadataContainerUpdate } from '../../util/visualmetadata-container.service';
 import { setVisual } from '../../util/VisualDispatchService';
@@ -44,7 +44,7 @@ const VisualizationEditModal = (props: IVisualizationEditModalProps1) => {
       props.getViewEntity(viewId);
     }
   }, []);
-  
+
   useEffect(() => {
     setVisual(props.visualmetadataEntity);
   }, [props.visualmetadataEntity]);

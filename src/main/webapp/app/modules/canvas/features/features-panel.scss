@@ -1,0 +1,37 @@
+.FeaturesPanel-Main {
+  .FeaturesPanel {
+    z-index: 9999;
+    right: 0;
+    position: absolute;
+    margin: 15px;
+    box-shadow: 3px 3px 3px 3px #a8a8a8;
+    overflow-y: hidden;
+    height: calc(100% - 95px);
+    background-color: var(
+      --spectrum-alias-background-color-default,
+      var(--spectrum-global-color-default, var(--spectrum-semantic-default-color-background))
+    );
+    .features-body {
+      max-height: calc(100vh - 180px);
+      min-height: calc(100vh - 180px);
+      overflow: auto;
+    }
+    .features-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  .FeaturesPanel-minimize {
+    width: 25%;
+  }
+  .FeaturesPanel-maximize {
+    width: 98%;
+  }
+}
+.FeaturesPanel-hide {
+  display: none;
+}
+.FeaturesPanel-show {
+  display: block;
+}

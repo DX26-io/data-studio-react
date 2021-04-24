@@ -11,7 +11,7 @@ import {
   getEntity as getVisualmetadataEntity,
   updateEntity as updateVisualmetadataEntity,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { getDatasourcesFeaturesEntities } from 'app/entities/feature/feature.reducer';
+import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 import { VisualMetadataContainerUpdate } from '../../util/visualmetadata-container.service';
 import { setEditAction, setVisual } from '../../util/VisualDispatchService';
@@ -52,7 +52,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
   useEffect(() => {
     if (visualizationId) {
       props.getVisualmetadataEntity(visualizationId);
-      props.getDatasourcesFeaturesEntities(viewId);
+      props.getViewFeaturesEntities(viewId);
       props.getViewEntity(viewId);
     }
   }, []);
@@ -153,7 +153,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
 });
 
-const mapDispatchToProps = { getVisualmetadataEntity, getDatasourcesFeaturesEntities, getViewEntity, updateVisualmetadataEntity };
+const mapDispatchToProps = { getVisualmetadataEntity, getViewFeaturesEntities, getViewEntity, updateVisualmetadataEntity };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
