@@ -319,8 +319,13 @@ export const loginWithProvider: (provider: string, realmId: number) => void = (p
     google: new firebase.auth.GoogleAuthProvider(),
     github: new firebase.auth.GithubAuthProvider(),
   };
-  const authProvider = firebaseProviders[provider];
-  await firebase.auth().signInWithPopup(authProvider);
+  try {
+    const authProvider = firebaseProviders[provider];
+    await firebase.auth().signInWithPopup(authProvider);
+  } catch (e) {
+    toast.error(e.message);
+    return;
+  }
   const tkn = await firebase.auth().currentUser.getIdToken(true);
   const result = await dispatch({
     type: ACTION_TYPES.LOGIN_WITH_PROVIDER,
