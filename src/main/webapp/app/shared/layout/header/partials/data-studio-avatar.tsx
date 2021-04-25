@@ -21,7 +21,7 @@ const DataStudioAvatar: React.FC = () => {
             <Text>
               <span className="spectrum-Body spectrum-Body--sizeL" data-testid="userGreeting">
                 <Translate contentKey="header.avatar.greeting">Hello</Translate>
-                <strong>{` ${account.login}`}</strong>
+                <strong>{` ${account.login}`}</strong> <span>[{`${account.currentRealm?.name}`}]</span>
               </span>
             </Text>
             <Divider size="M" />

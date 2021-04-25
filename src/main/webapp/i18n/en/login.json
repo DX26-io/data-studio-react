@@ -60,6 +60,10 @@
   "flairbiApp": {
     "realm": {
       "created": "Realm created"
+    },
+    "signup": {
+      "username_exists": "Username already exists, please choose another one",
+      "email_exists": "Email already exists, please choose another one"
     }
   }
 }
