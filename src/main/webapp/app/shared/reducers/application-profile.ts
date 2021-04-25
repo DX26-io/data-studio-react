@@ -40,11 +40,13 @@ export default (state: ApplicationProfileState = initialState, action): Applicat
       return {
         ...state,
         isFilterOpen: !state.isFilterOpen,
+        isFeaturesPanelOpen: state.isFeaturesPanelOpen && !state.isFilterOpen,
       };
     case ACTION_TYPES.TOGGLE_FEATURES_PANEL:
       return {
         ...state,
         isFeaturesPanelOpen: !state.isFeaturesPanelOpen,
+        isFilterOpen: state.isFilterOpen && !state.isFeaturesPanelOpen,
       };
     default:
       return state;
