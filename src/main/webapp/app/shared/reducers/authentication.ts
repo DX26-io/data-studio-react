@@ -26,6 +26,17 @@ export interface RealmDTO {
   id: number;
 }
 
+export interface AccountDTO {
+  id: number;
+  userGroups: any;
+  login: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  langKey: string;
+  currentRealm: RealmDTO;
+}
+
 const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
 
 const initialState = {
@@ -45,7 +56,7 @@ const initialState = {
   signupError: false, // Errors returned from server side
   createRealmError: false, // Errors returned from server side
   logoutError: false, // Errors returned from server side
-  account: {} as any,
+  account: {} as AccountDTO,
   errorMessage: (null as unknown) as string, // Errors returned from server side
   redirectMessage: (null as unknown) as string,
   sessionHasBeenFetched: false,
