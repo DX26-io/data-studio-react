@@ -3,7 +3,7 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-import { ICrudGetDatasourcesFeaturesAction } from './feature-util';
+import { ICrudGetViewFeaturesAction } from './feature-util';
 import { IFeature, defaultValue } from 'app/shared/model/feature.model';
 
 export const ACTION_TYPES = {
@@ -99,7 +99,7 @@ const apiUrl = 'api/features';
 
 // Actions
 
-export const getDatasourcesFeaturesEntities: ICrudGetDatasourcesFeaturesAction<IFeature> = viewId => ({
+export const getViewFeaturesEntities: ICrudGetViewFeaturesAction<IFeature> = viewId => ({
   type: ACTION_TYPES.FETCH_FEATURE_LIST,
   payload: axios.get<IFeature>(`${apiUrl}?view=${viewId}&cacheBuster=${new Date().getTime()}`),
 });
