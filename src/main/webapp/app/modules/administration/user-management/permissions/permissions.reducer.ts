@@ -5,6 +5,7 @@ import { IPermission } from 'app/shared/model/permission.model';
 
 export const ACTION_TYPES = {
   FETCH_DASHBOARD_PERMISSIONS: 'permission/FETCH_DASHBOARD_PERMISSIONS',
+  FETCH_DATASOURCE_PERMISSIONS: 'permission/FETCH_DATASOURCE_PERMISSIONS',
   FETCH_VIEWS_PERMISSIONS: 'permission/FETCH_VIEWS_PERMISSIONS',
   UPDATE_PERMISSIONS: 'permission/UPDATE_PERMISSIONS',
   RESET_VIEWS_PERMISSIONS: 'permission/RESET_VIEWS_PERMISSIONS',
@@ -15,6 +16,8 @@ const initialState = {
   errorMessage: null,
   dashboardPermissions: [],
   totalDashboardPermissions: 0,
+  datasourcePermissions: [],
+  totalDatasourcePermissions: 0,
   viewsPermissions: [],
   totalViewsPermissions: 0,
   updateSuccess: false,
@@ -33,6 +36,13 @@ export default (state: PermissionsState = initialState, action): PermissionsStat
         loading: true,
       };
     case FAILURE(ACTION_TYPES.FETCH_DASHBOARD_PERMISSIONS):
+    case REQUEST(ACTION_TYPES.FETCH_DATASOURCE_PERMISSIONS):
+      return {
+        ...state,
+        datasourcePermissions: [],
+        totalDatasourcePermissions: 0,
+      };
+    case FAILURE(ACTION_TYPES.FETCH_DATASOURCE_PERMISSIONS):
       return {
         ...state,
         loading: false,
@@ -73,6 +83,13 @@ export default (state: PermissionsState = initialState, action): PermissionsStat
         dashboardPermissions: action.payload.data,
         totalDashboardPermissions: parseInt(action.payload.headers['x-total-count'], 10),
       };
+    case SUCCESS(ACTION_TYPES.FETCH_DATASOURCE_PERMISSIONS):
+      return {
+        ...state,
+        loading: false,
+        datasourcePermissions: action.payload.data,
+        totalDatasourcePermissions: parseInt(action.payload.headers['x-total-count'], 10),
+      };
     case SUCCESS(ACTION_TYPES.FETCH_VIEWS_PERMISSIONS):
       return {
         ...state,
@@ -110,6 +127,23 @@ export const getUserDashboardPermissions = (page: number, size: number, login: s
   payload: axios.get(`api/users/${login}/dashboardPermissions?page=${page}&size=${size}`),
 });
 
+export const getUserGroupDatasourcePermissions = (page: number, size: number, name: string) => ({
+  type: ACTION_TYPES.FETCH_DATASOURCE_PERMISSIONS,
+  payload: axios.get(`api/userGroups/${name}/datasourcePermissions?page=${page}&size=${size}`),
+});
+
+export const getUserDatasourcePermissions = (page: number, size: number, login: string) => ({
+  type: ACTION_TYPES.FETCH_DATASOURCE_PERMISSIONS,
+  payload: axios.get(`api/users/${login}/datasourcePermissions?page=${page}&size=${size}`),
+});
+
+export const updateGroupPermissions = (permissions: Array<IPermission>, name: string) => async dispatch => {
+  const result = await dispatch({
+    type: ACTION_TYPES.UPDATE_PERMISSIONS,
+    payload: axios.put(`api/userGroups/${name}/changePermissions`, permissions),
+  });
+  return result;
+};
 export const getUserGroupViewsPermissions = (page: number, size: number, name: string, id: number) => ({
   type: ACTION_TYPES.FETCH_VIEWS_PERMISSIONS,
   payload: axios.get(`api/userGroups/${name}/dashboardPermissions/${id}/viewPermissions?page=${page}&size=${size}`),

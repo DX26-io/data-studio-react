@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardPermissionContainer } from 'app/modules/administration/user-management/permission/dashboard-permissions-container';
+import { DashboardPermissionContainer } from 'app/modules/administration/user-management/permissions/dashboards/dashboard-permissions-container';
 import userEvent from '@testing-library/user-event';
 import { defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
 import { render } from '@testing-library/react';

@@ -2,7 +2,7 @@ import React from 'react';
 import {
   DashboardsPermissions,
   IDashboardsPermissionsProps,
-} from 'app/modules/administration/user-management/permission/dashboards-permissions';
+} from 'app/modules/administration/user-management/permissions/dashboards/dashboards-permissions';
 import userEvent from '@testing-library/user-event';
 import { defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
 import { render } from '@testing-library/react';

@@ -6,7 +6,7 @@ import {
   updateUserGroupPermissions,
   updateUserPermissions,
   resetViewsPermissions
-} from './permissions.reducer';
+} from '../permissions.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
   Flex,
@@ -25,7 +25,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { ITEMS_PER_PAGE, ACTIVE_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/pagination.constants';
 import { Translate, getSortState } from 'react-jhipster';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { findViewsPermissionsChanges } from './permissions-util';
+import { findViewsPermissionsChanges } from '../permissions-util';
 
 export interface IViewsPermissionsProps extends StateProps, DispatchProps {
   permissionProps: any;
