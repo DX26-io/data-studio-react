@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getUserGroupDashboardPermissions, getUserDashboardPermissions } from './permissions.reducer';
+import { getUserGroupDashboardPermissions, getUserDashboardPermissions } from '../permissions.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Flex, Text, SearchField, DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
@@ -127,23 +127,30 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
                   <TableCell align="center">{dashboard.info.dashboardName}</TableCell>
                   {dashboard.info.permissionMetadata.slice(0, 4).map((p, j) => (
                     <TableCell align="center" key={`permission-${p.permission.key.action}`}>
-                      {/* Todo : allow,deny and partial need to be decided during save of view permission. api change is required and one more field will be added in json 
-                      once sergei done with the api,hasIt will be replaced with status*/}
-                      {p.hasIt ? (
-                        <StatusLight variant="positive">
-                          <Translate contentKey="permissions.dashboardPermissions.allow">allow</Translate>
-                        </StatusLight>
-                      ) : (
-                        <StatusLight variant="negative">
-                          <Translate contentKey="permissions.dashboardPermissions.deny">deny</Translate>
-                        </StatusLight>
-                      )}
+                      <Flex direction="row" justifyContent="center" alignContent="center" gap="size-25">
+                        {p.status === 'ALLOW' ? (
+                          <StatusLight variant="positive">
+                            <Translate contentKey="permissions.dashboardPermissions.allow">allow</Translate>
+                          </StatusLight>
+                        ) : null}
+                        {p.status === 'DENY' ? (
+                          <StatusLight variant="negative">
+                            <Translate contentKey="permissions.dashboardPermissions.deny">deny</Translate>
+                          </StatusLight>
+                        ) : null}
+
+                        {p.status === 'PARTIAL' ? (
+                          <StatusLight variant="yellow">
+                            <Translate contentKey="permissions.dashboardPermissions.partial">partial</Translate>
+                          </StatusLight>
+                        ) : null}
+                      </Flex>
                     </TableCell>
                   ))}
                   <TableCell>
                     <Flex gap="size-100" justifyContent="center">
                       <a
-                        data-testid = {`update-views-permissions-${dashboard.info.id}`}
+                        data-testid={`update-views-permissions-${dashboard.info.id}`}
                         onClick={() => {
                           setOpen(true);
                           setId(dashboard.info.id);

@@ -37,6 +37,11 @@ export default (state: PermissionsState = initialState, action): PermissionsStat
       };
     case FAILURE(ACTION_TYPES.FETCH_DASHBOARD_PERMISSIONS):
     case REQUEST(ACTION_TYPES.FETCH_DATASOURCE_PERMISSIONS):
+      return {
+        ...state,
+        datasourcePermissions: [],
+        totalDatasourcePermissions: 0,
+      };
     case FAILURE(ACTION_TYPES.FETCH_DATASOURCE_PERMISSIONS):
       return {
         ...state,

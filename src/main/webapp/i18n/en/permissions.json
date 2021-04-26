@@ -3,6 +3,7 @@
     "home": {
       "administrators": "Administrators"
     },
+    "messages": "Permissions are updated",
     "write": "WRITE",
     "read": "READ",
     "update": "UPDATE",

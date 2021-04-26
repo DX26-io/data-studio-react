@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Grid, View, Text } from '@adobe/react-spectrum';
-import UsersGroups from './users-groups';
+import UsersGroups from '../users-groups';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import PermissionsTitle from './permissions-title';
+import DatasourcePermissionTitle from './datasource-permissions-title';
 import Datasource from './datasource-permissions';
 import { IRootState } from 'app/shared/reducers';
-import { updateUserGroupPermissions, updateUserPermissions, resetViewsPermissions } from './permissions.reducer';
+import { updateUserGroupPermissions, updateUserPermissions, resetViewsPermissions } from '../permissions.reducer';
 import { connect } from 'react-redux';
-import { findViewsPermissionsChanges } from './permissions-util';
+import { findViewsPermissionsChanges } from '../permissions-util';
+import { translate } from "react-jhipster";
 
 export interface IDatasourcePermissionContainerProps extends StateProps, DispatchProps, RouteComponentProps {}
 
@@ -29,14 +30,14 @@ export const DatasourcePermissionContainer = (props: IDatasourcePermissionContai
     <div>
       <SecondaryHeader
         breadcrumbItems={[
-          { label: 'Home', route: '/' },
-          { label: 'User Management', route: '/administration/user-management' },
+          { label: translate('home.title'), route: '/' },
+          { label: translate('userManagement.home.title'), route: '/administration/user-management' },
           {
-            label: 'Datasource Permissions',
+            label: translate('permissions.datasourcePermissions.title'),
             route: '/administration/user-management/datasource-permissions',
           },
         ]}
-        title={'Datasource Permissions'}
+        title={translate('permissions.datasourcePermissions.title')}
       ></SecondaryHeader>
 
       <Grid areas={['users datasources']} columns={['1fr', '2fr']} rows={['auto']} data-testid="permission-container">
@@ -44,7 +45,7 @@ export const DatasourcePermissionContainer = (props: IDatasourcePermissionContai
           <UsersGroups permissionProps={props} />
         </View>
         <View gridArea="datasources" borderXWidth="thin" borderColor="default" height="100vh">
-          <PermissionsTitle handleSaveClick={handleSaveClick} />
+          <DatasourcePermissionTitle handleSaveClick={handleSaveClick} updating={props.updating}/>
           <Datasource permissionProps={props} />
         </View>
       </Grid>
@@ -54,6 +55,7 @@ export const DatasourcePermissionContainer = (props: IDatasourcePermissionContai
 const mapStateToProps = (storeState: IRootState) => ({
   datasourcePermissions: storeState.permissions.datasourcePermissions,
   totalDatasourcePermissions: storeState.permissions.totalDatasourcePermissions,
+  updating: storeState.permissions.updating,
 });
 const mapDispatchToProps = {
   updateUserGroupPermissions,

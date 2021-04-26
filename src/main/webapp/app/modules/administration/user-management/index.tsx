@@ -2,8 +2,8 @@ import React from 'react';
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 import Users from './users/users';
 import UserGroups from './groups/user-groups';
-import Permission from './permission/dashboard-permissions-container';
-import DatasourcePermissionContainer from './permission/datasource-permissions-container';
+import Permission from './permissions/dashboards/dashboard-permissions-container';
+import DatasourcePermissionContainer from './permissions/datasources/datasource-permissions-container';
 
 import UserManagement from './user-management';
 

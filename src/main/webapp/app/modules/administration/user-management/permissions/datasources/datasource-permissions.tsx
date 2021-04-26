@@ -6,16 +6,17 @@ import {
   updateUserGroupPermissions,
   updateUserPermissions,
   resetViewsPermissions,
-} from './permissions.reducer';
+} from '../permissions.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Flex, Text, SearchField, Checkbox } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import Edit from '@spectrum-icons/workflow/Edit';
 import { ITEMS_PER_PAGE, ACTIVE_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/pagination.constants';
-import { Translate, getSortState } from 'react-jhipster';
+import { Translate, getSortState, translate } from 'react-jhipster';
 import { StatusLight } from '@adobe/react-spectrum';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { findViewsPermissionsChanges } from './permissions-util';
+import { findViewsPermissionsChanges } from '../permissions-util';
+import { toast } from 'react-toastify';
 
 // TODO : when hit the url,params should be visible
 
@@ -27,7 +28,7 @@ export const DatasourcePermissions = (props: IDatasourceProps) => {
   const [user, setUser] = React.useState(null);
   const [group, setGroup] = React.useState(null);
 
-  const { datasourcePermissions, totalDatasourcePermissions, permissionProps} = props;
+  const { datasourcePermissions, totalDatasourcePermissions, permissionProps } = props;
 
   const [pagination, setPagination] = useState(
     overridePaginationStateWithQueryParams(getSortState(permissionProps.location, ITEMS_PER_PAGE), permissionProps.location.search)
@@ -90,6 +91,12 @@ export const DatasourcePermissions = (props: IDatasourceProps) => {
     }
   };
 
+  useEffect(() => {
+    if (props.updateSuccess) {
+      toast.success(translate('permissions.messages'));
+    }
+  }, [props.updateSuccess]);
+
   return (
     <div className="dx26-container">
       <Paper className="dx26-table-pager">
@@ -150,6 +157,7 @@ export const DatasourcePermissions = (props: IDatasourceProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   datasourcePermissions: storeState.permissions.datasourcePermissions,
   totalDatasourcePermissions: storeState.permissions.totalDatasourcePermissions,
+  updateSuccess: storeState.permissions.updateSuccess,
 });
 
 const mapDispatchToProps = {

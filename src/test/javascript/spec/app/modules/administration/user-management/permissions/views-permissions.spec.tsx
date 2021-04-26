@@ -1,5 +1,5 @@
 import React from 'react';
-import { ViewsPermissions, IViewsPermissionsProps } from 'app/modules/administration/user-management/permission/views-permissions';
+import { ViewsPermissions, IViewsPermissionsProps } from 'app/modules/administration/user-management/permissions/dashboards/views-permissions';
 import userEvent from '@testing-library/user-event';
 import { DialogContainer, defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
 import { render } from '@testing-library/react';
