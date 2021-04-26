@@ -1,0 +1,35 @@
+{
+  "reports": {
+    "home": {
+      "title": "Reports Management",
+      "subTitle": "Reports",
+      "description": "Manage your reports"
+    },
+    "reportConfiguration": {
+      "title": "Reports Configuration",
+      "description": "Manage your reports configuration",
+      "email": {
+        "title": "Email Configuration",
+        "description": "Manage your email configuration",
+        "createLabel": "Create Email Configurations",
+        "updateLabel": "Update Email Configurations"
+      },
+      "teams": {
+        "title": "Team Configuration",
+        "description": "Manage your team configuration",
+        "createLabel": "Create MS Teams Configurations",
+        "updateLabel": "Update MS Teams Configurations",
+        "name": "Name",
+        "url": "URL"
+      },
+      "jira": {
+        "title": "Jira Configuration",
+        "description": "Manage your jira configuration"
+      }
+    },
+    "taskLogger": {
+      "title": "Task Logger",
+      "description": "Manage your logs"
+    }
+  }
+}
