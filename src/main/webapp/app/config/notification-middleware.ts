@@ -1,11 +1,21 @@
 import { isPromise, translate } from 'react-jhipster';
 import { toast } from 'react-toastify';
+import { authFailure } from 'app/shared/reducers/authentication';
 
+const url401 = new Map();
 const addErrorAlert = (message, key?, data?) => {
   key = key ? key : message;
   toast.error(translate(key, data));
 };
-export default () => next => action => {
+
+const bump401Error = url => {
+  if (!url401.has(url)) {
+    url401.set(url, 0);
+  }
+  url401.set(url, url401.get(url) + 1);
+};
+
+export default ({ dispatch }) => next => action => {
   // If not a promise, continue on
   if (!isPromise(action.payload)) {
     return next(action);
@@ -44,65 +54,70 @@ export default () => next => action => {
       } else if (error && error.response) {
         const response = error.response;
         const data = response.data;
-        if (
-          !(response.status === 401 && (error.message === '' || (data && data.path && data.path.includes('/api/account')))) &&
-          !(response.status === 500 && response.config.url.includes('api/account'))
-        ) {
-          let i;
-          switch (response.status) {
-            // connection refused, server not reachable
-            case 0:
-              addErrorAlert('Server not reachable', 'error.server.not.reachable');
-              break;
+        const url = response.config?.url;
+        let i;
+        let showAlert = true;
+        switch (response.status) {
+          // connection refused, server not reachable
+          case 0:
+            addErrorAlert('Server not reachable', 'error.server.not.reachable');
+            break;
 
-            case 400: {
-              const headers = Object.entries<string>(response.headers);
-              let errorHeader: string | null = null;
-              let entityKey: string | null = null;
-              headers.forEach(([k, v]: [string, string]) => {
-                if (k.toLowerCase().endsWith('app-error')) {
-                  errorHeader = v;
-                } else if (k.toLowerCase().endsWith('app-params')) {
-                  entityKey = v;
-                }
-              });
-              if (errorHeader) {
-                const entityName = translate('global.menu.entities.' + entityKey);
-                addErrorAlert(errorHeader, errorHeader, { entityName });
-              } else if (data !== '' && data.fieldErrors) {
-                const fieldErrors = data.fieldErrors;
-                for (i = 0; i < fieldErrors.length; i++) {
-                  const fieldError = fieldErrors[i];
-                  if (['Min', 'Max', 'DecimalMin', 'DecimalMax'].includes(fieldError.message)) {
-                    fieldError.message = 'Size';
-                  }
-                  // convert 'something[14].other[4].id' to 'something[].other[].id' so translations can be written to it
-                  const convertedField = fieldError.field.replace(/\[\d*\]/g, '[]');
-                  const fieldName = translate(`datastudioApp.${fieldError.objectName}.${convertedField}`);
-                  addErrorAlert(`Error on field "${fieldName}"`, `error.${fieldError.message}`, { fieldName });
-                }
-              } else if (data !== '' && data.message) {
-                addErrorAlert(data.message, data.message, data.params);
-              } else {
-                addErrorAlert(data);
+          case 400: {
+            const headers = Object.entries<string>(response.headers);
+            let errorHeader: string | null = null;
+            let entityKey: string | null = null;
+            headers.forEach(([k, v]: [string, string]) => {
+              if (k.toLowerCase().endsWith('app-error')) {
+                errorHeader = v;
+              } else if (k.toLowerCase().endsWith('app-params')) {
+                entityKey = v;
               }
-              break;
+            });
+            if (errorHeader) {
+              const entityName = translate('global.menu.entities.' + entityKey);
+              addErrorAlert(errorHeader, errorHeader, { entityName });
+            } else if (data !== '' && data.fieldErrors) {
+              const fieldErrors = data.fieldErrors;
+              for (i = 0; i < fieldErrors.length; i++) {
+                const fieldError = fieldErrors[i];
+                if (['Min', 'Max', 'DecimalMin', 'DecimalMax'].includes(fieldError.message)) {
+                  fieldError.message = 'Size';
+                }
+                // convert 'something[14].other[4].id' to 'something[].other[].id' so translations can be written to it
+                const convertedField = fieldError.field.replace(/\[\d*\]/g, '[]');
+                const fieldName = translate(`datastudioApp.${fieldError.objectName}.${convertedField}`);
+                addErrorAlert(`Error on field "${fieldName}"`, `error.${fieldError.message}`, { fieldName });
+              }
+            } else if (data !== '' && data.message) {
+              addErrorAlert(data.message, data.message, data.params);
+            } else {
+              addErrorAlert(data);
             }
-            case 404:
-              addErrorAlert('Not found', 'error.url.not.found');
-              break;
-
-            default:
-              if (data !== '' && data.message) {
-                addErrorAlert(data.message);
-              } else {
-                addErrorAlert(data);
-              }
+            break;
           }
+          case 401:
+            bump401Error(url);
+            if (url === 'api/account' && url401.get(url) === 1) {
+              showAlert = false;
+            }
+            if (showAlert) {
+              addErrorAlert(data.message);
+            }
+            dispatch(authFailure());
+            break;
+
+          case 404:
+            addErrorAlert('Not found', 'error.url.not.found');
+            break;
+
+          default:
+            if (data !== '' && data.message) {
+              addErrorAlert(data.message);
+            } else {
+              addErrorAlert(data);
+            }
         }
-      } else if (error && error.config && error.config.url === 'api/account' && error.config.method === 'get') {
-        /* eslint-disable no-console */
-        console.log('Authentication Error: Trying to access url api/account with GET.');
       } else if (error && error.message) {
         toast.error(error.message);
       } else {
