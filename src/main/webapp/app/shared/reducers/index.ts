@@ -19,6 +19,9 @@ import settings, { SettingsState } from 'app/modules/account/settings/settings.r
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
 import home, { HomeState } from 'app/modules/home/home.reducer';
 import recent, { RecentState } from 'app/modules/home/sections/recent.reducer';
+import reportConfiguration, {
+  ReportConfigurationState,
+} from 'app/modules/administration/report-management/reports-configuration/reports-configuration.reducer';
 
 // prettier-ignore
 import dashboard, {
@@ -50,6 +53,7 @@ export interface IRootState {
   readonly views: ViewsState;
   readonly home: HomeState;
   readonly recent: RecentState;
+  readonly reportConfiguration: ReportConfigurationState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -73,6 +77,7 @@ const rootReducer = combineReducers<IRootState>({
   datasources,
   views,
   home,
+  reportConfiguration,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
   recent,
