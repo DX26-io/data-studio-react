@@ -141,6 +141,8 @@ describe('permissions reducer tests', () => {
         errorMessage: null,
         dashboardPermissions: [],
         totalDashboardPermissions: 0,
+        datasourcePermissions: [],
+        totalDatasourcePermissions: 0,
         viewsPermissions: [],
         totalViewsPermissions: 0,
         updateSuccess: false,
