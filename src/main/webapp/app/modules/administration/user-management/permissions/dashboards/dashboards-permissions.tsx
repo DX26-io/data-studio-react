@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getUserGroupDashboardPermissions, getUserDashboardPermissions } from './permissions.reducer';
+import { getUserGroupDashboardPermissions, getUserDashboardPermissions } from '../permissions.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Flex, Text, SearchField, DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';

@@ -3,6 +3,7 @@
     "home": {
       "administrators": "Administrators"
     },
+    "messages": "Permissions are updated",
     "write": "WRITE",
     "read": "READ",
     "update": "UPDATE",
@@ -26,8 +27,17 @@
       "viewName": "VIEW NAME"
     },
     "datasourcePermissions": {
-      "title": "Datasource Permissions",
-      "description": "Manage datasources user and  group permissions"
+      "title": "Datasource permissions",
+      "description": "Manage datasources user and  group permissions",
+      "datasource": "DATASOURCE",
+      "read": "READ",
+      "write": "WRITE",
+      "update": "UPDATE",
+      "delete": "DELETE",
+      "manage": "MANAGE",
+      "allow": "allow",
+      "deny": "deny",
+      "partial": "partial"
     }
   }
 }
