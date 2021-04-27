@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
-import { Grid, View, Text } from '@adobe/react-spectrum';
+import { Grid, View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import UsersGroups from '../users-groups';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
