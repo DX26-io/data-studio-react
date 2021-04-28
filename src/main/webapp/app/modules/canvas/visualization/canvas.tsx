@@ -7,7 +7,7 @@ import RGL, { WidthProvider } from 'react-grid-layout';
 import './canvas.scss';
 import { getEntity as getViewEntity, getCurrentViewState, saveViewState } from 'app/entities/views/views.reducer';
 import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
-import { getEntities as getfeatureEntities, getDatasourcesFeaturesEntities } from 'app/entities/feature/feature.reducer';
+import { getEntities as getfeatureEntities, getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
   createEntity as addVisualmetadataEntity,
@@ -215,6 +215,7 @@ const Canvas = (props: VisualizationProp) => {
   return (
     <>
       {isSocketConnaction && <FilterPanel />}
+      {isSocketConnaction && <FeaturesPanel />}
       <View>
         <CanvasFilterHeader />
       </View>
@@ -266,7 +267,7 @@ const mapDispatchToProps = {
   addVisualmetadataEntity,
   deleteVisualmetadataEntity,
   saveViewState,
-  getDatasourcesFeaturesEntities,
+  getViewFeaturesEntities,
   getVisualmetadataEntity,
   updateVisualmetadataEntity,
 };

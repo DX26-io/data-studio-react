@@ -55,6 +55,12 @@
         "thresholdAlert": "Threshold Alert",
         "data": "Data"
       }
+    },
+    "features": {
+      "tabs": {
+        "dimensions": "Dimensions",
+        "measures": "Measures"
+      }
     }
   }
 }

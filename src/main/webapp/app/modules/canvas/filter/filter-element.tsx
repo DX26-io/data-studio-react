@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { ActionButton, Flex, View, Text, Button, Divider } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
-import { getDatasourcesFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
+import { getViewFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { IFeature } from 'app/shared/model/feature.model';
 import AsyncSelect from 'react-select/async';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
@@ -20,7 +20,7 @@ export interface IFilterElementProp extends StateProps, DispatchProps {
 
 const FilterElement = (props: IFilterElementProp) => {
   // const onExchangeMetadata = data => {
-  //   
+  //
   //   const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
   //   if (data.headers.request === 'filters') {
   //     const obj = metaData.data[0];
@@ -240,7 +240,6 @@ const FilterElement = (props: IFilterElementProp) => {
 const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   filterData: storeState.visualmetadata.filterData,
-  isFilterOpen: storeState.applicationProfile.isFilterOpen,
   featuresList: storeState.feature.entities,
   selectedFilter: storeState.filter.selectedFilter,
   filterStateChange: storeState.filter.filterStateChange,
