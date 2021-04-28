@@ -247,9 +247,9 @@ export const resetTeamConfig = () => ({
 });
 
 export const setConfig = (config: IEmailConfig | ITeamConfig) => dispatch => {
-  if (config['webhookName']) {
+  if (config['webhookName'] !== undefined) {
     dispatch(setTeamConfig(config));
-  } else if (config['host'] && config['sender']) {
+  } else if (config['host'] !== undefined && config['sender'] !== undefined) {
     dispatch(setEmailConfig(config));
   }
 };

@@ -1,5 +1,3 @@
-// import './secondary-header.scss';
-
 import React from 'react';
 import { Flex, View } from '@adobe/react-spectrum';
 import { RouteComponentProps } from 'react-router-dom';
@@ -19,12 +17,6 @@ const ReportsManagement = (props: RouteComponentProps) => {
       link: `${match.url}/reports`,
       title: 'reports.home.subTitle',
       description: 'reports.home.description',
-    },
-    {
-      icon: <FileGear size="L" />,
-      link: `${match.url}/reports-configuration`,
-      title: 'reports.reportConfiguration.title',
-      description: 'reports.reportConfiguration.description',
     },
     {
       icon: <Feed size="L" />,

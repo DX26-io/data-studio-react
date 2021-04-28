@@ -9,11 +9,11 @@ import Configuration from './configuration/configuration';
 import Audits from './audits/audits';
 import Docs from './docs/docs';
 import Sources from './sources';
-import ReportManagement from "./report-management";
+import ReportConfiguration from "./reports-configuration";
 
 const Routes = ({ match }) => (
   <div>
-    <ErrorBoundaryRoute path={`${match.url}/report-management`} component={ReportManagement} />
+    <ErrorBoundaryRoute path={`${match.url}/reports-configuration`} component={ReportConfiguration} />
     <ErrorBoundaryRoute path={`${match.url}/user-management`} component={UserManagement} />
     <ErrorBoundaryRoute path={`${match.url}/sources`} component={Sources} />
     <ErrorBoundaryRoute exact path={`${match.url}/health`} component={Health} />
