@@ -345,3 +345,12 @@ export const clearAuthentication = messageKey => (dispatch, getState) => {
 export const getToken = () => {
   return Storage.local.get(AUTH_TOKEN_KEY) || Storage.session.get(AUTH_TOKEN_KEY);
 };
+
+export const hasAuthority = (account, authority) => {
+  debugger;
+  if (account?.permissions && account?.permissions.indexOf(authority) !== -1) {
+    return true;
+  } else {
+    return false;
+  }
+};

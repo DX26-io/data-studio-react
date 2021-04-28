@@ -5,7 +5,7 @@ import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
 import { IDashboard } from 'app/shared/model/dashboard.model';
 import { Redirect } from 'react-router-dom';
-import { hasAuthority } from 'app/shared/auth/permissions-dispatch.service';
+import { hasAuthority } from 'app/shared/reducers/authentication';
 
 interface IViewCardContentProps {
   viewDashboard: IDashboard;
@@ -44,7 +44,7 @@ const ViewCardContent: React.FC<IViewCardContentProps> = props => {
                     </Text>
                   </Item>
                 </Section>
-                {account && hasAuthority('DELETE_' + viewId + '_VIEW') && (
+                {account &&  hasAuthority(props.account, 'DELETE_' + viewId + '_VIEW') && (
                   <Section title={<Translate contentKey="entity.options.danger">Danger</Translate>}>
                     <Item key="delete">
                       <Text>

@@ -1,10 +1,6 @@
 import 'react-toastify/dist/ReactToastify.css';
 import '../content/scss/main.scss';
-// import 'flair-visualizations/styles/stylesheets/screen.css'
 import '@spectrum-css/typography/dist/index-vars.css';
-// import 'flair-visualizations/dist/main.bundle.js'
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';

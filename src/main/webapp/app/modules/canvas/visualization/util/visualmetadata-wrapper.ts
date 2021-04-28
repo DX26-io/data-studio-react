@@ -165,13 +165,14 @@ const constructHavingField = fieldMeasure => {
 };
 
 const getQueryParametersWithFields = (fields, filters, conditionExpression) => {
-  var query = {
+  let query = {
     fields,
+    conditionExpressions: undefined,
   };
 
-  // if (conditionExpression && conditionExpression.conditionExpression) {
-  //   query.conditionExpressions = [conditionExpression];
-  // }
+  if (conditionExpression && conditionExpression.conditionExpression) {
+    query.conditionExpressions = [conditionExpression];
+  }
 
   return query;
 };

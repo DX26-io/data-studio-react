@@ -15,7 +15,7 @@ import DashboardCreateModal from './dashboard-create-modal';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
-import { hasAuthority, saveAccount } from 'app/shared/auth/permissions-dispatch.service';
+import { hasAuthority } from 'app/shared/reducers/authentication';
 
 export interface IDashboardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -53,10 +53,10 @@ export const Dashboard = (props: IDashboardProps) => {
         order: sortSplit[1],
       });
     }
-    if(props.account){
-      saveAccount(props.account)
+    if (props.account) {
+      // saveAccount(props.account)
     }
-  }, [props.location.search,props.account]);
+  }, [props.location.search, props.account]);
 
   const handleChangePage = (event, newPage) => {
     setPaginationState({
@@ -102,7 +102,7 @@ export const Dashboard = (props: IDashboardProps) => {
           ]}
           title={DASHBOARDS_TITLE}
         >
-          {props.account && hasAuthority("WRITE_DASHBOARDS_APPLICATION") && (
+          {props.account && hasAuthority(props.account, 'WRITE_DASHBOARDS_APPLICATION') && (
             <Button variant="cta" onPress={() => props.history.push(`${match.url}/create`)}>
               <Translate contentKey="dashboard.home.createLabel">Create</Translate>
             </Button>

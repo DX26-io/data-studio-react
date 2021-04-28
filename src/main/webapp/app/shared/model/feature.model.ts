@@ -17,9 +17,18 @@ export interface IFeature {
 }
 
 export const defaultValue: Readonly<IFeature> = {
-  favouriteFilter: false,
-  isSelected: false,
-  pin: false,
-  name: '',
+  datasourceId: 0,
+  dateFilter: '',
   definition: '',
+  favouriteFilter: false,
+  featureCacheType: '',
+  featureType: '',
+  functionId: null,
+  isSelected: false,
+  name: '',
+  pin: false,
+  type: '',
+  metadata: null,
+  selected: '',
+  selected2: '',
 };

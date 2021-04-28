@@ -28,7 +28,7 @@ import {
 } from 'app/entities/dashboard/dashboard-util';
 import { RouteComponentProps } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import { hasAuthority } from 'app/shared/auth/permissions-dispatch.service';
+import { hasAuthority } from 'app/shared/reducers/authentication';
 
 export interface IDashboardPropertiesModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -164,7 +164,7 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
               <Translate contentKey="entity.action.cancel">Close</Translate>
             </Button>
 
-            {props.account && hasAuthority('DELETE_' + dashboardId + '_DASHBOARDS') && !isEdit && (
+            {props.account &&  hasAuthority(props.account, 'DELETE_' + dashboardId + '_DASHBOARDS') && !isEdit && (
               <Button variant="cta" onPress={handleEdit}>
                 <Translate contentKey="entity.action.edit">Edit</Translate>
               </Button>

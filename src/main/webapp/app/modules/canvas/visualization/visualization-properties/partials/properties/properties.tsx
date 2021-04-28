@@ -6,6 +6,7 @@ import { IFeature } from 'app/shared/model/feature.model';
 import { IVisualMetadataSet, Property } from 'app/shared/model/visualMetadata.model';
 import { Checkbox, Switch, Item, Picker, TextField } from '@adobe/react-spectrum';
 import { parseBool, parseString } from 'app/shared/util/common-utils.ts';
+import { ColorSlider } from '@react-spectrum/color';
 
 export interface IPropertiesProps {
   features: readonly IFeature[];
@@ -69,14 +70,24 @@ const Properties = (props: IPropertiesProps) => {
         </Switch>
       )}
       {props.property.type === 'COLOR_PICKER' && (
-        <TextField
+        <><TextField
           onChange={text => {
             handleValueChange(text);
-          }}
+          } }
           value={parseString(props.property.value)}
           type="color"
-          label={props.property.propertyType.name}
-        />
+          label={props.property.propertyType.name} />
+        
+{/* 
+working on it
+          <ColorSlider
+            label="Hue (controlled)"
+            value={parseString(props.property.value)}
+            onChange={text => {
+              handleValueChange(text);
+            } }
+            channel="hue" />*/}
+            </> 
       )}
       {props.property.type === 'TEXT' && (
         <TextField

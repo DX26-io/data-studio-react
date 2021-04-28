@@ -35,6 +35,8 @@ import { NoDataFoundPlaceHolder } from 'app/shared/components/placeholder/placeh
 import Loader from 'app/shared/components/card/loader/loader';
 import FilterPanel from 'app/modules/canvas/filter/filter-panel';
 import CanvasFilterHeader from 'app/shared/layout/header/canvas-filter-header';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
 const ReactGridLayout = WidthProvider(RGL);
 
 export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}

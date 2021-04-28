@@ -20,9 +20,9 @@ export type ICrudGetDashboardViewsAction<T> = (
 /**
  * This is a special type for store all data type
  */
-export type ISaveViewState<T> = (visualmetaDataDTO: ISaveViewStateDTO) => IPayload<T> | ((dispatch: any) => IPayload<T>);
+export type ISaveViewState<T> = (visualmetaDataDTO: IViewStateDTO) => IPayload<T> | ((dispatch: any) => IPayload<T>);
 
-export interface ISaveViewStateDTO {
+export interface IViewStateDTO {
   visualMetadataSet: IVisualMetadataSet[];
   _id: number;
 }

@@ -15,7 +15,7 @@ import ViewCardContent from './view-card/view-card-content';
 import Pagination from '@material-ui/lab/Pagination';
 import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
-import { hasAuthority } from 'app/shared/auth/permissions-dispatch.service';
+import { hasAuthority } from 'app/shared/reducers/authentication';
 
 export interface IViewsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -100,7 +100,7 @@ export const Views = (props: IViewsProps) => {
           ]}
           title={dashboardEntity.dashboardName}
         >
-          {props.account && hasAuthority(`WRITE_${dashboardEntity.id}_DASHBOARD`) && (
+          {props.account  && (
             <Button variant="cta" onPress={() => props.history.push(`${props.match.url}/create`)}>
               <Translate contentKey="views.home.createLabel">Create View</Translate>
             </Button>

@@ -4,7 +4,7 @@ import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
 import { Redirect } from 'react-router-dom';
-import { hasAuthority } from 'app/shared/auth/permissions-dispatch.service';
+import { hasAuthority } from 'app/shared/reducers/authentication';
 
 interface IDashboardCardContentProps {
   dashboardName: string;
@@ -47,7 +47,7 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
                     </Text>
                   </Item>
                 </Section>
-                {account && hasAuthority("DELETE_" + dashboardId + "_DASHBOARDS") && (
+                {account && hasAuthority(account, 'DELETE_' + dashboardId + '_DASHBOARDS') && (
                   <Section title={<Translate contentKey="entity.options.danger">Danger</Translate>}>
                     <Item key="delete">
                       <Text>

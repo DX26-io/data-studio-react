@@ -8,7 +8,7 @@ import { defaultValue, IViews } from 'app/shared/model/views.model';
 import { IVisualMetadataSet, IVisualMetadata } from 'app/shared/model/visualMetadata.model';
 
 import { getDefaultInitialPaginationState } from 'app/shared/util/pagination-utils';
-import { ICrudGetDashboardViewsAction, ICrudViewDeleteAction, ISaveViewState, ISaveViewStateDTO } from './view-util';
+import { ICrudGetDashboardViewsAction, ICrudViewDeleteAction, ISaveViewState, IViewStateDTO } from './view-util';
 
 export const ACTION_TYPES = {
   FETCH_VIEWS_LIST: 'views/FETCH_VIEWS_LIST',
@@ -135,7 +135,7 @@ export const getCurrentViewState: ICrudGetDashboardViewsAction<IVisualMetadataSe
   };
 };
 
-export const saveViewState: ICrudPutAction<ISaveViewStateDTO> = entity => async dispatch => {
+export const saveViewState: ICrudPutAction<IViewStateDTO> = entity => async dispatch => {
   const requestUrl = `${apiUrl}/${entity._id}/viewState`;
   const result = await dispatch({
     type: ACTION_TYPES.FETCH_VIEWS_STATE,
