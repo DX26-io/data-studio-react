@@ -21,7 +21,7 @@ import home, { HomeState } from 'app/modules/home/home.reducer';
 import recent, { RecentState } from 'app/modules/home/sections/recent.reducer';
 import reportConfiguration, {
   ReportConfigurationState,
-} from 'app/modules/administration/report-management/reports-configuration/reports-configuration.reducer';
+} from 'app/modules/administration/reports-configuration/reports-configuration.reducer';
 
 // prettier-ignore
 import dashboard, {

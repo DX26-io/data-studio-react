@@ -67,8 +67,7 @@ const ReportsConfiguration = (props: IReportsConfigurationProps) => {
       <SecondaryHeader
         breadcrumbItems={[
           { label: translate('home.title'), route: '/' },
-          { label: translate('reports.home.title'), route: '/administration/report-management' },
-          { label: translate('reports.reportConfiguration.title'), route: '/administration/report-management/report-configuration' },
+          { label: translate('reports.reportConfiguration.title'), route: '/administration/report-configuration' },
         ]}
         title={translate('reports.reportConfiguration.title')}
       />
