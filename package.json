@@ -23,7 +23,6 @@
     "@spectrum-css/typography": "^3.0.0-beta.0",
     "@spectrum-icons/illustrations": "^3.2.1",
     "@spectrum-icons/workflow": "^3.2.0",
-    "@spectrum-web-components/accordion": "^0.1.4",
     "availity-reactstrap-validation": "2.6.1",
     "axios": "0.19.2",
     "bootstrap": "4.4.1",

@@ -27,6 +27,7 @@ const initialState = {
   newCreated: false,
   rowQuery: null,
   filterData: {},
+  selectedFilter: {},
 };
 
 export type VisualmetadataState = Readonly<typeof initialState>;
