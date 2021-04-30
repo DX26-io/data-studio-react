@@ -59,10 +59,7 @@
   },
   "flairbiApp": {
     "realm": {
-      "created": "Realm created successfully"
-    },
-    "features": {
-      "created": "Feature created successfully"
+      "created": "Realm created"
     }
   }
 }

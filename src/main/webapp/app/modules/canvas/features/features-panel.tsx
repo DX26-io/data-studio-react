@@ -52,9 +52,9 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
         <Flex direction="column" gap="size-100">
           <View justifySelf="center">
             <div className="features-header">
-              <Text>
+              <span className="spectrum-Heading--sizeXXS">
                 <Translate contentKey="datastudioApp.feature.panel.title">_Features</Translate>
-              </Text>
+              </span>
               <Button variant="secondary"
                       isQuiet
                       onPress={createNewFeatureClicked}>
