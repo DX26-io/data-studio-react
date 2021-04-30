@@ -9,12 +9,15 @@ import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import {toggleFeaturesPanel} from "app/shared/reducers/application-profile";
 import {Tabs} from "@react-spectrum/tabs";
 import {featureTypeToActiveTabs, getFeaturesTabTranslations} from "app/modules/canvas/features/features-panel-util";
+import {Translate} from "react-jhipster";
+import {Redirect} from "react-router-dom";
 
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
 const FeaturesPanel = (props: IFeaturesPanelProp) => {
   const [isFeaturesMinimize, setFeaturesMinimize] = useState(true);
   const [activeTabId, setActiveTabId] = useState<Key>(0);
+  const [showFeatureCreateDialog, setShowFeatureCreateDialog] = useState<boolean>(false);
 
   useEffect(() => {
     props.getViewFeaturesEntities(props.view.id);
@@ -23,6 +26,23 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
   const featureFilter = (feature) => {
     return feature.featureType === featureTypeToActiveTabs[activeTabId];
   };
+
+  const createNewFeatureClicked = () => {
+    setShowFeatureCreateDialog(true);
+  };
+
+  if (showFeatureCreateDialog) {
+    return (
+      <Redirect
+        to={{
+          pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/feature/create',
+          state: {
+            featureType: featureTypeToActiveTabs[activeTabId]
+          }
+        }}
+      />
+    );
+  }
 
   return <>
     <div className={props.isFeaturesPanelOpen ? 'FeaturesPanel-Main FeaturesPanel-show' : 'FeaturesPanel-Main FeaturesPanel-hide'}>
@@ -33,6 +53,11 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
               <Text>
                 <span>Features</span>
               </Text>
+              <Button variant="secondary"
+                      isQuiet
+                      onPress={createNewFeatureClicked}>
+                <Translate contentKey="datastudioApp.feature.panel.create">_+</Translate>
+              </Button>
               {isFeaturesMinimize ?
                 <ActionButton
                   onPress={() => {
