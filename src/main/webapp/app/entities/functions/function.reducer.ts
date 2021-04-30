@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
+import { ICrudGetAllAction } from 'react-jhipster';
 
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IFunction } from 'app/shared/model/function.model';
 
 export const ACTION_TYPES = {
-  FETCH_FUNCTIONS_LIST: 'feature/FETCH_FUNCTIONS_LIST',
+  FETCH_FUNCTIONS_LIST: 'function/FETCH_FUNCTIONS_LIST',
 };
 
 const initialState = {
