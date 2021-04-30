@@ -43,7 +43,7 @@ const apiUrl = 'api/functions';
 
 // Actions
 
-export const getEntities: ICrudGetAllAction<IFunction> = (page, size, sort) => ({
+export const getEntities: ICrudGetAllAction<IFunction> = () => ({
   type: ACTION_TYPES.FETCH_FUNCTIONS_LIST,
   payload: axios.get<IFunction>(`${apiUrl}?cacheBuster=${new Date().getTime()}`),
 });

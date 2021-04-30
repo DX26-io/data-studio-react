@@ -28,7 +28,7 @@ const initialState = {
   realmCreateError: false,
   redirectTo: (null as unknown) as string,
   loginSuccess: false,
-  realms: (null as unknown) as Array<RealmDTO>,
+  realms: (null as unknown) as ReadonlyArray<RealmDTO>,
   loginProviderEmailConfirmationToken: (null as unknown) as string,
   verifyUserSuccess: false,
   createRealmSuccess: false,

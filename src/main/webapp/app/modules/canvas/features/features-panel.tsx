@@ -5,6 +5,7 @@ import { IRootState } from 'app/shared/reducers';
 import './features-panel.scss';
 import Minimize from '@spectrum-icons/workflow/Minimize';
 import Maximize from '@spectrum-icons/workflow/Maximize';
+import Add from '@spectrum-icons/workflow/Add';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import {toggleFeaturesPanel} from "app/shared/reducers/application-profile";
 import {Tabs} from "@react-spectrum/tabs";
@@ -51,12 +52,12 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
           <View justifySelf="center">
             <div className="features-header">
               <Text>
-                <span>Features</span>
+                <Translate contentKey="datastudioApp.feature.panel.title">_Features</Translate>
               </Text>
               <Button variant="secondary"
                       isQuiet
                       onPress={createNewFeatureClicked}>
-                <Translate contentKey="datastudioApp.feature.panel.create">_+</Translate>
+                <Add></Add>
               </Button>
               {isFeaturesMinimize ?
                 <ActionButton

@@ -1,4 +1,4 @@
 export interface RealmDTO {
-  name: string;
-  id: number;
+  readonly name: string;
+  readonly id: number;
 }

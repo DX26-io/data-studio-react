@@ -21,7 +21,7 @@
       "definition": "Definition",
       "favouriteFilter": "Favourite Filter",
       "panel": {
-        "create": "+"
+        "title": "Features"
       },
       "dialogs": {
         "create": {
@@ -29,7 +29,8 @@
           "name": "Name",
           "type": "Type",
           "definition": "Definition",
-          "searchfunction": "Search function"
+          "searchfunction": "Search function",
+          "functions": "Functions"
         }
       }
     }
