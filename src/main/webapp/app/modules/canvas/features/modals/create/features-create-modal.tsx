@@ -14,7 +14,7 @@ import {Redirect, RouteComponentProps} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {IRootState} from 'app/shared/reducers';
 import {getEntities as getFunctions} from "app/entities/functions/function.reducer";
-import {createEntity as createFeature} from "app/entities/feature/feature.reducer";
+import {createEntity as createFeature, getEntity as getFeature} from "app/entities/feature/feature.reducer";
 import {IFunction} from "app/shared/model/function.model";
 import {IDatasources} from "app/shared/model/datasources.model";
 
@@ -30,14 +30,23 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
   const [canceled, setCanceled] = useState<boolean>(false);
 
   useEffect(() => {
-    setFeatureType(props.location.state.featureType);
     setDatasource(props.location.state.datasource);
+    setFeatureType(props.location.state.featureType);
+    if (props.match.params.featureId) {
+      props.getFeature(props.match.params.featureId);
+    }
   }, []);
-
 
   useEffect(() => {
     props.getFunctions();
   }, []);
+
+  useEffect(() => {
+    setFeatureType(props.feature.featureType);
+    setNameText(props.feature.name);
+    setTypeText(props.feature.type);
+    setDefinitionText(props.feature.definition);
+  }, [props.feature]);
 
   const onCancelClick = () => {
     setCanceled(true);
@@ -143,9 +152,10 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   functions: storeState.functions.entities,
+  feature: storeState.feature.entity,
   succeeded: storeState.feature.updateSuccess,
 });
-const mapDispatchToProps = { getFunctions, createFeature };
+const mapDispatchToProps = { getFunctions, createFeature, getFeature };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 

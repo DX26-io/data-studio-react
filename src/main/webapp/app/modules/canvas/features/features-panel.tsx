@@ -12,12 +12,14 @@ import {Tabs} from "@react-spectrum/tabs";
 import {featureTypeToActiveTabs, getFeaturesTabTranslations} from "app/modules/canvas/features/features-panel-util";
 import {Translate} from "react-jhipster";
 import {Redirect} from "react-router-dom";
+import {IFeature} from "app/shared/model/feature.model";
 
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
 const FeaturesPanel = (props: IFeaturesPanelProp) => {
   const [isFeaturesMinimize, setFeaturesMinimize] = useState(true);
   const [activeTabId, setActiveTabId] = useState<Key>(0);
+  const [selectedFeature, setSelectedFeature] = useState<IFeature>();
   const [showFeatureCreateDialog, setShowFeatureCreateDialog] = useState<boolean>(false);
 
   useEffect(() => {
@@ -32,11 +34,17 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
     setShowFeatureCreateDialog(true);
   };
 
-  if (showFeatureCreateDialog) {
+  const onFeatureSelected = (selectedSet) => {
+    const feature = props.featuresList.find((ft) => selectedSet.has(ft.id));
+    setSelectedFeature(feature);
+  };
+
+  const redirectToFeature = (feature?: IFeature) => {
+    const featureSlug = feature ? `edit/${feature.id}` : 'create';
     return (
       <Redirect
         to={{
-          pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/feature/create',
+          pathname: `/dashboards/${props.view.viewDashboard.id}/${props.view.id}/feature/${featureSlug}`,
           state: {
             featureType: featureTypeToActiveTabs[activeTabId],
             datasource: props.view.viewDashboard.dashboardDatasource
@@ -44,6 +52,14 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
         }}
       />
     );
+  }
+
+  if (showFeatureCreateDialog) {
+    return redirectToFeature();
+  }
+
+  if (selectedFeature) {
+    return redirectToFeature(selectedFeature);
   }
 
   return <>
@@ -95,7 +111,8 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
                     <ListBox
                       width="size-2400"
                       aria-label="Features"
-                      selectionMode="none"
+                      selectionMode="single"
+                      onSelectionChange={onFeatureSelected}
                       items={props.featuresList.filter(featureFilter)}>
                       {(feature) => <Item>{feature.name}</Item>}
                     </ListBox>
