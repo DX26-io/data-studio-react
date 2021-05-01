@@ -35,14 +35,14 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
   const onFeatureSelected = (selectedSet) => {
     const feature = props.featuresList.find((ft) => selectedSet.has(ft.id));
     props.selectFeature(feature);
+    setShowFeatureCreateDialog(true);
   };
 
   const redirectToFeature = () => {
-    const slug = props.selectedFeature ? `${props.selectedFeature.id}` : ``;
     return (
       <Redirect
         to={{
-          pathname: `/dashboards/${props.view.viewDashboard.id}/${props.view.id}/feature/${slug}`,
+          pathname: `/dashboards/${props.view.viewDashboard.id}/${props.view.id}/feature`,
           state: {
             featureType: featureTypeToActiveTabs[activeTabId],
             datasource: props.view.viewDashboard.dashboardDatasource,
@@ -52,7 +52,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
     );
   }
 
-  if (showFeatureCreateDialog || props.selectedFeature) {
+  if (showFeatureCreateDialog) {
     return redirectToFeature();
   }
 

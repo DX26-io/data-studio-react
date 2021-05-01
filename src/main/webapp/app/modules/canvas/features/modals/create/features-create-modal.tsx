@@ -47,14 +47,18 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
   }, []);
 
   useEffect(() => {
-    setSelectedFunction(props.functions.find(func => props.selectedFeature?.functionId === func.id));
+    if (props.selectedFeature) {
+      setSelectedFunction(props.functions.find(func => props.selectedFeature.functionId === func.id));
+    }
   }, [props.functions, props.selectedFeature]);
 
   useEffect(() => {
-    setFeatureType(props.selectedFeature?.featureType);
-    setNameText(props.selectedFeature?.name);
-    setTypeText(props.selectedFeature?.type);
-    setDefinitionText(props.selectedFeature?.definition);
+    if (props.selectedFeature) {
+      setFeatureType(props.selectedFeature.featureType);
+      setNameText(props.selectedFeature.name);
+      setTypeText(props.selectedFeature.type);
+      setDefinitionText(props.selectedFeature.definition);
+    }
   }, [props.selectedFeature]);
 
   useEffect(() => {
@@ -194,7 +198,6 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   functions: storeState.functions.entities,
-  feature: storeState.feature.entity,
   selectedFeature: storeState.feature.selectedFeature,
   updateSuccess: storeState.feature.updateSuccess,
 });
