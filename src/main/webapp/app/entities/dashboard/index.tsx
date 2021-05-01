@@ -33,8 +33,8 @@ const Routes = ({ match }) => (
 
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={Views} />
 
-      <ErrorBoundaryRoute path={`${match.url}/:id/:viewId/feature/create`} component={FeaturesCreateModal} />
-      <ErrorBoundaryRoute path={`${match.url}/:id/:viewId/feature/edit/:featureId`} component={FeaturesCreateModal} />
+      <ErrorBoundaryRoute path={`${match.url}/:id/:viewId/feature`} component={FeaturesCreateModal} />
+      <ErrorBoundaryRoute path={`${match.url}/:id/:viewId/feature/:featureId`} component={FeaturesCreateModal} />
       <ErrorBoundaryRoute path={match.url} component={Dashboard} />
     </Switch>
   </>

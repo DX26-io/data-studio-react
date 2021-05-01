@@ -1,4 +1,4 @@
-import React, {Key, ReactText, useEffect, useState} from 'react';
+import React, {Key, useEffect, useState} from 'react';
 import { connect } from 'react-redux';
 import {ActionButton, Flex, View, Text, Button, Divider, ListBox, Item, Content} from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
@@ -6,20 +6,18 @@ import './features-panel.scss';
 import Minimize from '@spectrum-icons/workflow/Minimize';
 import Maximize from '@spectrum-icons/workflow/Maximize';
 import Add from '@spectrum-icons/workflow/Add';
-import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
+import {getViewFeaturesEntities, selectFeature} from 'app/entities/feature/feature.reducer';
 import {toggleFeaturesPanel} from "app/shared/reducers/application-profile";
 import {Tabs} from "@react-spectrum/tabs";
 import {featureTypeToActiveTabs, getFeaturesTabTranslations} from "app/modules/canvas/features/features-panel-util";
 import {Translate} from "react-jhipster";
 import {Redirect} from "react-router-dom";
-import {IFeature} from "app/shared/model/feature.model";
 
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
 const FeaturesPanel = (props: IFeaturesPanelProp) => {
   const [isFeaturesMinimize, setFeaturesMinimize] = useState(true);
   const [activeTabId, setActiveTabId] = useState<Key>(0);
-  const [selectedFeature, setSelectedFeature] = useState<IFeature>();
   const [showFeatureCreateDialog, setShowFeatureCreateDialog] = useState<boolean>(false);
 
   useEffect(() => {
@@ -36,31 +34,27 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
 
   const onFeatureSelected = (selectedSet) => {
     const feature = props.featuresList.find((ft) => selectedSet.has(ft.id));
-    setSelectedFeature(feature);
+    props.selectFeature(feature);
   };
 
-  const redirectToFeature = (feature?: IFeature) => {
-    const featureSlug = feature ? `edit/${feature.id}` : 'create';
+  const redirectToFeature = () => {
+    const slug = props.selectedFeature ? `${props.selectedFeature.id}` : ``;
     return (
       <Redirect
         to={{
-          pathname: `/dashboards/${props.view.viewDashboard.id}/${props.view.id}/feature/${featureSlug}`,
+          pathname: `/dashboards/${props.view.viewDashboard.id}/${props.view.id}/feature/${slug}`,
           state: {
             featureType: featureTypeToActiveTabs[activeTabId],
             datasource: props.view.viewDashboard.dashboardDatasource,
-            feature
+            feature: props.selectedFeature,
           }
         }}
       />
     );
   }
 
-  if (showFeatureCreateDialog) {
+  if (showFeatureCreateDialog || props.selectedFeature) {
     return redirectToFeature();
-  }
-
-  if (selectedFeature) {
-    return redirectToFeature(selectedFeature);
   }
 
   return <>
@@ -132,10 +126,12 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   isFeaturesPanelOpen: storeState.applicationProfile.isFeaturesPanelOpen,
   featuresList: storeState.feature.entities,
+  selectedFeature: storeState.feature.selectedFeature,
 });
 const mapDispatchToProps = {
   getViewFeaturesEntities,
   toggleFeaturesPanel,
+  selectFeature
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

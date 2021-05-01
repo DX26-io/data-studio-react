@@ -13,6 +13,7 @@ export const ACTION_TYPES = {
   UPDATE_FEATURE: 'feature/UPDATE_FEATURE',
   DELETE_FEATURE: 'feature/DELETE_FEATURE',
   RESET: 'feature/RESET',
+  SELECT_FEATURE: 'feature/SELECT_FEATURE',
 };
 
 const initialState = {
@@ -22,6 +23,7 @@ const initialState = {
   entity: defaultValue,
   updating: false,
   updateSuccess: false,
+  selectedFeature: (null as unknown) as IFeature,
 };
 
 export type FeatureState = Readonly<typeof initialState>;
@@ -77,6 +79,7 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         ...state,
         updating: false,
         updateSuccess: true,
+        selectedFeature: null,
         entity: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.DELETE_FEATURE):
@@ -84,11 +87,18 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         ...state,
         updating: false,
         updateSuccess: true,
+        selectedFeature: null,
         entity: {},
       };
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
+        selectedFeature: null,
+      };
+    case ACTION_TYPES.SELECT_FEATURE:
+      return {
+        ...initialState,
+        selectedFeature: action.payload,
       };
     default:
       return state;
@@ -146,4 +156,9 @@ export const deleteEntity: ICrudDeleteAction<IFeature> = id => async dispatch =>
 
 export const reset = () => ({
   type: ACTION_TYPES.RESET,
+});
+
+export const selectFeature = (feature: IFeature) => ({
+  type: ACTION_TYPES.SELECT_FEATURE,
+  payload: feature,
 });

@@ -21,7 +21,7 @@ import {Redirect, RouteComponentProps} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {IRootState} from 'app/shared/reducers';
 import {getEntities as getFunctions} from "app/entities/functions/function.reducer";
-import {createEntity as createFeature, updateEntity as updateFeature} from "app/entities/feature/feature.reducer";
+import {createEntity as createFeature, updateEntity as updateFeature, reset} from "app/entities/feature/feature.reducer";
 import {IFunction} from "app/shared/model/function.model";
 import {IDatasources} from "app/shared/model/datasources.model";
 import {IFeature} from "app/shared/model/feature.model";
@@ -36,7 +36,7 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
   const [selectedFunction, setSelectedFunction] = useState<IFunction>();
   const [editableFeature, setEditableFeature] = useState<IFeature>();
   const [datasource, setDatasource] = useState<IDatasources>();
-  const [canceled, setCanceled] = useState<boolean>(false);
+  const [canCloseDialog, setCanCloseDialog] = useState<boolean>(false);
 
   useEffect(() => {
     setDatasource(props.location.state.datasource);
@@ -63,8 +63,13 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
     }
   }, [editableFeature]);
 
+  useEffect(() => {
+    setCanCloseDialog(props.updateSuccess);
+  }, [props.updateSuccess]);
+
   const onCancelClick = () => {
-    setCanceled(true);
+    props.reset();
+    setCanCloseDialog(true);
   };
 
   const onUpdateFeature = () => {
@@ -111,7 +116,7 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
     return false;
   };
 
-  if (props.succeeded || canceled) {
+  if (canCloseDialog) {
     return (
       <Redirect
         to={{
@@ -193,9 +198,9 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   functions: storeState.functions.entities,
   feature: storeState.feature.entity,
-  succeeded: storeState.feature.updateSuccess,
+  updateSuccess: storeState.feature.updateSuccess,
 });
-const mapDispatchToProps = { getFunctions, createFeature, updateFeature };
+const mapDispatchToProps = { getFunctions, createFeature, updateFeature, reset };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
