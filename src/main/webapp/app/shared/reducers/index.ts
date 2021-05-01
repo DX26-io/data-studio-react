@@ -44,6 +44,7 @@ import filter, { FilterState } from 'app/modules/canvas/filter/filter.reducer';
 import scheduler, { SchedulerState } from 'app/modules/canvas/scheduler/scheduler.reducer';
 import notification, { notificationState } from 'app/modules/canvas/scheduler/notification.reducer';
 import functions, { FunctionState } from 'app/entities/functions/function.reducer';
+import search, { SearchState } from 'app/entities/search/search.reducer';
 
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
@@ -69,6 +70,7 @@ export interface IRootState {
   readonly functions: FunctionState;
   readonly visualizations: VisualizationsState;
   readonly visualmetadata: VisualmetadataState;
+  readonly search: SearchState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
   readonly filter: FilterState;
@@ -100,6 +102,7 @@ const rootReducer = combineReducers<IRootState>({
   functions,
   visualizations,
   visualmetadata,
+  search,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
   filter,

@@ -114,7 +114,10 @@
       "more": "More",
       "share": "Share",
       "copy": "Copy",
-      "runnow": "Run Now"
+      "runnow": "Run Now",
+      "pin": "Pin",
+      "savebookmark": "Save as bookmark",
+      "createview": "Create view"
     },
     "options": {
       "more_options": "More options",
