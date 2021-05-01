@@ -25,7 +25,8 @@
       },
       "dialogs": {
         "create": {
-          "title": "Create feature",
+          "createtitle": "Create feature",
+          "edittitle": "Modify feature",
           "name": "Name",
           "type": "Type",
           "definition": "Definition",

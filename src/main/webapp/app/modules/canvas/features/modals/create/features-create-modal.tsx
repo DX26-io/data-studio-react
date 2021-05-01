@@ -1,22 +1,30 @@
-import React, {ReactText, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Button,
   ButtonGroup,
   Content,
   Dialog,
   DialogContainer,
-  Divider, Flex, Form, Grid,
-  Heading, Item, ListBox, Text, TextArea,
-  TextField, View,
+  Divider,
+  Flex,
+  Form,
+  Heading,
+  Item,
+  ListBox,
+  Text,
+  TextArea,
+  TextField,
+  View,
 } from '@adobe/react-spectrum';
 import {translate, Translate} from 'react-jhipster';
 import {Redirect, RouteComponentProps} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {IRootState} from 'app/shared/reducers';
 import {getEntities as getFunctions} from "app/entities/functions/function.reducer";
-import {createEntity as createFeature} from "app/entities/feature/feature.reducer";
+import {createEntity as createFeature, updateEntity as updateFeature, reset} from "app/entities/feature/feature.reducer";
 import {IFunction} from "app/shared/model/function.model";
 import {IDatasources} from "app/shared/model/datasources.model";
+import {IFeature} from "app/shared/model/feature.model";
 
 interface IFeaturesCreateModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string, featureId: string, viewId: string }> {}
 
@@ -27,37 +35,76 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
   const [definitionText, setDefinitionText] = useState('');
   const [selectedFunction, setSelectedFunction] = useState<IFunction>();
   const [datasource, setDatasource] = useState<IDatasources>();
-  const [canceled, setCanceled] = useState<boolean>(false);
+  const [canCloseDialog, setCanCloseDialog] = useState<boolean>(false);
 
   useEffect(() => {
-    setFeatureType(props.location.state.featureType);
     setDatasource(props.location.state.datasource);
+    setFeatureType(props.location.state.featureType);
   }, []);
-
 
   useEffect(() => {
     props.getFunctions();
   }, []);
 
+  useEffect(() => {
+    if (props.selectedFeature) {
+      setSelectedFunction(props.functions.find(func => props.selectedFeature.functionId === func.id));
+    }
+  }, [props.functions, props.selectedFeature]);
+
+  useEffect(() => {
+    if (props.selectedFeature) {
+      setFeatureType(props.selectedFeature.featureType);
+      setNameText(props.selectedFeature.name);
+      setTypeText(props.selectedFeature.type);
+      setDefinitionText(props.selectedFeature.definition);
+    }
+  }, [props.selectedFeature]);
+
+  useEffect(() => {
+    setCanCloseDialog(props.updateSuccess);
+  }, [props.updateSuccess]);
+
   const onCancelClick = () => {
-    setCanceled(true);
+    props.reset();
+    setCanCloseDialog(true);
   };
 
-  const onCreateClick = () => {
-    props.createFeature({
+  const onUpdateFeature = () => {
+    const ft: IFeature = {
+      ...props.selectedFeature,
+      definition: definitionText,
+      functionId: selectedFunction?.id,
+      name: nameText,
+      type: typeText,
+    }
+    props.updateFeature(ft);
+  };
+
+  const onCreateFeature = () => {
+    const newFeature:IFeature = {
       datasource,
       definition: definitionText,
       featureType,
-      functionId: selectedFunction.id,
+      functionId: selectedFunction?.id,
       name: nameText,
       type: typeText,
-    })
+    };
+    props.createFeature(newFeature);
+  };
+
+  const onSubmitClick = () => {
+    if (props.selectedFeature) {
+      onUpdateFeature();
+    } else {
+      onCreateFeature();
+    }
   };
 
   const onFunctionSelected = (selectedSet) => {
-    const f = props.functions.find((func) => selectedSet.has(func.id));
-    setDefinitionText(f.value);
-    setSelectedFunction(f);
+    const selectedFunc = props.functions.find((func) => selectedSet.has(func.id));
+    setDefinitionText(selectedFunc.value);
+    setSelectedFunction(selectedFunc);
   }
 
   const functionFilter = (func) => {
@@ -70,7 +117,7 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
     return false;
   };
 
-  if (props.succeeded || canceled) {
+  if (canCloseDialog) {
     return (
       <Redirect
         to={{
@@ -84,7 +131,11 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
     <DialogContainer onDismiss={onCancelClick}>
       <Dialog>
         <Heading>
-          <Translate contentKey="datastudioApp.feature.dialogs.create.title">_Delete Feature</Translate>
+          { props.selectedFeature ?
+            <Translate contentKey="datastudioApp.feature.dialogs.create.edittitle">_Edit Feature</Translate>
+            :
+            <Translate contentKey="datastudioApp.feature.dialogs.create.createtitle">_Create Feature</Translate>
+          }
         </Heading>
         <Divider/>
         <Content>
@@ -131,8 +182,12 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
             <Translate contentKey="entity.action.cancel">_Cancel</Translate>
           </Button>
           <Button variant="primary"
-                  onPress={onCreateClick}>
-            <Translate contentKey="entity.action.create">_Create</Translate>
+                  onPress={onSubmitClick}>
+            { props.selectedFeature ?
+              <Translate contentKey="entity.action.update">_Edit</Translate>
+              :
+              <Translate contentKey="entity.action.create">_Create</Translate>
+            }
           </Button>
         </ButtonGroup>
       </Dialog>
@@ -143,9 +198,10 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   functions: storeState.functions.entities,
-  succeeded: storeState.feature.updateSuccess,
+  selectedFeature: storeState.feature.selectedFeature,
+  updateSuccess: storeState.feature.updateSuccess,
 });
-const mapDispatchToProps = { getFunctions, createFeature };
+const mapDispatchToProps = { getFunctions, createFeature, updateFeature, reset };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 

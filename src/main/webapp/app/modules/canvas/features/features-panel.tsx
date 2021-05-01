@@ -1,4 +1,4 @@
-import React, {Key, ReactText, useEffect, useState} from 'react';
+import React, {Key, useEffect, useState} from 'react';
 import { connect } from 'react-redux';
 import {ActionButton, Flex, View, Text, Button, Divider, ListBox, Item, Content} from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
@@ -6,7 +6,7 @@ import './features-panel.scss';
 import Minimize from '@spectrum-icons/workflow/Minimize';
 import Maximize from '@spectrum-icons/workflow/Maximize';
 import Add from '@spectrum-icons/workflow/Add';
-import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
+import {getViewFeaturesEntities, selectFeature} from 'app/entities/feature/feature.reducer';
 import {toggleFeaturesPanel} from "app/shared/reducers/application-profile";
 import {Tabs} from "@react-spectrum/tabs";
 import {featureTypeToActiveTabs, getFeaturesTabTranslations} from "app/modules/canvas/features/features-panel-util";
@@ -32,18 +32,28 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
     setShowFeatureCreateDialog(true);
   };
 
-  if (showFeatureCreateDialog) {
+  const onFeatureSelected = (selectedSet) => {
+    const feature = props.featuresList.find((ft) => selectedSet.has(ft.id));
+    props.selectFeature(feature);
+    setShowFeatureCreateDialog(true);
+  };
+
+  const redirectToFeature = () => {
     return (
       <Redirect
         to={{
-          pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/feature/create',
+          pathname: `/dashboards/${props.view.viewDashboard.id}/${props.view.id}/feature`,
           state: {
             featureType: featureTypeToActiveTabs[activeTabId],
-            datasource: props.view.viewDashboard.dashboardDatasource
+            datasource: props.view.viewDashboard.dashboardDatasource,
           }
         }}
       />
     );
+  }
+
+  if (showFeatureCreateDialog) {
+    return redirectToFeature();
   }
 
   return <>
@@ -95,7 +105,8 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
                     <ListBox
                       width="size-2400"
                       aria-label="Features"
-                      selectionMode="none"
+                      selectionMode="single"
+                      onSelectionChange={onFeatureSelected}
                       items={props.featuresList.filter(featureFilter)}>
                       {(feature) => <Item>{feature.name}</Item>}
                     </ListBox>
@@ -114,10 +125,12 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   isFeaturesPanelOpen: storeState.applicationProfile.isFeaturesPanelOpen,
   featuresList: storeState.feature.entities,
+  selectedFeature: storeState.feature.selectedFeature,
 });
 const mapDispatchToProps = {
   getViewFeaturesEntities,
   toggleFeaturesPanel,
+  selectFeature
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
