@@ -34,14 +34,12 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
   const [typeText, setTypeText] = useState('');
   const [definitionText, setDefinitionText] = useState('');
   const [selectedFunction, setSelectedFunction] = useState<IFunction>();
-  const [editableFeature, setEditableFeature] = useState<IFeature>();
   const [datasource, setDatasource] = useState<IDatasources>();
   const [canCloseDialog, setCanCloseDialog] = useState<boolean>(false);
 
   useEffect(() => {
     setDatasource(props.location.state.datasource);
     setFeatureType(props.location.state.featureType);
-    setEditableFeature(props.location.state.feature);
   }, []);
 
   useEffect(() => {
@@ -49,19 +47,15 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
   }, []);
 
   useEffect(() => {
-    if (editableFeature) {
-      setSelectedFunction(props.functions.find(func => editableFeature.functionId === func.id));
-    }
-  }, [props.functions]);
+    setSelectedFunction(props.functions.find(func => props.selectedFeature?.functionId === func.id));
+  }, [props.functions, props.selectedFeature]);
 
   useEffect(() => {
-    if (editableFeature) {
-      setFeatureType(editableFeature.featureType);
-      setNameText(editableFeature.name);
-      setTypeText(editableFeature.type);
-      setDefinitionText(editableFeature.definition);
-    }
-  }, [editableFeature]);
+    setFeatureType(props.selectedFeature?.featureType);
+    setNameText(props.selectedFeature?.name);
+    setTypeText(props.selectedFeature?.type);
+    setDefinitionText(props.selectedFeature?.definition);
+  }, [props.selectedFeature]);
 
   useEffect(() => {
     setCanCloseDialog(props.updateSuccess);
@@ -73,11 +67,14 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
   };
 
   const onUpdateFeature = () => {
-    editableFeature.definition = definitionText;
-    editableFeature.functionId = selectedFunction?.id;
-    editableFeature.name = nameText;
-    editableFeature.type = typeText;
-    props.updateFeature(editableFeature);
+    const ft: IFeature = {
+      ...props.selectedFeature,
+      definition: definitionText,
+      functionId: selectedFunction?.id,
+      name: nameText,
+      type: typeText,
+    }
+    props.updateFeature(ft);
   };
 
   const onCreateFeature = () => {
@@ -93,7 +90,7 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
   };
 
   const onSubmitClick = () => {
-    if (editableFeature) {
+    if (props.selectedFeature) {
       onUpdateFeature();
     } else {
       onCreateFeature();
@@ -130,7 +127,7 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
     <DialogContainer onDismiss={onCancelClick}>
       <Dialog>
         <Heading>
-          { editableFeature ?
+          { props.selectedFeature ?
             <Translate contentKey="datastudioApp.feature.dialogs.create.edittitle">_Edit Feature</Translate>
             :
             <Translate contentKey="datastudioApp.feature.dialogs.create.createtitle">_Create Feature</Translate>
@@ -182,7 +179,7 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
           </Button>
           <Button variant="primary"
                   onPress={onSubmitClick}>
-            {editableFeature ?
+            { props.selectedFeature ?
               <Translate contentKey="entity.action.update">_Edit</Translate>
               :
               <Translate contentKey="entity.action.create">_Create</Translate>
@@ -198,6 +195,7 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   functions: storeState.functions.entities,
   feature: storeState.feature.entity,
+  selectedFeature: storeState.feature.selectedFeature,
   updateSuccess: storeState.feature.updateSuccess,
 });
 const mapDispatchToProps = { getFunctions, createFeature, updateFeature, reset };

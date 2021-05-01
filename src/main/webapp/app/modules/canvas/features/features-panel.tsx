@@ -46,7 +46,6 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
           state: {
             featureType: featureTypeToActiveTabs[activeTabId],
             datasource: props.view.viewDashboard.dashboardDatasource,
-            feature: props.selectedFeature,
           }
         }}
       />
