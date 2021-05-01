@@ -35,6 +35,7 @@ export default (state: ApplicationProfileState = initialState, action): Applicat
       return {
         ...state,
         isEditMode: !state.isEditMode,
+        isFeaturesPanelOpen: false,
       };
     case ACTION_TYPES.TOGGLE_FILTER_PANEL:
       return {
