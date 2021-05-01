@@ -38,7 +38,8 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
         to={{
           pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/feature/create',
           state: {
-            featureType: featureTypeToActiveTabs[activeTabId]
+            featureType: featureTypeToActiveTabs[activeTabId],
+            datasource: props.view.viewDashboard.dashboardDatasource
           }
         }}
       />
