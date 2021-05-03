@@ -22,7 +22,7 @@ import recent, { RecentState } from 'app/modules/home/sections/recent.reducer';
 import reportConfiguration, {
   ReportConfigurationState,
 } from 'app/modules/administration/reports-configuration/reports-configuration.reducer';
-import visualizations, { VisualDataState } from 'app/shared/websocket/websocket.reducer';
+import visualizationData, { VisualDataState } from 'app/shared/websocket/websocket.reducer';
 
 // prettier-ignore
 import dashboard, {
@@ -55,7 +55,7 @@ export interface IRootState {
   readonly home: HomeState;
   readonly recent: RecentState;
   readonly reportConfiguration: ReportConfigurationState;
-  readonly visualizations: VisualDataState;
+  readonly visualizationData: VisualDataState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -80,7 +80,7 @@ const rootReducer = combineReducers<IRootState>({
   views,
   home,
   reportConfiguration,
-  visualizations,
+  visualizationData,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
   recent,

@@ -51,7 +51,7 @@ export const receiveSocketResponse = () => dispatch => {
   connectWebSocket({ token: getToken() }, function (frame) {
     subscribeWebSocket('/user/exchange/metaData', data => {
       const body = data.body === '' ? { data: [] } : JSON.parse(data.body);
-      dispatch(setVisualData(body));
+      dispatch(setVisualData(body.data));
     });
     subscribeWebSocket('/user/exchange/metaDataError', error => {
       const body = JSON.parse(error.body || '{}');
