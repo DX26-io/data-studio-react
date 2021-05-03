@@ -1,0 +1,76 @@
+{
+  "reports-management": {
+    "home": {
+      "title": "Reports Management"
+    },
+    "reportConfiguration": {
+      "title": "Reports Configuration",
+      "description": "Manage your reports configuration",
+      "email": {
+        "title": "Email Configuration",
+        "description": "Manage your email configuration",
+        "createLabel": "Create Email Configurations",
+        "updateLabel": "Update Email Configurations"
+      },
+      "teams": {
+        "title": "Team Configuration",
+        "description": "Manage your team configuration",
+        "createLabel": "Create MS Teams Configurations",
+        "updateLabel": "Update MS Teams Configurations",
+        "name": "Name",
+        "url": "URL"
+      },
+      "jira": {
+        "title": "Jira Configuration",
+        "description": "Manage your jira configuration"
+      }
+    },
+    "taskLogger": {
+      "title": "Task Logger",
+      "description": "Manage your logs"
+    },
+    "reports": {
+      "title": "Reports",
+      "description": "Manage your reports",
+      "errorDeleting": "Error deleting user",
+      "no": "No.",
+      "reportName": "Report Name",
+      "dashboardName": "Dashboard Name",
+      "viewName": "View Name",
+      "queryID": "Query ID",
+      "channel": "Channel",
+      "thresholdMet": "Threshold Met",
+      "isThresholdAlert": "Is threshold Report",
+      "subject": "Subject",
+      "run": "Run",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "action": "Actions",
+      "status": "Status",
+      "executedAt": "Executed At",
+      "thresholdAlert": "Threshold Alert",
+      "thresholdAlertYes": "Yes",
+      "thresholdAlertNo": "No",
+      "filters": {
+        "title": "Filters",
+        "fromDate": "From Date",
+        "toDate": "To Date",
+        "reportName": "Report Name",
+        "user": "User"
+      },
+      "webhookName": "Webhook Name",
+      "webhookURL": "Webhook URL",
+      "issueID": "Issue ID",
+      "projectKey": "Project Name",
+      "summary": "Title",
+      "createDate": "Date Time",
+      "assignPerson": "Assign",
+      "priority": "Priority",
+      "reporter": "Reporter",
+      "enableTicketCreation": "Enable Create Ticket",
+      "viewTicket": "View Ticket",
+      "reportRecipient": "Report Recipient",
+      "uniqueError": "Webhook already exists with this name"
+    }
+  }
+}
