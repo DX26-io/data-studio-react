@@ -1,20 +1,24 @@
-import React, {Key, ReactText, useEffect, useState} from 'react';
+import React, {Key, useEffect, useState} from 'react';
 import { connect } from 'react-redux';
 import {ActionButton, Flex, View, Text, Button, Divider, ListBox, Item, Content} from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import './features-panel.scss';
 import Minimize from '@spectrum-icons/workflow/Minimize';
 import Maximize from '@spectrum-icons/workflow/Maximize';
-import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
+import Add from '@spectrum-icons/workflow/Add';
+import {getViewFeaturesEntities, selectFeature} from 'app/entities/feature/feature.reducer';
 import {toggleFeaturesPanel} from "app/shared/reducers/application-profile";
 import {Tabs} from "@react-spectrum/tabs";
 import {featureTypeToActiveTabs, getFeaturesTabTranslations} from "app/modules/canvas/features/features-panel-util";
+import {Translate} from "react-jhipster";
+import {Redirect} from "react-router-dom";
 
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
 const FeaturesPanel = (props: IFeaturesPanelProp) => {
   const [isFeaturesMinimize, setFeaturesMinimize] = useState(true);
   const [activeTabId, setActiveTabId] = useState<Key>(0);
+  const [showFeatureCreateDialog, setShowFeatureCreateDialog] = useState<boolean>(false);
 
   useEffect(() => {
     props.getViewFeaturesEntities(props.view.id);
@@ -24,15 +28,48 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
     return feature.featureType === featureTypeToActiveTabs[activeTabId];
   };
 
+  const createNewFeatureClicked = () => {
+    setShowFeatureCreateDialog(true);
+  };
+
+  const onFeatureSelected = (selectedSet) => {
+    const feature = props.featuresList.find((ft) => selectedSet.has(ft.id));
+    props.selectFeature(feature);
+    setShowFeatureCreateDialog(true);
+  };
+
+  const redirectToFeature = () => {
+    return (
+      <Redirect
+        to={{
+          pathname: `/dashboards/${props.view.viewDashboard.id}/${props.view.id}/feature`,
+          state: {
+            featureType: featureTypeToActiveTabs[activeTabId],
+            datasource: props.view.viewDashboard.dashboardDatasource,
+          }
+        }}
+      />
+    );
+  }
+
+  if (showFeatureCreateDialog) {
+    return redirectToFeature();
+  }
+
   return <>
     <div className={props.isFeaturesPanelOpen ? 'FeaturesPanel-Main FeaturesPanel-show' : 'FeaturesPanel-Main FeaturesPanel-hide'}>
       <div className={isFeaturesMinimize ? 'FeaturesPanel FeaturesPanel-minimize' : 'FeaturesPanel FeaturesPanel-maximize'}>
         <Flex direction="column" gap="size-100">
           <View justifySelf="center">
             <div className="features-header">
-              <Text>
-                <span>Features</span>
-              </Text>
+              <span className="spectrum-Heading--sizeXXS">
+                <Translate contentKey="datastudioApp.feature.panel.title">_Features</Translate>
+              </span>
+              <Button variant="secondary"
+                      isQuiet
+                      onPress={createNewFeatureClicked}>
+                <Add></Add>
+              </Button>
               {isFeaturesMinimize ?
                 <ActionButton
                   onPress={() => {
@@ -68,7 +105,8 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
                     <ListBox
                       width="size-2400"
                       aria-label="Features"
-                      selectionMode="none"
+                      selectionMode="single"
+                      onSelectionChange={onFeatureSelected}
                       items={props.featuresList.filter(featureFilter)}>
                       {(feature) => <Item>{feature.name}</Item>}
                     </ListBox>
@@ -87,10 +125,12 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   isFeaturesPanelOpen: storeState.applicationProfile.isFeaturesPanelOpen,
   featuresList: storeState.feature.entities,
+  selectedFeature: storeState.feature.selectedFeature,
 });
 const mapDispatchToProps = {
   getViewFeaturesEntities,
   toggleFeaturesPanel,
+  selectFeature
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

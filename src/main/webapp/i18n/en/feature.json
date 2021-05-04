@@ -19,7 +19,21 @@
       "datasourceId": "Datasource Id",
       "dateFilter": "Date Filter",
       "definition": "Definition",
-      "favouriteFilter": "Favourite Filter"
+      "favouriteFilter": "Favourite Filter",
+      "panel": {
+        "title": "Features"
+      },
+      "dialogs": {
+        "create": {
+          "createtitle": "Create feature",
+          "edittitle": "Modify feature",
+          "name": "Name",
+          "type": "Type",
+          "definition": "Definition",
+          "searchfunction": "Search function",
+          "functions": "Functions"
+        }
+      }
     }
   }
 }

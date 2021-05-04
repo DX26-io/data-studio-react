@@ -1,6 +1,9 @@
+import { IDatasources } from 'app/shared/model/datasources.model';
+
 export interface IFeature {
   id?: number;
   datasourceId?: number;
+  datasource?: IDatasources;
   dateFilter?: string;
   definition: string;
   favouriteFilter?: boolean;

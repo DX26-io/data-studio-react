@@ -5,7 +5,7 @@ import firebase from 'firebase/app';
 import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
 import { setLocale } from 'app/shared/reducers/locale';
 import config from 'app/config/constants';
-import { toast } from 'react-toastify';
+import { RealmDTO } from 'app/shared/model/realm.model';
 
 export const ACTION_TYPES = {
   LOGIN: 'authentication/LOGIN',
@@ -20,11 +20,6 @@ export const ACTION_TYPES = {
   ERROR_MESSAGE: 'authentication/ERROR_MESSAGE',
 };
 
-export interface RealmDTO {
-  name: string;
-  id: number;
-}
-
 const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
 
 const initialState = {
@@ -33,7 +28,7 @@ const initialState = {
   realmCreateError: false,
   redirectTo: (null as unknown) as string,
   loginSuccess: false,
-  realms: (null as unknown) as Array<RealmDTO>,
+  realms: (null as unknown) as ReadonlyArray<RealmDTO>,
   loginProviderEmailConfirmationToken: (null as unknown) as string,
   verifyUserSuccess: false,
   createRealmSuccess: false,
