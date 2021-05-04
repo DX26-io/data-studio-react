@@ -9,7 +9,6 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 export interface IDashboardDeleteModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 const DashboardDeleteModal = (props: IDashboardDeleteModalProps) => {
-  const dashboardNameLabel = translate('dashboard.dashboard_name');
   const history = useHistory();
   const [dashboardNameConfirmation, setDashboardNameConfirmation] = useState<ReactText>('');
   const handleDelete = () => {
@@ -47,8 +46,8 @@ const DashboardDeleteModal = (props: IDashboardDeleteModalProps) => {
           </Translate>
           <TextField
             marginTop="size-250"
-            label={dashboardNameLabel}
-            placeholder={dashboardNameLabel}
+            label={translate('dashboard.dashboard_name')}
+            placeholder={translate('dashboard.dashboard_name')}
             isRequired
             isQuiet
             width="size-3600"

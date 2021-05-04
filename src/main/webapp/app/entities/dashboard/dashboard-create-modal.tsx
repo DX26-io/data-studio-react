@@ -21,12 +21,7 @@ import { useHistory } from 'react-router-dom';
 import { createEntity, getEntity, reset, updateEntity } from './dashboard.reducer';
 import { getDatasources as getDataSourceEntities } from 'app/modules/administration/sources/datasources/datasources.reducer';
 import { IRootState } from 'app/shared/reducers';
-import {
-  isCreateEditFormNotValid,
-  getDashboardFromTranslations,
-  getDashboardSuccessTranslations,
-  getDashboardErrorTranslations,
-} from './dashboard-util';
+import { isCreateEditFormNotValid } from './dashboard-util';
 import { translate, Translate } from 'react-jhipster';
 
 export interface IDashboardCreateModalProps extends StateProps, DispatchProps {}
@@ -42,9 +37,6 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
   const [createErrorDialog, setCreateErrorDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { dashboardEntity, dataSourcesList, updating } = props;
-  const { DASHBOARD_LABEL, CATEGORY_LABEL, DESCRIPTION_LABEL, DATASOURCE_LABEL, DATASOURCE_PLACEHOLDER } = getDashboardFromTranslations();
-  const { SUCCESS_LABEL, SUCCESS_CLOSE_LABEL, PRIMARY_ACTION_LABEL } = getDashboardSuccessTranslations();
-  const { ERROR_LABEL, ERROR_CLOSE_LABEL } = getDashboardErrorTranslations();
 
   const getDatasourceByName = id => {
     const _datasource = dataSourcesList.filter(function (item) {
@@ -119,19 +111,19 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
                 <Form isRequired necessityIndicator="icon" minWidth="size-4600">
                   <TextField
                     ref={dashboardNameInputEl}
-                    label={DASHBOARD_LABEL}
+                    label={translate('dashboard.dashboard_name')}
                     maxLength={30}
                     validationState={dashboardName?.length < 30 ? 'valid' : 'invalid'}
                     onChange={setDashboardName}
                   />
                   <TextField
-                    label={CATEGORY_LABEL}
+                    label={translate('dashboard.category')}
                     maxLength={30}
                     validationState={dashboardCategory?.length < 30 ? 'valid' : 'invalid'}
                     onChange={setCategory}
                   />
                   <TextArea
-                    label={DESCRIPTION_LABEL}
+                    label={translate('dashboard.description')}
                     maxLength={100}
                     isRequired={false}
                     validationState={dashboardDescription?.length < 100 ? 'valid' : 'invalid'}
@@ -139,8 +131,8 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
                   />
                   <Picker
                     validationState={dashboardDataSource?.length !== 0 ? 'valid' : 'invalid'}
-                    label={DATASOURCE_LABEL}
-                    placeholder={DATASOURCE_PLACEHOLDER}
+                    label={translate('dashboard.datasource')}
+                    placeholder={translate('dashboard.datasource_placeholder')}
                     onSelectionChange={selected => setDatasource(selected.toString())}
                   >
                     {dataSourcesList.map(dataSources => (
@@ -169,12 +161,12 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
       <DialogContainer onDismiss={() => setCreateSuccessDialog(false)}>
         {createSuccessDialog && (
           <AlertDialog
-            title={SUCCESS_LABEL}
+            title={translate('dashboard.created.header')}
             onPrimaryAction={handleOpenOnSuccessDialog}
             onCancel={handleCloseOnSuccessDialog}
             variant="confirmation"
-            cancelLabel={SUCCESS_CLOSE_LABEL}
-            primaryActionLabel={PRIMARY_ACTION_LABEL}
+            cancelLabel={translate('entity.action.cancel')}
+            primaryActionLabel={translate('entity.action.open')}
           >
             <Translate contentKey="dashboard.created.content">Created dashboard successfully</Translate>
           </AlertDialog>
@@ -182,7 +174,11 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
       </DialogContainer>
       <DialogContainer onDismiss={() => setCreateErrorDialog(false)}>
         {createErrorDialog && (
-          <AlertDialog title={ERROR_LABEL} variant="destructive" primaryActionLabel={ERROR_CLOSE_LABEL}>
+          <AlertDialog
+            title={translate('dashboard.error.header')}
+            variant="destructive"
+            primaryActionLabel={translate('entity.action.cancel')}
+          >
             {errorMessage}
           </AlertDialog>
         )}

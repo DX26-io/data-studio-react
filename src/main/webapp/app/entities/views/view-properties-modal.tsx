@@ -18,7 +18,6 @@ import { getEntity, updateEntity, reset } from './views.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { translate, Translate } from 'react-jhipster';
-import { getViewErrorTranslations, getViewFromTranslations } from 'app/entities/views/view-util';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer';
 import { hasAuthority } from 'app/shared/reducers/authentication';
@@ -31,8 +30,6 @@ const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
   const [viewDescription, setDescriptionText] = useState(props.viewEntity.description ? props.viewEntity.description : '');
   const [isError, setErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const { VIEW_LABEL, DESCRIPTION_LABEL } = getViewFromTranslations();
-  const { ERROR_LABEL, ERROR_CLOSE_LABEL } = getViewErrorTranslations();
   const history = useHistory();
   const viewId = props.match.params.viewId;
   const dashboardId = props.match.params.id;
@@ -92,7 +89,7 @@ const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
               <View padding="size-600">
                 <Form isDisabled={!isEdit} isRequired necessityIndicator="icon" minWidth="size-4600">
                   <TextField
-                    label={VIEW_LABEL}
+                    label={translate('views.viewName')}
                     maxLength={30}
                     validationState={viewName?.length < 30 ? 'valid' : 'invalid'}
                     onChange={setViewNameText}
@@ -100,7 +97,7 @@ const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
                   />
 
                   <TextArea
-                    label={DESCRIPTION_LABEL}
+                    label={translate('views.description')}
                     maxLength={100}
                     isRequired={false}
                     value={viewDescription}
@@ -135,7 +132,7 @@ const ViewPropertiesModal = (props: IViewPropertiesModalProps) => {
       </DialogContainer>
       <DialogContainer onDismiss={() => setErrorOpen(false)} {...props}>
         {isError && (
-          <AlertDialog title={ERROR_LABEL} variant="destructive" primaryActionLabel={ERROR_CLOSE_LABEL}>
+          <AlertDialog title={translate('views.error.header')} variant="destructive" primaryActionLabel={ translate('entity.action.cancel')}>
             {errorMessage}
           </AlertDialog>
         )}

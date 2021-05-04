@@ -121,7 +121,8 @@
       "properties": "Properties",
       "release": "Release",
       "delete": "Delete",
-      "no_description": "no description"
+      "no_description": "no description",
+      "filter": "Filter"
     },
     "detail": {
       "field": "Field",

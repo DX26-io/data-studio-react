@@ -26,34 +26,3 @@ export interface IViewStateDTO {
   visualMetadataSet: IVisualMetadataSet[];
   _id: number;
 }
-
-/**
- * This method returns an object that contains view form labels
- */
-export const getViewFromTranslations = (): any => {
-  return {
-    VIEW_LABEL: translate('views.viewName'),
-    DESCRIPTION_LABEL: translate('views.description'),
-  };
-};
-
-/**
- * This method returns an object that contains dashboard success translations
- */
-export const getViewSuccessTranslations = (): any => {
-  return {
-    SUCCESS_LABEL: translate('views.created.header'),
-    SUCCESS_CLOSE_LABEL: translate('entity.action.cancel'),
-    PRIMARY_ACTION_LABEL: translate('entity.action.open'),
-  };
-};
-
-/**
- * This method returns an object that contains dashboard error translations
- */
-export const getViewErrorTranslations = (): any => {
-  return {
-    ERROR_LABEL: translate('views.error.header'),
-    ERROR_CLOSE_LABEL: translate('entity.action.cancel'),
-  };
-};

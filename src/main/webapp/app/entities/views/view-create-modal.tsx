@@ -19,7 +19,6 @@ import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer'
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { Translate, translate, setFileData } from 'react-jhipster';
-import { getViewFromTranslations, getViewSuccessTranslations, getViewErrorTranslations } from 'app/entities/views/view-util';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 
 export interface IViewCreateModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
@@ -31,9 +30,6 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
   const [viewName, setViewNameText] = useState('');
   const [viewDescription, setDescriptionText] = useState('');
   const { viewEntity, updating } = props;
-  const { VIEW_LABEL, DESCRIPTION_LABEL } = getViewFromTranslations();
-  const { SUCCESS_LABEL, SUCCESS_CLOSE_LABEL, PRIMARY_ACTION_LABEL } = getViewSuccessTranslations();
-  const { ERROR_LABEL, ERROR_CLOSE_LABEL } = getViewErrorTranslations();
   const history = useHistory();
   const dashboardId = props.match.params.id;
 
@@ -110,14 +106,14 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
               <View padding="size-600">
                 <Form isRequired necessityIndicator="icon" minWidth="size-4600">
                   <TextField
-                    label={VIEW_LABEL}
+                    label={translate('views.viewName')}
                     maxLength={30}
                     validationState={viewName?.length < 30 ? 'valid' : 'invalid'}
                     onChange={setViewNameText}
                   />
 
                   <TextArea
-                    label={DESCRIPTION_LABEL}
+                    label={translate('views.description')}
                     maxLength={100}
                     isRequired={false}
                     validationState={viewDescription?.length < 100 ? 'valid' : 'invalid'}
@@ -142,12 +138,12 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
       <DialogContainer onDismiss={() => setCreateSuccessDialog(false)}>
         {createSuccessDialog && (
           <AlertDialog
-            title={SUCCESS_LABEL}
+            title={translate('views.created.header')}
             onPrimaryAction={handleOpenOnSuccessDialog}
             onCancel={handleCloseOnSuccessDialog}
             variant="confirmation"
-            cancelLabel={SUCCESS_CLOSE_LABEL}
-            primaryActionLabel={PRIMARY_ACTION_LABEL}
+            cancelLabel={translate('entity.action.cancel')}
+            primaryActionLabel={translate('entity.action.open')}
           >
             <Translate contentKey="views.created.content">Created view successfully</Translate>
           </AlertDialog>
@@ -155,7 +151,7 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
       </DialogContainer>
       <DialogContainer onDismiss={() => setCreateErrorDialog(false)}>
         {createErrorDialog && (
-          <AlertDialog title={ERROR_LABEL} variant="destructive" primaryActionLabel={ERROR_CLOSE_LABEL}>
+          <AlertDialog title={translate('views.error.header')} variant="destructive" primaryActionLabel={ translate('entity.action.cancel')}>
             {errorMessage}
           </AlertDialog>
         )}

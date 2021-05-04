@@ -20,13 +20,13 @@ import { connect } from 'react-redux';
 import TableAndChart from '@spectrum-icons/workflow/TableAndChart';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
-import { Field } from 'app/shared/model/visualMetadata.model';
 import uuid from 'react-uuid';
 import Properties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/properties';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 import LockClosed from '@spectrum-icons/workflow/LockClosed';
 import Delete from '@spectrum-icons/workflow/Delete';
 import { getVisualizationFromTranslations } from 'app/modules/canvas/visualization/util/visualization-utils';
+import { Field } from 'app/shared/model/field.model';
 export interface IVisualizationDataPropertiesProps {
   features: readonly IFeature[];
   visual: IVisualMetadataSet;

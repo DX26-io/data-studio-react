@@ -347,7 +347,6 @@ export const getToken = () => {
 };
 
 export const hasAuthority = (account, authority) => {
-  debugger;
   if (account?.permissions && account?.permissions.indexOf(authority) !== -1) {
     return true;
   } else {

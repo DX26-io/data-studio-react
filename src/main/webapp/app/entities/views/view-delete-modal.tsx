@@ -8,7 +8,6 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 export interface IViewDeleteModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string; viewId: string }> {}
 
 const ViewDeleteModal = (props: IViewDeleteModalProps) => {
-  const viewNameLabel = translate('views.viewName');
   const history = useHistory();
   const [viewNameConfirmation, setViewNameConfirmation] = useState<ReactText>('');
   const viewId = props.match.params.viewId;
@@ -52,8 +51,8 @@ const ViewDeleteModal = (props: IViewDeleteModalProps) => {
           <br />
           <TextField
             marginTop="size-250"
-            label={viewNameLabel}
-            placeholder={viewNameLabel}
+            label={translate('views.viewName')}
+            placeholder={translate('views.viewName')}
             isRequired={true}
             isQuiet={true}
             width="size-3600"

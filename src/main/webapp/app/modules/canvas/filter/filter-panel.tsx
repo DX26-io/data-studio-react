@@ -13,6 +13,7 @@ import { getViewFeaturesEntities as getfeatureEntities } from 'app/entities/feat
 import { getVisualizationData, ValidateFields } from '../visualization/util/visualization-render-utils';
 import { FilterParameterService } from './filter-parameters-service';
 import { updateSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
+import { Translate } from 'react-jhipster';
 
 export interface IFilterPanelProp extends StateProps, DispatchProps {}
 
@@ -56,8 +57,11 @@ const FilterPanel = (props: IFilterPanelProp) => {
             <View justifySelf="center">
               <div className="filter-header">
                 <Text>
-                  <span>Filter</span>
+                  <h6 className="spectrum-Heading spectrum-Heading--sizeXXS spectrum-Heading--seri">
+                    <Translate contentKey="entity.options.filter">Filter</Translate>
+                  </h6>
                 </Text>
+
                 {isFilterMinimize ? (
                   <ActionButton
                     onPress={() => {

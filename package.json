@@ -18,7 +18,6 @@
     "@react-spectrum/color": "^3.0.0-beta.1",
     "@react-spectrum/combobox": "^3.0.0-beta.0",
     "@react-spectrum/slider": "^3.0.0",
-    "@react-spectrum/table": "^3.0.0-alpha.9",
     "@react-spectrum/tabs": "^3.0.0-alpha.3",
     "@spectrum-css/typography": "^3.0.0-beta.0",
     "@spectrum-icons/illustrations": "^3.2.1",

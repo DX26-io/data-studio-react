@@ -21,11 +21,7 @@ import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { translate, Translate } from 'react-jhipster';
 import { getDatasources as getDataSourceEntities } from 'app/modules/administration/sources/datasources/datasources.reducer';
-import {
-  getDashboardErrorTranslations,
-  getDashboardFromTranslations,
-  isCreateEditFormNotValid,
-} from 'app/entities/dashboard/dashboard-util';
+import { isCreateEditFormNotValid } from 'app/entities/dashboard/dashboard-util';
 import { RouteComponentProps } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { hasAuthority } from 'app/shared/reducers/authentication';
@@ -44,8 +40,6 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
   );
   const [isError, setErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const { DASHBOARD_LABEL, CATEGORY_LABEL, DESCRIPTION_LABEL, DATASOURCE_LABEL, DATASOURCE_PLACEHOLDER } = getDashboardFromTranslations();
-  const { ERROR_LABEL, ERROR_CLOSE_LABEL } = getDashboardErrorTranslations();
   const { dashboardEntity, dataSourcesList, updating } = props;
   const dashboardId = props.match.params.id;
   const getDatasourceByName = id => {
@@ -123,14 +117,14 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
               <View padding="size-600">
                 <Form isRequired isDisabled={!isEdit} necessityIndicator="icon" minWidth="size-4600">
                   <TextField
-                    label={DASHBOARD_LABEL}
+                    label={translate('dashboard.dashboard_name')}
                     maxLength={30}
                     validationState={dashboardName?.length < 30 ? 'valid' : 'invalid'}
                     value={dashboardName}
                     onChange={setDashboardName}
                   />
                   <TextField
-                    label={CATEGORY_LABEL}
+                    label={translate('dashboard.category')}
                     maxLength={30}
                     validationState={dashboardCategory?.length < 30 ? 'valid' : 'invalid'}
                     onChange={setCategory}
@@ -139,16 +133,16 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
                   <TextArea
                     isRequired={false}
                     value={dashboardDescription}
-                    label={DESCRIPTION_LABEL}
+                    label={translate('dashboard.description')}
                     maxLength={100}
                     validationState={dashboardDescription?.length < 100 ? 'valid' : 'invalid'}
                     onChange={setDescription}
                   />
                   <Picker
                     validationState={dashboardDataSource?.length !== 0 ? 'valid' : 'invalid'}
-                    label={DATASOURCE_LABEL}
+                    label={translate('dashboard.datasource')}
                     selectedKey={dashboardDataSource}
-                    placeholder={DATASOURCE_PLACEHOLDER}
+                    placeholder={translate('dashboard.datasource_placeholder')}
                     onSelectionChange={selected => setDataSource(selected.toString())}
                   >
                     {dataSourcesList.map(dataSource => (
@@ -164,7 +158,7 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
               <Translate contentKey="entity.action.cancel">Close</Translate>
             </Button>
 
-            {props.account &&  hasAuthority(props.account, 'DELETE_' + dashboardId + '_DASHBOARDS') && !isEdit && (
+            {props.account && hasAuthority(props.account, 'DELETE_' + dashboardId + '_DASHBOARDS') && !isEdit && (
               <Button variant="cta" onPress={handleEdit}>
                 <Translate contentKey="entity.action.edit">Edit</Translate>
               </Button>
@@ -183,7 +177,11 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
       </DialogContainer>
       <DialogContainer onDismiss={() => setErrorOpen(false)} {...props}>
         {isError && (
-          <AlertDialog title={ERROR_LABEL} variant="destructive" primaryActionLabel={ERROR_CLOSE_LABEL}>
+          <AlertDialog
+            title={translate('dashboard.error.header')}
+            variant="destructive"
+            primaryActionLabel={translate('entity.action.cancel')}
+          >
             {errorMessage}
           </AlertDialog>
         )}

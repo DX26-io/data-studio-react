@@ -5,6 +5,7 @@ import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
 import { Redirect } from 'react-router-dom';
 import { hasAuthority } from 'app/shared/reducers/authentication';
+import { IAccount } from 'app/shared/model/account.model';
 
 interface IDashboardCardContentProps {
   dashboardName: string;
@@ -12,7 +13,7 @@ interface IDashboardCardContentProps {
   dashboardDescription: string;
   dashboardId: number;
   datasource: string;
-  account: any;
+  account: IAccount;
 }
 
 const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
