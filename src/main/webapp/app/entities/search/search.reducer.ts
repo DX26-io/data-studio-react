@@ -28,13 +28,13 @@ export default (state: SearchState = initialState, action): SearchState => {
   }
 };
 
-export const toggleSearch: () => void = () => (dispatch, getState) => {
+export const toggleSearch: () => void = () => dispatch => {
   dispatch({
     type: ACTION_TYPES.TOGGLE_SEARCH_MODAL,
   });
 };
 
-export const resetSearch: () => void = () => (dispatch, getState) => {
+export const resetSearch: () => void = () => dispatch => {
   dispatch({
     type: ACTION_TYPES.RESET,
   });
