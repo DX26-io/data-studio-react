@@ -9,11 +9,13 @@ import {
   Form,
   ButtonGroup,
   Button,
+  ListBox,
   TextField,
   TextArea,
   AlertDialog,
   DialogContainer,
 } from '@adobe/react-spectrum';
+import {ComboBox, Item, Section} from '@react-spectrum/combobox'
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import {translate, Translate} from 'react-jhipster';
@@ -50,17 +52,14 @@ const SearchModal = (props: ISearchModalProps) => {
           <Divider />
           <Content>
             <Flex direction="column" gap="size-100" alignItems="center">
-              <View padding="size-600">
-                <Form isRequired
-                      necessityIndicator="icon"
-                      minWidth="size-4600">
-                  <TextField
-                    label={translate('views.search.search')}
-                    value={searchText}
-                    onChange={setSearchText}
-                  />
-                </Form>
-              </View>
+              <Form isRequired
+                    necessityIndicator="icon">
+                <ComboBox
+                  label="Realm"
+                  items={props.searchItems}>
+                  {(item) => <Item>{item.name}</Item>}
+                </ComboBox>
+              </Form>
             </Flex>
           </Content>
           <ButtonGroup>
@@ -87,6 +86,7 @@ const SearchModal = (props: ISearchModalProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   isSearchOpen: storeState.search.isSearchOpen,
+  searchItems: storeState.feature.entities,
 });
 
 const mapDispatchToProps = {
