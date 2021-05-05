@@ -15,7 +15,6 @@ import ViewCardContent from './view-card/view-card-content';
 import Pagination from '@material-ui/lab/Pagination';
 import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
-import { hasAuthority } from 'app/shared/reducers/authentication';
 
 export interface IViewsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
