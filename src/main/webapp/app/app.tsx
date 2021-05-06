@@ -7,7 +7,6 @@ import {BrowserRouter as Router, Redirect} from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { hot } from 'react-hot-loader';
 import { Grid, View } from '@adobe/react-spectrum';
-
 import { IRootState } from 'app/shared/reducers';
 import { getSessionWithPath } from 'app/shared/reducers/authentication';
 import { getProfile } from 'app/shared/reducers/application-profile';

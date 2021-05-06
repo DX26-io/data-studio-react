@@ -11,6 +11,7 @@ import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header
 import Edit from '@spectrum-icons/workflow/Edit';
 import { fetchReports } from '../reports-management.reducer';
 import Filters from './filters';
+import { findUserId } from './reports.util';
 
 export interface IReportsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -20,16 +21,16 @@ export const Reports = (props: IReportsProps) => {
   );
   const [isOpen, setOpen] = React.useState(false);
 
-  const fetchUsersGroups = () => {
-    props.fetchReports(pagination.itemsPerPage, pagination.activePage);
-    // const endURL = `?page=${pagination.activePage}`;
-    // if (props.location.search !== endURL) {
-    //   props.history.push(`${props.location.pathname}${endURL}`);
-    // }
+  const getReports = () => {
+    props.fetchReports(pagination.itemsPerPage, pagination.activePage, findUserId(props.account, ''));
+    const endURL = `?page=${pagination.activePage}`;
+    if (props.location.search !== endURL) {
+      props.history.push(`${props.location.pathname}${endURL}`);
+    }
   };
 
   useEffect(() => {
-    fetchUsersGroups();
+    getReports();
   }, [pagination.activePage, pagination.order, pagination.sort, pagination.itemsPerPage]);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export const Reports = (props: IReportsProps) => {
   }, [props.location.search]);
 
   const setUpdateSuccess = () => {
-    fetchUsersGroups();
+    getReports();
   };
 
   const handleChangePage = (event, newPage) => {
@@ -143,6 +144,7 @@ export const Reports = (props: IReportsProps) => {
                         <a
                           onClick={() => {
                             // setOpen(true);
+                            // TODO
                           }}
                         >
                           <Edit size="S" />
@@ -172,6 +174,7 @@ export const Reports = (props: IReportsProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   reports: storeState.reportsManagement.reports,
   totalReports: storeState.reportsManagement.totalReports,
+  account: storeState.authentication.account,
 });
 
 const mapDispatchToProps = { fetchReports };
