@@ -45,20 +45,20 @@ const ReportsConfiguration = (props: IReportsConfigurationProps) => {
     {
       icon: <EmailGear size="L" />,
       link: `${match.url}?channel=email`,
-      title: 'reports.reportConfiguration.email.title',
-      description: 'reports.reportConfiguration.email.description',
+      title: 'reports-management.reportConfiguration.email.title',
+      description: 'reports-management.reportConfiguration.email.description',
     },
     {
       icon: <PeopleGroup size="L" />,
       link: `${match.url}/teams`,
-      title: 'reports.reportConfiguration.teams.title',
-      description: 'reports.reportConfiguration.teams.description',
+      title: 'reports-management.reportConfiguration.teams.title',
+      description: 'reports-management.reportConfiguration.teams.description',
     },
     {
       icon: <ExcludeOverlap size="L" />,
       link: `${match.url}?channel=jira`,
-      title: 'reports.reportConfiguration.jira.title',
-      description: 'reports.reportConfiguration.jira.description',
+      title: 'reports-management.reportConfiguration.jira.title',
+      description: 'reports-management.reportConfiguration.jira.description',
     },
   ];
 
@@ -67,9 +67,9 @@ const ReportsConfiguration = (props: IReportsConfigurationProps) => {
       <SecondaryHeader
         breadcrumbItems={[
           { label: translate('home.title'), route: '/' },
-          { label: translate('reports.reportConfiguration.title'), route: '/administration/report-configuration' },
+          { label: translate('reports-management.reportConfiguration.title'), route: '/administration/report-configuration' },
         ]}
-        title={translate('reports.reportConfiguration.title')}
+        title={translate('reports-management.reportConfiguration.title')}
       />
       <DialogContainer onDismiss={() => setEmailConfigOpen(false)}>
         {isEmailConfigOpen && <EmailConfigUpdate match={match} setOpen={setEmailConfigOpen} properties={emailChannelConfig.connectionProperties ? emailChannelConfig.connectionProperties : []} history={props.history}></EmailConfigUpdate>}
