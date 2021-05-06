@@ -153,6 +153,12 @@ const Canvas = (props: VisualizationProp) => {
     }
   }, [props.visualmetadata, props.isCreated, props.isSocketConnected, props.visualmetadataEntity]);
 
+  useEffect(() => {
+    if (props.isSearchOpen) {
+      props.history.push(`/dashboards/${props.view.viewDashboard.id}/${props.view.id}/search`);
+    }
+  }, [props.isSearchOpen]);
+
   const handleVisualizationClick = v => {
     props.addVisualmetadataEntity({
       viewId: props.view.id,
@@ -252,6 +258,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualData: storeState.visualizationData.visualData,
   isSocketConnected: storeState.visualizationData.isSocketConnected,
 
+  isSearchOpen: storeState.search.isSearchOpen,
   selectedFilter: storeState.visualmetadata.selectedFilter,
 });
 

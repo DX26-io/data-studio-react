@@ -4,6 +4,7 @@ import { ActionButton, View, DialogContainer, TooltipTrigger, Tooltip, MenuTrigg
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import SaveAsFloppy from '@spectrum-icons/workflow/SaveAsFloppy';
 import Asset from '@spectrum-icons/workflow/Asset';
+import Search from '@spectrum-icons/workflow/Search';
 import GraphBarVerticalAdd from '@spectrum-icons/workflow/GraphBarVerticalAdd';
 import CollectionEdit from '@spectrum-icons/workflow/CollectionEdit';
 import VisualizationsList from 'app/entities/visualizations/visualizations-list';
@@ -13,9 +14,15 @@ import {
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import {toggleEditMode, toggleFeaturesPanel, toggleFilterPanel} from 'app/shared/reducers/application-profile';
+import {
+  toggleEditMode,
+  toggleFeaturesPanel,
+  toggleFilterPanel,
+} from 'app/shared/reducers/application-profile';
 import { saveViewState } from 'app/entities/views/views.reducer';
 import Filter from '@spectrum-icons/workflow/Filter';
+import {translate} from "react-jhipster";
+import {toggleSearch} from "app/entities/search/search.reducer";
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
@@ -43,6 +50,10 @@ const CanvasHeader = props => {
 
   const toggleFeatures = () => {
     props.toggleFeaturesPanel();
+  };
+
+  const toggleSearchModal = () => {
+    props.toggleSearch();
   };
 
   return (
@@ -101,6 +112,16 @@ const CanvasHeader = props => {
         </TooltipTrigger>
 
         <TooltipTrigger>
+          <ActionButton onPress={() => toggleSearchModal()}
+                        aria-label="{translate('views.menu.search')}"
+                        isQuiet={true}
+                        marginEnd="size-5">
+            <Search size="M" />
+          </ActionButton>
+          <Tooltip>{translate('views.menu.toggle.search')}</Tooltip>
+        </TooltipTrigger>
+
+        <TooltipTrigger>
           <ActionButton onPress={() => handleToggleFilterPanel()} isQuiet={true} marginEnd="size-5">
             <Filter size="M" />
           </ActionButton>
@@ -136,6 +157,7 @@ const mapDispatchToProps = {
   toggleEditMode,
   toggleFilterPanel,
   toggleFeaturesPanel,
+  toggleSearch,
   saveViewState,
 };
 

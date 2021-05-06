@@ -61,6 +61,14 @@
         "dimensions": "Dimensions",
         "measures": "Measures"
       }
+    },
+    "menu": {
+      "toggle.search": "Toggle search",
+      "search": "Search"
+    },
+    "search": {
+      "title": "Search",
+      "search": "Search"
     }
   }
 }
