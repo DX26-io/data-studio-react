@@ -7,7 +7,6 @@ import { IFeature } from 'app/shared/model/feature.model';
 import AsyncSelect from 'react-select/async';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { FilterParameterService } from './filter-parameters-service';
-import { connectWebSocket, subscribeWebSocket } from 'app/shared/websocket/stomp-client.service';
 import { getToken } from 'app/shared/reducers/authentication';
 import { COMPARABLE_DATA_TYPES } from 'app/shared/util/data-constraints.constants';
 import VisualizationDataConstraints from '../data-constraints/visualization-data-constraints';
@@ -19,32 +18,6 @@ export interface IFilterElementProp extends StateProps, DispatchProps {
 }
 
 const FilterElement = (props: IFilterElementProp) => {
-  // const onExchangeMetadata = data => {
-  //
-  //   const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
-  //   if (data.headers.request === 'filters') {
-  //     const obj = metaData.data[0];
-  //     const dimensionName = '';
-  //     for (const i in obj) {
-  //       dimensionName = i;
-  //       break;
-  //     }
-  //     const retVal = metaData.data.map(function (item) {
-  //       return {
-  //         value: item[dimensionName],
-  //         label: item[dimensionName],
-  //       };
-  //     });
-  //     props.filterData[dimensionName] = retVal;
-  //   }
-  // };
-
-  // const connectWeb = () => {
-  //   connectWebSocket({ token: getToken() }, function (frame) {
-  //     // console.log(' connected web socket');
-  //     subscribeWebSocket('/user/exchange/metaData', onExchangeMetadata);
-  //   });
-  // };
   const [defaultValues, setdefaultValues] = useState<string[]>();
 
   const updateDefaultValues = data => {

@@ -26,7 +26,6 @@ import {
   getEntity as getVisualmetadataEntity,
   updateEntity as updateVisualmetadataEntity,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { connectWebSocket, subscribeWebSocket } from 'app/shared/websocket/stomp-client.service';
 import VisualizationHeader from './visualization-modal/visualization-header';
 import 'app/modules/canvas/visualization/canvas.scss';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
@@ -37,16 +36,16 @@ import FilterPanel from 'app/modules/canvas/filter/filter-panel';
 import CanvasFilterHeader from 'app/shared/layout/header/canvas-filter-header';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import  FeaturesPanel from 'app/modules/canvas/features/features-panel'
+import FeaturesPanel from 'app/modules/canvas/features/features-panel';
+import { receiveSocketResponse } from 'app/shared/websocket/websocket.reducer';
+
 const ReactGridLayout = WidthProvider(RGL);
 
 export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
 
 const Canvas = (props: VisualizationProp) => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
-  const [isSocketConnaction, setSocketConnaction] = useState(false);
   const [visualmetadataList, setvisualmetadata] = useState<IVisualMetadataSet[]>();
-
   const [filters, setFilters] = useState<string[]>();
 
   useEffect(() => {
@@ -76,41 +75,6 @@ const Canvas = (props: VisualizationProp) => {
     }
   };
 
-  const onExchangeMetadataError = data => {
-    const body = JSON.parse(data.body || '{}');
-    // console.log('received error=' + body);
-  };
-
-  const onExchangeMetadata = data => {
-    const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
-    if (data.headers.request === 'filters') {
-      const obj = metaData.data[0];
-      let dimensionName = '';
-      for (const i in obj) {
-        dimensionName = i;
-        break;
-      }
-      const retVal = metaData.data.map(function (item) {
-        return {
-          value: item[dimensionName],
-          label: item[dimensionName],
-        };
-      });
-      props.filterData[dimensionName] = retVal;
-    } else {
-      const v = VisualMetadataContainerGetOne(data.headers.queryId);
-      if (v && metaData.data.length > 0) {
-        v.data = metaData.data;
-        $(`.loader-${v.id}`).hide();
-        $(`.dataNotFound-${v.id}`).hide();
-        renderVisualization(v, metaData.data);
-      } else {
-        $(`.dataNotFound-${v.id}`).show();
-        $(`.loader-${v.id}`).hide();
-      }
-    }
-  };
-
   const renderVisualizationById = item => {
     if (ValidateFields(item.fields)) {
       getVisualizationData(item, props.view);
@@ -124,17 +88,7 @@ const Canvas = (props: VisualizationProp) => {
       renderVisualizationById(item);
     });
   };
-  const connectWeb = () => {
-    connectWebSocket({ token: getToken() }, function (frame) {
-      // console.log(' connected web socket');
-      subscribeWebSocket('/user/exchange/metaData', onExchangeMetadata);
-      subscribeWebSocket('/user/exchange/metaDataError', onExchangeMetadataError);
-      setSocketConnaction(true);
-      VisualMetadataContainerAdd(props.visualmetadata?.visualMetadataSet);
-      loadVisualization();
-    });
-  };
-
+ 
   useEffect(() => {
     if (props.match.params.viewId) {
       props.getVisualizationsEntities();
@@ -144,9 +98,48 @@ const Canvas = (props: VisualizationProp) => {
   }, []);
 
   useEffect(() => {
+    if (props.isSocketConnected) {
+      VisualMetadataContainerAdd(props.visualmetadata?.visualMetadataSet);
+      loadVisualization();
+    }
+  }, [props.isSocketConnected]);
+
+  useEffect(() => {
+    if (props.visualData) {
+      if (props.visualData?.headers?.request === 'filters') {
+        const obj = props.visualData?.body[0];
+        let dimensionName = '';
+        for (const i in obj) {
+          dimensionName = i;
+          break;
+        }
+        const retVal = props.visualData?.body?.map(function (item) {
+          return {
+            value: item[dimensionName],
+            label: item[dimensionName],
+          };
+        });
+        props.filterData[dimensionName] = retVal;
+      } else {
+        const v = VisualMetadataContainerGetOne(props.visualData.headers.queryId);
+        if (v && props.visualData?.body.length > 0) {
+          v.data = props.visualData?.body;
+          $(`.loader-${v.id}`).hide();
+          $(`.dataNotFound-${v.id}`).hide();
+          renderVisualization(v, props.visualData?.body);
+        } else {
+          $(`.dataNotFound-${v.id}`).show();
+          $(`.loader-${v.id}`).hide();
+        }
+      }
+    }
+  }, [props.visualData]);
+
+  useEffect(() => {
     if (props.visualmetadata?.visualMetadataSet?.length > 0) {
-      if (!isSocketConnaction) {
-        connectWeb();
+      if (!props.isSocketConnected) {
+        //connectWeb();
+        props.receiveSocketResponse();
       }
       props.visualmetadata.visualMetadataSet.map(item => {
         (item.x = item.xPosition), (item.y = item.yPosition), (item.h = item.height), (item.w = item.width);
@@ -158,7 +151,7 @@ const Canvas = (props: VisualizationProp) => {
       setvisualmetadata(visualMetadata);
       renderVisualizationById(props.visualmetadataEntity);
     }
-  }, [props.visualmetadata, props.isCreated, isSocketConnaction, props.visualmetadataEntity]);
+  }, [props.visualmetadata, props.isCreated, props.isSocketConnected, props.visualmetadataEntity]);
 
   const handleVisualizationClick = v => {
     props.addVisualmetadataEntity({
@@ -198,7 +191,7 @@ const Canvas = (props: VisualizationProp) => {
               {...props}
             ></VisualizationHeader>
           </div>
-          <div style={{backgroundColor: v.bodyProperties.backgroundColor}} className="visualBody" id={`visualBody-${v.id}`}>
+          <div style={{ backgroundColor: v.bodyProperties.backgroundColor }} className="visualBody" id={`visualBody-${v.id}`}>
             <div className="illustrate">
               <div className={`loader loader-${v.id}`}>
                 <Loader />
@@ -215,8 +208,8 @@ const Canvas = (props: VisualizationProp) => {
 
   return (
     <>
-      {isSocketConnaction && <FilterPanel />}
-      {isSocketConnaction && <FeaturesPanel />}
+      {props.isSocketConnected && <FilterPanel />}
+      {props.isSocketConnected && <FeaturesPanel />}
       <View>
         <CanvasFilterHeader />
       </View>
@@ -256,6 +249,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualmetadataEntity: storeState.visualmetadata.entity,
   isEditMode: storeState.applicationProfile.isEditMode,
   filterData: storeState.visualmetadata.filterData,
+  visualData: storeState.visualizationData.visualData,
+  isSocketConnected: storeState.visualizationData.isSocketConnected,
 
   selectedFilter: storeState.visualmetadata.selectedFilter,
 });
@@ -271,6 +266,7 @@ const mapDispatchToProps = {
   getViewFeaturesEntities,
   getVisualmetadataEntity,
   updateVisualmetadataEntity,
+  receiveSocketResponse,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

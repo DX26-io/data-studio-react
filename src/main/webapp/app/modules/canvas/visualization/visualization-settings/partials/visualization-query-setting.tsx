@@ -15,8 +15,7 @@ export interface IVisualizationQuerySettingProps extends StateProps, DispatchPro
 const VisualizationQuerySetting = (props: IVisualizationQuerySettingProps) => {
   const [rowQuery, setRowQuery] = useState<ReactText>('');
   let wrap;
-  useEffect(() => {}, []);
-
+ 
   useEffect(() => {
     if (props.rowQuery && props.rowQuery.validationResultType === 'SUCCESS') {
       setRowQuery(props.rowQuery.rawQuery);
