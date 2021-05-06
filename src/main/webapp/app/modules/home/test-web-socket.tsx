@@ -1,46 +1,29 @@
 import React, { useEffect } from 'react';
-
-import { getToken } from 'app/shared/reducers/authentication';
-import { connectWebSocket, subscribeWebSocket, disconnectWebSocket } from 'app/shared/websocket/stomp-client.service';
+import { disconnectWebSocket } from 'app/shared/websocket/stomp-client.service';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
+import { connect } from 'react-redux';
+import { receiveSocketResponse } from 'app/shared/websocket/websocket.reducer';
+import { IRootState } from 'app/shared/reducers';
 
 //  this is just for testing websocket connection. remove this file when it's not needed
 
-export const TestWebSocket = () => {
-  const onExchangeMetadataError = data => {
-    const body = JSON.parse(data.body || '{}');
-     // console.log('received error=' + body);
-  };
+export interface ITestWebSocketProps extends StateProps, DispatchProps {}
 
-  const onExchangeMetadata = data => {
-    const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
-     // console.log('received data=' + metaData);
-  };
-
-  const connectWeb = () => {
-    connectWebSocket({ token: getToken() }, function (frame) {
-       // console.log(' connected web socket');
-      subscribeWebSocket('/user/exchange/metaData', onExchangeMetadata);
-      subscribeWebSocket('/user/exchange/metaDataError', onExchangeMetadataError);
-    });
-  };
-
+export const TestWebSocket = (props: ITestWebSocketProps) => {
   const sendData = () => {
-    // "{"queryDTO":{"fields":[{"name":"customer_lname"}],"distinct":true,"limit":100},"vId":"1004","type":"filters"}"
     const query = {
       queryDTO: { distinct: true, fields: [{ name: 'customer_fname' }] },
       limit: 100,
-      vId: '1004',
+      vId: '1020',
       type: 'filters',
     };
-    forwardCall(503, query, 1004);
+    forwardCall(503, query, 1020);
   };
 
   useEffect(() => {
-    connectWeb();
+    props.receiveSocketResponse();
     return () => {
       disconnectWebSocket();
-       // console.log('cleaned up');
     };
   }, []);
 
@@ -52,4 +35,13 @@ export const TestWebSocket = () => {
   );
 };
 
-export default TestWebSocket;
+const mapStateToProps = (storeState: IRootState) => ({
+  visualData : storeState.visualizationData.visualData
+});
+
+const mapDispatchToProps = { receiveSocketResponse };
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(TestWebSocket);
