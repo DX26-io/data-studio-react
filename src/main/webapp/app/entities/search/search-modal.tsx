@@ -13,14 +13,15 @@ import {
   TextField,
   TextArea,
   AlertDialog,
-  DialogContainer,
+  DialogContainer, SearchField, Text,
 } from '@adobe/react-spectrum';
-import {ComboBox, Item, Section} from '@react-spectrum/combobox'
+import {ComboBox, Item, Section} from '@react-spectrum/combobox';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import {translate, Translate} from 'react-jhipster';
 import { RouteComponentProps} from 'react-router-dom';
 import {resetSearch} from "app/entities/search/search.reducer";
+import AsyncSelect from 'react-select/async';
 
 export interface ISearchModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string, viewId: string }> {}
 
@@ -49,16 +50,20 @@ const SearchModal = (props: ISearchModalProps) => {
           <Heading>
             <Translate contentKey="views.search.title">_Search</Translate>
           </Heading>
-          <Divider />
+          <Divider/>
           <Content>
             <Flex direction="column" gap="size-100" alignItems="center">
               <Form isRequired
-                    necessityIndicator="icon">
-                <ComboBox
-                  label="Realm"
-                  items={props.searchItems}>
-                  {(item) => <Item>{item.name}</Item>}
-                </ComboBox>
+                    necessityIndicator="icon"
+                    width="100%">
+                <Text>
+                  <Translate contentKey="views.search.search">_Search</Translate>
+                </Text>
+                <AsyncSelect
+                  loadOptions
+                  isSearchable={true}
+                  classNamePrefix="select"
+                />
               </Form>
             </Flex>
           </Content>
