@@ -4,7 +4,7 @@ import { getToken } from 'app/shared/reducers/authentication';
 export const ACTION_TYPES = {
   SET_VISUAL_DATA: 'visualData/SET_VISUAL_DATA',
   SET_VISUAL_ERROR: 'visualData/SET_VISUAL_ERROR',
-  SET_CONNACTION_STATUS: 'visualData/SET_CONNACTION_STATUS',
+  SET_CONNECTION_STATUS: 'visualData/SET_CONNECTION_STATUS',
 };
 
 const initialState = {
@@ -24,7 +24,7 @@ export default (state: VisualDataState = initialState, action): VisualDataState 
         loading: false,
         visualData: action.payload,
       };
-    case ACTION_TYPES.SET_CONNACTION_STATUS:
+    case ACTION_TYPES.SET_CONNECTION_STATUS:
       return {
         ...state,
         isSocketConnected: action.payload,
@@ -52,14 +52,14 @@ export const setError = (error: string) => ({
   payload: error,
 });
 
-export const setSocketConnaction = (status: boolean) => ({
-  type: ACTION_TYPES.SET_CONNACTION_STATUS,
+export const setSocketConnection = (status: boolean) => ({
+  type: ACTION_TYPES.SET_CONNECTION_STATUS,
   payload: status,
 });
 
 export const receiveSocketResponse = () => dispatch => {
   connectWebSocket({ token: getToken() }, function (frame) {
-    dispatch(setSocketConnaction(true));
+    dispatch(setSocketConnection(true));
     subscribeWebSocket('/user/exchange/metaData', data => {
       const body = data.body === '' ? { data: [] } : JSON.parse(data.body);
       data.body = body.data;

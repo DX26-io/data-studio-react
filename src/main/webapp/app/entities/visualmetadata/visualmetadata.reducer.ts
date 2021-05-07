@@ -28,6 +28,7 @@ const initialState = {
   rowQuery: null,
   filterData: {},
   selectedFilter: {},
+  validateQueryError: null,
 };
 
 export type VisualmetadataState = Readonly<typeof initialState>;
@@ -72,13 +73,17 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
       };
     case FAILURE(ACTION_TYPES.UPDATE_VISUALMETADATA):
     case FAILURE(ACTION_TYPES.DELETE_VISUALMETADATA):
-    case FAILURE(ACTION_TYPES.VALIDATE_QUERY):
       return {
         ...state,
         loading: false,
         updating: false,
         updateSuccess: false,
         errorMessage: action.payload,
+      };
+    case FAILURE(ACTION_TYPES.VALIDATE_QUERY):
+      return {
+        ...state,
+        validateQueryError: action.payload,
       };
     case SUCCESS(ACTION_TYPES.FETCH_VISUALMETADATA_LIST):
       return {

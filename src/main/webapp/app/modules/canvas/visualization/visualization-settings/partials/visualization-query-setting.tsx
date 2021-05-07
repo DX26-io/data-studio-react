@@ -15,7 +15,7 @@ export interface IVisualizationQuerySettingProps extends StateProps, DispatchPro
 const VisualizationQuerySetting = (props: IVisualizationQuerySettingProps) => {
   const [rowQuery, setRowQuery] = useState<ReactText>('');
   let wrap;
- 
+
   useEffect(() => {
     if (props.rowQuery && props.rowQuery.validationResultType === 'SUCCESS') {
       setRowQuery(props.rowQuery.rawQuery);
@@ -30,7 +30,10 @@ const VisualizationQuerySetting = (props: IVisualizationQuerySettingProps) => {
         });
       }
     }
-  }, [props.rowQuery, props.visual, props.view]);
+    if (props.validateQueryError) {
+      setRowQuery(props.validateQueryError);
+    }
+  }, [props.rowQuery, props.visual, props.view, props.validateQueryError]);
 
   return (
     <>
@@ -43,6 +46,7 @@ const VisualizationQuerySetting = (props: IVisualizationQuerySettingProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   rowQuery: storeState.visualmetadata.rowQuery,
+  validateQueryError: storeState.visualmetadata.validateQueryError,
   updateSuccess: storeState.visualmetadata.updateSuccess,
 });
 

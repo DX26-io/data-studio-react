@@ -1,5 +1,4 @@
 import { RealmDTO } from 'app/shared/model/realm.model';
-
 export interface IFunction {
   readonly id: number;
   readonly description: string;

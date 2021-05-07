@@ -134,7 +134,7 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
       });
       props.condition.values = [];
       props.condition.valueTypes.forEach(item => {
-        props.condition.values.push(actionMeta.option.value);
+        props.condition.values.push(item.value);
       });
     } else if (actionMeta.action === 'remove-value') {
       props.condition?.values.splice(props.condition?.values.indexOf(actionMeta.removedValue.value), 1);

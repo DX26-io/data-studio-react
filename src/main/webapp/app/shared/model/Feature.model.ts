@@ -1,3 +1,5 @@
+import { FeatureType } from '../util/visualization.constants';
+
 export interface Feature {
   createdBy?: null;
   createdDate?: Date;
@@ -15,9 +17,4 @@ export interface Feature {
   pin?: null;
   dateFilter?: null;
   featureCacheType?: null;
-}
-
-export enum FeatureType {
-  Dimension = 'DIMENSION',
-  Measure = 'MEASURE',
 }
