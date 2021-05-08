@@ -65,5 +65,7 @@ export const connectWebSocket = (params: IWebsocketToken, connectionHandler: Fun
 
 export const disconnectWebSocket = () => {
   // console.log('STOMP disconnect');
-  stompClient.disconnect();
+  if (stompClient) {
+    stompClient.disconnect();
+  }
 };

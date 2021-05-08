@@ -1,38 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  View,
-  Flex,
-  Dialog,
-  Heading,
-  Divider,
-  Content,
-  Form,
-  ButtonGroup,
   Button,
+  ButtonGroup,
+  Content,
+  Dialog,
+  DialogContainer,
+  Divider,
+  Flex,
+  Form,
+  Heading,
   ListBox,
+  Text,
   TextField,
-  TextArea,
-  AlertDialog,
-  DialogContainer, SearchField, Text,
 } from '@adobe/react-spectrum';
-import {ComboBox, Item, Section} from '@react-spectrum/combobox';
-import { IRootState } from 'app/shared/reducers';
-import { connect } from 'react-redux';
+import {IRootState} from 'app/shared/reducers';
+import {connect} from 'react-redux';
 import {translate, Translate} from 'react-jhipster';
-import { RouteComponentProps} from 'react-router-dom';
-import {resetSearch} from "app/entities/search/search.reducer";
-import AsyncSelect from 'react-select/async';
+import {RouteComponentProps} from 'react-router-dom';
+import {disconnectSocket, receiveSocketResponse, resetSearch} from "app/entities/search/search.reducer";
+import {searchCall} from "app/shared/websocket/proxy-websocket.service";
+import {ListItem} from "@material-ui/core";
 
 export interface ISearchModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string, viewId: string }> {}
 
 const SearchModal = (props: ISearchModalProps) => {
+  const viewId = props.match.params.viewId;
   const [searchText, setSearchText] = useState('')
+
+  const closeSearch = () => {
+    disconnectSocket();
+    props.history.push(`/dashboards/${props.match.params.id}/${props.match.params.viewId}/build`);
+  };
 
   useEffect(() => {
     if (!props.isSearchOpen) {
-      props.history.push(`/dashboards/${props.match.params.id}/${props.match.params.viewId}/build`);
+      closeSearch();
     }
   }, [props.isSearchOpen]);
+
+  useEffect(() => {
+    props.receiveSocketResponse();
+  }, []);
 
   const handleClose = () => {
     props.resetSearch();
@@ -40,6 +48,20 @@ const SearchModal = (props: ISearchModalProps) => {
 
   const handleSearchClick = () => {
 
+  };
+
+  const load = (value) => {
+    searchCall(viewId, {text: value});
+  };
+
+  const onSearchTextChange = (value) => {
+    setSearchText(value);
+    load(value);
+  };
+
+  const onAutoSuggestionItemChange = (selectedSet) => {
+    const item = props.autoSuggestion.find((ft) => selectedSet.has(ft.text));
+    setSearchText(item.text);
   };
 
   return (
@@ -59,11 +81,18 @@ const SearchModal = (props: ISearchModalProps) => {
                 <Text>
                   <Translate contentKey="views.search.search">_Search</Translate>
                 </Text>
-                <AsyncSelect
-                  loadOptions
-                  isSearchable={true}
-                  classNamePrefix="select"
+                <TextField
+                  label={translate('views.search.search')}
+                  value={searchText}
+                  onChange={onSearchTextChange}
                 />
+                <ListBox
+                  aria-label="Auto-suggestions"
+                  selectionMode="single"
+                  onSelectionChange={onAutoSuggestionItemChange}
+                  items={props.autoSuggestion}>
+                  {(item) => <ListItem key={item.text}>{item.text}</ListItem>}
+                </ListBox>
               </Form>
             </Flex>
           </Content>
@@ -91,11 +120,13 @@ const SearchModal = (props: ISearchModalProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   isSearchOpen: storeState.search.isSearchOpen,
-  searchItems: storeState.feature.entities,
+  autoSuggestion: storeState.search.autoSuggestion,
 });
 
 const mapDispatchToProps = {
   resetSearch,
+  receiveSocketResponse,
+  disconnectSocket,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
