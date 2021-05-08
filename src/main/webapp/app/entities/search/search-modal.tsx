@@ -28,7 +28,6 @@ const SearchModal = (props: ISearchModalProps) => {
   const [searchText, setSearchText] = useState('')
 
   const closeSearch = () => {
-    disconnectSocket();
     props.history.push(`/dashboards/${props.match.params.id}/${props.match.params.viewId}/build`);
   };
 
@@ -40,6 +39,7 @@ const SearchModal = (props: ISearchModalProps) => {
 
   useEffect(() => {
     props.receiveSocketResponse();
+    return disconnectSocket;
   }, []);
 
   const handleClose = () => {
