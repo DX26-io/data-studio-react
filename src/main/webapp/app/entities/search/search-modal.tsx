@@ -9,6 +9,7 @@ import {
   Flex,
   Form,
   Heading,
+  Item,
   ListBox,
   Text,
   TextField,
@@ -19,7 +20,6 @@ import {translate, Translate} from 'react-jhipster';
 import {RouteComponentProps} from 'react-router-dom';
 import {disconnectSocket, receiveSocketResponse, resetSearch} from "app/entities/search/search.reducer";
 import {searchCall} from "app/shared/websocket/proxy-websocket.service";
-import {ListItem} from "@material-ui/core";
 
 export interface ISearchModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string, viewId: string }> {}
 
@@ -91,7 +91,7 @@ const SearchModal = (props: ISearchModalProps) => {
                   selectionMode="single"
                   onSelectionChange={onAutoSuggestionItemChange}
                   items={props.autoSuggestion}>
-                  {(item) => <ListItem key={item.text}>{item.text}</ListItem>}
+                  {(item) => <Item key={item.text}>{item.text}</Item>}
                 </ListBox>
               </Form>
             </Flex>
