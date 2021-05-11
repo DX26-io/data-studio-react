@@ -27,7 +27,7 @@
       "viewName": "VIEW NAME"
     },
     "datasourcePermissions": {
-      "title": "Datasource permissions",
+      "title": "Datasource Permissions",
       "description": "Manage datasources user and  group permissions",
       "datasource": "DATASOURCE",
       "read": "READ",
@@ -38,6 +38,19 @@
       "allow": "allow",
       "deny": "deny",
       "partial": "partial"
+    },
+    "datasourceConstraints": {
+      "editLabel": "Edit Constraint",
+      "createLabel": "Create Constraint",
+      "title": "Datasource Constraints",
+      "name": "Datasource",
+      "description": "Manage Datasource constraints",
+      "notFound": {
+        "heading": "No constraint found",
+        "content": "To create a new constraint click on create"
+      },
+      "constraints": "Constraints",
+      "selectType": "Select Constraint Type"
     }
   }
 }

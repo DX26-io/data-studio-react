@@ -3,7 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Grid, View, Text } from '@adobe/react-spectrum';
 import UsersGroups from '../users-groups';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import DatasourcePermissionTitle from './datasource-permissions-title';
+import PermissionsActionTitle from "../permissions-action-title";
 import Datasource from './datasource-permissions';
 import { IRootState } from 'app/shared/reducers';
 import { updateUserGroupPermissions, updateUserPermissions, resetViewsPermissions } from '../permissions.reducer';
@@ -45,7 +45,7 @@ export const DatasourcePermissionContainer = (props: IDatasourcePermissionContai
           <UsersGroups permissionProps={props} />
         </View>
         <View gridArea="datasources" borderXWidth="thin" borderColor="default" height="100vh">
-          <DatasourcePermissionTitle handleSaveClick={handleSaveClick} updating={props.updating}/>
+          <PermissionsActionTitle handleClick={handleSaveClick} updating={props.updating} translateActionKey="entity.action.save"/>
           <Datasource permissionProps={props} />
         </View>
       </Grid>
