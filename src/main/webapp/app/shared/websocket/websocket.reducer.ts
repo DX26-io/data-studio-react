@@ -3,6 +3,7 @@ import { getToken } from 'app/shared/reducers/authentication';
 
 export const ACTION_TYPES = {
   SET_VISUAL_DATA: 'visualData/SET_VISUAL_DATA',
+  SET_FILTER_DATA: 'visualData/SET_FILTER_DATA',
   SET_VISUAL_ERROR: 'visualData/SET_VISUAL_ERROR',
   SET_CONNECTION_STATUS: 'visualData/SET_CONNECTION_STATUS',
 };
@@ -11,6 +12,7 @@ const initialState = {
   loading: false,
   errorMessage: null,
   visualData: null,
+  filterData: null,
   isSocketConnected: false,
 };
 
@@ -23,6 +25,12 @@ export default (state: VisualDataState = initialState, action): VisualDataState 
         ...state,
         loading: false,
         visualData: action.payload,
+      };
+    case ACTION_TYPES.SET_FILTER_DATA:
+      return {
+        ...state,
+        loading: false,
+        filterData: action.payload,
       };
     case ACTION_TYPES.SET_CONNECTION_STATUS:
       return {
@@ -47,6 +55,11 @@ export const setVisualData = (visualData: any) => ({
   payload: visualData,
 });
 
+export const setFilterData = (filterData: any) => ({
+  type: ACTION_TYPES.SET_FILTER_DATA,
+  payload: filterData,
+});
+
 export const setError = (error: string) => ({
   type: ACTION_TYPES.SET_VISUAL_ERROR,
   payload: error,
@@ -63,7 +76,11 @@ export const receiveSocketResponse = () => dispatch => {
     subscribeWebSocket('/user/exchange/metaData', data => {
       const body = data.body === '' ? { data: [] } : JSON.parse(data.body);
       data.body = body.data;
-      dispatch(setVisualData(data));
+      if (data.headers?.request === 'filters') {
+        dispatch(setFilterData(data));
+      } else {
+        dispatch(setVisualData(data));
+      }
     });
     subscribeWebSocket('/user/exchange/metaDataError', error => {
       const body = JSON.parse(error.body || '{}');

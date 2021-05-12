@@ -1,7 +1,8 @@
 import { TitleProperties } from './title-properties.model';
 import { Field } from './field.model';
-import { MetadataVisual, Property } from './property.model';
-import { BodyProperties } from './body-properties.model copy';
+import { BodyProperties } from './body-properties.model';
+import { MetadataVisual } from './metadata-visual.model';
+import { Property } from './property.model';
 
 export interface IVisualMetadata {
   readOnly?: boolean;

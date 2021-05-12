@@ -88,7 +88,7 @@ const Canvas = (props: VisualizationProp) => {
       renderVisualizationById(item);
     });
   };
- 
+
   useEffect(() => {
     if (props.match.params.viewId) {
       props.getVisualizationsEntities();
@@ -106,34 +106,36 @@ const Canvas = (props: VisualizationProp) => {
 
   useEffect(() => {
     if (props.visualData) {
-      if (props.visualData?.headers?.request === 'filters') {
-        const obj = props.visualData?.body[0];
-        let dimensionName = '';
-        for (const i in obj) {
-          dimensionName = i;
-          break;
-        }
-        const retVal = props.visualData?.body?.map(function (item) {
-          return {
-            value: item[dimensionName],
-            label: item[dimensionName],
-          };
-        });
-        props.filterData[dimensionName] = retVal;
+      const v = VisualMetadataContainerGetOne(props.visualData.headers.queryId);
+      if (v && props.visualData?.body.length > 0) {
+        v.data = props.visualData?.body;
+        $(`.loader-${v.id}`).hide();
+        $(`.dataNotFound-${v.id}`).hide();
+        renderVisualization(v, props.visualData?.body);
       } else {
-        const v = VisualMetadataContainerGetOne(props.visualData.headers.queryId);
-        if (v && props.visualData?.body.length > 0) {
-          v.data = props.visualData?.body;
-          $(`.loader-${v.id}`).hide();
-          $(`.dataNotFound-${v.id}`).hide();
-          renderVisualization(v, props.visualData?.body);
-        } else {
-          $(`.dataNotFound-${v.id}`).show();
-          $(`.loader-${v.id}`).hide();
-        }
+        $(`.dataNotFound-${v.id}`).show();
+        $(`.loader-${v.id}`).hide();
       }
     }
   }, [props.visualData]);
+
+  useEffect(() => {
+    if (props.filterList) {
+      const obj = props.filterList?.body[0];
+      let dimensionName = '';
+      for (const i in obj) {
+        dimensionName = i;
+        break;
+      }
+      const retVal = props.filterList?.body?.map(function (item) {
+        return {
+          value: item[dimensionName],
+          label: item[dimensionName],
+        };
+      });
+      props.filterData[dimensionName] = retVal;
+    }
+  }, [props.filterList]);
 
   useEffect(() => {
     if (props.visualmetadata?.visualMetadataSet?.length > 0) {
@@ -256,6 +258,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isEditMode: storeState.applicationProfile.isEditMode,
   filterData: storeState.visualmetadata.filterData,
   visualData: storeState.visualizationData.visualData,
+  filterList : storeState.visualizationData.filterData,
   isSocketConnected: storeState.visualizationData.isSocketConnected,
 
   isSearchOpen: storeState.search.isSearchOpen,
