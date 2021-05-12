@@ -1,37 +1,23 @@
-import { IDatasources } from 'app/shared/model/datasources.model';
-
-export interface IFeature {
+export interface Feature {
+  createdBy?: null;
+  createdDate?: Date;
+  lastModifiedBy?: null;
+  lastModifiedDate?: Date;
   id?: number;
-  datasourceId?: number;
-  datasource?: IDatasources;
-  dateFilter?: string;
-  definition: string;
-  favouriteFilter?: boolean;
-  featureCacheType?: string;
-  featureType?: string;
-  functionId?: number;
-  isSelected?: boolean;
-  name: string;
-  pin?: boolean;
+  name?: string;
   type?: string;
-  metadata?: null;
-  selected?: string;
-  selected2?: string;
+  functionId?: null;
+  definition?: string;
+  datasource?: null;
+  featureType?: FeatureType;
+  fields?: any[];
+  favouriteFilter?: null;
+  pin?: null;
+  dateFilter?: null;
+  featureCacheType?: null;
 }
 
-export const defaultValue: Readonly<IFeature> = {
-  datasourceId: 0,
-  dateFilter: '',
-  definition: '',
-  favouriteFilter: false,
-  featureCacheType: '',
-  featureType: '',
-  functionId: null,
-  isSelected: false,
-  name: '',
-  pin: false,
-  type: '',
-  metadata: null,
-  selected: '',
-  selected2: '',
-};
+export enum FeatureType {
+  Dimension = 'DIMENSION',
+  Measure = 'MEASURE',
+}

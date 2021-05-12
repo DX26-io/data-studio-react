@@ -1,35 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  View,
-  Flex,
-  Dialog,
-  Heading,
-  Divider,
-  Content,
-  Form,
-  ButtonGroup,
   Button,
-  TextField,
-  TextArea,
-  AlertDialog,
+  ButtonGroup,
+  Content,
+  Dialog,
   DialogContainer,
+  Divider,
+  Flex,
+  Form,
+  Heading,
+  Item,
+  ListBox,
+  Text,
+  TextField,
 } from '@adobe/react-spectrum';
-import { IRootState } from 'app/shared/reducers';
-import { connect } from 'react-redux';
+import {IRootState} from 'app/shared/reducers';
+import {connect} from 'react-redux';
 import {translate, Translate} from 'react-jhipster';
-import { RouteComponentProps} from 'react-router-dom';
-import {resetSearch} from "app/entities/search/search.reducer";
+import {RouteComponentProps} from 'react-router-dom';
+import {disconnectSocket, receiveSocketResponse, resetSearch} from "app/entities/search/search.reducer";
+import {searchCall} from "app/shared/websocket/proxy-websocket.service";
 
 export interface ISearchModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string, viewId: string }> {}
 
 const SearchModal = (props: ISearchModalProps) => {
+  const viewId = props.match.params.viewId;
   const [searchText, setSearchText] = useState('')
+
+  const closeSearch = () => {
+    props.history.push(`/dashboards/${props.match.params.id}/${props.match.params.viewId}/build`);
+  };
 
   useEffect(() => {
     if (!props.isSearchOpen) {
-      props.history.push(`/dashboards/${props.match.params.id}/${props.match.params.viewId}/build`);
+      closeSearch();
     }
   }, [props.isSearchOpen]);
+
+  useEffect(() => {
+    props.receiveSocketResponse();
+    return disconnectSocket;
+  }, []);
 
   const handleClose = () => {
     props.resetSearch();
@@ -37,6 +48,20 @@ const SearchModal = (props: ISearchModalProps) => {
 
   const handleSearchClick = () => {
 
+  };
+
+  const load = (value) => {
+    searchCall(viewId, {text: value});
+  };
+
+  const onSearchTextChange = (value) => {
+    setSearchText(value);
+    load(value);
+  };
+
+  const onAutoSuggestionItemChange = (selectedSet) => {
+    const item = props.autoSuggestion.find((ft) => selectedSet.has(ft.text));
+    setSearchText(item.text);
   };
 
   return (
@@ -47,20 +72,28 @@ const SearchModal = (props: ISearchModalProps) => {
           <Heading>
             <Translate contentKey="views.search.title">_Search</Translate>
           </Heading>
-          <Divider />
+          <Divider/>
           <Content>
             <Flex direction="column" gap="size-100" alignItems="center">
-              <View padding="size-600">
-                <Form isRequired
-                      necessityIndicator="icon"
-                      minWidth="size-4600">
-                  <TextField
-                    label={translate('views.search.search')}
-                    value={searchText}
-                    onChange={setSearchText}
-                  />
-                </Form>
-              </View>
+              <Form isRequired
+                    necessityIndicator="icon"
+                    width="100%">
+                <Text>
+                  <Translate contentKey="views.search.search">_Search</Translate>
+                </Text>
+                <TextField
+                  label={translate('views.search.search')}
+                  value={searchText}
+                  onChange={onSearchTextChange}
+                />
+                <ListBox
+                  aria-label="Auto-suggestions"
+                  selectionMode="single"
+                  onSelectionChange={onAutoSuggestionItemChange}
+                  items={props.autoSuggestion}>
+                  {(item) => <Item key={item.text}>{item.text}</Item>}
+                </ListBox>
+              </Form>
             </Flex>
           </Content>
           <ButtonGroup>
@@ -87,10 +120,13 @@ const SearchModal = (props: ISearchModalProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   isSearchOpen: storeState.search.isSearchOpen,
+  autoSuggestion: storeState.search.autoSuggestion,
 });
 
 const mapDispatchToProps = {
   resetSearch,
+  receiveSocketResponse,
+  disconnectSocket,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

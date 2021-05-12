@@ -12,3 +12,7 @@ const sendMsg = (sourceId: number, body: any, viewId?: number) => {
 export const forwardCall = (sourceId: number, body: any, viewId: any) => {
   sendMsg(sourceId, body, viewId);
 };
+
+export const searchCall = (viewId: any, body: any) => {
+  sendToWebSocket(`/flair-ws/view/${viewId}/search`, {}, JSON.stringify(body));
+};
