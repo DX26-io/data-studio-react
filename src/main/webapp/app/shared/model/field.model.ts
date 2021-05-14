@@ -1,5 +1,5 @@
 import { Constraint } from '../util/visualization.constants';
-import { Feature } from './Feature.model';
+import { IFeature } from './feature.model';
 import { FieldType } from './field-type.model';
 import { Property } from './property.model';
 export interface Field {
@@ -10,7 +10,7 @@ export interface Field {
   id?: number;
   properties?: Property[];
   fieldType?: FieldType;
-  feature?: Feature;
+  feature?: IFeature;
   hierarchy?: null;
   constraint?: Constraint;
   order?: number;

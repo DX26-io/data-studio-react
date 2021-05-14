@@ -15,8 +15,6 @@ import {
   Tooltip,
   Section,
 } from '@adobe/react-spectrum';
-import { IRootState } from 'app/shared/reducers';
-import { connect } from 'react-redux';
 import TableAndChart from '@spectrum-icons/workflow/TableAndChart';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
@@ -220,7 +218,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
             selectedField.properties
               .sort((a, b) => (a.order > b.order ? 1 : -1))
               .map((property, i) => (
-                <Properties key={uuid()} property={property} propstype={'data'} visual={props.visual} features={props.features} />
+                <Properties key={uuid()} property={property} propstyle={'data'} visual={props.visual} features={props.features} />
               ))}
         </Form>
       </View>

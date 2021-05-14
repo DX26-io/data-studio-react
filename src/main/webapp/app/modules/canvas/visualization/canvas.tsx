@@ -140,7 +140,6 @@ const Canvas = (props: VisualizationProp) => {
   useEffect(() => {
     if (props.visualmetadata?.visualMetadataSet?.length > 0) {
       if (!props.isSocketConnected) {
-        //connectWeb();
         props.receiveSocketResponse();
       }
       props.visualmetadata.visualMetadataSet.map(item => {
@@ -255,7 +254,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualizationsList: storeState.visualizations.entities,
   featuresList: storeState.feature.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
-  isEditMode: storeState.applicationProfile.isEditMode,
+  isEditMode: storeState.visualmetadata.isEditMode,
   filterData: storeState.visualmetadata.filterData,
   visualData: storeState.visualizationData.visualData,
   filterList : storeState.visualizationData.filterData,

@@ -1,4 +1,14 @@
-import { AggregationType, ASC, Ascending, DESC, DIMENSION, Limit, MEASURE, Sort } from 'app/shared/util/visualization.constants';
+import {
+  AggregationType,
+  ASC,
+  Ascending,
+  DESC,
+  DIMENSION,
+  Limit,
+  MEASURE,
+  Sort,
+  VisualizationType,
+} from 'app/shared/util/visualization.constants';
 
 const nextFeature = (fields, fieldTypes) => {
   let i = 0;
@@ -178,7 +188,7 @@ const getQueryParametersWithFields = (fields, filters, conditionExpression) => {
 };
 
 const getQueryLimit = (visual, offset) => {
-  if (visual.metadataVisual.name === 'Table' || visual.metadataVisual.name === 'Pivot Table') {
+  if (visual.metadataVisual.name === VisualizationType.Table || visual.metadataVisual.name === VisualizationType.PivotTable) {
     return getChartPropertyValue(Limit, 20) * offset;
   } else {
     return getChartPropertyValue(visual.properties, Limit, 20);

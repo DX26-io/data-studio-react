@@ -1,5 +1,5 @@
 import './header.scss';
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { ActionButton, View, DialogContainer, TooltipTrigger, Tooltip, MenuTrigger, Menu, Item } from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import SaveAsFloppy from '@spectrum-icons/workflow/SaveAsFloppy';
@@ -13,16 +13,13 @@ import { connect } from 'react-redux';
 import {
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
-} from 'app/entities/visualmetadata/visualmetadata.reducer';
-import {
   toggleEditMode,
-  toggleFeaturesPanel,
-  toggleFilterPanel,
-} from 'app/shared/reducers/application-profile';
+} from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { toggleFeaturesPanel, toggleFilterPanel } from 'app/modules/canvas/filter/filter.reducer';
 import { saveViewState } from 'app/entities/views/views.reducer';
 import Filter from '@spectrum-icons/workflow/Filter';
-import {translate} from "react-jhipster";
-import {toggleSearch} from "app/entities/search/search.reducer";
+import { translate } from 'react-jhipster';
+import { toggleSearch } from 'app/entities/search/search.reducer';
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
@@ -60,7 +57,7 @@ const CanvasHeader = props => {
     <>
       <View>
         <TooltipTrigger>
-          <ActionButton onPress={() => handleToggleEditMode()} aria-label="Notifications" isQuiet={true} marginEnd="size-5">
+          <ActionButton onPress={() => handleToggleEditMode()} aria-label="enable edit" isQuiet={true} marginEnd="size-5">
             <div className={props.isEditMode ? 'enableEdit' : 'disableEdit'}>
               <CollectionEdit color="informative" size="M" />
             </div>
@@ -73,7 +70,6 @@ const CanvasHeader = props => {
             aria-label="GraphBarVerticalAdd"
             isQuiet={true}
             marginEnd="size-5"
-            data-testid="notificationsButton"
             isDisabled={!props.isEditMode}
           >
             <GraphBarVerticalAdd size="M" />
@@ -81,17 +77,19 @@ const CanvasHeader = props => {
           <Tooltip>Add Visualization</Tooltip>
         </TooltipTrigger>
         <TooltipTrigger>
-          <ActionButton onPress={() => saveAllVisualizations()} aria-label="Notifications" isQuiet={true} marginEnd="size-5">
+          <ActionButton onPress={() => saveAllVisualizations()} aria-label="Save" isQuiet={true} marginEnd="size-5">
             <SaveAsFloppy size="M" />
           </ActionButton>
           <Tooltip>Save</Tooltip>
         </TooltipTrigger>
         <TooltipTrigger>
-          <ActionButton onPress={() => toggleFeatures()}
-                        aria-label="Features"
-                        isQuiet={true}
-                        isDisabled={!props.isEditMode}
-                        marginEnd="size-5">
+          <ActionButton
+            onPress={() => toggleFeatures()}
+            aria-label="Features"
+            isQuiet={true}
+            isDisabled={!props.isEditMode}
+            marginEnd="size-5"
+          >
             <Asset size="M" />
           </ActionButton>
           <Tooltip>Toggle features</Tooltip>
@@ -99,7 +97,7 @@ const CanvasHeader = props => {
 
         <TooltipTrigger>
           <MenuTrigger>
-            <ActionButton aria-label="Notifications" isQuiet={true} marginEnd="size-5">
+            <ActionButton aria-label="Bookmarks" isQuiet={true} marginEnd="size-5">
               <MoreSmallListVert size="M" />
             </ActionButton>
             <Menu>
@@ -112,10 +110,7 @@ const CanvasHeader = props => {
         </TooltipTrigger>
 
         <TooltipTrigger>
-          <ActionButton onPress={() => toggleSearchModal()}
-                        aria-label="{translate('views.menu.search')}"
-                        isQuiet={true}
-                        marginEnd="size-5">
+          <ActionButton onPress={() => toggleSearchModal()} aria-label="{translate('views.menu.search')}" isQuiet={true} marginEnd="size-5">
             <Search size="M" />
           </ActionButton>
           <Tooltip>{translate('views.menu.toggle.search')}</Tooltip>
@@ -149,7 +144,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualmetadata: storeState.views.viewState,
   visualizationsList: storeState.visualizations.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
-  isEditMode: storeState.applicationProfile.isEditMode,
+  isEditMode: storeState.visualmetadata.isEditMode,
 });
 
 const mapDispatchToProps = {

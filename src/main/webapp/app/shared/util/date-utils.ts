@@ -7,3 +7,7 @@ export const convertDateTimeFromServer = date => (date ? moment(date).format(APP
 export const convertDateTimeToServer = date => (date ? moment(date, APP_LOCAL_DATETIME_FORMAT_Z).toDate() : null);
 
 export const displayDefaultDateTime = () => moment().startOf('day').format(APP_LOCAL_DATETIME_FORMAT);
+
+export const DATETIME = 'YYYY-MM-DD HH:mm:ss.000000';
+
+export const DATE = 'YYYY-MM-DD';

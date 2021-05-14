@@ -3,15 +3,16 @@ import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 
 import { IFeature } from 'app/shared/model/feature.model';
-import { IVisualMetadataSet, Property } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
 import { Checkbox, Switch, Item, Picker, TextField } from '@adobe/react-spectrum';
 import { parseBool, parseString } from 'app/shared/util/common-utils.ts';
 import { ColorSlider } from '@react-spectrum/color';
+import { Property } from 'app/shared/model/property.model';
 
 export interface IPropertiesProps {
   features: readonly IFeature[];
   visual: IVisualMetadataSet;
-  propstype: string;
+  propstyle: string;
   property: Property;
 }
 

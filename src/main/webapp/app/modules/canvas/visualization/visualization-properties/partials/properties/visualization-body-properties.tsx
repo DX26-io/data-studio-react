@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import { getBorderList } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 import { Form, Heading, Item, Picker, TextField, View } from '@adobe/react-spectrum';
 import { Slider } from '@react-spectrum/slider';
-import { BodyProperties } from 'app/shared/model/visualMetadata.model';
-
+import { BodyProperties } from 'app/shared/model/body-properties.model';
 export interface IVisualizationBodyPropertiesProps {
   bodyProperties: BodyProperties;
 }

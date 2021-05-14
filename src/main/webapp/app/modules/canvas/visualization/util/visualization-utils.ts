@@ -1,3 +1,4 @@
+import { COMPARABLE_DATA_TYPES } from 'app/shared/util/data-constraints.constants';
 import { translate } from 'react-jhipster';
 
 const getFormattedNumber = (value, format) => {
@@ -171,6 +172,18 @@ export const getVisualizationFromTranslations = (): any => {
     SelectDimension: translate('datastudioApp.visualmetadata.SelectDimension'),
     SelectMeasure: translate('datastudioApp.visualmetadata.SelectMeasure'),
   };
+};
+
+export const checkIsDateType = dimension => {
+  const dataType = dimension.type;
+  const isDateType = COMPARABLE_DATA_TYPES.includes(dataType.toLowerCase());
+  return isDateType;
+};
+
+export const getDimension = (features, dimension) => {
+  return features.find(element => {
+    return element.name === dimension;
+  });
 };
 
 export const VisualizationUtils = () => {

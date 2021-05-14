@@ -1,4 +1,6 @@
-export interface Feature {
+import { FeatureType } from '../util/visualization.constants';
+
+export interface IFeature {
   createdBy?: null;
   createdDate?: Date;
   lastModifiedBy?: null;
@@ -15,9 +17,7 @@ export interface Feature {
   pin?: null;
   dateFilter?: null;
   featureCacheType?: null;
-}
-
-export enum FeatureType {
-  Dimension = 'DIMENSION',
-  Measure = 'MEASURE',
+  metadata: any;
+  selected: string;
+  selected2: string;
 }
