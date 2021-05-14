@@ -21,6 +21,8 @@
       "firstName": "First Name can be maximum 100 characters long.",
       "lastName": "Last Name can be maximum 100 characters long."
     },
+    "search": "Search User...",
+    "select": "Select User",
     "login": "Login",
     "firstName": "First name",
     "lastName": "Last name",

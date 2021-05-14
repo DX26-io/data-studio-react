@@ -13,7 +13,7 @@ import permission, {
   getUserViewsPermissions,
   updateUserGroupPermissions,
   updateUserPermissions,
-} from 'app/modules/administration/user-management/permission/permissions.reducer';
+} from 'app/modules/administration/user-management/permissions/permissions.reducer';
 
 describe('permissions reducer tests', () => {
   const username = process.env.E2E_USER_GROUPNAME || 'admin';
@@ -141,6 +141,8 @@ describe('permissions reducer tests', () => {
         errorMessage: null,
         dashboardPermissions: [],
         totalDashboardPermissions: 0,
+        datasourcePermissions: [],
+        totalDatasourcePermissions: 0,
         viewsPermissions: [],
         totalViewsPermissions: 0,
         updateSuccess: false,

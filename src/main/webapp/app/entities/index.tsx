@@ -9,6 +9,7 @@ import Views from './views';
 import Visualizations from './visualizations';
 
 import Visualmetadata from './visualmetadata';
+import ReportsManagement from "./reports-management";
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -20,6 +21,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute exact path={`${match.url}visualizations`} component={Visualizations} />
 
       <ErrorBoundaryRoute path={`${match.url}visualmetadata`} component={Visualmetadata} />
+      <ErrorBoundaryRoute path={`${match.url}reports-management`} component={ReportsManagement} />
       {/* jhipster-needle-add-route-path - JHipster will add routes here */}
     </Switch>
   </div>

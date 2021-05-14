@@ -22,7 +22,7 @@ const QuickStart: React.FC = () => {
       icon: <Visibility size="M" />,
     },
     {
-      link: `/reports`,
+      link: `/reports-management/reports`,
       title: 'home.top.tabs.quickStart.reportManagement',
       icon: <Visibility size="M" />,
     },

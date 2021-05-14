@@ -14,11 +14,28 @@ export const ACTION_TYPES = {
   CREATE_REALM: 'authentication/CREATE_REALM',
   VERIFY_USER: 'authentication/VERIFY_USER',
   REALM_CREATED: 'authentication/REALM_CREATED',
+  AUTH_FAILURE: 'authentication/AUTH_FAILURE',
   GET_SESSION: 'authentication/GET_SESSION',
   LOGOUT: 'authentication/LOGOUT',
   CLEAR_AUTH: 'authentication/CLEAR_AUTH',
   ERROR_MESSAGE: 'authentication/ERROR_MESSAGE',
 };
+
+export interface RealmDTO {
+  name: string;
+  id: number;
+}
+
+export interface AccountDTO {
+  id: number;
+  userGroups: any;
+  login: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  langKey: string;
+  currentRealm: RealmDTO;
+}
 
 const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
 
@@ -39,7 +56,7 @@ const initialState = {
   signupError: false, // Errors returned from server side
   createRealmError: false, // Errors returned from server side
   logoutError: false, // Errors returned from server side
-  account: {} as any,
+  account: {} as AccountDTO,
   errorMessage: (null as unknown) as string, // Errors returned from server side
   redirectMessage: (null as unknown) as string,
   sessionHasBeenFetched: false,
@@ -170,6 +187,11 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...state,
         redirectTo: '/',
       };
+    case ACTION_TYPES.AUTH_FAILURE:
+      return {
+        ...state,
+        redirectTo: '/signin',
+      };
     default:
       return state;
   }
@@ -201,6 +223,14 @@ export const getSession: () => void = () => async (dispatch, getState) => {
     const langKey = Storage.session.get('locale', account.langKey);
     await dispatch(setLocale(langKey));
   }
+};
+
+export const getSessionWithPath: (pathname: string) => void = (pathname: string) => async (dispatch, getState) => {
+  const noSessionPathNames = ['/realm', '/signin', '/signup'];
+  if (noSessionPathNames.includes(pathname)) {
+    return;
+  }
+  return await dispatch(getSession());
 };
 
 export const setAuthToken = async (bearerToken, rememberMe) => {
@@ -289,8 +319,13 @@ export const loginWithProvider: (provider: string, realmId: number) => void = (p
     google: new firebase.auth.GoogleAuthProvider(),
     github: new firebase.auth.GithubAuthProvider(),
   };
-  const authProvider = firebaseProviders[provider];
-  await firebase.auth().signInWithPopup(authProvider);
+  try {
+    const authProvider = firebaseProviders[provider];
+    await firebase.auth().signInWithPopup(authProvider);
+  } catch (e) {
+    toast.error(e.message);
+    return;
+  }
   const tkn = await firebase.auth().currentUser.getIdToken(true);
   const result = await dispatch({
     type: ACTION_TYPES.LOGIN_WITH_PROVIDER,
@@ -326,6 +361,14 @@ export const logout: () => void = () => dispatch => {
   dispatch({
     type: ACTION_TYPES.LOGOUT,
     payload: axios.get('api/logout'),
+  });
+};
+
+export const authFailure: () => void = () => dispatch => {
+  clearAuthToken();
+  firebaseLogout();
+  dispatch({
+    type: ACTION_TYPES.AUTH_FAILURE,
   });
 };
 

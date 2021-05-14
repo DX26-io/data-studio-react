@@ -1,15 +1,10 @@
 import React from 'react';
-import { DashboardPermissionContainer } from 'app/modules/administration/user-management/permission/dashboard-permissions-container';
-import userEvent from '@testing-library/user-event';
-import { defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
-import { render } from '@testing-library/react';
+import { DashboardPermissionContainer } from 'app/modules/administration/user-management/permissions/dashboards/dashboard-permissions-container';
 import configureMockStore from 'redux-mock-store';
-import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import promiseMiddleware from 'redux-promise-middleware';
-import { MemoryRouter } from 'react-router';
-import { RouteComponentProps } from 'react-router-dom';
-import { AUTHORITIES } from 'app/config/constants';
+import { shallow } from 'enzyme';
+import { Grid, View } from '@adobe/react-spectrum';
 
 export const getInitialState = () => {
   return {
@@ -29,23 +24,16 @@ describe('Dashboard Permission Container', () => {
     history: { push: jest.fn() } as any,
     location: {} as any,
     match: {} as any,
-    dashboardPermissions:[],
-    totalDashboardPermissions:0
+    dashboardPermissions: [],
+    totalDashboardPermissions: 0,
   };
 
   const wrapper = () => {
     const mockStore = configureMockStore([thunk, promiseMiddleware]);
     const store = mockStore(getInitialState());
+
     if (!mountedWrapper) {
-      mountedWrapper = render(
-        <SpectrumProvider theme={defaultTheme}>
-          <Provider store={store}>
-            <MemoryRouter>
-              <DashboardPermissionContainer {...permissionsProps} />
-            </MemoryRouter>
-          </Provider>
-        </SpectrumProvider>
-      );
+      mountedWrapper = shallow(<DashboardPermissionContainer {...permissionsProps} />);
     }
     return mountedWrapper;
   };
@@ -56,6 +44,9 @@ describe('Dashboard Permission Container', () => {
 
   it('should render Dashboard Permission Container', () => {
     const tree = wrapper();
-    expect(tree).toBeDefined();
+    const gridItem = tree.find(Grid);
+    expect(gridItem.length).toEqual(1);
+    const viewItem = tree.find(View);
+    expect(viewItem.length).toEqual(3);
   });
 });

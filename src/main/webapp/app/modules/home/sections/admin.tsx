@@ -8,6 +8,7 @@ import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header
 import LinkCard from 'app/shared/components/link-card/link-card';
 import PlatformDataMapping from '@spectrum-icons/workflow/PlatformDataMapping';
 import Data from '@spectrum-icons/workflow/Data';
+import FileGear from '@spectrum-icons/workflow/FileGear';
 
 const Admin: React.FC = () => {
   const adminList = [
@@ -46,6 +47,12 @@ const Admin: React.FC = () => {
       link: `/administration/sources/datasources`,
       title: 'datasources.home.title',
       description: 'datasources.home.description',
+    },
+    {
+      icon: <FileGear size="L" />,
+      link: `/administration/reports-configuration`,
+      title: 'reports-management.reportConfiguration.title',
+      description: 'reports-management.reportConfiguration.description',
     },
   ];
   return (

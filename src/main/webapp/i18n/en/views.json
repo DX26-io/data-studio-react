@@ -27,6 +27,8 @@
     "detail": {
       "title": "Views"
     },
+    "search": "Search View...",
+    "select": "Select View",
     "viewName": "View Name",
     "description": "Description",
     "createdBy": "Created By",

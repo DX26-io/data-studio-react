@@ -1,5 +1,5 @@
 import React from 'react';
-import { UsersGroups,IUsersGroupsProps } from 'app/modules/administration/user-management/permission/users-groups';
+import { UsersGroups,IUsersGroupsProps } from 'app/modules/administration/user-management/permissions/users-groups';
 import userEvent from '@testing-library/user-event';
 import { defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
 import { render } from '@testing-library/react';

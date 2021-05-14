@@ -3,13 +3,12 @@ import '../content/scss/main.scss';
 import '@spectrum-css/typography/dist/index-vars.css';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import {BrowserRouter as Router, Redirect} from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { hot } from 'react-hot-loader';
 import { Grid, View } from '@adobe/react-spectrum';
-
 import { IRootState } from 'app/shared/reducers';
-import { getSession } from 'app/shared/reducers/authentication';
+import { getSessionWithPath } from 'app/shared/reducers/authentication';
 import { getProfile } from 'app/shared/reducers/application-profile';
 import { setLocale } from 'app/shared/reducers/locale';
 import Header from 'app/shared/layout/header/header';
@@ -22,7 +21,6 @@ import AppRoutes from 'app/routes';
 import { isCanvas } from './shared/util/common-utils';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
-const noSessionPathNames = ['/realm', '/signin', '/signup'];
 
 export interface IAppProps extends StateProps, DispatchProps {}
 
@@ -30,9 +28,7 @@ export interface IAppProps extends StateProps, DispatchProps {}
 export const App = (props: IAppProps) => {
   useEffect(() => {
     const pathname = window.location.pathname;
-    if (!noSessionPathNames.includes(pathname)) {
-      props.getSession();
-    }
+    props.getSessionWithPath(pathname);
     props.getProfile();
   }, []);
 
@@ -72,6 +68,13 @@ export const App = (props: IAppProps) => {
     </Router>
   ) : (
     <Router basename={baseHref}>
+      {props.redirectTo ?
+          <Redirect
+            to={{
+              pathname: props.redirectTo
+            }}
+          /> : null
+      }
       <ToastContainer position={toast.POSITION.BOTTOM_CENTER} className="toastify-container" toastClassName="toastify-toast" />
       <ErrorBoundary>
         <AppRoutes />
@@ -83,6 +86,7 @@ export const App = (props: IAppProps) => {
 const mapStateToProps = ({ authentication, applicationProfile, locale, home }: IRootState) => ({
   currentLocale: locale.currentLocale,
   isAuthenticated: authentication.isAuthenticated,
+  redirectTo: authentication.redirectTo,
   isAdmin: hasAnyAuthority(authentication.account.userGroups, [AUTHORITIES.ADMIN]),
   ribbonEnv: applicationProfile.ribbonEnv,
   isInProduction: applicationProfile.inProduction,
@@ -90,7 +94,7 @@ const mapStateToProps = ({ authentication, applicationProfile, locale, home }: I
   isCanvas: isCanvas()
 });
 
-const mapDispatchToProps = { setLocale, getSession, getProfile};
+const mapDispatchToProps = { setLocale, getSessionWithPath, getProfile };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
