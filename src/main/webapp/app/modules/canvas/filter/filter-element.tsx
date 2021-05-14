@@ -13,6 +13,7 @@ import VisualizationDataConstraints from '../data-constraints/visualization-data
 import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from '../data-constraints/utils/date-util';
 import $ from 'jquery';
+import { checkIsDateType } from '../visualization/util/visualization-utils';
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
 }
@@ -61,7 +62,7 @@ const FilterElement = (props: IFilterElementProp) => {
     return inputValue;
   };
   const mapOptionsToValues = (options, inputValue) => {
-    if (inputValue !== '') {
+    if (!inputValue) {
       return options.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase()));
     }
     return options;
@@ -124,12 +125,6 @@ const FilterElement = (props: IFilterElementProp) => {
     }
   };
 
-  const checkIsDateType = () => {
-    const dataType = props.feature.type;
-    const isDateType = COMPARABLE_DATA_TYPES.includes(dataType.toLowerCase());
-    return isDateType;
-  };
-
   function removeFilter(filter) {
     let filterParameters;
     filterParameters = FilterParameterService.get();
@@ -185,7 +180,7 @@ const FilterElement = (props: IFilterElementProp) => {
         borderRadius="regular"
       >
         <View>{props.feature.name}</View>
-        {checkIsDateType() ? (
+        {checkIsDateType(props.feature) ? (
           <View>
             <DateRangeComponent onDateChange={onDateChange} />
           </View>

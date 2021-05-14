@@ -17,6 +17,7 @@ import { IVisualizations } from 'app/shared/model/visualizations.model';
 import TableAndChart from '@spectrum-icons/workflow/TableAndChart';
 import { IViews } from 'app/shared/model/views.model';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
+import { createFields, createProperties } from './visualizations-util';
 
 interface IVisualizationsListProps {
   visualizations?: readonly IVisualizations[];
@@ -26,49 +27,6 @@ interface IVisualizationsListProps {
 }
 export const VisualizationsList = (props: IVisualizationsListProps) => {
   const { handleVisualizationClick } = props;
-
-  const createFields = newVM => {
-    let order = 0;
-    newVM.fields = newVM.metadataVisual.fieldTypes
-      .filter(function (item) {
-        return item.constraint === 'REQUIRED';
-      })
-      .map(function (item) {
-        return {
-          fieldType: item,
-          feature: null,
-          constraint: item.constraint,
-          properties: item.propertyTypes,
-        };
-      });
-    newVM.fields.forEach(function (field) {
-      field.fieldType = field.fieldType;
-      field.order = order + 1;
-      field.properties = field.fieldType.propertyTypes.map(function (item) {
-        return {
-          propertyType: item.propertyType,
-          value: item.propertyType.defaultValue,
-          type: item.propertyType.type,
-          order: item.order,
-        };
-      });
-    });
-
-    return newVM;
-  };
-
-  const createProperties = newVM => {
-    newVM.properties = newVM.metadataVisual.propertyTypes.map(function (item) {
-      return {
-        propertyType: item.propertyType,
-        value: item.propertyType.defaultValue,
-        order: item.order,
-        type: item.propertyType.type,
-      };
-    });
-    return newVM;
-  };
-
   const createVisualMetadata = visualization => {
     let newVM = {
       isCardRevealed: true,

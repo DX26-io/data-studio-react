@@ -1,3 +1,4 @@
+import { DATE, DATETIME } from 'app/shared/util/date-utils';
 import moment from 'moment';
 
 export const resetTimezone = date => {
@@ -36,7 +37,7 @@ export const startOfDay = date => {
 };
 
 export const dateToString = date => {
-  return moment(date).utc().format('YYYY-MM-DD HH:mm:ss.000000');
+  return moment(date).utc().format(DATETIME);
 };
 
 export const formatDate = date => {
@@ -47,7 +48,7 @@ export const formatDate = date => {
 };
 
 export const stringToDate = date => {
-  return moment(date).format('YYYY-MM-DD').toString();
+  return moment(date).format(DATE).toString();
 };
 
 export const getStartDateRangeInterval = (config, customDynamicDateRange) => {

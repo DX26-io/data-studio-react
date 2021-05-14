@@ -5,7 +5,8 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 
 import { IVisualMetadata, defaultValue } from 'app/shared/model/visualMetadata.model';
-import { IValidateDTO, IVisualmetaDataDTO } from './visualmetadata-util';
+import { IVisualmetaDataDTO } from 'app/shared/model/visualmeta-data.model';
+import { IValidateDTO } from 'app/shared/model/validate.model';
 
 export const ACTION_TYPES = {
   FETCH_VISUALMETADATA_LIST: 'visualmetadata/FETCH_VISUALMETADATA_LIST',
@@ -15,6 +16,7 @@ export const ACTION_TYPES = {
   DELETE_VISUALMETADATA: 'visualmetadata/DELETE_VISUALMETADATA',
   RESET: 'visualmetadata/RESET',
   VALIDATE_QUERY: 'visualmetadata/VALIDATE_QUERYDTO',
+  TOGGLE_EDIT_MODE: 'visualmetadata/TOGGLE_EDIT_MODE',
 };
 
 const initialState = {
@@ -29,6 +31,7 @@ const initialState = {
   filterData: {},
   selectedFilter: {},
   validateQueryError: null,
+  isEditMode: false,
 };
 
 export type VisualmetadataState = Readonly<typeof initialState>;
@@ -125,6 +128,11 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         ...state,
         rowQuery: action.payload.data,
       };
+    case ACTION_TYPES.TOGGLE_EDIT_MODE:
+      return {
+        ...state,
+        isEditMode: !state.isEditMode,
+      };
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
@@ -186,6 +194,10 @@ export const deleteEntity: ICrudDeleteAction<IVisualMetadata> = id => async disp
   // dispatch(getEntities());
   return result;
 };
+
+export const toggleEditMode = () => ({
+  type: ACTION_TYPES.TOGGLE_EDIT_MODE,
+});
 
 export const reset = () => ({
   type: ACTION_TYPES.RESET,

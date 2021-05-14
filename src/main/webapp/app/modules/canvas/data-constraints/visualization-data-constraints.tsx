@@ -19,6 +19,7 @@ import AsyncSelect from 'react-select/async';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { resetTimezoneData } from 'app/modules/canvas/data-constraints/utils/date-util';
 import DateRangeComponent from './date-range-component';
+import { checkIsDateType, getDimension } from '../visualization/util/visualization-utils';
 
 interface IVisualizationDataConstraintsProps {
   features: readonly IFeature[];
@@ -46,11 +47,6 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
     return SIMPLE_DATE_TYPES_OTHER.includes(item['@type']);
   });
 
-  const getDimension = condition => {
-    return props.features.find(element => {
-      return element.name === condition;
-    });
-  };
   const mapOptionsToValues = (options, inputValue) => {
     if (inputValue !== '') {
       return options.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase()));
@@ -65,7 +61,7 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
   };
   const onDateChange = (fromDate, toDate, metadata) => {
     if (fromDate && toDate) {
-      const dimension = getDimension(props.condition.featureName);
+      const dimension = getDimension(props.features, props.condition.featureName);
       fromDate = resetTimezoneData(fromDate);
       toDate = resetTimezoneData(toDate);
       props.condition.valueType = { value: fromDate, type: dimension.type, '@type': 'valueType' };
@@ -126,7 +122,7 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
 
   const handleChange = (value, actionMeta) => {
     if (actionMeta.action === 'select-option') {
-      const dimension = getDimension(props.condition.featureName);
+      const dimension = getDimension(props.features, props.condition.featureName);
       props.condition.valueTypes.push({
         '@type': 'valueType',
         value: actionMeta.option.value,
@@ -144,7 +140,7 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
   const getComparisonTypes = condition => {
     props.condition.featureName = condition;
     setProperty([props.condition.featureName]);
-    const dimension = getDimension(condition);
+    const dimension = getDimension(props.features, condition);
     if (!dimension) {
       return [];
     }
@@ -157,12 +153,7 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
       setConditionList(dateRangeUnsupportedTypes);
     }
   };
-  const checkIsDateType = featureName => {
-    const dimension = getDimension(featureName);
-    const dataType = dimension.type;
-    const isDateType = COMPARABLE_DATA_TYPES.includes(dataType.toLowerCase());
-    return isDateType;
-  };
+
   const getContainDefaultValues = condition => {
     const data = [];
     condition?.values?.map(item => {
@@ -326,7 +317,7 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
 
               {(condition['@type'] === 'Contains' || condition['@type'] === 'NotContains') && getContainDefaultValues(condition)}
 
-              {condition['@type'] === 'Between' && checkIsDateType(condition.featureName) && (
+              {condition['@type'] === 'Between' && checkIsDateType(getDimension(props.features, condition.featureName)) && (
                 <DateRangeComponent condition={condition} onDateChange={onDateChange} />
               )}
 

@@ -112,7 +112,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
-  isFilterOpen: storeState.applicationProfile.isFilterOpen,
+  isFilterOpen: storeState.filter.isFilterOpen,
   featuresList: storeState.feature.entities,
   visualmetadata: storeState.views.viewState,
   selectedFilter: storeState.filter.selectedFilter,

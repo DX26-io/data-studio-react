@@ -36,35 +36,35 @@ const DateRangeComponent = (props: IDateRangeComponentProps) => {
   const dynamicDateRangeConfig = DYNAMIC_DATE_RANGE_CONFIG;
 
   const onInputChange = () => {
-    let _startDate;
-    let _endDate;
+    let fromDate;
+    let toDate;
     let startDateFormatted = '';
     let endDateFormatted = '';
     if (dateRangeTab === TAB_DAY) {
-      startDateFormatted = _startDate = formatDate(resetTimezone(startOfDay(strToDate(startDate))));
-      endDateFormatted = _endDate = formatDate(resetTimezone(endOfDay(strToDate(startDate))));
+      startDateFormatted = fromDate = formatDate(resetTimezone(startOfDay(strToDate(startDate))));
+      endDateFormatted = toDate = formatDate(resetTimezone(endOfDay(strToDate(startDate))));
     } else if (dateRangeTab === TAB_RANGE) {
-      startDateFormatted = _startDate = formatDate(resetTimezone(startOfDay(strToDate(startDate))));
-      endDateFormatted = _endDate = formatDate(resetTimezone(endOfDay(strToDate(endDate))));
+      startDateFormatted = fromDate = formatDate(resetTimezone(startOfDay(strToDate(startDate))));
+      endDateFormatted = toDate = formatDate(resetTimezone(endOfDay(strToDate(endDate))));
     } else if (dateRangeTab === TAB_DYNAMIC) {
       const startDateRange = getStartDateRange(currentDynamicDateRangeConfig);
       if (startDateRange) {
-        _startDate = formatDate(resetTimezone(strToDate(startDateRange)));
-        startDateFormatted = _startDate;
+        fromDate = formatDate(resetTimezone(strToDate(startDateRange)));
+        startDateFormatted = fromDate;
       } else {
         const startDateRangeInterval = getStartDateRangeInterval(currentDynamicDateRangeConfig, customDynamicDateRange);
         if (!startDateRangeInterval) {
           return;
         }
         const timeUnit = getStartDateRangeTimeUnit(currentDynamicDateRangeConfig) || '';
-        _startDate = '__FLAIR_INTERVAL_OPERATION(NOW(' + timeUnit + "), '-', '" + startDateRangeInterval + "')";
+        fromDate = '__FLAIR_INTERVAL_OPERATION(NOW(' + timeUnit + "), '-', '" + startDateRangeInterval + "')";
         const adjustedDate = adjustStartDateRangeInterval(currentDynamicDateRangeConfig);
         startDateFormatted = formatDate(resetTimezone(startOfDay(adjustedDate)));
       }
       endDateFormatted = formatDate(resetTimezone(endOfDay(strToDate(new Date()))));
-      _endDate = '__FLAIR_NOW()';
+      toDate = '__FLAIR_NOW()';
     }
-    props.onDateChange(_startDate, _endDate, {
+    props.onDateChange(fromDate, toDate, {
       startDateFormatted,
       endDateFormatted,
       tab: dateRangeTab,

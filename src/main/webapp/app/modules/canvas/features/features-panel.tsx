@@ -123,7 +123,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
-  isFeaturesPanelOpen: storeState.applicationProfile.isFeaturesPanelOpen,
+  isFeaturesPanelOpen: storeState.filter.isFeaturesPanelOpen,
   featuresList: storeState.feature.entities,
   selectedFeature: storeState.feature.selectedFeature,
 });

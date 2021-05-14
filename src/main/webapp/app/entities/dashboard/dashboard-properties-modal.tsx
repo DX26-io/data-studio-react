@@ -41,7 +41,6 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
   const [isError, setErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { dashboardEntity, dataSourcesList, updating } = props;
-  const dashboardId = props.match.params.id;
   const getDatasourceByName = id => {
     const _datasource = dataSourcesList.filter(function (item) {
       return item.name === id;
@@ -67,8 +66,8 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
   };
 
   useEffect(() => {
-    if (dashboardId) {
-      props.getEntity(dashboardId);
+    if (props.match.params.id) {
+      props.getEntity(props.match.params.id);
     }
   }, []);
 
@@ -158,7 +157,7 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
               <Translate contentKey="entity.action.cancel">Close</Translate>
             </Button>
 
-            {props.account && hasAuthority(props.account, 'DELETE_' + dashboardId + '_DASHBOARDS') && !isEdit && (
+            {props.account && hasAuthority(props.account, 'DELETE_' + props.match.params.id + '_DASHBOARDS') && !isEdit && (
               <Button variant="cta" onPress={handleEdit}>
                 <Translate contentKey="entity.action.edit">Edit</Translate>
               </Button>
