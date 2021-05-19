@@ -41,12 +41,19 @@ import { receiveSocketResponse } from 'app/shared/websocket/websocket.reducer';
 
 const ReactGridLayout = WidthProvider(RGL);
 
+export interface IIllustrate {
+  visualizationId: string;
+  loaderVisibility: boolean;
+  noDataFoundVisibility: boolean;
+}
+
 export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
 
 const Canvas = (props: VisualizationProp) => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
   const [visualmetadataList, setvisualmetadata] = useState<IVisualMetadataSet[]>();
   const [filters, setFilters] = useState<string[]>();
+  const [isLoaderDisplay, setIsLoaderDisplay] = useState<IIllustrate[]>([]);
 
   useEffect(() => {
     if (props.selectedFilter) {
@@ -79,7 +86,7 @@ const Canvas = (props: VisualizationProp) => {
     if (ValidateFields(item.fields)) {
       getVisualizationData(item, props.view);
     } else {
-      $(`.loader-${item.id}`).hide();
+      hideLoader(item.id);
     }
   };
 
@@ -87,6 +94,33 @@ const Canvas = (props: VisualizationProp) => {
     props.visualmetadata.visualMetadataSet.map((item, i) => {
       renderVisualizationById(item);
     });
+  };
+
+  const hideLoader = id => {
+    isLoaderDisplay.map(item => {
+      if (item.visualizationId === id) {
+        item.loaderVisibility = false;
+      }
+    });
+    setIsLoaderDisplay(isLoaderDisplay);
+  };
+
+  const showDataNotFound = id => {
+    isLoaderDisplay.map(item => {
+      if (item.visualizationId === id) {
+        item.noDataFoundVisibility = true;
+      }
+    });
+    setIsLoaderDisplay(isLoaderDisplay);
+  };
+
+  const hideDataNotFound = id => {
+    isLoaderDisplay.map(item => {
+      if (item.visualizationId === id) {
+        item.noDataFoundVisibility = false;
+      }
+    });
+    setIsLoaderDisplay(isLoaderDisplay);
   };
 
   useEffect(() => {
@@ -109,12 +143,12 @@ const Canvas = (props: VisualizationProp) => {
       const v = VisualMetadataContainerGetOne(props.visualData.headers.queryId);
       if (v && props.visualData?.body.length > 0) {
         v.data = props.visualData?.body;
-        $(`.loader-${v.id}`).hide();
-        $(`.dataNotFound-${v.id}`).hide();
+        hideLoader(v.id);
+        hideDataNotFound(v.id);
         renderVisualization(v, props.visualData?.body);
       } else {
-        $(`.dataNotFound-${v.id}`).show();
-        $(`.loader-${v.id}`).hide();
+        showDataNotFound(v.id);
+        hideLoader(v.id);
       }
     }
   }, [props.visualData]);
@@ -139,6 +173,17 @@ const Canvas = (props: VisualizationProp) => {
 
   useEffect(() => {
     if (props.visualmetadata?.visualMetadataSet?.length > 0) {
+      props.visualmetadata?.visualMetadataSet.map(item => {
+        const loader = {
+          visualizationId: item.id,
+          loaderVisibility: true,
+          noDataFoundVisibility: false,
+        };
+        const visList = isLoaderDisplay || [];
+        isLoaderDisplay.push(loader);
+        setIsLoaderDisplay(visList);
+      });
+
       if (!props.isSocketConnected) {
         props.receiveSocketResponse();
       }
@@ -170,7 +215,7 @@ const Canvas = (props: VisualizationProp) => {
 
   const generateWidge =
     visualmetadataList &&
-    visualmetadataList.map(v => {
+    visualmetadataList.map((v, i) => {
       return (
         <div
           className="item widget"
@@ -200,10 +245,13 @@ const Canvas = (props: VisualizationProp) => {
           </div>
           <div style={{ backgroundColor: v.bodyProperties.backgroundColor }} className="visualBody" id={`visualBody-${v.id}`}>
             <div className="illustrate">
-              <div className={`loader loader-${v.id}`}>
+              <div style={{ display: isLoaderDisplay[i].loaderVisibility ? 'block' : 'none' }} className={`loader loader-${v.id}`}>
                 <Loader />
               </div>
-              <div className={`dataNotFound dataNotFound-${v.id}`}>
+              <div
+                style={{ display: isLoaderDisplay[i].noDataFoundVisibility ? 'block' : 'none' }}
+                className={`dataNotFound dataNotFound-${v.id}`}
+              >
                 <NoDataFoundPlaceHolder />
               </div>
             </div>
@@ -257,7 +305,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isEditMode: storeState.visualmetadata.isEditMode,
   filterData: storeState.visualmetadata.filterData,
   visualData: storeState.visualizationData.visualData,
-  filterList : storeState.visualizationData.filterData,
+  filterList: storeState.visualizationData.filterData,
   isSocketConnected: storeState.visualizationData.isSocketConnected,
 
   isSearchOpen: storeState.search.isSearchOpen,

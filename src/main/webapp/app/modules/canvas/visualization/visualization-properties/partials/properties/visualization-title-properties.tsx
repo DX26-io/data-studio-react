@@ -3,7 +3,7 @@ import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { Form, Heading, Item, Picker, TextField, View, Well } from '@adobe/react-spectrum';
 import { getBorderList } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
-import { TitleProperties } from 'app/shared/model/visualMetadata.model';
+import { TitleProperties } from 'app/shared/model/title-properties.model';
 
 export interface IVisualizationTitlePropertiesProps {
   titleProperties: TitleProperties;

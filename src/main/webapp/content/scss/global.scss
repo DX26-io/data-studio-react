@@ -37,15 +37,24 @@ a {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(
+    --spectrum-alias-background-color-gray-50,
+    var(--spectrum-global-color-gray-50, var(--spectrum-semantic-gray-50-color-background))
+  );
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: var(
+    --spectrum-alias-background-color-gray-500,
+    var(--spectrum-global-color-gray-500, var(--spectrum-semantic-gray-500-color-background))
+  );
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(
+    --spectrum-alias-background-color-gray-700,
+    var(--spectrum-global-color-gray-700, var(--spectrum-semantic-gray-700-color-background))
+  );
 }
