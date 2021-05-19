@@ -172,7 +172,7 @@ const getConditionExpressionForParams = (params: any, sourceParams: any) => {
   };
 };
 
-const getConditionExpression = (additionalFeaturesArray: any = null) => {
+const getConditionExpression = (paramObject: any, additionalFeaturesArray: any = null) => {
   const params = paramObject || {};
   const paramsArray = Object.keys(params).map(key => {
     const o = {};

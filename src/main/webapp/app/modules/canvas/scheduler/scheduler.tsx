@@ -184,7 +184,7 @@ const Scheduler = (props: ISchedulerProps) => {
         dimension: dimentionsAndMeasures.dimension,
         measure: dimentionsAndMeasures.measure,
       },
-      queryDTO: buildQueryDTO(props.visual),
+      queryDTO: buildQueryDTO(props.visual,props.filters),
       assign_report: {
         channel: selectedChannel,
         communication_list: { email: selectedUserEmail, teams: SelectedWebHooks },
@@ -290,6 +290,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   webHooks: storeState.notification.webHooks,
   view: storeState.views.entity,
   account: storeState.authentication.account,
+  filters: storeState.filter.paramObject,
 });
 
 const mapDispatchToProps = { executeNow, getUsers, scheduleReport, getWebhookList, getScheduleReportById };

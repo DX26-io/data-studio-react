@@ -14,6 +14,7 @@ import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from '../data-constraints/utils/date-util';
 import $ from 'jquery';
 import { checkIsDateType } from '../visualization/util/visualization-utils';
+import { saveSelectedFilter, saveFilter } from './filter.reducer';
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
 }
@@ -96,7 +97,7 @@ const FilterElement = (props: IFilterElementProp) => {
       valueType: 'valueType',
     };
     updateDefaultValues(filterParameters[props.feature.name]);
-    FilterParameterService.saveSelectedFilter(filterParameters);
+    props.saveSelectedFilter(filterParameters);
   };
 
   function removeTagFromFilterList(filterParameters, tag) {
@@ -121,19 +122,19 @@ const FilterElement = (props: IFilterElementProp) => {
     if (actionMeta.action === 'select-option') {
       addValueInFilter(actionMeta.option.value);
     } else if (actionMeta.action === 'remove-value') {
-      FilterParameterService.saveSelectedFilter(removeTagFromFilterList(props.selectedFilter, actionMeta.removedValue.value));
+      props.saveSelectedFilter(removeTagFromFilterList(props.selectedFilter, actionMeta.removedValue.value));
     }
   };
 
   function removeFilter(filter) {
     let filterParameters;
-    filterParameters = FilterParameterService.get();
+    filterParameters = props.filters;
     filterParameters[filter] = [];
-    FilterParameterService.save(filterParameters);
+    props.saveFilter(filterParameters);
 
     filterParameters = props.selectedFilter;
     filterParameters[filter] = [];
-    FilterParameterService.saveSelectedFilter(filterParameters);
+    props.saveSelectedFilter(filterParameters);
   }
 
   const addDateRangeFilter = date => {
@@ -146,7 +147,7 @@ const FilterElement = (props: IFilterElementProp) => {
       dataType: props.feature.type,
       valueType: 'dateRangeValueType',
     };
-    FilterParameterService.saveSelectedFilter(filterParameters);
+    props.saveSelectedFilter(filterParameters);
   };
 
   const onDateChange = (startDate, endDate, metadata) => {
@@ -209,11 +210,15 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   filterData: storeState.visualmetadata.filterData,
   featuresList: storeState.feature.entities,
-  selectedFilter: storeState.filter.selectedFilter,
+  selectedFilter: storeState.filter.selectedFilters,
   filterStateChange: storeState.filter.filterStateChange,
+  filters: storeState.filter.paramObject,
+
 });
 const mapDispatchToProps = {
   getfeatureEntities,
+  saveSelectedFilter,
+  saveFilter,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

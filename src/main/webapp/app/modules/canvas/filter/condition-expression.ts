@@ -1,3 +1,4 @@
+import { IConditionExpression } from 'app/shared/model/condition-expression.model';
 import uuid from 'react-uuid';
 
 let conditionExpression = {
@@ -21,7 +22,7 @@ export const ConditionExpression = (expression: any) => {
  * @param {any} changes : list of new nodes that contain new changes
  * @returns changes expression
  */
-const applyChanges = (exp: any, changes: any) => {
+const applyChanges = (exp: IConditionExpression, changes: any) => {
   let expression = { ...exp };
   const element = changes.filter(function (item) {
     return item.uuid === expression.uuid;
@@ -87,27 +88,4 @@ export const addNewExpression = (condition: any, exp: any, type: string = null) 
     '@type': type || 'And',
     uuid: uuid(),
   };
-};
-
-const removeExpression = (expression: any) => {
-  if (conditionExpression.uuid === expression.uuid) {
-    conditionExpression = null;
-  } else {
-    const changes = [];
-    depthFirstVisit(conditionExpression, function (current, previous, previousLeaf, parent) {
-      if (current.uuid === expression.uuid) {
-        let newParent;
-        if (parent.firstExpression && parent.firstExpression.uuid === condition.uuid) {
-          newParent = { ...parent.secondExpression };
-        } else if (parent.secondExpression && parent.secondExpression.uuid === condition.uuid) {
-          newParent = { ...parent.firstExpression };
-        }
-        if (newParent) {
-          newParent.uuid = parent.uuid;
-          changes.push(newParent);
-        }
-      }
-    });
-    conditionExpression = applyChanges(conditionExpression, changes);
-  }
 };

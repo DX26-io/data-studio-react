@@ -8,12 +8,11 @@ import Minimize from '@spectrum-icons/workflow/Minimize';
 import Search from '@spectrum-icons/workflow/Search';
 import Maximize from '@spectrum-icons/workflow/Maximize';
 import FilterElement from 'app/modules/canvas/filter/filter-element';
-import uuid from 'react-uuid';
 import { getViewFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { getVisualizationData, ValidateFields } from '../visualization/util/visualization-render-utils';
-import { FilterParameterService } from './filter-parameters-service';
 import { updateSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { Translate } from 'react-jhipster';
+import { saveSelectedFilter, saveFilter } from './filter.reducer';
 
 export interface IFilterPanelProp extends StateProps, DispatchProps {}
 
@@ -23,7 +22,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
 
   const renderVisualizationById = item => {
     if (ValidateFields(item.fields)) {
-      getVisualizationData(item, props.view);
+      getVisualizationData(item, props.view,props.filters);
     } else {
       $(`.loader-${item.id}`).hide();
     }
@@ -36,7 +35,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
   };
 
   const applyFilter = () => {
-    FilterParameterService.save(props.selectedFilter);
+    props.saveFilter(props.selectedFilter);
     props.updateSelectedFilter();
     loadVisualization();
   };
@@ -115,12 +114,15 @@ const mapStateToProps = (storeState: IRootState) => ({
   isFilterOpen: storeState.filter.isFilterOpen,
   featuresList: storeState.feature.entities,
   visualmetadata: storeState.views.viewState,
-  selectedFilter: storeState.filter.selectedFilter,
+  selectedFilter: storeState.filter.selectedFilters,
   filterStateChange: storeState.filter.filterStateChange,
+  filters: storeState.filter.paramObject,
 });
 const mapDispatchToProps = {
   getfeatureEntities,
   updateSelectedFilter,
+  saveSelectedFilter,
+  saveFilter,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

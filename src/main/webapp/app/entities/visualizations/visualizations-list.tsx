@@ -16,10 +16,9 @@ import {
 import { IVisualizations } from 'app/shared/model/visualizations.model';
 import TableAndChart from '@spectrum-icons/workflow/TableAndChart';
 import { IViews } from 'app/shared/model/views.model';
-import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
-import { createFields, createProperties } from './visualizations-util';
+import { createVisualMetadata } from './visualizations-util';
 
-interface IVisualizationsListProps {
+export interface IVisualizationsListProps {
   visualizations?: readonly IVisualizations[];
   handleVisualizationClick?: (visualization) => void;
   view?: IViews;
@@ -27,42 +26,9 @@ interface IVisualizationsListProps {
 }
 export const VisualizationsList = (props: IVisualizationsListProps) => {
   const { handleVisualizationClick } = props;
-  const createVisualMetadata = visualization => {
-    let newVM = {
-      isCardRevealed: true,
-      isSaved: false,
-      viewId: props.view.id,
-      titleProperties: {
-        titleText: visualization.name,
-        backgroundColor: '#fafafa',
-        borderBottom: 'none',
-        color: '#676a6c',
-      },
-      bodyProperties: {
-        opacity: 1,
-        backgroundColor: '#ffffff',
-        border: 'none',
-      },
-      visualBuildId: visualization.id + 'a' + Math.round(Math.random() * 1000000),
-      width: 1,
-      w: 1,
-      xPosition: (props.totalItem * 2) % (3 || 12),
-      x: (props.totalItem * 2) % (3 || 12),
-      height: 3,
-      h: 3,
-      yPosition: 0,
-      y: 0,
-      metadataVisual: visualization,
-      views: props.view,
-      datasource: props.view.viewDashboard.dashboardDatasource.id,
-    };
-    newVM = createProperties(newVM);
-    newVM = createFields(newVM);
-    return VisualWrap(newVM);
-  };
-
+  
   const addWidget = viz => {
-    handleVisualizationClick(createVisualMetadata(viz));
+    handleVisualizationClick(createVisualMetadata(viz,props));
   };
   return (
     <Dialog>

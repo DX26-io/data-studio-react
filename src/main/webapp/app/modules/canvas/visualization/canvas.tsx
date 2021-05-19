@@ -84,7 +84,7 @@ const Canvas = (props: VisualizationProp) => {
 
   const renderVisualizationById = item => {
     if (ValidateFields(item.fields)) {
-      getVisualizationData(item, props.view);
+      getVisualizationData(item, props.view, props.filters);
     } else {
       hideLoader(item.id);
     }
@@ -310,6 +310,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 
   isSearchOpen: storeState.search.isSearchOpen,
   selectedFilter: storeState.visualmetadata.selectedFilter,
+  filters: storeState.filter.paramObject,
 });
 
 const mapDispatchToProps = {

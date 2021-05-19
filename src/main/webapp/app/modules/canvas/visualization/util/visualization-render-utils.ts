@@ -18,15 +18,10 @@ export const ValidateFields = fields => {
   });
   return isValid;
 };
-export const getVisualizationData = (visual, view) => {
+export const getVisualizationData = (visual, view, filter) => {
   if (visual.fields && ValidateFields(visual.fields)) {
     const visualMetadata = VisualWrap(visual);
-    const queryDTO = visualMetadata.getQueryParameters(
-      visual,
-      FilterParameterService.get(),
-      FilterParameterService.getConditionExpression(),
-      0
-    );
+    const queryDTO = visualMetadata.getQueryParameters(visual, filter, FilterParameterService.getConditionExpression(filter), 0);
     const body = {
       queryDTO,
       visualMetadata,
@@ -85,9 +80,9 @@ export const renderVisualization = (visual, metaData, element = 'widget') => {
   }
 };
 
-export const buildQueryDTO = visualMetaData => {
+export const buildQueryDTO = (visualMetaData, filter) => {
   const viz = VisualWrap(visualMetaData);
-  return viz.getQueryParameters(visualMetaData, FilterParameterService.get(), FilterParameterService.getConditionExpression([]));
+  return viz.getQueryParameters(visualMetaData, filter, FilterParameterService.getConditionExpression([]));
 };
 
 const drawVisualization = {

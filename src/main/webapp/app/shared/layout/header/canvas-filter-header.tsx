@@ -38,7 +38,7 @@ const CanvasFilterHeader = props => {
 
   const renderVisualizationById = item => {
     if (ValidateFields(item.fields)) {
-      getVisualizationData(item, props.view);
+      getVisualizationData(item, props.view, props.filters);
     } else {
       $(`.loader-${item.id}`).hide();
     }
@@ -103,9 +103,10 @@ const CanvasFilterHeader = props => {
 const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   isAuthenticated: storeState.authentication.isAuthenticated,
-  selectedFilter: storeState.filter.selectedFilter,
+  selectedFilter: storeState.filter.selectedFilters,
   isUpdateValueInFilter: storeState.filter.isUpdateValueInFilter,
   visualmetadata: storeState.views.viewState,
+  filters: storeState.filter.paramObject,
 });
 
 const mapDispatchToProps = {

@@ -29,6 +29,7 @@ interface IVisualizationHeaderProps {
   handleVisualizationClick: (visualization) => void;
   isEditMode: boolean;
   filterData: any;
+  filter?:any
 }
 
 const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
@@ -102,7 +103,7 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
   const closeEditDialog = () => {
     if (getEditAction() === 'save') {
       const visual = getVisual();
-      getVisualizationData(visual, props.view);
+      getVisualizationData(visual, props.view, props.filter);
     }
   };
 
