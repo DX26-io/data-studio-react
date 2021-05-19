@@ -36,12 +36,12 @@ import {
   addConstraint,
   removeConstraint,
 } from './datasource-constraints.reducer';
-import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import AddCircel from '@spectrum-icons/workflow/AddCircle';
 import RemoveCircle from '@spectrum-icons/workflow/RemoveCircle';
+import { isFormValid } from './datasource-constraints.util';
 
 export interface IDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
@@ -160,6 +160,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                   });
                 }
                 props.setDatasourceConstraints({ ...props.constraint, user: filteredUsers[0] });
+                setError(isFormValid({ ...props.constraint, user: filteredUsers[0] }));
               }
             }}
             onInputChange={event => {
@@ -182,6 +183,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                 });
                 props.setDatasourceConstraints({ ...props.constraint, datasource: filteredDatasource[0] });
                 props.getFeatures(Number(event), 'DIMENSION');
+                setError(isFormValid({ ...props.constraint, datasource: filteredDatasource[0] }));
               }
             }}
             onInputChange={event => {
@@ -205,6 +207,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                 onSelectionChange={selected => {
                   con['@type'] = selected;
                   props.setDatasourceConstraints(props.constraint);
+                  setError(isFormValid(props.constraint));
                 }}
                 selectedKey={con['@type']}
                 placeholder={translate('permissions.datasourceConstraints.selectType')}
@@ -228,6 +231,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                     con.featureName = filteredFeatures[0].name;
                     props.setDatasourceConstraints(props.constraint);
                   }
+                  setError(isFormValid(props.constraint));
                 }}
                 onInputChange={event => {
                   if (event) {
@@ -290,7 +294,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
             <Translate contentKey="entity.action.delete">Delete</Translate>
           </Button>
         ) : null}
-        {/* {!error.isValid && (
+        {!error.isValid && (
           <Flex gap="size-100" data-testid="validation-error" marginTop="static-size-200">
             <Alert color="negative" />
             <Text marginBottom="size-300">
@@ -299,7 +303,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
               </span>
             </Text>
           </Flex>
-        )} */}
+        )}
       </Content>
     </Dialog>
   );

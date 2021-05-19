@@ -51,7 +51,14 @@
       },
       "constraints": "Constraints",
       "selectType": "Select Constraint Type",
-      "selectField": "Select Field"
+      "selectField": "Select Field",
+      "error": {
+        "datasource": "Datasource is required",
+        "user": "User is required",
+        "type": "Constraint type is required",
+        "feature": "Feature is required",
+        "filter": "Filter is required"
+      }
     }
   }
 }
