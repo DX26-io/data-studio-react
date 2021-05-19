@@ -50,7 +50,8 @@
         "content": "To create a new constraint click on create"
       },
       "constraints": "Constraints",
-      "selectType": "Select Constraint Type"
+      "selectType": "Select Constraint Type",
+      "selectField": "Select Field"
     }
   }
 }

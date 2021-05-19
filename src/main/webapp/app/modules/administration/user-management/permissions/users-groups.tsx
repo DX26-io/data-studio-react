@@ -25,7 +25,7 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
   const [searchValue, setSearchValue] = React.useState('');
   const [tabId, setTabId] = useState<ReactText>(1);
 
-  const { permissionProps, groups, users } = props;
+  const { permissionProps, groups, users, searchedUsers, searchedGroups } = props;
 
   const pushParams = endURL => {
     if (permissionProps.location.search !== endURL) {
@@ -60,13 +60,41 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
   }, []);
 
   useEffect(() => {
-    if (searchValue.length > 1 || searchValue.length === 0)
+    if (searchValue.length > 1) {
       if (tabId === 1) {
         props.searchUsers(ACTIVE_PAGE, ITEMS_PER_PAGE, 'login,asc', searchValue);
       } else {
         props.searchUserGroups(ACTIVE_PAGE, ITEMS_PER_PAGE, 'name,asc', searchValue);
       }
+    }
   }, [searchValue]);
+
+  // searched user/group should have a separate list as when searching user/group in datasource constraints users/groups list are changing as well
+
+  const getUserListElements = userList => {
+    const userListElements = userList.map((user, i) => {
+      return (
+        <Item textValue="Read" key={`${user.login}`}>
+          <User size="M" />
+          <Text>{user.login}</Text>
+        </Item>
+      );
+    });
+    return userListElements;
+  };
+
+  const getUserGroupListElements = userGroupList => {
+    const userGroupListElements = userGroupList.map((group, i) => {
+      return (
+        <Item textValue="Read" key={`${group.name}`}>
+          <UserGroup size="M" />
+          <Text>{group.name}</Text>
+          <Text slot="description">100 todo</Text>
+        </Item>
+      );
+    });
+    return userGroupListElements;
+  };
 
   return (
     <div>
@@ -80,26 +108,11 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
               <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
                 {tabId === 1 ? (
                   <ListBox width="size-static-size-3600" aria-label="users" selectionMode="single" onSelectionChange={setLogin}>
-                    <Section>
-                      {users.map((user, i) => (
-                        <Item textValue="Read" key={`${user.login}`}>
-                          <User size="M" />
-                          <Text>{user.login}</Text>
-                        </Item>
-                      ))}
-                    </Section>
+                    <Section>{getUserListElements(searchValue ? searchedUsers : users)}</Section>
                   </ListBox>
                 ) : (
                   <ListBox width="size-static-size-3600" aria-label="groups" selectionMode="single" onSelectionChange={setGroupName}>
-                    <Section>
-                      {groups.map((group, i) => (
-                        <Item textValue="Read" key={`${group.name}`}>
-                          <UserGroup size="M" />
-                          <Text>{group.name}</Text>
-                          <Text slot="description">100 todo</Text>
-                        </Item>
-                      ))}
-                    </Section>
+                    <Section>{getUserGroupListElements(searchValue ? searchedGroups : groups)}</Section>
                   </ListBox>
                 )}
               </Content>
@@ -114,6 +127,8 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   groups: storeState.userGroups.groups,
   users: storeState.userManagement.users,
+  searchedUsers: storeState.userManagement.searchedUsers,
+  searchedGroups: storeState.userGroups.searchedGroups,
 });
 
 const mapDispatchToProps = { getUserGroups, getUsers, searchUsers, searchUserGroups };

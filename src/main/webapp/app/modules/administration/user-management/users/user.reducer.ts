@@ -25,6 +25,7 @@ const initialState = {
   updateSuccess: false,
   fetchSuccess: false,
   totalItems: 0,
+  searchedUsers: [] as ReadonlyArray<IUser>,
 };
 
 export type UserManagementState = Readonly<typeof initialState>;
@@ -80,7 +81,7 @@ export default (state: UserManagementState = initialState, action): UserManageme
       return {
         ...state,
         loading: false,
-        users: action.payload.data,
+        searchedUsers: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.FETCH_USERS):
       return {
@@ -142,7 +143,7 @@ export const getUsers: ICrudGetAllAction<IUser> = (page, size, sort) => {
 export const searchUsers = (page, size, sort, login) => {
   const requestUrl = `${searchApiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}&login=${login}` : ''}`;
   return {
-    type: ACTION_TYPES.FETCH_USERS,
+    type: ACTION_TYPES.SEARCH_USERS,
     payload: axios.get<IUser>(requestUrl),
   };
 };

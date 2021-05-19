@@ -9,12 +9,17 @@ import { translate } from 'react-jhipster';
 import DatasourceConstraints from './datasource-constraints';
 import PermissionsActionTitle from '../permissions-action-title';
 import DatasourceConstraintUpdate from './datasource-constraint-update';
+import { receiveSocketResponse } from 'app/shared/websocket/websocket.reducer';
 
 export interface IDatasourceConstraintsContainerProps extends StateProps, DispatchProps, RouteComponentProps {}
 
 export const DatasourceConstraintsContainer = (props: IDatasourceConstraintsContainerProps) => {
   const [isOpen, setOpen] = React.useState(false);
   const [isNew, setIsNew] = React.useState(false);
+
+  useEffect(() => {
+    props.receiveSocketResponse();
+  }, []);
 
   const handleClick = () => {
     setOpen(true);
@@ -27,8 +32,6 @@ export const DatasourceConstraintsContainer = (props: IDatasourceConstraintsCont
     //   props.updateUserGroupPermissions(permissionChanges, groupName);
     // }
   };
-
-  const setUpdateSuccess = () => {};
 
   return (
     <div>
@@ -45,7 +48,7 @@ export const DatasourceConstraintsContainer = (props: IDatasourceConstraintsCont
       ></SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
         {isOpen && (
-          <DatasourceConstraintUpdate setUpdateSuccess={setUpdateSuccess} setOpen={setOpen} {...props}></DatasourceConstraintUpdate>
+          <DatasourceConstraintUpdate setOpen={setOpen} {...props}></DatasourceConstraintUpdate>
         )}
       </DialogContainer>
       <Grid areas={['users datasources']} columns={['1fr', '2fr']} rows={['auto']} data-testid="permission-container">
@@ -54,7 +57,7 @@ export const DatasourceConstraintsContainer = (props: IDatasourceConstraintsCont
         </View>
         <View gridArea="datasources" borderXWidth="thin" borderColor="default" height="100vh">
           <PermissionsActionTitle handleClick={handleClick} updating={props.updating} translateActionKey="entity.action.create" />
-          <DatasourceConstraints routeProps={props} />
+          <DatasourceConstraints routeProps={props} setOpen={setOpen} />
         </View>
       </Grid>
     </div>
@@ -63,7 +66,7 @@ export const DatasourceConstraintsContainer = (props: IDatasourceConstraintsCont
 const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.datasourceConstraints.updating,
 });
-const mapDispatchToProps = {};
+const mapDispatchToProps = { receiveSocketResponse };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 

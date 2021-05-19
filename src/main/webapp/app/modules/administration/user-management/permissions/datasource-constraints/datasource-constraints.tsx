@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { getUserGroupDatasourceConstraints, getUserDatasourceConstraints, reset } from './datasource-constraints.reducer';
+import {
+  getFeatures,
+  getUserGroupDatasourceConstraints,
+  getUserDatasourceConstraints,
+  reset,
+  getDatasourceConstraints,
+} from './datasource-constraints.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Flex } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
@@ -9,18 +15,18 @@ import { Translate, translate } from 'react-jhipster';
 import { toast } from 'react-toastify';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 
-
 // TODO : when hit the url,params should be visible
 
 export interface IDatasourceConstraintsProps extends StateProps, DispatchProps {
   routeProps: any;
+  setOpen: (isOpen: boolean) => void;
 }
 
 export const DatasourceConstraints = (props: IDatasourceConstraintsProps) => {
   const [user, setUser] = React.useState(null);
   const [group, setGroup] = React.useState(null);
 
-  const { constraints, routeProps } = props;
+  const { constraints, routeProps, updateSuccess } = props;
 
   const fetchConstraints = () => {
     let endURL = '';
@@ -50,14 +56,11 @@ export const DatasourceConstraints = (props: IDatasourceConstraintsProps) => {
     }
   }, [routeProps.location.search]);
 
-  // const save = () => {
-  //   const permissionChanges = findViewsPermissionsChanges(datasourcePermissions);
-  //   if (user) {
-  //     props.updateUserPermissions(permissionChanges, user);
-  //   } else if (group) {
-  //     props.updateUserGroupPermissions(permissionChanges, group);
-  //   }
-  // };
+  useEffect(() => {
+    if (updateSuccess) {
+      fetchConstraints();
+    }
+  }, [updateSuccess]);
 
   return (
     <React.Fragment>
@@ -86,9 +89,9 @@ export const DatasourceConstraints = (props: IDatasourceConstraintsProps) => {
                         <Flex gap="size-100" justifyContent="center">
                           <a
                             onClick={() => {
-                              // setOpen(true);
-                              // setNew(false);
-                              // setGroupName(userGroup.name);
+                              props.setOpen(true);
+                              props.getDatasourceConstraints(constraint.id);
+                              props.getFeatures(constraint.datasource.id, 'DIMENSION');
                             }}
                           >
                             <Edit size="S" />
@@ -121,6 +124,8 @@ const mapDispatchToProps = {
   getUserGroupDatasourceConstraints,
   getUserDatasourceConstraints,
   reset,
+  getDatasourceConstraints,
+  getFeatures,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
