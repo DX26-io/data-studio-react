@@ -167,6 +167,7 @@ describe('UserGroup management reducer tests', () => {
         updateSuccess: false,
         fetchSuccess: false,
         totalItems: 0,
+        searchedGroups: [],
       };
       const payload = {
         ...initialState,

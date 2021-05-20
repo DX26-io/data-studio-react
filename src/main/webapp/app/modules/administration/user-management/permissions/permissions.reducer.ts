@@ -22,7 +22,6 @@ const initialState = {
   totalViewsPermissions: 0,
   updateSuccess: false,
   updating: false,
-  totalDatasourceConstraints: 0,
 };
 
 export type PermissionsState = Readonly<typeof initialState>;
