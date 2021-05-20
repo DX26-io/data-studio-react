@@ -6,6 +6,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import User from '@spectrum-icons/workflow/User';
 import UserGroup from '@spectrum-icons/workflow/UserGroup';
 import UserLock from '@spectrum-icons/workflow/UserLock';
+import DataUser from '@spectrum-icons/workflow/DataUser';
 import DataSettings from '@spectrum-icons/workflow/DataSettings';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import LinkCard from 'app/shared/components/link-card/link-card';
@@ -37,6 +38,12 @@ const UserManagement = (props: RouteComponentProps) => {
       link: `${match.url}/datasource-permissions`,
       title: 'permissions.datasourcePermissions.title',
       description: 'permissions.datasourcePermissions.description',
+    },
+    {
+      icon: <DataUser size="L" />,
+      link: `${match.url}/datasource-constraints`,
+      title: 'permissions.datasourceConstraints.title',
+      description: 'permissions.datasourceConstraints.description',
     },
   ];
   return (

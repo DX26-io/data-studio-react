@@ -11,6 +11,7 @@ export const ACTION_TYPES = {
   CREATE_USER_GROUP: 'userGroups/CREATE_USER_GROUP',
   UPDATE_USER_GROUP: 'userGroups/UPDATE_USER_GROUP',
   DELETE_USER_GROUP: 'userGroups/DELETE_USER_GROUP',
+  SEARCH_USER_GROUPS: 'userGroups/SEARCH_USER_GROUPS',
   RESET: 'userGroups/RESET',
 };
 
@@ -24,6 +25,7 @@ const initialState = {
   updateSuccess: false,
   fetchSuccess: false,
   totalItems: 0,
+  searchedGroups: [] as ReadonlyArray<IUserGroup>,
 };
 
 export type UserGroupsState = Readonly<typeof initialState>;
@@ -36,6 +38,7 @@ export default (state: UserGroupsState = initialState, action): UserGroupsState 
         ...state,
       };
     case REQUEST(ACTION_TYPES.FETCH_USER_GROUPS):
+    case REQUEST(ACTION_TYPES.SEARCH_USER_GROUPS):
     case REQUEST(ACTION_TYPES.FETCH_USER_GROUP):
       return {
         ...state,
@@ -53,6 +56,7 @@ export default (state: UserGroupsState = initialState, action): UserGroupsState 
         updating: true,
       };
     case FAILURE(ACTION_TYPES.FETCH_USER_GROUPS):
+    case FAILURE(ACTION_TYPES.SEARCH_USER_GROUPS):
     case FAILURE(ACTION_TYPES.FETCH_USER_GROUP):
     case FAILURE(ACTION_TYPES.FETCH_ROLES):
     case FAILURE(ACTION_TYPES.CREATE_USER_GROUP):
@@ -75,6 +79,13 @@ export default (state: UserGroupsState = initialState, action): UserGroupsState 
         ...state,
         loading: false,
         groups: action.payload.data,
+        totalItems: parseInt(action.payload.headers['x-total-count'], 10),
+      };
+    case SUCCESS(ACTION_TYPES.SEARCH_USER_GROUPS):
+      return {
+        ...state,
+        loading: false,
+        searchedGroups: action.payload.data,
         totalItems: parseInt(action.payload.headers['x-total-count'], 10),
       };
     case SUCCESS(ACTION_TYPES.FETCH_USER_GROUP):
@@ -173,7 +184,7 @@ export const reset = () => ({
 export const searchUserGroups = (page, size, sort, name) => {
   const requestUrl = `${searchApiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}&name=${name}` : ''}`;
   return {
-    type: ACTION_TYPES.FETCH_USER_GROUPS,
+    type: ACTION_TYPES.SEARCH_USER_GROUPS,
     payload: axios.get<IUserGroup>(requestUrl),
   };
 };

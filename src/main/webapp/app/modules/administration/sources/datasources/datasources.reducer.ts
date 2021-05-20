@@ -227,6 +227,11 @@ export const getDatasources: ICrudGetAllAction<IDatasources> = (page, size, sort
   };
 };
 
+export const getDatasourcesByName = (page: number, size: number, sort: string, name?: string) => ({
+  type: ACTION_TYPES.FETCH_DATASOURCES,
+  payload: axios.get(`${apiUrl}?name=${name}&page=${page}&size=${size}&sort=${sort}`),
+});
+
 export const getDatasource: ICrudGetAction<IDatasources> = id => {
   const requestUrl = `${apiUrl}/${id}`;
   return {
@@ -270,7 +275,7 @@ export const resetUpdateError = () => ({
 
 export const listTables = (body: any) => ({
   type: ACTION_TYPES.LIST_TABLE,
-  payload: axios.post('api/datasources/listTables', body),
+  payload: axios.post(`${apiUrl}/listTables`, body),
 });
 
 export const setIsConnected = (isConnected: boolean) => ({

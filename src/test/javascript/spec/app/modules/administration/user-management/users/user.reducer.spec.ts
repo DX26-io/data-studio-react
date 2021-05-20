@@ -210,6 +210,7 @@ describe('User management reducer tests', () => {
         updateSuccess: false,
         fetchSuccess: false,
         totalItems: 0,
+        searchedUsers: [],
       };
       const payload = {
         ...initialState,
