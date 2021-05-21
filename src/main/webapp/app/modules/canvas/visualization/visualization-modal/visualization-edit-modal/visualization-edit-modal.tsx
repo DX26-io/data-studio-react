@@ -10,11 +10,11 @@ import { Translate } from 'react-jhipster';
 import {
   getEntity as getVisualmetadataEntity,
   updateEntity as updateVisualmetadataEntity,
+  setVisual,
+  metadataContainerUpdate,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getViewFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
-import { VisualMetadataContainerUpdate } from '../../util/visualmetadata-container.service';
-import { setVisual } from '../../util/VisualDispatchService';
 export interface IVisualizationEditModalProps1
   extends StateProps,
     DispatchProps,
@@ -34,7 +34,7 @@ const VisualizationEditModal = (props: IVisualizationEditModalProps1) => {
       viewId: parseInt(viewId, 10),
       visualMetadata: props.visualmetadataEntity,
     });
-    VisualMetadataContainerUpdate(props.visualmetadataEntity.id, props.visualmetadataEntity, 'id');
+    props.metadataContainerUpdate(props.visualmetadataEntity.id, props.visualmetadataEntity, 'id');
   };
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const VisualizationEditModal = (props: IVisualizationEditModalProps1) => {
   }, []);
 
   useEffect(() => {
-    setVisual(props.visualmetadataEntity);
+    props.setVisual(props.visualmetadataEntity);
   }, [props.visualmetadataEntity]);
   return (
     <>
@@ -94,7 +94,14 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
 });
 
-const mapDispatchToProps = { getVisualmetadataEntity, getfeatureEntities, getViewEntity, updateVisualmetadataEntity };
+const mapDispatchToProps = {
+  metadataContainerUpdate,
+  setVisual,
+  getVisualmetadataEntity,
+  getfeatureEntities,
+  getViewEntity,
+  updateVisualmetadataEntity,
+};
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

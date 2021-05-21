@@ -6,15 +6,11 @@ import { getViewFeaturesEntities as getfeatureEntities } from 'app/entities/feat
 import { IFeature } from 'app/shared/model/feature.model';
 import AsyncSelect from 'react-select/async';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
-import { FilterParameterService } from './filter-parameters-service';
-import { getToken } from 'app/shared/reducers/authentication';
-import { COMPARABLE_DATA_TYPES } from 'app/shared/util/data-constraints.constants';
-import VisualizationDataConstraints from '../data-constraints/visualization-data-constraints';
 import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from '../data-constraints/utils/date-util';
-import $ from 'jquery';
 import { checkIsDateType } from '../visualization/util/visualization-utils';
 import { saveSelectedFilter, saveFilter } from './filter.reducer';
+import { saveDynamicDateRangeMetaData } from './filter-util';
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
 }
@@ -156,7 +152,7 @@ const FilterElement = (props: IFilterElementProp) => {
       props.feature.selected = startDate;
       props.feature.selected2 = endDate;
     } else {
-      FilterParameterService.saveDynamicDateRangeMetaData(props.feature.name, metadata);
+      saveDynamicDateRangeMetaData(props.feature.name, metadata);
     }
     removeFilter(props.feature.name);
     if (startDate) {

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { View } from '@adobe/react-spectrum';
-import $ from 'jquery';
 import { RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import './canvas.scss';
@@ -19,17 +18,13 @@ import {
   ValidateFields,
 } from 'app/modules/canvas/visualization/util/visualization-render-utils';
 import {
-  VisualMetadataContainerAdd,
-  VisualMetadataContainerGetOne,
-} from 'app/modules/canvas/visualization/util/visualmetadata-container.service';
-import {
   getEntity as getVisualmetadataEntity,
   updateEntity as updateVisualmetadataEntity,
+  metadataContainerAdd,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import VisualizationHeader from './visualization-modal/visualization-header';
 import 'app/modules/canvas/visualization/canvas.scss';
 import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
-import { getToken } from 'app/shared/reducers/authentication';
 import { NoDataFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import Loader from 'app/shared/components/card/loader/loader';
 import FilterPanel from 'app/modules/canvas/filter/filter-panel';
@@ -38,6 +33,7 @@ import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import FeaturesPanel from 'app/modules/canvas/features/features-panel';
 import { receiveSocketResponse } from 'app/shared/websocket/websocket.reducer';
+import { VisualMetadataContainerGetOne } from './util/visualmetadata-container.util';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -61,6 +57,15 @@ const Canvas = (props: VisualizationProp) => {
       setFilters(filterList);
     }
   }, [props.selectedFilter]);
+
+  const hideLoader = id => {
+    isLoaderDisplay.map(item => {
+      if (item.visualizationId === id) {
+        item.loaderVisibility = false;
+      }
+    });
+    setIsLoaderDisplay(isLoaderDisplay);
+  };
 
   const onLayoutChange = _visualmetaList => {
     props.visualmetadata.visualMetadataSet.map((item, i) => {
@@ -96,15 +101,6 @@ const Canvas = (props: VisualizationProp) => {
     });
   };
 
-  const hideLoader = id => {
-    isLoaderDisplay.map(item => {
-      if (item.visualizationId === id) {
-        item.loaderVisibility = false;
-      }
-    });
-    setIsLoaderDisplay(isLoaderDisplay);
-  };
-
   const showDataNotFound = id => {
     isLoaderDisplay.map(item => {
       if (item.visualizationId === id) {
@@ -133,7 +129,7 @@ const Canvas = (props: VisualizationProp) => {
 
   useEffect(() => {
     if (props.isSocketConnected) {
-      VisualMetadataContainerAdd(props.visualmetadata?.visualMetadataSet);
+      props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
       loadVisualization();
     }
   }, [props.isSocketConnected]);
@@ -193,8 +189,8 @@ const Canvas = (props: VisualizationProp) => {
       setvisualmetadata(props.visualmetadata.visualMetadataSet);
     }
     if (props.isCreated) {
-      const visualMetadata = VisualMetadataContainerAdd(props.visualmetadataEntity);
-      setvisualmetadata(visualMetadata);
+      props.metadataContainerAdd(props.visualmetadataEntity);
+      setvisualmetadata(props.visualMetadataContainerList);
       renderVisualizationById(props.visualmetadataEntity);
     }
   }, [props.visualmetadata, props.isCreated, props.isSocketConnected, props.visualmetadataEntity]);
@@ -263,10 +259,10 @@ const Canvas = (props: VisualizationProp) => {
 
   return (
     <>
-      {props.isSocketConnected && <FilterPanel />}
+      {props.isSocketConnected && <FilterPanel hideLoader={hideLoader} />}
       {props.isSocketConnected && <FeaturesPanel />}
       <View>
-        <CanvasFilterHeader />
+        <CanvasFilterHeader hideLoader={hideLoader} />
       </View>
       <View>
         {visualmetadataList && visualmetadataList.length > 0 && (
@@ -307,7 +303,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualData: storeState.visualizationData.visualData,
   filterList: storeState.visualizationData.filterData,
   isSocketConnected: storeState.visualizationData.isSocketConnected,
-
+  visualMetadataContainerList: storeState.visualmetadata.visualMetadataContainerList,
   isSearchOpen: storeState.search.isSearchOpen,
   selectedFilter: storeState.visualmetadata.selectedFilter,
   filters: storeState.filter.paramObject,
@@ -325,6 +321,7 @@ const mapDispatchToProps = {
   getVisualmetadataEntity,
   updateVisualmetadataEntity,
   receiveSocketResponse,
+  metadataContainerAdd,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

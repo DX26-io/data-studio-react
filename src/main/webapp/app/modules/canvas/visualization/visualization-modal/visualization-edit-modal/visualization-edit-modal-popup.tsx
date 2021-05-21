@@ -10,11 +10,12 @@ import { Translate } from 'react-jhipster';
 import {
   getEntity as getVisualmetadataEntity,
   updateEntity as updateVisualmetadataEntity,
+  setVisual,
+  setEditAction,
+  metadataContainerUpdate
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
-import { VisualMetadataContainerUpdate } from '../../util/visualmetadata-container.service';
-import { setEditAction, setVisual } from '../../util/VisualDispatchService';
 import { renderVisualization, ValidateFields } from '../../util/visualization-render-utils';
 import { VisualWrap } from '../../util/visualmetadata-wrapper';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
@@ -35,9 +36,9 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
   const viewId = props.viewId;
 
   const handleClose = action => {
-    setEditAction(action)
+    props.setEditAction(action);
     props.setOpen(false);
-    setVisual(props.visualmetadataEntity);
+    props.setVisual(props.visualmetadataEntity);
     dialog.dismiss();
   };
 
@@ -46,7 +47,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
       viewId,
       visualMetadata: props.visualmetadataEntity,
     });
-    VisualMetadataContainerUpdate(props.visualmetadataEntity.id, props.visualmetadataEntity, 'id');
+    props.metadataContainerUpdate(props.visualmetadataEntity.id, props.visualmetadataEntity, 'id');
     handleClose('save');
   };
   useEffect(() => {
@@ -72,7 +73,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
   };
 
   useEffect(() => {
-    setVisual(props.visualmetadataEntity);
+    props.setVisual(props.visualmetadataEntity);
     if (props.visualmetadataEntity.fields && ValidateFields(props.visualmetadataEntity.fields)) {
       subscribeWebSocket('/user/exchange/metaData/' + props.visualmetadataEntity.id, onExchangeMetadata);
       subscribeWebSocket('/user/exchange/metaDataError', onExchangeMetadataError);
@@ -153,7 +154,15 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
 });
 
-const mapDispatchToProps = { getVisualmetadataEntity, getViewFeaturesEntities, getViewEntity, updateVisualmetadataEntity };
+const mapDispatchToProps = {
+  setVisual,
+  setEditAction,
+  getVisualmetadataEntity,
+  getViewFeaturesEntities,
+  getViewEntity,
+  updateVisualmetadataEntity,
+  metadataContainerUpdate
+};
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

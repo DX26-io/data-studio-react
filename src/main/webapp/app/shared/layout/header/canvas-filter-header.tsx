@@ -3,11 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { ActionButton, View, DialogContainer, TooltipTrigger, Tooltip, MenuTrigger, Menu, Item, Flex } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import {
-  createEntity as addVisualmetadataEntity,
-  deleteEntity as deleteVisualmetadataEntity,
-} from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { toggleEditMode, toggleFilterPanel } from 'app/shared/reducers/application-profile';
+import { createEntity as addVisualmetadataEntity, toggleEditMode } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { toggleFilterPanel } from 'app/modules/canvas/filter/filter.reducer';
 import { saveViewState } from 'app/entities/views/views.reducer';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -15,7 +12,11 @@ import { getVisualizationData, ValidateFields } from 'app/modules/canvas/visuali
 import Close from '@spectrum-icons/workflow/Close';
 import { modifyFilterState } from 'app/modules/canvas/filter/filter.reducer';
 
-const CanvasFilterHeader = props => {
+export interface ICanvasFilterHeaderProps extends StateProps, DispatchProps {
+  hideLoader?: (id) => void;
+}
+
+const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean[]>();
   const [filters, setFilters] = useState<string[]>();
   let dropdownStatus = [];
@@ -40,7 +41,7 @@ const CanvasFilterHeader = props => {
     if (ValidateFields(item.fields)) {
       getVisualizationData(item, props.view, props.filters);
     } else {
-      $(`.loader-${item.id}`).hide();
+      props.hideLoader(item.id);
     }
   };
 

@@ -1,5 +1,3 @@
-import { FilterParameterService } from 'app/modules/canvas/filter/filter-parameters-service';
-
 export const ACTION_TYPES = {
   UPDATE_SELECTED_FILTER: 'filter/UPDATE_SELECTED_FILTER',
   FILTER_STATE_CHANGE: 'filter/FILTER_STATE_CHANGE',

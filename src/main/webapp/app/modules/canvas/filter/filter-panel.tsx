@@ -14,7 +14,9 @@ import { updateSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { Translate } from 'react-jhipster';
 import { saveSelectedFilter, saveFilter } from './filter.reducer';
 
-export interface IFilterPanelProp extends StateProps, DispatchProps {}
+export interface IFilterPanelProp extends StateProps, DispatchProps {
+  hideLoader?: (id) => void;
+}
 
 const FilterPanel = (props: IFilterPanelProp) => {
   const [isFilterMinimize, setFilterMinimize] = useState(true);
@@ -22,9 +24,9 @@ const FilterPanel = (props: IFilterPanelProp) => {
 
   const renderVisualizationById = item => {
     if (ValidateFields(item.fields)) {
-      getVisualizationData(item, props.view,props.filters);
+      getVisualizationData(item, props.view, props.filters);
     } else {
-      $(`.loader-${item.id}`).hide();
+     props.hideLoader(item.id);
     }
   };
 

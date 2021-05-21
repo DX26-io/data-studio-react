@@ -3,8 +3,8 @@ import flairVisualizations from 'flair-visualizations/js/main';
 import Configuration from 'flair-visualizations/js/extras/configs/configuration';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { VisualWrap } from './visualmetadata-wrapper';
-import { FilterParameterService } from '../../filter/filter-parameters-service';
 import { REQUIRED_FIELDS } from 'app/shared/util/visualization.constants';
+import { getConditionExpression } from '../../filter/filter-util';
 
 const configuration = Configuration();
 
@@ -21,7 +21,7 @@ export const ValidateFields = fields => {
 export const getVisualizationData = (visual, view, filter) => {
   if (visual.fields && ValidateFields(visual.fields)) {
     const visualMetadata = VisualWrap(visual);
-    const queryDTO = visualMetadata.getQueryParameters(visual, filter, FilterParameterService.getConditionExpression(filter), 0);
+    const queryDTO = visualMetadata.getQueryParameters(visual, filter, getConditionExpression(filter), 0);
     const body = {
       queryDTO,
       visualMetadata,
@@ -82,7 +82,7 @@ export const renderVisualization = (visual, metaData, element = 'widget') => {
 
 export const buildQueryDTO = (visualMetaData, filter) => {
   const viz = VisualWrap(visualMetaData);
-  return viz.getQueryParameters(visualMetaData, filter, FilterParameterService.getConditionExpression([]));
+  return viz.getQueryParameters(visualMetaData, filter, getConditionExpression([]));
 };
 
 const drawVisualization = {

@@ -17,19 +17,20 @@ import 'app/modules/canvas/visualization/canvas.scss';
 import { IViews } from 'app/shared/model/views.model';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 import { VisualizationEditModal } from './visualization-edit-modal/visualization-edit-modal-popup';
-import { getEditAction, getVisual } from '../util/VisualDispatchService';
 import { getVisualizationData } from '../util/visualization-render-utils';
 import { VisualizationDataModal } from './visualization-data-modal/visualizations-data-modal';
 import { CSVLink } from 'react-csv';
+import { IRootState } from 'app/shared/reducers';
+import { connect } from 'react-redux';
 
-interface IVisualizationHeaderProps {
+interface IVisualizationHeaderProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
   view: IViews;
   totalItem: number;
   handleVisualizationClick: (visualization) => void;
   isEditMode: boolean;
   filterData: any;
-  filter?:any
+  filter?: any;
 }
 
 const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
@@ -101,8 +102,8 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
   };
 
   const closeEditDialog = () => {
-    if (getEditAction() === 'save') {
-      const visual = getVisual();
+    if (props.editAction === 'save') {
+      const visual = props.visual;
       getVisualizationData(visual, props.view, props.filter);
     }
   };
@@ -129,7 +130,7 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
       <View backgroundColor="gray-200">
         <Flex direction="row" justifyContent="space-between" alignContent="center">
           <Flex direction="column" alignItems="center" justifyContent="space-around">
-            <span>{props.visual.titleProperties.titleText}</span>
+            <span>{props.visual?.titleProperties?.titleText}</span>
             {props.visual?.data?.length > 0 && (
               <CSVLink
                 data={transactionData}
@@ -256,4 +257,17 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
   );
 };
 
-export default VisualizationHeader;
+const mapStateToProps = (storeState: IRootState) => ({
+  visual: storeState.visualmetadata.visual,
+  editAction: storeState.visualmetadata.editAction,
+
+  featuresList: storeState.feature.entities,
+  view: storeState.views.entity,
+});
+
+const mapDispatchToProps = {};
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizationHeader);

@@ -5,14 +5,7 @@ let paramObject = {};
 let selectedFilters = {};
 let dynamicDateRangeMetaData = {};
 
-const getSelectedFilter = () => {
-  return selectedFilters;
-};
-
-const saveSelectedFilter = (selectedFilter: any) => {
-  selectedFilters = selectedFilter;
-};
-const createBetweenExpressionBody = (value: any, secondValue: any, featureName: string, dataType: string, activeTab: string) => {
+export const createBetweenExpressionBody = (value: any, secondValue: any, featureName: string, dataType: string, activeTab: string) => {
   const result = {
     '@type': 'Between',
     value,
@@ -28,7 +21,7 @@ const createBetweenExpressionBody = (value: any, secondValue: any, featureName: 
   }
   return result;
 };
-const createCompareExpressionBody = (value: any, featureName: string, dataType: string) => {
+export const createCompareExpressionBody = (value: any, featureName: string, dataType: string) => {
   return {
     '@type': 'Compare',
     comparatorType: 'GTE',
@@ -41,7 +34,7 @@ const createCompareExpressionBody = (value: any, featureName: string, dataType: 
     featureName,
   };
 };
-const createContainsExpressionBody = (values: any, featureName: string, dataType: string = null) => {
+export const createContainsExpressionBody = (values: any, featureName: string, dataType: string = null) => {
   const ret = {
     '@type': 'Contains',
     values,
@@ -60,7 +53,7 @@ const createContainsExpressionBody = (values: any, featureName: string, dataType
   return ret;
 };
 
-const createCompareFeaturePropertyExpressionBody = (value: any, featureName: string) => {
+export const createCompareFeaturePropertyExpressionBody = (value: any, featureName: string) => {
   const featureNameArr = featureName.split('.');
   const valueArr = value.split('.');
   return {
@@ -78,7 +71,13 @@ const createCompareFeaturePropertyExpressionBody = (value: any, featureName: str
   };
 };
 
-const createCompareExpressionBodyForInterval = (initialValue: any, endValue: any, featureName: string, interval: any, operator: string) => {
+export const createCompareExpressionBodyForInterval = (
+  initialValue: any,
+  endValue: any,
+  featureName: string,
+  interval: any,
+  operator: string
+) => {
   return {
     '@type': 'Between',
     featureName,
@@ -96,14 +95,14 @@ const createCompareExpressionBodyForInterval = (initialValue: any, endValue: any
     activeTab: initialValue,
   };
 };
-const isDateFilterType = (type: string) => {
+export const isDateFilterType = (type: string) => {
   if (!type) {
     return false;
   }
   return COMPARABLE_DATA_TYPES.includes(type.toLowerCase());
 };
 
-const changeDateFormat = (date: any) => {
+export const changeDateFormat = (date: any) => {
   if (typeof date === 'string') {
     return date;
   } else {
@@ -115,7 +114,7 @@ const changeDateFormat = (date: any) => {
   }
 };
 
-const createBodyExpr = (values: any, name: string) => {
+export const createBodyExpr = (values: any, name: string) => {
   const meta = values._meta || {};
   const valueType = meta.valueType || '';
   const type = meta ? meta.dataType : '';
@@ -148,7 +147,7 @@ const createBodyExpr = (values: any, name: string) => {
   return createContainsExpressionBody(values, name);
 };
 
-const getConditionExpressionForParams = (params: any, sourceParams: any) => {
+export const getConditionExpressionForParams = (params: any, sourceParams: any) => {
   const finalParams = (params || []).concat(sourceParams || []);
   let body;
   let condition;
@@ -172,7 +171,7 @@ const getConditionExpressionForParams = (params: any, sourceParams: any) => {
   };
 };
 
-const getConditionExpression = (paramObject: any, additionalFeaturesArray: any = null) => {
+export const getConditionExpression = (paramObject: any, additionalFeaturesArray: any = null) => {
   const params = paramObject || {};
   const paramsArray = Object.keys(params).map(key => {
     const o = {};
@@ -182,26 +181,6 @@ const getConditionExpression = (paramObject: any, additionalFeaturesArray: any =
   return getConditionExpressionForParams(additionalFeaturesArray, paramsArray);
 };
 
-const get = (section: any = null) => {
-  if (section) {
-    return paramObject[section] || paramObject[section.toLowerCase()];
-  }
-  return paramObject;
-};
-
-const save = (newValue: any) => {
-  paramObject = newValue;
-};
-
-const saveDynamicDateRangeMetaData = (dimensionName: string, metaData: any) => {
+export const saveDynamicDateRangeMetaData = (dimensionName: string, metaData: any) => {
   dynamicDateRangeMetaData[dimensionName] = metaData;
-};
-
-export const FilterParameterService = {
-  getSelectedFilter,
-  saveSelectedFilter,
-  getConditionExpression,
-  saveDynamicDateRangeMetaData,
-  get,
-  save,
 };

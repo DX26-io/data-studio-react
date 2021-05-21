@@ -7,6 +7,10 @@ import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util'
 import { IVisualMetadata, defaultValue } from 'app/shared/model/visualMetadata.model';
 import { IVisualmetaDataDTO } from 'app/shared/model/visualmeta-data.model';
 import { IValidateDTO } from 'app/shared/model/validate.model';
+import {
+  visualMetadataContainerAdd,
+  visualMetadataContainerUpdate,
+} from 'app/modules/canvas/visualization/util/visualmetadata-container.util';
 
 export const ACTION_TYPES = {
   FETCH_VISUALMETADATA_LIST: 'visualmetadata/FETCH_VISUALMETADATA_LIST',
@@ -17,6 +21,10 @@ export const ACTION_TYPES = {
   RESET: 'visualmetadata/RESET',
   VALIDATE_QUERY: 'visualmetadata/VALIDATE_QUERYDTO',
   TOGGLE_EDIT_MODE: 'visualmetadata/TOGGLE_EDIT_MODE',
+  SET_VISUAL: 'visualmetadata/SET_VISUAL',
+  SET_EDIT_ACTION: 'visualmetadata/SET_EDIT_ACTION',
+  VISUAL_METADATA_CONTAINER_ADD: 'visualmetadata/VISUAL_METADATA_CONTAINER_ADD',
+  VISUAL_METADATA_CONTAINER_UPDATE: 'visualmetadata/VISUAL_METADATA_CONTAINER_UPDATE',
 };
 
 const initialState = {
@@ -32,6 +40,9 @@ const initialState = {
   selectedFilter: {},
   validateQueryError: null,
   isEditMode: false,
+  visual: {},
+  editAction: '',
+  visualMetadataContainerList: [],
 };
 
 export type VisualmetadataState = Readonly<typeof initialState>;
@@ -133,6 +144,26 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         ...state,
         isEditMode: !state.isEditMode,
       };
+    case ACTION_TYPES.SET_VISUAL:
+      return {
+        ...state,
+        visual: action.payload,
+      };
+    case ACTION_TYPES.SET_EDIT_ACTION:
+      return {
+        ...state,
+        editAction: action.payload,
+      };
+    case ACTION_TYPES.VISUAL_METADATA_CONTAINER_ADD:
+      return {
+        ...state,
+        visualMetadataContainerList: action.payload,
+      };
+    case ACTION_TYPES.VISUAL_METADATA_CONTAINER_UPDATE:
+      return {
+        ...state,
+        visualMetadataContainerList: action.payload,
+      };
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
@@ -199,6 +230,26 @@ export const toggleEditMode = () => ({
   type: ACTION_TYPES.TOGGLE_EDIT_MODE,
 });
 
+export const setVisual = v => ({
+  type: ACTION_TYPES.TOGGLE_EDIT_MODE,
+  payload: v,
+});
+
+export const setEditAction = action => ({
+  type: ACTION_TYPES.TOGGLE_EDIT_MODE,
+  payload: action,
+});
+
 export const reset = () => ({
   type: ACTION_TYPES.RESET,
+});
+
+export const metadataContainerAdd = (widget: any) => ({
+  type: ACTION_TYPES.VISUAL_METADATA_CONTAINER_ADD,
+  payload: visualMetadataContainerAdd(widget),
+});
+
+export const metadataContainerUpdate = (id: string, widget: any, key: string) => ({
+  type: ACTION_TYPES.VISUAL_METADATA_CONTAINER_UPDATE,
+  payload: visualMetadataContainerUpdate(id, widget, key),
 });
