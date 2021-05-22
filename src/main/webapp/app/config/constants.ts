@@ -27,3 +27,42 @@ export const APP_WHOLE_NUMBER_FORMAT = '0,0';
 export const APP_TWO_DIGITS_AFTER_POINT_NUMBER_FORMAT = '0,0.[00]';
 
 export const CONSTRAINT_TYPES = ['Inclusion', 'Exclusion'];
+
+// TODO : transalte component does not work with picker
+// export const SEPARATORS = [
+//   {
+//     id: ',',
+//     name: 'separators.comma',
+//   },
+//   {
+//     id: ' ',
+//     name: 'separators.space',
+//   },
+//   {
+//     id: '|',
+//     name: 'separators.pipe',
+//   },
+//   {
+//     id: ':',
+//     name: 'separators.colon',
+//   },
+// ];
+
+export const SEPARATORS = [
+  {
+    name: 'Data Separator Comma[,]',
+    id: ',',
+  },
+  {
+    name: 'Data Separator Space[]',
+    id: ' ',
+  },
+  {
+    name: 'Data Separator Pipe[|]',
+    id: '|',
+  },
+  {
+    name: 'Data Separator Colon[:]',
+    id: ':',
+  },
+];
