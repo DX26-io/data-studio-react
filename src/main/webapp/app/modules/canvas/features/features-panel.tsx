@@ -7,7 +7,7 @@ import Minimize from '@spectrum-icons/workflow/Minimize';
 import Maximize from '@spectrum-icons/workflow/Maximize';
 import Add from '@spectrum-icons/workflow/Add';
 import {getViewFeaturesEntities, selectFeature} from 'app/entities/feature/feature.reducer';
-import {toggleFeaturesPanel} from "app/shared/reducers/application-profile";
+// import {toggleFeaturesPanel} from "app/shared/reducers/application-profile";
 import {Tabs} from "@react-spectrum/tabs";
 import {featureTypeToActiveTabs, getFeaturesTabTranslations} from "app/modules/canvas/features/features-panel-util";
 import {Translate} from "react-jhipster";
@@ -129,7 +129,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 const mapDispatchToProps = {
   getViewFeaturesEntities,
-  toggleFeaturesPanel,
+  // toggleFeaturesPanel,
   selectFeature
 };
 type StateProps = ReturnType<typeof mapStateToProps>;

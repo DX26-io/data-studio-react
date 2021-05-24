@@ -8,6 +8,9 @@ import { IFeature, defaultValue } from 'app/shared/model/feature.model';
 
 export const ACTION_TYPES = {
   FETCH_FEATURE_LIST: 'feature/FETCH_FEATURE_LIST',
+  FETCH_FEATURE: 'feature/FETCH_FEATURE',
+  CREATE_FEATURE: 'feature/CREATE_FEATURE',
+  UPDATE_FEATURE: 'feature/UPDATE_FEATURE',
   RESET: 'feature/RESET',
   SELECT_FEATURE: 'feature/SELECT_FEATURE',
 };
@@ -85,6 +88,16 @@ export const getViewFeaturesEntities: ICrudGetViewFeaturesAction<IFeature> = vie
 export const getEntities: ICrudGetAllAction<IFeature> = (page, size, sort) => ({
   type: ACTION_TYPES.FETCH_FEATURE_LIST,
   payload: axios.get<IFeature>(`${apiUrl}?cacheBuster=${new Date().getTime()}`),
+});
+
+export const createEntity: ICrudPutAction<IFeature> = entity => ({
+  type: ACTION_TYPES.CREATE_FEATURE,
+  payload: axios.post<IFeature>(`${apiUrl}`, entity),
+});
+
+export const updateEntity: ICrudPutAction<IFeature> = entity => ({
+  type: ACTION_TYPES.UPDATE_FEATURE,
+  payload: axios.put<IFeature>(`${apiUrl}`, entity),
 });
 
 export const getEntity: ICrudGetAction<IFeature> = id => {
