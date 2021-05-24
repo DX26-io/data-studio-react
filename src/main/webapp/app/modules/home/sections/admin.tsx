@@ -9,6 +9,7 @@ import LinkCard from 'app/shared/components/link-card/link-card';
 import PlatformDataMapping from '@spectrum-icons/workflow/PlatformDataMapping';
 import Data from '@spectrum-icons/workflow/Data';
 import FileGear from '@spectrum-icons/workflow/FileGear';
+import DataUser from '@spectrum-icons/workflow/DataUser';
 
 const Admin: React.FC = () => {
   const adminList = [
@@ -35,6 +36,12 @@ const Admin: React.FC = () => {
       link: `/administration/user-management/datasource-permissions`,
       title: 'permissions.datasourcePermissions.title',
       description: 'permissions.datasourcePermissions.description',
+    },
+    {
+      icon: <DataUser size="L" />,
+      link: `/administration/user-management/datasource-constraints`,
+      title: 'permissions.datasourceConstraints.title',
+      description: 'permissions.datasourceConstraints.description',
     },
     {
       icon: <PlatformDataMapping size="L" />,
