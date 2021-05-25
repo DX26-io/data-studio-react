@@ -2,7 +2,7 @@ import { IRealm } from './realm.model';
 import { IUserGroup } from './user-group.model';
 export interface IAccount {
   id: number;
-  userGroups: Array<IUserGroup>;
+  userGroups: Array<string>;
   login: string;
   firstName: string;
   lastName: string;

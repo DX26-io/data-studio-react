@@ -24,7 +24,7 @@ import {
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import VisualizationHeader from './visualization-modal/visualization-header';
 import 'app/modules/canvas/visualization/canvas.scss';
-import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { NoDataFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import Loader from 'app/shared/components/card/loader/loader';
 import FilterPanel from 'app/modules/canvas/filter/filter-panel';

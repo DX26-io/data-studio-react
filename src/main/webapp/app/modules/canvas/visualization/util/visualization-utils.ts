@@ -18,75 +18,79 @@ const getFormattedNumber = (value, format) => {
   }
 };
 
+const sortBySequenceNumber = (a, b) => {
+  return a.order - b.order;
+};
+
 const isFunction = obj => {
   return !!(obj && obj.constructor && obj.call && obj.apply);
 };
 
 const getDimensionsAndMeasures = fields => {
   const dimensions = fields
-    .filter(function (item) {
+    .filter(item => {
       return item.feature && item.feature.featureType === 'DIMENSION';
     })
-    .map(function (item) {
+    .map(item => {
       const newItem = {};
       // angular.copy(item, newItem);
-      //newItem.feature.name = newItem.feature.selectedName;
+      // newItem.feature.name = newItem.feature.selectedName;
       return newItem;
     })
-    .sort(function (a, b) {
+    .sort((a, b) => {
       return sortBySequenceNumber(a.fieldType, b.fieldType);
     });
 
   const measures = fields
-    .filter(function (item) {
+    .filter(item => {
       return item.feature && item.feature.featureType === 'MEASURE';
     })
-    .map(function (item) {
+    .map(item => {
       const newItem = {};
       //  angular.copy(item, newItem);
       //  newItem.feature.name = newItem.feature.name;
       return newItem;
     })
-    .sort(function (a, b) {
+    .sort((a, b) => {
       return sortBySequenceNumber(a.fieldType, b.fieldType);
     });
   return {
-    measures: measures,
-    dimensions: dimensions,
+    measures,
+    dimensions,
   };
 };
 
 const getDimensionsAndMeasuresForNotification = fields => {
   const dimensions = fields
-    .filter(function (item) {
+    .filter(item => {
       return item.feature && item.feature.featureType === 'DIMENSION';
     })
-    .map(function (item) {
-      const newItem = {};
+    .map(item => {
+      // const newItem = {};
       //   angular.copy(item, newItem);
-      //.feature.name = newItem.feature.name;
-      return newItem;
+      // .feature.name = newItem.feature.name;
+      return item.feature.name;
     })
-    .sort(function (a, b) {
+    .sort((a, b) => {
       return sortBySequenceNumber(a.fieldType, b.fieldType);
     });
 
   const measures = fields
-    .filter(function (item) {
+    .filter(item => {
       return item.feature && item.feature.featureType === 'MEASURE';
     })
-    .map(function (item) {
+    .map(item => {
       const newItem = {};
       //  angular.copy(item, newItem);
       // newItem.feature.name = newItem.feature.name;
       return newItem;
     })
-    .sort(function (a, b) {
+    .sort((a, b) => {
       return sortBySequenceNumber(a.fieldType, b.fieldType);
     });
   return {
-    measures: measures,
-    dimensions: dimensions,
+    measures,
+    dimensions,
   };
 };
 
@@ -106,7 +110,7 @@ const getFilterPropertyValue = (property, orElse) => {
   }
 };
 const getPropertyValue = (properties, propertyName, orElse) => {
-  const filterProperty = properties.filter(function (item) {
+  const filterProperty = properties.filter(item => {
     return item.propertyType.name === propertyName;
   });
   const property = filterProperty[0];
@@ -115,7 +119,7 @@ const getPropertyValue = (properties, propertyName, orElse) => {
 };
 
 const setPropertyValue = (properties, propertyName: string, orElse) => {
-  const filterProperty = properties.filter(function (item) {
+  const filterProperty = properties.filter(item => {
     return item.propertyType.name === propertyName;
   });
   const property = filterProperty[0];
@@ -133,13 +137,13 @@ const getFieldPropertyValue = (field, propertyName, orElse) => {
 };
 
 const getMaxValue = values => {
-  return values.reduce(function (a, b) {
+  return values.reduce((a, b) => {
     return Math.max(a, b);
   });
 };
 
 const getMinValue = values => {
-  return values.reduce(function (a, b) {
+  return values.reduce((a, b) => {
     return Math.min(a, b);
   });
 };
@@ -158,10 +162,6 @@ const normalize = (values, lowBoundry, highBoundry, x) => {
   const minValue = getMinValue(values);
   const xStd = (x - minValue) / (maxValue - minValue);
   return xStd * (highBoundry - lowBoundry) + lowBoundry;
-};
-
-const sortBySequenceNumber = (a, b) => {
-  return a.order - b.order;
 };
 
 /**
@@ -188,13 +188,13 @@ export const getDimension = (features, dimension) => {
 
 export const VisualizationUtils = () => {
   return {
-    normalize: normalize,
-    sortBySequenceNumber: sortBySequenceNumber,
-    getFieldPropertyValue: getFieldPropertyValue,
-    getPropertyValue: getPropertyValue,
-    setPropertyValue: setPropertyValue,
-    getDimensionsAndMeasures: getDimensionsAndMeasures,
-    getFormattedNumber: getFormattedNumber,
-    getDimensionsAndMeasuresForNotification: getDimensionsAndMeasuresForNotification,
+    normalize,
+    sortBySequenceNumber,
+    getFieldPropertyValue,
+    getPropertyValue,
+    setPropertyValue,
+    getDimensionsAndMeasures,
+    getFormattedNumber,
+    getDimensionsAndMeasuresForNotification,
   };
 };

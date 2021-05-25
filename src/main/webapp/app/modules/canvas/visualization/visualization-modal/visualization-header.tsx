@@ -3,7 +3,7 @@ import { ActionButton, DialogContainer, Flex, Item, Menu, MenuTrigger, Text, Vie
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import { Translate } from 'react-jhipster';
 import { Redirect } from 'react-router-dom';
-import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import Settings from '@spectrum-icons/workflow/Settings';
 import Edit from '@spectrum-icons/workflow/Edit';
 import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';

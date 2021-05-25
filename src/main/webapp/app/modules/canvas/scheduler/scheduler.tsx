@@ -9,7 +9,7 @@ import DatePicker from 'app/shared/components/date-picker/date-picker';
 import { stringToDate } from '../data-constraints/utils/date-util';
 import { IEmail, ISchedule } from 'app/shared/model/schedule.model';
 import { Translate } from 'react-jhipster';
-import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { buildQueryDTO } from '../visualization/util/visualization-render-utils';
 import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
 export interface ISchedulerProps extends StateProps, DispatchProps {

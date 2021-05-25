@@ -15,6 +15,7 @@ import reducer, {
   reset,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
+import { IVisualMetadata, defaultValue } from 'app/shared/model/visual-meta-data.model';
 
 describe('Entities reducer tests', () => {
   function isEmpty(element): boolean {
@@ -28,10 +29,19 @@ describe('Entities reducer tests', () => {
   const initialState = {
     loading: false,
     errorMessage: null,
-    entities: [] as ReadonlyArray<IVisualmetadata>,
+    entities: [] as ReadonlyArray<IVisualMetadata>,
     entity: defaultValue,
     updating: false,
     updateSuccess: false,
+    newCreated: false,
+    rowQuery: null,
+    filterData: {},
+    selectedFilter: {},
+    validateQueryError: null,
+    isEditMode: false,
+    visual: {},
+    editAction: '',
+    visualMetadataContainerList: [],
   };
 
   function testInitialState(state) {

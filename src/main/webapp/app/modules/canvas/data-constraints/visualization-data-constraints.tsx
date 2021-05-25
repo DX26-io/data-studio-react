@@ -2,7 +2,7 @@ import React, { FC, ReactText, useEffect, useRef, useState } from 'react';
 import { ActionButton, Button, Flex, Item, Picker, TextField, View } from '@adobe/react-spectrum';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IDatasources } from 'app/shared/model/datasources.model';
-import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import uuid from 'react-uuid';
 import {
   COMPARABLE_DATA_TYPES,

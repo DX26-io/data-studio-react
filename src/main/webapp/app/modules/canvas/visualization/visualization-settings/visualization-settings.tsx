@@ -8,7 +8,7 @@ import VisualizationThresholdAlertSetting from 'app/modules/canvas/visualization
 import { Content } from '@react-spectrum/view';
 import { Tabs, Item } from '@react-spectrum/tabs';
 import { getSettingsTabTranslations } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
-import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { IViews } from 'app/shared/model/views.model';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IDatasources } from 'app/shared/model/datasources.model';

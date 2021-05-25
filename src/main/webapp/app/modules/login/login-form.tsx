@@ -4,11 +4,11 @@ import { ComboBox, Item } from '@react-spectrum/combobox';
 import Alert from '@spectrum-icons/workflow/Alert';
 import { Translate } from 'react-jhipster';
 import config from "app/config/constants";
-import {RealmDTO} from "app/shared/model/realm.model";
+import {IRealm} from "app/shared/model/realm.model";
 
 export interface ILoginProps {
   loginError: boolean;
-  realms: Array<RealmDTO>;
+  realms: Array<IRealm>;
   handleLogin: (username: string, password: string, rememberMe: boolean, realmId: number) => void;
   handleProviderLogin: (provider: string, realmId: number) => void;
   handleSignup: () => void;

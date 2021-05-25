@@ -8,7 +8,7 @@ import VisualizationHierarchy from 'app/modules/canvas/visualization/visualizati
 import { getPropertiesTabTranslations } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IViews } from 'app/shared/model/views.model';
-import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { Tabs } from '@react-spectrum/tabs';
 
 export interface IVisualizationPropertiesProps  {

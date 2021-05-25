@@ -1,4 +1,4 @@
-import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { translate } from 'react-jhipster';
 import { IPayload, IPayloadResult } from 'react-jhipster/src/type/redux-action.type';
 

@@ -17,7 +17,7 @@ import {
 } from '@adobe/react-spectrum';
 import TableAndChart from '@spectrum-icons/workflow/TableAndChart';
 import { IFeature } from 'app/shared/model/feature.model';
-import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import uuid from 'react-uuid';
 import Properties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/properties';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';

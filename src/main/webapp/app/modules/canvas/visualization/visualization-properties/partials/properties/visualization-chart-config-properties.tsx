@@ -3,7 +3,7 @@ import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { View,  Heading, Form } from '@adobe/react-spectrum';
 import { IFeature } from 'app/shared/model/feature.model';
-import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import Properties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/properties';
 
 export interface IVisualizationChartConfigPropertiesProps {

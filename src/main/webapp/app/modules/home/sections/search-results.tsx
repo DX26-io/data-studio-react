@@ -21,11 +21,12 @@ const SearchResults = (props: ISearchResultsProps) => {
         key={view.id}
         thumbnail={
           <View height="size-3200">
-            <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName} />
+            {/* TODO: added empty string as url for now */}
+            <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName} url='' />
           </View>
         }
         content={
-          <ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} />
+          <ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} account={props.account} />
         }
       />
     );
@@ -51,6 +52,7 @@ const SearchResults = (props: ISearchResultsProps) => {
             dashboardType={dashboard.category}
             dashboardId={dashboard.id}
             datasource={dashboard.dashboardDatasource.name}
+            account={props.account}
           />
         }
       />
@@ -83,6 +85,7 @@ const mapStateToProps = storeState => ({
   loadingDashboards: storeState.dashboard.loading,
   views: storeState.views.entities,
   loadingViews: storeState.views.loading,
+  account: storeState.authentication.account
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;

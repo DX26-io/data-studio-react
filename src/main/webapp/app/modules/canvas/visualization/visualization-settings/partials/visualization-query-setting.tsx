@@ -3,7 +3,7 @@ import { View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { validate as validateQuery } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 import { IViews } from 'app/shared/model/views.model';
 import { ValidateFields } from '../../util/visualization-render-utils';

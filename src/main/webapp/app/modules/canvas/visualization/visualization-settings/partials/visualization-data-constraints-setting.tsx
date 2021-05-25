@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import VisualizationDataConstraints from 'app/modules/canvas/data-constraints/visualization-data-constraints';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IDatasources } from 'app/shared/model/datasources.model';
-import { IVisualMetadataSet } from 'app/shared/model/visualMetadata.model';
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 export interface IVisualizationDataConstraintsSettingProps {
   features: readonly IFeature[];
   datasource: IDatasources;

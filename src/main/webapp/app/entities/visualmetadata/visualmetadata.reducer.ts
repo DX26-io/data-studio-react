@@ -4,8 +4,8 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 
-import { IVisualMetadata, defaultValue } from 'app/shared/model/visualMetadata.model';
-import { IVisualmetaDataDTO } from 'app/shared/model/visualmeta-data.model';
+import { IVisualMetadata, defaultValue } from 'app/shared/model/visual-meta-data.model';
+import { IVisualMetaDataDTO } from 'app/shared/model/visualmeta-data-dto.model';
 import { IValidateDTO } from 'app/shared/model/validate.model';
 import {
   visualMetadataContainerAdd,
@@ -190,7 +190,7 @@ export const getEntity: ICrudGetAction<IVisualMetadata> = id => {
   };
 };
 
-export const createEntity: ICrudPutAction<IVisualmetaDataDTO> = entity => async dispatch => {
+export const createEntity: ICrudPutAction<IVisualMetaDataDTO> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_VISUALMETADATA,
     payload: axios.post(apiUrl, cleanEntity(entity)),
@@ -208,7 +208,7 @@ export const validate: ICrudPutAction<IValidateDTO> = entity => async dispatch =
   return result;
 };
 
-export const updateEntity: ICrudPutAction<IVisualmetaDataDTO> = entity => async dispatch => {
+export const updateEntity: ICrudPutAction<IVisualMetaDataDTO> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_VISUALMETADATA,
     payload: axios.put(apiUrl, cleanEntity(entity)),
