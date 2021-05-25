@@ -1,22 +1,23 @@
 import { FeatureType } from '../util/visualization.constants';
+import { IDatasources, defaultDatasourceValue } from 'app/shared/model/datasources.model';
 
 export interface IFeature {
-  createdBy?: null;
+  createdBy?: '';
   createdDate?: Date;
-  lastModifiedBy?: null;
+  lastModifiedBy?: '';
   lastModifiedDate?: Date;
   id?: any;
   name?: string;
   type?: string;
-  functionId?: null;
+  functionId?: any;
   definition?: string;
-  datasource?: null;
+  datasource?: IDatasources;
   featureType?: string;
   fields?: any[];
-  favouriteFilter?: null;
-  pin?: null;
-  dateFilter?: null;
-  featureCacheType?: null;
+  favouriteFilter?: any;
+  pin?: any;
+  dateFilter?: any;
+  featureCacheType?: any;
   metadata: any;
   selected: string;
   selected2: string;
@@ -30,9 +31,9 @@ export const defaultValue: Readonly<IFeature> = {
   id: '',
   name: '',
   type: '',
-  functionId: null,
+  functionId: '',
   definition: '',
-  datasource: null,
+  datasource: defaultDatasourceValue,
   featureType: '',
   fields: [],
   favouriteFilter: null,

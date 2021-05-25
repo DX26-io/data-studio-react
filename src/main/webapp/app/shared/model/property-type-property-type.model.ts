@@ -3,9 +3,9 @@ import { ValueElement } from './value-element.model';
 
 export interface PropertyTypePropertyType {
   type?: PropertyType;
-  createdBy?: null;
+  createdBy?: '';
   createdDate?: Date;
-  lastModifiedBy?: null;
+  lastModifiedBy?: '';
   lastModifiedDate?: Date;
   id?: number;
   name?: string;

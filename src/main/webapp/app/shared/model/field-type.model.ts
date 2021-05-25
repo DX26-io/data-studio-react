@@ -1,9 +1,9 @@
 import { Constraint, FeatureType } from '../util/visualization.constants';
 import { FieldTypePropertyType } from './field-type-property-type.model';
 export interface FieldType {
-  createdBy?: null;
+  createdBy?: '';
   createdDate?: Date;
-  lastModifiedBy?: null;
+  lastModifiedBy?: '';
   lastModifiedDate?: Date;
   id?: number;
   constraint?: Constraint;

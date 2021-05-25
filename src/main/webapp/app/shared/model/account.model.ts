@@ -1,24 +1,12 @@
+import { IRealm } from './realm.model';
+import { IUserGroup } from './user-group.model';
 export interface IAccount {
-  activated: boolean;
-  email: string;
-  firstName: string;
-  langKey: string;
-  lastName: string;
+  id: number;
+  userGroups: Array<IUserGroup>;
   login: string;
-  permissions: Array<string>;
-  realm: { id: number; name: string };
-  userGroups: Array<string>;
-  userType: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  langKey: string;
+  currentRealm: IRealm;
 }
-export const defaultValue: Readonly<IAccount> = {
-  activated: false,
-  email: '',
-  firstName: '',
-  langKey: '',
-  lastName: '',
-  login: '',
-  permissions: [],
-  realm: { id: 0, name: '' },
-  userGroups: [],
-  userType: '',
-};

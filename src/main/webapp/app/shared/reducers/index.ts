@@ -22,6 +22,10 @@ import settings, { SettingsState } from 'app/modules/account/settings/settings.r
 import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
 import home, { HomeState } from 'app/modules/home/home.reducer';
 import recent, { RecentState } from 'app/modules/home/sections/recent.reducer';
+import reportConfiguration, {
+  ReportConfigurationState,
+} from 'app/modules/administration/reports-configuration/reports-configuration.reducer';
+import reportsManagement, { ReportsManagementState } from 'app/entities/reports-management/reports-management.reducer';
 import visualizationData, { VisualDataState } from 'app/shared/websocket/websocket.reducer';
 
 // prettier-ignore
@@ -83,6 +87,8 @@ export interface IRootState {
   readonly notification: notificationState;
   readonly home: HomeState;
   readonly recent: RecentState;
+  readonly reportConfiguration: ReportConfigurationState;
+  readonly reportsManagement: ReportsManagementState;
   readonly visualizationData: VisualDataState;
 }
 
@@ -117,6 +123,8 @@ const rootReducer = combineReducers<IRootState>({
   notification,
   home,
   recent,
+  reportConfiguration,
+  reportsManagement,
   visualizationData,
 });
 

@@ -5,7 +5,9 @@ import firebase from 'firebase/app';
 import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
 import { setLocale } from 'app/shared/reducers/locale';
 import config from 'app/config/constants';
-import { RealmDTO } from 'app/shared/model/realm.model';
+import { IAccount } from 'app/shared/model/account.model';
+import { toast } from 'react-toastify';
+import { IRealm } from 'app/shared/model/realm.model';
 
 export const ACTION_TYPES = {
   LOGIN: 'authentication/LOGIN',
@@ -21,22 +23,6 @@ export const ACTION_TYPES = {
   ERROR_MESSAGE: 'authentication/ERROR_MESSAGE',
 };
 
-export interface RealmDTO {
-  name: string;
-  id: number;
-}
-
-export interface AccountDTO {
-  id: number;
-  userGroups: any;
-  login: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  langKey: string;
-  currentRealm: RealmDTO;
-}
-
 const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
 
 const initialState = {
@@ -45,7 +31,7 @@ const initialState = {
   realmCreateError: false,
   redirectTo: (null as unknown) as string,
   loginSuccess: false,
-  realms: (null as unknown) as ReadonlyArray<RealmDTO>,
+  realms: (null as unknown) as ReadonlyArray<IRealm>,
   loginProviderEmailConfirmationToken: (null as unknown) as string,
   verifyUserSuccess: false,
   createRealmSuccess: false,
@@ -56,7 +42,7 @@ const initialState = {
   signupError: false, // Errors returned from server side
   createRealmError: false, // Errors returned from server side
   logoutError: false, // Errors returned from server side
-  account: {} as AccountDTO,
+  account: {} as IAccount,
   errorMessage: (null as unknown) as string, // Errors returned from server side
   redirectMessage: (null as unknown) as string,
   sessionHasBeenFetched: false,

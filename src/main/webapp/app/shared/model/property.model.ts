@@ -3,11 +3,11 @@ import { PropertyTypePropertyType } from './property-type-property-type.model';
 import { ValueElement } from './value-element.model';
 export interface Property {
   type?: PropertyType;
-  createdBy?: null;
+  createdBy?: '';
   createdDate?: Date;
-  lastModifiedBy?: null;
+  lastModifiedBy?: '';
   lastModifiedDate?: Date;
-  id?: null;
+  id?: any;
   propertyType?: PropertyTypePropertyType;
   order?: number;
   value?: boolean | ValueElement | Color | number | null | string;

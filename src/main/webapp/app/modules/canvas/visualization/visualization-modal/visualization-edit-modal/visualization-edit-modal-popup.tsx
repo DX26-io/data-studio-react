@@ -27,6 +27,7 @@ export interface IVisualizationEditModalProps extends StateProps, DispatchProps 
   visualizationId: string;
   setOpen: (isOpen: boolean) => void;
   filterData: any;
+  view:any
 }
 
 export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {

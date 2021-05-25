@@ -12,9 +12,9 @@ export interface IVisualMetadata {
 }
 
 export interface IVisualMetadataSet {
-  createdBy?: null;
+  createdBy?: '';
   createdDate?: Date;
-  lastModifiedBy?: null;
+  lastModifiedBy?: '';
   lastModifiedDate?: Date;
   height?: number;
   width?: number;
@@ -29,8 +29,8 @@ export interface IVisualMetadataSet {
   data?: any;
 
   conditionExpression?: any;
-  query?: null;
-  queryJson?: null;
+  query?: any;
+  queryJson?: any;
   titleProperties?: TitleProperties;
   bodyProperties?: BodyProperties;
   metadataVisual?: MetadataVisual;
