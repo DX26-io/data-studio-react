@@ -18,7 +18,6 @@ export const createFields = (newVM: any) => {
       };
     });
   newVM.fields.forEach(function (field) {
-    field.fieldType = field.fieldType;
     field.order = order + 1;
     field.properties = field.fieldType.propertyTypes.map(function (item) {
       return {

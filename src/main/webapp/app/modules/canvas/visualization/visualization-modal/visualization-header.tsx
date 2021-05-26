@@ -264,7 +264,7 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  visual: storeState.visualmetadata.visual,
+  // visual: storeState.visualmetadata.visual, // TODO : commented it for now
   editAction: storeState.visualmetadata.editAction,
 
   featuresList: storeState.feature.entities,

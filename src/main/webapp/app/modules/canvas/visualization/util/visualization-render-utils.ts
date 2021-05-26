@@ -40,7 +40,7 @@ export const buildQueryDTO = (visualMetaData, filter) => {
 
 const drawVisualization = {
   'Clustered Vertical Bar Chart': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetVerticalBarChartConfig(visual);
       const clusteredverticalBarChartObj = flairVisualizations
         .clusteredverticalbar()
@@ -53,7 +53,7 @@ const drawVisualization = {
     },
   },
   'Clustered Horizontal Bar Chart': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetHorizontalBarChartConfig(visual);
       const clusteredhorizontalBarChartObj = flairVisualizations
         .clusteredhorizontalbar()
@@ -66,7 +66,7 @@ const drawVisualization = {
     },
   },
   'Stacked Vertical Bar Chart': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetVerticalBarChartConfig(visual);
       const stackedverticalBarChartObj = flairVisualizations
         .stackedverticalbar()
@@ -79,7 +79,7 @@ const drawVisualization = {
     },
   },
   'Stacked Horizontal Bar Chart': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetHorizontalBarChartConfig(visual);
       const stackedhorizontalBarChartObj = flairVisualizations
         .stackedhorizontalbar()
@@ -92,42 +92,42 @@ const drawVisualization = {
     },
   },
   'Line Chart': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetLineChartConfig(visual);
       const lineChartObj = flairVisualizations.line().config(config).tooltip(true).print(false).notification(false).data(metaData);
       lineChartObj(div[0]);
     },
   },
   'Combo Chart': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetComboChartConfig(visual);
       const comboChartObj = flairVisualizations.combo().config(config).tooltip(true).print(false).notification(false).data(metaData);
       comboChartObj(div[0]);
     },
   },
   'Pie Chart': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetPieChartConfig(visual);
       const pieChartObj = flairVisualizations.pie().config(config).tooltip(true).print(false).notification(false).data(metaData);
       pieChartObj(div[0]);
     },
   },
   'Doughnut Chart': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetDoughnutChartConfig(visual);
       const doughnutChartObj = flairVisualizations.doughnut().config(config).tooltip(true).print(false).notification(false).data(metaData);
       doughnutChartObj(div[0]);
     },
   },
   'Pie Grid': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetPieGridChartConfig(visual);
       const pieGridChartObj = flairVisualizations.piegrid().config(config).tooltip(true).print(false).notification(false).data(metaData);
       pieGridChartObj(div[0]);
     },
   },
   'Number Grid': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetNumberGridChartConfig(visual);
       const numberGridChartObj = flairVisualizations
         .numbergrid()
@@ -140,63 +140,63 @@ const drawVisualization = {
     },
   },
   'Bullet Chart': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetBulletChartConfig(visual);
       const bulletChartObj = flairVisualizations.bullet().config(config).tooltip(true).print(false).notification(false).data(metaData);
       bulletChartObj(div[0]);
     },
   },
   Table: {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetTableChartConfig(visual);
       const tableChartObj = flairVisualizations.table().config(config).print(false).notification(false).data(metaData);
       tableChartObj(div[0]);
     },
   },
   'Pivot Table': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetPivotTableChartConfig(visual);
       const pivotTableChartObj = flairVisualizations.pivot().config(config).print(false).notification(false).data(metaData);
       pivotTableChartObj(div[0]);
     },
   },
   Sankey: {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetSankeyChartConfig(visual);
       const sankeyChartObj = flairVisualizations.sankey().config(config).tooltip(true).print(false).notification(false).data(metaData);
       sankeyChartObj(div[0]);
     },
   },
   'Heat Map': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetHeatmapChartConfig(visual);
       const heatmapChartObj = flairVisualizations.heatmap().config(config).tooltip(true).print(false).notification(false).data(metaData);
       heatmapChartObj(div[0]);
     },
   },
   'Tree Map': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetTreemapChartConfig(visual);
       const treemapChartObj = flairVisualizations.treemap().config(config).tooltip(true).print(false).notification(false).data(metaData);
       treemapChartObj(div[0]);
     },
   },
   'Scatter plot': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetScatterPlotConfig(visual);
       const scatterChartObj = flairVisualizations.scatter().config(config).tooltip(true).print(false).notification(false).data(metaData);
       scatterChartObj(div[0]);
     },
   },
   KPI: {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetKPIConfig(visual);
       const kpiChartObj = flairVisualizations.kpi().config(config).print(false).notification(false).data(metaData);
       kpiChartObj(div[0]);
     },
   },
   'Chord Diagram': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetChordDiagramConfig(visual);
       const chorddiagramChartObj = flairVisualizations
         .chorddiagram()
@@ -209,7 +209,7 @@ const drawVisualization = {
     },
   },
   'Info-graphic': {
-    drawChart: (visual, metaData, div) => {
+    drawChart(visual, metaData, div) {
       const config = configuration.GetInfoGraphicConfig(visual);
       const infographicChartObj = flairVisualizations
         .infographics()

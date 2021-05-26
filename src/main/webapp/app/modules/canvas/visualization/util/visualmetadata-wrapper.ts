@@ -175,7 +175,7 @@ const constructHavingField = fieldMeasure => {
 };
 
 const getQueryParametersWithFields = (fields, filters, conditionExpression) => {
-  let query = {
+  const query = {
     fields,
     conditionExpressions: undefined,
   };
@@ -252,19 +252,18 @@ const getQueryParameters = (visual, filters, conditionExpression, offset) => {
   const measureFields = measures.map(function (item) {
     return constructMeasureField(item);
   });
-  var query;
-  query = getQueryParametersWithFields(dimensionFields.concat(measureFields), filters, conditionExpression);
+  const query = getQueryParametersWithFields(dimensionFields.concat(measureFields), filters, conditionExpression);
   const aggExists = !!measureFields.filter(function (item) {
     return item.aggregation;
   })[0];
 
   if (aggExists) {
-    query.groupBy = dimensionFields;
+    query['groupBy'] = dimensionFields;
   }
-  query.limit = getQueryLimit(visual, offset);
+  query['limit'] = getQueryLimit(visual, offset);
   const ordersListSortMeasures = applyOrderOnMeasures(measures);
   const ordersListSortDimensions = applyOrderOnDimensions(dimensions);
-  query.orders = ordersListSortMeasures.concat(ordersListSortDimensions);
+  query['orders'] = ordersListSortMeasures.concat(ordersListSortDimensions);
   return query;
 };
 

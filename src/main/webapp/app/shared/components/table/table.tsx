@@ -15,9 +15,9 @@ const TableView: React.FC<ITableProps> = props => {
           <TableContainer>
             <Table size="small" stickyHeader aria-label="sticky table">
               <TableHead style={{ backgroundColor: '#f5f5f5' }}>
-                <TableRow>
+                <TableRow key={uuid()}>
                   {Object.keys(props.data[0]).map(col => {
-                    return <TableCell  align="left">{col}</TableCell>;
+                    return <TableCell key={uuid()} align="left">{col}</TableCell>;
                   })}
                 </TableRow>
               </TableHead>
@@ -28,7 +28,7 @@ const TableView: React.FC<ITableProps> = props => {
                     return (
                       <TableRow key={uuid()}>
                         {Object.keys(row).map(col => {
-                          return <TableCell align="left">{row[col]}</TableCell>;
+                          return <TableCell key={uuid()} align="left">{row[col]}</TableCell>;
                         })}
                       </TableRow>
                     );

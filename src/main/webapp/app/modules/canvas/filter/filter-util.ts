@@ -1,9 +1,9 @@
 import { COMPARABLE_DATA_TYPES, FILTER_TYPES } from 'app/shared/util/data-constraints.constants';
 import { addNewExpression, ConditionExpression } from './condition-expression';
 
-let paramObject = {};
-let selectedFilters = {};
-let dynamicDateRangeMetaData = {};
+// const paramObject = {};
+// const selectedFilters = {};
+const dynamicDateRangeMetaData = {};
 
 export const createBetweenExpressionBody = (value: any, secondValue: any, featureName: string, dataType: string, activeTab: string) => {
   const result = {

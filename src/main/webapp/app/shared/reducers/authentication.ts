@@ -31,7 +31,7 @@ const initialState = {
   realmCreateError: false,
   redirectTo: (null as unknown) as string,
   loginSuccess: false,
-  realms: (null as unknown) as ReadonlyArray<IRealm>,
+  realms: (null as unknown) as Array<IRealm>,
   loginProviderEmailConfirmationToken: (null as unknown) as string,
   verifyUserSuccess: false,
   createRealmSuccess: false,

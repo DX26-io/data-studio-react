@@ -80,7 +80,7 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
                         <DropdownMenu>
                           {props.selectedFilter[item].map(value => {
                             return (
-                              <DropdownItem>
+                              <DropdownItem key={value}>
                                 {value}
                                 <ActionButton onPress={() => removeFromFilter(item, value, i)} isQuiet aria-label="Icon only">
                                   <Close size={'XS'} />

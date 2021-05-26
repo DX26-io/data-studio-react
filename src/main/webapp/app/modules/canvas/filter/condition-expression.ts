@@ -1,7 +1,7 @@
 import { IConditionExpression } from 'app/shared/model/condition-expression.model';
 import uuid from 'react-uuid';
 
-let conditionExpression = {
+const conditionExpression = {
   expression: null,
   uuid: '',
 };

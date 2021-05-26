@@ -3,9 +3,9 @@ import { View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 
-export interface IVisualizationHierarchyProps {}
+// export interface IVisualizationHierarchyProps {}
 
-const VisualizationHierarchy = (props: IVisualizationHierarchyProps) => {
+const VisualizationHierarchy = () => {
   return (
     <>
       <View>Hierarchy display here</View>

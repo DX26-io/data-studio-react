@@ -1,5 +1,5 @@
 export const getDefaultColorset = () => {
-  return []; //colorset;
+  return []; // colorset;
 };
 
 export const getNames = arr => {

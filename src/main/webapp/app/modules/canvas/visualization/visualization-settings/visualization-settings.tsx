@@ -18,9 +18,9 @@ export interface IVisualizationSettingsProps {
   visual: IVisualMetadataSet;
   view: IViews;
   data?: any;
-  features: readonly IFeature[];
-  datasource: IDatasources;
-  filterData: any;
+  features?: readonly IFeature[];
+  datasource?: IDatasources;
+  filterData?: any;
 }
 
 const VisualizationSettings = (props: IVisualizationSettingsProps) => {

@@ -19,10 +19,16 @@ export const VisualizationDataModal = (props: IVisualizationDataModalProps) => {
     dialog.dismiss();
   };
 
-  const getTransactionData = async () => {
+  const getTransactionData = () => {
     setTransactionData(props.visual.data);
     csvLink.current.link.click();
   };
+  
+  // TODO : commented it for now
+  // const getTransactionData = async () => {
+  //   setTransactionData(props.visual.data);
+  //   csvLink.current.link.click();
+  // };
 
   return (
     <Dialog>
@@ -50,4 +56,4 @@ export const VisualizationDataModal = (props: IVisualizationDataModalProps) => {
   );
 };
 
-export default (VisualizationDataModal);
+export default VisualizationDataModal;

@@ -151,12 +151,9 @@ const Canvas = (props: VisualizationProp) => {
 
   useEffect(() => {
     if (props.filterList) {
+      // TODO : this code needs to be refectored
       const obj = props.filterList?.body[0];
-      let dimensionName = '';
-      for (const i in obj) {
-        dimensionName = i;
-        break;
-      }
+      const dimensionName = Object.keys(obj)[0];
       const retVal = props.filterList?.body?.map(function (item) {
         return {
           value: item[dimensionName],
@@ -236,6 +233,7 @@ const Canvas = (props: VisualizationProp) => {
               view={props.view}
               totalItem={visualmetadataList?.length || 0}
               filterData={props.filterData}
+              // isEditMode={true} // TODO : setting it true for now
               {...props}
             ></VisualizationHeader>
           </div>
