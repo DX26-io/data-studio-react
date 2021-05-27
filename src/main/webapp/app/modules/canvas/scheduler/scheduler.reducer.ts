@@ -3,11 +3,12 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 import { cleanEntity, generateOptions } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IUser } from 'app/shared/model/user.model';
-import { defaultValue, ISchedule } from 'app/shared/model/schedule.model';
+import { schedulerReportDefaultValue, ISchedulerReport } from 'app/shared/model/scheduler-report.model';
 
 export const ACTION_TYPES = {
   FETCH_USERS: 'scheduler/FETCH_USERS',
   SCHEDULE_REPORT: 'scheduler/SCHEDULE_REPORT',
+  SET_SCHEDULER_REPORT: 'scheduler/SET_SCHEDULER_REPORT',
   FETCH_SCHEDULE_REPORT: 'scheduler/FETCH_SCHEDULE_REPORT',
   EXECUTE_NOW: 'scheduler/EXECUTE_NOW',
 };
@@ -15,7 +16,7 @@ export const ACTION_TYPES = {
 const initialState = {
   loading: false,
   errorMessage: null,
-  scheduler: defaultValue,
+  schedulerReport: schedulerReportDefaultValue,
   users: [] as ReadonlyArray<IUser>,
 };
 
@@ -47,7 +48,7 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
       return {
         ...state,
         loading: false,
-        scheduler: action.payload.data.report,
+        schedulerReport: action.payload.data.report,
       };
     case SUCCESS(ACTION_TYPES.SCHEDULE_REPORT):
       return {
@@ -57,6 +58,11 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
     case SUCCESS(ACTION_TYPES.EXECUTE_NOW):
       return {
         ...state,
+      };
+    case ACTION_TYPES.SET_SCHEDULER_REPORT:
+      return {
+        ...state,
+        schedulerReport: action.payload,
       };
     default:
       return state;
@@ -74,21 +80,26 @@ export const getUsers: ICrudGetAllAction<IUser> = () => {
   };
 };
 
-export const getScheduleReportById: ICrudGetAction<ISchedule> = id => {
+export const getScheduleReportById: ICrudGetAction<ISchedulerReport> = id => {
   const requestUrl = `${apiUrlSchedule}/${id}`;
   return {
     type: ACTION_TYPES.FETCH_SCHEDULE_REPORT,
-    payload: axios.get<ISchedule>(requestUrl),
+    payload: axios.get<ISchedulerReport>(requestUrl),
   };
 };
 
-export const scheduleReport: ICrudPutAction<ISchedule> = entity => async dispatch => {
+export const scheduleReport: ICrudPutAction<ISchedulerReport> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.SCHEDULE_REPORT,
     payload: axios.post(apiUrlSchedule, cleanEntity(entity)),
   });
   return result;
 };
+
+export const setSchedulerReport = (schedulerReport: ISchedulerReport) => ({
+  type: ACTION_TYPES.SET_SCHEDULER_REPORT,
+  payload: schedulerReport,
+});
 
 export const executeNow = id => {
   const requestUrl = `api/executeImmediate/${id}`;

@@ -3,7 +3,6 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 import { cleanEntity, generateOptions } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IUser, defaultValue } from 'app/shared/model/user.model';
-import { ISchedule } from 'app/shared/model/schedule.model';
 
 export const ACTION_TYPES = {
   FETCH_WEBHOOK: 'notification/FETCH_WEBHOOK',

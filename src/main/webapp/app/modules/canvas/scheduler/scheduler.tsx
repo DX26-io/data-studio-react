@@ -7,7 +7,7 @@ import { getUsers, scheduleReport, getScheduleReportById, executeNow } from 'app
 import Select from 'react-select';
 import DatePicker from 'app/shared/components/date-picker/date-picker';
 import { stringToDate } from '../data-constraints/utils/date-util';
-import { IEmail, ISchedule } from 'app/shared/model/schedule.model';
+import { IEmail, ISchedulerReport, schedulerReportDefaultValue } from 'app/shared/model/scheduler-report.model';
 import { Translate } from 'react-jhipster';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { buildQueryDTO } from '../visualization/util/visualization-render-utils';
@@ -24,7 +24,7 @@ const Scheduler = (props: ISchedulerProps) => {
   const [channelsList, setChannels] = useState([]);
   const [reportTitle, setReportTitle] = useState('');
   const [comments, setComments] = useState('');
-  const [cronExpression, setCronExpression] = useState('');
+  const [cronExp, setCronExpression] = useState('');
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [userList, setUserList] = useState<IDropdown[]>();
@@ -45,12 +45,12 @@ const Scheduler = (props: ISchedulerProps) => {
   useEffect(() => {
     props.getUsers();
     props.getWebhookList();
-    props.getScheduleReportById(props.visual?.id);
+    props.getScheduleReportById(props.visual.id);
     resetSelectedChannels();
   }, []);
 
   useEffect(() => {
-    props.visual?.id && props.getScheduleReportById(props.visual?.id);
+    props.visual.id && props.getScheduleReportById(props.visual.id);
   }, [props.visual]);
 
   useEffect(() => {
@@ -64,18 +64,17 @@ const Scheduler = (props: ISchedulerProps) => {
   }, [props.users]);
 
   useEffect(() => {
-    if (props.scheduler?.report) {
-      setReportTitle(props.scheduler?.report?.title_name);
-      setComments(props.scheduler?.report?.mail_body);
-      setSelectedChannel(props.scheduler?.assign_report?.channel);
+    if (props.schedulerReport.report) {
+      setReportTitle(props.schedulerReport.report.titleName);
+      setComments(props.schedulerReport.report.mailBody);
+      setSelectedChannel(props.schedulerReport.assignReport.channels);
 
-      setStartDate(props.scheduler?.constraints?.start_date);
-      setEndDate(props.scheduler?.constraints?.endDate);
-      ;
-      setSelectedWebHook(props.scheduler?.assign_report?.communication_list?.teams);
-      setCronExpression(props.scheduler?.constraints?.cron_exp);
+      setStartDate(props.schedulerReport.constraints.startDate);
+      setEndDate(props.schedulerReport.constraints.endDate);
+      setSelectedWebHook(props.schedulerReport.assignReport.communicationList.teams);
+      setCronExpression(props.schedulerReport.constraints.cronExp);
     }
-  }, [props.scheduler]);
+  }, [props.schedulerReport]);
 
   useEffect(() => {
     if (props.webHooks.length > 0) {
@@ -97,11 +96,11 @@ const Scheduler = (props: ISchedulerProps) => {
   const handleChangeEmail = (value, actionMeta) => {
     const emails = selectedUserEmail || [];
     if (actionMeta.action === 'select-option') {
-      emails.push({ user_name: actionMeta.option.value.split(' ')[0], user_email: actionMeta.option.value.split(' ')[1] });
+      emails.push({ userName: actionMeta.option.value.split(' ')[0], userEmail: actionMeta.option.value.split(' ')[1] });
       setSelectedUserEmail(emails);
     } else if (actionMeta.action === 'remove-value') {
       const filterEmails = emails.filter(element => {
-        if (element.user_name !== actionMeta.removedValue.value.split(' ')[0]) {
+        if (element.userName !== actionMeta.removedValue.value.split(' ')[0]) {
           return element;
         }
       });
@@ -122,18 +121,18 @@ const Scheduler = (props: ISchedulerProps) => {
   };
 
   const setDimentionsAndMeasures = fields => {
-    const dimension = [];
-    const measure = [];
+    const dimensions = [];
+    const measures = [];
     fields.filter(function (item) {
       if (item.feature.featureType === 'DIMENSION') {
-        dimension.push(item.feature.name);
+        dimensions.push(item.feature.name);
       } else if (item.feature.featureType === 'MEASURE') {
-        measure.push(item.feature.name);
+        measures.push(item.feature.name);
       }
     });
     return {
-      dimension,
-      measure,
+      dimensions,
+      measures,
     };
   };
 
@@ -143,7 +142,8 @@ const Scheduler = (props: ISchedulerProps) => {
 
   const setReportChannels = item => {
     const channelsObj = selectedChannel || [];
-    if (channelsObj.indexOf(item.key) === -1) {
+    // if (channelsObj.indexOf(item.key) === -1) {
+    if (channelsObj.includes(item.key)) {
       channelsObj.push(item.key);
     } else {
       channelsObj.splice(channelsObj.indexOf(item.key), 1);
@@ -159,48 +159,44 @@ const Scheduler = (props: ISchedulerProps) => {
   };
 
   const saveScheduleReport = () => {
+    // TODO : this is not the best practice..will be refactored in near future
     const dimentionsAndMeasures = setDimentionsAndMeasures(props.visual.fields);
-    const scheduleReportObj = {
-      datasourceid: props.view.viewDashboard.dashboardDatasource.id,
+
+    props.scheduleReport({
+      ...schedulerReportDefaultValue,
+      datasourceId: props.view.viewDashboard.dashboardDatasource.id,
       dashboardId: props.view.viewDashboard.id.toString(),
       report: {
-        userid: '',
-        connection_name: '',
-        report_name: reportTitle,
-        source_id: 0,
+        userId: '',
+        connectionName: '',
+        reportName: reportTitle,
+        sourceId: 0,
         subject: '',
-        title_name: reportTitle,
-        mail_body: comments,
-        dashboard_name: props.view.viewDashboard.dashboardName,
-        view_name: props.view.viewName,
-        view_id: props.view.id,
-        share_link: 'share_link',
-        build_url: 'build_url',
+        titleName: reportTitle,
+        mailBody: comments,
+        dashboardName: props.view.viewDashboard.dashboardName,
+        viewName: props.view.viewName,
+        viewId: props.view.id,
+        shareLink: '',
+        buildUrl: '',
         thresholdAlert: false,
       },
-      report_line_item: {
-        visualizationid: props.visual.id,
+      reportLineItem: {
+        visualizationId: props.visual.id,
         visualization: '',
-        dimension: dimentionsAndMeasures.dimension,
-        measure: dimentionsAndMeasures.measure,
-      },
-      queryDTO: buildQueryDTO(props.visual,props.filters),
-      assign_report: {
-        channel: selectedChannel,
-        communication_list: { email: selectedUserEmail, teams: SelectedWebHooks },
+        dimensions: dimentionsAndMeasures.dimensions,
+        measures: dimentionsAndMeasures.measures,
       },
       schedule: {
-        cron_exp: cronExpression,
+        cronExp,
         timezone: '',
-        start_date: startDate,
-        end_date: endDate,
+        startDate,
+        endDate,
       },
-      constraints: '{}',
-      putcall: false,
-      emailReporter: false,
-    };
-    props.scheduleReport(scheduleReportObj);
+      queryDTO: buildQueryDTO(props.visual, props.filters),
+    });
   };
+
   return (
     <>
       <Flex direction="column" gap="size-100">
@@ -219,7 +215,7 @@ const Scheduler = (props: ISchedulerProps) => {
                 >
                   <Translate contentKey="entity.action.create">Create</Translate>
                 </Button>
-                {props.scheduler?.report && (
+                {props.schedulerReport.report && (
                   <Button
                     onPress={() => {
                       executeReport();
@@ -245,6 +241,7 @@ const Scheduler = (props: ISchedulerProps) => {
                     }}
                     defaultSelected={item.value}
                     value={item.key}
+                    key={item.key}
                   >
                     {item.key}
                   </Checkbox>
@@ -274,7 +271,7 @@ const Scheduler = (props: ISchedulerProps) => {
             />
 
             <TextArea value={comments} onChange={setComments} label="Comments" />
-            <TextField label="cron expression" value={cronExpression} onChange={setCronExpression} />
+            <TextField label="cron expression" value={cronExp} onChange={setCronExpression} />
             <DatePicker label="Start Date" onChange={handleStartDateChange} value={stringToDate(startDate)} />
             <DatePicker label="End Date" onChange={handleEndDateChange} value={stringToDate(endDate)} />
           </Form>
@@ -286,7 +283,7 @@ const Scheduler = (props: ISchedulerProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   users: storeState.scheduler.users,
-  scheduler: storeState.scheduler.scheduler,
+  schedulerReport: storeState.scheduler.schedulerReport,
   webHooks: storeState.notification.webHooks,
   view: storeState.views.entity,
   account: storeState.authentication.account,
