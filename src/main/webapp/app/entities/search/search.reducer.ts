@@ -33,6 +33,7 @@ export default (state: SearchState = initialState, action): SearchState => {
       return {
         ...state,
         searchError: action.payload,
+        autoSuggestion: [],
       };
     case ACTION_TYPES.SET_SEARCH_RESPONSE:
       return {
