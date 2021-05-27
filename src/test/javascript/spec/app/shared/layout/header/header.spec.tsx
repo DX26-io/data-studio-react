@@ -14,6 +14,7 @@ describe('Header tests', () => {
     ribbonEnv: 'dev',
     isInProduction: false,
     isSwaggerEnabled: true,
+    isCanvas:false
   };
   const prodProps = {
     ...devProps,
