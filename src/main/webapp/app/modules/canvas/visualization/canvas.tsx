@@ -233,7 +233,7 @@ const Canvas = (props: VisualizationProp) => {
               view={props.view}
               totalItem={visualmetadataList?.length || 0}
               filterData={props.filterData}
-              // isEditMode={true} // TODO : setting it true for now
+              isEditMode={props.isEditMode}
               {...props}
             ></VisualizationHeader>
           </div>

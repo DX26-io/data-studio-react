@@ -7,11 +7,13 @@ import { getUsers, scheduleReport, getScheduleReportById, executeNow } from 'app
 import Select from 'react-select';
 import DatePicker from 'app/shared/components/date-picker/date-picker';
 import { stringToDate } from '../data-constraints/utils/date-util';
-import { IEmail, ISchedulerReport, schedulerReportDefaultValue } from 'app/shared/model/scheduler-report.model';
 import { Translate } from 'react-jhipster';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { buildQueryDTO } from '../visualization/util/visualization-render-utils';
 import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
+import { report } from 'process';
+import { ISchedulerReport, schedulerReportDefaultValue } from 'app/shared/model/scheduler-report.model';
+import { IEmail } from 'app/shared/model/email.model';
 export interface ISchedulerProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
 }
@@ -159,42 +161,38 @@ const Scheduler = (props: ISchedulerProps) => {
   };
 
   const saveScheduleReport = () => {
-    // TODO : this is not the best practice..will be refactored in near future
     const dimentionsAndMeasures = setDimentionsAndMeasures(props.visual.fields);
+    const reportObj: ISchedulerReport = null;
+    reportObj.dashboardId = props.view.viewDashboard.id.toString();
+    reportObj.report.userId = '';
+    reportObj.report.connectionName = '';
+    reportObj.report.reportName = reportTitle;
+    reportObj.report.sourceId = 0;
+    reportObj.report.subject = '';
+    reportObj.report.titleName = reportTitle;
+    reportObj.report.mailBody = comments;
+    reportObj.report.dashboardName = props.view.viewDashboard.dashboardName;
+    reportObj.report.viewName = props.view.viewName;
+    reportObj.report.viewId = props.view.id;
+    reportObj.report.shareLink = '';
+    reportObj.report.buildUrl = '';
+    reportObj.report.thresholdAlert = false;
+    reportObj.reportLineItem.visualizationId = props.visual.id;
+    reportObj.reportLineItem.visualization = '';
+    reportObj.reportLineItem.dimensions = dimentionsAndMeasures.dimensions;
+    reportObj.reportLineItem.measures = dimentionsAndMeasures.measures;
+    reportObj.schedule.cronExp = '';
+    reportObj.schedule.timezone = '';
+    reportObj.schedule.startDate = startDate;
+    reportObj.schedule.endDate = endDate;
+    reportObj.queryDTO = buildQueryDTO(props.visual, props.filters);
 
-    props.scheduleReport({
+    const entity = {
       ...schedulerReportDefaultValue,
-      datasourceId: props.view.viewDashboard.dashboardDatasource.id,
-      dashboardId: props.view.viewDashboard.id.toString(),
-      report: {
-        userId: '',
-        connectionName: '',
-        reportName: reportTitle,
-        sourceId: 0,
-        subject: '',
-        titleName: reportTitle,
-        mailBody: comments,
-        dashboardName: props.view.viewDashboard.dashboardName,
-        viewName: props.view.viewName,
-        viewId: props.view.id,
-        shareLink: '',
-        buildUrl: '',
-        thresholdAlert: false,
-      },
-      reportLineItem: {
-        visualizationId: props.visual.id,
-        visualization: '',
-        dimensions: dimentionsAndMeasures.dimensions,
-        measures: dimentionsAndMeasures.measures,
-      },
-      schedule: {
-        cronExp,
-        timezone: '',
-        startDate,
-        endDate,
-      },
-      queryDTO: buildQueryDTO(props.visual, props.filters),
-    });
+      ...reportObj,
+    };
+
+    props.scheduleReport(entity);
   };
 
   return (

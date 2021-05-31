@@ -19,17 +19,10 @@ export const VisualizationDataModal = (props: IVisualizationDataModalProps) => {
     dialog.dismiss();
   };
 
-  const getTransactionData = () => {
-    setTransactionData(props.visual.data);
+  async function getTransactionData() {
+    await Promise.resolve(setTransactionData(props.visual.data));
     csvLink.current.link.click();
-  };
-  
-  // TODO : commented it for now
-  // const getTransactionData = async () => {
-  //   setTransactionData(props.visual.data);
-  //   csvLink.current.link.click();
-  // };
-
+  }
   return (
     <Dialog>
       <Heading level={4}>{props.visual?.titleProperties?.titleText}</Heading>

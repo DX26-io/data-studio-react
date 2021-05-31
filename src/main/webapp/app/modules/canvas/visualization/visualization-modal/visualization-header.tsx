@@ -16,7 +16,7 @@ import Copy from '@spectrum-icons/workflow/Copy';
 import 'app/modules/canvas/visualization/canvas.scss';
 import { IViews } from 'app/shared/model/views.model';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
-import  VisualizationEditModal  from './visualization-edit-modal/visualization-edit-modal-popup';
+import VisualizationEditModal from './visualization-edit-modal/visualization-edit-modal-popup';
 import { getVisualizationData } from '../util/visualization-render-utils';
 import { VisualizationDataModal } from './visualization-data-modal/visualizations-data-modal';
 import { CSVLink } from 'react-csv';
@@ -108,16 +108,10 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
     }
   };
 
-  // TODO : commented for now
-  // const getTransactionData = async () => {
-  //   await setTransactionData(props.visual.data);
-  //   csvLink.current.link.click();
-  // };
-
-  const getTransactionData =  () => {
-    setTransactionData(props.visual.data);
-    csvLink.current.link.click();
-  };
+  async function getTransactionData() {
+    await Promise.resolve(setTransactionData(props.visual.data));
+    return csvLink.current.link.click();
+  }
 
   useEffect(() => {
     if (dialog === 'Copy') {
@@ -264,7 +258,6 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  // visual: storeState.visualmetadata.visual, // TODO : commented it for now
   editAction: storeState.visualmetadata.editAction,
 
   featuresList: storeState.feature.entities,
