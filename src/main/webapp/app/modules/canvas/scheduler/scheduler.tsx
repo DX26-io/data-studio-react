@@ -11,9 +11,8 @@ import { Translate } from 'react-jhipster';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { buildQueryDTO } from '../visualization/util/visualization-render-utils';
 import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
-import { report } from 'process';
-import { ISchedulerReport, schedulerReportDefaultValue } from 'app/shared/model/scheduler-report.model';
 import { IEmail } from 'app/shared/model/email.model';
+import { schedulerReportDefaultValue } from 'app/shared/model/scheduler-report.model';
 export interface ISchedulerProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
 }
@@ -32,7 +31,8 @@ const Scheduler = (props: ISchedulerProps) => {
   const [userList, setUserList] = useState<IDropdown[]>();
   const [webHookList, setWebHookList] = useState<IDropdown[]>();
   const [selectedUserEmail, setSelectedUserEmail] = useState<IEmail[]>();
-  const [SelectedWebHooks, setSelectedWebHook] = useState<number[]>();
+  const [selectedWebHooks, setSelectedWebHook] = useState<any[]>();
+
   const [selectedChannel, setSelectedChannel] = useState<string[]>();
   const resetSelectedChannels = () => {
     const channels = [];
@@ -66,15 +66,15 @@ const Scheduler = (props: ISchedulerProps) => {
   }, [props.users]);
 
   useEffect(() => {
-    if (props.schedulerReport.report) {
-      setReportTitle(props.schedulerReport.report.titleName);
-      setComments(props.schedulerReport.report.mailBody);
-      setSelectedChannel(props.schedulerReport.assignReport.channels);
+    if (props.schedulerReport?.report) {
+      setReportTitle(props.schedulerReport?.report?.titleName);
+      setComments(props.schedulerReport?.report?.mailBody);
+      setSelectedChannel(props.schedulerReport?.assignReport?.channels);
 
-      setStartDate(props.schedulerReport.constraints.startDate);
-      setEndDate(props.schedulerReport.constraints.endDate);
-      setSelectedWebHook(props.schedulerReport.assignReport.communicationList.teams);
-      setCronExpression(props.schedulerReport.constraints.cronExp);
+      setStartDate(props.schedulerReport?.constraints?.startDate);
+      setEndDate(props.schedulerReport?.constraints?.endDate);
+      setSelectedWebHook(props.schedulerReport?.assignReport?.communicationList?.teams);
+      setCronExpression(props.schedulerReport?.constraints?.cronExp);
     }
   }, [props.schedulerReport]);
 
@@ -111,9 +111,9 @@ const Scheduler = (props: ISchedulerProps) => {
   };
 
   const handleChangeTeam = (value, actionMeta) => {
-    const teams = SelectedWebHooks || [];
+    const teams = selectedWebHooks || [];
     if (actionMeta.action === 'select-option') {
-      teams.push(actionMeta.option.value);
+      teams.push(actionMeta.option);
       setSelectedWebHook(teams);
     } else if (actionMeta.action === 'remove-value') {
       const postion = teams.indexOf(actionMeta.removedValue.value);
@@ -161,38 +161,51 @@ const Scheduler = (props: ISchedulerProps) => {
   };
 
   const saveScheduleReport = () => {
+    // TODO : this is not the best practice..will be refactored in near future
     const dimentionsAndMeasures = setDimentionsAndMeasures(props.visual.fields);
-    const reportObj: ISchedulerReport = null;
-    reportObj.dashboardId = props.view.viewDashboard.id.toString();
-    reportObj.report.userId = '';
-    reportObj.report.connectionName = '';
-    reportObj.report.reportName = reportTitle;
-    reportObj.report.sourceId = 0;
-    reportObj.report.subject = '';
-    reportObj.report.titleName = reportTitle;
-    reportObj.report.mailBody = comments;
-    reportObj.report.dashboardName = props.view.viewDashboard.dashboardName;
-    reportObj.report.viewName = props.view.viewName;
-    reportObj.report.viewId = props.view.id;
-    reportObj.report.shareLink = '';
-    reportObj.report.buildUrl = '';
-    reportObj.report.thresholdAlert = false;
-    reportObj.reportLineItem.visualizationId = props.visual.id;
-    reportObj.reportLineItem.visualization = '';
-    reportObj.reportLineItem.dimensions = dimentionsAndMeasures.dimensions;
-    reportObj.reportLineItem.measures = dimentionsAndMeasures.measures;
-    reportObj.schedule.cronExp = '';
-    reportObj.schedule.timezone = '';
-    reportObj.schedule.startDate = startDate;
-    reportObj.schedule.endDate = endDate;
-    reportObj.queryDTO = buildQueryDTO(props.visual, props.filters);
 
-    const entity = {
+    props.scheduleReport({
       ...schedulerReportDefaultValue,
-      ...reportObj,
-    };
-
-    props.scheduleReport(entity);
+      datasourceId: props.view.viewDashboard.dashboardDatasource.id,
+      dashboardId: props.view.viewDashboard.id.toString(),
+      constraints: {},
+      report: {
+        userId: '',
+        connectionName: '',
+        reportName: reportTitle,
+        sourceId: 0,
+        subject: '',
+        titleName: reportTitle,
+        mailBody: comments,
+        dashboardName: props.view.viewDashboard.dashboardName,
+        viewName: props.view.viewName,
+        viewId: props.view.id,
+        shareLink: '',
+        buildUrl: '',
+        thresholdAlert: false,
+      },
+      reportLineItem: {
+        visualizationId: props.visual.id,
+        visualizationType : '',
+        dimensions: dimentionsAndMeasures.dimensions,
+        measures: dimentionsAndMeasures.measures,
+      },
+      assignReport: {
+        channels: ['Teams'],
+        communicationList: {
+          emails: [],
+          teams: [1],
+        },
+      },
+      schedule: {
+        // pass fix for testing now
+        cronExp : "*/2 * * * *",
+        endDate : new Date('2021-06-02T12:15:21.780Z'),
+        startDate : new Date('2021-06-01T12:15:21.780Z'),
+        timezone: '',
+      },
+      queryDTO: buildQueryDTO(props.visual, props.filters),
+    });
   };
 
   return (
@@ -213,7 +226,7 @@ const Scheduler = (props: ISchedulerProps) => {
                 >
                   <Translate contentKey="entity.action.create">Create</Translate>
                 </Button>
-                {props.schedulerReport.report && (
+                {props.schedulerReport?.report && (
                   <Button
                     onPress={() => {
                       executeReport();
@@ -264,8 +277,8 @@ const Scheduler = (props: ISchedulerProps) => {
               options={webHookList}
               className="basic-multi-select"
               classNamePrefix="select"
-              value={SelectedWebHooks}
-              defaultValue={SelectedWebHooks}
+              value={selectedWebHooks}
+              defaultValue={selectedWebHooks}
             />
 
             <TextArea value={comments} onChange={setComments} label="Comments" />

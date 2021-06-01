@@ -68,7 +68,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
 
   const addFieldMeasure = () => {
     const fieldType = visualWrap.nextFieldMeasure(props.visual.fields, props.visual.metadataVisual);
-    if (!fieldType) {
+    if (fieldType) {
       const field = {
         fieldType,
         feature: null,
@@ -92,7 +92,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
 
   const addFieldDimension = () => {
     const fieldType = visualWrap.nextFieldDimension(props.visual.fields, props.visual.metadataVisual);
-    if (!fieldType) {
+    if (fieldType) {
       const field = {
         fieldType,
         feature: null,

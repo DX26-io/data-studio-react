@@ -20,6 +20,7 @@ import { renderVisualization, ValidateFields } from '../../util/visualization-re
 import { VisualWrap } from '../../util/visualmetadata-wrapper';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { receiveSocketResponseByVisualId } from 'app/shared/websocket/websocket.reducer';
+import { IViews } from 'app/shared/model/views.model';
 
 export interface IVisualizationEditModalProps extends StateProps, DispatchProps {
   id: number;
@@ -27,7 +28,7 @@ export interface IVisualizationEditModalProps extends StateProps, DispatchProps 
   visualizationId: string;
   setOpen: (isOpen: boolean) => void;
   filterData: any;
-  view: any;
+  view: IViews;
 }
 
 export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
