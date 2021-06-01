@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Translate, translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
 import Alert from '@spectrum-icons/workflow/Alert';
-import AlertCircle from '@spectrum-icons/workflow/AlertCircle';
 import {
   Picker,
   Flex,
@@ -42,6 +41,11 @@ import { generateOptions } from 'app/shared/util/entity-utils';
 import AddCircel from '@spectrum-icons/workflow/AddCircle';
 import RemoveCircle from '@spectrum-icons/workflow/RemoveCircle';
 import { isFormValid } from './datasource-constraints.util';
+import Separators from 'app/shared/components/separator/separators';
+import SeparatorInput from 'app/shared/components/separator/separator-input';
+import SeparatorIcon from 'app/shared/components/separator/separator-icon';
+import { addCommaSeparatedValuesIntoConstraint } from 'app/shared/components/separator/separator.util';
+import { SEPARATORS } from 'app/config/constants';
 
 export interface IDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
@@ -53,6 +57,8 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
   const [error, setError] = useState(defaultValue);
   const [login, setLogin] = React.useState('');
   const [datasourceName, setDatasourceName] = React.useState('');
+  const [separator, setSeparator] = useState(SEPARATORS[0].id);
+  const [featureConstraint, setFeatureConstraint] = useState();
 
   const dialog = useDialogContainer();
 
@@ -114,6 +120,21 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
     // }
   };
 
+  const dispatchCommaSeparatedValues = receivedCommaSeparatedvalues => {
+    const _constraint = addCommaSeparatedValuesIntoConstraint(receivedCommaSeparatedvalues, props.constraint, featureConstraint, separator);
+    props.setDatasourceConstraints(_constraint);
+  };
+
+  const toggleCommaSeparator = _featureConstraint => {
+    if (_featureConstraint['isCommaSeparatedInputOn'] !== undefined) {
+      _featureConstraint['isCommaSeparatedInputOn'] = !_featureConstraint['isCommaSeparatedInputOn'];
+    } else {
+      _featureConstraint['isCommaSeparatedInputOn'] = true;
+    }
+    setFeatureConstraint(_featureConstraint);
+    props.setDatasourceConstraints(props.constraint);
+  };
+
   const selectStyles = {
     control: styles => ({ ...styles, minWidth: '305px' }),
   };
@@ -131,6 +152,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
       </Heading>
       <Header data-testid="datasource-constraint-form-action">
         <Flex alignItems="center" gap="size-100">
+          <Separators setSeparator={setSeparator} />
           <Button variant="secondary" onPress={handleClose} data-testid="datasource-constraint-form-cancel">
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
@@ -232,6 +254,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                     props.setDatasourceConstraints(props.constraint);
                   }
                   setError(isFormValid(props.constraint));
+                  con['isCommaSeparatedInputOn'] = false;
                 }}
                 onInputChange={event => {
                   if (event) {
@@ -243,22 +266,36 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                 {item => <Item>{item.name}</Item>}
               </ComboBox>
               {/* TODO : this will be done once khushbu's pr is merged */}
-              <AsyncSelect
-                isDisabled={!props.constraint.datasource.id}
-                isClearable
-                isSearchable
-                isMulti
-                value={generateOptions(con.values)}
-                defaultValue={generateOptions(con.values)}
-                // options={generateOptions(con.values)}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                // onInputChange={loadFilters}
-                loadOptions={loadFilters}
-                // onChange={selectDatasource}
-                styles={selectStyles}
-                // defaultValue={{ value: datasource.name, label: datasource.name }}
-              />
+
+              {con.isCommaSeparatedInputOn ? (
+                <SeparatorInput values={con.values} dispatchCommaSeparatedValues={dispatchCommaSeparatedValues} separator={separator} />
+              ) : (
+                <AsyncSelect
+                  isDisabled={!props.constraint.datasource.id}
+                  isClearable
+                  isSearchable
+                  isMulti
+                  value={generateOptions(con.values)}
+                  defaultValue={generateOptions(con.values)}
+                  // options={generateOptions(con.values)}
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  // onInputChange={loadFilters}
+                  loadOptions={loadFilters}
+                  // onChange={selectDatasource}
+                  styles={selectStyles}
+                  // defaultValue={{ value: datasource.name, label: datasource.name }}
+                />
+              )}
+
+              <SeparatorIcon toggleCommaSeparator={toggleCommaSeparator} condition={con} />
+
+              {/* <ActionButton isQuiet onPress={()=>{
+                toggleCommaSeparator(con);
+              }}>
+                <Separator size="S" />
+              </ActionButton> */}
+
               <ActionButton
                 isQuiet
                 onPress={() => {
@@ -267,6 +304,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
               >
                 <AddCircel size="S" />
               </ActionButton>
+
               {i !== 0 ? (
                 <ActionButton
                   isQuiet
