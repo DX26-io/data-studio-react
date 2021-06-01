@@ -186,7 +186,7 @@ const Scheduler = (props: ISchedulerProps) => {
       },
       reportLineItem: {
         visualizationId: props.visual.id,
-        visualization : '',
+        visualizationType: '',
         dimensions: dimentionsAndMeasures.dimensions,
         measures: dimentionsAndMeasures.measures,
       },
