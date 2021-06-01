@@ -36,6 +36,24 @@ import dashboard, {
 import views, {
   ViewsState
 } from 'app/entities/views/views.reducer';
+// prettier-ignore
+import feature, {
+  FeatureState
+} from 'app/entities/feature/feature.reducer';
+// prettier-ignore
+import visualizations, {
+  VisualizationsState
+} from 'app/entities/visualizations/visualizations.reducer';
+// prettier-ignore
+import visualmetadata, {
+  VisualmetadataState
+} from 'app/entities/visualmetadata/visualmetadata.reducer';
+import filter, { FilterState } from 'app/modules/canvas/filter/filter.reducer';
+import scheduler, { SchedulerState } from 'app/modules/canvas/scheduler/scheduler.reducer';
+import notification, { notificationState } from 'app/modules/canvas/scheduler/notification.reducer';
+import functions, { FunctionState } from 'app/entities/functions/function.reducer';
+import search, { SearchState } from 'app/entities/search/search.reducer';
+
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -57,13 +75,21 @@ export interface IRootState {
   readonly datasources: DatasourcesState;
   readonly datasourceSteps: DatasourceStepsState;
   readonly views: ViewsState;
+  readonly feature: FeatureState;
+  readonly functions: FunctionState;
+  readonly visualizations: VisualizationsState;
+  readonly visualmetadata: VisualmetadataState;
+  readonly search: SearchState;
+  /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
+  readonly loadingBar: any;
+  readonly filter: FilterState;
+  readonly scheduler: SchedulerState;
+  readonly notification: notificationState;
   readonly home: HomeState;
   readonly recent: RecentState;
   readonly reportConfiguration: ReportConfigurationState;
   readonly reportsManagement: ReportsManagementState;
   readonly visualizationData: VisualDataState;
-  /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
-  readonly loadingBar: any;
 }
 
 const rootReducer = combineReducers<IRootState>({
@@ -85,13 +111,21 @@ const rootReducer = combineReducers<IRootState>({
   dashboard,
   datasources,
   views,
+  feature,
+  functions,
+  visualizations,
+  visualmetadata,
+  search,
+  /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
+  loadingBar,
+  filter,
+  scheduler,
+  notification,
   home,
+  recent,
   reportConfiguration,
   reportsManagement,
   visualizationData,
-  /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
-  loadingBar,
-  recent,
 });
 
 export default rootReducer;

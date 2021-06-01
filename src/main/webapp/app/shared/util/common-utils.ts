@@ -9,3 +9,31 @@ export const getFirstLettersFromString = (stringText: string): string => {
   else finalString = splitString[0].slice(0, 2);
   return finalString.toUpperCase();
 };
+
+export const parseBool = str => {
+  if (!str && str.length === 0) {
+    return str === 1 ? true : false;
+  } else {
+    if (typeof str === 'boolean') {
+      return str;
+    } else {
+      return str.toLowerCase() === 'true' ? true : false;
+    }
+  }
+};
+
+export const parseString = str => {
+  if (str) {
+    return str;
+  } else {
+    return '';
+  }
+};
+
+export const isCanvas = () => {
+  if (window.location.href.endsWith('build')) {
+    return true;
+  } else {
+    return false;
+  }
+};

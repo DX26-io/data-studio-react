@@ -38,3 +38,12 @@ Development Ribbon
     pointer-events: none;
   }
 }
+.disableEdit {
+  line-height: 0;
+}
+.enableEdit {
+  line-height: 0;
+  svg {
+    fill: var(--spectrum-semantic-informative-color-icon) !important;
+  }
+}

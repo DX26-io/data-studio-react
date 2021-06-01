@@ -18,6 +18,7 @@ import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import ErrorBoundary from 'app/shared/error/error-boundary';
 import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
+import { isCanvas } from './shared/util/common-utils';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
 
@@ -42,27 +43,17 @@ export const App = (props: IAppProps) => {
       >
         <View gridArea="header">
           <ErrorBoundary>
-            {props.isHome ? (
-              <HomeHeader
-                isAuthenticated={props.isAuthenticated}
-                isAdmin={props.isAdmin}
-                currentLocale={props.currentLocale}
-                onLocaleChange={props.setLocale}
-                ribbonEnv={props.ribbonEnv}
-                isInProduction={props.isInProduction}
-                isSwaggerEnabled={props.isSwaggerEnabled}
-              />
-            ) : (
-              <Header
-                isAuthenticated={props.isAuthenticated}
-                isAdmin={props.isAdmin}
-                currentLocale={props.currentLocale}
-                onLocaleChange={props.setLocale}
-                ribbonEnv={props.ribbonEnv}
-                isInProduction={props.isInProduction}
-                isSwaggerEnabled={props.isSwaggerEnabled}
-              />
-            )}
+            <Header
+              isAuthenticated={props.isAuthenticated}
+              isAdmin={props.isAdmin}
+              currentLocale={props.currentLocale}
+              onLocaleChange={props.setLocale}
+              ribbonEnv={props.ribbonEnv}
+              isInProduction={props.isInProduction}
+              isSwaggerEnabled={props.isSwaggerEnabled}
+              isCanvas={props.isCanvas}
+
+            />
           </ErrorBoundary>
         </View>
         <View gridArea="content" flex={true} alignSelf={'stretch'} backgroundColor="default">
@@ -100,7 +91,7 @@ const mapStateToProps = ({ authentication, applicationProfile, locale, home }: I
   ribbonEnv: applicationProfile.ribbonEnv,
   isInProduction: applicationProfile.inProduction,
   isSwaggerEnabled: applicationProfile.isSwaggerEnabled,
-  isHome: home.isHome,
+  isCanvas: isCanvas()
 });
 
 const mapDispatchToProps = { setLocale, getSessionWithPath, getProfile };

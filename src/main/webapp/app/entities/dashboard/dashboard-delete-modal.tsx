@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactText, useEffect, useState } from 'react';
 import { Button, ButtonGroup, Content, Dialog, DialogContainer, Divider, Heading, TextField } from '@adobe/react-spectrum';
 import { deleteEntity, getEntity } from './dashboard.reducer';
 import { IRootState } from 'app/shared/reducers';
@@ -9,9 +9,8 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 export interface IDashboardDeleteModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 const DashboardDeleteModal = (props: IDashboardDeleteModalProps) => {
-  const dashboardNameLabel = translate('dashboard.dashboard_name');
   const history = useHistory();
-  const [dashboardNameConfirmation, setDashboardNameConfirmation] = useState<React.ReactText>('');
+  const [dashboardNameConfirmation, setDashboardNameConfirmation] = useState<ReactText>('');
   const handleDelete = () => {
     props.deleteEntity(props.match.params.id);
   };
@@ -47,8 +46,8 @@ const DashboardDeleteModal = (props: IDashboardDeleteModalProps) => {
           </Translate>
           <TextField
             marginTop="size-250"
-            label={dashboardNameLabel}
-            placeholder={dashboardNameLabel}
+            label={translate('dashboard.dashboard_name')}
+            placeholder={translate('dashboard.dashboard_name')}
             isRequired
             isQuiet
             width="size-3600"

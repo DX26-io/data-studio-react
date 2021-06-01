@@ -26,6 +26,11 @@ const Admin = Loadable({
   loading: () => <div>loading ...</div>,
 });
 
+const Canvas = Loadable({
+  loader: () => import(/* webpackChunkName: "Dx26" */ 'app/modules/canvas/visualization'),
+  loading: () => <div>loading ...</div>,
+});
+
 const Routes = () => (
   <div className="view-routes">
     <Switch>
@@ -37,7 +42,9 @@ const Routes = () => (
       <ErrorBoundaryRoute path="/account/activate/:key?" component={Activate} />
       <ErrorBoundaryRoute path="/account/reset/request" component={PasswordResetInit} />
       <ErrorBoundaryRoute path="/account/reset/finish/:key?" component={PasswordResetFinish} />
-      <PrivateRoute path="/administration" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN]} />
+      <ErrorBoundaryRoute path="/canvas" component={Canvas} />
+
+      <PrivateRoute path="/admin" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN]} />
       <PrivateRoute path="/account" component={Account} hasAnyAuthorities={[AUTHORITIES.ADMIN, AUTHORITIES.USER]} />
       <PrivateRoute path="/" exact component={Home} hasAnyAuthorities={[AUTHORITIES.USER]} />
       <PrivateRoute path="/" component={Entities} hasAnyAuthorities={[AUTHORITIES.USER]} />

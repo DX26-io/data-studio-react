@@ -9,6 +9,9 @@
         "main": "Entities",
         "dashboard": "Dashboard",
         "views": "Views",
+        "feature": "Feature",
+        "visualizations": "Visualizations",
+        "visualmetadata": "Visualmetadata",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
@@ -99,16 +102,22 @@
       "cancel": "Close",
       "delete": "Delete",
       "edit": "Edit",
+      "update": "Update",
       "open": "Open",
       "save": "Save",
       "view": "View",
-      "manage": "Manage",
       "create": "Create",
-      "dangerZone": "Danger Zone",
-      "next": "Next",
-      "finish": "Finish",
-      "reset": "Reset",
-      "search": "Search"
+      "apply": "Apply",
+      "discard": "Discard",
+      "export": "Export",
+      "data": "Data",
+      "more": "More",
+      "share": "Share",
+      "copy": "Copy",
+      "runnow": "Run Now",
+      "pin": "Pin",
+      "savebookmark": "Save as bookmark",
+      "createview": "Create view"
     },
     "options": {
       "more_options": "More options",
@@ -116,7 +125,8 @@
       "properties": "Properties",
       "release": "Release",
       "delete": "Delete",
-      "no_description": "no description"
+      "no_description": "no description",
+      "filter": "Filter"
     },
     "detail": {
       "field": "Field",

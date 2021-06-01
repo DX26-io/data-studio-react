@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactText, useEffect, useState } from 'react';
 import { Dialog, Heading, Divider, Content, ButtonGroup, Button, DialogContainer, TextField } from '@adobe/react-spectrum';
 import { getEntity, deleteEntity } from './views.reducer';
 import { IRootState } from 'app/shared/reducers';
@@ -8,9 +8,8 @@ import { RouteComponentProps, useHistory } from 'react-router-dom';
 export interface IViewDeleteModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string; viewId: string }> {}
 
 const ViewDeleteModal = (props: IViewDeleteModalProps) => {
-  const viewNameLabel = translate('views.viewName');
   const history = useHistory();
-  const [viewNameConfirmation, setViewNameConfirmation] = useState<React.ReactText>('');
+  const [viewNameConfirmation, setViewNameConfirmation] = useState<ReactText>('');
   const viewId = props.match.params.viewId;
   const dashboardId = props.match.params.id;
 
@@ -52,8 +51,8 @@ const ViewDeleteModal = (props: IViewDeleteModalProps) => {
           <br />
           <TextField
             marginTop="size-250"
-            label={viewNameLabel}
-            placeholder={viewNameLabel}
+            label={translate('views.viewName')}
+            placeholder={translate('views.viewName')}
             isRequired={true}
             isQuiet={true}
             width="size-3600"

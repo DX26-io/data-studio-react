@@ -1,0 +1,31 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "datasourceId",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "dateFilter",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "definition",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "favouriteFilter",
+      "fieldType": "Boolean"
+    }
+  ],
+  "dto": "no",
+  "searchEngine": false,
+  "service": "no",
+  "entityTableName": "feature",
+  "databaseType": "postgres",
+  "readOnly": false,
+  "jpaMetamodelFiltering": false,
+  "pagination": "no"
+}

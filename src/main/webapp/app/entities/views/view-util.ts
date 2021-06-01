@@ -1,3 +1,4 @@
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { translate } from 'react-jhipster';
 import { IPayload, IPayloadResult } from 'react-jhipster/src/type/redux-action.type';
 
@@ -17,32 +18,11 @@ export type ICrudGetDashboardViewsAction<T> = (
 ) => IPayload<T> | ((dispatch: any) => IPayload<T>);
 
 /**
- * This method returns an object that contains view form labels
+ * This is a special type for store all data type
  */
-export const getViewFromTranslations = (): any => {
-  return {
-    VIEW_LABEL: translate('views.viewName'),
-    DESCRIPTION_LABEL: translate('views.description'),
-  };
-};
+export type ISaveViewState<T> = (visualmetaDataDTO: IViewStateDTO) => IPayload<T> | ((dispatch: any) => IPayload<T>);
 
-/**
- * This method returns an object that contains dashboard success translations
- */
-export const getViewSuccessTranslations = (): any => {
-  return {
-    SUCCESS_LABEL: translate('views.created.header'),
-    SUCCESS_CLOSE_LABEL: translate('entity.action.cancel'),
-    PRIMARY_ACTION_LABEL: translate('entity.action.open'),
-  };
-};
-
-/**
- * This method returns an object that contains dashboard error translations
- */
-export const getViewErrorTranslations = (): any => {
-  return {
-    ERROR_LABEL: translate('views.error.header'),
-    ERROR_CLOSE_LABEL: translate('entity.action.cancel'),
-  };
-};
+export interface IViewStateDTO {
+  visualMetadataSet: IVisualMetadataSet[];
+  _id: number;
+}

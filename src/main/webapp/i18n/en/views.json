@@ -44,6 +44,33 @@
     "error": {
       "header": "Error",
       "content": "Error saving view"
+    },
+    "editConfiguration": {
+      "properties": {
+        "chartProperties": "Chart Properties",
+        "dataProperties": "Data Properties",
+        "hierarchy": "Hierarchy"
+      },
+      "settings": {
+        "query": "Query",
+        "dataConstraints": "Data Constraints",
+        "thresholdAlert": "Threshold Alert",
+        "data": "Data"
+      }
+    },
+    "features": {
+      "tabs": {
+        "dimensions": "Dimensions",
+        "measures": "Measures"
+      }
+    },
+    "menu": {
+      "toggle.search": "Toggle search",
+      "search": "Search"
+    },
+    "search": {
+      "title": "Search",
+      "search": "Search"
     }
   }
 }

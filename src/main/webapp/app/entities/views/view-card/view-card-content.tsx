@@ -5,16 +5,18 @@ import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
 import { IDashboard } from 'app/shared/model/dashboard.model';
 import { Redirect } from 'react-router-dom';
+import { hasAuthority } from 'app/shared/reducers/authentication';
 
 interface IViewCardContentProps {
   viewDashboard: IDashboard;
   viewName: string;
   description: string;
   viewId: number;
+  account: any;
 }
 
 const ViewCardContent: React.FC<IViewCardContentProps> = props => {
-  const { viewName, viewId, description, viewDashboard } = props;
+  const { viewName, viewId, description, viewDashboard, account } = props;
   const [redirect, setRedirect] = useState<ReactText>('');
 
   return (
@@ -42,13 +44,15 @@ const ViewCardContent: React.FC<IViewCardContentProps> = props => {
                     </Text>
                   </Item>
                 </Section>
-                <Section title={<Translate contentKey="entity.options.danger">Danger</Translate>}>
-                  <Item key="delete">
-                    <Text>
-                      <Translate contentKey="entity.options.delete">Delete</Translate>
-                    </Text>
-                  </Item>
-                </Section>
+                {account &&  hasAuthority(props.account, 'DELETE_' + viewId + '_VIEW') && (
+                  <Section title={<Translate contentKey="entity.options.danger">Danger</Translate>}>
+                    <Item key="delete">
+                      <Text>
+                        <Translate contentKey="entity.options.delete">Delete</Translate>
+                      </Text>
+                    </Item>
+                  </Section>
+                )}
               </Menu>
             </MenuTrigger>
 

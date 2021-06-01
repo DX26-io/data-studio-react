@@ -51,7 +51,8 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
         key={recent.view.id}
         thumbnail={
           <View height="size-3200">
-            <ViewCardThumbnail thumbnailImagePath={recent.view.imageLocation} viewName={recent.view.viewName} />
+            {/* TODO: added empty string as url for now */}
+            <ViewCardThumbnail thumbnailImagePath={recent.view.imageLocation} viewName={recent.view.viewName} url='' />
           </View>
         }
         content={
@@ -60,6 +61,7 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
             description={recent.view.description}
             viewName={recent.view.viewName}
             viewId={recent.view.id}
+            account={props.account}
           />
         }
       />
@@ -72,11 +74,11 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
         key={view.id}
         thumbnail={
           <View height="size-3200">
-            <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName} />
+            <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName} url=''/>
           </View>
         }
         content={
-          <ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} />
+          <ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} account={props.account}/>
         }
       />
     );
@@ -113,6 +115,7 @@ const mapStateToProps = storeState => ({
   recentlyAccessedViews: storeState.recent.recentlyAccessedViews,
   popularViews: storeState.recent.popularViews,
   loading: storeState.recent.loading,
+  account: storeState.authentication.account
 });
 
 const mapDispatchToProps = { getMostPopularViews, getRecentlyAccessedBookmarks, getRecentViews };

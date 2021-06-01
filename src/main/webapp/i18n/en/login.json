@@ -59,11 +59,11 @@
   },
   "flairbiApp": {
     "realm": {
-      "created": "Realm created"
+      "created": "Realm created successfully"
     },
-    "signup": {
-      "username_exists": "Username already exists, please choose another one",
-      "email_exists": "Email already exists, please choose another one"
+    "features": {
+      "created": "Feature created successfully",
+      "updated": "Feature created updated"
     }
   }
 }

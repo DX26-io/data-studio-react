@@ -12,6 +12,11 @@ import Views from '../views/views';
 import ViewCreateModal from '../views/view-create-modal';
 import ViewDeleteModal from '../views/view-delete-modal';
 import ViewPropertiesModal from '../views/view-properties-modal';
+import Canvas from 'app/modules/canvas/visualization/canvas';
+import VisualizationEditModal from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal';
+import VisualizationsDeleteModal from 'app/modules/canvas/visualization/visualization-modal/visualization-delete-modal/visualizations-delete-modal';
+import FeaturesCreateModal from "app/modules/canvas/features/modals/create/features-create-modal";
+import SearchModal from "app/entities/search/search-modal";
 
 const Routes = ({ match }) => (
   <>
@@ -21,8 +26,16 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={DashboardDeleteModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/properties`} component={ViewPropertiesModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/delete`} component={ViewDeleteModal} />
+      <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/search`} component={SearchModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/create`} component={ViewCreateModal} />
+      <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/build`} component={Canvas} />
+
+      <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/edit/:visualizationId`} component={VisualizationEditModal} />
+      <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/delete/:visualizationId`} component={VisualizationsDeleteModal} />
+
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={Views} />
+
+      <ErrorBoundaryRoute path={`${match.url}/:id/:viewId/feature`} component={FeaturesCreateModal} />
       <ErrorBoundaryRoute path={match.url} component={Dashboard} />
     </Switch>
   </>

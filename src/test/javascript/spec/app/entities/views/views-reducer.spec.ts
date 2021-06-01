@@ -16,6 +16,7 @@ import reducer, {
 } from 'app/entities/views/views.reducer';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IViews, defaultValue } from 'app/shared/model/views.model';
+import { IVisualMetadata } from 'app/shared/model/visual-meta-data.model';
 
 describe('Entities reducer tests', () => {
   function isEmpty(element): boolean {
@@ -34,6 +35,7 @@ describe('Entities reducer tests', () => {
     totalItems: 0,
     updating: false,
     updateSuccess: false,
+    viewState: {} as IVisualMetadata,
   };
 
   function testInitialState(state) {

@@ -1,0 +1,27 @@
+{
+  "datastudioApp": {
+    "visualmetadata": {
+      "home": {
+        "title": "Visualmetadata",
+        "createLabel": "Create a new Visualmetadata",
+        "createOrEditLabel": "Create or edit a Visualmetadata",
+        "notFound": "No Visualmetadata found",
+        "deleteDashboard": "Delete Visualizations"
+      },
+      "created": "A new Visualmetadata is created with identifier {{ param }}",
+      "updated": "A Visualmetadata is updated with identifier {{ param }}",
+      "deleted": "A Visualmetadata is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "This will permanently delete the selected <strong>{{ name }}</strong> visualization. If you wish to continue type <em>{{ name }}</em> and click on delete."
+      },
+      "detail": {
+        "title": "Visualmetadata"
+      },
+      "height": "Height",
+      "width": "Width",
+      "visualBuildId": "Visual Build Id",
+      "SelectMeasure": "Select measure",
+      "SelectDimension": "Select dimension"
+    }
+  }
+}

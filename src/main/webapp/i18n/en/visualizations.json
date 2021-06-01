@@ -1,0 +1,23 @@
+{
+  "datastudioApp": {
+    "visualizations": {
+      "home": {
+        "title": "Visualizations",
+        "createLabel": "Create a new Visualizations",
+        "createOrEditLabel": "Create or edit a Visualizations",
+        "notFound": "No Visualizations found"
+      },
+      "created": "A new Visualizations is created with identifier {{ param }}",
+      "updated": "A Visualizations is updated with identifier {{ param }}",
+      "deleted": "A Visualizations is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Visualizations {{ id }}?"
+      },
+      "detail": {
+        "title": "Visualizations"
+      },
+      "name": "Name",
+      "functionname": "Functionname"
+    }
+  }
+}

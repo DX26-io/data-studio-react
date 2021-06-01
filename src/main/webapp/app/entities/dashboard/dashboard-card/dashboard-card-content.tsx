@@ -4,6 +4,8 @@ import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
 import { Redirect } from 'react-router-dom';
+import { hasAuthority } from 'app/shared/reducers/authentication';
+import { IAccount } from 'app/shared/model/account.model';
 
 interface IDashboardCardContentProps {
   dashboardName: string;
@@ -11,10 +13,11 @@ interface IDashboardCardContentProps {
   dashboardDescription: string;
   dashboardId: number;
   datasource: string;
+  account: IAccount;
 }
 
 const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
-  const { dashboardName, dashboardType, dashboardDescription, dashboardId } = props;
+  const { dashboardName, dashboardType, dashboardDescription, dashboardId, account } = props;
   const [redirect, setRedirect] = useState<ReactText>('');
 
   return (
@@ -45,13 +48,15 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
                     </Text>
                   </Item>
                 </Section>
-                <Section title={<Translate contentKey="entity.options.danger">Danger</Translate>}>
-                  <Item key="delete">
-                    <Text>
-                      <Translate contentKey="entity.options.delete">Delete</Translate>
-                    </Text>
-                  </Item>
-                </Section>
+                {account && hasAuthority(account, 'DELETE_' + dashboardId + '_DASHBOARDS') && (
+                  <Section title={<Translate contentKey="entity.options.danger">Danger</Translate>}>
+                    <Item key="delete">
+                      <Text>
+                        <Translate contentKey="entity.options.delete">Delete</Translate>
+                      </Text>
+                    </Item>
+                  </Section>
+                )}
               </Menu>
             </MenuTrigger>
             <TooltipTrigger delay={0} placement="end">

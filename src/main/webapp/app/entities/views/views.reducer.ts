@@ -5,12 +5,15 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
 
 import { defaultValue, IViews } from 'app/shared/model/views.model';
+import { IVisualMetadataSet, IVisualMetadata } from 'app/shared/model/visual-meta-data.model';
+
 import { getDefaultInitialPaginationState } from 'app/shared/util/pagination-utils';
-import { ICrudGetDashboardViewsAction, ICrudViewDeleteAction } from './view-util';
+import { ICrudGetDashboardViewsAction, ICrudViewDeleteAction, ISaveViewState, IViewStateDTO } from './view-util';
 
 export const ACTION_TYPES = {
   FETCH_VIEWS_LIST: 'views/FETCH_VIEWS_LIST',
   FETCH_VIEWS: 'views/FETCH_VIEWS',
+  FETCH_VIEWS_STATE: 'views/FETCH_VIEWS_STATE',
   CREATE_VIEWS: 'views/CREATE_VIEWS',
   UPDATE_VIEWS: 'views/UPDATE_VIEWS',
   DELETE_VIEWS: 'views/DELETE_VIEWS',
@@ -26,6 +29,7 @@ const initialState = {
   updating: false,
   totalItems: 0,
   updateSuccess: false,
+  viewState: {} as IVisualMetadata,
 };
 
 export type ViewsState = Readonly<typeof initialState>;
@@ -36,6 +40,7 @@ export default (state: ViewsState = initialState, action): ViewsState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_VIEWS_LIST):
     case REQUEST(ACTION_TYPES.FETCH_VIEWS):
+    case REQUEST(ACTION_TYPES.FETCH_VIEWS_STATE):
       return {
         ...state,
         errorMessage: null,
@@ -53,6 +58,7 @@ export default (state: ViewsState = initialState, action): ViewsState => {
       };
     case FAILURE(ACTION_TYPES.FETCH_VIEWS_LIST):
     case FAILURE(ACTION_TYPES.FETCH_VIEWS):
+    case FAILURE(ACTION_TYPES.FETCH_VIEWS_STATE):
     case FAILURE(ACTION_TYPES.CREATE_VIEWS):
     case FAILURE(ACTION_TYPES.UPDATE_VIEWS):
     case FAILURE(ACTION_TYPES.DELETE_VIEWS):
@@ -69,6 +75,12 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         loading: false,
         entities: action.payload.data,
         totalItems: parseInt(action.payload.headers['x-total-count'], 10),
+      };
+    case SUCCESS(ACTION_TYPES.FETCH_VIEWS_STATE):
+      return {
+        ...state,
+        loading: false,
+        viewState: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.FETCH_VIEWS):
       return {
@@ -114,6 +126,24 @@ export default (state: ViewsState = initialState, action): ViewsState => {
 const apiUrl = 'api/views';
 
 // Actions
+
+export const getCurrentViewState: ICrudGetDashboardViewsAction<IVisualMetadataSet> = viewId => {
+  const requestUrl = `${apiUrl}/${viewId}/viewState`;
+  return {
+    type: ACTION_TYPES.FETCH_VIEWS_STATE,
+    payload: axios.get<IVisualMetadataSet>(`${requestUrl}?cacheBuster=${new Date().getTime()}`),
+  };
+};
+
+export const saveViewState: ICrudPutAction<IViewStateDTO> = entity => async dispatch => {
+  const requestUrl = `${apiUrl}/${entity._id}/viewState`;
+  const result = await dispatch({
+    type: ACTION_TYPES.FETCH_VIEWS_STATE,
+    payload: axios.put(requestUrl, cleanEntity(entity)),
+  });
+  dispatch(getCurrentViewState(entity._id));
+  return result;
+};
 
 export const getDashboardViewEntities: ICrudGetDashboardViewsAction<IViews> = (dashboardId, page, size, sort) => {
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}&viewDashboard=${dashboardId}&paginate=true`;
