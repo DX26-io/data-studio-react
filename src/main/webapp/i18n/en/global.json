@@ -149,6 +149,16 @@
       "patternLogin": "This field can only contain letters, digits and e-mail addresses."
     }
   },
+  "separators": {
+    "placeholder": "Select Separator",
+    "inputPlaceholder": "Add comma separated values",
+    "tooltipCommaSeparatedOn": "Click here, to add comma separated values",
+    "tooltipCommaSeparatedOff": "Click here, to go back to search box",
+    "comma": "Data Separator Comma[,]",
+    "space": "Data Separator Space[]",
+    "pipe": "Data Separator Pipe[|]",
+    "colon": "Data Separator Colon[:]"
+  },
   "error": {
     "internalServerError": "Internal server error",
     "accessDenied": "Access denied",
