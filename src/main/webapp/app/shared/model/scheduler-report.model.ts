@@ -34,14 +34,14 @@ export const reportDefaultValue: Readonly<IReport> = {
 
 export interface IReportLineItem {
   visualizationId: any;
-  visualization: string;
+  visualizationType: string;
   dimensions: Array<string>;
   measures: Array<string>;
 }
 
 export const reportLineItemDefaultValue: Readonly<IReportLineItem> = {
   visualizationId: '',
-  visualization: '',
+  visualizationType: '',
   dimensions: [],
   measures: [],
 };
@@ -100,7 +100,7 @@ export interface ISchedulerReport {
   queryDTO: any;
   //   query: any;
   constraints: any;
-  putcall: boolean;
+  putCall: boolean;
   emailReporter: boolean;
 }
 
@@ -114,6 +114,6 @@ export const schedulerReportDefaultValue: Readonly<ISchedulerReport> = {
   queryDTO: {},
   //   query: any;
   constraints: {},
-  putcall: false,
+  putCall: false,
   emailReporter: false,
 };
