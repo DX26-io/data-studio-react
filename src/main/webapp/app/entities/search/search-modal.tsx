@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   Button,
   ButtonGroup,
@@ -18,14 +18,13 @@ import {IRootState} from 'app/shared/reducers';
 import {connect} from 'react-redux';
 import {translate, Translate} from 'react-jhipster';
 import {RouteComponentProps} from 'react-router-dom';
-import {disconnectSocket, receiveSocketResponse, resetSearch} from "app/entities/search/search.reducer";
-import {searchCall} from "app/shared/websocket/proxy-websocket.service";
+import {disconnectSocket, receiveSocketResponse, resetSearch, searchChange} from "app/entities/search/search.reducer";
+import {searchCall, searchItemSelected} from "app/shared/websocket/proxy-websocket.service";
 
 export interface ISearchModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string, viewId: string }> {}
 
 const SearchModal = (props: ISearchModalProps) => {
   const viewId = props.match.params.viewId;
-  const [searchText, setSearchText] = useState('')
 
   const closeSearch = () => {
     props.history.push(`/dashboards/${props.match.params.id}/${props.match.params.viewId}/build`);
@@ -39,7 +38,7 @@ const SearchModal = (props: ISearchModalProps) => {
 
   useEffect(() => {
     props.receiveSocketResponse();
-    return disconnectSocket;
+    return props.disconnectSocket;
   }, []);
 
   const handleClose = () => {
@@ -50,18 +49,14 @@ const SearchModal = (props: ISearchModalProps) => {
 
   };
 
-  const load = (value) => {
-    searchCall(viewId, {text: value});
-  };
-
   const onSearchTextChange = (value) => {
-    setSearchText(value);
-    load(value);
+    props.searchChange(value);
+    searchCall(viewId, {text: value});
   };
 
   const onAutoSuggestionItemChange = (selectedSet) => {
     const item = props.autoSuggestion.find((ft) => selectedSet.has(ft.text));
-    setSearchText(item.text);
+    searchItemSelected(viewId, {text: props.searchText, item: item.text});
   };
 
   return (
@@ -83,7 +78,7 @@ const SearchModal = (props: ISearchModalProps) => {
                 </Text>
                 <TextField
                   label={translate('views.search.search')}
-                  value={searchText}
+                  value={props.searchText}
                   onChange={onSearchTextChange}
                 />
                 <ListBox
@@ -121,12 +116,14 @@ const SearchModal = (props: ISearchModalProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   isSearchOpen: storeState.search.isSearchOpen,
   autoSuggestion: storeState.search.autoSuggestion,
+  searchText: storeState.search.searchText,
 });
 
 const mapDispatchToProps = {
   resetSearch,
   receiveSocketResponse,
   disconnectSocket,
+  searchChange,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
