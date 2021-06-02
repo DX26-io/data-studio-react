@@ -66,7 +66,7 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
           {filters &&
             filters.length > 0 &&
             filters.map((item, i) => {
-              if (props.selectedFilter[item].length > 0) {
+              if (props.selectedFilter && props.selectedFilter[item] && props.selectedFilter[item].length > 0) {
                 return (
                   <>
                     <View>
