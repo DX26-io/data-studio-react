@@ -1,15 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import { Dialog, Heading, Divider, Content, ButtonGroup, Button, useDialogContainer, View, Form, TextField } from '@adobe/react-spectrum';
-import { IRootState } from 'app/shared/reducers';
-import { connect } from 'react-redux';
-import { Translate } from 'react-jhipster';
-import TableView from 'app/shared/components/table/table';
-import { CSVLink } from 'react-csv';
 
-export interface IVisualizationShareModalProps {}
-
-export const VisualizationShareModal = (props: IVisualizationShareModalProps) => {
+export const VisualizationShareModal = () => {
   const dialog = useDialogContainer();
+
+  const copyDashboardUrl = () => {
+    navigator.clipboard.writeText(window.location.href);
+    dialog.dismiss();
+  };
 
   return (
     <Dialog>
@@ -25,9 +23,9 @@ export const VisualizationShareModal = (props: IVisualizationShareModalProps) =>
           Cancel
         </Button>
         <Button
-          onPress={() => {
-            navigator.clipboard.writeText(window.location.href);
-          }}
+          onPress={
+            copyDashboardUrl
+          }
           variant="cta"
         >
           Copy
