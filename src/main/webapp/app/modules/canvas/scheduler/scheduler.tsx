@@ -66,7 +66,7 @@ const Scheduler = (props: ISchedulerProps) => {
   }, [props.users]);
 
   useEffect(() => {
-    if (props.schedulerReport?.report) {
+    if (props.schedulerReport?.reportLineItem.visualizationId) {
       setReportTitle(props.schedulerReport?.report?.titleName);
       setComments(props.schedulerReport?.report?.mailBody);
       setSelectedChannel(props.schedulerReport?.assignReport?.channels);
@@ -143,21 +143,18 @@ const Scheduler = (props: ISchedulerProps) => {
   };
 
   const setReportChannels = item => {
-    const channelsObj = selectedChannel || [];
-    // if (channelsObj.indexOf(item.key) === -1) {
-    if (channelsObj.includes(item.key)) {
-      channelsObj.push(item.key);
-    } else {
-      channelsObj.splice(channelsObj.indexOf(item.key), 1);
-    }
-    setSelectedChannel(channelsObj);
+    const channelsObj = [];
     const list = channelsList;
     list.forEach(element => {
       if (element.key === item.key) {
         item.value = !element.value;
       }
+      if (element.value) {
+        channelsObj.push(element.key);
+      }
     });
     setChannels(list);
+    setSelectedChannel(channelsObj);
   };
 
   const saveScheduleReport = () => {
@@ -168,20 +165,20 @@ const Scheduler = (props: ISchedulerProps) => {
       ...schedulerReportDefaultValue,
       datasourceId: props.view.viewDashboard.dashboardDatasource.id,
       dashboardId: props.view.viewDashboard.id.toString(),
-      constraints: {},
+      constraints: null,
       report: {
         userId: '',
         connectionName: '',
         reportName: reportTitle,
         sourceId: 0,
-        subject: '',
+        subject: 'subject',
         titleName: reportTitle,
         mailBody: comments,
         dashboardName: props.view.viewDashboard.dashboardName,
         viewName: props.view.viewName,
         viewId: props.view.id,
-        shareLink: '',
-        buildUrl: '',
+        shareLink: 'shareLink',
+        buildUrl: 'buildUrl',
         thresholdAlert: false,
       },
       reportLineItem: {
@@ -191,17 +188,16 @@ const Scheduler = (props: ISchedulerProps) => {
         measures: dimentionsAndMeasures.measures,
       },
       assignReport: {
-        channels: ['Teams'],
+        channels: selectedChannel,
         communicationList: {
           emails: [],
           teams: [1],
         },
       },
       schedule: {
-        // pass fix for testing now
-        cronExp : "*/2 * * * *",
-        endDate : new Date('2021-06-02T12:15:21.780Z'),
-        startDate : new Date('2021-06-01T12:15:21.780Z'),
+        cronExp,
+        endDate,
+        startDate,
         timezone: '',
       },
       queryDTO: buildQueryDTO(props.visual, props.filters),
@@ -226,7 +222,7 @@ const Scheduler = (props: ISchedulerProps) => {
                 >
                   <Translate contentKey="entity.action.create">Create</Translate>
                 </Button>
-                {props.schedulerReport?.report && (
+                {props.schedulerReport?.reportLineItem.visualizationId && (
                   <Button
                     onPress={() => {
                       executeReport();
