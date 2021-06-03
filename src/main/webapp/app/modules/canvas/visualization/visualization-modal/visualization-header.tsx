@@ -22,6 +22,7 @@ import { VisualizationDataModal } from './visualization-data-modal/visualization
 import { CSVLink } from 'react-csv';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
+import { getTransactionData } from '../util/visualization-utils';
 
 interface IVisualizationHeaderProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
@@ -108,11 +109,6 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
     }
   };
 
-  async function getTransactionData() {
-    await Promise.resolve(setTransactionData(props.visual.data));
-    return csvLink.current.link.click();
-  }
-
   useEffect(() => {
     if (dialog === 'Copy') {
       const viz = createVisualMetadata(props.visual.metadataVisual);
@@ -122,7 +118,7 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
       viz.fields = props.visual.fields;
       handleVisualizationClick(viz);
     } else if (dialog === 'Export') {
-      getTransactionData();
+      getTransactionData(props.visual.data,csvLink,setTransactionData);
     }
   }, [dialog]);
   return (
