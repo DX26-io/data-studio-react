@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import {
+  ActionButton,
   Button,
   ButtonGroup,
   Content,
@@ -18,8 +19,9 @@ import {IRootState} from 'app/shared/reducers';
 import {connect} from 'react-redux';
 import {translate, Translate} from 'react-jhipster';
 import {RouteComponentProps} from 'react-router-dom';
-import {disconnectSocket, receiveSocketResponse, resetSearch, searchChange} from "app/entities/search/search.reducer";
+import {disconnectSocket, receiveSocketResponse, resetSearch, searchChange, doSearch} from "app/entities/search/search.reducer";
 import {searchCall, searchItemSelected} from "app/shared/websocket/proxy-websocket.service";
+import Search from "@spectrum-icons/workflow/Search";
 
 export interface ISearchModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string, viewId: string }> {}
 
@@ -49,14 +51,19 @@ const SearchModal = (props: ISearchModalProps) => {
 
   };
 
+  const onSearchPressed = () => {
+    props.doSearch(viewId, props.searchText);
+  }
+
   const onSearchTextChange = (value) => {
-    props.searchChange(value);
-    searchCall(viewId, {text: value});
+    props.searchChange(viewId, value);
   };
 
   const onAutoSuggestionItemChange = (selectedSet) => {
     const item = props.autoSuggestion.find((ft) => selectedSet.has(ft.text));
-    searchItemSelected(viewId, {text: props.searchText, item: item.text});
+    if (item) {
+      searchItemSelected(viewId, {text: props.searchText, item: item.text});
+    }
   };
 
   return (
@@ -69,27 +76,33 @@ const SearchModal = (props: ISearchModalProps) => {
           </Heading>
           <Divider/>
           <Content>
-            <Flex direction="column" gap="size-100" alignItems="center">
               <Form isRequired
                     necessityIndicator="icon"
                     width="100%">
-                <Text>
-                  <Translate contentKey="views.search.search">_Search</Translate>
-                </Text>
-                <TextField
-                  label={translate('views.search.search')}
-                  value={props.searchText}
-                  onChange={onSearchTextChange}
-                />
-                <ListBox
-                  aria-label="Auto-suggestions"
-                  selectionMode="single"
-                  onSelectionChange={onAutoSuggestionItemChange}
-                  items={props.autoSuggestion}>
-                  {(item) => <Item key={item.text}>{item.text}</Item>}
-                </ListBox>
+                <Flex direction="column" gap="size-100">
+                  <Text>
+                    <Translate contentKey="views.search.search">_Search</Translate>
+                  </Text>
+                  <Flex direction="row" width="100%" alignContent="end">
+                    <TextField
+                      width="100%"
+                      label={translate('views.search.search')}
+                      value={props.searchText}
+                      onChange={onSearchTextChange}
+                    />
+                    <ActionButton onPress={() => onSearchPressed()} aria-label="{translate('views.menu.search')}">
+                      <Search size="M" />
+                    </ActionButton>
+                  </Flex>
+                  <ListBox
+                    aria-label="Auto-suggestions"
+                    selectionMode="single"
+                    onSelectionChange={onAutoSuggestionItemChange}
+                    items={props.autoSuggestion}>
+                    {(item) => <Item key={item.text}>{item.text}</Item>}
+                  </ListBox>
+                </Flex>
               </Form>
-            </Flex>
           </Content>
           <ButtonGroup>
             <Button variant="secondary"
@@ -117,6 +130,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isSearchOpen: storeState.search.isSearchOpen,
   autoSuggestion: storeState.search.autoSuggestion,
   searchText: storeState.search.searchText,
+  showResults: storeState.search.showResults,
 });
 
 const mapDispatchToProps = {
@@ -124,6 +138,7 @@ const mapDispatchToProps = {
   receiveSocketResponse,
   disconnectSocket,
   searchChange,
+  doSearch,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
