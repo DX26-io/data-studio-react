@@ -27,7 +27,7 @@ import reportConfiguration, {
 } from 'app/modules/administration/reports-configuration/reports-configuration.reducer';
 import reportsManagement, { ReportsManagementState } from 'app/entities/reports-management/reports-management.reducer';
 import visualizationData, { VisualDataState } from 'app/shared/websocket/websocket.reducer';
-
+import bookmarks, { BookmarksState } from 'app/entities/bookmarks/bookmark.reducer';
 // prettier-ignore
 import dashboard, {
   DashboardState
@@ -90,6 +90,7 @@ export interface IRootState {
   readonly reportConfiguration: ReportConfigurationState;
   readonly reportsManagement: ReportsManagementState;
   readonly visualizationData: VisualDataState;
+  readonly bookmarks: BookmarksState;
 }
 
 const rootReducer = combineReducers<IRootState>({
@@ -126,6 +127,7 @@ const rootReducer = combineReducers<IRootState>({
   reportConfiguration,
   reportsManagement,
   visualizationData,
+  bookmarks,
 });
 
 export default rootReducer;
