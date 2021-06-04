@@ -6,12 +6,15 @@ export const ACTION_TYPES = {
   RESET: 'search/RESET',
   TOGGLE_SEARCH_MODAL: 'search/TOGGLE_SEARCH_MODAL',
   SET_SEARCH_RESPONSE: 'search/SET_SEARCH_RESPONSE',
+  SET_SEARCH_TEXT: 'search/SET_SEARCH_TEXT',
+  SET_SEARCH_ITEM_SELECTED_RESPONSE: 'search/SET_SEARCH_ITEM_SELECTED_RESPONSE',
   SET_SEARCH_ERROR: 'search/SET_SEARCH_ERROR',
 };
 
 const initialState = {
   isSearchOpen: false,
   searchError: null as string,
+  searchText: '' as string,
   autoSuggestion: [] as ReadonlyArray<SearchAutoSuggestion>,
 };
 
@@ -33,12 +36,24 @@ export default (state: SearchState = initialState, action): SearchState => {
       return {
         ...state,
         searchError: action.payload,
+        autoSuggestion: [],
       };
     case ACTION_TYPES.SET_SEARCH_RESPONSE:
       return {
         ...state,
         searchError: null,
         autoSuggestion: action.payload.autoSuggestion,
+      };
+    case ACTION_TYPES.SET_SEARCH_ITEM_SELECTED_RESPONSE:
+      return {
+        ...state,
+        searchError: null,
+        searchText: action.payload.text,
+      };
+    case ACTION_TYPES.SET_SEARCH_TEXT:
+      return {
+        ...state,
+        searchText: action.payload.text,
       };
     default:
       return state;
@@ -62,6 +77,18 @@ export const setSearchResponse = (data: any) => ({
   payload: data,
 });
 
+export const setSearchItemSelectedResponse = (data: any) => ({
+  type: ACTION_TYPES.SET_SEARCH_ITEM_SELECTED_RESPONSE,
+  payload: data,
+});
+
+export const searchChange: (text: string) => void = text => dispatch => {
+  dispatch({
+    type: ACTION_TYPES.SET_SEARCH_TEXT,
+    payload: { text },
+  });
+};
+
 export const setError = (error: string) => ({
   type: ACTION_TYPES.SET_SEARCH_ERROR,
   payload: error,
@@ -72,6 +99,10 @@ export const receiveSocketResponse = () => dispatch => {
     subscribeWebSocket('/user/exchange/search', data => {
       const body = JSON.parse(data.body);
       dispatch(setSearchResponse(body));
+    });
+    subscribeWebSocket('/user/exchange/search-item-selected', data => {
+      const body = JSON.parse(data.body);
+      dispatch(setSearchItemSelectedResponse(body));
     });
     subscribeWebSocket('/user/exchange/errors', error => {
       dispatch(setError(error));
