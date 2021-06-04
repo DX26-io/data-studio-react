@@ -1,6 +1,6 @@
 import { connectWebSocket, disconnectWebSocket, subscribeWebSocket } from 'app/shared/websocket/stomp-client.service';
 import { getToken } from 'app/shared/reducers/authentication';
-import { SearchAutoSuggestion } from 'app/entities/search/search.model';
+import { SearchAutoSuggestion, SearchResult } from 'app/entities/search/search.model';
 import { searchCall } from 'app/shared/websocket/proxy-websocket.service';
 
 export const ACTION_TYPES = {
@@ -19,7 +19,7 @@ const initialState = {
   searchText: '' as string,
   showResults: false,
   autoSuggestion: [] as ReadonlyArray<SearchAutoSuggestion>,
-  searchStruct: {} as object,
+  searchStruct: null as SearchResult,
 };
 
 export type SearchState = Readonly<typeof initialState>;
@@ -41,7 +41,7 @@ export default (state: SearchState = initialState, action): SearchState => {
         ...state,
         searchError: action.payload,
         autoSuggestion: [],
-        searchStruct: {},
+        searchStruct: null,
       };
     case ACTION_TYPES.SET_SEARCH_RESPONSE:
       return {

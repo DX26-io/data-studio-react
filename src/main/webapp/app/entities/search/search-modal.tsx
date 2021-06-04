@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActionButton,
   Button,
@@ -13,19 +13,34 @@ import {
   Item,
   ListBox,
   Text,
-  TextField,
+  TextField, View,
 } from '@adobe/react-spectrum';
 import {IRootState} from 'app/shared/reducers';
 import {connect} from 'react-redux';
 import {translate, Translate} from 'react-jhipster';
 import {RouteComponentProps} from 'react-router-dom';
 import {disconnectSocket, receiveSocketResponse, resetSearch, searchChange, doSearch} from "app/entities/search/search.reducer";
-import {searchCall, searchItemSelected} from "app/shared/websocket/proxy-websocket.service";
+import {forwardCall, searchCall, searchItemSelected} from "app/shared/websocket/proxy-websocket.service";
 import Search from "@spectrum-icons/workflow/Search";
+import VisualizationSettings from "app/modules/canvas/visualization/visualization-settings/visualization-settings";
+import VisualizationProperties
+  from "app/modules/canvas/visualization/visualization-properties/visualization-properties";
+import {
+  getEntity as getVisualmetadataEntity, metadataContainerUpdate,
+  setEditAction,
+  setVisual, updateEntity as updateVisualmetadataEntity
+} from "app/entities/visualmetadata/visualmetadata.reducer";
+import {getViewFeaturesEntities} from "app/entities/feature/feature.reducer";
+import {getEntity as getViewEntity} from "app/entities/views/views.reducer";
+import {renderVisualization, ValidateFields} from "app/modules/canvas/visualization/util/visualization-render-utils";
+import {subscribeWebSocket} from "app/shared/websocket/stomp-client.service";
+import {VisualWrap} from "app/modules/canvas/visualization/util/visualmetadata-wrapper";
 
 export interface ISearchModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string, viewId: string }> {}
 
 const SearchModal = (props: ISearchModalProps) => {
+  // const visualizationId = props.visualizationId;
+
   const viewId = props.match.params.viewId;
 
   const closeSearch = () => {
@@ -42,6 +57,33 @@ const SearchModal = (props: ISearchModalProps) => {
     props.receiveSocketResponse();
     return props.disconnectSocket;
   }, []);
+
+  const onExchangeMetadata = data => {
+    const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
+    renderVisualization(props.visualmetadataEntity, metaData.data, 'visualization-edit');
+  };
+
+  const onExchangeMetadataError = data => {
+    const body = JSON.parse(data.body || '{}');
+  };
+
+  useEffect(() => {
+    props.setVisual(props.visualmetadataEntity);
+    if (props.visualmetadataEntity.fields && ValidateFields(props.visualmetadataEntity.fields)) {
+      subscribeWebSocket('/user/exchange/metaData/' + props.visualmetadataEntity.id, onExchangeMetadata);
+      subscribeWebSocket('/user/exchange/metaDataError', onExchangeMetadataError);
+      const visualMetadata = VisualWrap(props.visualmetadataEntity);
+      const queryDTO = visualMetadata.getQueryParameters(props.visualmetadataEntity, null, null, null);
+      const body = {
+        queryDTO,
+        visualMetadata,
+        validationType: 'REQUIRED_FIELDS',
+        actionType: null,
+        type: 'share-link',
+      };
+      forwardCall(props.view?.viewDashboard?.dashboardDatasource?.id, body, props.view.id);
+    }
+  }, [props.visualmetadataEntity]);
 
   const handleClose = () => {
     props.resetSearch();
@@ -65,6 +107,17 @@ const SearchModal = (props: ISearchModalProps) => {
       searchItemSelected(viewId, {text: props.searchText, item: item.text});
     }
   };
+
+  const rendering = props.showResults  ? (
+    <Flex direction="row" height="size-600" gap="size-75">
+      <Flex direction="column" height="100%" flex gap="size-75">
+        <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="100%">
+          <div style={{height: '100%'}} id={`visualization-edit-${props.visualmetadataEntity.id}`}
+               className="visualization"></div>
+        </View>
+      </Flex>
+    </Flex>
+  ) : null;
 
   return (
     <>
@@ -94,6 +147,7 @@ const SearchModal = (props: ISearchModalProps) => {
                       <Search size="M" />
                     </ActionButton>
                   </Flex>
+                  {rendering}
                   <ListBox
                     aria-label="Auto-suggestions"
                     selectionMode="single"
@@ -131,6 +185,9 @@ const mapStateToProps = (storeState: IRootState) => ({
   autoSuggestion: storeState.search.autoSuggestion,
   searchText: storeState.search.searchText,
   showResults: storeState.search.showResults,
+  searchStruct: storeState.search.searchStruct,
+  visualmetadataEntity: storeState.visualmetadata.entity,
+  view: storeState.views.entity,
 });
 
 const mapDispatchToProps = {
@@ -139,6 +196,10 @@ const mapDispatchToProps = {
   disconnectSocket,
   searchChange,
   doSearch,
+  setVisual,
+  getVisualmetadataEntity,
+  getViewFeaturesEntities,
+  getViewEntity,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
