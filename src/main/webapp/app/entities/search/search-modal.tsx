@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ActionButton,
   Button,
@@ -40,8 +40,8 @@ export interface ISearchModalProps extends StateProps, DispatchProps, RouteCompo
 
 const SearchModal = (props: ISearchModalProps) => {
   // const visualizationId = props.visualizationId;
-
   const viewId = props.match.params.viewId;
+  const [searchCursorPos, setSearchCursorPos] = useState<number>();
 
   const closeSearch = () => {
     props.history.push(`/dashboards/${props.match.params.id}/${props.match.params.viewId}/build`);
@@ -97,6 +97,10 @@ const SearchModal = (props: ISearchModalProps) => {
     props.doSearch(viewId, props.searchText);
   }
 
+  const onSearchSelect = (event) => {
+    setSearchCursorPos(event.target.selectionStart);
+  }
+
   const onSearchTextChange = (value) => {
     props.searchChange(viewId, value);
   };
@@ -104,7 +108,7 @@ const SearchModal = (props: ISearchModalProps) => {
   const onAutoSuggestionItemChange = (selectedSet) => {
     const item = props.autoSuggestion.find((ft) => selectedSet.has(ft.text));
     if (item) {
-      searchItemSelected(viewId, {text: props.searchText, item: item.text});
+      searchItemSelected(viewId, {text: props.searchText, item: item.text, cursor: searchCursorPos});
     }
   };
 
@@ -138,6 +142,7 @@ const SearchModal = (props: ISearchModalProps) => {
                   </Text>
                   <Flex direction="row" width="100%" alignContent="end">
                     <TextField
+                      onSelect={onSearchSelect}
                       width="100%"
                       label={translate('views.search.search')}
                       value={props.searchText}

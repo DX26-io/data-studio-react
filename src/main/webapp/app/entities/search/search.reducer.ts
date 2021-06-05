@@ -55,6 +55,8 @@ export default (state: SearchState = initialState, action): SearchState => {
         ...state,
         searchError: null,
         searchText: action.payload.text,
+        autoSuggestion: action.payload.autoSuggestion,
+        searchStruct: action.payload.searchStruct,
       };
     case ACTION_TYPES.SET_SEARCH_TEXT:
       return {
