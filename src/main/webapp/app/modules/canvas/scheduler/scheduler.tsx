@@ -23,7 +23,7 @@ export interface IDropdown {
 
 const Scheduler = (props: ISchedulerProps) => {
   const [channelsList, setChannels] = useState([]);
-  const [reportTitle, setReportTitle] = useState('');
+  const [reportTitle, setReportTitle] = useState(props.visual?.titleProperties?.titleText);
   const [comments, setComments] = useState('');
   const [cronExp, setCronExpression] = useState('');
   const [startDate, setStartDate] = useState(new Date());
@@ -165,7 +165,7 @@ const Scheduler = (props: ISchedulerProps) => {
       ...schedulerReportDefaultValue,
       datasourceId: props.view.viewDashboard.dashboardDatasource.id,
       dashboardId: props.view.viewDashboard.id.toString(),
-      constraints: null,
+      constraints: "{}",
       report: {
         userId: '',
         connectionName: '',
