@@ -6,7 +6,7 @@ const conditionExpression = {
   uuid: '',
 };
 
-export const ConditionExpression = (expression: any) => {
+export const ConditionExpression = (expression: IConditionExpression) => {
   conditionExpression.expression = expression || {
     '@type': 'Compare',
     comparatorType: 'EQ',

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Translate } from 'react-jhipster';
 import TableView from 'app/shared/components/table/table';
 import { CSVLink } from 'react-csv';
+import { getTransactionData } from '../../util/visualization-utils';
 
 export interface IVisualizationDataModalProps {
   visual: any;
@@ -18,17 +19,6 @@ export const VisualizationDataModal = (props: IVisualizationDataModalProps) => {
   const handleClose = () => {
     dialog.dismiss();
   };
-
-  const getTransactionData = () => {
-    setTransactionData(props.visual.data);
-    csvLink.current.link.click();
-  };
-  
-  // TODO : commented it for now
-  // const getTransactionData = async () => {
-  //   setTransactionData(props.visual.data);
-  //   csvLink.current.link.click();
-  // };
 
   return (
     <Dialog>
@@ -45,7 +35,7 @@ export const VisualizationDataModal = (props: IVisualizationDataModalProps) => {
         />
       </Content>
       <ButtonGroup>
-        <Button variant="cta" onPress={() => getTransactionData()}>
+        <Button variant="cta" onPress={() => getTransactionData(props.visual.data, csvLink, setTransactionData)}>
           Export
         </Button>
         <Button variant="secondary" onPress={() => handleClose()}>

@@ -1,5 +1,5 @@
 import './header.scss';
-import React, {  useState } from 'react';
+import React, { ReactText, useState } from 'react';
 import { ActionButton, View, DialogContainer, TooltipTrigger, Tooltip, MenuTrigger, Menu, Item } from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import SaveAsFloppy from '@spectrum-icons/workflow/SaveAsFloppy';
@@ -20,9 +20,11 @@ import { saveViewState } from 'app/entities/views/views.reducer';
 import Filter from '@spectrum-icons/workflow/Filter';
 import { translate } from 'react-jhipster';
 import { toggleSearch } from 'app/entities/search/search.reducer';
+import VisualizationShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/visualization-share-modal';
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
+  const [dialog, setDialog] = useState<ReactText>();
 
   const handleVisualizationClick = v => {
     props.addVisualmetadataEntity({
@@ -100,15 +102,16 @@ const CanvasHeader = props => {
             <ActionButton aria-label="Bookmarks" isQuiet={true} marginEnd="size-5">
               <MoreSmallListVert size="M" />
             </ActionButton>
-            <Menu>
+            <Menu onAction={key => setDialog(key)}>
               <Item key="Bookmarks">Bookmarks</Item>
               <Item key="Share">Share</Item>
               <Item key="Print">Print</Item>
             </Menu>
           </MenuTrigger>
+
           <Tooltip>More</Tooltip>
         </TooltipTrigger>
-
+        <DialogContainer onDismiss={() => setDialog(null)}>{dialog === 'Share' && <VisualizationShareModal />}</DialogContainer>
         <TooltipTrigger>
           <ActionButton onPress={() => toggleSearchModal()} aria-label="{translate('views.menu.search')}" isQuiet={true} marginEnd="size-5">
             <Search size="M" />
@@ -130,6 +133,7 @@ const CanvasHeader = props => {
               view={props.view}
               visualizations={props.visualizationsList}
               totalItem={props.visualmetadata.visualmetadataList?.length || 0}
+              setVisualizationsModelOpen={setVisualizationsModelOpen}
             />
           )}
         </DialogContainer>

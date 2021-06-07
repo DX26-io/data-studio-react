@@ -12,14 +12,15 @@ import {
   updateEntity as updateVisualmetadataEntity,
   setVisual,
   setEditAction,
-  metadataContainerUpdate
+  metadataContainerUpdate,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 import { renderVisualization, ValidateFields } from '../../util/visualization-render-utils';
 import { VisualWrap } from '../../util/visualmetadata-wrapper';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
-import { subscribeWebSocket } from 'app/shared/websocket/stomp-client.service';
+import { receiveSocketResponseByVisualId } from 'app/shared/websocket/websocket.reducer';
+import { IViews } from 'app/shared/model/views.model';
 
 export interface IVisualizationEditModalProps extends StateProps, DispatchProps {
   id: number;
@@ -27,7 +28,7 @@ export interface IVisualizationEditModalProps extends StateProps, DispatchProps 
   visualizationId: string;
   setOpen: (isOpen: boolean) => void;
   filterData: any;
-  view:any
+  view: IViews;
 }
 
 export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
@@ -59,25 +60,10 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
     }
   }, []);
 
-  const onExchangeMetadata = data => {
-    const metaData = data.body === '' ? { data: [] } : JSON.parse(data.body);
-    setData(metaData.data);
-    if (data.headers.request === 'filters') {
-      // console.log('filter data');
-    } else {
-      renderVisualization(props.visualmetadataEntity, metaData.data, 'visualization-edit');
-    }
-  };
-
-  const onExchangeMetadataError = data => {
-    const body = JSON.parse(data.body || '{}');
-  };
-
   useEffect(() => {
     props.setVisual(props.visualmetadataEntity);
     if (props.visualmetadataEntity.fields && ValidateFields(props.visualmetadataEntity.fields)) {
-      subscribeWebSocket('/user/exchange/metaData/' + props.visualmetadataEntity.id, onExchangeMetadata);
-      subscribeWebSocket('/user/exchange/metaDataError', onExchangeMetadataError);
+      props.receiveSocketResponseByVisualId(props.visualmetadataEntity.id);
       const visualMetadata = VisualWrap(props.visualmetadataEntity);
       const queryDTO = visualMetadata.getQueryParameters(props.visualmetadataEntity, null, null, null);
       const body = {
@@ -90,6 +76,14 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
       forwardCall(props.view?.viewDashboard?.dashboardDatasource?.id, body, props.view.id);
     }
   }, [props.visualmetadataEntity]);
+
+  useEffect(() => {
+    if (props.visualDataById) {
+      if (props.visualDataById?.data.length > 0) {
+        renderVisualization(props.visualmetadataEntity, props.visualDataById?.data, 'visualization-edit');
+      }
+    }
+  }, [props.visualDataById]);
 
   return (
     <Dialog>
@@ -153,6 +147,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualmetadataEntity: storeState.visualmetadata.entity,
   featuresList: storeState.feature.entities,
   view: storeState.views.entity,
+  visualDataById: storeState.visualizationData.visualDataById,
 });
 
 const mapDispatchToProps = {
@@ -162,7 +157,8 @@ const mapDispatchToProps = {
   getViewFeaturesEntities,
   getViewEntity,
   updateVisualmetadataEntity,
-  metadataContainerUpdate
+  metadataContainerUpdate,
+  receiveSocketResponseByVisualId,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

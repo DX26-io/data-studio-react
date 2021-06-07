@@ -189,7 +189,7 @@ const getQueryParametersWithFields = (fields, filters, conditionExpression) => {
 
 const getQueryLimit = (visual, offset) => {
   if (visual.metadataVisual.name === VisualizationType.Table || visual.metadataVisual.name === VisualizationType.PivotTable) {
-    return getChartPropertyValue(Limit, 20) * offset;
+    return getChartPropertyValue(visual.properties, Limit, 20) * offset;
   } else {
     return getChartPropertyValue(visual.properties, Limit, 20);
   }

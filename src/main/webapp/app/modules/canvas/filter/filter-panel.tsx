@@ -26,7 +26,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
     if (ValidateFields(item.fields)) {
       getVisualizationData(item, props.view, props.filters);
     } else {
-     props.hideLoader(item.id);
+      props.hideLoader(item.id);
     }
   };
 
@@ -39,6 +39,12 @@ const FilterPanel = (props: IFilterPanelProp) => {
   const applyFilter = () => {
     props.saveFilter(props.selectedFilter);
     props.updateSelectedFilter();
+    loadVisualization();
+  };
+
+  const clearFilter = () => {
+    props.saveSelectedFilter({});
+    props.saveFilter({});
     loadVisualization();
   };
 
@@ -100,7 +106,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
               <Button onPress={applyFilter} marginX={5} variant="cta">
                 <Text>Filter</Text> <Search></Search>
               </Button>
-              <Button marginX={5} variant="primary">
+              <Button onPress={clearFilter} marginX={5} variant="primary">
                 <Text>Clear</Text>
               </Button>
             </View>
