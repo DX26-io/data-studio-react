@@ -184,3 +184,51 @@ export const getConditionExpression = (paramObject: any, additionalFeaturesArray
 export const saveDynamicDateRangeMetaData = (dimensionName: string, metaData: any) => {
   dynamicDateRangeMetaData[dimensionName] = metaData;
 };
+
+export const isDateRange = (name, selectedFilters) => {
+  if (selectedFilters[name]._meta.dataType) {
+    if (selectedFilters[name]._meta.valueType === 'castValueType' || selectedFilters[name]._meta.valueType === 'valueType') {
+      return false;
+    }
+    return isDateFilterType(selectedFilters[name]._meta.dataType);
+  } else {
+    return false;
+  }
+};
+
+export const buildFilterCriteriasForDynamicDateRange = dimensionName => {
+  if (dynamicDateRangeMetaData[dimensionName]) {
+    const metaData = dynamicDateRangeMetaData[dimensionName];
+    const isCustom = metaData.currentDynamicDateRangeConfig.isCustom ? 'true' : 'false';
+    return isCustom + '||' + metaData.customDynamicDateRange + '||' + metaData.currentDynamicDateRangeConfig.title;
+  } else {
+    return null;
+  }
+};
+
+export const getFilterCriterias = (selectedFilters, features) => {
+  const filterCriterias = [];
+  for (const key in selectedFilters) {
+    if (Object.prototype.hasOwnProperty.call(selectedFilters, key)) {
+      // if (selectedFilters.hasOwnProperty(key)) {
+      const param = selectedFilters[key];
+      const isItemDateRange = isDateRange(key, selectedFilters);
+      if (isItemDateRange && param._meta.valueType !== 'castValueType') {
+        param[0] = changeDateFormat(param[0]);
+        if (param[1]) {
+          param[1] = changeDateFormat(param[1]);
+        }
+      }
+      filterCriterias.push({
+        value: selectedFilters[key].join('||'),
+        metaData: isItemDateRange ? buildFilterCriteriasForDynamicDateRange(key) : null,
+        dateRange: param._meta.valueType === 'dateRangeValueType' ? true : false,
+        key,
+        feature: features.filter(item => {
+          return item.name.toLowerCase() === key;
+        })[0],
+      });
+    }
+  }
+  return filterCriterias;
+};

@@ -1,9 +1,10 @@
 import './header.scss';
-import React, { ReactText, useState } from 'react';
-import { ActionButton, View, DialogContainer, TooltipTrigger, Tooltip, MenuTrigger, Menu, Item } from '@adobe/react-spectrum';
+import React, { useState, useEffect } from 'react';
+import { ActionButton, View, DialogContainer, TooltipTrigger, Tooltip, MenuTrigger, Menu, Item, Picker } from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import SaveAsFloppy from '@spectrum-icons/workflow/SaveAsFloppy';
 import Asset from '@spectrum-icons/workflow/Asset';
+import BookmarkSingle from '@spectrum-icons/workflow/BookmarkSingle';
 import Search from '@spectrum-icons/workflow/Search';
 import GraphBarVerticalAdd from '@spectrum-icons/workflow/GraphBarVerticalAdd';
 import CollectionEdit from '@spectrum-icons/workflow/CollectionEdit';
@@ -20,11 +21,22 @@ import { saveViewState } from 'app/entities/views/views.reducer';
 import Filter from '@spectrum-icons/workflow/Filter';
 import { translate } from 'react-jhipster';
 import { toggleSearch } from 'app/entities/search/search.reducer';
+import BookmarkUpdate from 'app/entities/bookmarks/bookmark-update';
+import { ComboBox, Item as ComboBoxItem } from '@react-spectrum/combobox';
+import { getBookmarks } from 'app/entities/bookmarks/bookmark.reducer';
 import VisualizationShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/visualization-share-modal';
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
+  const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
+  const [bookmarkId, setBookmarkId] = useState('');
   const [dialog, setDialog] = useState<ReactText>();
+
+  useEffect(() => {
+    if (props.datasourceId) {
+      props.getBookmarks(props.datasourceId);
+    }
+  }, []);
 
   const handleVisualizationClick = v => {
     props.addVisualmetadataEntity({
@@ -58,6 +70,28 @@ const CanvasHeader = props => {
   return (
     <>
       <View>
+        {/* <ComboBox
+          placeholder={translate('bookmarks.search')}
+          items={props.bookmarks}
+          inputValue={bookmarkName}
+          onSelectionChange={event => {}}
+          onInputChange={event => {}}
+        >
+          {item => <ComboBoxItem>{item.name}</ComboBoxItem>}
+        </ComboBox> */}
+        {/* TODO : Picker needs to be replaced with combobox in near future 
+        using Picker for time being */}
+        <Picker
+          placeholder={translate('bookmarks.search')}
+          onSelectionChange={selected => {
+            setBookmarkId(selected.toString());
+          }}
+        >
+          {props.bookmarks.map(bookmark => (
+            <Item key={bookmark.id}>{bookmark.name}</Item>
+          ))}
+        </Picker>
+
         <TooltipTrigger>
           <ActionButton onPress={() => handleToggleEditMode()} aria-label="enable edit" isQuiet={true} marginEnd="size-5">
             <div className={props.isEditMode ? 'enableEdit' : 'disableEdit'}>
@@ -85,18 +119,17 @@ const CanvasHeader = props => {
           <Tooltip>Save</Tooltip>
         </TooltipTrigger>
         <TooltipTrigger>
-          <ActionButton
-            onPress={() => toggleFeatures()}
-            aria-label="Features"
-            isQuiet={true}
-            isDisabled={!props.isEditMode}
-            marginEnd="size-5"
-          >
+          <ActionButton onPress={() => toggleFeatures()} aria-label="Features" isQuiet={true} isDisabled={!props.isEditMode}>
             <Asset size="M" />
           </ActionButton>
           <Tooltip>Toggle features</Tooltip>
         </TooltipTrigger>
-
+        <TooltipTrigger>
+          <ActionButton onPress={() => setIsBookmarkDialogOpen(true)} aria-label="Bookmarks" isQuiet={true} marginEnd="size-5">
+            <BookmarkSingle size="M" />
+          </ActionButton>
+          <Tooltip>{translate('bookmarks.home.createLabel')}</Tooltip>
+        </TooltipTrigger>
         <TooltipTrigger>
           <MenuTrigger>
             <ActionButton aria-label="Bookmarks" isQuiet={true} marginEnd="size-5">
@@ -137,18 +170,22 @@ const CanvasHeader = props => {
             />
           )}
         </DialogContainer>
+        <DialogContainer onDismiss={() => setIsBookmarkDialogOpen(false)}>
+          {isBookmarkDialogOpen && <BookmarkUpdate setOpen={setIsBookmarkDialogOpen} />}
+        </DialogContainer>
       </View>
     </>
   );
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  view: storeState.views.entity,
   isAuthenticated: storeState.authentication.isAuthenticated,
   visualmetadata: storeState.views.viewState,
   visualizationsList: storeState.visualizations.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
   isEditMode: storeState.visualmetadata.isEditMode,
+  bookmarks: storeState.bookmarks.bookmarks,
+  datasourceId: storeState.dashboard.entity.dashboardDatasource.id,
 });
 
 const mapDispatchToProps = {
@@ -158,6 +195,7 @@ const mapDispatchToProps = {
   toggleFeaturesPanel,
   toggleSearch,
   saveViewState,
+  getBookmarks,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
