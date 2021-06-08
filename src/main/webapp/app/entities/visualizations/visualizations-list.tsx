@@ -29,13 +29,13 @@ export const VisualizationsList = (props: IVisualizationsListProps) => {
   const { handleVisualizationClick } = props;
 
   const addWidget = viz => {
-    handleVisualizationClick(createVisualMetadata(viz, props));
+    handleVisualizationClick(createVisualMetadata(viz, props.view, props.totalItem));
   };
   return (
     <Dialog>
       <Heading>Select Visualizations</Heading>
       <Divider />
-      <Content >
+      <Content>
         <Flex direction="row" gap="size-250" wrap alignItems="center" justifyContent="start">
           {props.visualizations &&
             props.visualizations.length > 0 &&

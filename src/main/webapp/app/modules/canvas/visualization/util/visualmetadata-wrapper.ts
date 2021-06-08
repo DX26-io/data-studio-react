@@ -267,6 +267,33 @@ const getQueryParameters = (visual, filters, conditionExpression, offset) => {
   return query;
 };
 
+const getQueryParametersForSearch = (visual, filters, conditionExpression, offset) => {
+  const fields = visual.fields;
+  const dimensions = fields.filter(isDimension);
+  const measures = fields.filter(isMeasure);
+  const dimensionFields = dimensions.map(function (item) {
+    const result = constructDimensionField(item, filters);
+    item.feature.selectedName = result.name;
+    return result;
+  });
+  const measureFields = measures.map(function (item) {
+    return constructMeasureField(item);
+  });
+  const query = getQueryParametersWithFields(dimensionFields.concat(measureFields), filters, conditionExpression);
+  const aggExists = !!measureFields.filter(function (item) {
+    return item.aggregation;
+  })[0];
+
+  if (aggExists) {
+    query['groupBy'] = dimensionFields;
+  }
+  query['limit'] = getQueryLimit(visual, offset);
+  const ordersListSortMeasures = applyOrderOnMeasures(measures);
+  const ordersListSortDimensions = applyOrderOnDimensions(dimensions);
+  query['orders'] = ordersListSortMeasures.concat(ordersListSortDimensions);
+  return query;
+};
+
 const hasDimension = (fields, dimensionName) => {
   return (
     fields.filter(function (item) {
@@ -306,5 +333,6 @@ export const VisualWrap = visual => {
   visual.nextFieldDimension = nextFieldDimension;
   visual.nextFieldMeasure = nextFieldMeasure;
   visual.constructHavingField = constructHavingField;
+  visual.getQueryParametersForSearch = getQueryParametersForSearch;
   return visual;
 };

@@ -104,7 +104,7 @@ export const searchChange: (viewId: string, text: string) => void = (viewId, tex
   });
 };
 
-export const doSearch: (viewId: string, text: string) => void = (viewId, text) => dispatch => {
+export const doSearch: (viewId: string, text: any) => void = (viewId, text) => dispatch => {
   searchCall(viewId, { text });
   dispatch({
     type: ACTION_TYPES.DO_SEARCH,

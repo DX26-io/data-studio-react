@@ -34,5 +34,5 @@ export interface SearchResult {
   readonly aggregation: SearchAggregationStatements;
   readonly by: SearchByStatements;
   readonly where: SearchWhereStatements;
-  readonly orderBy: SearchOrderByStatements;
+  readonly orderBy: Array<SearchOrderByStatements>;
 }
