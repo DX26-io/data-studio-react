@@ -16,3 +16,7 @@ export const forwardCall = (sourceId: number, body: any, viewId: any) => {
 export const searchCall = (viewId: any, body: any) => {
   sendToWebSocket(`/flair-ws/view/${viewId}/search`, {}, JSON.stringify(body));
 };
+
+export const searchItemSelected = (viewId: any, body: any) => {
+  sendToWebSocket(`/flair-ws/view/${viewId}/search-item-selected`, {}, JSON.stringify(body));
+};

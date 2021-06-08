@@ -4,6 +4,7 @@ import { getToken } from 'app/shared/reducers/authentication';
 export const ACTION_TYPES = {
   SET_VISUAL_DATA: 'visualData/SET_VISUAL_DATA',
   SET_FILTER_DATA: 'visualData/SET_FILTER_DATA',
+  SET_VISUAL_DATA_BY_ID: 'visualData/SET_VISUAL_DATA_BY_ID',
   SET_VISUAL_ERROR: 'visualData/SET_VISUAL_ERROR',
   SET_CONNECTION_STATUS: 'visualData/SET_CONNECTION_STATUS',
 };
@@ -12,6 +13,7 @@ const initialState = {
   loading: false,
   errorMessage: null,
   visualData: null,
+  visualDataById: null,
   filterData: null,
   isSocketConnected: false,
 };
@@ -25,6 +27,12 @@ export default (state: VisualDataState = initialState, action): VisualDataState 
         ...state,
         loading: false,
         visualData: action.payload,
+      };
+    case ACTION_TYPES.SET_VISUAL_DATA_BY_ID:
+      return {
+        ...state,
+        loading: false,
+        visualDataById: action.payload,
       };
     case ACTION_TYPES.SET_FILTER_DATA:
       return {
@@ -53,6 +61,11 @@ export default (state: VisualDataState = initialState, action): VisualDataState 
 export const setVisualData = (visualData: any) => ({
   type: ACTION_TYPES.SET_VISUAL_DATA,
   payload: visualData,
+});
+
+export const setVisualDataById = (visualDataById: any) => ({
+  type: ACTION_TYPES.SET_VISUAL_DATA_BY_ID,
+  payload: visualDataById,
 });
 
 export const setFilterData = (filterData: any) => ({
@@ -85,6 +98,18 @@ export const receiveSocketResponse = () => dispatch => {
     subscribeWebSocket('/user/exchange/metaDataError', error => {
       const body = JSON.parse(error.body || '{}');
       dispatch(setError(body));
+    });
+  });
+};
+
+export const receiveSocketResponseByVisualId = (id: string) => dispatch => {
+  connectWebSocket({ token: getToken() }, () => {
+    subscribeWebSocket('/user/exchange/metaData/' + id, data => {
+      const body = JSON.parse(data.body);
+      dispatch(setVisualDataById(body));
+    });
+    subscribeWebSocket('/user/exchange/errors', error => {
+      dispatch(setError(error));
     });
   });
 };

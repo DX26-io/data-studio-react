@@ -5,4 +5,11 @@ export interface IConditionExpression {
   metadata: string;
   secondExpression: any;
   uuid: string;
+  expression: {
+    '@type': string;
+    comparatorType: string;
+  };
+  featureName: string;
+  valueTypes: Array<any>;
+  values: Array<any>;
 }

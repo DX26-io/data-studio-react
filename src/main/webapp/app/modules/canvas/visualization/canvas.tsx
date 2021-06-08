@@ -177,20 +177,41 @@ const Canvas = (props: VisualizationProp) => {
         setIsLoaderDisplay(visList);
       });
 
-      if (!props.isSocketConnected) {
-        props.receiveSocketResponse();
-      }
       props.visualmetadata.visualMetadataSet.map(item => {
         (item.x = item.xPosition), (item.y = item.yPosition), (item.h = item.height), (item.w = item.width);
       });
       setvisualmetadata(props.visualmetadata.visualMetadataSet);
     }
+  }, [props.visualmetadata]);
+
+  useEffect(() => {
+    if (!props.isSocketConnected) {
+      props.receiveSocketResponse();
+    }
+    setvisualmetadata(props.visualmetadata.visualMetadataSet);
+  }, [props.isSocketConnected, props.visualmetadataEntity]);
+
+  useEffect(() => {
     if (props.isCreated) {
       props.metadataContainerAdd(props.visualmetadataEntity);
       setvisualmetadata(props.visualMetadataContainerList);
       renderVisualizationById(props.visualmetadataEntity);
     }
-  }, [props.visualmetadata, props.isCreated, props.isSocketConnected, props.visualmetadataEntity]);
+  }, [props.isCreated]);
+
+  useEffect(() => {
+    if (props.updateSuccess) {
+      setvisualmetadata(props.visualMetadataContainerList);
+      renderVisualizationById(props.visualmetadataEntity);
+    }
+  }, [props.updateSuccess]);
+
+  useEffect(() => {
+    if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
+      setvisualmetadata(props.visualMetadataContainerList);
+      renderVisualizationById(props.visualmetadataEntity);
+    }
+  }, [props.visualMetadataContainerList]);
 
   useEffect(() => {
     if (props.isSearchOpen) {
@@ -233,21 +254,26 @@ const Canvas = (props: VisualizationProp) => {
               view={props.view}
               totalItem={visualmetadataList?.length || 0}
               filterData={props.filterData}
-              // isEditMode={true} // TODO : setting it true for now
+              isEditMode={props.isEditMode}
               {...props}
             ></VisualizationHeader>
           </div>
           <div style={{ backgroundColor: v.bodyProperties.backgroundColor }} className="visualBody" id={`visualBody-${v.id}`}>
             <div className="illustrate">
-              <div style={{ display: isLoaderDisplay[i].loaderVisibility ? 'block' : 'none' }} className={`loader loader-${v.id}`}>
-                <Loader />
-              </div>
-              <div
-                style={{ display: isLoaderDisplay[i].noDataFoundVisibility ? 'block' : 'none' }}
-                className={`dataNotFound dataNotFound-${v.id}`}
-              >
-                <NoDataFoundPlaceHolder />
-              </div>
+              {isLoaderDisplay[i]?.loaderVisibility && (
+                <div style={{ display: isLoaderDisplay[i]?.loaderVisibility ? 'block' : 'none' }} className={`loader loader-${v.id}`}>
+                  <Loader />
+                </div>
+              )}
+
+              {isLoaderDisplay[i]?.noDataFoundVisibility && (
+                <div
+                  style={{ display: isLoaderDisplay[i]?.noDataFoundVisibility ? 'block' : 'none' }}
+                  className={`dataNotFound dataNotFound-${v.id}`}
+                >
+                  <NoDataFoundPlaceHolder />
+                </div>
+              )}
             </div>
             <div id={`visualization-${v.id}`} className="visualization"></div>
           </div>
@@ -293,6 +319,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isAuthenticated: storeState.authentication.isAuthenticated,
   visualmetadata: storeState.views.viewState,
   isCreated: storeState.visualmetadata.newCreated,
+  updateSuccess: storeState.visualmetadata.updateSuccess,
   visualizationsList: storeState.visualizations.entities,
   featuresList: storeState.feature.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,

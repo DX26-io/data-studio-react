@@ -23,18 +23,19 @@ export interface IVisualizationsListProps {
   handleVisualizationClick?: (visualization) => void;
   view?: IViews;
   totalItem?: number;
+  setVisualizationsModelOpen: (boolean) => void;
 }
 export const VisualizationsList = (props: IVisualizationsListProps) => {
   const { handleVisualizationClick } = props;
-  
+
   const addWidget = viz => {
-    handleVisualizationClick(createVisualMetadata(viz,props));
+    handleVisualizationClick(createVisualMetadata(viz, props));
   };
   return (
     <Dialog>
       <Heading>Select Visualizations</Heading>
       <Divider />
-      <Content>
+      <Content >
         <Flex direction="row" gap="size-250" wrap alignItems="center" justifyContent="start">
           {props.visualizations &&
             props.visualizations.length > 0 &&
@@ -67,7 +68,9 @@ export const VisualizationsList = (props: IVisualizationsListProps) => {
         </Flex>
       </Content>
       <ButtonGroup>
-        <Button variant="secondary">Cancel</Button>
+        <Button onPress={() => props.setVisualizationsModelOpen(false)} variant="secondary">
+          Cancel
+        </Button>
       </ButtonGroup>
     </Dialog>
   );

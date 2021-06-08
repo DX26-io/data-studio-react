@@ -24,11 +24,13 @@ import { toggleSearch } from 'app/entities/search/search.reducer';
 import BookmarkUpdate from 'app/entities/bookmarks/bookmark-update';
 import { ComboBox, Item as ComboBoxItem } from '@react-spectrum/combobox';
 import { getBookmarks } from 'app/entities/bookmarks/bookmark.reducer';
+import VisualizationShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/visualization-share-modal';
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
   const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
   const [bookmarkId, setBookmarkId] = useState('');
+  const [dialog, setDialog] = useState<ReactText>();
 
   useEffect(() => {
     if (props.datasourceId) {
@@ -133,15 +135,16 @@ const CanvasHeader = props => {
             <ActionButton aria-label="Bookmarks" isQuiet={true} marginEnd="size-5">
               <MoreSmallListVert size="M" />
             </ActionButton>
-            <Menu>
+            <Menu onAction={key => setDialog(key)}>
               <Item key="Bookmarks">Bookmarks</Item>
               <Item key="Share">Share</Item>
               <Item key="Print">Print</Item>
             </Menu>
           </MenuTrigger>
+
           <Tooltip>More</Tooltip>
         </TooltipTrigger>
-
+        <DialogContainer onDismiss={() => setDialog(null)}>{dialog === 'Share' && <VisualizationShareModal />}</DialogContainer>
         <TooltipTrigger>
           <ActionButton onPress={() => toggleSearchModal()} aria-label="{translate('views.menu.search')}" isQuiet={true} marginEnd="size-5">
             <Search size="M" />
@@ -163,6 +166,7 @@ const CanvasHeader = props => {
               view={props.view}
               visualizations={props.visualizationsList}
               totalItem={props.visualmetadata.visualmetadataList?.length || 0}
+              setVisualizationsModelOpen={setVisualizationsModelOpen}
             />
           )}
         </DialogContainer>
