@@ -104,7 +104,7 @@ export const createVisualFields = (
 
 const isDynamicDateRange = value => {
   let conditionType = 'In';
-  for (let element of DYNAMIC_DATE_RANGE_CONFIG) {
+  for (const element of DYNAMIC_DATE_RANGE_CONFIG) {
     if (value.toLowerCase() === element.title.toLowerCase()) {
       conditionType = 'Between';
       break;
@@ -122,7 +122,7 @@ const isCompareTypes = item => {
     },
   };
 
-  for (let element of COMPARE_TYPES) {
+  for (const element of COMPARE_TYPES) {
     if (item.includes(element.displayName)) {
       const searchCondition = {
         feature: item.substring(0, item.indexOf(element.displayName)),
@@ -176,7 +176,6 @@ const getCondition = condition => {
 const getOrderBy = (order: Array<string>) => {
   const orderBy = [];
   order.forEach(item => {
-    debugger;
     const searchOrderByStatement = {
       feature: item.trim().split(' ')[0],
       direction: item.trim().split(' ')[1],
