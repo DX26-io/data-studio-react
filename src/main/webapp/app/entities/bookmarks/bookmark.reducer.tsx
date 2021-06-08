@@ -26,7 +26,7 @@ const initialState = {
   updateSuccess: false,
   fetchSuccess: false,
   totalItems: 0,
-  searchedGroups: [] as ReadonlyArray<IBookmark>,
+  searchedBookmarks: [] as ReadonlyArray<IBookmark>,
 };
 
 export type BookmarksState = Readonly<typeof initialState>;
@@ -39,6 +39,11 @@ export default (state: BookmarksState = initialState, action): BookmarksState =>
         ...state,
       };
     case REQUEST(ACTION_TYPES.FETCH_BOOKMARKS):
+      return {
+        ...state,
+        errorMessage: null,
+        loading: true,
+      };
     case REQUEST(ACTION_TYPES.SEARCH_BOOKMARKS):
     case REQUEST(ACTION_TYPES.FETCH_BOOKMARK):
       return {
@@ -48,6 +53,12 @@ export default (state: BookmarksState = initialState, action): BookmarksState =>
         loading: true,
       };
     case REQUEST(ACTION_TYPES.CREATE_BOOKMARK):
+        return {
+          ...state,
+          errorMessage: null,
+          updateSuccess: false,
+          updating: true,
+        };
     case REQUEST(ACTION_TYPES.UPDATE_BOOKMARK):
     case REQUEST(ACTION_TYPES.DELETE_BOOKMARK):
       return {
@@ -57,10 +68,21 @@ export default (state: BookmarksState = initialState, action): BookmarksState =>
         updating: true,
       };
     case FAILURE(ACTION_TYPES.FETCH_BOOKMARKS):
+      return {
+        ...state,
+        errorMessage: action.payload,
+        loading: false,
+      };
     case FAILURE(ACTION_TYPES.SEARCH_BOOKMARKS):
     case FAILURE(ACTION_TYPES.FETCH_BOOKMARK):
     case FAILURE(ACTION_TYPES.FETCH_ROLES):
     case FAILURE(ACTION_TYPES.CREATE_BOOKMARK):
+        return {
+          ...state,
+          errorMessage: action.payload,
+          updateSuccess: false,
+          updating: false,
+        };
     case FAILURE(ACTION_TYPES.UPDATE_BOOKMARK):
     case FAILURE(ACTION_TYPES.DELETE_BOOKMARK):
       return {
@@ -86,7 +108,7 @@ export default (state: BookmarksState = initialState, action): BookmarksState =>
       return {
         ...state,
         loading: false,
-        searchedGroups: action.payload.data,
+        searchedBookmarks: action.payload.data,
         totalItems: parseInt(action.payload.headers['x-total-count'], 10),
       };
     case SUCCESS(ACTION_TYPES.FETCH_BOOKMARK):
@@ -100,6 +122,8 @@ export default (state: BookmarksState = initialState, action): BookmarksState =>
       return {
         ...state,
         updateSuccess: true,
+        errorMessage: null,
+        updating: false,
       };
     case SUCCESS(ACTION_TYPES.UPDATE_BOOKMARK):
       return {
@@ -127,9 +151,8 @@ export default (state: BookmarksState = initialState, action): BookmarksState =>
 
 const apiUrl = 'api/feature-bookmarks';
 
-
-export const getBookmarks: ICrudGetAllAction<IBookmark> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+export const getBookmarks: ICrudGetAllAction<IBookmark> = (datasourceId: number) => {
+  const requestUrl = `${apiUrl}?datasource=${datasourceId}`;
   return {
     type: ACTION_TYPES.FETCH_BOOKMARKS,
     payload: axios.get<IBookmark>(requestUrl),

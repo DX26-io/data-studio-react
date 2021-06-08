@@ -4,6 +4,7 @@ import { IUser, defaultValue as userDefaultValue } from './user.model';
 export interface IBookmark {
   id?: any;
   name: string;
+  featureCriteria: any;
   user: IUser;
   datasource: IDatasources;
 }
@@ -11,6 +12,7 @@ export interface IBookmark {
 export const defaultValue: Readonly<IBookmark> = {
   id: '',
   name: '',
+  featureCriteria: null,
   user: userDefaultValue,
   datasource: defaultDatasourceValue,
 };

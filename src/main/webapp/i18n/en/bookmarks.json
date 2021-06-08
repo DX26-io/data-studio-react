@@ -16,6 +16,7 @@
       "name": "Name is required",
       "length": "Name cannot be longer than 50 characters"
     },
+    "search": "Search bookmark...",
     "name": "Name",
     "createdBy": "Created by",
     "createdDate": "Created date",

@@ -1,83 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Translate, translate } from 'react-jhipster';
-import { getBookmark, updateBookmark, createBookmark, reset, deleteBookmark, setBookmark } from './bookmark.reducer';
+import { getBookmarks, updateBookmark, createBookmark, reset, deleteBookmark, setBookmark } from './bookmark.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { isFormValid } from './bookmark.util';
 import Alert from '@spectrum-icons/workflow/Alert';
 import AlertCircle from '@spectrum-icons/workflow/AlertCircle';
 import { Flex, useDialogContainer, Dialog, Heading, Divider, Content, Form, Button, TextField, Header, Text } from '@adobe/react-spectrum';
 import { defaultValue } from 'app/shared/model/error.model';
+import { getFilterCriterias } from 'app/modules/canvas/filter/filter-util';
 
 export interface IBookmarkUpdateProps extends StateProps, DispatchProps {
-  setUpdateSuccess: () => void;
-  isNew: boolean;
   setOpen: (isOpen: boolean) => void;
-  bookmarkName: string;
-  history: any;
 }
 
-export const UserUpdate = (props: IBookmarkUpdateProps) => {
-  const { isNew, setOpen, setUpdateSuccess, bookmarkName, bookmark, loading, updating, fetchSuccess, updateSuccess, history } = props;
+export const BookmarkUpdate = (props: IBookmarkUpdateProps) => {
+  const { setOpen, bookmark, loading, updating, fetchSuccess, updateSuccess, datasource } = props;
   const [error, setError] = useState(defaultValue);
 
   const dialog = useDialogContainer();
 
   useEffect(() => {
-    if (isNew) {
-      props.reset();
-    } else {
-      props.getBookmark(bookmark.name);
-    }
-    return () => {
-      props.reset();
-    };
+    props.setBookmark({ ...bookmark, datasource, featureCriteria: getFilterCriterias(props.selectedFilter, props.features) });
   }, []);
 
   const handleClose = () => {
     setOpen(false);
     dialog.dismiss();
+    props.reset();
   };
 
-  //   useEffect(() => {
-  //     if (isNew) {
-  //       setName('');
-  //     } else {
-  //       setName(bookmark.name);
-  //     }
-  //     if (updateSuccess) {
-  //       handleClose();
-  //       setUpdateSuccess();
-  //     }
-  //   }, [fetchSuccess, isNew, updateSuccess]);
-
-  //   useEffect(() => {
-  //     const errorObj = isFormValid({ ...bookmark, name });
-  //     setError(errorObj);
-  //   }, [name]);
+  useEffect(() => {
+    if (updateSuccess) {
+      handleClose();
+      props.getBookmarks(props.datasourceId);
+    }
+  }, [props.updateSuccess]);
 
   const save = () => {
-    const values = { ...bookmark, name };
-    if (isNew) {
-      props.createBookmark(values);
-    } else {
-      props.updateBookmark(values);
-    }
+    props.createBookmark(bookmark);
   };
 
   const remove = () => {
-    props.deleteBookmark(bookmark.name);
+    props.deleteBookmark(bookmark.id);
   };
 
   return (
     <Dialog data-testid="bookmark-form-dialog">
       <Heading>
         <Flex alignItems="center" gap="size-100" data-testid="bookmark-form-heading">
-          {!isNew ? (
-            <Translate contentKey="bookmarks.home.editLabel">Edit Bookmark</Translate>
-          ) : (
-            <Translate contentKey="bookmarks.home.createLabel">Create Bookmark</Translate>
-          )}
+          <Translate contentKey="bookmarks.home.createLabel">Create Bookmark</Translate>
         </Flex>
       </Heading>
       <Header data-testid="bookmark-form-action">
@@ -106,14 +78,6 @@ export const UserUpdate = (props: IBookmarkUpdateProps) => {
             isRequired
             data-testid="name"
           />
-          <div style={{ marginTop: '20px' }}>
-            <Flex alignItems="center" gap="size-25">
-              <p className="spectrum-Heading spectrum-Heading--sizeXXS">
-                <Translate contentKey="bookmarks.tip"></Translate>
-              </p>
-              <AlertCircle size="S" />
-            </Flex>
-          </div>
           {/* {!isNew ? (
             <React.Fragment>
               <span className="spectrum-Heading spectrum-Heading--sizeXXS">
@@ -149,11 +113,15 @@ const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.bookmarks.updating,
   fetchSuccess: storeState.bookmarks.fetchSuccess,
   updateSuccess: storeState.bookmarks.updateSuccess,
+  datasource: storeState.dashboard.entity.dashboardDatasource,
+  selectedFilter: storeState.filter.selectedFilters,
+  features: storeState.feature.entities,
+  datasourceId: storeState.dashboard.entity.dashboardDatasource.id,
 });
 
-const mapDispatchToProps = { getBookmark, updateBookmark, createBookmark, reset, deleteBookmark, setBookmark };
+const mapDispatchToProps = { getBookmarks, updateBookmark, createBookmark, reset, deleteBookmark, setBookmark };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserUpdate);
+export default connect(mapStateToProps, mapDispatchToProps)(BookmarkUpdate);
