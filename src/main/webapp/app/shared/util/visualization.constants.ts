@@ -7,6 +7,8 @@ export const MEASURE = 'MEASURE';
 export const AggregationType = 'Aggregation type';
 export const Limit = 'Limit';
 export const Sort = 'Sort';
+export const BETWEEN = 'Between';
+
 export const VisualizationType = {
   ClusteredVerticalBarChart: 'Clustered Vertical Bar Chart',
   ClusteredHorizontalBarChart: 'Clustered Horizontal Bar Chart',

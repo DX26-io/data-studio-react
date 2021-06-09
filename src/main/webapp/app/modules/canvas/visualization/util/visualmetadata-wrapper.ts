@@ -271,16 +271,16 @@ const getQueryParametersForSearch = (visual, filters, conditionExpression, offse
   const fields = visual.fields;
   const dimensions = fields.filter(isDimension);
   const measures = fields.filter(isMeasure);
-  const dimensionFields = dimensions.map(function (item) {
+  const dimensionFields = dimensions.map(item => {
     const result = constructDimensionField(item, filters);
     item.feature.selectedName = result.name;
     return result;
   });
-  const measureFields = measures.map(function (item) {
+  const measureFields = measures.map(item => {
     return constructMeasureField(item);
   });
   const query = getQueryParametersWithFields(dimensionFields.concat(measureFields), filters, conditionExpression);
-  const aggExists = !!measureFields.filter(function (item) {
+  const aggExists = !!measureFields.filter(item => {
     return item.aggregation;
   })[0];
 
