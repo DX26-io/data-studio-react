@@ -11,6 +11,7 @@ export const ACTION_TYPES = {
   CREATE_BOOKMARK: 'bookmarks/CREATE_BOOKMARK',
   UPDATE_BOOKMARK: 'bookmarks/UPDATE_BOOKMARK',
   DELETE_BOOKMARK: 'bookmarks/DELETE_BOOKMARK',
+  // TODO:
   SEARCH_BOOKMARKS: 'bookmarks/SEARCH_BOOKMARKS',
   SET_BOOKMARK: 'bookmarks/SET_BOOKMARK',
   RESET: 'bookmarks/RESET',
@@ -53,12 +54,12 @@ export default (state: BookmarksState = initialState, action): BookmarksState =>
         loading: true,
       };
     case REQUEST(ACTION_TYPES.CREATE_BOOKMARK):
-        return {
-          ...state,
-          errorMessage: null,
-          updateSuccess: false,
-          updating: true,
-        };
+      return {
+        ...state,
+        errorMessage: null,
+        updateSuccess: false,
+        updating: true,
+      };
     case REQUEST(ACTION_TYPES.UPDATE_BOOKMARK):
     case REQUEST(ACTION_TYPES.DELETE_BOOKMARK):
       return {
@@ -77,12 +78,12 @@ export default (state: BookmarksState = initialState, action): BookmarksState =>
     case FAILURE(ACTION_TYPES.FETCH_BOOKMARK):
     case FAILURE(ACTION_TYPES.FETCH_ROLES):
     case FAILURE(ACTION_TYPES.CREATE_BOOKMARK):
-        return {
-          ...state,
-          errorMessage: action.payload,
-          updateSuccess: false,
-          updating: false,
-        };
+      return {
+        ...state,
+        errorMessage: action.payload,
+        updateSuccess: false,
+        updating: false,
+      };
     case FAILURE(ACTION_TYPES.UPDATE_BOOKMARK):
     case FAILURE(ACTION_TYPES.DELETE_BOOKMARK):
       return {

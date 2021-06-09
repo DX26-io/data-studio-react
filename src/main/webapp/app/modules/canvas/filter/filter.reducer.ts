@@ -1,3 +1,6 @@
+import { getVisualizationData, ValidateFields } from '../visualization/util/visualization-render-utils';
+import { IViews } from 'app/shared/model/views.model';
+
 export const ACTION_TYPES = {
   UPDATE_SELECTED_FILTER: 'filter/UPDATE_SELECTED_FILTER',
   FILTER_STATE_CHANGE: 'filter/FILTER_STATE_CHANGE',
@@ -90,4 +93,31 @@ export const toggleFeaturesPanel: () => void = () => (dispatch, getState) => {
   dispatch({
     type: ACTION_TYPES.TOGGLE_FEATURES_PANEL,
   });
+};
+
+const renderVisualizationById = (item, view, filters) => {
+  if (ValidateFields(item.fields)) {
+    getVisualizationData(item, view, filters);
+  } else {
+    // @khushbu needs to make it generic
+    // props.hideLoader(item.id);
+  }
+};
+
+export const loadVisualization = (visualmetadata, view, filters) => {
+  visualmetadata.visualMetadataSet.map((item, i) => {
+    renderVisualizationById(item, view, filters);
+  });
+};
+
+export const applyFilter = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
+  dispatch(saveFilter(filters));
+  dispatch(updateSelectedFilter());
+  loadVisualization(visualmetadata, view, filters);
+};
+
+export const clearFilter = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
+  dispatch(saveSelectedFilter({}));
+  dispatch(saveFilter({}));
+  loadVisualization(visualmetadata, view, filters);
 };
