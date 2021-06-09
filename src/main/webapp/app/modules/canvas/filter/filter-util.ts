@@ -1,5 +1,7 @@
 import { COMPARABLE_DATA_TYPES, FILTER_TYPES } from 'app/shared/util/data-constraints.constants';
 import { addNewExpression, ConditionExpression } from './condition-expression';
+import { IBookmark } from 'app/shared/model/bookmark.model';
+import { DYNAMIC_DATE_RANGE_CONFIG, tabList } from 'app/shared/util/data-constraints.constants';
 
 // const paramObject = {};
 // const selectedFilters = {};
@@ -210,7 +212,6 @@ export const getFilterCriterias = (selectedFilters, features) => {
   const filterCriterias = [];
   for (const key in selectedFilters) {
     if (Object.prototype.hasOwnProperty.call(selectedFilters, key)) {
-      // if (selectedFilters.hasOwnProperty(key)) {
       const param = selectedFilters[key];
       const isItemDateRange = isDateRange(key, selectedFilters);
       if (isItemDateRange && param._meta.valueType !== 'castValueType') {
@@ -231,4 +232,61 @@ export const getFilterCriterias = (selectedFilters, features) => {
     }
   }
   return filterCriterias;
+};
+
+const buildDynamicDateRangeObject = (dimensionName, title, customDynamicDateRange) => {
+  const metaData = {
+    dimensionName,
+    metadata: { currentDynamicDateRangeConfig: {}, customDynamicDateRange, dateRangeTab: 2 },
+  };
+  const configs = DYNAMIC_DATE_RANGE_CONFIG.filter(function (item) {
+    return item.title === title;
+  });
+  metaData.metadata.currentDynamicDateRangeConfig = configs[0];
+  return metaData;
+};
+
+const applyFeatureCriteria = (isTemporal, metadata, feature, value, filterName) => {
+  if (isTemporal) {
+    if (metadata) {
+      const dynamics = metadata.split('||');
+      const tooltipText = dynamics[0] === 'true' ? 'Last ' + dynamics[1] : dynamics[2];
+      const dynamicDateRangeToolTip = { name: filterName, text: tooltipText };
+      const dynamicDateRangeObject = buildDynamicDateRangeObject(feature.name, dynamics[2], dynamics[1]);
+      // TODO
+      // filterParametersService.saveDynamicDateRangeMetaData(filterName, dynamicDateRangeObject.metadata);
+      // filterParametersService.saveDynamicDateRangeToolTip(dynamicDateRangeToolTip);
+      // $rootScope.$broadcast("flairbiApp:bookmark-update-dynamic-date-range-meta-data", dynamicDateRangeObject);
+    } else {
+      const daterange = value.split('||');
+      // set date range TODO
+      // $rootScope.$broadcast("flairbiApp:filter-set-date-ranges", buildDateRange(feature.name, daterange));
+    }
+  }
+  const valueType = isTemporal ? 'dateRangeValueType' : 'valueType';
+  const filter = value.split('||');
+  filter._meta = {
+    dataType: feature.type,
+    valueType,
+  };
+  return filter;
+};
+
+export const addFilterFromBookmark = (bookmark: IBookmark) => {
+  const filters = {};
+  bookmark.featureCriteria.forEach(function (criteria) {
+    const isTemporal = criteria.dateRange && COMPARABLE_DATA_TYPES.includes(criteria.feature.type.toLowerCase());
+    filters[criteria.feature.name] = applyFeatureCriteria(
+      isTemporal,
+      criteria.metaData,
+      criteria.feature,
+      criteria.value,
+      criteria.feature.name
+    );
+  });
+  return filters;
+};
+
+const buildDateRange = (dimensionName, daterange) => {
+  return { dimensionName, startDate: daterange[0], endDate: daterange[1] };
 };
