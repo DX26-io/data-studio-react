@@ -19,6 +19,7 @@ interface SearchWhereStatement {
   readonly feature: string;
   readonly condition: string;
   readonly statement: string;
+  readonly statements: ReadonlyArray<string>;
 }
 
 interface SearchWhereStatements {
