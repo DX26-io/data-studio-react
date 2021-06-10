@@ -28,7 +28,6 @@ const createMeasures = (features: readonly IFeature[], measuresList: Array<strin
   const measures = [];
   measuresList.forEach(element => {
     const measure = features.find(item => {
-      //const featureName = element.substring(element.indexOf('(') + 1, element.indexOf(')'));
       const featureName = element.substring(element.indexOf('(') + 1, element.indexOf(')'));
       return item.name === trim(featureName);
     });
@@ -122,6 +121,7 @@ const isCompareTypes = item => {
       condition: '',
       statement: '',
       featureDataType: '',
+      statements: [],
     },
   };
 
@@ -130,8 +130,9 @@ const isCompareTypes = item => {
       const searchCondition = {
         feature: item.substring(0, item.indexOf(element.displayName)),
         condition: element.displayName,
-        statement: item.substring(item.indexOf(element.displayName) + element.displayName.length, item.length),
+        statement: trim(item.substring(item.indexOf(element.displayName) + element.displayName.length, item.length)),
         featureDataType: '',
+        statements: [],
       };
       compareType.isCompare = true;
       compareType.expression = searchCondition;
@@ -156,7 +157,7 @@ const getAggregation = (measuresList: Array<string>) => {
 
 const getCondition = condition => {
   const conditions = [];
-  condition.forEach(item => {
+  condition.forEach((item, index) => {
     const compareType = isCompareTypes(item);
     if (compareType.isCompare) {
       const searchWhereStatement = {
@@ -214,12 +215,12 @@ const createSearchResult = (
 };
 
 const createFilterObject = (searchObject: SearchResult, features: readonly IFeature[]) => {
-  let filter = {};
+  const filter = {};
   searchObject.where.conditions.forEach(item => {
     if (item.condition === BETWEEN) {
     } else {
       filter[item.feature] = item.statement.split(' ').map(val => {
-        return (val = val.replace(/\'/gi, ''));
+        return (val = val.replace(/'/gi, ''));
       });
       filter[item.feature]._meta = {
         dataType: 'valueType',
@@ -237,7 +238,7 @@ export const getQueryDTO = (searchText: string, features: readonly IFeature[], v
     .replace('filter by', '')
     .split(',');
   const order = searchText.substring(searchText.indexOf('order by'), searchText.length).replace('order by', '').split(',');
-  //const limit = searchText.substring(searchText.indexOf('limit'), searchText.length).replace('limit', '').split(',');
+  // const limit = searchText.substring(searchText.indexOf('limit'), searchText.length).replace('limit', '').split(',');
   const visual = createVisualFields(features, dimensionsList, measuresList, view, visualization);
 
   const searchObject = createSearchResult(measuresList, dimensionsList, condition, order, features);

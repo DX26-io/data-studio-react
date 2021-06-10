@@ -20,6 +20,7 @@ interface SearchWhereStatement {
   readonly condition: string;
   readonly statement: string;
   readonly featureDataType: string;
+  readonly statements: ReadonlyArray<string>;
 }
 
 interface SearchWhereStatements {

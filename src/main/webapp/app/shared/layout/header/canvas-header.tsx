@@ -1,5 +1,5 @@
 import './header.scss';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactText } from 'react';
 import { ActionButton, View, DialogContainer, TooltipTrigger, Tooltip, MenuTrigger, Menu, Item, Picker } from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import SaveAsFloppy from '@spectrum-icons/workflow/SaveAsFloppy';
@@ -25,11 +25,16 @@ import BookmarkUpdate from 'app/entities/bookmarks/bookmark-update';
 import { ComboBox, Item as ComboBoxItem } from '@react-spectrum/combobox';
 import { getBookmarks } from 'app/entities/bookmarks/bookmark.reducer';
 import VisualizationShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/visualization-share-modal';
+import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
+import { IBookmark } from 'app/shared/model/bookmark.model';
+import { addFilterFromBookmark } from 'app/modules/canvas/filter/filter-util';
+import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
   const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
   const [bookmarkId, setBookmarkId] = useState('');
+  const [bookmark, setBookmark] = useState<IBookmark>();
   const [dialog, setDialog] = useState<ReactText>();
 
   useEffect(() => {
@@ -67,6 +72,17 @@ const CanvasHeader = props => {
     props.toggleSearch();
   };
 
+  const applyBookmark = id => {
+    props.getFeatureCriteria(id);
+  };
+
+  useEffect(() => {
+    if (props.fetchedFeatureCriteria) {
+      const filters = addFilterFromBookmark({ ...bookmark, featureCriteria: props.featureCriteria });
+      props.applyFilter(filters, props.visualmetadata, props.view);
+    }
+  }, [props.fetchedFeatureCriteria]);
+
   return (
     <>
       <View>
@@ -85,10 +101,15 @@ const CanvasHeader = props => {
           placeholder={translate('bookmarks.search')}
           onSelectionChange={selected => {
             setBookmarkId(selected.toString());
+            applyBookmark(selected.toString());
+            const _bookmark = props.bookmarks.filter(item => {
+              return item.id === selected;
+            })[0];
+            setBookmark(_bookmark);
           }}
         >
-          {props.bookmarks.map(bookmark => (
-            <Item key={bookmark.id}>{bookmark.name}</Item>
+          {props.bookmarks.map(item => (
+            <Item key={item.id}>{item.name}</Item>
           ))}
         </Picker>
 
@@ -145,7 +166,7 @@ const CanvasHeader = props => {
           <Tooltip>More</Tooltip>
         </TooltipTrigger>
         <DialogContainer onDismiss={() => setDialog(null)}>{dialog === 'Share' && <VisualizationShareModal />}</DialogContainer>
-        <TooltipTrigger>
+        <TooltipTrigger >
           <ActionButton onPress={() => toggleSearchModal()} aria-label="{translate('views.menu.search')}" isQuiet={true} marginEnd="size-5">
             <Search size="M" />
           </ActionButton>
@@ -186,6 +207,10 @@ const mapStateToProps = (storeState: IRootState) => ({
   isEditMode: storeState.visualmetadata.isEditMode,
   bookmarks: storeState.bookmarks.bookmarks,
   datasourceId: storeState.dashboard.entity.dashboardDatasource.id,
+  fetchedFeatureCriteria: storeState.featureCriteria.fetchedFeatureCriteria,
+  featureCriteria: storeState.featureCriteria.featureCriteria,
+  view: storeState.views.entity,
+  selectedFilter: storeState.filter.selectedFilters,
 });
 
 const mapDispatchToProps = {
@@ -196,6 +221,8 @@ const mapDispatchToProps = {
   toggleSearch,
   saveViewState,
   getBookmarks,
+  getFeatureCriteria,
+  applyFilter,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
