@@ -54,6 +54,7 @@ import notification, { notificationState } from 'app/modules/canvas/scheduler/no
 import functions, { FunctionState } from 'app/entities/functions/function.reducer';
 import search, { SearchState } from 'app/entities/search/search.reducer';
 import featureCriteria, { FeatureCriteriaState } from 'app/entities/feature-criteria/feature-criteria.reducer';
+import hierarchies, { HierarchyState } from 'app/entities/hierarchy/hierarchy.reducer';
 
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
@@ -93,6 +94,7 @@ export interface IRootState {
   readonly visualizationData: VisualDataState;
   readonly bookmarks: BookmarksState;
   readonly featureCriteria: FeatureCriteriaState;
+  readonly hierarchies: HierarchyState;
 }
 
 const rootReducer = combineReducers<IRootState>({
@@ -131,6 +133,7 @@ const rootReducer = combineReducers<IRootState>({
   visualizationData,
   bookmarks,
   featureCriteria,
+  hierarchies,
 });
 
 export default rootReducer;

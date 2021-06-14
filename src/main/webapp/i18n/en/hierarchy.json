@@ -1,0 +1,28 @@
+{
+  "hierarchies": {
+    "home": {
+      "title": "Hierarchies",
+      "createLabel": "Create Hierarchy",
+      "editLabel": "Edit Hierarchy",
+      "description": "Manage your hierarchies"
+    },
+    "created": "A new hierarchy is created with identifier {{ param }}",
+    "updated": "A hierarchy is updated with identifier {{ param }}",
+    "deleted": "A hierarchy is deleted with identifier {{ param }}",
+    "delete": {
+      "question": "Are you sure you want to delete hierarchy {{ login }}?"
+    },
+    "error": {
+      "name": "Name is required",
+      "length": "Name cannot be longer than 50 characters"
+    },
+    "search": "Search hierarchy...",
+    "name": "Name",
+    "drilldown": "Drilldown order:",
+    "drilldownPlaceholder": "Select Dimension",
+    "createdBy": "Created by",
+    "createdDate": "Created date",
+    "lastModifiedBy": "Modified by",
+    "lastModifiedDate": "Modified date"
+  }
+}
