@@ -61,7 +61,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
         <div className={isFeaturesMinimize ? 'FeaturesPanel FeaturesPanel-minimize' : 'FeaturesPanel FeaturesPanel-maximize'}>
           <Flex direction="row" justifyContent="center" alignItems="center" marginStart="size-175" marginEnd="size-175">
             <span className="spectrum-Heading--sizeXXS" style={{ marginRight: 'auto' }}>
-              <Translate contentKey="datastudioApp.feature.panel.title">_Features</Translate>
+              <Translate contentKey="features.panel.title">_Features</Translate>
             </span>
             <ActionButton isQuiet onPress={createNewFeatureClicked}>
               <Add size="S" />

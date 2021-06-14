@@ -138,9 +138,9 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
       <Dialog>
         <Heading>
           {props.selectedFeature ? (
-            <Translate contentKey="datastudioApp.feature.dialogs.create.edittitle">_Edit Feature</Translate>
+            <Translate contentKey="features.dialogs.create.edittitle">_Edit Feature</Translate>
           ) : (
-            <Translate contentKey="datastudioApp.feature.dialogs.create.createtitle">_Create Feature</Translate>
+            <Translate contentKey="features.dialogs.create.createtitle">_Create Feature</Translate>
           )}
         </Heading>
         <Divider />
@@ -149,19 +149,19 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
             <View width="100%">
               <Form isRequired necessityIndicator="icon">
                 <TextField
-                  label={translate('datastudioApp.feature.dialogs.create.name')}
+                  label={translate('features.dialogs.create.name')}
                   placeholder="customer_attrition"
                   value={nameText}
                   onChange={setNameText}
                 />
                 <TextField
-                  label={translate('datastudioApp.feature.dialogs.create.type')}
+                  label={translate('features.dialogs.create.type')}
                   placeholder="varchar(30)"
                   value={typeText}
                   onChange={setTypeText}
                 />
                 <TextArea
-                  label={translate('datastudioApp.feature.dialogs.create.definition')}
+                  label={translate('features.dialogs.create.definition')}
                   placeholder="yearquarter(order_date)"
                   value={definitionText}
                   onChange={setDefinitionText}
@@ -170,7 +170,7 @@ const FeaturesCreateModal = (props: IFeaturesCreateModalProps) => {
             </View>
             <View width="100%">
               <ListBox
-                aria-label={translate('datastudioApp.feature.dialogs.create.functions')}
+                aria-label={translate('features.dialogs.create.functions')}
                 selectionMode="single"
                 onSelectionChange={onFunctionSelected}
                 items={props.functions.filter(functionFilter)}
