@@ -1,17 +1,16 @@
-import React, {Key, useEffect, useState} from 'react';
+import React, { Key, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import {ActionButton, Flex, View, Text, Button, Divider, ListBox, Item, Content} from '@adobe/react-spectrum';
+import { ActionButton, Flex, View, Text, Button, Divider, ListBox, Item, Content } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import './features-panel.scss';
 import Minimize from '@spectrum-icons/workflow/Minimize';
 import Maximize from '@spectrum-icons/workflow/Maximize';
 import Add from '@spectrum-icons/workflow/Add';
-import {getViewFeaturesEntities, selectFeature} from 'app/entities/feature/feature.reducer';
-// import {toggleFeaturesPanel} from "app/shared/reducers/application-profile";
-import {Tabs} from "@react-spectrum/tabs";
-import {featureTypeToActiveTabs, getFeaturesTabTranslations} from "app/modules/canvas/features/features-panel-util";
-import {Translate} from "react-jhipster";
-import {Redirect} from "react-router-dom";
+import { getViewFeaturesEntities, selectFeature } from 'app/entities/feature/feature.reducer';
+import { Tabs } from '@react-spectrum/tabs';
+import { featureTypeToActiveTabs, getFeaturesTabTranslations } from 'app/modules/canvas/features/features-panel-util';
+import { Translate } from 'react-jhipster';
+import { Redirect } from 'react-router-dom';
 
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
@@ -24,7 +23,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
     props.getViewFeaturesEntities(props.view.id);
   }, [props.view]);
 
-  const featureFilter = (feature) => {
+  const featureFilter = feature => {
     return feature.featureType === featureTypeToActiveTabs[activeTabId];
   };
 
@@ -32,8 +31,8 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
     setShowFeatureCreateDialog(true);
   };
 
-  const onFeatureSelected = (selectedSet) => {
-    const feature = props.featuresList.find((ft) => selectedSet.has(ft.id));
+  const onFeatureSelected = selectedSet => {
+    const feature = props.featuresList.find(ft => selectedSet.has(ft.id));
     props.selectFeature(feature);
     setShowFeatureCreateDialog(true);
   };
@@ -46,50 +45,51 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
           state: {
             featureType: featureTypeToActiveTabs[activeTabId],
             datasource: props.view.viewDashboard.dashboardDatasource,
-          }
+          },
         }}
       />
     );
-  }
+  };
 
   if (showFeatureCreateDialog) {
     return redirectToFeature();
   }
 
-  return <>
-    <div className={props.isFeaturesPanelOpen ? 'FeaturesPanel-Main FeaturesPanel-show' : 'FeaturesPanel-Main FeaturesPanel-hide'}>
-      <div className={isFeaturesMinimize ? 'FeaturesPanel FeaturesPanel-minimize' : 'FeaturesPanel FeaturesPanel-maximize'}>
-        <Flex direction="column" gap="size-100">
-          <View justifySelf="center">
-            <div className="features-header">
-              <span className="spectrum-Heading--sizeXXS">
-                <Translate contentKey="datastudioApp.feature.panel.title">_Features</Translate>
-              </span>
-              <Button variant="secondary"
-                      isQuiet
-                      onPress={createNewFeatureClicked}>
-                <Add></Add>
-              </Button>
-              {isFeaturesMinimize ?
+  return (
+    <>
+      <div className={props.isFeaturesPanelOpen ? 'FeaturesPanel-Main FeaturesPanel-show' : 'FeaturesPanel-Main FeaturesPanel-hide'}>
+        <div className={isFeaturesMinimize ? 'FeaturesPanel FeaturesPanel-minimize' : 'FeaturesPanel FeaturesPanel-maximize'}>
+          <Flex direction="row" justifyContent="center" alignItems="center" marginStart="size-175" marginEnd="size-175">
+            <span className="spectrum-Heading--sizeXXS" style={{ marginRight: 'auto' }}>
+              <Translate contentKey="features.panel.title">_Features</Translate>
+            </span>
+            <ActionButton isQuiet onPress={createNewFeatureClicked}>
+              <Add size="S" />
+            </ActionButton>
+            <div style={{ marginRight: '-11px' }}>
+              {isFeaturesMinimize ? (
                 <ActionButton
                   onPress={() => {
                     setFeaturesMinimize(!isFeaturesMinimize);
                   }}
-                  isQuiet={true}>
+                  isQuiet={true}
+                >
                   <Maximize></Maximize>
                 </ActionButton>
-                :
+              ) : (
                 <ActionButton
                   onPress={() => {
                     setFeaturesMinimize(!isFeaturesMinimize);
                   }}
-                  isQuiet={true}>
+                  isQuiet={true}
+                >
                   <Minimize></Minimize>
-                </ActionButton>}
+                </ActionButton>
+              )}
             </div>
-            <Divider size={'S'} />
-          </View>
-          <View>
+          </Flex>
+          <Divider size={'S'} />
+          <View backgroundColor="gray-75" width="91%" margin="0px auto">
             <Tabs
               aria-label="Features"
               isQuiet={true}
@@ -97,28 +97,29 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
               position={'sticky'}
               items={getFeaturesTabTranslations()}
               selectedKey={activeTabId}
-              onSelectionChange={key => setActiveTabId(key)}>
+              onSelectionChange={key => setActiveTabId(key)}
+            >
               {item => (
-                <Item title={item.name}
-                      key={item.id}>
-                  <Content margin="size-100">
+                <Item title={item.name} key={item.id}>
+                  <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
                     <ListBox
                       width="size-2400"
                       aria-label="Features"
                       selectionMode="single"
                       onSelectionChange={onFeatureSelected}
-                      items={props.featuresList.filter(featureFilter)}>
-                      {(feature) => <Item>{feature.name}</Item>}
+                      items={props.featuresList.filter(featureFilter)}
+                    >
+                      {feature => <Item>{feature.name}</Item>}
                     </ListBox>
                   </Content>
                 </Item>
               )}
             </Tabs>
           </View>
-        </Flex>
+        </div>
       </div>
-    </div>
-  </>;
+    </>
+  );
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
@@ -129,8 +130,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 const mapDispatchToProps = {
   getViewFeaturesEntities,
-  // toggleFeaturesPanel,
-  selectFeature
+  selectFeature,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
