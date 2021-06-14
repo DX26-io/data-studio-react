@@ -4,7 +4,7 @@ import { waitUntilDisplayed, waitUntilHidden, isVisible } from '../../util/utils
 const expect = chai.expect;
 
 export default class FeatureUpdatePage {
-  pageTitle: ElementFinder = element(by.id('datastudioApp.feature.home.createOrEditLabel'));
+  pageTitle: ElementFinder = element(by.id('features.home.createOrEditLabel'));
   saveButton: ElementFinder = element(by.id('save-entity'));
   cancelButton: ElementFinder = element(by.id('cancel-save'));
   datasourceIdInput: ElementFinder = element(by.css('input#feature-datasourceId'));

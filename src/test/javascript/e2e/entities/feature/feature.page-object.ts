@@ -9,7 +9,7 @@ import FeatureUpdatePage from './feature-update.page-object';
 const expect = chai.expect;
 export class FeatureDeleteDialog {
   deleteModal = element(by.className('modal'));
-  private dialogTitle: ElementFinder = element(by.id('datastudioApp.feature.delete.question'));
+  private dialogTitle: ElementFinder = element(by.id('features.delete.question'));
   private confirmButton = element(by.id('jhi-confirm-delete-feature'));
 
   getDialogTitle() {
@@ -59,7 +59,7 @@ export default class FeatureComponentsPage {
 
     const featureDeleteDialog = new FeatureDeleteDialog();
     await waitUntilDisplayed(featureDeleteDialog.deleteModal);
-    expect(await featureDeleteDialog.getDialogTitle().getAttribute('id')).to.match(/datastudioApp.feature.delete.question/);
+    expect(await featureDeleteDialog.getDialogTitle().getAttribute('id')).to.match(/features.delete.question/);
     await featureDeleteDialog.clickOnConfirmButton();
 
     await waitUntilHidden(featureDeleteDialog.deleteModal);
