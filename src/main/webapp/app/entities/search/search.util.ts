@@ -1,3 +1,16 @@
+import {
+  adjustStartDateRangeInterval,
+  endOfDay,
+  formatDate,
+  getStartDateRange,
+  getStartDateRangeInterval,
+  getStartDateRangeTimeUnit,
+  resetTimezone,
+  resetTimezoneData,
+  startOfDay,
+  strToDate,
+} from 'app/modules/canvas/data-constraints/utils/date-util';
+import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
 import { ValidateFields } from 'app/modules/canvas/visualization/util/visualization-render-utils';
 import { getDimension } from 'app/modules/canvas/visualization/util/visualization-utils';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
@@ -28,7 +41,7 @@ const createMeasures = (features: readonly IFeature[], measuresList: Array<strin
   const measures = [];
   measuresList.forEach(element => {
     const measure = features.find(item => {
-      const featureName = element.substring(element.indexOf('(') + 1, element.indexOf(')'));
+      const featureName = element.substring(element.search(/[(]/g) + 1, element.search(/[)]/g));
       return item.name === trim(featureName);
     });
     if (measure) {
@@ -128,9 +141,9 @@ const isCompareTypes = item => {
   for (const element of COMPARE_TYPES) {
     if (item.includes(element.displayName)) {
       const searchCondition = {
-        feature: item.substring(0, item.indexOf(element.displayName)),
+        feature: trim(item.substring(0, item.search(element.displayName))),
         condition: element.displayName,
-        statement: trim(item.substring(item.indexOf(element.displayName) + element.displayName.length, item.length)),
+        statement: trim(item.substring(item.search(element.displayName) + element.displayName.length, item.length)),
         featureDataType: '',
         statements: [],
       };
@@ -147,8 +160,8 @@ const getAggregation = (measuresList: Array<string>) => {
   const statements = [];
   measuresList.forEach(item => {
     const aggregationStatement = {
-      func: item.substring(0, item.indexOf('(')),
-      feature: item.substring(item.indexOf('(') + 1, item.indexOf(')')),
+      func: item.substring(0, item.search(/[(]/g)),
+      feature: item.substring(item.search(/[(]/g) + 1, item.search(/[)]/g)),
     };
     statements.push(aggregationStatement);
   });
@@ -161,19 +174,55 @@ const getCondition = condition => {
     const compareType = isCompareTypes(item);
     if (compareType.isCompare) {
       const searchWhereStatement = {
-        feature: compareType.expression.feature,
+        feature: trim(compareType.expression.feature),
         condition: compareType.expression.condition,
         statement: compareType.expression.statement,
         featureDataType: compareType.expression.featureDataType,
       };
       conditions.push(searchWhereStatement);
     } else if (item.includes('(') && item.includes(')')) {
+      const condtionType = isDynamicDateRange(item.substring(item.search(/[(]/g) + 1, item.search(/[)]/g)));
       const searchWhereStatement = {
-        feature: item.substring(0, item.indexOf('(')),
-        condition: isDynamicDateRange(item.substring(item.indexOf('(') + 1, item.indexOf(')'))),
-        statement: item.substring(item.indexOf('(') + 1, item.indexOf(')')),
+        feature: trim(item.substring(0, item.search(/[(]/g))),
+        condition: condtionType,
+        statement: item.substring(item.search(/[(]/g) + 1, item.search(/[)]/g)),
         featureDataType: compareType.expression.featureDataType,
+        statements: [],
       };
+      if (condtionType === BETWEEN) {
+        let fromDate;
+        let toDate;
+        let startDateFormatted = '';
+        let endDateFormatted = '';
+
+        const currentDynamicDateRangeConfig = DYNAMIC_DATE_RANGE_CONFIG.find(
+          d => d.title.toLocaleLowerCase() === searchWhereStatement.statement
+        );
+        const startDateRange = getStartDateRange(currentDynamicDateRangeConfig);
+        if (startDateRange) {
+          fromDate = formatDate(resetTimezone(strToDate(startDateRange)));
+          startDateFormatted = fromDate;
+        } else {
+          const startDateRangeInterval = getStartDateRangeInterval(currentDynamicDateRangeConfig, '0');
+          if (!startDateRangeInterval) {
+            return;
+          }
+          const timeUnit = getStartDateRangeTimeUnit(currentDynamicDateRangeConfig) || '';
+          fromDate = '__FLAIR_INTERVAL_OPERATION(NOW(' + timeUnit + "), '-', '" + startDateRangeInterval + "')";
+          const adjustedDate = adjustStartDateRangeInterval(currentDynamicDateRangeConfig);
+          startDateFormatted = formatDate(resetTimezone(startOfDay(adjustedDate)));
+        }
+        endDateFormatted = formatDate(resetTimezone(endOfDay(strToDate(new Date()))));
+        toDate = '__FLAIR_NOW()';
+
+        if (fromDate) {
+          fromDate = resetTimezoneData(fromDate);
+        }
+        if (toDate) {
+          toDate = resetTimezoneData(toDate);
+        }
+        searchWhereStatement.statements.push(fromDate, toDate);
+      }
       conditions.push(searchWhereStatement);
     }
   });
@@ -214,38 +263,55 @@ const createSearchResult = (
   return modal;
 };
 
+const findCompareObject = oprater => {
+  return COMPARE_TYPES.find(item => {
+    return item.displayName === oprater;
+  });
+};
+
 const createFilterObject = (searchObject: SearchResult, features: readonly IFeature[]) => {
   const filter = {};
   searchObject.where.conditions.forEach(item => {
     if (item.condition === BETWEEN) {
+      filter[item.feature] = item.statements;
+      filter[item.feature]._meta = {
+        dataType: getDimension(features, item.feature).type,
+        valueType: 'dateRangeValueType',
+      };
+    } else if (findCompareObject(item.condition)) {
+      filter[item.feature] = item.statement.split(' ').map(val => {
+        return (val = val.replace(/'/gi, ''));
+      });
+      filter[item.feature]._meta = {
+        dataType: getDimension(features, item.feature).type,
+        valueType: 'compare',
+      };
     } else {
       filter[item.feature] = item.statement.split(' ').map(val => {
         return (val = val.replace(/'/gi, ''));
       });
       filter[item.feature]._meta = {
-        dataType: 'valueType',
-        valueType: getDimension(features, item.feature).type,
+        dataType: getDimension(features, item.feature).type,
+        valueType: 'valueType',
       };
     }
   });
+  return filter;
 };
 
 export const getQueryDTO = (searchText: string, features: readonly IFeature[], view: IViews, visualization: IVisualizations) => {
-  const measuresList = searchText.substring(0, searchText.indexOf('by')).split(',');
-  const dimensionsList = searchText.substring(searchText.indexOf('by'), searchText.indexOf('filter by')).replace('by', '').split(',');
-  const condition = searchText
-    .substring(searchText.indexOf('filter by'), searchText.indexOf('order by'))
-    .replace('filter by', '')
-    .split(',');
-  const order = searchText.substring(searchText.indexOf('order by'), searchText.length).replace('order by', '').split(',');
-  // const limit = searchText.substring(searchText.indexOf('limit'), searchText.length).replace('limit', '').split(',');
+  const measuresList = searchText.substring(0, searchText.search('by')).split(',');
+  const dimensionsList = searchText.substring(searchText.search('by'), searchText.search('filter by')).replace('by', '').split(',');
+  const condition = searchText.substring(searchText.search('filter by'), searchText.search('order by')).replace('filter by', '').split(',');
+  const order = searchText.substring(searchText.search('order by'), searchText.length).replace('order by', '').split(',');
+  // const limit = searchText.substring(searchText.search('limit'), searchText.length).replace('limit', '').split(',');
   const visual = createVisualFields(features, dimensionsList, measuresList, view, visualization);
 
   const searchObject = createSearchResult(measuresList, dimensionsList, condition, order, features);
   if (visual.fields && ValidateFields(visual.fields)) {
-    createFilterObject(searchObject, features);
+    const filter = createFilterObject(searchObject, features);
     const visualMetadata = VisualWrap(visual);
-    const queryDTO = visualMetadata.getQueryParametersForSearch(visual, searchObject);
+    const queryDTO = visualMetadata.getQueryParametersForSearch(visual, filter, getConditionExpression(filter), 0, searchObject);
     return queryDTO;
   }
 };

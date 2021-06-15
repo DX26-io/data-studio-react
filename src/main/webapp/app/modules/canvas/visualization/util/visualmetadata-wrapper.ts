@@ -1,3 +1,6 @@
+import { SearchResult } from 'app/entities/search/search.model';
+import { IFeature } from 'app/shared/model/feature.model';
+import { IQueryDTO } from 'app/shared/model/query-dto.model';
 import {
   AggregationType,
   ASC,
@@ -151,8 +154,20 @@ const getDimension = item => {
   });
 };
 
-const constructMeasureField = fieldMeasure => {
-  const agg = getProperty(fieldMeasure.properties, AggregationType, null);
+const findAggregation = (feature: IFeature, searchObject?: SearchResult) => {
+  const aggregation = searchObject.aggregation.statements.find(item => {
+    return item.feature === feature.name;
+  });
+  return aggregation.func;
+};
+
+const constructMeasureField = (fieldMeasure, searchObject?: SearchResult) => {
+  let agg;
+  if (searchObject) {
+    agg = findAggregation(fieldMeasure.feature, searchObject);
+  } else {
+    agg = getProperty(fieldMeasure.properties, AggregationType, null);
+  }
   if (agg !== null) {
     return {
       aggregation: agg !== 'NONE' ? agg : null,
@@ -240,6 +255,23 @@ const applyOrderOnMeasures = measures => {
   return ordersListSortMeasures;
 };
 
+const applyOrderOnSearch = (searchFeature: SearchResult) => {
+  const ordersListSortMeasures = searchFeature.orderBy.map(function (item) {
+    if (item.direction.toLowerCase() === ASC.toLowerCase()) {
+      return {
+        direction: ASC,
+        feature: { name: item.feature },
+      };
+    } else {
+      return {
+        direction: DESC,
+        feature: { name: item.feature },
+      };
+    }
+  });
+  return ordersListSortMeasures;
+};
+
 const getQueryParameters = (visual, filters, conditionExpression, offset) => {
   const fields = visual.fields;
   const dimensions = fields.filter(isDimension);
@@ -267,20 +299,20 @@ const getQueryParameters = (visual, filters, conditionExpression, offset) => {
   return query;
 };
 
-const getQueryParametersForSearch = (visual, filters, conditionExpression, offset) => {
+const getQueryParametersForSearch = (visual, filters, conditionExpression, offset, searchObject: SearchResult): IQueryDTO => {
   const fields = visual.fields;
   const dimensions = fields.filter(isDimension);
   const measures = fields.filter(isMeasure);
-  const dimensionFields = dimensions.map(item => {
+  const dimensionFields = dimensions.map(function (item) {
     const result = constructDimensionField(item, filters);
     item.feature.selectedName = result.name;
     return result;
   });
-  const measureFields = measures.map(item => {
-    return constructMeasureField(item);
+  const measureFields = measures.map(function (item) {
+    return constructMeasureField(item, searchObject);
   });
   const query = getQueryParametersWithFields(dimensionFields.concat(measureFields), filters, conditionExpression);
-  const aggExists = !!measureFields.filter(item => {
+  const aggExists = !!measureFields.filter(function (item) {
     return item.aggregation;
   })[0];
 
@@ -288,10 +320,17 @@ const getQueryParametersForSearch = (visual, filters, conditionExpression, offse
     query['groupBy'] = dimensionFields;
   }
   query['limit'] = getQueryLimit(visual, offset);
-  const ordersListSortMeasures = applyOrderOnMeasures(measures);
-  const ordersListSortDimensions = applyOrderOnDimensions(dimensions);
-  query['orders'] = ordersListSortMeasures.concat(ordersListSortDimensions);
-  return query;
+  const orderBy = applyOrderOnSearch(searchObject);
+  query['orders'] = orderBy;
+
+  const modal: IQueryDTO = {
+    conditionExpressions: query.conditionExpressions,
+    fields: query.fields,
+    groupBy: query['groupBy'],
+    limit: 20,
+    orders: orderBy,
+  };
+  return modal;
 };
 
 const hasDimension = (fields, dimensionName) => {
