@@ -336,7 +336,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualMetadataContainerList: storeState.visualmetadata.visualMetadataContainerList,
   isSearchOpen: storeState.search.isSearchOpen,
   selectedFilter: storeState.visualmetadata.selectedFilter,
-  filters: storeState.filter.paramObject,
+  filters: storeState.filter.selectedFilters,
 });
 
 const mapDispatchToProps = {

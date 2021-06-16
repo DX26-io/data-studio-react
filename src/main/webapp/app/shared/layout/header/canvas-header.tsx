@@ -28,7 +28,7 @@ import VisualizationShareModal from 'app/modules/canvas/visualization/visualizat
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { IBookmark } from 'app/shared/model/bookmark.model';
 import { addFilterFromBookmark } from 'app/modules/canvas/filter/filter-util';
-import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
+import { applyFilter, modifyFilterState } from 'app/modules/canvas/filter/filter.reducer';
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
@@ -38,10 +38,10 @@ const CanvasHeader = props => {
   const [dialog, setDialog] = useState<ReactText>();
 
   useEffect(() => {
-    if (props.datasourceId) {
-      props.getBookmarks(props.datasourceId);
+    if (props.view.id) {
+      props.getBookmarks(props.view.viewDashboard?.dashboardDatasource?.id);
     }
-  }, []);
+  }, [props.view]);
 
   const handleVisualizationClick = v => {
     props.addVisualmetadataEntity({
@@ -80,6 +80,7 @@ const CanvasHeader = props => {
     if (props.fetchedFeatureCriteria) {
       const filters = addFilterFromBookmark({ ...bookmark, featureCriteria: props.featureCriteria });
       props.applyFilter(filters, props.visualmetadata, props.view);
+      props.modifyFilterState();
     }
   }, [props.fetchedFeatureCriteria]);
 
@@ -97,6 +98,7 @@ const CanvasHeader = props => {
         </ComboBox> */}
         {/* TODO : Picker needs to be replaced with combobox in near future 
         using Picker for time being */}
+        
         <Picker
           placeholder={translate('bookmarks.search')}
           onSelectionChange={selected => {
@@ -166,7 +168,7 @@ const CanvasHeader = props => {
           <Tooltip>More</Tooltip>
         </TooltipTrigger>
         <DialogContainer onDismiss={() => setDialog(null)}>{dialog === 'Share' && <VisualizationShareModal />}</DialogContainer>
-        <TooltipTrigger >
+        <TooltipTrigger>
           <ActionButton onPress={() => toggleSearchModal()} aria-label="{translate('views.menu.search')}" isQuiet={true} marginEnd="size-5">
             <Search size="M" />
           </ActionButton>
@@ -206,7 +208,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualmetadataEntity: storeState.visualmetadata.entity,
   isEditMode: storeState.visualmetadata.isEditMode,
   bookmarks: storeState.bookmarks.bookmarks,
-  datasourceId: storeState.dashboard.entity.dashboardDatasource.id,
   fetchedFeatureCriteria: storeState.featureCriteria.fetchedFeatureCriteria,
   featureCriteria: storeState.featureCriteria.featureCriteria,
   view: storeState.views.entity,
@@ -223,6 +224,7 @@ const mapDispatchToProps = {
   getBookmarks,
   getFeatureCriteria,
   applyFilter,
+  modifyFilterState,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

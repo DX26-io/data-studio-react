@@ -107,7 +107,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   selectedFilter: storeState.filter.selectedFilters,
   isUpdateValueInFilter: storeState.filter.isUpdateValueInFilter,
   visualmetadata: storeState.views.viewState,
-  filters: storeState.filter.paramObject,
+  filters: storeState.filter.selectedFilters,
 });
 
 const mapDispatchToProps = {

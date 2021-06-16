@@ -9,7 +9,7 @@ import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from '../data-constraints/utils/date-util';
 import { checkIsDateType } from '../visualization/util/visualization-utils';
-import { saveSelectedFilter, saveFilter } from './filter.reducer';
+import { saveSelectedFilter } from './filter.reducer';
 import { saveDynamicDateRangeMetaData } from './filter-util';
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
@@ -20,12 +20,13 @@ const FilterElement = (props: IFilterElementProp) => {
 
   const updateDefaultValues = data => {
     const filterValues = [];
-    data && data.forEach(item => {
-      filterValues.push({
-        label: item,
-        value: item,
+    data &&
+      data.forEach(item => {
+        filterValues.push({
+          label: item,
+          value: item,
+        });
       });
-    });
     setdefaultValues(filterValues);
   };
 
@@ -123,12 +124,7 @@ const FilterElement = (props: IFilterElementProp) => {
   };
 
   function removeFilter(filter) {
-    let filterParameters;
-    filterParameters = props.filters;
-    filterParameters[filter] = [];
-    props.saveFilter(filterParameters);
-
-    filterParameters = props.selectedFilter;
+    const filterParameters = props.selectedFilter;
     filterParameters[filter] = [];
     props.saveSelectedFilter(filterParameters);
   }
@@ -208,13 +204,10 @@ const mapStateToProps = (storeState: IRootState) => ({
   featuresList: storeState.feature.entities,
   selectedFilter: storeState.filter.selectedFilters,
   filterStateChange: storeState.filter.filterStateChange,
-  filters: storeState.filter.paramObject,
-
 });
 const mapDispatchToProps = {
   getfeatureEntities,
   saveSelectedFilter,
-  saveFilter,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
