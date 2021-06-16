@@ -17,7 +17,7 @@ const initialState = {
   isSearchOpen: false,
   searchError: null as string,
   searchText: '' as string,
-  showResults: false,
+  searchedResults: false,
   autoSuggestion: [] as ReadonlyArray<SearchAutoSuggestion>,
   searchStruct: null as SearchResult,
 };
@@ -61,13 +61,13 @@ export default (state: SearchState = initialState, action): SearchState => {
     case ACTION_TYPES.SET_SEARCH_TEXT:
       return {
         ...state,
-        showResults: false,
+        searchedResults: false,
         searchText: action.payload.text,
       };
     case ACTION_TYPES.DO_SEARCH:
       return {
         ...state,
-        showResults: true,
+        searchedResults: true,
       };
     default:
       return state;

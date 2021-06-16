@@ -86,7 +86,7 @@ const SearchModal = (props: ISearchModalProps) => {
     }
   };
 
-  const rendering = props.showResults ? (
+  const rendering = props.searchedResults ? (
     <Flex direction="row" height="size-600" gap="size-75">
       <Flex direction="column" height="100%" flex gap="size-75">
         <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="100%">
@@ -158,7 +158,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isSearchOpen: storeState.search.isSearchOpen,
   autoSuggestion: storeState.search.autoSuggestion,
   searchText: storeState.search.searchText,
-  showResults: storeState.search.showResults,
+  searchedResults: storeState.search.searchedResults,
   searchStruct: storeState.search.searchStruct,
   visualmetadataEntity: storeState.visualmetadata.entity,
   features: storeState.feature.entities,
