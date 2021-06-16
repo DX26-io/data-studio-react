@@ -20,7 +20,7 @@ const FilterElement = (props: IFilterElementProp) => {
 
   const updateDefaultValues = data => {
     const filterValues = [];
-    data.forEach(item => {
+    data && data.forEach(item => {
       filterValues.push({
         label: item,
         value: item,

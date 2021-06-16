@@ -48,20 +48,20 @@ export const COMPARE_TYPES = [
     value: 'NEQ',
   },
   {
-    displayName: '>',
-    value: 'GT',
-  },
-  {
-    displayName: '<',
-    value: 'LT',
-  },
-  {
     displayName: '>=',
     value: 'GTE',
   },
   {
     displayName: '<=',
     value: 'LTE',
+  },
+  {
+    displayName: '>',
+    value: 'GT',
+  },
+  {
+    displayName: '<',
+    value: 'LT',
   },
 ];
 

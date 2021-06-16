@@ -4,6 +4,7 @@ import { View } from '@adobe/react-spectrum';
 import { RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import './canvas.scss';
+import 'flair-visualizations/styles/stylesheets/screen.css';
 import { getEntity as getViewEntity, getCurrentViewState, saveViewState } from 'app/entities/views/views.reducer';
 import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
 import { getEntities as getfeatureEntities, getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
@@ -83,6 +84,10 @@ const Canvas = (props: VisualizationProp) => {
   const onResizeStop = (layout, oldItem, newItem, placeholder, e, element) => {
     const v = VisualMetadataContainerGetOne(oldItem.i);
     if (v && v.data?.length > 0) {
+      v.h = newItem.h;
+      v.height = newItem.h;
+      v.w = newItem.w;
+      v.width = newItem.w;
       renderVisualization(v, v.data);
     }
   };

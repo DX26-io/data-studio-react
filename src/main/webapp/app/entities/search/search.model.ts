@@ -19,6 +19,7 @@ interface SearchWhereStatement {
   readonly feature: string;
   readonly condition: string;
   readonly statement: string;
+  readonly featureDataType: string;
   readonly statements: ReadonlyArray<string>;
 }
 
@@ -35,5 +36,10 @@ export interface SearchResult {
   readonly aggregation: SearchAggregationStatements;
   readonly by: SearchByStatements;
   readonly where: SearchWhereStatements;
-  readonly orderBy: SearchOrderByStatements;
+  readonly orderBy: Array<SearchOrderByStatements>;
+}
+
+export interface CompareType {
+  isCompare: boolean;
+  expression: SearchWhereStatement;
 }
