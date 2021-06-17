@@ -31,12 +31,12 @@ const FilterElement = (props: IFilterElementProp) => {
   };
 
   useEffect(() => {
-    if (props.selectedFilter[props.feature.name]) {
-      updateDefaultValues(props.selectedFilter[props.feature.name]);
+    if (props.selectedFilters[props.feature.name]) {
+      updateDefaultValues(props.selectedFilters[props.feature.name]);
     } else {
       setdefaultValues([]);
     }
-  }, [props.filterStateChange]);
+  }, [props.selectedFilters, props.isUpdateValueInFilter]);
 
   const load = (q, dimension) => {
     const vId = props.view?.id;
@@ -61,7 +61,7 @@ const FilterElement = (props: IFilterElementProp) => {
   };
   const mapOptionsToValues = (options, inputValue) => {
     if (!inputValue) {
-      return options.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase()));
+      return options.filter(i => i.label?.toString().toLowerCase().includes(inputValue.toLowerCase()));
     }
     return options;
   };
@@ -84,17 +84,16 @@ const FilterElement = (props: IFilterElementProp) => {
   };
 
   const addValueInFilter = value => {
-    const filterParameters = props.selectedFilter;
-    if (!filterParameters[props.feature.name]) {
-      filterParameters[props.feature.name] = [];
+    if (!props.selectedFilters[props.feature.name]) {
+      props.selectedFilters[props.feature.name] = [];
     }
-    filterParameters[props.feature.name].push(value);
-    filterParameters[props.feature.name]._meta = {
+    props.selectedFilters[props.feature.name].push(value);
+    props.selectedFilters[props.feature.name]._meta = {
       dataType: props.feature.type,
       valueType: 'valueType',
     };
-    updateDefaultValues(filterParameters[props.feature.name]);
-    props.saveSelectedFilter(filterParameters);
+    updateDefaultValues(props.selectedFilters[props.feature.name]);
+    props.saveSelectedFilter(props.selectedFilters);
   };
 
   function removeTagFromFilterList(filterParameters, tag) {
@@ -119,27 +118,25 @@ const FilterElement = (props: IFilterElementProp) => {
     if (actionMeta.action === 'select-option') {
       addValueInFilter(actionMeta.option.value);
     } else if (actionMeta.action === 'remove-value') {
-      props.saveSelectedFilter(removeTagFromFilterList(props.selectedFilter, actionMeta.removedValue.value));
+      props.saveSelectedFilter(removeTagFromFilterList(props.selectedFilters, actionMeta.removedValue.value));
     }
   };
 
   function removeFilter(filter) {
-    const filterParameters = props.selectedFilter;
-    filterParameters[filter] = [];
-    props.saveSelectedFilter(filterParameters);
+    props.selectedFilters[filter] = [];
+    props.saveSelectedFilter(props.selectedFilters);
   }
 
   const addDateRangeFilter = date => {
-    const filterParameters = props.selectedFilter;
-    if (!filterParameters[props.feature.name]) {
-      filterParameters[props.feature.name] = [];
+    if (!props.selectedFilters[props.feature.name]) {
+      props.selectedFilters[props.feature.name] = [];
     }
-    filterParameters[props.feature.name].push(date);
-    filterParameters[props.feature.name]._meta = {
+    props.selectedFilters[props.feature.name].push(date);
+    props.selectedFilters[props.feature.name]._meta = {
       dataType: props.feature.type,
       valueType: 'dateRangeValueType',
     };
-    props.saveSelectedFilter(filterParameters);
+    props.saveSelectedFilter(props.selectedFilters);
   };
 
   const onDateChange = (startDate, endDate, metadata) => {
@@ -202,8 +199,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   filterData: storeState.visualmetadata.filterData,
   featuresList: storeState.feature.entities,
-  selectedFilter: storeState.filter.selectedFilters,
-  filterStateChange: storeState.filter.filterStateChange,
+  selectedFilters: storeState.filter.selectedFilters,
+  isUpdateValueInFilter: storeState.filter.isUpdateValueInFilter,
 });
 const mapDispatchToProps = {
   getfeatureEntities,

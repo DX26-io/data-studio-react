@@ -10,12 +10,13 @@ const configuration = Configuration();
 
 export const ValidateFields = fields => {
   let isValid = true;
-  fields.forEach(field => {
-    if (!field || !field.feature) {
-      isValid = false;
-      return isValid;
-    }
-  });
+  fields &&
+    fields.forEach(field => {
+      if (!field || !field.feature) {
+        isValid = false;
+        return isValid;
+      }
+    });
   return isValid;
 };
 export const getVisualizationData = (visual, view, filter) => {

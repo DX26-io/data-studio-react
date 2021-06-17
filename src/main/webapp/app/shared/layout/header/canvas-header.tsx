@@ -28,7 +28,7 @@ import VisualizationShareModal from 'app/modules/canvas/visualization/visualizat
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { IBookmark } from 'app/shared/model/bookmark.model';
 import { addFilterFromBookmark } from 'app/modules/canvas/filter/filter-util';
-import { applyFilter, modifyFilterState } from 'app/modules/canvas/filter/filter.reducer';
+import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
@@ -80,7 +80,7 @@ const CanvasHeader = props => {
     if (props.fetchedFeatureCriteria) {
       const filters = addFilterFromBookmark({ ...bookmark, featureCriteria: props.featureCriteria });
       props.applyFilter(filters, props.visualmetadata, props.view);
-      props.modifyFilterState();
+     // props.modifyFilterState();
     }
   }, [props.fetchedFeatureCriteria]);
 
@@ -224,7 +224,7 @@ const mapDispatchToProps = {
   getBookmarks,
   getFeatureCriteria,
   applyFilter,
-  modifyFilterState,
+  //modifyFilterState,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

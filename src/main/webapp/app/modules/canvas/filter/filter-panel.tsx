@@ -10,7 +10,7 @@ import FilterElement from 'app/modules/canvas/filter/filter-element';
 import { getViewFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { updateSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { Translate } from 'react-jhipster';
-import { applyFilter, clearFilter, modifyFilterState } from './filter.reducer';
+import { applyFilter, clearFilter } from './filter.reducer';
 
 export interface IFilterPanelProp extends StateProps, DispatchProps {
   hideLoader?: (id) => void;
@@ -22,7 +22,6 @@ const FilterPanel = (props: IFilterPanelProp) => {
 
   const removeFilter = () => {
     props.clearFilter({}, props.visualmetadata, props.view);
-    props.modifyFilterState();
   };
   useEffect(() => {
     props.getfeatureEntities(props.view.id);
@@ -110,15 +109,13 @@ const mapStateToProps = (storeState: IRootState) => ({
   isFilterOpen: storeState.filter.isFilterOpen,
   featuresList: storeState.feature.entities,
   visualmetadata: storeState.views.viewState,
-  selectedFilter: storeState.filter.selectedFilters,
-  filterStateChange: storeState.filter.filterStateChange,
+  selectedFilter: storeState.filter.selectedFilters
 });
 const mapDispatchToProps = {
   getfeatureEntities,
   updateSelectedFilter,
   applyFilter,
-  clearFilter,
-  modifyFilterState,
+  clearFilter
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

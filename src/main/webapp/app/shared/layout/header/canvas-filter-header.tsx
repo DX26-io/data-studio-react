@@ -4,14 +4,13 @@ import { ActionButton, View, DialogContainer, TooltipTrigger, Tooltip, MenuTrigg
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { createEntity as addVisualmetadataEntity, toggleEditMode } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { toggleFilterPanel } from 'app/modules/canvas/filter/filter.reducer';
+import { toggleFilterPanel, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { saveViewState } from 'app/entities/views/views.reducer';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import { getVisualizationData, ValidateFields } from 'app/modules/canvas/visualization/util/visualization-render-utils';
+import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
 import Close from '@spectrum-icons/workflow/Close';
-import { modifyFilterState } from 'app/modules/canvas/filter/filter.reducer';
-
 export interface ICanvasFilterHeaderProps extends StateProps, DispatchProps {
   hideLoader?: (id) => void;
 }
@@ -37,26 +36,12 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
     }
   }, [props.selectedFilter, props.isUpdateValueInFilter]);
 
-  const renderVisualizationById = item => {
-    if (ValidateFields(item.fields)) {
-      getVisualizationData(item, props.view, props.filters);
-    } else {
-      props.hideLoader(item.id);
-    }
-  };
-
-  const loadVisualization = () => {
-    props.visualmetadata.visualMetadataSet.map((item, i) => {
-      renderVisualizationById(item);
-    });
-  };
-
   const removeFromFilter = (key, values, index) => {
-    const position = props.selectedFilter[key].indexOf(values);
-    props.selectedFilter[key].splice(position, 1);
+    const filter = props.selectedFilter;
+    const position = filter[key].indexOf(values);
+    filter[key].splice(position, 1);
     toggle(index);
-    loadVisualization();
-    props.modifyFilterState();
+    props.applyFilter(filter, props.visualmetadata, props.view);
   };
 
   return (
@@ -115,7 +100,8 @@ const mapDispatchToProps = {
   toggleEditMode,
   toggleFilterPanel,
   saveViewState,
-  modifyFilterState,
+  saveSelectedFilter,
+  applyFilter
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

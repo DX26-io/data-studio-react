@@ -200,7 +200,6 @@ const Canvas = (props: VisualizationProp) => {
     if (props.isCreated) {
       props.metadataContainerAdd(props.visualmetadataEntity);
       setvisualmetadata(props.visualMetadataContainerList);
-      renderVisualizationById(props.visualmetadataEntity);
     }
   }, [props.isCreated]);
 
@@ -210,6 +209,12 @@ const Canvas = (props: VisualizationProp) => {
       renderVisualizationById(props.visualmetadataEntity);
     }
   }, [props.updateSuccess]);
+
+  useEffect(() => {
+    if (props.deleteSuccess) {
+      setvisualmetadata(props.visualMetadataContainerList);
+    }
+  }, [props.deleteSuccess]);
 
   useEffect(() => {
     if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
@@ -325,6 +330,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualmetadata: storeState.views.viewState,
   isCreated: storeState.visualmetadata.newCreated,
   updateSuccess: storeState.visualmetadata.updateSuccess,
+  deleteSuccess: storeState.visualmetadata.deleteSuccess,
   visualizationsList: storeState.visualizations.entities,
   featuresList: storeState.feature.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,

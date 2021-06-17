@@ -9,6 +9,7 @@ import { IVisualMetaDataDTO } from 'app/shared/model/visualmeta-data-dto.model';
 import { IValidateDTO } from 'app/shared/model/validate.model';
 import {
   visualMetadataContainerAdd,
+  visualMetadataContainerRemove,
   visualMetadataContainerUpdate,
 } from 'app/modules/canvas/visualization/util/visualmetadata-container.util';
 
@@ -25,6 +26,7 @@ export const ACTION_TYPES = {
   SET_EDIT_ACTION: 'visualmetadata/SET_EDIT_ACTION',
   VISUAL_METADATA_CONTAINER_ADD: 'visualmetadata/VISUAL_METADATA_CONTAINER_ADD',
   VISUAL_METADATA_CONTAINER_UPDATE: 'visualmetadata/VISUAL_METADATA_CONTAINER_UPDATE',
+  VISUAL_METADATA_CONTAINER_REMOVE: 'visualmetadata/VISUAL_METADATA_CONTAINER_REMOVE',
 };
 
 const initialState = {
@@ -35,6 +37,7 @@ const initialState = {
   updating: false,
   updateSuccess: false,
   newCreated: false,
+  deleteSuccess: false,
   rowQuery: null,
   filterData: {},
   selectedFilter: {},
@@ -71,7 +74,8 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
       return {
         ...state,
         errorMessage: null,
-        updateSuccess: false,
+        deleteSuccess: false,
+        newCreated: false,
         updating: true,
       };
     case REQUEST(ACTION_TYPES.VALIDATE_QUERY):
@@ -91,7 +95,8 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         ...state,
         loading: false,
         updating: false,
-        updateSuccess: false,
+        deleteSuccess: false,
+        newCreated: false,
         errorMessage: action.payload,
       };
     case FAILURE(ACTION_TYPES.VALIDATE_QUERY):
@@ -131,7 +136,8 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
       return {
         ...state,
         updating: false,
-        updateSuccess: true,
+        deleteSuccess: true,
+        newCreated: false,
         entity: {},
       };
     case SUCCESS(ACTION_TYPES.VALIDATE_QUERY):
@@ -155,6 +161,11 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         editAction: action.payload,
       };
     case ACTION_TYPES.VISUAL_METADATA_CONTAINER_ADD:
+      return {
+        ...state,
+        visualMetadataContainerList: action.payload,
+      };
+    case ACTION_TYPES.VISUAL_METADATA_CONTAINER_REMOVE:
       return {
         ...state,
         visualMetadataContainerList: action.payload,
@@ -247,6 +258,11 @@ export const reset = () => ({
 export const metadataContainerAdd = (widget: any) => ({
   type: ACTION_TYPES.VISUAL_METADATA_CONTAINER_ADD,
   payload: visualMetadataContainerAdd(widget),
+});
+
+export const metadataContainerRemove = (id: string) => ({
+  type: ACTION_TYPES.VISUAL_METADATA_CONTAINER_REMOVE,
+  payload: visualMetadataContainerRemove(id),
 });
 
 export const metadataContainerUpdate = (id: string, widget: any, key: string) => ({

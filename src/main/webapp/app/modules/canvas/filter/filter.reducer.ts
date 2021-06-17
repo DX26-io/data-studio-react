@@ -3,7 +3,6 @@ import { IViews } from 'app/shared/model/views.model';
 
 export const ACTION_TYPES = {
   UPDATE_SELECTED_FILTER: 'filter/UPDATE_SELECTED_FILTER',
-  FILTER_STATE_CHANGE: 'filter/FILTER_STATE_CHANGE',
   TOGGLE_FILTER_PANEL: 'filter/TOGGLE_FILTER_PANEL',
   TOGGLE_FEATURES_PANEL: 'filter/TOGGLE_FEATURES_PANEL',
   SAVE_SELECTED_FILTER: 'filter/SAVE_SELECTED_FILTER',
@@ -11,7 +10,6 @@ export const ACTION_TYPES = {
 
 const initialState = {
   isUpdateValueInFilter: false,
-  filterStateChange: false,
   isFeaturesPanelOpen: false,
   isFilterOpen: false,
   selectedFilters: {},
@@ -28,11 +26,6 @@ export default (state: FilterState = initialState, action): FilterState => {
         ...state,
         isUpdateValueInFilter: !state.isUpdateValueInFilter,
         selectedFilters: state.selectedFilters,
-      };
-    case ACTION_TYPES.FILTER_STATE_CHANGE:
-      return {
-        ...state,
-        filterStateChange: !state.filterStateChange,
       };
     case ACTION_TYPES.SAVE_SELECTED_FILTER:
       return {
@@ -63,11 +56,6 @@ const apiUrl = 'api/visualmetadata';
 export const updateSelectedFilter = () => ({
   type: ACTION_TYPES.UPDATE_SELECTED_FILTER,
 });
-
-export const modifyFilterState = () => ({
-  type: ACTION_TYPES.FILTER_STATE_CHANGE,
-});
-
 export const saveSelectedFilter = (selectedFilter: any) => ({
   type: ACTION_TYPES.SAVE_SELECTED_FILTER,
   payload: selectedFilter,
