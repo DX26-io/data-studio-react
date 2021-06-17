@@ -1,5 +1,6 @@
 import { IDatasourceConstraints } from 'app/shared/model/datasource-constraints.model';
 import { IError, defaultValue } from 'app/shared/model/error.model';
+import { IFeature } from 'app/shared/model/feature.model';
 
 export const isFormValid = (constraint: IDatasourceConstraints): IError => {
   let error = defaultValue;
@@ -20,4 +21,14 @@ export const isFormValid = (constraint: IDatasourceConstraints): IError => {
     return error;
   }
   return error;
+};
+
+export const generateFeaturesOptions = features => {
+  const options = [];
+  features.forEach(function (item) {
+    if (item.featureType === 'DIMENSION') {
+      options.push({ value: item.id, label: item.name });
+    }
+  });
+  return options;
 };

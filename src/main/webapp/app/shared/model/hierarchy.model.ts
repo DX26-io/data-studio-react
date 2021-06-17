@@ -1,8 +1,10 @@
 import { IDrilldown } from './drilldown.model';
+import { IDatasources, defaultDatasourceValue } from './datasources.model';
 export interface IHierarchy {
   id?: any;
   name: string;
   drilldown: any;
+  datasource: IDatasources;
 }
 
 export const defaultValue: Readonly<IHierarchy> = {
@@ -18,4 +20,5 @@ export const defaultValue: Readonly<IHierarchy> = {
       order: 1,
     },
   ],
+  datasource: defaultDatasourceValue,
 };

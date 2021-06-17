@@ -32,6 +32,11 @@
         "searchfunction": "Search function",
         "functions": "Functions"
       }
+    },
+    "tabs": {
+      "dimensions": "Dimensions",
+      "measures": "Measures",
+      "hierarchy": "Hierarchy"
     }
   }
 }

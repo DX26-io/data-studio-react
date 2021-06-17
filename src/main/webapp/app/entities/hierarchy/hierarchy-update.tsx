@@ -20,27 +20,29 @@ import {
   ActionButton,
 } from '@adobe/react-spectrum';
 import { defaultValue } from 'app/shared/model/error.model';
-import { ComboBox, Item } from '@react-spectrum/combobox';
 import { searchUsers, getUsers } from 'app/modules/administration/user-management/users/user.reducer';
-import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { getDatasourcesByName, getDatasources } from 'app/modules/administration/sources/datasources/datasources.reducer';
-import { CONSTRAINT_TYPES } from 'app/config/constants';
-
-import AsyncSelect from 'react-select/async';
-import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
-import { generateOptions } from 'app/shared/util/entity-utils';
+import Select from 'react-select';
 import AddCircel from '@spectrum-icons/workflow/AddCircle';
 import RemoveCircle from '@spectrum-icons/workflow/RemoveCircle';
-import { isFormValid } from './hierarchy.util';
-import Separators from 'app/shared/components/separator/separators';
+import { isFormValid, generateFeaturesOptions } from './hierarchy.util';
+import {
+  getHierarchies,
+  addDrilldown,
+  removeDrilldown,
+  setHierarchy,
+  updateHierarchy,
+  createHierarchy,
+  deleteHierarchy,
+  reset,
+} from './hierarchy.reducer';
 
 export interface IDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
-  history: any;
 }
 
 export const HierarchyUpdate = (props: IDatasourceConstraintUpdateProps) => {
-  const { setOpen, updateSuccess, history, updating } = props;
+  const { setOpen, updateSuccess, updating } = props;
   const [error, setError] = useState(defaultValue);
 
   const dialog = useDialogContainer();
@@ -48,40 +50,40 @@ export const HierarchyUpdate = (props: IDatasourceConstraintUpdateProps) => {
   const handleClose = () => {
     setOpen(false);
     dialog.dismiss();
-    // props.reset();
+    props.reset();
   };
 
   useEffect(() => {
     if (updateSuccess) {
       handleClose();
+      props.getHierarchies(props.datasource.id);
     }
   }, [updateSuccess]);
 
-  useEffect(() => {
-    props.getDatasources(0, ITEMS_PER_PAGE, 'lastUpdated,desc');
-    props.getUsers(0, ITEMS_PER_PAGE);
-  }, []);
-
-  const saveUser = () => {
+  const save = () => {
     if (props.hierarchy.id) {
+      props.updateHierarchy({ ...props.hierarchy, datasource: props.datasource });
     } else {
+      props.createHierarchy({ ...props.hierarchy, datasource: props.datasource });
     }
   };
 
-  const remove = () => {};
+  const remove = () => {
+    props.deleteHierarchy(props.hierarchy.id);
+  };
 
   const getDrillDownOrderLabel = order => {
-    return translate('hierarchies.drilldown') + ' ' + order + 1;
+    return translate('hierarchies.drilldown') + ' ' + (Number(order) + 1);
   };
 
   return (
-    <Dialog data-testid="hierarchy-form-dialog" width="80vw" minHeight="60vh">
+    <Dialog data-testid="hierarchy-form-dialog" size="L" minHeight="60vh">
       <Heading>
         <Flex alignItems="center" gap="size-100" data-testid="hierarchy-form-heading">
           {props.hierarchy.id !== '' ? (
-            <Translate contentKey="hierarchies.editLabel">Edit Constraints</Translate>
+            <Translate contentKey="hierarchies.home.editLabel">Edit Constraints</Translate>
           ) : (
-            <Translate contentKey="hierarchies.createLabel">Create Constraints</Translate>
+            <Translate contentKey="hierarchies.home.createLabel">Create Constraints</Translate>
           )}
         </Flex>
       </Heading>
@@ -90,7 +92,7 @@ export const HierarchyUpdate = (props: IDatasourceConstraintUpdateProps) => {
           <Button variant="secondary" onPress={handleClose} data-testid="hierarchy-form-cancel">
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
-          <Button variant="cta" onPress={saveUser} isDisabled={updating || !error.isValid} data-testid="hierarchy-form-submit">
+          <Button variant="cta" onPress={save} isDisabled={updating || !error.isValid} data-testid="hierarchy-form-submit">
             <Translate contentKey="entity.action.save">Save</Translate>
           </Button>
         </Flex>
@@ -98,47 +100,36 @@ export const HierarchyUpdate = (props: IDatasourceConstraintUpdateProps) => {
       <Divider />
       <Content>
         <Form data-testid="hierarchy-form">
-          <TextField label={translate('hierarchies.name')} />
+          <TextField
+            label={translate('hierarchies.name')}
+            onChange={event => {
+              props.setHierarchy({ ...props.hierarchy, name: event });
+            }}
+          />
+          <br />
           {props.hierarchy.drilldown.map((drilldown, i) => (
-            <Flex alignItems="center" gap="size-200" key={`hierarchy-${i}`}>
-              <ComboBox
-                // isDisabled={!props.hierarchy.datasource.id}
-                key={`hierarchy-feature-${i}`}
-                placeholder={translate('hierarchies.drilldownPlaceholder')}
-                label={getDrillDownOrderLabel(drilldown.order)}
-                // defaultItems={props.dimensions}
-                items={props.dimensions}
-                // inputValue={con.featureName ? con.featureName : ''}
-                onSelectionChange={event => {
-                  // const filteredFeatures = props.features.filter(item => {
-                  //   return item.id === event;
-                  // });
-                  // if (filteredFeatures && filteredFeatures.length > 0) {
-                  //   con.featureName = filteredFeatures[0].name;
-                  //   // props.setDatasourceConstraints(props.hierarchy);
-                  // }
-                  // // setError(isFormValid(props.hierarchy));
-                  // con['isCommaSeparatedInputOn'] = false;
-                }}
-                onInputChange={event => {
-                  // if (event) {
-                  // }
-                }}
-              >
-                {item => <Item>{item.name}</Item>}
-              </ComboBox>
-              {/* TODO : this will be done once khushbu's pr is merged */}
-
-              {/* <ActionButton isQuiet onPress={()=>{
-                toggleCommaSeparator(con);
-              }}>
-                <Separator size="S" />
-              </ActionButton> */}
-
+            <Flex alignItems="center" gap="size-100" key={`hierarchy-${i}`}>
+              <span className="spectrum-Body-emphasis--sizeXXS">{getDrillDownOrderLabel(drilldown.order)}</span>
+              <div style={{ minWidth: '305px' }}>
+                <Select
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isClearable
+                  isSearchable
+                  key={`hierarchy-select-${i}`}
+                  name={`hierarchy-name-${i}`}
+                  options={props.dimensions}
+                  onChange={selectedOption => {
+                    const _feature = props.features.filter(f => f.id === selectedOption.value)[0];
+                    drilldown.feature = _feature;
+                    props.setHierarchy(props.hierarchy);
+                  }}
+                />
+              </div>
               <ActionButton
                 isQuiet
                 onPress={() => {
-                  // props.addConstraint();
+                  props.addDrilldown();
                 }}
               >
                 <AddCircel size="S" />
@@ -148,7 +139,7 @@ export const HierarchyUpdate = (props: IDatasourceConstraintUpdateProps) => {
                 <ActionButton
                   isQuiet
                   onPress={() => {
-                    // props.removeConstraint(con);
+                    props.removeDrilldown(drilldown);
                   }}
                 >
                   <RemoveCircle size="S" />
@@ -178,16 +169,12 @@ export const HierarchyUpdate = (props: IDatasourceConstraintUpdateProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  datasources: storeState.datasources.datasources,
-  updateSuccess: storeState.datasourceConstraints.updateSuccess,
-  updating: storeState.datasourceConstraints.updating,
-  features: storeState.datasourceConstraints.features,
-  dimensions: storeState.feature.entities.filter(item => {
-    return item.featureType === 'DIMENSION';
-  }),
-  users: storeState.userManagement.users,
-  searchedUsers: storeState.userManagement.searchedUsers,
+  updateSuccess: storeState.hierarchies.updateSuccess,
+  updating: storeState.hierarchies.updating,
+  features: storeState.feature.entities,
+  dimensions: generateFeaturesOptions(storeState.feature.entities),
   hierarchy: storeState.hierarchies.hierarchy,
+  datasource: storeState.dashboard.entity.dashboardDatasource,
 });
 
 const mapDispatchToProps = {
@@ -195,6 +182,14 @@ const mapDispatchToProps = {
   searchUsers,
   getDatasourcesByName,
   getUsers,
+  addDrilldown,
+  removeDrilldown,
+  setHierarchy,
+  updateHierarchy,
+  createHierarchy,
+  deleteHierarchy,
+  reset,
+  getHierarchies,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
