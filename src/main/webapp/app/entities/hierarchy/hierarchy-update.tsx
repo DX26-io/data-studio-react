@@ -152,13 +152,20 @@ export const HierarchyUpdate = (props: HierarchyUpdateProps) => {
               ) : null}
             </Flex>
           ))}
+          {props.hierarchy.id !== '' ? (
+            <React.Fragment>
+              <span className="spectrum-Heading spectrum-Heading--sizeXXS">
+                <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
+              </span>
+              <Divider size="M" />{' '}
+            </React.Fragment>
+          ) : null}
         </Form>
-        {/* commented the below code for time being */}
-        {/* {props.hierarchy.id !== '' ? (
+        {props.hierarchy.id !== '' ? (
           <Button data-testid="delete" variant="negative" onPress={remove} marginTop="size-175" marginBottom="size-100">
             <Translate contentKey="entity.action.delete">Delete</Translate>
           </Button>
-        ) : null} */}
+        ) : null}
         {!error.isValid && (
           <Flex gap="size-100" data-testid="validation-error" marginTop="static-size-200">
             <Alert color="negative" />

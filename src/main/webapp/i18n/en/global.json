@@ -116,6 +116,8 @@
       "copy": "Copy",
       "runnow": "Run Now",
       "pin": "Pin",
+      "manage": "Manage",
+      "dangerZone": "Danger Zone",
       "savebookmark": "Save as bookmark",
       "createview": "Create view"
     },
