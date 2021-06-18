@@ -1,23 +1,20 @@
-import { IDatasourceConstraints } from 'app/shared/model/datasource-constraints.model';
 import { IError, defaultValue } from 'app/shared/model/error.model';
-import { IFeature } from 'app/shared/model/feature.model';
+import { IHierarchy } from 'app/shared/model/hierarchy.model';
 
-export const isFormValid = (constraint: IDatasourceConstraints): IError => {
+export const isFormValid = (hierarchy: IHierarchy): IError => {
   let error = defaultValue;
-  if (!constraint.datasource.id) {
-    error = { translationKey: 'permissions.datasourceConstraints.error.datasource', isValid: false };
+  if (!hierarchy.name) {
+    error = { translationKey: 'hierarchies.error.name', isValid: false };
     return error;
-  } else if (!constraint.user.id) {
-    error = { translationKey: 'permissions.datasourceConstraints.error.user', isValid: false };
+  } else if (hierarchy.drilldown.length < 2) {
+    error = { translationKey: 'hierarchies.error.drilldownLength', isValid: false };
     return error;
-  } else if (!constraint.constraintDefinition.featureConstraints[0]['@type']) {
-    error = { translationKey: 'permissions.datasourceConstraints.error.type', isValid: false };
-    return error;
-  } else if (!constraint.constraintDefinition.featureConstraints[0].featureName) {
-    error = { translationKey: 'permissions.datasourceConstraints.error.feature', isValid: false };
-    return error;
-  } else if (constraint.constraintDefinition.featureConstraints[0].values.length === 0) {
-    error = { translationKey: 'permissions.datasourceConstraints.error.filter', isValid: false };
+  } else if (hierarchy.drilldown.length >= 2) {
+    hierarchy.drilldown.forEach(function (item) {
+      if (item.feature === null) {
+        error = { translationKey: 'hierarchies.error.feature', isValid: false };
+      }
+    });
     return error;
   }
   return error;

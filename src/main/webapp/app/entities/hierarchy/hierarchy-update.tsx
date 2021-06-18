@@ -19,7 +19,6 @@ import {
   View,
   ActionButton,
 } from '@adobe/react-spectrum';
-import { defaultValue } from 'app/shared/model/error.model';
 import { searchUsers, getUsers } from 'app/modules/administration/user-management/users/user.reducer';
 import { getDatasourcesByName, getDatasources } from 'app/modules/administration/sources/datasources/datasources.reducer';
 import Select from 'react-select';
@@ -37,28 +36,27 @@ import {
   reset,
 } from './hierarchy.reducer';
 
-export interface IDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
+export interface HierarchyUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
 }
 
-export const HierarchyUpdate = (props: IDatasourceConstraintUpdateProps) => {
-  const { setOpen, updateSuccess, updating } = props;
-  const [error, setError] = useState(defaultValue);
+export const HierarchyUpdate = (props: HierarchyUpdateProps) => {
+  const [error, setError] = useState(isFormValid(props.hierarchy));
 
   const dialog = useDialogContainer();
 
   const handleClose = () => {
-    setOpen(false);
+    props.setOpen(false);
     dialog.dismiss();
     props.reset();
   };
 
   useEffect(() => {
-    if (updateSuccess) {
+    if (props.updateSuccess) {
       handleClose();
       props.getHierarchies(props.datasource.id);
     }
-  }, [updateSuccess]);
+  }, [props.updateSuccess]);
 
   const save = () => {
     if (props.hierarchy.id) {
@@ -92,7 +90,7 @@ export const HierarchyUpdate = (props: IDatasourceConstraintUpdateProps) => {
           <Button variant="secondary" onPress={handleClose} data-testid="hierarchy-form-cancel">
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
-          <Button variant="cta" onPress={save} isDisabled={updating || !error.isValid} data-testid="hierarchy-form-submit">
+          <Button variant="cta" onPress={save} isDisabled={props.updating || !error.isValid} data-testid="hierarchy-form-submit">
             <Translate contentKey="entity.action.save">Save</Translate>
           </Button>
         </Flex>
@@ -102,8 +100,11 @@ export const HierarchyUpdate = (props: IDatasourceConstraintUpdateProps) => {
         <Form data-testid="hierarchy-form">
           <TextField
             label={translate('hierarchies.name')}
+            value={props.hierarchy.name ? props.hierarchy.name : ''}
             onChange={event => {
               props.setHierarchy({ ...props.hierarchy, name: event });
+              const errorObj = isFormValid({ ...props.hierarchy, name: event });
+              setError(errorObj);
             }}
           />
           <br />
@@ -116,6 +117,7 @@ export const HierarchyUpdate = (props: IDatasourceConstraintUpdateProps) => {
                   classNamePrefix="select"
                   isClearable
                   isSearchable
+                  defaultValue={drilldown.feature ? { value: drilldown.feature.id, label: drilldown.feature.name } : null}
                   key={`hierarchy-select-${i}`}
                   name={`hierarchy-name-${i}`}
                   options={props.dimensions}
@@ -123,19 +125,22 @@ export const HierarchyUpdate = (props: IDatasourceConstraintUpdateProps) => {
                     const _feature = props.features.filter(f => f.id === selectedOption.value)[0];
                     drilldown.feature = _feature;
                     props.setHierarchy(props.hierarchy);
+                    const errorObj = isFormValid(props.hierarchy);
+                    setError(errorObj);
                   }}
                 />
               </div>
-              <ActionButton
-                isQuiet
-                onPress={() => {
-                  props.addDrilldown();
-                }}
-              >
-                <AddCircel size="S" />
-              </ActionButton>
-
               {i !== 0 ? (
+                <ActionButton
+                  isQuiet
+                  onPress={() => {
+                    props.addDrilldown();
+                  }}
+                >
+                  <AddCircel size="S" />
+                </ActionButton>
+              ) : null}
+              {i > 1 ? (
                 <ActionButton
                   isQuiet
                   onPress={() => {
@@ -148,11 +153,12 @@ export const HierarchyUpdate = (props: IDatasourceConstraintUpdateProps) => {
             </Flex>
           ))}
         </Form>
-        {props.hierarchy.id !== '' ? (
+        {/* commented the below code for time being */}
+        {/* {props.hierarchy.id !== '' ? (
           <Button data-testid="delete" variant="negative" onPress={remove} marginTop="size-175" marginBottom="size-100">
             <Translate contentKey="entity.action.delete">Delete</Translate>
           </Button>
-        ) : null}
+        ) : null} */}
         {!error.isValid && (
           <Flex gap="size-100" data-testid="validation-error" marginTop="static-size-200">
             <Alert color="negative" />
@@ -174,7 +180,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   features: storeState.feature.entities,
   dimensions: generateFeaturesOptions(storeState.feature.entities),
   hierarchy: storeState.hierarchies.hierarchy,
-  datasource: storeState.dashboard.entity.dashboardDatasource,
+  datasource: storeState.views.entity.viewDashboard.dashboardDatasource,
 });
 
 const mapDispatchToProps = {

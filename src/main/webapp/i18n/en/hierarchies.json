@@ -14,7 +14,8 @@
     },
     "error": {
       "name": "Name is required",
-      "length": "Name cannot be longer than 50 characters"
+      "drilldownLength": "atleast 2 drilldowns are required",
+      "feature": "select a feature from drop down"
     },
     "search": "Search hierarchy...",
     "name": "Name",
