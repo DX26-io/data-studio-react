@@ -35,13 +35,14 @@ import {
   deleteHierarchy,
   reset,
 } from './hierarchy.reducer';
+import { defaultValue } from 'app/shared/model/error.model';
 
 export interface HierarchyUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
 }
 
 export const HierarchyUpdate = (props: HierarchyUpdateProps) => {
-  const [error, setError] = useState(isFormValid(props.hierarchy));
+  const [error, setError] = useState(defaultValue);
 
   const dialog = useDialogContainer();
 
@@ -59,10 +60,15 @@ export const HierarchyUpdate = (props: HierarchyUpdateProps) => {
   }, [props.updateSuccess]);
 
   const save = () => {
-    if (props.hierarchy.id) {
-      props.updateHierarchy({ ...props.hierarchy, datasource: props.datasource });
-    } else {
-      props.createHierarchy({ ...props.hierarchy, datasource: props.datasource });
+    const errorObj = isFormValid(props.hierarchy);
+    if (errorObj.isValid) {
+      if (props.hierarchy.id) {
+        props.updateHierarchy({ ...props.hierarchy, datasource: props.datasource });
+      } else {
+        props.createHierarchy({ ...props.hierarchy, datasource: props.datasource });
+      }
+    }else{
+      setError(errorObj);
     }
   };
 
@@ -78,7 +84,7 @@ export const HierarchyUpdate = (props: HierarchyUpdateProps) => {
     <Dialog data-testid="hierarchy-form-dialog" size="L" minHeight="60vh">
       <Heading>
         <Flex alignItems="center" gap="size-100" data-testid="hierarchy-form-heading">
-          {props.hierarchy.id !== '' ? (
+          {props.hierarchy && props.hierarchy.id !== '' ? (
             <Translate contentKey="hierarchies.home.editLabel">Edit Constraints</Translate>
           ) : (
             <Translate contentKey="hierarchies.home.createLabel">Create Constraints</Translate>
@@ -100,7 +106,7 @@ export const HierarchyUpdate = (props: HierarchyUpdateProps) => {
         <Form data-testid="hierarchy-form">
           <TextField
             label={translate('hierarchies.name')}
-            value={props.hierarchy.name ? props.hierarchy.name : ''}
+            value={props.hierarchy && props.hierarchy.name ? props.hierarchy.name : ''}
             onChange={event => {
               props.setHierarchy({ ...props.hierarchy, name: event });
               const errorObj = isFormValid({ ...props.hierarchy, name: event });
@@ -108,51 +114,52 @@ export const HierarchyUpdate = (props: HierarchyUpdateProps) => {
             }}
           />
           <br />
-          {props.hierarchy.drilldown.map((drilldown, i) => (
-            <Flex alignItems="center" gap="size-100" key={`hierarchy-${i}`}>
-              <span className="spectrum-Body-emphasis--sizeXXS">{getDrillDownOrderLabel(drilldown.order)}</span>
-              <div style={{ minWidth: '305px' }}>
-                <Select
-                  className="basic-single"
-                  classNamePrefix="select"
-                  isClearable
-                  isSearchable
-                  defaultValue={drilldown.feature ? { value: drilldown.feature.id, label: drilldown.feature.name } : null}
-                  key={`hierarchy-select-${i}`}
-                  name={`hierarchy-name-${i}`}
-                  options={props.dimensions}
-                  onChange={selectedOption => {
-                    const _feature = props.features.filter(f => f.id === selectedOption.value)[0];
-                    drilldown.feature = _feature;
-                    props.setHierarchy(props.hierarchy);
-                    const errorObj = isFormValid(props.hierarchy);
-                    setError(errorObj);
-                  }}
-                />
-              </div>
-              {i !== 0 ? (
-                <ActionButton
-                  isQuiet
-                  onPress={() => {
-                    props.addDrilldown();
-                  }}
-                >
-                  <AddCircel size="S" />
-                </ActionButton>
-              ) : null}
-              {i > 1 ? (
-                <ActionButton
-                  isQuiet
-                  onPress={() => {
-                    props.removeDrilldown(drilldown);
-                  }}
-                >
-                  <RemoveCircle size="S" />
-                </ActionButton>
-              ) : null}
-            </Flex>
-          ))}
-          {props.hierarchy.id !== '' ? (
+          {props.hierarchy &&
+            props.hierarchy.drilldown.map((drilldown, i) => (
+              <Flex alignItems="center" gap="size-100" key={`hierarchy-${i}`}>
+                <span className="spectrum-Body-emphasis--sizeXXS">{getDrillDownOrderLabel(drilldown.order)}</span>
+                <div style={{ minWidth: '305px' }}>
+                  <Select
+                    className="basic-single"
+                    classNamePrefix="select"
+                    isClearable
+                    isSearchable
+                    defaultValue={drilldown.feature ? { value: drilldown.feature.id, label: drilldown.feature.name } : null}
+                    key={`hierarchy-select-${i}`}
+                    name={`hierarchy-name-${i}`}
+                    options={props.dimensions}
+                    onChange={selectedOption => {
+                      const _feature = props.features.filter(f => f.id === selectedOption.value)[0];
+                      drilldown.feature = _feature;
+                      props.setHierarchy(props.hierarchy);
+                      const errorObj = isFormValid(props.hierarchy);
+                      setError(errorObj);
+                    }}
+                  />
+                </div>
+                {i !== 0 ? (
+                  <ActionButton
+                    isQuiet
+                    onPress={() => {
+                      props.addDrilldown();
+                    }}
+                  >
+                    <AddCircel size="S" />
+                  </ActionButton>
+                ) : null}
+                {i > 1 ? (
+                  <ActionButton
+                    isQuiet
+                    onPress={() => {
+                      props.removeDrilldown(drilldown);
+                    }}
+                  >
+                    <RemoveCircle size="S" />
+                  </ActionButton>
+                ) : null}
+              </Flex>
+            ))}
+          {props.hierarchy && props.hierarchy.id !== '' ? (
             <React.Fragment>
               <span className="spectrum-Heading spectrum-Heading--sizeXXS">
                 <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
@@ -161,7 +168,7 @@ export const HierarchyUpdate = (props: HierarchyUpdateProps) => {
             </React.Fragment>
           ) : null}
         </Form>
-        {props.hierarchy.id !== '' ? (
+        {props.hierarchy && props.hierarchy.id !== '' ? (
           <Button data-testid="delete" variant="negative" onPress={remove} marginTop="size-175" marginBottom="size-100">
             <Translate contentKey="entity.action.delete">Delete</Translate>
           </Button>
