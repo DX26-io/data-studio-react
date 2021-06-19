@@ -1,6 +1,6 @@
 import './header.scss';
 import React, { useEffect, useState } from 'react';
-import { ActionButton, View, DialogContainer, TooltipTrigger, Tooltip, MenuTrigger, Menu, Item, Flex } from '@adobe/react-spectrum';
+import { ActionButton, View, Flex } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { createEntity as addVisualmetadataEntity, toggleEditMode } from 'app/entities/visualmetadata/visualmetadata.reducer';
@@ -8,7 +8,6 @@ import { toggleFilterPanel, saveSelectedFilter } from 'app/modules/canvas/filter
 import { saveViewState } from 'app/entities/views/views.reducer';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
-import { getVisualizationData, ValidateFields } from 'app/modules/canvas/visualization/util/visualization-render-utils';
 import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
 import Close from '@spectrum-icons/workflow/Close';
 export interface ICanvasFilterHeaderProps extends StateProps, DispatchProps {
@@ -18,6 +17,7 @@ export interface ICanvasFilterHeaderProps extends StateProps, DispatchProps {
 const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
   const [dropdownOpen, setDropdownOpen] = useState<boolean[]>();
   const [filters, setFilters] = useState<string[]>();
+
   let dropdownStatus = [];
   const toggle = index => {
     dropdownStatus[index] = !dropdownStatus[index];
@@ -34,7 +34,7 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
       });
       setDropdownOpen(dropdownStatus);
     }
-  }, [props.selectedFilter, props.isUpdateValueInFilter]);
+  }, [props.selectedFilter]);
 
   const removeFromFilter = (key, values, index) => {
     const filter = props.selectedFilter;
@@ -90,7 +90,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   isAuthenticated: storeState.authentication.isAuthenticated,
   selectedFilter: storeState.filter.selectedFilters,
-  isUpdateValueInFilter: storeState.filter.isUpdateValueInFilter,
   visualmetadata: storeState.views.viewState,
   filters: storeState.filter.selectedFilters,
 });
@@ -101,7 +100,7 @@ const mapDispatchToProps = {
   toggleFilterPanel,
   saveViewState,
   saveSelectedFilter,
-  applyFilter
+  applyFilter,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

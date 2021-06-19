@@ -36,7 +36,7 @@ const FilterElement = (props: IFilterElementProp) => {
     } else {
       setdefaultValues([]);
     }
-  }, [props.selectedFilters, props.isUpdateValueInFilter]);
+  }, [props.selectedFilters]);
 
   const load = (q, dimension) => {
     const vId = props.view?.id;
@@ -183,8 +183,6 @@ const FilterElement = (props: IFilterElementProp) => {
               isSearchable={true}
               classNamePrefix="select"
               loadOptions={loadOptions}
-              defaultOptions
-              defaultValue={defaultValues}
               onInputChange={handleInputChange}
               onChange={handleChange}
             />
@@ -200,7 +198,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   filterData: storeState.visualmetadata.filterData,
   featuresList: storeState.feature.entities,
   selectedFilters: storeState.filter.selectedFilters,
-  isUpdateValueInFilter: storeState.filter.isUpdateValueInFilter,
 });
 const mapDispatchToProps = {
   getfeatureEntities,

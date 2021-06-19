@@ -8,7 +8,6 @@ import Search from '@spectrum-icons/workflow/Search';
 import Maximize from '@spectrum-icons/workflow/Maximize';
 import FilterElement from 'app/modules/canvas/filter/filter-element';
 import { getViewFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
-import { updateSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { Translate } from 'react-jhipster';
 import { applyFilter, clearFilter } from './filter.reducer';
 
@@ -113,7 +112,6 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 const mapDispatchToProps = {
   getfeatureEntities,
-  updateSelectedFilter,
   applyFilter,
   clearFilter
 };

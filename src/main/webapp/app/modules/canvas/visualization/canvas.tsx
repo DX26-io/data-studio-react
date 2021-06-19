@@ -65,7 +65,7 @@ const Canvas = (props: VisualizationProp) => {
         item.loaderVisibility = false;
       }
     });
-    setIsLoaderDisplay(isLoaderDisplay);
+    setIsLoaderDisplay([...isLoaderDisplay]);
   };
 
   const onLayoutChange = _visualmetaList => {
@@ -112,7 +112,7 @@ const Canvas = (props: VisualizationProp) => {
         item.noDataFoundVisibility = true;
       }
     });
-    setIsLoaderDisplay(isLoaderDisplay);
+    setIsLoaderDisplay([...isLoaderDisplay]);
   };
 
   const hideDataNotFound = id => {
@@ -121,7 +121,7 @@ const Canvas = (props: VisualizationProp) => {
         item.noDataFoundVisibility = false;
       }
     });
-    setIsLoaderDisplay(isLoaderDisplay);
+    setIsLoaderDisplay([...isLoaderDisplay]);
   };
 
   useEffect(() => {
@@ -179,13 +179,13 @@ const Canvas = (props: VisualizationProp) => {
         };
         const visList = isLoaderDisplay || [];
         isLoaderDisplay.push(loader);
-        setIsLoaderDisplay(visList);
+        setIsLoaderDisplay([...visList]);
       });
 
       props.visualmetadata.visualMetadataSet.map(item => {
         (item.x = item.xPosition), (item.y = item.yPosition), (item.h = item.height), (item.w = item.width);
       });
-      setvisualmetadata(props.visualmetadata.visualMetadataSet);
+      setvisualmetadata([...props.visualmetadata.visualMetadataSet]);
     }
   }, [props.visualmetadata]);
 
@@ -193,32 +193,31 @@ const Canvas = (props: VisualizationProp) => {
     if (!props.isSocketConnected) {
       props.receiveSocketResponse();
     }
-    setvisualmetadata(props.visualmetadata.visualMetadataSet);
-  }, [props.isSocketConnected, props.visualmetadataEntity]);
+  }, [props.isSocketConnected]);
 
   useEffect(() => {
     if (props.isCreated) {
       props.metadataContainerAdd(props.visualmetadataEntity);
-      setvisualmetadata(props.visualMetadataContainerList);
+      setvisualmetadata([...props.visualMetadataContainerList]);
     }
   }, [props.isCreated]);
 
   useEffect(() => {
     if (props.updateSuccess) {
-      setvisualmetadata(props.visualMetadataContainerList);
+      setvisualmetadata([...props.visualMetadataContainerList]);
       renderVisualizationById(props.visualmetadataEntity);
     }
   }, [props.updateSuccess]);
 
   useEffect(() => {
     if (props.deleteSuccess) {
-      setvisualmetadata(props.visualMetadataContainerList);
+      setvisualmetadata([...props.visualMetadataContainerList]);
     }
   }, [props.deleteSuccess]);
 
   useEffect(() => {
     if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
-      setvisualmetadata(props.visualMetadataContainerList);
+      setvisualmetadata([...props.visualMetadataContainerList]);
       renderVisualizationById(props.visualmetadataEntity);
     }
   }, [props.visualMetadataContainerList]);
