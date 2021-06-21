@@ -22,6 +22,14 @@ export const visualMetadataContainerAdd = (widget: any) => {
   return visualMetadataContainerList;
 };
 
+export const visualMetadataContainerRemove = (widget: string) => {
+  const index = visualMetadataContainerList.findIndex(x => x.id === widget);
+  if (index > -1) {
+    visualMetadataContainerList.splice(index, 1);
+  }
+  return visualMetadataContainerList;
+};
+
 const addConfigs = (widgetNew: any, widgetOld: any) => {
   Object.keys(widgetNew).forEach(function (key, index) {
     if (key !== '$promise' && key !== '$resolved') {

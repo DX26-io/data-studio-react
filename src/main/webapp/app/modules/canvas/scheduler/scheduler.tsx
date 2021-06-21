@@ -294,7 +294,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   webHooks: storeState.notification.webHooks,
   view: storeState.views.entity,
   account: storeState.authentication.account,
-  filters: storeState.filter.paramObject,
+  filters: storeState.filter.selectedFilters,
 });
 
 const mapDispatchToProps = { executeNow, getUsers, scheduleReport, getWebhookList, getScheduleReportById };

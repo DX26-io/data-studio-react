@@ -9,7 +9,7 @@ import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from '../data-constraints/utils/date-util';
 import { checkIsDateType } from '../visualization/util/visualization-utils';
-import { saveSelectedFilter, saveFilter } from './filter.reducer';
+import { saveSelectedFilter } from './filter.reducer';
 import { saveDynamicDateRangeMetaData } from './filter-util';
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
@@ -20,22 +20,23 @@ const FilterElement = (props: IFilterElementProp) => {
 
   const updateDefaultValues = data => {
     const filterValues = [];
-    data && data.forEach(item => {
-      filterValues.push({
-        label: item,
-        value: item,
+    data &&
+      data.forEach(item => {
+        filterValues.push({
+          label: item,
+          value: item,
+        });
       });
-    });
     setdefaultValues(filterValues);
   };
 
   useEffect(() => {
-    if (props.selectedFilter[props.feature.name]) {
-      updateDefaultValues(props.selectedFilter[props.feature.name]);
+    if (props.selectedFilters[props.feature.name]) {
+      updateDefaultValues(props.selectedFilters[props.feature.name]);
     } else {
       setdefaultValues([]);
     }
-  }, [props.filterStateChange]);
+  }, [props.selectedFilters]);
 
   const load = (q, dimension) => {
     const vId = props.view?.id;
@@ -60,7 +61,7 @@ const FilterElement = (props: IFilterElementProp) => {
   };
   const mapOptionsToValues = (options, inputValue) => {
     if (!inputValue) {
-      return options.filter(i => i.label.toLowerCase().includes(inputValue.toLowerCase()));
+      return options.filter(i => i.label?.toString().toLowerCase().includes(inputValue.toLowerCase()));
     }
     return options;
   };
@@ -83,17 +84,16 @@ const FilterElement = (props: IFilterElementProp) => {
   };
 
   const addValueInFilter = value => {
-    const filterParameters = props.selectedFilter;
-    if (!filterParameters[props.feature.name]) {
-      filterParameters[props.feature.name] = [];
+    if (!props.selectedFilters[props.feature.name]) {
+      props.selectedFilters[props.feature.name] = [];
     }
-    filterParameters[props.feature.name].push(value);
-    filterParameters[props.feature.name]._meta = {
+    props.selectedFilters[props.feature.name].push(value);
+    props.selectedFilters[props.feature.name]._meta = {
       dataType: props.feature.type,
       valueType: 'valueType',
     };
-    updateDefaultValues(filterParameters[props.feature.name]);
-    props.saveSelectedFilter(filterParameters);
+    updateDefaultValues(props.selectedFilters[props.feature.name]);
+    props.saveSelectedFilter(props.selectedFilters);
   };
 
   function removeTagFromFilterList(filterParameters, tag) {
@@ -118,32 +118,25 @@ const FilterElement = (props: IFilterElementProp) => {
     if (actionMeta.action === 'select-option') {
       addValueInFilter(actionMeta.option.value);
     } else if (actionMeta.action === 'remove-value') {
-      props.saveSelectedFilter(removeTagFromFilterList(props.selectedFilter, actionMeta.removedValue.value));
+      props.saveSelectedFilter(removeTagFromFilterList(props.selectedFilters, actionMeta.removedValue.value));
     }
   };
 
   function removeFilter(filter) {
-    let filterParameters;
-    filterParameters = props.filters;
-    filterParameters[filter] = [];
-    props.saveFilter(filterParameters);
-
-    filterParameters = props.selectedFilter;
-    filterParameters[filter] = [];
-    props.saveSelectedFilter(filterParameters);
+    props.selectedFilters[filter] = [];
+    props.saveSelectedFilter(props.selectedFilters);
   }
 
   const addDateRangeFilter = date => {
-    const filterParameters = props.selectedFilter;
-    if (!filterParameters[props.feature.name]) {
-      filterParameters[props.feature.name] = [];
+    if (!props.selectedFilters[props.feature.name]) {
+      props.selectedFilters[props.feature.name] = [];
     }
-    filterParameters[props.feature.name].push(date);
-    filterParameters[props.feature.name]._meta = {
+    props.selectedFilters[props.feature.name].push(date);
+    props.selectedFilters[props.feature.name]._meta = {
       dataType: props.feature.type,
       valueType: 'dateRangeValueType',
     };
-    props.saveSelectedFilter(filterParameters);
+    props.saveSelectedFilter(props.selectedFilters);
   };
 
   const onDateChange = (startDate, endDate, metadata) => {
@@ -190,8 +183,6 @@ const FilterElement = (props: IFilterElementProp) => {
               isSearchable={true}
               classNamePrefix="select"
               loadOptions={loadOptions}
-              defaultOptions
-              defaultValue={defaultValues}
               onInputChange={handleInputChange}
               onChange={handleChange}
             />
@@ -206,15 +197,11 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   filterData: storeState.visualmetadata.filterData,
   featuresList: storeState.feature.entities,
-  selectedFilter: storeState.filter.selectedFilters,
-  filterStateChange: storeState.filter.filterStateChange,
-  filters: storeState.filter.paramObject,
-
+  selectedFilters: storeState.filter.selectedFilters,
 });
 const mapDispatchToProps = {
   getfeatureEntities,
   saveSelectedFilter,
-  saveFilter,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

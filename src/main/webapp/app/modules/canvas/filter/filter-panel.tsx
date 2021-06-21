@@ -8,7 +8,6 @@ import Search from '@spectrum-icons/workflow/Search';
 import Maximize from '@spectrum-icons/workflow/Maximize';
 import FilterElement from 'app/modules/canvas/filter/filter-element';
 import { getViewFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
-import { updateSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { Translate } from 'react-jhipster';
 import { applyFilter, clearFilter } from './filter.reducer';
 
@@ -20,6 +19,9 @@ const FilterPanel = (props: IFilterPanelProp) => {
   const [isFilterMinimize, setFilterMinimize] = useState(true);
   const [isFilterPanelClose, setFilterPanelClose] = useState(props.isFilterOpen);
 
+  const removeFilter = () => {
+    props.clearFilter({}, props.visualmetadata, props.view);
+  };
   useEffect(() => {
     props.getfeatureEntities(props.view.id);
   }, [props.view]);
@@ -86,7 +88,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
               </Button>
               <Button
                 onPress={() => {
-                  props.clearFilter(props.selectedFilter, props.visualmetadata, props.view);
+                  removeFilter();
                 }}
                 marginX={5}
                 variant="primary"
@@ -106,15 +108,12 @@ const mapStateToProps = (storeState: IRootState) => ({
   isFilterOpen: storeState.filter.isFilterOpen,
   featuresList: storeState.feature.entities,
   visualmetadata: storeState.views.viewState,
-  selectedFilter: storeState.filter.selectedFilters,
-  filterStateChange: storeState.filter.filterStateChange,
-  filters: storeState.filter.paramObject,
+  selectedFilter: storeState.filter.selectedFilters
 });
 const mapDispatchToProps = {
   getfeatureEntities,
-  updateSelectedFilter,
   applyFilter,
-  clearFilter,
+  clearFilter
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

@@ -75,12 +75,14 @@ const DateRangeComponent = (props: IDateRangeComponentProps) => {
 
   const handleStartDateChange = date => {
     setStartDate(date);
-    onInputChange();
   };
   const handleEndDateChange = date => {
     setEndDate(date);
-    onInputChange();
   };
+
+  useEffect(() => {
+    onInputChange();
+  }, [startDate, endDate]);
 
   useEffect(() => {
     if (props.condition) {
