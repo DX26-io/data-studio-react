@@ -15,7 +15,7 @@ import ViewPropertiesModal from '../views/view-properties-modal';
 import Canvas from 'app/modules/canvas/visualization/canvas';
 import VisualizationEditModal from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal';
 import VisualizationsDeleteModal from 'app/modules/canvas/visualization/visualization-modal/visualization-delete-modal/visualizations-delete-modal';
-import FeaturesCreateModal from "app/modules/canvas/features/modals/create/features-create-modal";
+import FeaturesCreateModal from "app/modules/canvas/features/features-create-modal";
 import SearchModal from "app/entities/search/search-modal";
 
 const Routes = ({ match }) => (

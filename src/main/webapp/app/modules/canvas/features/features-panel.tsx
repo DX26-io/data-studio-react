@@ -1,6 +1,6 @@
 import React, { Key, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { ActionButton, Flex, View, Text, Button, Divider, ListBox, Item, Content } from '@adobe/react-spectrum';
+import { ActionButton, Flex, View, Text, Button, Divider, ListBox, Item, DialogContainer } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import './features-panel.scss';
 import Minimize from '@spectrum-icons/workflow/Minimize';
@@ -11,13 +11,20 @@ import { Tabs } from '@react-spectrum/tabs';
 import { featureTypeToActiveTabs, getFeaturesTabTranslations } from 'app/modules/canvas/features/features-panel-util';
 import { Translate } from 'react-jhipster';
 import { Redirect } from 'react-router-dom';
+import { getHierarchies, setHierarchy } from 'app/entities/hierarchy/hierarchy.reducer';
+import HierarchyUpdate from 'app/entities/hierarchy/hierarchy-update';
 
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
 const FeaturesPanel = (props: IFeaturesPanelProp) => {
-  const [isFeaturesMinimize, setFeaturesMinimize] = useState(true);
+  const [isFeaturesMinimize, setFeaturesMinimize] = useState<boolean>(true);
   const [activeTabId, setActiveTabId] = useState<Key>(0);
   const [showFeatureCreateDialog, setShowFeatureCreateDialog] = useState<boolean>(false);
+  const [isHierarchyDialogOpen, setHierarchyDialogOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    props.getHierarchies(props.datasourceId);
+  }, []);
 
   useEffect(() => {
     props.getViewFeaturesEntities(props.view.id);
@@ -27,14 +34,24 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
     return feature.featureType === featureTypeToActiveTabs[activeTabId];
   };
 
-  const createNewFeatureClicked = () => {
-    setShowFeatureCreateDialog(true);
+  const create = () => {
+    if (activeTabId === '2') {
+      setHierarchyDialogOpen(true);
+    } else {
+      setShowFeatureCreateDialog(true);
+    }
   };
 
   const onFeatureSelected = selectedSet => {
     const feature = props.featuresList.find(ft => selectedSet.has(ft.id));
     props.selectFeature(feature);
     setShowFeatureCreateDialog(true);
+  };
+
+  const onHierarchySelected = selectedSet => {
+    const hierarchy = props.hierarchies.find(h => selectedSet.has(h.id));
+    props.setHierarchy(hierarchy);
+    setHierarchyDialogOpen(true);
   };
 
   const redirectToFeature = () => {
@@ -63,7 +80,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
             <span className="spectrum-Heading--sizeXXS" style={{ marginRight: 'auto' }}>
               <Translate contentKey="features.panel.title">_Features</Translate>
             </span>
-            <ActionButton isQuiet onPress={createNewFeatureClicked}>
+            <ActionButton isQuiet onPress={create}>
               <Add size="S" />
             </ActionButton>
             <div style={{ marginRight: '-11px' }}>
@@ -101,21 +118,36 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
             >
               {item => (
                 <Item title={item.name} key={item.id}>
-                  <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-                    <ListBox
-                      width="size-2400"
-                      aria-label="Features"
-                      selectionMode="single"
-                      onSelectionChange={onFeatureSelected}
-                      items={props.featuresList.filter(featureFilter)}
-                    >
-                      {feature => <Item>{feature.name}</Item>}
-                    </ListBox>
-                  </Content>
+                  <View marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+                    {activeTabId === '2' ? (
+                      <ListBox
+                        width="size-2400"
+                        aria-label="Hierarchy"
+                        selectionMode="single"
+                        onSelectionChange={onHierarchySelected}
+                        items={props.hierarchies}
+                      >
+                        {hiararchy => <Item>{hiararchy.name}</Item>}
+                      </ListBox>
+                    ) : (
+                      <ListBox
+                        width="size-2400"
+                        aria-label="Features"
+                        selectionMode="single"
+                        onSelectionChange={onFeatureSelected}
+                        items={props.featuresList.filter(featureFilter)}
+                      >
+                        {feature => <Item>{feature.name}</Item>}
+                      </ListBox>
+                    )}
+                  </View>
                 </Item>
               )}
             </Tabs>
           </View>
+          <DialogContainer onDismiss={() => setHierarchyDialogOpen(false)}>
+            {isHierarchyDialogOpen && <HierarchyUpdate setOpen={setHierarchyDialogOpen} />}
+          </DialogContainer>
         </div>
       </div>
     </>
@@ -127,10 +159,14 @@ const mapStateToProps = (storeState: IRootState) => ({
   isFeaturesPanelOpen: storeState.filter.isFeaturesPanelOpen,
   featuresList: storeState.feature.entities,
   selectedFeature: storeState.feature.selectedFeature,
+  datasourceId: storeState.views.entity.viewDashboard.dashboardDatasource.id,
+  hierarchies: storeState.hierarchies.hierarchies,
 });
 const mapDispatchToProps = {
   getViewFeaturesEntities,
   selectFeature,
+  getHierarchies,
+  setHierarchy,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
