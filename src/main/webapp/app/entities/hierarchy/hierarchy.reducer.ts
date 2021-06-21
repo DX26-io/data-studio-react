@@ -22,6 +22,12 @@ const removeDrilldownFromList = (hierarchy: IHierarchy, drilldown: IDrilldown) =
   return hierarchy;
 };
 
+const sortDrillDowns = (hierarchy: IHierarchy) => {
+  const _drilldown = hierarchy.drilldown.sort((a, b) => a.order - b.order);
+  hierarchy['drilldown'] = _drilldown;
+  return hierarchy;
+};
+
 export const ACTION_TYPES = {
   FETCH_HIERARCHY: 'hierarchies/FETCH_HIERARCHY',
   FETCH_HIERARCHIES: 'hierarchies/FETCH_HIERARCHIES',
@@ -136,7 +142,7 @@ export default (state: HierarchyState = initialState, action): HierarchyState =>
     case ACTION_TYPES.SET_HIERARCHY:
       return {
         ...state,
-        hierarchy: action.payload,
+        hierarchy: sortDrillDowns(action.payload),
       };
     case ACTION_TYPES.RESET:
       return {
@@ -178,6 +184,12 @@ export const setHierarchy = (hierarchy: IHierarchy) => ({
   type: ACTION_TYPES.SET_HIERARCHY,
   payload: hierarchy,
 });
+
+// export const sortDrillDowns = (hierarchy: IHierarchy) => ({
+//   type: ACTION_TYPES.SORT_DRILLDOWNS,
+//   payload: hierarchy,
+// });
+
 // TODO : created dummy..not tested
 export const getHierarchy: ICrudGetAction<IHierarchy> = id => {
   const requestUrl = `${apiUrl}/${id}`;
