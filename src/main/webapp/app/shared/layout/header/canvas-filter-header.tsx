@@ -54,7 +54,7 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
               if (props.selectedFilter && props.selectedFilter[item] && props.selectedFilter[item].length > 0) {
                 return (
                   <>
-                    <View>
+                    <View key={`filter-${i}`}>
                       <Dropdown
                         isOpen={dropdownOpen[i]}
                         toggle={() => {

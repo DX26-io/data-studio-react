@@ -51,6 +51,7 @@ const Canvas = (props: VisualizationProp) => {
   const [visualmetadataList, setvisualmetadata] = useState<IVisualMetadataSet[]>();
   const [filters, setFilters] = useState<string[]>();
   const [isLoaderDisplay, setIsLoaderDisplay] = useState<IIllustrate[]>([]);
+  const [showLoader, setShowLoader] = useState(props.visualLoader);
 
   useEffect(() => {
     if (props.selectedFilter) {
@@ -133,6 +134,10 @@ const Canvas = (props: VisualizationProp) => {
   }, []);
 
   useEffect(() => {
+    setShowLoader(props.visualLoader);
+  }, [props.visualLoader]);
+
+  useEffect(() => {
     if (props.isSocketConnected) {
       props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
       loadVisualization();
@@ -199,6 +204,9 @@ const Canvas = (props: VisualizationProp) => {
     if (props.isCreated) {
       props.metadataContainerAdd(props.visualmetadataEntity);
       setvisualmetadata([...props.visualMetadataContainerList]);
+      if (props.visualmetadataEntity.id) {
+        renderVisualizationById(props.visualmetadataEntity.id);
+      }
     }
   }, [props.isCreated]);
 
@@ -269,12 +277,6 @@ const Canvas = (props: VisualizationProp) => {
           </div>
           <div style={{ backgroundColor: v.bodyProperties.backgroundColor }} className="visualBody" id={`visualBody-${v.id}`}>
             <div className="illustrate">
-              {isLoaderDisplay[i]?.loaderVisibility && (
-                <div style={{ display: isLoaderDisplay[i]?.loaderVisibility ? 'block' : 'none' }} className={`loader loader-${v.id}`}>
-                  <Loader />
-                </div>
-              )}
-
               {isLoaderDisplay[i]?.noDataFoundVisibility && (
                 <div
                   style={{ display: isLoaderDisplay[i]?.noDataFoundVisibility ? 'block' : 'none' }}
@@ -298,6 +300,11 @@ const Canvas = (props: VisualizationProp) => {
         <CanvasFilterHeader hideLoader={hideLoader} />
       </View>
       <View>
+        {showLoader && (
+          <div style={{ display: showLoader ? 'block' : 'none' }} className="loader-element">
+            <Loader />
+          </div>
+        )}
         {visualmetadataList && visualmetadataList.length > 0 && (
           <ReactGridLayout
             className="layout"
@@ -338,10 +345,12 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualData: storeState.visualizationData.visualData,
   filterList: storeState.visualizationData.filterData,
   isSocketConnected: storeState.visualizationData.isSocketConnected,
+  visualLoader: storeState.visualizationData.visualLoader,
   visualMetadataContainerList: storeState.visualmetadata.visualMetadataContainerList,
   isSearchOpen: storeState.search.isSearchOpen,
   selectedFilter: storeState.visualmetadata.selectedFilter,
   filters: storeState.filter.selectedFilters,
+  isFilterOpen: storeState.filter.isFilterOpen,
 });
 
 const mapDispatchToProps = {
