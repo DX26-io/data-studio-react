@@ -21,6 +21,7 @@ import { VisualWrap } from '../../util/visualmetadata-wrapper';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { receiveSocketResponseByVisualId } from 'app/shared/websocket/websocket.reducer';
 import { IViews } from 'app/shared/model/views.model';
+import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
 
 export interface IVisualizationEditModalProps extends StateProps, DispatchProps {
   id: number;
@@ -65,7 +66,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
     if (props.visualmetadataEntity.fields && ValidateFields(props.visualmetadataEntity.fields)) {
       props.receiveSocketResponseByVisualId(props.visualmetadataEntity.id);
       const visualMetadata = VisualWrap(props.visualmetadataEntity);
-      const queryDTO = visualMetadata.getQueryParameters(props.visualmetadataEntity, null, null, null);
+      const queryDTO = visualMetadata.getQueryParameters(props.visualmetadataEntity, props.selectedFilters, getConditionExpression(props.selectedFilters), 0);
       const body = {
         queryDTO,
         visualMetadata,
@@ -134,7 +135,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
           </Flex>
           <div className="properties-tab">
             <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight={'100%'} width="size-4000">
-              <VisualizationProperties features={props.featuresList} visual={props.visualmetadataEntity} />
+              <VisualizationProperties  hierarchies={props.hierarchies} features={props.featuresList} visual={props.visualmetadataEntity} />
             </View>
           </div>
         </Flex>
@@ -148,6 +149,9 @@ const mapStateToProps = (storeState: IRootState) => ({
   featuresList: storeState.feature.entities,
   view: storeState.views.entity,
   visualDataById: storeState.visualizationData.visualDataById,
+  hierarchies: storeState.hierarchies.hierarchies,
+  selectedFilters: storeState.filter.selectedFilters,
+
 });
 
 const mapDispatchToProps = {

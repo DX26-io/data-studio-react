@@ -10,10 +10,12 @@ import { IFeature } from 'app/shared/model/feature.model';
 import { IViews } from 'app/shared/model/views.model';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { Tabs } from '@react-spectrum/tabs';
+import { IHierarchy } from 'app/shared/model/hierarchy.model';
 
 export interface IVisualizationPropertiesProps  {
   features: readonly IFeature[];
   visual: IVisualMetadataSet;
+  hierarchies?:readonly IHierarchy[]
 }
 
 const VisualizationProperties = (props: IVisualizationPropertiesProps) => {
@@ -32,8 +34,8 @@ const VisualizationProperties = (props: IVisualizationPropertiesProps) => {
           {item => (
             <Item title={item.name} key={item.id}>
               <Content margin="size-100">
-                {activeTabId === 'chartProperties' &&<VisualizationChartProperties features={props.features} visual={props.visual}  />}
-                {activeTabId === 'dataProperties' && <VisualizationDataProperties features={props.features} visual={props.visual} />}
+                {activeTabId === 'chartProperties' &&<VisualizationChartProperties  features={props.features} visual={props.visual}  />}
+                {activeTabId === 'dataProperties' && <VisualizationDataProperties hierarchies={props.hierarchies} features={props.features} visual={props.visual} />}
                 {/* {activeTabId === 'hierarchy' && <VisualizationHierarchy />} */}
               </Content>
             </Item>

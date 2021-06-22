@@ -25,9 +25,13 @@ import LockClosed from '@spectrum-icons/workflow/LockClosed';
 import Delete from '@spectrum-icons/workflow/Delete';
 import { getVisualizationFromTranslations } from 'app/modules/canvas/visualization/util/visualization-utils';
 import { Field } from 'app/shared/model/field.model';
+import Select from 'react-select';
+import { IHierarchy } from 'app/shared/model/hierarchy.model';
+
 export interface IVisualizationDataPropertiesProps {
   features: readonly IFeature[];
   visual: IVisualMetadataSet;
+  hierarchies?: readonly IHierarchy[];
 }
 
 const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) => {
@@ -36,8 +40,25 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
   const [showMeasure, setShowMeasure] = useState(false);
   const [properties, setProperty] = useState([]);
   const { SelectDimension, SelectMeasure } = getVisualizationFromTranslations();
+  const [hierarchies, setHierarchies] = useState<Array<IHierarchy>>();
 
   const visualWrap = VisualWrap(props.visual);
+
+  useEffect(() => {
+    const hierarchyData = [];
+    props.hierarchies &&
+      props.hierarchies.length > 0 &&
+      props.hierarchies.map(item => {
+        hierarchyData.push({ value: item.id, label: item.name });
+      });
+    setHierarchies(hierarchyData);
+  }, [props.hierarchies]);
+
+  const hierarchyChange = selectedOption => {
+    selectedField.hierarchy = props.hierarchies.find(item => {
+      return item.id === selectedOption.value;
+    });
+  };
   const getDimensionList = () => {
     return props.features.filter(item => {
       if (item.featureType === 'DIMENSION') {
@@ -184,17 +205,31 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
           </ButtonGroup>
 
           {showDimension && (
-            <Picker
-              onSelectionChange={selected => featureChange(selected.toString())}
-              label={SelectDimension}
-              selectedKey={selectedField?.feature?.name || ''}
-            >
-              {dimensionList &&
-                dimensionList.length > 0 &&
-                dimensionList
-                  .sort((a, b) => (a.name > b.name ? 1 : -1))
-                  .map((feature, i) => <Item key={uuid() + '|' + feature.name}> {feature.name} </Item>)}
-            </Picker>
+            <>
+              <Picker
+                onSelectionChange={selected => featureChange(selected.toString())}
+                label={SelectDimension}
+                selectedKey={selectedField?.feature?.name || ''}
+              >
+                {dimensionList &&
+                  dimensionList.length > 0 &&
+                  dimensionList
+                    .sort((a, b) => (a.name > b.name ? 1 : -1))
+                    .map((feature, i) => <Item key={uuid() + '|' + feature.name}> {feature.name} </Item>)}
+              </Picker>
+
+              {props.hierarchies && props.hierarchies.length > 0 && (
+                <Select
+                  onChange={hierarchyChange}
+                  className="basic-single"
+                  classNamePrefix="select"
+                  value={{ value: selectedField?.hierarchy?.id, label: selectedField?.hierarchy?.name }}
+                  isSearchable={true}
+                  name="hierarchy"
+                  options={hierarchies}
+                />
+              )}
+            </>
           )}
 
           {showMeasure && (
