@@ -22,8 +22,8 @@ interface IDateRangeComponentProps {
 }
 
 const DateRangeComponent = (props: IDateRangeComponentProps) => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date(null));
+  const [endDate, setEndDate] = useState(new Date(null));
   const [customDynamicDateRange, setCustomDynamicDateRange] = useState('0');
   const [dateRangeTab, setDateRangeTab] = useState<ReactText>('0');
   const [isdynamicDateRangeConfig, setDynamicDateRangeConfig] = useState<ReactText>('');
