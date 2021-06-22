@@ -6,21 +6,23 @@ import './features-panel.scss';
 import Minimize from '@spectrum-icons/workflow/Minimize';
 import Maximize from '@spectrum-icons/workflow/Maximize';
 import Add from '@spectrum-icons/workflow/Add';
-import { getViewFeaturesEntities, selectFeature } from 'app/entities/feature/feature.reducer';
+import { getViewFeaturesEntities, setFeature } from 'app/entities/feature/feature.reducer';
 import { Tabs } from '@react-spectrum/tabs';
 import { featureTypeToActiveTabs, getFeaturesTabTranslations } from 'app/modules/canvas/features/features-panel-util';
 import { Translate } from 'react-jhipster';
 import { Redirect } from 'react-router-dom';
 import { getHierarchies, setHierarchy } from 'app/entities/hierarchy/hierarchy.reducer';
 import HierarchyUpdate from 'app/entities/hierarchy/hierarchy-update';
+import FeatureUpdate from 'app/entities/feature/feature-update';
+import { IFeature, defaultValue as featureDefaultValue } from 'app/shared/model/feature.model';
 
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
 const FeaturesPanel = (props: IFeaturesPanelProp) => {
   const [isFeaturesMinimize, setFeaturesMinimize] = useState<boolean>(true);
   const [activeTabId, setActiveTabId] = useState<Key>(0);
-  const [showFeatureCreateDialog, setShowFeatureCreateDialog] = useState<boolean>(false);
   const [isHierarchyDialogOpen, setHierarchyDialogOpen] = useState<boolean>(false);
+  const [isFeatureDialogOpen, setFeatureDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     props.getHierarchies(props.datasourceId);
@@ -35,17 +37,21 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
   };
 
   const create = () => {
-    if (activeTabId === '2') {
-      setHierarchyDialogOpen(true);
+    if (activeTabId === '0') {
+      props.setFeature({ ...featureDefaultValue, featureType: 'DIMENSION' });
+      setFeatureDialogOpen(true);
+    } else if (activeTabId === '1') {
+      props.setFeature({ ...featureDefaultValue, featureType: 'MEASURE' });
+      setFeatureDialogOpen(true);
     } else {
-      setShowFeatureCreateDialog(true);
+      setHierarchyDialogOpen(true);
     }
   };
 
   const onFeatureSelected = selectedSet => {
     const feature = props.featuresList.find(ft => selectedSet.has(ft.id));
-    props.selectFeature(feature);
-    setShowFeatureCreateDialog(true);
+    props.setFeature(feature);
+    setFeatureDialogOpen(true);
   };
 
   const onHierarchySelected = selectedSet => {
@@ -54,23 +60,23 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
     setHierarchyDialogOpen(true);
   };
 
-  const redirectToFeature = () => {
-    return (
-      <Redirect
-        to={{
-          pathname: `/dashboards/${props.view.viewDashboard.id}/${props.view.id}/feature`,
-          state: {
-            featureType: featureTypeToActiveTabs[activeTabId],
-            datasource: props.view.viewDashboard.dashboardDatasource,
-          },
-        }}
-      />
-    );
-  };
+  // const redirectToFeature = () => {
+  //   return (
+  //     <Redirect
+  //       to={{
+  //         pathname: `/dashboards/${props.view.viewDashboard.id}/${props.view.id}/feature`,
+  //         state: {
+  //           featureType: featureTypeToActiveTabs[activeTabId],
+  //           datasource: props.view.viewDashboard.dashboardDatasource,
+  //         },
+  //       }}
+  //     />
+  //   );
+  // };
 
-  if (showFeatureCreateDialog) {
-    return redirectToFeature();
-  }
+  // if (setFeatureDialogOpen) {
+  //   return redirectToFeature();
+  // }
 
   return (
     <>
@@ -148,6 +154,9 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
           <DialogContainer onDismiss={() => setHierarchyDialogOpen(false)}>
             {isHierarchyDialogOpen && <HierarchyUpdate setOpen={setHierarchyDialogOpen} />}
           </DialogContainer>
+          <DialogContainer onDismiss={() => setFeatureDialogOpen(false)}>
+            {isFeatureDialogOpen && <FeatureUpdate setOpen={setFeatureDialogOpen} />}
+          </DialogContainer>
         </div>
       </div>
     </>
@@ -158,13 +167,13 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   isFeaturesPanelOpen: storeState.filter.isFeaturesPanelOpen,
   featuresList: storeState.feature.entities,
-  selectedFeature: storeState.feature.selectedFeature,
+  feature: storeState.feature.feature,
   datasourceId: storeState.views.entity.viewDashboard.dashboardDatasource.id,
   hierarchies: storeState.hierarchies.hierarchies,
 });
 const mapDispatchToProps = {
   getViewFeaturesEntities,
-  selectFeature,
+  setFeature,
   getHierarchies,
   setHierarchy,
 };
