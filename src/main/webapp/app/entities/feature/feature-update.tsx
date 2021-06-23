@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
   Button,
-  ButtonGroup,
   Content,
   Dialog,
-  DialogContainer,
   Divider,
   Flex,
   Form,
@@ -30,17 +28,15 @@ import {
   getViewFeaturesEntities,
   setFeature,
 } from 'app/entities/feature/feature.reducer';
-import { IFunction } from 'app/shared/model/function.model';
-import { IDatasources } from 'app/shared/model/datasources.model';
 import { defaultValue } from 'app/shared/model/error.model';
 import Alert from '@spectrum-icons/workflow/Alert';
+import { isFormValid } from './feature-util';
 
 interface IFeatureUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
 }
 
 const FeatureUpdate = (props: IFeatureUpdateProps) => {
-
   const [error, setError] = useState(defaultValue);
 
   const dialog = useDialogContainer();
@@ -74,10 +70,14 @@ const FeatureUpdate = (props: IFeatureUpdateProps) => {
   };
 
   const save = () => {
-    if (props.feature && props.feature.id) {
-      onUpdateFeature();
-    } else {
-      onCreateFeature();
+    const errorObj = isFormValid(props.feature);
+    setError(errorObj);
+    if (errorObj.isValid) {
+      if (props.feature && props.feature.id) {
+        onUpdateFeature();
+      } else {
+        onCreateFeature();
+      }
     }
   };
 
@@ -105,9 +105,9 @@ const FeatureUpdate = (props: IFeatureUpdateProps) => {
       <Heading>
         <Flex alignItems="center" gap="size-100" data-testid="feature-form-heading">
           {props.feature && props.feature.id !== '' ? (
-            <Translate contentKey="features.dialogs.create.edittitle">_Edit Feature</Translate>
+            <Translate contentKey="features.home.updateLabel">Update Feature</Translate>
           ) : (
-            <Translate contentKey="features.dialogs.create.createtitle">_Create Feature</Translate>
+            <Translate contentKey="features.home.createLabel">Create Feature</Translate>
           )}
         </Flex>
       </Heading>
@@ -116,7 +116,7 @@ const FeatureUpdate = (props: IFeatureUpdateProps) => {
           <Button variant="secondary" onPress={handleClose} data-testid="feature-form-cancel">
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
-          <Button variant="cta" onPress={save} data-testid="feature-form-submit">
+          <Button isDisabled={props.updating || !error.isValid} variant="cta" onPress={save} data-testid="feature-form-submit">
             <Translate contentKey="entity.action.save">Save</Translate>
           </Button>
         </Flex>
@@ -127,27 +127,33 @@ const FeatureUpdate = (props: IFeatureUpdateProps) => {
           <View width="100%">
             <Form isRequired necessityIndicator="icon">
               <TextField
-                label={translate('features.dialogs.create.name')}
+                label={translate('features.name')}
                 placeholder="customer_attrition"
                 value={props.feature && props.feature.name ? props.feature.name : ''}
                 onChange={event => {
                   props.setFeature({ ...props.feature, name: event });
+                  const errorObj = isFormValid({ ...props.feature, name: event });
+                  setError(errorObj);
                 }}
               />
               <TextField
-                label={translate('features.dialogs.create.type')}
-                placeholder="varchar(30)"
+                label={translate('features.type')}
+                placeholder="varchar(40)"
                 value={props.feature && props.feature.type ? props.feature.type : ''}
                 onChange={event => {
                   props.setFeature({ ...props.feature, type: event });
+                  const errorObj = isFormValid({ ...props.feature, type: event });
+                  setError(errorObj);
                 }}
               />
               <TextArea
-                label={translate('features.dialogs.create.definition')}
+                label={translate('features.definition')}
                 placeholder="yearquarter(order_date)"
                 value={props.feature && props.feature.definition ? props.feature.definition : ''}
                 onChange={event => {
                   props.setFeature({ ...props.feature, definition: event });
+                  const errorObj = isFormValid({ ...props.feature, definition: event });
+                  setError(errorObj);
                 }}
               />
               {props.feature && props.feature.id !== '' ? (
@@ -177,7 +183,7 @@ const FeatureUpdate = (props: IFeatureUpdateProps) => {
           </View>
           <View width="100%">
             <ListBox
-              aria-label={translate('features.dialogs.create.functions')}
+              aria-label={translate('features.functions')}
               selectionMode="single"
               onSelectionChange={onFunctionSelected}
               items={props.functions.filter(functionFilter)}
@@ -200,6 +206,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   functions: storeState.functions.entities,
   feature: storeState.feature.feature,
   updateSuccess: storeState.feature.updateSuccess,
+  updating: storeState.feature.updating,
   viewId: storeState.views.entity.id,
   datasource: storeState.views.entity.viewDashboard.dashboardDatasource,
 });
