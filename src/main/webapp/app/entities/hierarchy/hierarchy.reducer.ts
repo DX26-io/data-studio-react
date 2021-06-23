@@ -215,7 +215,6 @@ export const updateHierarchy: ICrudPutAction<IHierarchy> = hierarchy => async di
   return result;
 };
 
-// TODO : created dummy..not tested
 export const deleteHierarchy: ICrudDeleteAction<IHierarchy> = id => async dispatch => {
   const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({

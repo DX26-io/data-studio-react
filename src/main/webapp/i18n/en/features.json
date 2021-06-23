@@ -2,8 +2,8 @@
   "features": {
     "home": {
       "title": "Features",
-      "createLabel": "Create a new Feature",
-      "createOrEditLabel": "Create or edit a Feature",
+      "createLabel": "Create Feature",
+      "updateLabel": "Update Feature",
       "notFound": "No Features found"
     },
     "created": "A new Feature is created with identifier {{ param }}",
@@ -15,28 +15,28 @@
     "detail": {
       "title": "Feature"
     },
+    "name": "Name",
+    "type": "Type",
+    "definition": "Definition",
+    "searchfunction": "Search function",
+    "functions": "Functions",
     "datasourceId": "Datasource Id",
     "dateFilter": "Date Filter",
-    "definition": "Definition",
     "favouriteFilter": "Favourite Filter",
     "panel": {
       "title": "Features"
-    },
-    "dialogs": {
-      "create": {
-        "createtitle": "Create feature",
-        "edittitle": "Modify feature",
-        "name": "Name",
-        "type": "Type",
-        "definition": "Definition",
-        "searchfunction": "Search function",
-        "functions": "Functions"
-      }
     },
     "tabs": {
       "dimensions": "Dimensions",
       "measures": "Measures",
       "hierarchy": "Hierarchy"
+    },
+    "error": {
+      "name": "Name is required",
+      "nameLength": "Name cannot be longer than 40 characters",
+      "type": "Type is required",
+      "typeLength": "Type cannot be longer than 40 characters",
+      "definition": "Definition is required"
     }
   }
 }

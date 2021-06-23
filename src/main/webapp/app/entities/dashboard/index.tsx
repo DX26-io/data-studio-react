@@ -15,7 +15,7 @@ import ViewPropertiesModal from '../views/view-properties-modal';
 import Canvas from 'app/modules/canvas/visualization/canvas';
 import VisualizationEditModal from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal';
 import VisualizationsDeleteModal from 'app/modules/canvas/visualization/visualization-modal/visualization-delete-modal/visualizations-delete-modal';
-import FeaturesCreateModal from "app/modules/canvas/features/features-create-modal";
+import FeaturesCreateModal from "app/entities/feature/feature-update";
 import SearchModal from "app/entities/search/search-modal";
 
 const Routes = ({ match }) => (
@@ -34,8 +34,6 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/delete/:visualizationId`} component={VisualizationsDeleteModal} />
 
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={Views} />
-
-      <ErrorBoundaryRoute path={`${match.url}/:id/:viewId/feature`} component={FeaturesCreateModal} />
       <ErrorBoundaryRoute path={match.url} component={Dashboard} />
     </Switch>
   </>
