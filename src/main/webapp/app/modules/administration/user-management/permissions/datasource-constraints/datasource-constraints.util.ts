@@ -21,3 +21,28 @@ export const isFormValid = (constraint: IDatasourceConstraints): IError => {
   }
   return error;
 };
+
+export const generateUserOptions = users => {
+  const options = [];
+  users &&
+    users.forEach(item => {
+      options.push({ value: item.id, label: item.login });
+    });
+  return options;
+};
+export const generateDatasourcesOptions = datasources => {
+  const options = [];
+  datasources &&
+    datasources.forEach(item => {
+      options.push({ value: item.id, label: item.name });
+    });
+  return options;
+};
+export const generateFeatureNameOptions = featurs => {
+  const options = [];
+  featurs &&
+    featurs.forEach(item => {
+      options.push({ value: item.id, label: item.name });
+    });
+  return options;
+};

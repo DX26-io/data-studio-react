@@ -40,12 +40,13 @@ import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import AddCircel from '@spectrum-icons/workflow/AddCircle';
 import RemoveCircle from '@spectrum-icons/workflow/RemoveCircle';
-import { isFormValid } from './datasource-constraints.util';
+import { generateDatasourcesOptions, generateFeatureNameOptions, generateUserOptions, isFormValid } from './datasource-constraints.util';
 import Separators from 'app/shared/components/separator/separators';
 import SeparatorInput from 'app/shared/components/separator/separator-input';
 import SeparatorIcon from 'app/shared/components/separator/separator-icon';
 import { addCommaSeparatedValuesIntoConstraint } from 'app/shared/components/separator/separator.util';
 import { SEPARATORS } from 'app/config/constants';
+import Select from 'react-select';
 
 export interface IDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
@@ -164,7 +165,36 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
       <Divider />
       <Content>
         <Form data-testid="datasource-constraint-form">
-          <ComboBox
+          <span className="spectrum-Body-emphasis--sizeXXS">{translate('userManagement.select')}</span>
+          <Select
+            onChange={event => {
+              let filteredUsers = [];
+              if (event) {
+                setLogin(event.value);
+                filteredUsers = props.searchedUsers.filter(item => {
+                  return item.id === event.value;
+                });
+                if (filteredUsers && filteredUsers.length === 0) {
+                  filteredUsers = props.users.filter(item => {
+                    return item.id === event.value;
+                  });
+                }
+                props.setDatasourceConstraints({ ...props.constraint, user: filteredUsers[0] });
+                setError(isFormValid({ ...props.constraint, user: filteredUsers[0] }));
+              }
+            }}
+            placeholder={translate('userManagement.search')}
+            label={translate('userManagement.select')}
+            className="basic-single"
+            classNamePrefix="select"
+            isSearchable={true}
+            name="users"
+            options={generateUserOptions(props.users)}
+            defaultValue={login ? login : props.constraint.user.login}
+          />
+
+          {
+            /* <ComboBox
             placeholder={translate('userManagement.search')}
             label={translate('userManagement.select')}
             defaultItems={props.users}
@@ -192,7 +222,33 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
           >
             {item => <Item>{item.login}</Item>}
           </ComboBox>
-          <ComboBox
+}*/
+
+            <>
+              <span className="spectrum-Body-emphasis--sizeXXS">{translate('datasources.select')}</span>
+              <Select
+                placeholder={translate('datasources.search')}
+                onChange={event => {
+                  if (event) {
+                    setDatasourceName(event.label);
+                    const filteredDatasource = props.datasources.filter(item => {
+                      return item.id === event.value;
+                    });
+                    props.setDatasourceConstraints({ ...props.constraint, datasource: filteredDatasource[0] });
+                    props.getFeatures(Number(event.value), 'DIMENSION');
+                    setError(isFormValid({ ...props.constraint, datasource: filteredDatasource[0] }));
+                  }
+                }}
+                className="basic-single"
+                classNamePrefix="select"
+                isSearchable={true}
+                name="datasources"
+                options={generateDatasourcesOptions(props.datasources)}
+                defaultValue={datasourceName ? datasourceName : props.constraint.datasource.name}
+              />
+            </>
+
+            /* <ComboBox
             placeholder={translate('datasources.search')}
             label={translate('datasources.select')}
             defaultItems={props.datasources}
@@ -214,7 +270,8 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
             }}
           >
             {item => <Item>{item.name}</Item>}
-          </ComboBox>
+          </ComboBox>  */
+          }
           <View>
             <span className="spectrum-Heading spectrum-Heading--sizeXXS">
               <Translate contentKey="permissions.datasourceConstraints.constraints">Constraints</Translate>
@@ -238,7 +295,48 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                   <Item key={item}>{item}</Item>
                 ))}
               </Picker>
-              <ComboBox
+
+              <Select
+                placeholder={translate('permissions.datasourceConstraints.selectField')}
+                isDisabled={!props.constraint.datasource.id}
+                onChange={item => {
+                  props.setDatasourceConstraints({ ...props.constraint, datasource: item.value });
+                  props.getFeatures(Number(item.value), 'DIMENSION');
+                  setError(isFormValid({ ...props.constraint, datasource: item.value }));
+                }}
+                className="basic-single"
+                classNamePrefix="select"
+                isSearchable={true}
+                name="hierarchy"
+                options={generateDatasourcesOptions(props.datasources)}
+                defaultValue={con.featureName ? con.featureName : ''}
+              />
+
+              <Select
+                placeholder={translate('permissions.datasourceConstraints.selectField')}
+                onChange={event => {
+                  if (event) {
+                    con.featureName = event.label;
+                    const filteredFeatures = props.features.filter(item => {
+                      return item.id === event.value;
+                    });
+                    if (filteredFeatures && filteredFeatures.length > 0) {
+                      con.featureName = filteredFeatures[0].name;
+                      props.setDatasourceConstraints(props.constraint);
+                    }
+                    setError(isFormValid(props.constraint));
+                    con['isCommaSeparatedInputOn'] = false;
+                  }
+                }}
+                className="basic-single"
+                classNamePrefix="select"
+                isSearchable={true}
+                name="features"
+                options={generateFeatureNameOptions(props.features)}
+                defaultValue={con.featureName ? con.featureName : ''}
+              />
+
+              {/* <ComboBox
                 isDisabled={!props.constraint.datasource.id}
                 key={`constraint-feature-${i}`}
                 placeholder={translate('permissions.datasourceConstraints.selectField')}
@@ -264,7 +362,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                 }}
               >
                 {item => <Item>{item.name}</Item>}
-              </ComboBox>
+              </ComboBox> */}
               {/* TODO : this will be done once khushbu's pr is merged */}
 
               {con.isCommaSeparatedInputOn ? (

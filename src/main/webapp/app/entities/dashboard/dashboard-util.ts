@@ -15,3 +15,12 @@ interface IFormData {
 export const isCreateEditFormNotValid = ({ dashboardName, dashboardCategory, dashboardDataSource }: IFormData): boolean => {
   return dashboardName === '' || dashboardCategory === '' || dashboardDataSource === '';
 };
+
+export const generateDatasourcesOptions = datasources => {
+  const options = [];
+  datasources &&
+    datasources.forEach(item => {
+      options.push({ value: item.name, label: item.name });
+    });
+  return options;
+};

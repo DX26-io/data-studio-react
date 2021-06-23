@@ -13,7 +13,7 @@ const initialState = {
   loading: false,
   errorMessage: null,
   visualData: null,
-  visualLoader: true,
+  isLoaderOn: true,
   visualDataById: null,
   filterData: null,
   isSocketConnected: false,
@@ -26,7 +26,7 @@ export default (state: VisualDataState = initialState, action): VisualDataState 
     case ACTION_TYPES.SET_VISUAL_DATA:
       return {
         ...state,
-        visualLoader: false,
+        isLoaderOn: false,
         loading: false,
         visualData: action.payload,
       };

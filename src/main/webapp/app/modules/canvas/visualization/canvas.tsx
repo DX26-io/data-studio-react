@@ -51,7 +51,6 @@ const Canvas = (props: VisualizationProp) => {
   const [visualmetadataList, setvisualmetadata] = useState<IVisualMetadataSet[]>();
   const [filters, setFilters] = useState<string[]>();
   const [isLoaderDisplay, setIsLoaderDisplay] = useState<IIllustrate[]>([]);
-  const [showLoader, setShowLoader] = useState(props.visualLoader);
 
   useEffect(() => {
     if (props.selectedFilter) {
@@ -134,17 +133,6 @@ const Canvas = (props: VisualizationProp) => {
   }, []);
 
   useEffect(() => {
-    setShowLoader(props.visualLoader);
-  }, [props.visualLoader]);
-
-  useEffect(() => {
-    if (props.isSocketConnected) {
-      props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
-      loadVisualization();
-    }
-  }, [props.isSocketConnected]);
-
-  useEffect(() => {
     if (props.visualData) {
       const v = VisualMetadataContainerGetOne(props.visualData.headers.queryId);
       if (v && props.visualData?.body.length > 0) {
@@ -195,7 +183,10 @@ const Canvas = (props: VisualizationProp) => {
   }, [props.visualmetadata]);
 
   useEffect(() => {
-    if (!props.isSocketConnected) {
+    if (props.isSocketConnected) {
+      props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
+      loadVisualization();
+    } else {
       props.receiveSocketResponse();
     }
   }, [props.isSocketConnected]);
@@ -232,6 +223,7 @@ const Canvas = (props: VisualizationProp) => {
 
   useEffect(() => {
     if (props.isSearchOpen) {
+      debugger
       props.history.push(`/dashboards/${props.view.viewDashboard.id}/${props.view.id}/search`);
     }
   }, [props.isSearchOpen]);
@@ -300,8 +292,8 @@ const Canvas = (props: VisualizationProp) => {
         <CanvasFilterHeader hideLoader={hideLoader} />
       </View>
       <View>
-        {showLoader && (
-          <div style={{ display: showLoader ? 'block' : 'none' }} className="loader-element">
+        {props.isLoaderOn && (
+          <div style={{ display: props.isLoaderOn ? 'block' : 'none' }} className="loader-element">
             <Loader />
           </div>
         )}
@@ -345,7 +337,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualData: storeState.visualizationData.visualData,
   filterList: storeState.visualizationData.filterData,
   isSocketConnected: storeState.visualizationData.isSocketConnected,
-  visualLoader: storeState.visualizationData.visualLoader,
+  isLoaderOn: storeState.visualizationData.isLoaderOn,
   visualMetadataContainerList: storeState.visualmetadata.visualMetadataContainerList,
   isSearchOpen: storeState.search.isSearchOpen,
   selectedFilter: storeState.visualmetadata.selectedFilter,

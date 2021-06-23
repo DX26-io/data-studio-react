@@ -27,11 +27,12 @@ import { getVisualizationFromTranslations } from 'app/modules/canvas/visualizati
 import { Field } from 'app/shared/model/field.model';
 import Select from 'react-select';
 import { IHierarchy } from 'app/shared/model/hierarchy.model';
+import { generateHierarchiesOptions } from '../../visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 
 export interface IVisualizationDataPropertiesProps {
   features: readonly IFeature[];
   visual: IVisualMetadataSet;
-  hierarchies?: readonly IHierarchy[];
+  hierarchies?: Array<any>;
 }
 
 const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) => {
@@ -40,19 +41,8 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
   const [showMeasure, setShowMeasure] = useState(false);
   const [properties, setProperty] = useState([]);
   const { SelectDimension, SelectMeasure } = getVisualizationFromTranslations();
-  const [hierarchies, setHierarchies] = useState<Array<IHierarchy>>();
 
   const visualWrap = VisualWrap(props.visual);
-
-  useEffect(() => {
-    const hierarchyData = [];
-    props.hierarchies &&
-      props.hierarchies.length > 0 &&
-      props.hierarchies.map(item => {
-        hierarchyData.push({ value: item.id, label: item.name });
-      });
-    setHierarchies(hierarchyData);
-  }, [props.hierarchies]);
 
   const hierarchyChange = selectedOption => {
     selectedField.hierarchy = props.hierarchies.find(item => {
@@ -226,7 +216,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
                   value={{ value: selectedField?.hierarchy?.id, label: selectedField?.hierarchy?.name }}
                   isSearchable={true}
                   name="hierarchy"
-                  options={hierarchies}
+                  options={props.hierarchies}
                 />
               )}
             </>

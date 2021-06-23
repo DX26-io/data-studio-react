@@ -100,3 +100,12 @@ export const getBorderList = (): IBorderData[] => {
     },
   ];
 };
+
+export const generateHierarchiesOptions = hierarchies => {
+  const options = [];
+  hierarchies &&
+    hierarchies.forEach(item => {
+      options.push({ value: item.id, label: item.name });
+    });
+  return options;
+};
