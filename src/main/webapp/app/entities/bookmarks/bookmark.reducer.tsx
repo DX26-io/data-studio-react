@@ -14,6 +14,7 @@ export const ACTION_TYPES = {
   // TODO:
   SEARCH_BOOKMARKS: 'bookmarks/SEARCH_BOOKMARKS',
   SET_BOOKMARK: 'bookmarks/SET_BOOKMARK',
+  APPLY_BOOKMARK: 'bookmarks/APPLY_BOOKMARK',
   RESET: 'bookmarks/RESET',
 };
 
@@ -23,6 +24,7 @@ const initialState = {
   bookmarks: [] as ReadonlyArray<IBookmark>,
   authorities: [] as any[],
   bookmark: defaultValue,
+  appliedBookmark: null,
   updating: false,
   updateSuccess: false,
   fetchSuccess: false,
@@ -145,6 +147,11 @@ export default (state: BookmarksState = initialState, action): BookmarksState =>
         ...state,
         bookmark: action.payload,
       };
+    case ACTION_TYPES.APPLY_BOOKMARK:
+      return {
+        ...state,
+        appliedBookmark: action.payload,
+      };
     default:
       return state;
   }
@@ -187,6 +194,13 @@ export const updateBookmark: ICrudPutAction<IBookmark> = bookmark => async dispa
 export const setBookmark = (bookmark: IBookmark) => {
   return {
     type: ACTION_TYPES.SET_BOOKMARK,
+    payload: bookmark,
+  };
+};
+
+export const applyBookmark = (bookmark: IBookmark) => {
+  return {
+    type: ACTION_TYPES.APPLY_BOOKMARK,
     payload: bookmark,
   };
 };

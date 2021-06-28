@@ -5,6 +5,8 @@ export const ACTION_TYPES = {
   FETCH_RECENTS_ACCESSED_VIEWS: 'recent/FETCH_RECENTS_ACCESSED_VIEWS',
   FETCH_POPULAR_VIEWS: 'recent/FETCH_POPULAR_VIEWS',
   FETCH_RECENTS_CREATED_VIEWS: 'recent/FETCH_RECENTS_CREATED_VIEWS',
+  FETCH_RECENTS_ACCESSED_BOOKMARKS: 'recent/FETCH_RECENTS_ACCESSED_BOOKMARKS',
+  FETCH_RECENTS_CREATED_BOOKMARKS: 'recent/FETCH_RECENTS_CREATED_BOOKMARKS',
 };
 
 const initialState = {
@@ -14,6 +16,8 @@ const initialState = {
   popularViews: [],
   totalRecents: 0,
   recentlyCreatedViews: [],
+  recentlyAccessedBookmarks: [],
+  recentlyCreatedBookmarks: [],
 };
 
 export type RecentState = Readonly<typeof initialState>;
@@ -79,6 +83,47 @@ export default (state: RecentState = initialState, action): RecentState => {
         popularViews: action.payload.data,
         totalRecents: parseInt(action.payload.headers['x-total-count'], 10),
       };
+
+    case REQUEST(ACTION_TYPES.FETCH_RECENTS_ACCESSED_BOOKMARKS):
+      return {
+        ...state,
+        recentlyAccessedBookmarks: [],
+        errorMessage: null,
+        loading: true,
+      };
+    case FAILURE(ACTION_TYPES.FETCH_RECENTS_ACCESSED_BOOKMARKS):
+      return {
+        ...state,
+        loading: false,
+        errorMessage: action.payload,
+      };
+    case SUCCESS(ACTION_TYPES.FETCH_RECENTS_ACCESSED_BOOKMARKS):
+      return {
+        ...state,
+        loading: false,
+        recentlyAccessedBookmarks: action.payload.data,
+        totalRecents: parseInt(action.payload.headers['x-total-count'], 10),
+      };
+    case REQUEST(ACTION_TYPES.FETCH_RECENTS_CREATED_BOOKMARKS):
+      return {
+        ...state,
+        errorMessage: null,
+        loading: true,
+      };
+    case FAILURE(ACTION_TYPES.FETCH_RECENTS_CREATED_BOOKMARKS):
+      return {
+        ...state,
+        loading: false,
+        errorMessage: action.payload,
+      };
+    case SUCCESS(ACTION_TYPES.FETCH_RECENTS_CREATED_BOOKMARKS):
+      return {
+        ...state,
+        loading: false,
+        recentlyCreatedBookmarks: action.payload.data,
+        totalRecents: parseInt(action.payload.headers['x-total-count'], 10),
+      };
+
     default:
       return state;
   }
@@ -89,15 +134,13 @@ export const getRecentViews = (page: number, size: number, sort: string) => ({
   payload: axios.get(`api/viewWatches?page=${page}&size=${size}&sort=${sort}`),
 });
 
-// TODO : action needs to be changed
 export const getRecentlyAccessedBookmarks = (page: number, size: number, sort: string) => ({
-  type: ACTION_TYPES.FETCH_POPULAR_VIEWS,
+  type: ACTION_TYPES.FETCH_RECENTS_ACCESSED_BOOKMARKS,
   payload: axios.get(`api/bookmark-watches?page=${page}&size=${size}&sort=${sort}`),
 });
 
-// TODO : action needs to be changed
 export const getRecentlyCreatedBookmarks = (page: number, size: number, sort: string) => ({
-  type: ACTION_TYPES.FETCH_POPULAR_VIEWS,
+  type: ACTION_TYPES.FETCH_RECENTS_CREATED_BOOKMARKS,
   payload: axios.get(`api/bookmark-watches?page=${page}&size=${size}&sort=${sort}`),
 });
 

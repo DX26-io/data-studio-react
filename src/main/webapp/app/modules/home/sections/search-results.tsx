@@ -22,7 +22,7 @@ const SearchResults = (props: ISearchResultsProps) => {
         thumbnail={
           <View height="size-3200">
             {/* TODO: added empty string as url for now */}
-            <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName} url='' />
+            <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName} url={`/dashboards/${view.viewDashboard.id}/${view.id}/build`} />
           </View>
         }
         content={
