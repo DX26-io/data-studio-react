@@ -1,6 +1,6 @@
 import './header.scss';
 import React, { useState, useEffect, ReactText } from 'react';
-import { ActionButton, View, DialogContainer, TooltipTrigger, Tooltip, MenuTrigger, Menu, Item, Picker } from '@adobe/react-spectrum';
+import { Flex, ActionButton, View, DialogContainer, TooltipTrigger, Tooltip, MenuTrigger, Menu, Item, Picker } from '@adobe/react-spectrum';
 import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import SaveAsFloppy from '@spectrum-icons/workflow/SaveAsFloppy';
 import Asset from '@spectrum-icons/workflow/Asset';
@@ -22,19 +22,17 @@ import Filter from '@spectrum-icons/workflow/Filter';
 import { translate } from 'react-jhipster';
 import { toggleSearch } from 'app/entities/search/search.reducer';
 import BookmarkUpdate from 'app/entities/bookmarks/bookmark-update';
-import { ComboBox, Item as ComboBoxItem } from '@react-spectrum/combobox';
-import { getBookmarks } from 'app/entities/bookmarks/bookmark.reducer';
+import { getBookmarks,applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import VisualizationShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/visualization-share-modal';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
-import { IBookmark } from 'app/shared/model/bookmark.model';
 import { addFilterFromBookmark } from 'app/modules/canvas/filter/filter-util';
 import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
+import Select from 'react-select';
+import { generateBookmarksOptions } from 'app/entities/bookmarks/bookmark.util';
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
   const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
-  const [bookmarkId, setBookmarkId] = useState('');
-  const [bookmark, setBookmark] = useState<IBookmark>();
   const [dialog, setDialog] = useState<ReactText>();
 
   useEffect(() => {
@@ -72,116 +70,110 @@ const CanvasHeader = props => {
     props.toggleSearch();
   };
 
-  const applyBookmark = id => {
-    props.getFeatureCriteria(id);
-  };
-
   useEffect(() => {
     if (props.fetchedFeatureCriteria) {
-      const filters = addFilterFromBookmark({ ...bookmark, featureCriteria: props.featureCriteria });
+      const filters = addFilterFromBookmark({ ...props.bookmark, featureCriteria: props.featureCriteria });
       props.applyFilter(filters, props.visualmetadata, props.view);
-     // props.modifyFilterState();
     }
   }, [props.fetchedFeatureCriteria]);
 
   return (
     <>
       <View>
-        {/* <ComboBox
-          placeholder={translate('bookmarks.search')}
-          items={props.bookmarks}
-          inputValue={bookmarkName}
-          onSelectionChange={event => {}}
-          onInputChange={event => {}}
-        >
-          {item => <ComboBoxItem>{item.name}</ComboBoxItem>}
-        </ComboBox> */}
-        {/* TODO : Picker needs to be replaced with combobox in near future 
-        using Picker for time being */}
-        
-        <Picker
-          placeholder={translate('bookmarks.search')}
-          onSelectionChange={selected => {
-            setBookmarkId(selected.toString());
-            applyBookmark(selected.toString());
-            const _bookmark = props.bookmarks.filter(item => {
-              return item.id === selected;
-            })[0];
-            setBookmark(_bookmark);
-          }}
-        >
-          {props.bookmarks.map(item => (
-            <Item key={item.id}>{item.name}</Item>
-          ))}
-        </Picker>
-
-        <TooltipTrigger>
-          <ActionButton onPress={() => handleToggleEditMode()} aria-label="enable edit" isQuiet={true} marginEnd="size-5">
-            <div className={props.isEditMode ? 'enableEdit' : 'disableEdit'}>
-              <CollectionEdit color="informative" size="M" />
-            </div>
-          </ActionButton>
-          <Tooltip>Edit</Tooltip>
-        </TooltipTrigger>
-        <TooltipTrigger>
-          <ActionButton
-            onPress={() => setVisualizationsModelOpen(true)}
-            aria-label="GraphBarVerticalAdd"
-            isQuiet={true}
-            marginEnd="size-5"
-            isDisabled={!props.isEditMode}
-          >
-            <GraphBarVerticalAdd size="M" />
-          </ActionButton>
-          <Tooltip>Add Visualization</Tooltip>
-        </TooltipTrigger>
-        <TooltipTrigger>
-          <ActionButton onPress={() => saveAllVisualizations()} aria-label="Save" isQuiet={true} marginEnd="size-5">
-            <SaveAsFloppy size="M" />
-          </ActionButton>
-          <Tooltip>Save</Tooltip>
-        </TooltipTrigger>
-        <TooltipTrigger>
-          <ActionButton onPress={() => toggleFeatures()} aria-label="Features" isQuiet={true} isDisabled={!props.isEditMode}>
-            <Asset size="M" />
-          </ActionButton>
-          <Tooltip>Toggle features</Tooltip>
-        </TooltipTrigger>
-        <TooltipTrigger>
-          <ActionButton onPress={() => setIsBookmarkDialogOpen(true)} aria-label="Bookmarks" isQuiet={true} marginEnd="size-5">
-            <BookmarkSingle size="M" />
-          </ActionButton>
-          <Tooltip>{translate('bookmarks.home.createLabel')}</Tooltip>
-        </TooltipTrigger>
-        <TooltipTrigger>
-          <MenuTrigger>
-            <ActionButton aria-label="Bookmarks" isQuiet={true} marginEnd="size-5">
-              <MoreSmallListVert size="M" />
+        <Flex gap="size-100" wrap="nowrap">
+          <div style={{ minWidth: '305px' }}>
+            <Select
+              className="basic-single"
+              classNamePrefix="select"
+              isClearable
+              isSearchable
+              placeholder={translate('bookmarks.search')}
+              value={props.bookmark && props.bookmark.id ? { value: props.bookmark.id, label: props.bookmark.name } : null}
+              options={props.bookmarkSelectOptions}
+              onChange={selectedOption => {
+                if (selectedOption) {
+                  const _bookmark = props.bookmarks.filter(b => b.id === selectedOption.value)[0];
+                  props.applyBookmark(_bookmark);
+                  props.getFeatureCriteria(selectedOption.value.toString());
+                } else {
+                  props.applyFilter({}, props.visualmetadata, props.view);
+                  props.applyBookmark(null);
+                }
+              }}
+            />
+          </div>
+          <TooltipTrigger>
+            <ActionButton onPress={() => handleToggleEditMode()} aria-label="enable edit" isQuiet={true} marginEnd="size-5">
+              <div className={props.isEditMode ? 'enableEdit' : 'disableEdit'}>
+                <CollectionEdit color="informative" size="M" />
+              </div>
             </ActionButton>
-            <Menu onAction={key => setDialog(key)}>
-              <Item key="Bookmarks">Bookmarks</Item>
-              <Item key="Share">Share</Item>
-              <Item key="Print">Print</Item>
-            </Menu>
-          </MenuTrigger>
+            <Tooltip>Edit</Tooltip>
+          </TooltipTrigger>
+          <TooltipTrigger>
+            <ActionButton
+              onPress={() => setVisualizationsModelOpen(true)}
+              aria-label="GraphBarVerticalAdd"
+              isQuiet={true}
+              marginEnd="size-5"
+              isDisabled={!props.isEditMode}
+            >
+              <GraphBarVerticalAdd size="M" />
+            </ActionButton>
+            <Tooltip>Add Visualization</Tooltip>
+          </TooltipTrigger>
+          <TooltipTrigger>
+            <ActionButton onPress={() => saveAllVisualizations()} aria-label="Save" isQuiet={true} marginEnd="size-5">
+              <SaveAsFloppy size="M" />
+            </ActionButton>
+            <Tooltip>Save</Tooltip>
+          </TooltipTrigger>
+          <TooltipTrigger>
+            <ActionButton onPress={() => toggleFeatures()} aria-label="Features" isQuiet={true} isDisabled={!props.isEditMode}>
+              <Asset size="M" />
+            </ActionButton>
+            <Tooltip>Toggle features</Tooltip>
+          </TooltipTrigger>
+          <TooltipTrigger>
+            <ActionButton onPress={() => setIsBookmarkDialogOpen(true)} aria-label="Bookmarks" isQuiet={true} marginEnd="size-5">
+              <BookmarkSingle size="M" />
+            </ActionButton>
+            <Tooltip>{translate('bookmarks.home.createLabel')}</Tooltip>
+          </TooltipTrigger>
+          <TooltipTrigger>
+            <MenuTrigger>
+              <ActionButton aria-label="Bookmarks" isQuiet={true} marginEnd="size-5">
+                <MoreSmallListVert size="M" />
+              </ActionButton>
+              <Menu onAction={key => setDialog(key)}>
+                <Item key="Bookmarks">Bookmarks</Item>
+                <Item key="Share">Share</Item>
+                <Item key="Print">Print</Item>
+              </Menu>
+            </MenuTrigger>
 
-          <Tooltip>More</Tooltip>
-        </TooltipTrigger>
-        <DialogContainer onDismiss={() => setDialog(null)}>{dialog === 'Share' && <VisualizationShareModal />}</DialogContainer>
-        <TooltipTrigger>
-          <ActionButton onPress={() => toggleSearchModal()} aria-label="{translate('views.menu.search')}" isQuiet={true} marginEnd="size-5">
-            <Search size="M" />
-          </ActionButton>
-          <Tooltip>{translate('views.menu.toggle.search')}</Tooltip>
-        </TooltipTrigger>
+            <Tooltip>More</Tooltip>
+          </TooltipTrigger>
+          <DialogContainer onDismiss={() => setDialog(null)}>{dialog === 'Share' && <VisualizationShareModal />}</DialogContainer>
+          <TooltipTrigger>
+            <ActionButton
+              onPress={() => toggleSearchModal()}
+              aria-label="{translate('views.menu.search')}"
+              isQuiet={true}
+              marginEnd="size-5"
+            >
+              <Search size="M" />
+            </ActionButton>
+            <Tooltip>{translate('views.menu.toggle.search')}</Tooltip>
+          </TooltipTrigger>
 
-        <TooltipTrigger>
-          <ActionButton onPress={() => handleToggleFilterPanel()} isQuiet={true} marginEnd="size-5">
-            <Filter size="M" />
-          </ActionButton>
-          <Tooltip>Filter</Tooltip>
-        </TooltipTrigger>
-
+          <TooltipTrigger>
+            <ActionButton onPress={() => handleToggleFilterPanel()} isQuiet={true} marginEnd="size-5">
+              <Filter size="M" />
+            </ActionButton>
+            <Tooltip>Filter</Tooltip>
+          </TooltipTrigger>
+        </Flex>
         <DialogContainer type="fullscreen" onDismiss={() => setVisualizationsModelOpen(false)} {...props}>
           {isVisualizationsModelOpen && (
             <VisualizationsList
@@ -207,11 +199,13 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualizationsList: storeState.visualizations.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
   isEditMode: storeState.visualmetadata.isEditMode,
+  bookmarkSelectOptions: generateBookmarksOptions(storeState.bookmarks.bookmarks),
   bookmarks: storeState.bookmarks.bookmarks,
   fetchedFeatureCriteria: storeState.featureCriteria.fetchedFeatureCriteria,
   featureCriteria: storeState.featureCriteria.featureCriteria,
   view: storeState.views.entity,
   selectedFilter: storeState.filter.selectedFilters,
+  bookmark: storeState.bookmarks.appliedBookmark,
 });
 
 const mapDispatchToProps = {
@@ -224,7 +218,7 @@ const mapDispatchToProps = {
   getBookmarks,
   getFeatureCriteria,
   applyFilter,
-  //modifyFilterState,
+  applyBookmark
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
