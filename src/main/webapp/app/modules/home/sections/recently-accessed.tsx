@@ -11,7 +11,7 @@ import Card from 'app/shared/components/card/card';
 export interface IRecentlyAccessedProps extends StateProps, DispatchProps {}
 
 const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
-  const [tabId, setTabId] = useState<ReactText>('2');
+  const [tabId, setTabId] = useState<ReactText>('1');
 
   const tabs = [
     { id: 1, name: 'home.bottom.tabs.accessed.tabs.recentlyAccessedViews' },
@@ -33,14 +33,12 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
     },
     '3': {
       getData() {
-        // TODO
-        // props.getRecentlyAccessedBookmarks(0, 5, 'watchTime,desc');
+        props.getRecentlyAccessedBookmarks(0, 5, 'watchTime,desc');
       },
     },
     '4': {
       getData() {
-        // TODO
-        // props.getRecentlyAccessedBookmarks(0, 5, 'watchCount,desc');
+        props.getRecentlyAccessedBookmarks(0, 5, 'watchCount,desc');
       },
     },
   };
@@ -51,8 +49,37 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
         key={recent.view.id}
         thumbnail={
           <View height="size-3200">
-            {/* TODO: added empty string as url for now */}
-            <ViewCardThumbnail thumbnailImagePath={recent.view.imageLocation} viewName={recent.view.viewName} url='' />
+            <ViewCardThumbnail
+              thumbnailImagePath={recent.view.imageLocation}
+              viewName={recent.view.viewName}
+              url={`/dashboards/${recent.view.viewDashboard.id}/${recent.view.id}/build`}
+            />
+          </View>
+        }
+        content={
+          <ViewCardContent
+            viewDashboard={recent.view.viewDashboard}
+            description={recent.view.description}
+            viewName={recent.view.viewName}
+            viewId={recent.view.id}
+            account={props.account}
+          />
+        }
+      />
+    );
+  });
+
+  const recentlyAccessedBookmarksListElement = props.recentlyAccessedBookmarks.map(recent => {
+    return (
+      <Card
+        key={recent.view.id}
+        thumbnail={
+          <View height="size-3200">
+            <ViewCardThumbnail
+              thumbnailImagePath={recent.view.imageLocation}
+              viewName={recent.view.viewName}
+              url={`/dashboards/${recent.view.viewDashboard.id}/${recent.view.id}/build/${recent.featureBookmark.id}`}
+            />
           </View>
         }
         content={
@@ -74,22 +101,36 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
         key={view.id}
         thumbnail={
           <View height="size-3200">
-            <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName} url=''/>
+            <ViewCardThumbnail
+              thumbnailImagePath={view.imageLocation}
+              viewName={view.viewName}
+              url={`/dashboards/${view.viewDashboard.id}/${view.id}/build`}
+            />
           </View>
         }
         content={
-          <ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} account={props.account}/>
+          <ViewCardContent
+            viewDashboard={view.viewDashboard}
+            description={view.description}
+            viewName={view.viewName}
+            viewId={view.id}
+            account={props.account}
+          />
         }
       />
     );
   });
 
-  useEffect(() => {
-    recentlyAccessed[tabId].getData();
-  }, [tabId]);
-
   return (
-    <Tabs aria-label="recent-tabs" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
+    <Tabs
+      aria-label="recent-tabs"
+      items={tabs}
+      selectedKey={tabId}
+      onSelectionChange={id => {
+        setTabId(id);
+        recentlyAccessed[id].getData();
+      }}
+    >
       {item => (
         <Item title={translate(item.name)}>
           <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
@@ -100,7 +141,7 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
                 <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
                   {tabId === 1 && props.recentlyAccessedViews.length > 0 ? recentlyAccessedViewsListElement : null}
                   {tabId === 2 && props.popularViews.length > 0 ? popularViewsListElement : null}
-                  {/* TODO : recent bookmark will be implemented when build page is completely done*/}
+                  {tabId === 3 || (tabId === 4 && props.recentlyAccessedBookmarks.length > 0) ? recentlyAccessedBookmarksListElement : null}
                 </Flex>
               </View>
             )}
@@ -115,7 +156,8 @@ const mapStateToProps = storeState => ({
   recentlyAccessedViews: storeState.recent.recentlyAccessedViews,
   popularViews: storeState.recent.popularViews,
   loading: storeState.recent.loading,
-  account: storeState.authentication.account
+  account: storeState.authentication.account,
+  recentlyAccessedBookmarks: storeState.recent.recentlyAccessedBookmarks,
 });
 
 const mapDispatchToProps = { getMostPopularViews, getRecentlyAccessedBookmarks, getRecentViews };

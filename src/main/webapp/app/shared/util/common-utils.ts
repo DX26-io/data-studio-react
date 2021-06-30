@@ -31,7 +31,7 @@ export const parseString = str => {
 };
 
 export const isCanvas = () => {
-  if (window.location.href.endsWith('build')) {
+  if (window.location.href.includes('build')) {
     return true;
   } else {
     return false;

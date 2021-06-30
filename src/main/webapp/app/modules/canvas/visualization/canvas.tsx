@@ -35,6 +35,8 @@ import 'react-resizable/css/styles.css';
 import FeaturesPanel from 'app/modules/canvas/features/features-panel';
 import { receiveSocketResponse } from 'app/shared/websocket/websocket.reducer';
 import { VisualMetadataContainerGetOne } from './util/visualmetadata-container.util';
+import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
+import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -44,7 +46,10 @@ export interface IIllustrate {
   noDataFoundVisibility: boolean;
 }
 
-export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ dashboardId: string; viewId: string }> {}
+export interface VisualizationProp
+  extends StateProps,
+    DispatchProps,
+    RouteComponentProps<{ dashboardId: string; viewId: string; bookmarkId?: any }> {}
 
 const Canvas = (props: VisualizationProp) => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
@@ -179,6 +184,10 @@ const Canvas = (props: VisualizationProp) => {
         (item.x = item.xPosition), (item.y = item.yPosition), (item.h = item.height), (item.w = item.width);
       });
       setvisualmetadata([...props.visualmetadata.visualMetadataSet]);
+      if (props.match.params.bookmarkId) {
+        props.getAppliedBookmark(props.match.params.bookmarkId);
+        props.getFeatureCriteria(props.match.params.bookmarkId);
+      }
     }
   }, [props.visualmetadata]);
 
@@ -358,6 +367,8 @@ const mapDispatchToProps = {
   updateVisualmetadataEntity,
   receiveSocketResponse,
   metadataContainerAdd,
+  getFeatureCriteria,
+  getAppliedBookmark,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

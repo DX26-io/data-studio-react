@@ -26,8 +26,7 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
     },
     '2': {
       getData() {
-        // TODO
-        // props.getRecentlyCreatedBookmarks(0, 5, 'watchCreatedTime,desc');
+        props.getRecentlyCreatedBookmarks(0, 5, 'watchCreatedTime,desc');
       },
     },
   };
@@ -38,22 +37,62 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
         key={view.id}
         thumbnail={
           <View height="size-3200">
-            <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName} url=''/>
+            <ViewCardThumbnail
+              thumbnailImagePath={view.imageLocation}
+              viewName={view.viewName}
+              url={`/dashboards/${view.viewDashboard.id}/${view.id}/build`}
+            />
           </View>
         }
         content={
-          <ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} account={props.account} />
+          <ViewCardContent
+            viewDashboard={view.viewDashboard}
+            description={view.description}
+            viewName={view.viewName}
+            viewId={view.id}
+            account={props.account}
+          />
         }
       />
     );
   });
 
-  useEffect(() => {
-    recentlyCreated[tabId].getData();
-  }, [tabId]);
+  const recentlyCreatedBookmarksListElement = props.recentlyCreatedBookmarks.map(recent => {
+    return (
+      <Card
+        key={recent.view.id}
+        thumbnail={
+          <View height="size-3200">
+            <ViewCardThumbnail
+              thumbnailImagePath={recent.view.imageLocation}
+              viewName={recent.view.viewName}
+              url={`/dashboards/${recent.view.viewDashboard.id}/${recent.view.id}/build/${recent.featureBookmark.id}`}
+            />
+          </View>
+        }
+        content={
+          <ViewCardContent
+            viewDashboard={recent.view.viewDashboard}
+            description={recent.view.description}
+            viewName={recent.view.viewName}
+            viewId={recent.view.id}
+            account={props.account}
+          />
+        }
+      />
+    );
+  });
 
   return (
-    <Tabs aria-label="recent-tabs" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
+    <Tabs
+      aria-label="recent-tabs"
+      items={tabs}
+      selectedKey={tabId}
+      onSelectionChange={id => {
+        setTabId(id);
+        recentlyCreated[id].getData();
+      }}
+    >
       {item => (
         <Item title={translate(item.name)}>
           <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
@@ -63,7 +102,7 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
               <View>
                 <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
                   {tabId === 1 && props.recentlyCreatedViews.length > 0 ? recentlyCreatedViewsListElement : null}
-                  {/* TODO : recent bookmark will be implemented when build page is completely done*/}
+                  {tabId === 2 && props.recentlyCreatedBookmarks.length > 0 ? recentlyCreatedBookmarksListElement : null}
                 </Flex>
               </View>
             )}
@@ -76,8 +115,9 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
 
 const mapStateToProps = storeState => ({
   recentlyCreatedViews: storeState.recent.recentlyCreatedViews,
+  recentlyCreatedBookmarks: storeState.recent.recentlyCreatedBookmarks,
   loading: storeState.recent.loading,
-  account: storeState.authentication.account
+  account: storeState.authentication.account,
 });
 
 const mapDispatchToProps = { getRecentlyCreatedViews, getRecentlyCreatedBookmarks };
