@@ -21,8 +21,9 @@ import { useHistory } from 'react-router-dom';
 import { createEntity, getEntity, reset, updateEntity } from './dashboard.reducer';
 import { getDatasources as getDataSourceEntities } from 'app/modules/administration/sources/datasources/datasources.reducer';
 import { IRootState } from 'app/shared/reducers';
-import { isCreateEditFormNotValid } from './dashboard-util';
+import { generateDatasourcesOptions, isCreateEditFormNotValid } from './dashboard-util';
 import { translate, Translate } from 'react-jhipster';
+import Select from 'react-select';
 
 export interface IDashboardCreateModalProps extends StateProps, DispatchProps {}
 
@@ -129,7 +130,18 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
                     validationState={dashboardDescription?.length < 100 ? 'valid' : 'invalid'}
                     onChange={setDescription}
                   />
-                  <Picker
+                  <span className="spectrum-Body-emphasis--sizeXXS">{translate('dashboard.datasource')}</span>
+                  <Select
+                    placeholder={translate('dashboard.datasource_placeholder')}
+                    value={{ label: dashboardDataSource, value: dashboardDataSource }}
+                    onChange={event => {
+                      if (event) {
+                        setDatasource(event.label.toString());
+                      }
+                    }}
+                    options={generateDatasourcesOptions(dataSourcesList)}
+                  />
+                  {/* <Picker
                     validationState={dashboardDataSource?.length !== 0 ? 'valid' : 'invalid'}
                     label={translate('dashboard.datasource')}
                     placeholder={translate('dashboard.datasource_placeholder')}
@@ -138,7 +150,7 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
                     {dataSourcesList.map(dataSources => (
                       <Item key={dataSources.name}>{dataSources.name}</Item>
                     ))}
-                  </Picker>
+                  </Picker> */}
                 </Form>
               </View>
             </Flex>

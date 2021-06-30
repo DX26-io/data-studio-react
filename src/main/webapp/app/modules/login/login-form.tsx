@@ -3,8 +3,9 @@ import { Button, Checkbox, Flex, Text, TextField, View, Link, Form } from '@adob
 import { ComboBox, Item } from '@react-spectrum/combobox';
 import Alert from '@spectrum-icons/workflow/Alert';
 import { Translate } from 'react-jhipster';
-import config from "app/config/constants";
-import {IRealm} from "app/shared/model/realm.model";
+import config from 'app/config/constants';
+import { IRealm } from 'app/shared/model/realm.model';
+import Select from 'react-select';
 
 export interface ILoginProps {
   loginError: boolean;
@@ -28,15 +29,15 @@ export const LoginForm = (props: ILoginProps) => {
 
   const onGoogleClick = () => {
     handleProviderLogin('google', realmId);
-  }
+  };
 
   const onGitHubClick = () => {
     handleProviderLogin('github', realmId);
-  }
+  };
 
   const onSignup = () => {
     handleSignup();
-  }
+  };
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -77,12 +78,25 @@ export const LoginForm = (props: ILoginProps) => {
           onChange={setPassword}
         />
         {realms && (
-          <ComboBox
-            label="Realm"
-            defaultItems={realms}
-            onSelectionChange={setRealmId}>
-            {(item) => <Item>{item.name}</Item>}
-          </ComboBox>
+          <>
+            {/* <ComboBox label="Realm" defaultItems={realms} onSelectionChange={setRealmId}>
+              {item => <Item>{item.name}</Item>}
+            </ComboBox> */}
+            <Select
+              placeholder={'Realm'}
+              onChange={event => {
+                if (event) {
+                  setRealmId(event.value);
+                }
+              }}
+              className="basic-single"
+              classNamePrefix="select"
+              isSearchable={true}
+              name="realms"
+              options={realms}
+              defaultValue={realms}
+            />
+          </>
         )}
         {loginError && !emptyFieldError && (
           <Flex gap="size-100" data-testid="login-error">
@@ -111,22 +125,16 @@ export const LoginForm = (props: ILoginProps) => {
           <Button data-testid="submit" variant="cta" marginStart="auto" type="submit">
             <Translate contentKey="login.form.button">Sign In</Translate>
           </Button>
-          {
-            firebaseEnabled ?
-              <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGoogleClick}>
-                <Translate contentKey="login.form.google">Google</Translate>
-              </Button>
-            :
-            null
-          }
-          {
-            firebaseEnabled ?
-              <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGitHubClick}>
-                <Translate contentKey="login.form.github">GitHub</Translate>
-              </Button>
-              :
-              null
-          }
+          {firebaseEnabled ? (
+            <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGoogleClick}>
+              <Translate contentKey="login.form.google">Google</Translate>
+            </Button>
+          ) : null}
+          {firebaseEnabled ? (
+            <Button data-testid="submit" variant="secondary" marginStart="auto" type="button" onPress={onGitHubClick}>
+              <Translate contentKey="login.form.github">GitHub</Translate>
+            </Button>
+          ) : null}
           <Link isQuiet={true}>
             <a href="/login">
               <Translate contentKey="login.form.sso">Use Single Sign On (SSO)</Translate>

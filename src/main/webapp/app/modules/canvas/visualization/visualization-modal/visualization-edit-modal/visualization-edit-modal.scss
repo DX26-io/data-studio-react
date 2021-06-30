@@ -2,13 +2,14 @@
 .settings-tab {
   overflow-y: auto;
 }
-._spectrum-TabsPanel-collapseWrapper_0248f {
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 5 !important;
-  background-color: var(--spectrum-alias-background-color-default, var(--spectrum-global-color-gray-100));
-}
+
 .properties-tabs {
+  ._spectrum-TabsPanel-collapseWrapper_0248f {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 5 !important;
+    background-color: var(--spectrum-alias-background-color-default, var(--spectrum-global-color-gray-100));
+  }
   .field {
     display: flex;
     width: 100%;

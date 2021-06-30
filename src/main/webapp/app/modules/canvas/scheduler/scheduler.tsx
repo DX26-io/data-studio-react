@@ -26,8 +26,8 @@ const Scheduler = (props: ISchedulerProps) => {
   const [reportTitle, setReportTitle] = useState(props.visual?.titleProperties?.titleText);
   const [comments, setComments] = useState('');
   const [cronExp, setCronExpression] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date(null));
+  const [endDate, setEndDate] = useState(new Date(null));
   const [userList, setUserList] = useState<IDropdown[]>();
   const [webHookList, setWebHookList] = useState<IDropdown[]>();
   const [selectedUserEmail, setSelectedUserEmail] = useState<IEmail[]>();

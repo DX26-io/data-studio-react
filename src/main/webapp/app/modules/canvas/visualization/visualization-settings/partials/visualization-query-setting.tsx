@@ -26,7 +26,7 @@ const VisualizationQuerySetting = (props: IVisualizationQuerySettingProps) => {
         props.validateQuery({
           datasourceId: props.view.viewDashboard.dashboardDatasource.id,
           visualMetadataId: props.visual.id,
-          queryDTO: wrap.getQueryParameters(props.visual, null, null, null),
+          queryDTO: wrap.getQueryParameters(props.visual, {}, null, null),
         });
       }
     }

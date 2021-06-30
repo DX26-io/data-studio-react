@@ -140,55 +140,51 @@ const FilterElement = (props: IFilterElementProp) => {
   };
 
   const onDateChange = (startDate, endDate, metadata) => {
-    props.feature.metadata = metadata;
-    if (metadata.dateRangeTab !== 2) {
-      props.feature.selected = startDate;
-      props.feature.selected2 = endDate;
-    } else {
-      saveDynamicDateRangeMetaData(props.feature.name, metadata);
-    }
-    removeFilter(props.feature.name);
-    if (startDate) {
-      startDate = resetTimezoneData(startDate);
-      addDateRangeFilter(startDate);
-    }
-    if (endDate) {
-      endDate = resetTimezoneData(endDate);
-      addDateRangeFilter(endDate);
+    if (startDate && endDate) {
+      props.feature.metadata = metadata;
+      if (metadata.dateRangeTab !== 2) {
+        props.feature.selected = startDate;
+        props.feature.selected2 = endDate;
+      } else {
+        saveDynamicDateRangeMetaData(props.feature.name, metadata);
+      }
+      removeFilter(props.feature.name);
+      if (startDate) {
+        startDate = resetTimezoneData(startDate);
+        addDateRangeFilter(startDate);
+      }
+      if (endDate) {
+        endDate = resetTimezoneData(endDate);
+        addDateRangeFilter(endDate);
+      }
     }
   };
 
   return (
     <>
-      <View
-        padding={5}
-        margin={5}
-        maxWidth={'size-4600'}
-        borderWidth="thin"
-        borderColor="default"
-        backgroundColor="gray-75"
-        borderRadius="regular"
-      >
-        <View>{props.feature.name}</View>
-        {checkIsDateType(props.feature) ? (
-          <View>
-            <DateRangeComponent onDateChange={onDateChange} />
-          </View>
-        ) : (
-          <View>
-            <AsyncSelect
-              cacheOptions
-              value={defaultValues}
-              isMulti
-              isSearchable={true}
-              classNamePrefix="select"
-              loadOptions={loadOptions}
-              onInputChange={handleInputChange}
-              onChange={handleChange}
-            />
-          </View>
-        )}
-      </View>
+      <div className="filter-element">
+        <View padding={5} margin={5} borderWidth="thin" borderColor="default" backgroundColor="gray-75" borderRadius="regular">
+          <View>{props.feature.name}</View>
+          {checkIsDateType(props.feature) ? (
+            <View>
+              <DateRangeComponent onDateChange={onDateChange} />
+            </View>
+          ) : (
+            <View>
+              <AsyncSelect
+                cacheOptions
+                value={defaultValues}
+                isMulti
+                isSearchable={true}
+                classNamePrefix="select"
+                loadOptions={loadOptions}
+                onInputChange={handleInputChange}
+                onChange={handleChange}
+              />
+            </View>
+          )}
+        </View>
+      </div>
     </>
   );
 };
