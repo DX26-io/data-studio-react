@@ -66,7 +66,7 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
             <ViewCardThumbnail
               thumbnailImagePath={recent.view.imageLocation}
               viewName={recent.view.viewName}
-              url={`/dashboards/${recent.view.viewDashboard.id}/${recent.view.id}/build`}
+              url={`/dashboards/${recent.view.viewDashboard.id}/${recent.view.id}/build/${recent.featureBookmark.id}`}
             />
           </View>
         }
