@@ -29,32 +29,18 @@ const Header = (props: IHeaderProps) => {
     props.onLocaleChange(langKey);
   };
 
-  const renderDevRibbon = () =>
-    props.isInProduction === false ? (
-      <div className="ribbon dev">
-        <a href="">
-          <Translate contentKey={`global.ribbon.${props.ribbonEnv}`} />
-        </a>
-      </div>
-    ) : null;
-
   return (
     <>
-      {renderDevRibbon()}
       <LoadingBar className="loading-bar" />
       <View padding="size-150" backgroundColor="default">
         <header>
-          <Flex justifyContent="space-between">
+          <Flex justifyContent="space-between" alignSelf="center">
             <Flex justifyContent="center" alignItems="center">
               <Logo />
             </Flex>
-            <Flex alignItems="end">
-              {props.isCanvas && (
-                  <CanvasHeader />
-              )}
-              {props.isCanvas && (
-                  <Divider size={'M'} orientation={'vertical'} />
-              )}
+            <Flex justifyContent="end">
+              {props.isCanvas && <CanvasHeader />}
+              {props.isCanvas && <Divider size={'M'} orientation={'vertical'} />}
               <Notifications />
               <DataStudioAvatar />
             </Flex>

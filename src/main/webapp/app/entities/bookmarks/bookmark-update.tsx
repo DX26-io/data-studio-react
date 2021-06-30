@@ -15,7 +15,7 @@ export interface IBookmarkUpdateProps extends StateProps, DispatchProps {
 }
 
 export const BookmarkUpdate = (props: IBookmarkUpdateProps) => {
-  const { setOpen, bookmark, loading, updating, fetchSuccess, updateSuccess, datasource } = props;
+  const { setOpen, bookmark, updating, updateSuccess, datasource } = props;
   const [error, setError] = useState(defaultValue);
 
   const dialog = useDialogContainer();
@@ -33,7 +33,7 @@ export const BookmarkUpdate = (props: IBookmarkUpdateProps) => {
   useEffect(() => {
     if (updateSuccess) {
       handleClose();
-      props.getBookmarks(props.datasourceId);
+      props.getBookmarks(datasource.id);
     }
   }, [props.updateSuccess]);
 
@@ -78,20 +78,7 @@ export const BookmarkUpdate = (props: IBookmarkUpdateProps) => {
             isRequired
             data-testid="name"
           />
-          {/* {!isNew ? (
-            <React.Fragment>
-              <span className="spectrum-Heading spectrum-Heading--sizeXXS">
-                <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
-              </span>
-              <Divider size="M" />{' '}
-            </React.Fragment>
-          ) : null} */}
         </Form>
-        {/* {!isNew ? (
-          <Button data-testid="delete" variant="negative" onPress={remove} marginTop="size-175">
-            <Translate contentKey="entity.action.delete">Delete</Translate>
-          </Button>
-        ) : null} */}
         {!error.isValid && (
           <Flex gap="size-100" data-testid="validation-error" marginTop="static-size-200">
             <Alert color="negative" />
@@ -109,14 +96,12 @@ export const BookmarkUpdate = (props: IBookmarkUpdateProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   bookmark: storeState.bookmarks.bookmark,
-  loading: storeState.bookmarks.loading,
   updating: storeState.bookmarks.updating,
   fetchSuccess: storeState.bookmarks.fetchSuccess,
   updateSuccess: storeState.bookmarks.updateSuccess,
-  datasource: storeState.dashboard.entity.dashboardDatasource,
+  datasource: storeState.views.entity.viewDashboard.dashboardDatasource,
   selectedFilter: storeState.filter.selectedFilters,
   features: storeState.feature.entities,
-  datasourceId: storeState.dashboard.entity.dashboardDatasource.id,
 });
 
 const mapDispatchToProps = { getBookmarks, updateBookmark, createBookmark, reset, deleteBookmark, setBookmark };

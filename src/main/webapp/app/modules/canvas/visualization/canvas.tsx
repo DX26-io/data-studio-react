@@ -232,7 +232,6 @@ const Canvas = (props: VisualizationProp) => {
 
   useEffect(() => {
     if (props.isSearchOpen) {
-      debugger
       props.history.push(`/dashboards/${props.view.viewDashboard.id}/${props.view.id}/search`);
     }
   }, [props.isSearchOpen]);
