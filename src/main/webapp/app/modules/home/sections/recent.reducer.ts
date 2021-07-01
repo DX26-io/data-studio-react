@@ -7,6 +7,7 @@ export const ACTION_TYPES = {
   FETCH_RECENTS_CREATED_VIEWS: 'recent/FETCH_RECENTS_CREATED_VIEWS',
   FETCH_RECENTS_ACCESSED_BOOKMARKS: 'recent/FETCH_RECENTS_ACCESSED_BOOKMARKS',
   FETCH_RECENTS_CREATED_BOOKMARKS: 'recent/FETCH_RECENTS_CREATED_BOOKMARKS',
+  SAVE_RECENTS_BOOKMARK: 'recent/SAVE_RECENTS_BOOKMARK',
 };
 
 const initialState = {
@@ -123,7 +124,9 @@ export default (state: RecentState = initialState, action): RecentState => {
         recentlyCreatedBookmarks: action.payload.data,
         totalRecents: parseInt(action.payload.headers['x-total-count'], 10),
       };
-
+    case REQUEST(ACTION_TYPES.SAVE_RECENTS_BOOKMARK):
+    case FAILURE(ACTION_TYPES.SAVE_RECENTS_BOOKMARK):
+    case SUCCESS(ACTION_TYPES.SAVE_RECENTS_BOOKMARK):
     default:
       return state;
   }
@@ -152,4 +155,9 @@ export const getMostPopularViews = () => ({
 export const getRecentlyCreatedViews = () => ({
   type: ACTION_TYPES.FETCH_RECENTS_CREATED_VIEWS,
   payload: axios.get(`api/views/recentlyCreated`),
+});
+
+export const saveRecentBookmark = (bookmarkId, viewId) => ({
+  type: ACTION_TYPES.SAVE_RECENTS_BOOKMARK,
+  payload: axios.get(`api/save-recent-bookmark/${bookmarkId}/${viewId}`),
 });

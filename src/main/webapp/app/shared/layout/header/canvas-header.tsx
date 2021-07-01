@@ -29,6 +29,7 @@ import { addFilterFromBookmark } from 'app/modules/canvas/filter/filter-util';
 import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
 import Select from 'react-select';
 import { generateBookmarksOptions } from 'app/entities/bookmarks/bookmark.util';
+import {saveRecentBookmark  } from "app/modules/home/sections/recent.reducer";
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
@@ -80,7 +81,7 @@ const CanvasHeader = props => {
   return (
     <>
       <View>
-        <Flex gap="size-100" wrap="nowrap">
+        <Flex gap="size-50" wrap="nowrap">
           <div style={{ minWidth: '305px' }}>
             <Select
               className="basic-single"
@@ -95,6 +96,7 @@ const CanvasHeader = props => {
                   const _bookmark = props.bookmarks.filter(b => b.id === selectedOption.value)[0];
                   props.applyBookmark(_bookmark);
                   props.getFeatureCriteria(selectedOption.value.toString());
+                  props.saveRecentBookmark(_bookmark.id,props.view.id);
                 } else {
                   props.applyFilter({}, props.visualmetadata, props.view);
                   props.applyBookmark(null);
@@ -218,7 +220,8 @@ const mapDispatchToProps = {
   getBookmarks,
   getFeatureCriteria,
   applyFilter,
-  applyBookmark
+  applyBookmark,
+  saveRecentBookmark
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
