@@ -37,6 +37,7 @@ import { receiveSocketResponse } from 'app/shared/websocket/websocket.reducer';
 import { VisualMetadataContainerGetOne } from './util/visualmetadata-container.util';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
+import {saveRecentBookmark  } from "app/modules/home/sections/recent.reducer";
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -187,6 +188,7 @@ const Canvas = (props: VisualizationProp) => {
       if (props.match.params.bookmarkId) {
         props.getAppliedBookmark(props.match.params.bookmarkId);
         props.getFeatureCriteria(props.match.params.bookmarkId);
+        props.saveRecentBookmark(props.match.params.bookmarkId,props.match.params.viewId);
       }
     }
   }, [props.visualmetadata]);
@@ -368,6 +370,7 @@ const mapDispatchToProps = {
   metadataContainerAdd,
   getFeatureCriteria,
   getAppliedBookmark,
+  saveRecentBookmark
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
