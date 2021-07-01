@@ -80,9 +80,9 @@ const CanvasHeader = props => {
 
   return (
     <>
-      <View>
+      <View marginEnd="size-600">
         <Flex gap="size-50" wrap="nowrap">
-          <div style={{ minWidth: '305px' }}>
+          <div style={{ minWidth: '305px',paddingRight:'10px'}}>
             <Select
               className="basic-single"
               classNamePrefix="select"
@@ -105,7 +105,7 @@ const CanvasHeader = props => {
             />
           </div>
           <TooltipTrigger>
-            <ActionButton onPress={() => handleToggleEditMode()} aria-label="enable edit" isQuiet={true} marginEnd="size-5">
+            <ActionButton onPress={() => handleToggleEditMode()} aria-label="enable edit" isQuiet={true} >
               <div className={props.isEditMode ? 'enableEdit' : 'disableEdit'}>
                 <CollectionEdit color="informative" size="M" />
               </div>
@@ -117,7 +117,6 @@ const CanvasHeader = props => {
               onPress={() => setVisualizationsModelOpen(true)}
               aria-label="GraphBarVerticalAdd"
               isQuiet={true}
-              marginEnd="size-5"
               isDisabled={!props.isEditMode}
             >
               <GraphBarVerticalAdd size="M" />
@@ -125,7 +124,7 @@ const CanvasHeader = props => {
             <Tooltip>Add Visualization</Tooltip>
           </TooltipTrigger>
           <TooltipTrigger>
-            <ActionButton onPress={() => saveAllVisualizations()} aria-label="Save" isQuiet={true} marginEnd="size-5">
+            <ActionButton onPress={() => saveAllVisualizations()} aria-label="Save" isQuiet={true} >
               <SaveAsFloppy size="M" />
             </ActionButton>
             <Tooltip>Save</Tooltip>
@@ -137,14 +136,14 @@ const CanvasHeader = props => {
             <Tooltip>Toggle features</Tooltip>
           </TooltipTrigger>
           <TooltipTrigger>
-            <ActionButton onPress={() => setIsBookmarkDialogOpen(true)} aria-label="Bookmarks" isQuiet={true} marginEnd="size-5">
+            <ActionButton onPress={() => setIsBookmarkDialogOpen(true)} aria-label="Bookmarks" isQuiet={true} >
               <BookmarkSingle size="M" />
             </ActionButton>
             <Tooltip>{translate('bookmarks.home.createLabel')}</Tooltip>
           </TooltipTrigger>
           <TooltipTrigger>
             <MenuTrigger>
-              <ActionButton aria-label="Bookmarks" isQuiet={true} marginEnd="size-5">
+              <ActionButton aria-label="Bookmarks" isQuiet={true} >
                 <MoreSmallListVert size="M" />
               </ActionButton>
               <Menu onAction={key => setDialog(key)}>
@@ -153,7 +152,6 @@ const CanvasHeader = props => {
                 <Item key="Print">Print</Item>
               </Menu>
             </MenuTrigger>
-
             <Tooltip>More</Tooltip>
           </TooltipTrigger>
           <DialogContainer onDismiss={() => setDialog(null)}>{dialog === 'Share' && <VisualizationShareModal />}</DialogContainer>
@@ -162,15 +160,13 @@ const CanvasHeader = props => {
               onPress={() => toggleSearchModal()}
               aria-label="{translate('views.menu.search')}"
               isQuiet={true}
-              marginEnd="size-5"
             >
               <Search size="M" />
             </ActionButton>
             <Tooltip>{translate('views.menu.toggle.search')}</Tooltip>
           </TooltipTrigger>
-
           <TooltipTrigger>
-            <ActionButton onPress={() => handleToggleFilterPanel()} isQuiet={true} marginEnd="size-5">
+            <ActionButton onPress={() => handleToggleFilterPanel()} isQuiet={true} >
               <Filter size="M" />
             </ActionButton>
             <Tooltip>Filter</Tooltip>
