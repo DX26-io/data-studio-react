@@ -37,7 +37,9 @@ import { receiveSocketResponse } from 'app/shared/websocket/websocket.reducer';
 import { VisualMetadataContainerGetOne } from './util/visualmetadata-container.util';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
-import {saveRecentBookmark  } from "app/modules/home/sections/recent.reducer";
+import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
+import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
+import { applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -47,16 +49,14 @@ export interface IIllustrate {
   noDataFoundVisibility: boolean;
 }
 
-export interface VisualizationProp
-  extends StateProps,
-    DispatchProps,
-    RouteComponentProps<{ dashboardId: string; viewId: string; bookmarkId?: any }> {}
+export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 const Canvas = (props: VisualizationProp) => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
   const [visualmetadataList, setvisualmetadata] = useState<IVisualMetadataSet[]>();
   const [filters, setFilters] = useState<string[]>();
   const [isLoaderDisplay, setIsLoaderDisplay] = useState<IIllustrate[]>([]);
+  const params = new URLSearchParams(props.location.search);
 
   useEffect(() => {
     if (props.selectedFilter) {
@@ -131,10 +131,12 @@ const Canvas = (props: VisualizationProp) => {
   };
 
   useEffect(() => {
-    if (props.match.params.viewId) {
+    debugger;
+    const viewId = params.get('viewId');
+    if (viewId) {
       props.getVisualizationsEntities();
-      props.getViewEntity(props.match.params.viewId);
-      props.getCurrentViewState(props.match.params.viewId);
+      props.getViewEntity(viewId);
+      props.getCurrentViewState(viewId);
     }
   }, []);
 
@@ -185,10 +187,15 @@ const Canvas = (props: VisualizationProp) => {
         (item.x = item.xPosition), (item.y = item.yPosition), (item.h = item.height), (item.w = item.width);
       });
       setvisualmetadata([...props.visualmetadata.visualMetadataSet]);
-      if (props.match.params.bookmarkId) {
-        props.getAppliedBookmark(props.match.params.bookmarkId);
-        props.getFeatureCriteria(props.match.params.bookmarkId);
-        props.saveRecentBookmark(props.match.params.bookmarkId,props.match.params.viewId);
+      if (params.get('bookmarkId')) {
+        const bookmarkId = params.get('bookmarkId');
+        props.getAppliedBookmark(bookmarkId);
+        props.getFeatureCriteria(Number(bookmarkId));
+        props.saveRecentBookmark(bookmarkId, params.get('viewId'));
+      }
+      else{
+        props.applyFilter({}, props.visualmetadata, props.view);
+        props.applyBookmark(null);
       }
     }
   }, [props.visualmetadata]);
@@ -234,7 +241,7 @@ const Canvas = (props: VisualizationProp) => {
 
   useEffect(() => {
     if (props.isSearchOpen) {
-      props.history.push(`/dashboards/${props.view.viewDashboard.id}/${props.view.id}/search`);
+       props.history.push(`/dashboards/${props.view.viewDashboard.id}/${props.view.id}/search`);
     }
   }, [props.isSearchOpen]);
 
@@ -370,7 +377,9 @@ const mapDispatchToProps = {
   metadataContainerAdd,
   getFeatureCriteria,
   getAppliedBookmark,
-  saveRecentBookmark
+  saveRecentBookmark,
+  applyFilter,
+  applyBookmark,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

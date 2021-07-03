@@ -40,7 +40,8 @@ const SearchModal = (props: ISearchModalProps) => {
   const [searchCursorPos, setSearchCursorPos] = useState<number>();
 
   const closeSearch = () => {
-    props.history.push(`/dashboards/${props.match.params.id}/${props.match.params.viewId}/build`);
+    props.history.push(`/dashboards/build?dahsbordId=${props.match.params.id}&viewId=${props.match.params.viewId}`);
+
   };
 
   useEffect(() => {
