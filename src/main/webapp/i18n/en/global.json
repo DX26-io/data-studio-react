@@ -126,6 +126,8 @@
       "danger": "Danger",
       "properties": "Properties",
       "release": "Release",
+      "export": "Export",
+      "import": "Import",
       "delete": "Delete",
       "no_description": "no description",
       "filter": "Filter"
