@@ -159,7 +159,6 @@ const FilterElement = (props: IFilterElementProp) => {
       }
     }
   };
-
   return (
     <>
       <div className="filter-element">
@@ -172,11 +171,12 @@ const FilterElement = (props: IFilterElementProp) => {
           ) : (
             <View>
               <AsyncSelect
-                cacheOptions
                 value={defaultValues}
                 isMulti
                 isSearchable={true}
+                closeMenuOnSelect={false}
                 classNamePrefix="select"
+                cacheOptions
                 loadOptions={loadOptions}
                 onInputChange={handleInputChange}
                 onChange={handleChange}

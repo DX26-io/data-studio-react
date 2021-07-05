@@ -131,7 +131,6 @@ const Canvas = (props: VisualizationProp) => {
   };
 
   useEffect(() => {
-    debugger;
     const viewId = params.get('viewId');
     if (viewId) {
       props.getVisualizationsEntities();

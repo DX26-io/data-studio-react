@@ -194,37 +194,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
           />
 
           {
-            /* <ComboBox
-            placeholder={translate('userManagement.search')}
-            label={translate('userManagement.select')}
-            defaultItems={props.users}
-            items={props.searchedUsers.length > 0 ? props.searchedUsers : props.users}
-            inputValue={login ? login : props.constraint.user.login}
-            onSelectionChange={event => {
-              let filteredUsers = [];
-              if (event) {
-                filteredUsers = props.searchedUsers.filter(item => {
-                  return item.id === event;
-                });
-                if (filteredUsers && filteredUsers.length === 0) {
-                  filteredUsers = props.users.filter(item => {
-                    return item.id === event;
-                  });
-                }
-                props.setDatasourceConstraints({ ...props.constraint, user: filteredUsers[0] });
-                setError(isFormValid({ ...props.constraint, user: filteredUsers[0] }));
-              }
-            }}
-            onInputChange={event => {
-              setLogin(event);
-              props.searchUsers(0, ITEMS_PER_PAGE, 'login,asc', event);
-            }}
-          >
-            {item => <Item>{item.login}</Item>}
-          </ComboBox>
-}*/
-
-            <>
+             <>
               <span className="spectrum-Body-emphasis--sizeXXS">{translate('datasources.select')}</span>
               <Select
                 placeholder={translate('datasources.search')}
@@ -248,29 +218,6 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
               />
             </>
 
-            /* <ComboBox
-            placeholder={translate('datasources.search')}
-            label={translate('datasources.select')}
-            defaultItems={props.datasources}
-            items={props.datasources}
-            inputValue={datasourceName ? datasourceName : props.constraint.datasource.name}
-            onSelectionChange={event => {
-              if (event) {
-                const filteredDatasource = props.datasources.filter(item => {
-                  return item.id === event;
-                });
-                props.setDatasourceConstraints({ ...props.constraint, datasource: filteredDatasource[0] });
-                props.getFeatures(Number(event), 'DIMENSION');
-                setError(isFormValid({ ...props.constraint, datasource: filteredDatasource[0] }));
-              }
-            }}
-            onInputChange={event => {
-              setDatasourceName(event);
-              props.getDatasourcesByName(0, ITEMS_PER_PAGE, 'lastUpdated,desc', event);
-            }}
-          >
-            {item => <Item>{item.name}</Item>}
-          </ComboBox>  */
           }
           <View>
             <span className="spectrum-Heading spectrum-Heading--sizeXXS">
@@ -336,33 +283,6 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                 defaultValue={con.featureName ? con.featureName : ''}
               />
 
-              {/* <ComboBox
-                isDisabled={!props.constraint.datasource.id}
-                key={`constraint-feature-${i}`}
-                placeholder={translate('permissions.datasourceConstraints.selectField')}
-                defaultItems={props.features}
-                items={props.features}
-                inputValue={con.featureName ? con.featureName : ''}
-                onSelectionChange={event => {
-                  const filteredFeatures = props.features.filter(item => {
-                    return item.id === event;
-                  });
-                  if (filteredFeatures && filteredFeatures.length > 0) {
-                    con.featureName = filteredFeatures[0].name;
-                    props.setDatasourceConstraints(props.constraint);
-                  }
-                  setError(isFormValid(props.constraint));
-                  con['isCommaSeparatedInputOn'] = false;
-                }}
-                onInputChange={event => {
-                  if (event) {
-                    con.featureName = event;
-                    props.setDatasourceConstraints(props.constraint);
-                  }
-                }}
-              >
-                {item => <Item>{item.name}</Item>}
-              </ComboBox> */}
               {/* TODO : this will be done once khushbu's pr is merged */}
 
               {con.isCommaSeparatedInputOn ? (
