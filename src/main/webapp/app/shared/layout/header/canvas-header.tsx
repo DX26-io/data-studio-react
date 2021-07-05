@@ -35,6 +35,7 @@ const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
   const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
   const [dialog, setDialog] = useState<ReactText>();
+  const url = new URL(window.location.toString());
 
   useEffect(() => {
     if (props.view.id) {
@@ -97,6 +98,8 @@ const CanvasHeader = props => {
                   props.applyBookmark(_bookmark);
                   props.getFeatureCriteria(selectedOption.value.toString());
                   props.saveRecentBookmark(_bookmark.id,props.view.id);
+                  url.searchParams.set("bookmarkId",selectedOption.value.toString());
+                  window.history.pushState({}, '', url);
                 } else {
                   props.applyFilter({}, props.visualmetadata, props.view);
                   props.applyBookmark(null);
