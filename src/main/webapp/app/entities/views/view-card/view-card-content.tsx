@@ -13,10 +13,11 @@ interface IViewCardContentProps {
   description: string;
   viewId: number;
   account: any;
+  dispatchReleaseRequestProps: (viewId: any) => void;
 }
 
 const ViewCardContent: React.FC<IViewCardContentProps> = props => {
-  const { viewName, viewId, description, viewDashboard, account } = props;
+  const { viewName, viewId, description, viewDashboard, account, dispatchReleaseRequestProps } = props;
   const [redirect, setRedirect] = useState<ReactText>('');
 
   return (
@@ -31,7 +32,14 @@ const ViewCardContent: React.FC<IViewCardContentProps> = props => {
               <ActionButton isQuiet aria-label="more options">
                 <MoreSmallListVert size="S" aria-label="Default Alert" />
               </ActionButton>
-              <Menu onAction={key => setRedirect(key)}>
+              <Menu
+                onAction={key => {
+                  setRedirect(key);
+                  if (key === 'release') {
+                    dispatchReleaseRequestProps(viewId);
+                  }
+                }}
+              >
                 <Section title={<Translate contentKey="entity.options.more_options">More options</Translate>}>
                   <Item key="properties">
                     <Text>
@@ -44,7 +52,7 @@ const ViewCardContent: React.FC<IViewCardContentProps> = props => {
                     </Text>
                   </Item>
                 </Section>
-                {account &&  hasAuthority(props.account, 'DELETE_' + viewId + '_VIEW') && (
+                {account && hasAuthority(props.account, 'DELETE_' + viewId + '_VIEW') && (
                   <Section title={<Translate contentKey="entity.options.danger">Danger</Translate>}>
                     <Item key="delete">
                       <Text>

@@ -19,6 +19,7 @@ export const ACTION_TYPES = {
   DELETE_VIEWS: 'views/DELETE_VIEWS',
   SET_BLOB: 'views/SET_BLOB',
   RESET: 'views/RESET',
+  REQUEST_RELEASE: 'views/REQUEST_RELEASE',
 };
 
 const initialState = {
@@ -56,6 +57,13 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         updateSuccess: false,
         updating: true,
       };
+    case REQUEST(ACTION_TYPES.REQUEST_RELEASE):
+      return {
+        ...state,
+        errorMessage: null,
+        updateSuccess: false,
+        updating: true,
+      };
     case FAILURE(ACTION_TYPES.FETCH_VIEWS_LIST):
     case FAILURE(ACTION_TYPES.FETCH_VIEWS):
     case FAILURE(ACTION_TYPES.FETCH_VIEWS_STATE):
@@ -65,6 +73,13 @@ export default (state: ViewsState = initialState, action): ViewsState => {
       return {
         ...state,
         loading: false,
+        updating: false,
+        updateSuccess: false,
+        errorMessage: action.payload,
+      };
+    case FAILURE(ACTION_TYPES.REQUEST_RELEASE):
+      return {
+        ...state,
         updating: false,
         updateSuccess: false,
         errorMessage: action.payload,
@@ -102,6 +117,12 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         updating: false,
         updateSuccess: true,
         entity: {},
+      };
+    case SUCCESS(ACTION_TYPES.REQUEST_RELEASE):
+      return {
+        ...state,
+        updating: false,
+        updateSuccess: true,
       };
     case ACTION_TYPES.SET_BLOB: {
       const { name, data, contentType } = action.payload;
@@ -213,3 +234,8 @@ export const getViewsByName = (viewName: string) => {
     payload: axios.get<IViews>(`${apiUrl}?viewName=${viewName}`),
   };
 };
+
+export const requestRelease = (comment, id) => ({
+  type: ACTION_TYPES.REQUEST_RELEASE,
+  payload: axios.put(`${apiUrl}/${id}/requestRelease`, { comment }),
+});
