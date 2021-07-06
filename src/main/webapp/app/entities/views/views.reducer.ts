@@ -19,6 +19,7 @@ export const ACTION_TYPES = {
   DELETE_VIEWS: 'views/DELETE_VIEWS',
   EXPORT_VIEW: 'views/EXPORT_VIEW',
   SET_EXPORT_VIEW: 'views/SET_EXPORT_VIEW',
+  IMPORT_VIEW: 'views/IMPORT_VIEW',
   SET_BLOB: 'views/SET_BLOB',
   RESET: 'views/RESET',
 };
@@ -29,6 +30,7 @@ const initialState = {
   entities: [] as ReadonlyArray<IViews>,
   entity: defaultValue,
   updating: false,
+  uploadSucceeded: false,
   totalItems: 0,
   exportViewId: 0,
   updateSuccess: false,
@@ -47,6 +49,7 @@ const saveViewToLocalDrive = (action, response, viewId) => {
 export default (state: ViewsState = initialState, action): ViewsState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_VIEWS_LIST):
+    case REQUEST(ACTION_TYPES.IMPORT_VIEW):
     case REQUEST(ACTION_TYPES.EXPORT_VIEW):
     case REQUEST(ACTION_TYPES.FETCH_VIEWS):
     case REQUEST(ACTION_TYPES.FETCH_VIEWS_STATE):
@@ -66,6 +69,7 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         updating: true,
       };
     case FAILURE(ACTION_TYPES.FETCH_VIEWS_LIST):
+    case FAILURE(ACTION_TYPES.IMPORT_VIEW):
     case FAILURE(ACTION_TYPES.FETCH_VIEWS):
     case FAILURE(ACTION_TYPES.FETCH_VIEWS_STATE):
     case FAILURE(ACTION_TYPES.CREATE_VIEWS):
@@ -118,6 +122,11 @@ export default (state: ViewsState = initialState, action): ViewsState => {
       return {
         ...state,
         loading: false,
+      };
+    case SUCCESS(ACTION_TYPES.IMPORT_VIEW):
+      return {
+        ...state,
+        uploadSucceeded: true,
       };
     case ACTION_TYPES.SET_BLOB: {
       const { name, data, contentType } = action.payload;
@@ -243,5 +252,19 @@ export const getViewsByName = (viewName: string) => {
   return {
     type: ACTION_TYPES.FETCH_VIEWS_LIST,
     payload: axios.get<IViews>(`${apiUrl}?viewName=${viewName}`),
+  };
+};
+
+export const importView = (contents: string, dashboardId: number) => {
+  const formData = new FormData();
+  formData.append('file', new Blob([contents]), 'filename');
+
+  return {
+    type: ACTION_TYPES.IMPORT_VIEW,
+    payload: axios.post(`api/dashboards/${dashboardId}/importView?cacheBuster=${new Date().getTime()}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }),
   };
 };
