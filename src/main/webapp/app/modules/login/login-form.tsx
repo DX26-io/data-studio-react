@@ -79,9 +79,6 @@ export const LoginForm = (props: ILoginProps) => {
         />
         {realms && (
           <>
-            {/* <ComboBox label="Realm" defaultItems={realms} onSelectionChange={setRealmId}>
-              {item => <Item>{item.name}</Item>}
-            </ComboBox> */}
             <Select
               placeholder={'Realm'}
               onChange={event => {

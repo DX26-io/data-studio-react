@@ -141,16 +141,6 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
                     }}
                     options={generateDatasourcesOptions(dataSourcesList)}
                   />
-                  {/* <Picker
-                    validationState={dashboardDataSource?.length !== 0 ? 'valid' : 'invalid'}
-                    label={translate('dashboard.datasource')}
-                    placeholder={translate('dashboard.datasource_placeholder')}
-                    onSelectionChange={selected => setDatasource(selected.toString())}
-                  >
-                    {dataSourcesList.map(dataSources => (
-                      <Item key={dataSources.name}>{dataSources.name}</Item>
-                    ))}
-                  </Picker> */}
                 </Form>
               </View>
             </Flex>
