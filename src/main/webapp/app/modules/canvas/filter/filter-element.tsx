@@ -11,12 +11,16 @@ import { resetTimezoneData } from '../data-constraints/utils/date-util';
 import { checkIsDateType } from '../visualization/util/visualization-utils';
 import { saveSelectedFilter } from './filter.reducer';
 import { saveDynamicDateRangeMetaData } from './filter-util';
+import Select from 'react-select';
+import { IQueryDTO } from 'app/shared/model/query-dto.model';
+
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
 }
 
 const FilterElement = (props: IFilterElementProp) => {
   const [defaultValues, setdefaultValues] = useState<string[]>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const updateDefaultValues = data => {
     const filterValues = [];
@@ -38,13 +42,39 @@ const FilterElement = (props: IFilterElementProp) => {
     }
   }, [props.selectedFilters]);
 
+  useEffect(() => {
+    if (props.filterList) {
+      const retVal = props.filterList?.body?.map(function (item) {
+        return {
+          value: item[props.feature.name],
+          label: item[props.feature.name],
+        };
+      });
+      props.filterData[props.feature.name] = retVal;
+      setIsLoading(false);
+    }
+  }, [props.filterList]);
+
   const load = (q, dimension) => {
-    const vId = props.view?.id;
-    const query = {
-      fields: null,
+    const query: IQueryDTO = {
+      fields: [{ name: dimension }],
       distinct: true,
+      limit: 100,
     };
-    query.fields = [{ name: dimension }];
+    const vId = props.view?.id;
+    if (q) {
+      query.conditionExpressions = [
+        {
+          sourceType: 'FILTER',
+          conditionExpression: {
+            '@type': 'Like',
+            featureName: dimension,
+            caseInsensitive: true,
+            value: q,
+          },
+        },
+      ];
+    }
     forwardCall(
       props.view?.viewDashboard?.dashboardDatasource.id,
       {
@@ -56,31 +86,12 @@ const FilterElement = (props: IFilterElementProp) => {
     );
   };
   const handleInputChange = (newValue: string) => {
-    const inputValue = newValue.replace(/\W/g, '');
-    return inputValue;
-  };
-  const mapOptionsToValues = (options, inputValue) => {
-    if (!inputValue) {
-      return options.filter(i => i.label?.toString().toLowerCase().includes(inputValue.toLowerCase()));
-    }
-    return options;
+    load(newValue, props.feature.name);
   };
 
-  const loadOptions = (inputValue, callback) => {
-    if (props.filterData) {
-      const dimensions = Object.keys(props.filterData);
-      if (!dimensions.includes(props.feature.name)) {
-        callback(load(inputValue, props.feature.name));
-      } else {
-        if (props.filterData[props.feature.name].length > 100 && inputValue !== '') {
-          callback(load(inputValue, props.feature.name));
-        } else {
-          callback(mapOptionsToValues(props.filterData[props.feature.name], inputValue));
-        }
-      }
-    } else {
-      callback(load(inputValue, props.feature.name));
-    }
+  const onFocus = () => {
+    setIsLoading(true);
+    load(null, props.feature.name);
   };
 
   const addValueInFilter = value => {
@@ -170,16 +181,20 @@ const FilterElement = (props: IFilterElementProp) => {
             </View>
           ) : (
             <View>
-              <AsyncSelect
-                value={defaultValues}
+              <Select
                 isMulti
-                isSearchable={true}
+                value={defaultValues}
+                searchable={true}
+                onBlurResetsInput={false}
+                onCloseResetsInput={false}
+                onFocus={onFocus}
                 closeMenuOnSelect={false}
                 classNamePrefix="select"
-                cacheOptions
-                loadOptions={loadOptions}
-                onInputChange={handleInputChange}
                 onChange={handleChange}
+                isLoading={isLoading}
+                placeholder={`Search ${props.feature.name}`}
+                onInputChange={handleInputChange}
+                options={props.filterData[props.feature.name]}
               />
             </View>
           )}
@@ -194,6 +209,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   filterData: storeState.visualmetadata.filterData,
   featuresList: storeState.feature.entities,
   selectedFilters: storeState.filter.selectedFilters,
+  filterList: storeState.visualizationData.filterData,
 });
 const mapDispatchToProps = {
   getfeatureEntities,

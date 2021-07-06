@@ -155,21 +155,6 @@ const Canvas = (props: VisualizationProp) => {
   }, [props.visualData]);
 
   useEffect(() => {
-    if (props.filterList) {
-      // TODO : this code needs to be refectored
-      const obj = props.filterList?.body[0];
-      const dimensionName = Object.keys(obj)[0];
-      const retVal = props.filterList?.body?.map(function (item) {
-        return {
-          value: item[dimensionName],
-          label: item[dimensionName],
-        };
-      });
-      props.filterData[dimensionName] = retVal;
-    }
-  }, [props.filterList]);
-
-  useEffect(() => {
     if (props.visualmetadata?.visualMetadataSet?.length > 0) {
       props.visualmetadata?.visualMetadataSet.map(item => {
         const loader = {
@@ -194,7 +179,6 @@ const Canvas = (props: VisualizationProp) => {
       }
       else{
         props.applyFilter({}, props.visualmetadata, props.view);
-        props.applyBookmark(null);
       }
     }
   }, [props.visualmetadata]);
