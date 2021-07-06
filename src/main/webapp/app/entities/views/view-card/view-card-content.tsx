@@ -46,11 +46,13 @@ const ViewCardContent: React.FC<IViewCardContentProps> = props => {
                       <Translate contentKey="entity.options.properties">Properties</Translate>
                     </Text>
                   </Item>
-                  <Item key="release">
-                    <Text>
-                      <Translate contentKey="entity.options.release">Release</Translate>
-                    </Text>
-                  </Item>
+                  {account && hasAuthority(props.account, 'REQUEST-PUBLISH_' + viewId + '_VIEW') && (
+                    <Item key="release">
+                      <Text>
+                        <Translate contentKey="entity.options.release">Release</Translate>
+                      </Text>
+                    </Item>
+                  )}
                 </Section>
                 {account && hasAuthority(props.account, 'DELETE_' + viewId + '_VIEW') && (
                   <Section title={<Translate contentKey="entity.options.danger">Danger</Translate>}>

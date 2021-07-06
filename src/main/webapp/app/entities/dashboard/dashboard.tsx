@@ -16,10 +16,15 @@ import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/place
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { hasAuthority } from 'app/shared/reducers/authentication';
+import DashboardRequestReleaseDialog from './dashboard-request-release-modal';
+import { defaultValue, IDashboard } from "app/shared/model/dashboard.model";
 
 export interface IDashboardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Dashboard = (props: IDashboardProps) => {
+  const [isRequestReleaseDialogOpen, setRequestReleaseDialogOpen] = useState<boolean>(false);
+  const [requestReleaseDashboard, setRequestReleaseDashboard] = useState<IDashboard>();
+
   const [isDashboardCreateModelOpen, setDashboardCreateModelOpen] = useState(false);
   const [paginationState, setPaginationState] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
@@ -65,6 +70,11 @@ export const Dashboard = (props: IDashboardProps) => {
     });
   };
 
+  const dispatchReleaseRequestProps = (id,dashboardName) =>{
+    setRequestReleaseDialogOpen(true);
+    setRequestReleaseDashboard({...defaultValue,id,dashboardName});
+  }
+
   const dashboardListElement = dashboardList.map(dashboard => {
     return (
       <Card
@@ -86,6 +96,7 @@ export const Dashboard = (props: IDashboardProps) => {
             dashboardId={dashboard.id}
             datasource={dashboard.dashboardDatasource.name}
             account={props.account}
+            dispatchReleaseRequestProps={dispatchReleaseRequestProps}
           />
         }
       />
@@ -132,6 +143,14 @@ export const Dashboard = (props: IDashboardProps) => {
             contentTranslationKey="dashboard.home.notFound.content"
           />
         )}
+        <DialogContainer onDismiss={() => setRequestReleaseDialogOpen(false)}>
+          {isRequestReleaseDialogOpen && (
+            <DashboardRequestReleaseDialog
+              setOpen={setRequestReleaseDialogOpen}
+              dashboard={requestReleaseDashboard}
+            ></DashboardRequestReleaseDialog>
+          )}
+        </DialogContainer>
       </>
     )
   );

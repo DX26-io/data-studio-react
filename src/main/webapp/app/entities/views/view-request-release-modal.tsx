@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Translate, translate } from 'react-jhipster';
 import { requestRelease } from './views.reducer';
 import { IRootState } from 'app/shared/reducers';
-import { Flex, useDialogContainer, Dialog, Heading, Divider, Content, Form, Button, TextField, Header, Text } from '@adobe/react-spectrum';
+import { Flex, useDialogContainer, Dialog, Heading, Divider, Content, Form, Button, TextArea, Header, Text } from '@adobe/react-spectrum';
 
 export interface IViewRequestReleaseDialogProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
@@ -49,9 +49,9 @@ export const ViewRequestReleaseDialog = (props: IViewRequestReleaseDialogProps) 
       </Header>
       <Divider />
       <Content>
-        <span className="spectrum-Body-emphasis--sizeS">{translate('releases.requestReleaseLabel', { param: props.viewId })}</span>
+        <span className="spectrum-Body-emphasis--sizeS">{translate('releases.viewRequestReleaseLabel', { param: props.viewId })}</span>
         <Form data-testid="request-release-form">
-          <TextField
+          <TextArea
             label={translate('releases.comment')}
             type="text"
             value={comment}

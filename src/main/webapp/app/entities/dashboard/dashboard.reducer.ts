@@ -13,6 +13,7 @@ export const ACTION_TYPES = {
   UPDATE_DASHBOARD: 'dashboard/UPDATE_DASHBOARD',
   DELETE_DASHBOARD: 'dashboard/DELETE_DASHBOARD',
   RESET: 'dashboard/RESET',
+  REQUEST_RELEASE: 'views/REQUEST_RELEASE',
 };
 
 const initialState = {
@@ -49,6 +50,13 @@ export default (state: DashboardState = initialState, action): DashboardState =>
         updating: true,
         loading: true,
       };
+    case REQUEST(ACTION_TYPES.REQUEST_RELEASE):
+      return {
+        ...state,
+        errorMessage: null,
+        updateSuccess: false,
+        updating: true,
+      };
     case FAILURE(ACTION_TYPES.FETCH_DASHBOARD_LIST):
     case FAILURE(ACTION_TYPES.FETCH_DASHBOARD):
     case FAILURE(ACTION_TYPES.CREATE_DASHBOARD):
@@ -60,6 +68,13 @@ export default (state: DashboardState = initialState, action): DashboardState =>
         updating: false,
         updateSuccess: false,
         errorMessage: action.payload,
+      };
+    case FAILURE(ACTION_TYPES.REQUEST_RELEASE):
+      return {
+        ...state,
+        errorMessage: action.payload,
+        updateSuccess: false,
+        updating: false,
       };
     case SUCCESS(ACTION_TYPES.FETCH_DASHBOARD_LIST):
       return {
@@ -90,6 +105,13 @@ export default (state: DashboardState = initialState, action): DashboardState =>
         updating: false,
         updateSuccess: true,
         entity: {},
+      };
+    case SUCCESS(ACTION_TYPES.REQUEST_RELEASE):
+      return {
+        ...state,
+        errorMessage: null,
+        updateSuccess: true,
+        updating: false,
       };
     case ACTION_TYPES.RESET:
       return {
@@ -155,3 +177,8 @@ export const getDashboardsByName = (dashboardName: string) => {
     payload: axios.get<IDashboard>(`${apiUrl}?dashboardName=${dashboardName}`),
   };
 };
+
+export const requestRelease = (id, comment, viewIds) => ({
+  type: ACTION_TYPES.REQUEST_RELEASE,
+  payload: axios.put(`${apiUrl}/${id}/requestRelease`, { comment, viewIds }),
+});

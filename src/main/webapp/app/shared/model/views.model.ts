@@ -13,8 +13,10 @@ export interface IViews {
   imageLocation?: string;
   image?: any;
   viewDashboard?: IDashboard;
+  selected?: boolean;
 }
 
 export const defaultValue: Readonly<IViews> = {
   published: false,
+  selected: false,
 };
