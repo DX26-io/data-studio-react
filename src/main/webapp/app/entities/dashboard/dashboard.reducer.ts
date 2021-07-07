@@ -13,7 +13,7 @@ export const ACTION_TYPES = {
   UPDATE_DASHBOARD: 'dashboard/UPDATE_DASHBOARD',
   DELETE_DASHBOARD: 'dashboard/DELETE_DASHBOARD',
   RESET: 'dashboard/RESET',
-  REQUEST_RELEASE: 'views/REQUEST_RELEASE',
+  REQUEST_RELEASE: 'dashboard/REQUEST_RELEASE',
 };
 
 const initialState = {
@@ -115,7 +115,10 @@ export default (state: DashboardState = initialState, action): DashboardState =>
       };
     case ACTION_TYPES.RESET:
       return {
-        ...initialState,
+        ...state,
+        updateSuccess: false,
+        errorMessage: null,
+        entity: {},
       };
     default:
       return state;
@@ -178,7 +181,7 @@ export const getDashboardsByName = (dashboardName: string) => {
   };
 };
 
-export const requestRelease = (id, comment, viewIds) => ({
+export const requestRelease = (id, dashboardReleaseRequest) => ({
   type: ACTION_TYPES.REQUEST_RELEASE,
-  payload: axios.put(`${apiUrl}/${id}/requestRelease`, { comment, viewIds }),
+  payload: axios.put(`${apiUrl}/${id}/requestRelease`, dashboardReleaseRequest),
 });

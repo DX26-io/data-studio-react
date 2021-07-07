@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Translate, translate } from 'react-jhipster';
-import { requestRelease } from './views.reducer';
+import { requestRelease,reset } from './views.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Flex, useDialogContainer, Dialog, Heading, Divider, Content, Form, Button, TextArea, Header, Text } from '@adobe/react-spectrum';
 
@@ -23,6 +23,7 @@ export const ViewRequestReleaseDialog = (props: IViewRequestReleaseDialogProps) 
   useEffect(() => {
     if (props.updateSuccess) {
       handleClose();
+      props.reset();
     }
   }, [props.updateSuccess]);
 
@@ -71,7 +72,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updateSuccess: storeState.views.updateSuccess,
 });
 
-const mapDispatchToProps = { requestRelease };
+const mapDispatchToProps = { requestRelease,reset };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

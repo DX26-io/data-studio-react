@@ -18,6 +18,8 @@ import {
 } from '@adobe/react-spectrum';
 import { IDashboard } from 'app/shared/model/dashboard.model';
 import { getDashboardViewEntities } from 'app/entities/views/views.reducer';
+import { reset } from './dashboard.reducer';
+import { setDashboardReleaseRequest } from 'app/modules/administration/release-management/releases.reducer';
 
 export interface IDashboardRequestReleaseDialogProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
@@ -25,8 +27,8 @@ export interface IDashboardRequestReleaseDialogProps extends StateProps, Dispatc
 }
 
 export const DashboardRequestReleaseDialog = (props: IDashboardRequestReleaseDialogProps) => {
-  const [comment, setComment] = useState<string>();
-  const [viewIds, setViewIds] = useState([]);
+  //   const [comment, setComment] = useState<string>();
+  //   const [viewIds, setViewIds] = useState([]);
 
   const dialog = useDialogContainer();
 
@@ -42,11 +44,12 @@ export const DashboardRequestReleaseDialog = (props: IDashboardRequestReleaseDia
   useEffect(() => {
     if (props.updateSuccess) {
       handleClose();
+      props.reset();
     }
   }, [props.updateSuccess]);
 
   const save = () => {
-    props.requestRelease(props.dashboard.id, comment, viewIds);
+    props.requestRelease(props.dashboard.id, props.dashboardReleaseRequest);
   };
 
   return (
@@ -61,7 +64,12 @@ export const DashboardRequestReleaseDialog = (props: IDashboardRequestReleaseDia
           <Button variant="secondary" onPress={handleClose} data-testid="request-release-form-cancel">
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
-          <Button variant="cta" onPress={save} isDisabled={props.updating} data-testid="request-release-form-submit">
+          <Button
+            variant="cta"
+            onPress={save}
+            isDisabled={props.updating || (props.views && props.views.length === 0) || props.dashboardReleaseRequest.viewIds.length === 0}
+            data-testid="request-release-form-submit"
+          >
             <Translate contentKey="entity.action.save">Save</Translate>
           </Button>
         </Flex>
@@ -83,28 +91,36 @@ export const DashboardRequestReleaseDialog = (props: IDashboardRequestReleaseDia
                 onChange={event => {
                   view.selected = event;
                   if (event) {
-                    viewIds.push(view.id);
+                    props.dashboardReleaseRequest.viewIds.push(view.id);
                   } else {
-                    const index = viewIds.findIndex(id => id === view.id);
+                    const index = props.dashboardReleaseRequest.viewIds.findIndex(id => id === view.id);
                     if (index > -1) {
-                      viewIds.splice(index, 1);
+                      props.dashboardReleaseRequest.viewIds.splice(index, 1);
                     }
                   }
-                  setViewIds(viewIds);
+                  props.setDashboardReleaseRequest(props.dashboardReleaseRequest);
                 }}
               >
                 {view.viewName}
               </Checkbox>
             ))}
         </Flex>
+        {props.views && props.views.length === 0 && (
+          <span className="spectrum-Body-emphasis error-message">
+            <Translate contentKey="releases.error">
+              You cannot request a release for this dashboard, because the dashboard does not have a view.
+            </Translate>
+          </span>
+        )}
         <Form data-testid="request-release-form">
           <TextArea
             label={translate('releases.comment')}
             type="text"
-            value={comment}
-            onChange={setComment}
+            value={props.dashboardReleaseRequest.comment ? props.dashboardReleaseRequest.comment : ''}
+            onChange={event => {
+              props.setDashboardReleaseRequest({ ...props.dashboardReleaseRequest, comment: event });
+            }}
             autoFocus
-            isRequired
             data-testid="comment"
           />
         </Form>
@@ -117,9 +133,10 @@ const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.dashboard.updating,
   updateSuccess: storeState.dashboard.updateSuccess,
   views: storeState.views.entities,
+  dashboardReleaseRequest: storeState.releases.dashboardReleaseRequest,
 });
 
-const mapDispatchToProps = { requestRelease, getDashboardViewEntities };
+const mapDispatchToProps = { requestRelease, getDashboardViewEntities, reset, setDashboardReleaseRequest };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

@@ -137,7 +137,10 @@ export default (state: ViewsState = initialState, action): ViewsState => {
     }
     case ACTION_TYPES.RESET:
       return {
-        ...initialState,
+        ...state,
+        updateSuccess: false,
+        errorMessage: null,
+        entity: defaultValue,
       };
     default:
       return state;

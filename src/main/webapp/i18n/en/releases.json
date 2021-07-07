@@ -1,28 +1,22 @@
 {
   "releases": {
     "home": {
-      "title": "Releases",
+      "title": "Release Management",
       "request": "Release Request",
       "description": "Manage your Releases"
     },
-    "created": "A new user is created with identifier {{ param }}",
-    "updated": "A user is updated with identifier {{ param }}",
-    "deleted": "A user is deleted with identifier {{ param }}",
-    "delete": {
-      "question": "Are you sure you want to delete user {{ login }}?"
-    },
-    "error": {
-      "name": "Name is required",
-      "length": "Name cannot be longer than 50 characters"
-    },
-    "search": "Search bookmark...",
     "comment": "Comment",
     "viewRequestReleaseLabel": "Are you sure you want to request a new release for this view {{param}}",
     "dashboardRequestReleaseLabel": "Are you sure you want to request a new release for this dashboard <strong>{{param}}</strong>",
     "selectViewLabel": "<strong>Select which views you want to be released</strong>",
-    "createdBy": "Created by",
-    "createdDate": "Created date",
-    "lastModifiedBy": "Modified by",
-    "lastModifiedDate": "Modified date"
+    "dashboardId": "Dashboard ID",
+    "dashboardName": "Dashboard Name",
+    "requestedBy": "Requested By",
+    "viewInformation": "View Information",
+    "viewInformationTableCell": "View Id - {{viewId}} <br/> View Name - {{viewName}}",
+    "noCommentFound": "Not provided",
+    "approve": "Approve",
+    "disApprove": "disapprove",
+    "error": "You cannot request a release for this dashboard, because the dashboard does not have a view."
   }
 }
