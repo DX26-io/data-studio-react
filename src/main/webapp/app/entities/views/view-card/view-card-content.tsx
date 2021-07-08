@@ -4,10 +4,13 @@ import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
 import { IDashboard } from 'app/shared/model/dashboard.model';
-import { Redirect } from 'react-router-dom';
+import {Redirect, RouteComponentProps} from 'react-router-dom';
 import { hasAuthority } from 'app/shared/reducers/authentication';
+import {exportView} from "app/entities/views/views.reducer";
+import {connect} from "react-redux";
+import {IRootState} from "app/shared/reducers";
 
-interface IViewCardContentProps {
+export interface IViewCardContentProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string; viewId: string }> {
   viewDashboard: IDashboard;
   viewName: string;
   description: string;
@@ -15,9 +18,17 @@ interface IViewCardContentProps {
   account: any;
 }
 
-const ViewCardContent: React.FC<IViewCardContentProps> = props => {
+const ViewCardContent = (props: IViewCardContentProps) => {
   const { viewName, viewId, description, viewDashboard, account } = props;
   const [redirect, setRedirect] = useState<ReactText>('');
+
+  const onMenuAction = (key) => {
+    if (key === 'export') {
+      props.exportView(viewId);
+    } else {
+      setRedirect(key);
+    }
+  }
 
   return (
     <>
@@ -31,7 +42,7 @@ const ViewCardContent: React.FC<IViewCardContentProps> = props => {
               <ActionButton isQuiet aria-label="more options">
                 <MoreSmallListVert size="S" aria-label="Default Alert" />
               </ActionButton>
-              <Menu onAction={key => setRedirect(key)}>
+              <Menu onAction={key => onMenuAction(key)}>
                 <Section title={<Translate contentKey="entity.options.more_options">More options</Translate>}>
                   <Item key="properties">
                     <Text>
@@ -41,6 +52,11 @@ const ViewCardContent: React.FC<IViewCardContentProps> = props => {
                   <Item key="release">
                     <Text>
                       <Translate contentKey="entity.options.release">Release</Translate>
+                    </Text>
+                  </Item>
+                  <Item key="export">
+                    <Text>
+                      <Translate contentKey="entity.options.export">_Export</Translate>
                     </Text>
                   </Item>
                 </Section>
@@ -85,4 +101,13 @@ const ViewCardContent: React.FC<IViewCardContentProps> = props => {
   );
 };
 
-export default ViewCardContent;
+const mapDispatchToProps = {
+  exportView,
+}
+
+const mapStateToProps = (storeState: IRootState) => ({});
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(ViewCardContent);

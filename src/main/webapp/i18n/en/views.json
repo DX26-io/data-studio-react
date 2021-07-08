@@ -3,6 +3,7 @@
     "home": {
       "title": "Views",
       "createLabel": "Create view",
+      "importLabel": "Import view",
       "notFound": {
         "heading": "No views found for this dashboard",
         "content": "To create a new view click on create"

@@ -7,8 +7,8 @@ import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util'
 import { defaultValue, IViews } from 'app/shared/model/views.model';
 import { IVisualMetadataSet, IVisualMetadata } from 'app/shared/model/visual-meta-data.model';
 
-import { getDefaultInitialPaginationState } from 'app/shared/util/pagination-utils';
 import { ICrudGetDashboardViewsAction, ICrudViewDeleteAction, ISaveViewState, IViewStateDTO } from './view-util';
+import FileSaver from 'file-saver';
 
 export const ACTION_TYPES = {
   FETCH_VIEWS_LIST: 'views/FETCH_VIEWS_LIST',
@@ -17,6 +17,9 @@ export const ACTION_TYPES = {
   CREATE_VIEWS: 'views/CREATE_VIEWS',
   UPDATE_VIEWS: 'views/UPDATE_VIEWS',
   DELETE_VIEWS: 'views/DELETE_VIEWS',
+  EXPORT_VIEW: 'views/EXPORT_VIEW',
+  SET_EXPORT_VIEW: 'views/SET_EXPORT_VIEW',
+  IMPORT_VIEW: 'views/IMPORT_VIEW',
   SET_BLOB: 'views/SET_BLOB',
   RESET: 'views/RESET',
 };
@@ -27,7 +30,9 @@ const initialState = {
   entities: [] as ReadonlyArray<IViews>,
   entity: defaultValue,
   updating: false,
+  uploadSucceeded: false,
   totalItems: 0,
+  exportViewId: 0,
   updateSuccess: false,
   viewState: {} as IVisualMetadata,
 };
@@ -36,9 +41,16 @@ export type ViewsState = Readonly<typeof initialState>;
 
 // Reducer
 
+const saveViewToLocalDrive = (action, response, viewId) => {
+  const fileData = new Blob([response], { type: 'text/plain;charset=utf-8' });
+  FileSaver.saveAs(fileData, `${viewId}.json`);
+};
+
 export default (state: ViewsState = initialState, action): ViewsState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_VIEWS_LIST):
+    case REQUEST(ACTION_TYPES.IMPORT_VIEW):
+    case REQUEST(ACTION_TYPES.EXPORT_VIEW):
     case REQUEST(ACTION_TYPES.FETCH_VIEWS):
     case REQUEST(ACTION_TYPES.FETCH_VIEWS_STATE):
       return {
@@ -57,11 +69,13 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         updating: true,
       };
     case FAILURE(ACTION_TYPES.FETCH_VIEWS_LIST):
+    case FAILURE(ACTION_TYPES.IMPORT_VIEW):
     case FAILURE(ACTION_TYPES.FETCH_VIEWS):
     case FAILURE(ACTION_TYPES.FETCH_VIEWS_STATE):
     case FAILURE(ACTION_TYPES.CREATE_VIEWS):
     case FAILURE(ACTION_TYPES.UPDATE_VIEWS):
     case FAILURE(ACTION_TYPES.DELETE_VIEWS):
+    case FAILURE(ACTION_TYPES.EXPORT_VIEW):
       return {
         ...state,
         loading: false,
@@ -103,6 +117,17 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         updateSuccess: true,
         entity: {},
       };
+    case SUCCESS(ACTION_TYPES.EXPORT_VIEW):
+      saveViewToLocalDrive(action, action.payload.data, state.exportViewId);
+      return {
+        ...state,
+        loading: false,
+      };
+    case SUCCESS(ACTION_TYPES.IMPORT_VIEW):
+      return {
+        ...state,
+        uploadSucceeded: true,
+      };
     case ACTION_TYPES.SET_BLOB: {
       const { name, data, contentType } = action.payload;
       return {
@@ -117,6 +142,11 @@ export default (state: ViewsState = initialState, action): ViewsState => {
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
+      };
+    case ACTION_TYPES.SET_EXPORT_VIEW:
+      return {
+        ...state,
+        exportViewId: action.payload,
       };
     default:
       return state;
@@ -194,6 +224,17 @@ export const deleteEntity: ICrudViewDeleteAction<IViews> = (viewId, dashboardId)
   return result;
 };
 
+export const exportView: (viewId: number) => void = viewId => async dispatch => {
+  dispatch({
+    type: ACTION_TYPES.SET_EXPORT_VIEW,
+    payload: viewId,
+  });
+  await dispatch({
+    type: ACTION_TYPES.EXPORT_VIEW,
+    payload: axios.get(`${apiUrl}/${viewId}/export?&cacheBuster=${new Date().getTime()}`, { responseType: 'arraybuffer' }),
+  });
+};
+
 export const setBlob = (name, data, contentType?) => ({
   type: ACTION_TYPES.SET_BLOB,
   payload: {
@@ -211,5 +252,19 @@ export const getViewsByName = (viewName: string) => {
   return {
     type: ACTION_TYPES.FETCH_VIEWS_LIST,
     payload: axios.get<IViews>(`${apiUrl}?viewName=${viewName}`),
+  };
+};
+
+export const importView = (contents: string, dashboardId: number) => {
+  const formData = new FormData();
+  formData.append('file', new Blob([contents]), 'filename');
+
+  return {
+    type: ACTION_TYPES.IMPORT_VIEW,
+    payload: axios.post(`api/dashboards/${dashboardId}/importView?cacheBuster=${new Date().getTime()}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }),
   };
 };
