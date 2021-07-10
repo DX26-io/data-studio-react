@@ -19,6 +19,7 @@ export interface IHeaderProps {
   currentLocale: string;
   onLocaleChange: Function;
   isCanvas: boolean;
+  isHome: boolean;
 }
 
 const Header = (props: IHeaderProps) => {
@@ -46,7 +47,6 @@ const Header = (props: IHeaderProps) => {
               {props.isCanvas && (
                 <React.Fragment>
                   <CanvasHeader />
-                  {/* <Divider size={'M'} orientation={'vertical'} />{' '} */}
                 </React.Fragment>
               )}
             </Flex>
