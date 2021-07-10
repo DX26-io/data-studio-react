@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Translate, translate } from 'react-jhipster';
-import { requestRelease } from './dashboard.reducer';
+import { requestRelease, setRequestReleaseUpdateSuccess } from './dashboard.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
   Flex,
@@ -27,9 +27,6 @@ export interface IDashboardRequestReleaseDialogProps extends StateProps, Dispatc
 }
 
 export const DashboardRequestReleaseDialog = (props: IDashboardRequestReleaseDialogProps) => {
-  //   const [comment, setComment] = useState<string>();
-  //   const [viewIds, setViewIds] = useState([]);
-
   const dialog = useDialogContainer();
 
   useEffect(() => {
@@ -37,6 +34,8 @@ export const DashboardRequestReleaseDialog = (props: IDashboardRequestReleaseDia
   }, []);
 
   const handleClose = () => {
+    props.setRequestReleaseUpdateSuccess(false);
+    props.setDashboardReleaseRequest({ comment: '', viewIds: [] });
     props.setOpen(false);
     dialog.dismiss();
   };
@@ -44,7 +43,6 @@ export const DashboardRequestReleaseDialog = (props: IDashboardRequestReleaseDia
   useEffect(() => {
     if (props.updateSuccess) {
       handleClose();
-      props.reset();
     }
   }, [props.updateSuccess]);
 
@@ -87,7 +85,7 @@ export const DashboardRequestReleaseDialog = (props: IDashboardRequestReleaseDia
               <Checkbox
                 key={view.id}
                 isEmphasized
-                isSelected={view.selected}
+                isSelected={props.dashboardReleaseRequest.viewIds.includes(view.id)}
                 onChange={event => {
                   view.selected = event;
                   if (event) {
@@ -116,6 +114,7 @@ export const DashboardRequestReleaseDialog = (props: IDashboardRequestReleaseDia
           <TextArea
             label={translate('releases.comment')}
             type="text"
+            isDisabled={props.dashboardReleaseRequest.viewIds.length === 0}
             value={props.dashboardReleaseRequest.comment ? props.dashboardReleaseRequest.comment : ''}
             onChange={event => {
               props.setDashboardReleaseRequest({ ...props.dashboardReleaseRequest, comment: event });
@@ -131,12 +130,12 @@ export const DashboardRequestReleaseDialog = (props: IDashboardRequestReleaseDia
 
 const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.dashboard.updating,
-  updateSuccess: storeState.dashboard.updateSuccess,
+  updateSuccess: storeState.dashboard.releaseRequestUpdateSuccess,
   views: storeState.views.entities,
   dashboardReleaseRequest: storeState.releases.dashboardReleaseRequest,
 });
 
-const mapDispatchToProps = { requestRelease, getDashboardViewEntities, reset, setDashboardReleaseRequest };
+const mapDispatchToProps = { setRequestReleaseUpdateSuccess, requestRelease, getDashboardViewEntities, reset, setDashboardReleaseRequest };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

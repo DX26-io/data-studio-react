@@ -58,7 +58,6 @@ export const ViewRequestReleaseDialog = (props: IViewRequestReleaseDialogProps) 
             value={comment}
             onChange={setComment}
             autoFocus
-            isRequired
             data-testid="comment"
           />
         </Form>

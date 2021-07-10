@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ReactText } from 'react';
 import { connect } from 'react-redux';
-import { Item, Content, View, Flex, ProgressBar } from '@adobe/react-spectrum';
+import { Item, Content, View, Flex, ProgressBar, DialogContainer } from '@adobe/react-spectrum';
 import { Tabs } from '@react-spectrum/tabs';
 import { Translate } from 'react-jhipster';
 import { getMostPopularViews, getRecentlyAccessedBookmarks, getRecentViews } from './recent.reducer';
@@ -9,12 +9,30 @@ import ViewCardThumbnail from 'app/entities/views/view-card/view-card-thumbnail'
 import Card from 'app/shared/components/card/card';
 import DashboardCardThumbnail from 'app/entities/dashboard/dashboard-card/dashboard-card-thumbnail';
 import DashboardCardContent from 'app/entities/dashboard/dashboard-card/dashboard-card-content';
+import { IDashboard, defaultValue } from 'app/shared/model/dashboard.model';
+import DashboardRequestReleaseDialog from 'app/entities/dashboard/dashboard-request-release-modal';
+import ViewRequestReleaseDialog from 'app/entities/views/view-request-release-modal';
 
 export interface ISearchResultsProps extends StateProps {
   match: any;
 }
 
 const SearchResults = (props: ISearchResultsProps) => {
+  const [isRequestReleaseDialogOpen, setRequestReleaseDialogOpen] = useState<boolean>(false);
+  const [requestReleaseViewId, setRequestReleaseViewId] = useState();
+  const [isRequestReleaseDashboardDialogOpen, setRequestReleaseDashboardDialogOpen] = useState<boolean>(false);
+  const [requestReleaseDashboard, setRequestReleaseDashboard] = useState<IDashboard>();
+
+  const dispatchReleaseRequestProps = viewId => {
+    setRequestReleaseDialogOpen(true);
+    setRequestReleaseViewId(viewId);
+  };
+
+  const dispatchReleaseRequestDashboardProps = (id, dashboardName) => {
+    setRequestReleaseDashboardDialogOpen(true);
+    setRequestReleaseDashboard({ ...defaultValue, id, dashboardName });
+  };
+
   const viewsElement = props.views.map(view => {
     return (
       <Card
@@ -22,11 +40,22 @@ const SearchResults = (props: ISearchResultsProps) => {
         thumbnail={
           <View height="size-3200">
             {/* TODO: added empty string as url for now */}
-            <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName} url={`/dashboards/${view.viewDashboard.id}/${view.id}/build`} />
+            <ViewCardThumbnail
+              thumbnailImagePath={view.imageLocation}
+              viewName={view.viewName}
+              url={`/dashboards/${view.viewDashboard.id}/${view.id}/build`}
+            />
           </View>
         }
         content={
-          <ViewCardContent viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} account={props.account} />
+          <ViewCardContent
+            viewDashboard={view.viewDashboard}
+            description={view.description}
+            viewName={view.viewName}
+            viewId={view.id}
+            account={props.account}
+            dispatchReleaseRequestProps={dispatchReleaseRequestProps}
+          />
         }
       />
     );
@@ -53,6 +82,7 @@ const SearchResults = (props: ISearchResultsProps) => {
             dashboardId={dashboard.id}
             datasource={dashboard.dashboardDatasource.name}
             account={props.account}
+            dispatchReleaseRequestProps={dispatchReleaseRequestDashboardProps}
           />
         }
       />
@@ -74,6 +104,19 @@ const SearchResults = (props: ISearchResultsProps) => {
               {props.dashboards.length > 0 ? dashboardListElement : null}
             </Flex>
           </View>
+          <DialogContainer onDismiss={() => setRequestReleaseDialogOpen(false)}>
+            {isRequestReleaseDialogOpen && (
+              <ViewRequestReleaseDialog setOpen={setRequestReleaseDialogOpen} viewId={requestReleaseViewId}></ViewRequestReleaseDialog>
+            )}
+          </DialogContainer>
+          <DialogContainer onDismiss={() => setRequestReleaseDialogOpen(false)}>
+            {isRequestReleaseDashboardDialogOpen && (
+              <DashboardRequestReleaseDialog
+                setOpen={setRequestReleaseDashboardDialogOpen}
+                dashboard={requestReleaseDashboard}
+              ></DashboardRequestReleaseDialog>
+            )}
+          </DialogContainer>
         </React.Fragment>
       )}
     </View>
@@ -85,7 +128,7 @@ const mapStateToProps = storeState => ({
   loadingDashboards: storeState.dashboard.loading,
   views: storeState.views.entities,
   loadingViews: storeState.views.loading,
-  account: storeState.authentication.account
+  account: storeState.authentication.account,
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;
