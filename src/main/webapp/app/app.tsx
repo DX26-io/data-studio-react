@@ -3,7 +3,7 @@ import '../content/scss/main.scss';
 import '@spectrum-css/typography/dist/index-vars.css';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import {BrowserRouter as Router, Redirect} from 'react-router-dom';
+import { BrowserRouter as Router, Redirect } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { hot } from 'react-hot-loader';
 import { Grid, View } from '@adobe/react-spectrum';
@@ -43,17 +43,21 @@ export const App = (props: IAppProps) => {
       >
         <View gridArea="header">
           <ErrorBoundary>
-            <Header
-              isAuthenticated={props.isAuthenticated}
-              isAdmin={props.isAdmin}
-              currentLocale={props.currentLocale}
-              onLocaleChange={props.setLocale}
-              ribbonEnv={props.ribbonEnv}
-              isInProduction={props.isInProduction}
-              isSwaggerEnabled={props.isSwaggerEnabled}
-              isCanvas={props.isCanvas}
-
-            />
+            {props.isHome ? (
+              <HomeHeader />
+            ) : (
+              <Header
+                isAuthenticated={props.isAuthenticated}
+                isAdmin={props.isAdmin}
+                currentLocale={props.currentLocale}
+                onLocaleChange={props.setLocale}
+                ribbonEnv={props.ribbonEnv}
+                isInProduction={props.isInProduction}
+                isSwaggerEnabled={props.isSwaggerEnabled}
+                isCanvas={props.isCanvas}
+                isHome={props.isHome}
+              />
+            )}
           </ErrorBoundary>
         </View>
         <View gridArea="content" flex={true} alignSelf={'stretch'} backgroundColor="default">
@@ -68,13 +72,13 @@ export const App = (props: IAppProps) => {
     </Router>
   ) : (
     <Router basename={baseHref}>
-      {props.redirectTo ?
-          <Redirect
-            to={{
-              pathname: props.redirectTo
-            }}
-          /> : null
-      }
+      {props.redirectTo ? (
+        <Redirect
+          to={{
+            pathname: props.redirectTo,
+          }}
+        />
+      ) : null}
       <ToastContainer position={toast.POSITION.BOTTOM_CENTER} className="toastify-container" toastClassName="toastify-toast" />
       <ErrorBoundary>
         <AppRoutes />
@@ -91,7 +95,8 @@ const mapStateToProps = ({ authentication, applicationProfile, locale, home }: I
   ribbonEnv: applicationProfile.ribbonEnv,
   isInProduction: applicationProfile.inProduction,
   isSwaggerEnabled: applicationProfile.isSwaggerEnabled,
-  isCanvas: isCanvas()
+  isCanvas: isCanvas(),
+  isHome: home.isHome,
 });
 
 const mapDispatchToProps = { setLocale, getSessionWithPath, getProfile };

@@ -8,17 +8,9 @@ import { getDashboardsByName } from 'app/entities/dashboard/dashboard.reducer';
 import { getViewsByName } from 'app/entities/views/views.reducer';
 import { updateSearchedText } from './home.reducer';
 
-export interface IHomeHeaderProps extends DispatchProps {
-  isAuthenticated: boolean;
-  isAdmin: boolean;
-  ribbonEnv: string;
-  isInProduction: boolean;
-  isSwaggerEnabled: boolean;
-  currentLocale: string;
-  onLocaleChange: Function;
-}
+// export interface IHomeHomeHeaderProps extends DispatchProps {}
 
-const Header = (props: IHomeHeaderProps) => {
+const HomeHeader = (props: DispatchProps) => {
   const [searchedText, setSearchedText] = React.useState('');
 
   const onChangeSearchedText = event => {
@@ -74,4 +66,4 @@ const mapDispatchToProps = { getDashboardsByName, getViewsByName, updateSearched
 
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(null, mapDispatchToProps)(Header);
+export default connect(null, mapDispatchToProps)(HomeHeader);
