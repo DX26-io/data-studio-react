@@ -1,11 +1,12 @@
 import { Field } from './field.model';
 
 export interface IQueryDTO {
-  conditionExpressions: any;
-  fields: Array<Field>;
-  groupBy: Array<any>;
+  conditionExpressions?: any;
+  fields: Array<Field> | Array<any>;
+  groupBy?: Array<any>;
   limit: number;
-  orders: Array<any>;
+  orders?: Array<any>;
+  distinct?: boolean;
 }
 
 export const defaultValue: Readonly<IQueryDTO> = {

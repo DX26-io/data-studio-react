@@ -48,7 +48,8 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
             <ViewCardThumbnail
               thumbnailImagePath={view.imageLocation}
               viewName={view.viewName}
-              url={`/dashboards/${view.viewDashboard.id}/${view.id}/build`}
+              url={`/dashboards/build?dahsbordId=${view.view.viewDashboard.id}&viewId=${view.view.id}`}
+
             />
           </View>
         }
@@ -75,7 +76,8 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
             <ViewCardThumbnail
               thumbnailImagePath={recent.view.imageLocation}
               viewName={recent.view.viewName}
-              url={`/dashboards/${recent.view.viewDashboard.id}/${recent.view.id}/build/${recent.featureBookmark.id}`}
+              url={`/dashboards/build?dahsbordId=${recent.view.viewDashboard.id}&viewId=${recent.view.id}&bookmarkId${recent.featureBookmark.id}`}
+
             />
           </View>
         }

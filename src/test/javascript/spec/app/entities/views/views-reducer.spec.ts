@@ -33,8 +33,10 @@ describe('Entities reducer tests', () => {
     entities: [] as ReadonlyArray<IViews>,
     entity: defaultValue,
     totalItems: 0,
+    exportViewId: 0,
     updating: false,
     updateSuccess: false,
+    uploadSucceeded: false,
     viewState: {} as IVisualMetadata,
   };
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { getSortState, Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
-import { getDashboardViewEntities } from './views.reducer';
+import {getDashboardViewEntities, importView} from './views.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
@@ -11,11 +11,11 @@ import { Button, Flex, View, DialogContainer } from '@adobe/react-spectrum';
 import Card from 'app/shared/components/card/card';
 import ViewCardThumbnail from './view-card/view-card-thumbnail';
 import ViewCardContent from './view-card/view-card-content';
-
 import Pagination from '@material-ui/lab/Pagination';
 import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import ViewRequestReleaseDialog from './view-request-release-modal';
+import {useFilePicker} from "use-file-picker";
 
 export interface IViewsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -27,7 +27,12 @@ export const Views = (props: IViewsProps) => {
   const [paginationState, setPaginationState] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
+
   const { viewsList, totalItems, dashboardEntity, account } = props;
+
+  const [openFileSelector, { filesContent, loading }] = useFilePicker({
+    accept: '.json',
+  });
 
   const getAllEntities = () => {
     const dashboardId = props.match.params['id'];
@@ -47,10 +52,20 @@ export const Views = (props: IViewsProps) => {
     }
   };
 
+  const onImportViewClicked = () => {
+    openFileSelector();
+  };
+
   useEffect(() => {
     props.getDashboardEntity(Number(props.match.params['id']));
     sortEntities();
   }, [paginationState.activePage, paginationState.order, paginationState.sort]);
+
+  useEffect(() => {
+    if (filesContent && filesContent[0]) {
+      props.importView(filesContent[0].content, dashboardEntity.id);
+    }
+  }, [filesContent]);
 
   useEffect(() => {
     const page = params.get('page');
@@ -65,6 +80,12 @@ export const Views = (props: IViewsProps) => {
       });
     }
   }, [props.location.search]);
+
+  useEffect(() => {
+    if (props.uploadSucceeded) {
+      window.location.reload();
+    }
+  }, [props.uploadSucceeded]);
 
   const handleChangePage = (event, newPage) => {
     setPaginationState({
@@ -85,7 +106,7 @@ export const Views = (props: IViewsProps) => {
         thumbnail={
           <View height="size-3200">
             <ViewCardThumbnail
-              url={`${props.match.url}/${view.id}/build`}
+              url={`/dashboards/build?dahsbordId=${view.viewDashboard.id}&viewId=${view.id}`}
               thumbnailImagePath={view.imageLocation}
               viewName={view.viewName}
             />
@@ -116,7 +137,13 @@ export const Views = (props: IViewsProps) => {
           ]}
           title={dashboardEntity.dashboardName}
         >
-          {props.account && (
+          {props.account  && (
+            <Button variant="cta" onPress={() => onImportViewClicked()}>
+              <Translate contentKey="views.home.importLabel">_Import View</Translate>
+            </Button>
+          )}
+          {props.account  && (
+
             <Button variant="cta" onPress={() => props.history.push(`${props.match.url}/create`)}>
               <Translate contentKey="views.home.createLabel">Create View</Translate>
             </Button>
@@ -153,11 +180,13 @@ const mapStateToProps = (storeState: IRootState) => ({
   totalItems: storeState.views.totalItems,
   dashboardEntity: storeState.dashboard.entity,
   account: storeState.authentication.account,
+  uploadSucceeded: storeState.views.uploadSucceeded,
 });
 
 const mapDispatchToProps = {
   getDashboardViewEntities,
   getDashboardEntity,
+  importView,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

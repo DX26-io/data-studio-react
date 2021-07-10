@@ -61,9 +61,7 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
 
   const handleOpenOnSuccessDialog = () => {
     setCreateSuccessDialog(false);
-    history.push('/dashboards/' + dashboardId);
-    // TODO
-    // redirect to build page
+    history.push(`/dashboards/build?dahsbordId=${dashboardId}&viewId=${props.viewEntity.id}`);
   };
 
   useEffect(() => {
@@ -151,7 +149,7 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
       </DialogContainer>
       <DialogContainer onDismiss={() => setCreateErrorDialog(false)}>
         {createErrorDialog && (
-          <AlertDialog title={translate('views.error.header')} variant="destructive" primaryActionLabel={ translate('entity.action.cancel')}>
+          <AlertDialog title={translate('views.error.header')} variant="destructive" primaryActionLabel={translate('entity.action.cancel')}>
             {errorMessage}
           </AlertDialog>
         )}

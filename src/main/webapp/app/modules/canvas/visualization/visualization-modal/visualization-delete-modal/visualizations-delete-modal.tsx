@@ -24,7 +24,7 @@ const VisualizationsDeleteModal = (props: IVisualizationsDeleteModalProps) => {
   }, []);
 
   const handleClose = () => {
-    props.history.push('/dashboards/' + props.match.params.id + '/' + props.match.params.viewId + '/build');
+    props.history.push(`/dashboards/build?dahsbordId=${props.match.params.id}&viewId=${props.match.params.viewId}`);
   };
   const deleteConfirmation = () => {
     return visualizationsTitleConfirmation !== visualizationsTitle;

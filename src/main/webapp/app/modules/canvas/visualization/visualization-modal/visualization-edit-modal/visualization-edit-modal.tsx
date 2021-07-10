@@ -26,7 +26,7 @@ const VisualizationEditModal = (props: IVisualizationEditModalProps1) => {
   const viewId = props.match.params.viewId;
 
   const handleClose = () => {
-    history.push('/dashboards/' + props.match.params.id + '/' + props.match.params.viewId + '/build');
+    history.push(`/dashboards/build?dahsbordId=${props.match.params.id}&viewId=${props.match.params.viewId}`);
   };
 
   const handleSave = () => {
