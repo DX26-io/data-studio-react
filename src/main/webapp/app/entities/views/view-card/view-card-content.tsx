@@ -16,10 +16,13 @@ export interface IViewCardContentProps extends StateProps, DispatchProps, RouteC
   description: string;
   viewId: number;
   account: any;
+  dispatchReleaseRequestProps: (viewId: any) => void;
 }
 
 const ViewCardContent = (props: IViewCardContentProps) => {
-  const { viewName, viewId, description, viewDashboard, account } = props;
+
+  const { viewName, viewId, description, viewDashboard, account,dispatchReleaseRequestProps } = props;
+
   const [redirect, setRedirect] = useState<ReactText>('');
 
   const onMenuAction = (key) => {
@@ -42,25 +45,33 @@ const ViewCardContent = (props: IViewCardContentProps) => {
               <ActionButton isQuiet aria-label="more options">
                 <MoreSmallListVert size="S" aria-label="Default Alert" />
               </ActionButton>
-              <Menu onAction={key => onMenuAction(key)}>
+              <Menu onAction={key => {
+                    onMenuAction(key);
+                    if (key === 'release') {
+                    dispatchReleaseRequestProps(viewId);
+                  }
+                  }}
+                >
                 <Section title={<Translate contentKey="entity.options.more_options">More options</Translate>}>
                   <Item key="properties">
                     <Text>
                       <Translate contentKey="entity.options.properties">Properties</Translate>
                     </Text>
                   </Item>
-                  <Item key="release">
-                    <Text>
-                      <Translate contentKey="entity.options.release">Release</Translate>
-                    </Text>
-                  </Item>
+                  {account && hasAuthority(props.account, 'REQUEST-PUBLISH_' + viewId + '_VIEW') && (
+                    <Item key="release">
+                      <Text>
+                        <Translate contentKey="entity.options.release">Release</Translate>
+                      </Text>
+                    </Item>
+                  )}
                   <Item key="export">
                     <Text>
                       <Translate contentKey="entity.options.export">_Export</Translate>
                     </Text>
                   </Item>
                 </Section>
-                {account &&  hasAuthority(props.account, 'DELETE_' + viewId + '_VIEW') && (
+                {account && hasAuthority(props.account, 'DELETE_' + viewId + '_VIEW') && (
                   <Section title={<Translate contentKey="entity.options.danger">Danger</Translate>}>
                     <Item key="delete">
                       <Text>

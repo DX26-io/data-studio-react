@@ -22,6 +22,7 @@ export const ACTION_TYPES = {
   IMPORT_VIEW: 'views/IMPORT_VIEW',
   SET_BLOB: 'views/SET_BLOB',
   RESET: 'views/RESET',
+  REQUEST_RELEASE: 'views/REQUEST_RELEASE',
 };
 
 const initialState = {
@@ -68,6 +69,13 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         updateSuccess: false,
         updating: true,
       };
+    case REQUEST(ACTION_TYPES.REQUEST_RELEASE):
+      return {
+        ...state,
+        errorMessage: null,
+        updateSuccess: false,
+        updating: true,
+      };
     case FAILURE(ACTION_TYPES.FETCH_VIEWS_LIST):
     case FAILURE(ACTION_TYPES.IMPORT_VIEW):
     case FAILURE(ACTION_TYPES.FETCH_VIEWS):
@@ -79,6 +87,13 @@ export default (state: ViewsState = initialState, action): ViewsState => {
       return {
         ...state,
         loading: false,
+        updating: false,
+        updateSuccess: false,
+        errorMessage: action.payload,
+      };
+    case FAILURE(ACTION_TYPES.REQUEST_RELEASE):
+      return {
+        ...state,
         updating: false,
         updateSuccess: false,
         errorMessage: action.payload,
@@ -117,6 +132,12 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         updateSuccess: true,
         entity: {},
       };
+    case SUCCESS(ACTION_TYPES.REQUEST_RELEASE):
+      return {
+        ...state,
+        updating: false,
+        updateSuccess: true,
+      };
     case SUCCESS(ACTION_TYPES.EXPORT_VIEW):
       saveViewToLocalDrive(action, action.payload.data, state.exportViewId);
       return {
@@ -141,7 +162,10 @@ export default (state: ViewsState = initialState, action): ViewsState => {
     }
     case ACTION_TYPES.RESET:
       return {
-        ...initialState,
+        ...state,
+        updateSuccess: false,
+        errorMessage: null,
+        entity: defaultValue,
       };
     case ACTION_TYPES.SET_EXPORT_VIEW:
       return {
@@ -254,6 +278,11 @@ export const getViewsByName = (viewName: string) => {
     payload: axios.get<IViews>(`${apiUrl}?viewName=${viewName}`),
   };
 };
+
+export const requestRelease = (comment, id) => ({
+  type: ACTION_TYPES.REQUEST_RELEASE,
+  payload: axios.put(`${apiUrl}/${id}/requestRelease`, { comment }),
+});
 
 export const importView = (contents: string, dashboardId: number) => {
   const formData = new FormData();

@@ -10,6 +10,7 @@ import PlatformDataMapping from '@spectrum-icons/workflow/PlatformDataMapping';
 import Data from '@spectrum-icons/workflow/Data';
 import FileGear from '@spectrum-icons/workflow/FileGear';
 import DataUser from '@spectrum-icons/workflow/DataUser';
+import AssetsPublished from '@spectrum-icons/workflow/AssetsPublished';
 
 const Admin: React.FC = () => {
   const adminList = [
@@ -60,6 +61,12 @@ const Admin: React.FC = () => {
       link: `/administration/reports-configuration`,
       title: 'reports-management.reportConfiguration.title',
       description: 'reports-management.reportConfiguration.description',
+    },
+    {
+      icon: <AssetsPublished size="L" />,
+      link: `/administration/release-management`,
+      title: 'releases.home.title',
+      description: 'releases.home.description',
     },
   ];
   return (

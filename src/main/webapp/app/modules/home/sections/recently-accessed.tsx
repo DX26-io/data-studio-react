@@ -1,17 +1,20 @@
 import React, { useEffect, useState, ReactText } from 'react';
 import { connect } from 'react-redux';
-import { Item, Content, View, Flex, ProgressBar } from '@adobe/react-spectrum';
+import { Item, Content, View, Flex, ProgressBar, DialogContainer } from '@adobe/react-spectrum';
 import { Tabs } from '@react-spectrum/tabs';
 import { translate } from 'react-jhipster';
 import { getMostPopularViews, getRecentlyAccessedBookmarks, getRecentViews } from './recent.reducer';
 import ViewCardContent from 'app/entities/views/view-card/view-card-content';
 import ViewCardThumbnail from 'app/entities/views/view-card/view-card-thumbnail';
 import Card from 'app/shared/components/card/card';
+import ViewRequestReleaseDialog from 'app/entities/views/view-request-release-modal';
 
 export interface IRecentlyAccessedProps extends StateProps, DispatchProps {}
 
 const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
   const [tabId, setTabId] = useState<ReactText>('1');
+  const [isRequestReleaseDialogOpen, setRequestReleaseDialogOpen] = useState<boolean>(false);
+  const [requestReleaseViewId, setRequestReleaseViewId] = useState();
 
   const tabs = [
     { id: 1, name: 'home.bottom.tabs.accessed.tabs.recentlyAccessedViews' },
@@ -43,6 +46,11 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
     },
   };
 
+  const dispatchReleaseRequestProps = (viewId)=>{
+    setRequestReleaseDialogOpen(true);
+    setRequestReleaseViewId(viewId)
+  }
+
   const recentlyAccessedViewsListElement = props.recentlyAccessedViews.map(recent => {
     return (
       <Card
@@ -63,6 +71,7 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
             viewName={recent.view.viewName}
             viewId={recent.view.id}
             account={props.account}
+            dispatchReleaseRequestProps={dispatchReleaseRequestProps}
           />
         }
       />
@@ -89,6 +98,7 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
             viewName={recent.view.viewName}
             viewId={recent.view.id}
             account={props.account}
+            dispatchReleaseRequestProps={dispatchReleaseRequestProps}
           />
         }
       />
@@ -115,6 +125,7 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
             viewName={view.viewName}
             viewId={view.id}
             account={props.account}
+            dispatchReleaseRequestProps={dispatchReleaseRequestProps}
           />
         }
       />
@@ -122,6 +133,7 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
   });
 
   return (
+    <React.Fragment>
     <Tabs
       aria-label="recent-tabs"
       items={tabs}
@@ -149,6 +161,12 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
         </Item>
       )}
     </Tabs>
+          <DialogContainer onDismiss={() => setRequestReleaseDialogOpen(false)}>
+          {isRequestReleaseDialogOpen && (
+            <ViewRequestReleaseDialog setOpen={setRequestReleaseDialogOpen} viewId={requestReleaseViewId}></ViewRequestReleaseDialog>
+          )}
+        </DialogContainer>
+      </React.Fragment>
   );
 };
 

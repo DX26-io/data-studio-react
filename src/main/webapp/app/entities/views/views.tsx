@@ -7,24 +7,29 @@ import {getDashboardViewEntities, importView} from './views.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import { Button, Flex, View } from '@adobe/react-spectrum';
+import { Button, Flex, View, DialogContainer } from '@adobe/react-spectrum';
 import Card from 'app/shared/components/card/card';
 import ViewCardThumbnail from './view-card/view-card-thumbnail';
 import ViewCardContent from './view-card/view-card-content';
-
 import Pagination from '@material-ui/lab/Pagination';
 import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
+import ViewRequestReleaseDialog from './view-request-release-modal';
 import {useFilePicker} from "use-file-picker";
 
 export interface IViewsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Views = (props: IViewsProps) => {
+  const [isRequestReleaseDialogOpen, setRequestReleaseDialogOpen] = useState<boolean>(false);
+  const [requestReleaseViewId, setRequestReleaseViewId] = useState();
+
   const params = new URLSearchParams(props.location.search);
   const [paginationState, setPaginationState] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
-  const { viewsList, totalItems, dashboardEntity,account } = props;
+
+  const { viewsList, totalItems, dashboardEntity, account } = props;
+
   const [openFileSelector, { filesContent, loading }] = useFilePicker({
     accept: '.json',
   });
@@ -88,6 +93,12 @@ export const Views = (props: IViewsProps) => {
       activePage: newPage,
     });
   };
+
+  const dispatchReleaseRequestProps = (viewId)=>{
+    setRequestReleaseDialogOpen(true);
+    setRequestReleaseViewId(viewId)
+  }
+
   const viewsListElement = props.viewsList.map(view => {
     return (
       <Card
@@ -102,7 +113,14 @@ export const Views = (props: IViewsProps) => {
           </View>
         }
         content={
-          <ViewCardContent account={account} viewDashboard={view.viewDashboard} description={view.description} viewName={view.viewName} viewId={view.id} />
+          <ViewCardContent
+            account={account}
+            viewDashboard={view.viewDashboard}
+            description={view.description}
+            viewName={view.viewName}
+            viewId={view.id}
+            dispatchReleaseRequestProps={dispatchReleaseRequestProps}
+          />
         }
       />
     );
@@ -125,6 +143,7 @@ export const Views = (props: IViewsProps) => {
             </Button>
           )}
           {props.account  && (
+
             <Button variant="cta" onPress={() => props.history.push(`${props.match.url}/create`)}>
               <Translate contentKey="views.home.createLabel">Create View</Translate>
             </Button>
@@ -147,6 +166,9 @@ export const Views = (props: IViewsProps) => {
         ) : (
           <NoItemsFoundPlaceHolder headerTranslationKey="views.home.notFound.heading" contentTranslationKey="views.home.notFound.content" />
         )}
+        <DialogContainer onDismiss={() => setRequestReleaseDialogOpen(false)}>
+          {isRequestReleaseDialogOpen && <ViewRequestReleaseDialog setOpen={setRequestReleaseDialogOpen} viewId={requestReleaseViewId}></ViewRequestReleaseDialog>}
+        </DialogContainer>
       </>
     )
   );

@@ -14,10 +14,11 @@ interface IDashboardCardContentProps {
   dashboardId: number;
   datasource: string;
   account: IAccount;
+  dispatchReleaseRequestProps: (id: any,name:string) => void;
 }
 
 const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
-  const { dashboardName, dashboardType, dashboardDescription, dashboardId, account } = props;
+  const { dashboardName, dashboardType, dashboardDescription, dashboardId, account, dispatchReleaseRequestProps } = props;
   const [redirect, setRedirect] = useState<ReactText>('');
 
   return (
@@ -35,20 +36,29 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
               <ActionButton isQuiet aria-label="more options">
                 <MoreSmallListVert size="S" aria-label="Default Alert" />
               </ActionButton>
-              <Menu onAction={key => setRedirect(key)}>
+              <Menu
+                onAction={key => {
+                  setRedirect(key);
+                  if (key === 'release') {
+                    dispatchReleaseRequestProps(dashboardId,dashboardName);
+                  }
+                }}
+              >
                 <Section title={<Translate contentKey="entity.options.more_options">More options</Translate>}>
                   <Item key="properties">
                     <Text>
                       <Translate contentKey="entity.options.properties">Properties</Translate>
                     </Text>
                   </Item>
+                  {account && hasAuthority(account, 'REQUEST-PUBLISH_' + dashboardId + '_DASHBOARD') && (
                   <Item key="release">
                     <Text>
                       <Translate contentKey="entity.options.release">Release</Translate>
                     </Text>
                   </Item>
+                  )}
                 </Section>
-                {account && hasAuthority(account, 'DELETE_' + dashboardId + '_DASHBOARDS') && (
+                {account && hasAuthority(account, 'DELETE_' + dashboardId + '_DASHBOARD') && (
                   <Section title={<Translate contentKey="entity.options.danger">Danger</Translate>}>
                     <Item key="delete">
                       <Text>

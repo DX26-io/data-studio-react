@@ -9,6 +9,7 @@ import Logo from 'app/shared/components/logo/logo';
 import { Divider, Flex, View } from '@adobe/react-spectrum';
 import CanvasHeader from './canvas-header';
 import { isCanvas } from 'app/shared/util/common-utils';
+import { Link } from 'react-router-dom';
 export interface IHeaderProps {
   isAuthenticated: boolean;
   isAdmin: boolean;
@@ -36,15 +37,24 @@ const Header = (props: IHeaderProps) => {
         <header>
           <Flex justifyContent="space-between" alignSelf="center">
             <Flex justifyContent="center" alignItems="center">
-              <Logo />
+              {/* TODO: will be replaced */}
+              <Link to="/" style={{ color: 'black' }}>
+                <Logo />
+              </Link>
             </Flex>
             <Flex justifyContent="end">
-              {props.isCanvas && <CanvasHeader />}
-              {props.isCanvas && <Divider size={'M'} orientation={'vertical'} />}
-              <Notifications />
-              <DataStudioAvatar />
+              {props.isCanvas && (
+                <React.Fragment>
+                  <CanvasHeader />
+                  {/* <Divider size={'M'} orientation={'vertical'} />{' '} */}
+                </React.Fragment>
+              )}
             </Flex>
           </Flex>
+          <div style={{ position: 'absolute', right: '-10px', top: '12px' }}>
+            {' '}
+            <DataStudioAvatar />
+          </div>
         </header>
       </View>
     </>

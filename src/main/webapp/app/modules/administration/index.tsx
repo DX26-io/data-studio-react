@@ -10,12 +10,14 @@ import Audits from './audits/audits';
 import Docs from './docs/docs';
 import Sources from './sources';
 import ReportConfiguration from "./reports-configuration";
+import ReleaseMangement from "./release-management";
 
 const Routes = ({ match }) => (
   <div>
     <ErrorBoundaryRoute path={`${match.url}/reports-configuration`} component={ReportConfiguration} />
     <ErrorBoundaryRoute path={`${match.url}/user-management`} component={UserManagement} />
     <ErrorBoundaryRoute path={`${match.url}/sources`} component={Sources} />
+    <ErrorBoundaryRoute path={`${match.url}/release-management`} component={ReleaseMangement} />
     <ErrorBoundaryRoute exact path={`${match.url}/health`} component={Health} />
     <ErrorBoundaryRoute exact path={`${match.url}/metrics`} component={Metrics} />
     <ErrorBoundaryRoute exact path={`${match.url}/docs`} component={Docs} />

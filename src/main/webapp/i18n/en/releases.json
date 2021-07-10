@@ -1,0 +1,22 @@
+{
+  "releases": {
+    "home": {
+      "title": "Release Management",
+      "request": "Release Request",
+      "description": "Manage your Releases"
+    },
+    "comment": "Comment",
+    "viewRequestReleaseLabel": "Are you sure you want to request a new release for this view {{param}}",
+    "dashboardRequestReleaseLabel": "Are you sure you want to request a new release for this dashboard <strong>{{param}}</strong>",
+    "selectViewLabel": "<strong>Select which views you want to be released</strong>",
+    "dashboardId": "Dashboard ID",
+    "dashboardName": "Dashboard Name",
+    "requestedBy": "Requested By",
+    "viewInformation": "View Information",
+    "viewInformationTableCell": "View Id - {{viewId}} <br/> View Name - {{viewName}}",
+    "noCommentFound": "Not provided",
+    "approve": "Approve",
+    "disApprove": "disapprove",
+    "error": "You cannot request a release for this dashboard, because the dashboard does not have a view."
+  }
+}
