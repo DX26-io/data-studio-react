@@ -4,13 +4,13 @@ import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
 import InfoOutline from '@spectrum-icons/workflow/InfoOutline';
 import { Translate } from 'react-jhipster';
 import { IDashboard } from 'app/shared/model/dashboard.model';
-import {Redirect, RouteComponentProps} from 'react-router-dom';
+import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { hasAuthority } from 'app/shared/reducers/authentication';
-import {exportView} from "app/entities/views/views.reducer";
-import {connect} from "react-redux";
-import {IRootState} from "app/shared/reducers";
+import { exportView } from 'app/entities/views/views.reducer';
+import { connect } from 'react-redux';
+import { IRootState } from 'app/shared/reducers';
 
-export interface IViewCardContentProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string; viewId: string }> {
+export interface IViewCardContentProps extends DispatchProps {
   viewDashboard: IDashboard;
   viewName: string;
   description: string;
@@ -20,18 +20,17 @@ export interface IViewCardContentProps extends StateProps, DispatchProps, RouteC
 }
 
 const ViewCardContent = (props: IViewCardContentProps) => {
-
-  const { viewName, viewId, description, viewDashboard, account,dispatchReleaseRequestProps } = props;
+  const { viewName, viewId, description, viewDashboard, account, dispatchReleaseRequestProps } = props;
 
   const [redirect, setRedirect] = useState<ReactText>('');
 
-  const onMenuAction = (key) => {
+  const onMenuAction = key => {
     if (key === 'export') {
       props.exportView(viewId);
     } else {
       setRedirect(key);
     }
-  }
+  };
 
   return (
     <>
@@ -45,13 +44,14 @@ const ViewCardContent = (props: IViewCardContentProps) => {
               <ActionButton isQuiet aria-label="more options">
                 <MoreSmallListVert size="S" aria-label="Default Alert" />
               </ActionButton>
-              <Menu onAction={key => {
-                    onMenuAction(key);
-                    if (key === 'release') {
+              <Menu
+                onAction={key => {
+                  onMenuAction(key);
+                  if (key === 'release') {
                     dispatchReleaseRequestProps(viewId);
                   }
-                  }}
-                >
+                }}
+              >
                 <Section title={<Translate contentKey="entity.options.more_options">More options</Translate>}>
                   <Item key="properties">
                     <Text>
@@ -114,11 +114,8 @@ const ViewCardContent = (props: IViewCardContentProps) => {
 
 const mapDispatchToProps = {
   exportView,
-}
+};
 
-const mapStateToProps = (storeState: IRootState) => ({});
-
-type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewCardContent);
+export default connect(null, mapDispatchToProps)(ViewCardContent);
