@@ -120,7 +120,8 @@
       "manage": "Manage",
       "dangerZone": "Danger Zone",
       "savebookmark": "Save as bookmark",
-      "createview": "Create view"
+      "createview": "Create view",
+      "next": "Next"
     },
     "options": {
       "more_options": "More options",
