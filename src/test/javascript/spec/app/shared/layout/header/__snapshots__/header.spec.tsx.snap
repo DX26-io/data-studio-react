@@ -2,18 +2,6 @@
 
 exports[`Header tests should render header component and have HTML header tag 1`] = `
 <Fragment>
-  <div
-    className="ribbon dev"
-  >
-    <a
-      href=""
-    >
-      <Translate
-        component="span"
-        contentKey="global.ribbon.dev"
-      />
-    </a>
-  </div>
   <Connect(LoadingBar)
     className="loading-bar"
   />
@@ -23,21 +11,40 @@ exports[`Header tests should render header component and have HTML header tag 1`
   >
     <header>
       <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
+        alignSelf="center"
         justifyContent="space-between"
       >
         <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
           alignItems="center"
           justifyContent="center"
         >
-          <Logo />
+          <Link
+            style={
+              Object {
+                "color": "black",
+              }
+            }
+            to="/"
+          >
+            <Logo />
+          </Link>
         </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
         <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
-          alignItems="end"
-        >
-          <Notifications />
-          <DataStudioAvatar />
-        </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
+          justifyContent="end"
+        />
       </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
+      <div
+        style={
+          Object {
+            "position": "absolute",
+            "right": "-10px",
+            "top": "12px",
+          }
+        }
+      >
+         
+        <DataStudioAvatar />
+      </div>
     </header>
   </ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)>
 </Fragment>

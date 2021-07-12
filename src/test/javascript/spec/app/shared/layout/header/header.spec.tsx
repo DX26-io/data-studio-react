@@ -14,7 +14,8 @@ describe('Header tests', () => {
     ribbonEnv: 'dev',
     isInProduction: false,
     isSwaggerEnabled: true,
-    isCanvas:false
+    isCanvas:false,
+    isHome:false
   };
   const prodProps = {
     ...devProps,
@@ -40,11 +41,5 @@ describe('Header tests', () => {
     const component = wrapper();
     expect(component).toMatchSnapshot();
     expect(component.find('header').length).toEqual(1);
-  });
-
-  it('should hide the dev ribbon in prod', function () {
-    const component = wrapper(prodProps);
-    const ribbon = component.find('.ribbon.dev');
-    expect(ribbon.length).toEqual(0);
   });
 });
