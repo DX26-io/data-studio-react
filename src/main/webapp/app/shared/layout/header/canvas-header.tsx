@@ -89,7 +89,7 @@ const CanvasHeader = props => {
               classNamePrefix="select"
               isClearable
               isSearchable
-              placeholder={translate('bookmarks.search')}
+              placeholder={translate('featureBookmark.search')}
               value={props.bookmark && props.bookmark.id ? { value: props.bookmark.id, label: props.bookmark.name } : null}
               options={props.bookmarkSelectOptions}
               onChange={selectedOption => {
@@ -142,7 +142,7 @@ const CanvasHeader = props => {
             <ActionButton onPress={() => setIsBookmarkDialogOpen(true)} aria-label="Bookmarks" isQuiet={true} >
               <BookmarkSingle size="M" />
             </ActionButton>
-            <Tooltip>{translate('bookmarks.home.createLabel')}</Tooltip>
+            <Tooltip>{translate('featureBookmark.home.createLabel')}</Tooltip>
           </TooltipTrigger>
           <TooltipTrigger>
             <MenuTrigger>

@@ -10,11 +10,11 @@
       "deleteDashboard": "Delete Dashboard",
       "createNewDashboard": "Create new dashboard"
     },
-    "created": {
+    "createdDailog": {
       "header": "Success",
       "content": "Dashboard is created successfully. Click on open to create a new view."
     },
-    "error": {
+    "errorDailog": {
       "header": "Error",
       "content": "Error saving dashboard"
     },

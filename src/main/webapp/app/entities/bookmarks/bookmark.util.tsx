@@ -12,9 +12,9 @@ const isValidLength = (name: string) => {
 export const isFormValid = (bookmark: IBookmark): IError => {
   let error = defaultValue;
   if (!isValidName(bookmark.name)) {
-    error = { translationKey: 'bookmarks.error.name', isValid: false };
+    error = { translationKey: 'featureBookmark.error.name', isValid: false };
   } else if (isValidLength(bookmark.name)) {
-    error = { translationKey: 'bookmarks.error.length', isValid: false };
+    error = { translationKey: 'featureBookmark.error.length', isValid: false };
   }
   return error;
 };

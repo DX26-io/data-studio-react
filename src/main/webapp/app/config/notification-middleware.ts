@@ -43,6 +43,9 @@ export default ({ dispatch }) => next => action => {
         });
         if (alert) {
           const alertParam = alertParams;
+          if (translate(alert).startsWith('translation-not-found')) {
+            return Promise.resolve(response);
+          }
           toast.success(translate(alert, { param: alertParam }));
         }
       }
