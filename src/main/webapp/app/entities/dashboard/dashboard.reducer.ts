@@ -120,7 +120,7 @@ export default (state: DashboardState = initialState, action): DashboardState =>
         ...state,
         updateSuccess: false,
         errorMessage: null,
-        entity: {},
+        entity: defaultValue,
       };
     case ACTION_TYPES.SET_REQUEST_RELEASE_UPDATE_SUCCESS:
       return {

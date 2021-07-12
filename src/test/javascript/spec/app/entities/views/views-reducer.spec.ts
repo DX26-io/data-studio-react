@@ -91,7 +91,7 @@ describe('Entities reducer tests', () => {
     it('should reset the state', () => {
       expect(
         reducer(
-          { ...initialState, loading: true },
+          { ...initialState, updateSuccess: false, errorMessage: null, entity: defaultValue },
           {
             type: ACTION_TYPES.RESET,
           }
