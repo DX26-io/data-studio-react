@@ -1,5 +1,6 @@
 import { getVisualizationData, ValidateFields } from '../visualization/util/visualization-render-utils';
 import { IViews } from 'app/shared/model/views.model';
+import { hideLoader } from 'app/shared/websocket/websocket.reducer';
 
 export const ACTION_TYPES = {
   TOGGLE_FILTER_PANEL: 'filter/TOGGLE_FILTER_PANEL',
@@ -66,8 +67,7 @@ const renderVisualizationById = (item, view, filters) => {
   if (ValidateFields(item.fields)) {
     getVisualizationData(item, view, filters);
   } else {
-    // @khushbu needs to make it generic
-    // props.hideLoader(item.id);
+    hideLoader();
   }
 };
 

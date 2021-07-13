@@ -12,7 +12,6 @@ import { Translate } from 'react-jhipster';
 import { applyFilter, clearFilter } from './filter.reducer';
 
 export interface IFilterPanelProp extends StateProps, DispatchProps {
-  hideLoader?: (id) => void;
 }
 
 const FilterPanel = (props: IFilterPanelProp) => {
