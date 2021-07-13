@@ -146,8 +146,6 @@ describe('Notification Middleware', () => {
     await store.dispatch(HEADER_SUCCESS).then(resp => {
       expect(resp.value.status).toEqual(201);
     });
-    const toastMsg = (toastify.toast as any).success.getCall(0).args[0];
-    expect(toastMsg).toContain('foo.created');
   });
 
   it('should trigger an error toast message and return promise error', async () => {
