@@ -33,12 +33,12 @@ import CanvasFilterHeader from 'app/shared/layout/header/canvas-filter-header';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import FeaturesPanel from 'app/modules/canvas/features/features-panel';
-import { receiveSocketResponse } from 'app/shared/websocket/websocket.reducer';
+import { receiveSocketResponse, hideLoader } from 'app/shared/websocket/websocket.reducer';
 import { VisualMetadataContainerGetOne } from './util/visualmetadata-container.util';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
-import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
+import { applyFilter ,saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 
 const ReactGridLayout = WidthProvider(RGL);
@@ -53,26 +53,8 @@ export interface VisualizationProp extends StateProps, DispatchProps, RouteCompo
 
 const Canvas = (props: VisualizationProp) => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
-  const [visualmetadataList, setvisualmetadata] = useState<IVisualMetadataSet[]>();
-  const [filters, setFilters] = useState<string[]>();
   const [isLoaderDisplay, setIsLoaderDisplay] = useState<IIllustrate[]>([]);
   const params = new URLSearchParams(props.location.search);
-
-  useEffect(() => {
-    if (props.selectedFilter) {
-      const filterList = Object.keys(props.selectedFilter);
-      setFilters(filterList);
-    }
-  }, [props.selectedFilter]);
-
-  const hideLoader = id => {
-    isLoaderDisplay.map(item => {
-      if (item.visualizationId === id) {
-        item.loaderVisibility = false;
-      }
-    });
-    setIsLoaderDisplay([...isLoaderDisplay]);
-  };
 
   const onLayoutChange = _visualmetaList => {
     props.visualmetadata.visualMetadataSet.map((item, i) => {
@@ -94,15 +76,15 @@ const Canvas = (props: VisualizationProp) => {
       v.height = newItem.h;
       v.w = newItem.w;
       v.width = newItem.w;
-      renderVisualization(v, v.data);
+      renderVisualization(v, v.data,null,null);
     }
   };
 
   const renderVisualizationById = item => {
     if (ValidateFields(item.fields)) {
-      getVisualizationData(item, props.view, props.filters);
+      getVisualizationData(item, props.view, props.selectedFilters);
     } else {
-      hideLoader(item.id);
+      props.hideLoader();
     }
   };
 
@@ -144,12 +126,12 @@ const Canvas = (props: VisualizationProp) => {
       const v = VisualMetadataContainerGetOne(props.visualData.headers.queryId);
       if (v && props.visualData?.body.length > 0) {
         v.data = props.visualData?.body;
-        hideLoader(v.id);
+        props.hideLoader();
         hideDataNotFound(v.id);
-        renderVisualization(v, props.visualData?.body);
+        renderVisualization(v, props.visualData?.body,"widget",props);
       } else {
         showDataNotFound(v.id);
-        hideLoader(v.id);
+        props.hideLoader();
       }
     }
   }, [props.visualData]);
@@ -170,14 +152,12 @@ const Canvas = (props: VisualizationProp) => {
       props.visualmetadata.visualMetadataSet.map(item => {
         (item.x = item.xPosition), (item.y = item.yPosition), (item.h = item.height), (item.w = item.width);
       });
-      setvisualmetadata([...props.visualmetadata.visualMetadataSet]);
       if (params.get('bookmarkId')) {
         const bookmarkId = params.get('bookmarkId');
         props.getAppliedBookmark(bookmarkId);
         props.getFeatureCriteria(Number(bookmarkId));
         props.saveRecentBookmark(bookmarkId, params.get('viewId'));
-      }
-      else{
+      } else {
         props.applyFilter({}, props.visualmetadata, props.view);
       }
     }
@@ -193,38 +173,20 @@ const Canvas = (props: VisualizationProp) => {
   }, [props.isSocketConnected]);
 
   useEffect(() => {
-    if (props.isCreated) {
-      props.metadataContainerAdd(props.visualmetadataEntity);
-      setvisualmetadata([...props.visualMetadataContainerList]);
-      if (props.visualmetadataEntity.id) {
-        renderVisualizationById(props.visualmetadataEntity.id);
-      }
-    }
-  }, [props.isCreated]);
-
-  useEffect(() => {
     if (props.updateSuccess) {
-      setvisualmetadata([...props.visualMetadataContainerList]);
       renderVisualizationById(props.visualmetadataEntity);
     }
   }, [props.updateSuccess]);
 
   useEffect(() => {
-    if (props.deleteSuccess) {
-      setvisualmetadata([...props.visualMetadataContainerList]);
-    }
-  }, [props.deleteSuccess]);
-
-  useEffect(() => {
     if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
-      setvisualmetadata([...props.visualMetadataContainerList]);
       renderVisualizationById(props.visualmetadataEntity);
     }
   }, [props.visualMetadataContainerList]);
 
   useEffect(() => {
     if (props.isSearchOpen) {
-       props.history.push(`/dashboards/${props.view.viewDashboard.id}/${props.view.id}/search`);
+      props.history.push(`/dashboards/${props.view.viewDashboard.id}/${props.view.id}/search`);
     }
   }, [props.isSearchOpen]);
 
@@ -237,8 +199,8 @@ const Canvas = (props: VisualizationProp) => {
   };
 
   const generateWidge =
-    visualmetadataList &&
-    visualmetadataList.map((v, i) => {
+    props.visualMetadataContainerList &&
+    props.visualMetadataContainerList.map((v, i) => {
       return (
         <div
           className="item widget"
@@ -261,7 +223,7 @@ const Canvas = (props: VisualizationProp) => {
               visual={v}
               handleVisualizationClick={handleVisualizationClick}
               view={props.view}
-              totalItem={visualmetadataList?.length || 0}
+              totalItem={props.visualMetadataContainerList?.length || 0}
               filterData={props.filterData}
               isEditMode={props.isEditMode}
               {...props}
@@ -286,10 +248,10 @@ const Canvas = (props: VisualizationProp) => {
 
   return (
     <>
-      {props.isSocketConnected && <FilterPanel hideLoader={hideLoader} />}
+      {props.isSocketConnected && <FilterPanel />}
       {props.isSocketConnected && <FeaturesPanel />}
       <View>
-        <CanvasFilterHeader hideLoader={hideLoader} />
+        <CanvasFilterHeader />
       </View>
       <View>
         {props.isLoaderOn && (
@@ -297,12 +259,12 @@ const Canvas = (props: VisualizationProp) => {
             <Loader />
           </div>
         )}
-        {visualmetadataList && visualmetadataList.length > 0 && (
+        {props.visualMetadataContainerList && props.visualMetadataContainerList.length > 0 && (
           <ReactGridLayout
             className="layout"
             rowHeight={120}
             cols={3}
-            layout={visualmetadataList}
+            layout={props.visualMetadataContainerList}
             margin={[15, 15]}
             verticalCompact={true}
             onLayoutChange={onLayoutChange}
@@ -340,8 +302,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isLoaderOn: storeState.visualizationData.isLoaderOn,
   visualMetadataContainerList: storeState.visualmetadata.visualMetadataContainerList,
   isSearchOpen: storeState.search.isSearchOpen,
-  selectedFilter: storeState.visualmetadata.selectedFilter,
-  filters: storeState.filter.selectedFilters,
+  selectedFilters: storeState.filter.selectedFilters,
   isFilterOpen: storeState.filter.isFilterOpen,
 });
 
@@ -363,6 +324,8 @@ const mapDispatchToProps = {
   saveRecentBookmark,
   applyFilter,
   applyBookmark,
+  hideLoader,
+  saveSelectedFilter
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

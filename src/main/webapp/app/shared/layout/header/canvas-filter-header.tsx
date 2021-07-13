@@ -11,7 +11,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
 import Close from '@spectrum-icons/workflow/Close';
 export interface ICanvasFilterHeaderProps extends StateProps, DispatchProps {
-  hideLoader?: (id) => void;
 }
 
 const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {

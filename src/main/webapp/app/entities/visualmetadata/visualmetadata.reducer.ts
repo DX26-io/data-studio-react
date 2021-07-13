@@ -12,6 +12,8 @@ import {
   visualMetadataContainerRemove,
   visualMetadataContainerUpdate,
 } from 'app/modules/canvas/visualization/util/visualmetadata-container.util';
+import { getVisualizationData, ValidateFields } from 'app/modules/canvas/visualization/util/visualization-render-utils';
+import { ICrudPutActionVisual } from './visualmetadata-util';
 
 export const ACTION_TYPES = {
   FETCH_VISUALMETADATA_LIST: 'visualmetadata/FETCH_VISUALMETADATA_LIST',
@@ -124,6 +126,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         newCreated: true,
         errorMessage: action.payload,
         entity: action.payload.data,
+        visualMetadataContainerList: visualMetadataContainerAdd(action.payload.data),
       };
     case SUCCESS(ACTION_TYPES.UPDATE_VISUALMETADATA):
       return {
@@ -131,6 +134,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         updating: false,
         updateSuccess: true,
         entity: action.payload.data,
+        visualMetadataContainerList: visualMetadataContainerUpdate(action.payload.data.id, action.payload.data, 'id'),
       };
     case SUCCESS(ACTION_TYPES.DELETE_VISUALMETADATA):
       return {
@@ -139,6 +143,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         deleteSuccess: true,
         newCreated: false,
         entity: {},
+        visualMetadataContainerList: visualMetadataContainerRemove(action.payload.headers['x-flairbiapp-params']),
       };
     case SUCCESS(ACTION_TYPES.VALIDATE_QUERY):
       return {
@@ -188,6 +193,12 @@ const apiUrl = 'api/visualmetadata';
 
 // Actions
 
+export const renderVisualizationById = (visual, view, filter) => {
+  if (ValidateFields(visual.fields)) {
+    getVisualizationData(visual, view, filter);
+  }
+};
+
 export const getEntities: ICrudGetAllAction<IVisualMetadata> = (page, size, sort) => ({
   type: ACTION_TYPES.FETCH_VISUALMETADATA_LIST,
   payload: axios.get<IVisualMetadata>(`${apiUrl}?cacheBuster=${new Date().getTime()}`),
@@ -206,7 +217,6 @@ export const createEntity: ICrudPutAction<IVisualMetaDataDTO> = entity => async 
     type: ACTION_TYPES.CREATE_VISUALMETADATA,
     payload: axios.post(apiUrl, cleanEntity(entity)),
   });
-  // dispatch(getEntities());
   return result;
 };
 
@@ -219,7 +229,7 @@ export const validate: ICrudPutAction<IValidateDTO> = entity => async dispatch =
   return result;
 };
 
-export const updateEntity: ICrudPutAction<IVisualMetaDataDTO> = entity => async dispatch => {
+export const updateEntity: ICrudPutActionVisual<IVisualMetaDataDTO> = (entity, view, filter) => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_VISUALMETADATA,
     payload: axios.put(apiUrl, cleanEntity(entity)),
