@@ -10,17 +10,20 @@
       "deleteDashboard": "Delete Dashboard",
       "createNewDashboard": "Create new dashboard"
     },
-    "created": {
+    "createdDailog": {
       "header": "Success",
       "content": "Dashboard is created successfully. Click on open to create a new view."
     },
-    "error": {
+    "errorDailog": {
       "header": "Error",
       "content": "Error saving dashboard"
     },
     "delete": {
       "question": "This will permanently delete the selected <strong>{{ name }}</strong> dashboard. If you wish to continue type <em>{{ name }}</em> and click on delete."
     },
+    "created": "A new dashboard is created with identifier {{ param }}",
+    "updated": "A dashboard is updated with identifier {{ param }}",
+    "deleted": "A dashboard is deleted with identifier {{ param }}",
     "search": "Search Dashboard...",
     "select": "Select Dashboard",
     "dashboard_name": "Dashboard name",

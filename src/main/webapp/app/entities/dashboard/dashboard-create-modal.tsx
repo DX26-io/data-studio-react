@@ -163,21 +163,21 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
       <DialogContainer onDismiss={() => setCreateSuccessDialog(false)}>
         {createSuccessDialog && (
           <AlertDialog
-            title={translate('dashboard.created.header')}
+            title={translate('dashboard.createdDailog.header')}
             onPrimaryAction={handleOpenOnSuccessDialog}
             onCancel={handleCloseOnSuccessDialog}
             variant="confirmation"
             cancelLabel={translate('entity.action.cancel')}
             primaryActionLabel={translate('entity.action.open')}
           >
-            <Translate contentKey="dashboard.created.content">Created dashboard successfully</Translate>
+            <Translate contentKey="dashboard.createdDailog.content">Created dashboard successfully</Translate>
           </AlertDialog>
         )}
       </DialogContainer>
       <DialogContainer onDismiss={() => setCreateErrorDialog(false)}>
         {createErrorDialog && (
           <AlertDialog
-            title={translate('dashboard.error.header')}
+            title={translate('dashboard.errorDailog.header')}
             variant="destructive"
             primaryActionLabel={translate('entity.action.cancel')}
           >

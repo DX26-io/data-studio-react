@@ -49,7 +49,7 @@ export const BookmarkUpdate = (props: IBookmarkUpdateProps) => {
     <Dialog data-testid="bookmark-form-dialog">
       <Heading>
         <Flex alignItems="center" gap="size-100" data-testid="bookmark-form-heading">
-          <Translate contentKey="bookmarks.home.createLabel">Create Bookmark</Translate>
+          <Translate contentKey="featureBookmark.home.createLabel">Create Bookmark</Translate>
         </Flex>
       </Heading>
       <Header data-testid="bookmark-form-action">
@@ -66,7 +66,7 @@ export const BookmarkUpdate = (props: IBookmarkUpdateProps) => {
       <Content>
         <Form data-testid="bookmark-form">
           <TextField
-            label={translate('bookmarks.name')}
+            label={translate('featureBookmark.name')}
             type="text"
             value={bookmark.name ? bookmark.name : ''}
             onChange={event => {
