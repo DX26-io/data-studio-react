@@ -7,7 +7,6 @@ import Minimize from '@spectrum-icons/workflow/Minimize';
 import Search from '@spectrum-icons/workflow/Search';
 import Maximize from '@spectrum-icons/workflow/Maximize';
 import FilterElement from 'app/modules/canvas/filter/filter-element';
-import { getViewFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { Translate } from 'react-jhipster';
 import { applyFilter, clearFilter } from './filter.reducer';
 
@@ -21,9 +20,6 @@ const FilterPanel = (props: IFilterPanelProp) => {
   const removeFilter = () => {
     props.clearFilter({}, props.visualmetadata, props.view);
   };
-  useEffect(() => {
-    props.getfeatureEntities(props.view.id);
-  }, [props.view]);
 
   useEffect(() => {
     setFilterPanelClose(props.isFilterOpen);
@@ -110,7 +106,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   selectedFilter: storeState.filter.selectedFilters
 });
 const mapDispatchToProps = {
-  getfeatureEntities,
   applyFilter,
   clearFilter
 };

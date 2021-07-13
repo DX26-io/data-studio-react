@@ -14,7 +14,6 @@ import {
   setEditAction,
   metadataContainerUpdate,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 import { renderVisualization, ValidateFields } from '../../util/visualization-render-utils';
 import { VisualWrap } from '../../util/visualmetadata-wrapper';
@@ -56,7 +55,6 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
   useEffect(() => {
     if (visualizationId) {
       props.getVisualmetadataEntity(visualizationId);
-      props.getViewFeaturesEntities(viewId);
       props.getViewEntity(viewId);
     }
   }, []);
@@ -158,7 +156,6 @@ const mapDispatchToProps = {
   setVisual,
   setEditAction,
   getVisualmetadataEntity,
-  getViewFeaturesEntities,
   getViewEntity,
   updateVisualmetadataEntity,
   metadataContainerUpdate,
