@@ -99,7 +99,7 @@ const CanvasHeader = props => {
                   props.getFeatureCriteria(selectedOption.value.toString());
                   props.saveRecentBookmark(_bookmark.id,props.view.id);
                   url.searchParams.set("bookmarkId",selectedOption.value.toString());
-                  window.history.pushState({}, '', url);
+                  window.history.pushState({}, '', url.href);
                 } else {
                   props.applyFilter({}, props.visualmetadata, props.view);
                   props.applyBookmark(null);
