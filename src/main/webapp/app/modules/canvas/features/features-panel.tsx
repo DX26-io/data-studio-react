@@ -60,24 +60,6 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
     setHierarchyDialogOpen(true);
   };
 
-  // const redirectToFeature = () => {
-  //   return (
-  //     <Redirect
-  //       to={{
-  //         pathname: `/dashboards/${props.view.viewDashboard.id}/${props.view.id}/feature`,
-  //         state: {
-  //           featureType: featureTypeToActiveTabs[activeTabId],
-  //           datasource: props.view.viewDashboard.dashboardDatasource,
-  //         },
-  //       }}
-  //     />
-  //   );
-  // };
-
-  // if (setFeatureDialogOpen) {
-  //   return redirectToFeature();
-  // }
-
   return (
     <>
       <div className={props.isFeaturesPanelOpen ? 'FeaturesPanel-Main FeaturesPanel-show' : 'FeaturesPanel-Main FeaturesPanel-hide'}>

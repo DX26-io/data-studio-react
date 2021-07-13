@@ -13,7 +13,6 @@ import {
   setVisual,
   metadataContainerUpdate,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { getViewFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 export interface IVisualizationEditModalProps1
   extends StateProps,
@@ -40,7 +39,6 @@ const VisualizationEditModal = (props: IVisualizationEditModalProps1) => {
   useEffect(() => {
     if (visualizationId) {
       props.getVisualmetadataEntity(visualizationId);
-      props.getfeatureEntities(parseInt(viewId, 10));
       props.getViewEntity(viewId);
     }
   }, []);
@@ -98,7 +96,6 @@ const mapDispatchToProps = {
   metadataContainerUpdate,
   setVisual,
   getVisualmetadataEntity,
-  getfeatureEntities,
   getViewEntity,
   updateVisualmetadataEntity,
 };

@@ -7,7 +7,6 @@ import './canvas.scss';
 import 'flair-visualizations/styles/stylesheets/screen.css';
 import { getEntity as getViewEntity, getCurrentViewState, saveViewState } from 'app/entities/views/views.reducer';
 import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
-import { getEntities as getfeatureEntities, getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
   createEntity as addVisualmetadataEntity,
@@ -349,11 +348,9 @@ const mapDispatchToProps = {
   getViewEntity,
   getCurrentViewState,
   getVisualizationsEntities,
-  getfeatureEntities,
   addVisualmetadataEntity,
   deleteVisualmetadataEntity,
   saveViewState,
-  getViewFeaturesEntities,
   getVisualmetadataEntity,
   updateVisualmetadataEntity,
   receiveSocketResponse,

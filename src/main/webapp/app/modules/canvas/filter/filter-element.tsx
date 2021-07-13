@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { ActionButton, Flex, View, Text, Button, Divider } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
-import { getViewFeaturesEntities as getfeatureEntities } from 'app/entities/feature/feature.reducer';
 import { IFeature } from 'app/shared/model/feature.model';
 import AsyncSelect from 'react-select/async';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
@@ -212,7 +211,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   filterList: storeState.visualizationData.filterData,
 });
 const mapDispatchToProps = {
-  getfeatureEntities,
   saveSelectedFilter,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;

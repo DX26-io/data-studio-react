@@ -28,9 +28,7 @@ import {
   updateEntity as updateVisualmetadataEntity,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getEntity as getFeatureEntity } from 'app/entities/feature/feature.reducer';
-import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
-import { renderVisualization, ValidateFields } from 'app/modules/canvas/visualization/util/visualization-render-utils';
 import { getQueryDTO } from './search.util';
 
 export interface ISearchModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string; viewId: string }> {}
@@ -176,7 +174,6 @@ const mapDispatchToProps = {
   doSearch,
   setVisual,
   getVisualmetadataEntity,
-  getViewFeaturesEntities,
   getViewEntity,
   getFeatureEntity,
 };
