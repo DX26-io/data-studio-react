@@ -121,7 +121,8 @@
       "dangerZone": "Danger Zone",
       "savebookmark": "Save as bookmark",
       "createview": "Create view",
-      "next": "Next"
+      "next": "Next",
+      "finish": "Finish"
     },
     "options": {
       "more_options": "More options",
