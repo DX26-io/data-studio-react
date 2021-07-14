@@ -5,8 +5,8 @@
     position: absolute;
     margin: 15px;
     box-shadow: 3px 3px 3px 3px #a8a8a8;
-    overflow-y: hidden;
-    height: calc(100% - 95px);
+    // overflow-y: hidden;
+    height: calc(100% - 79px);
     background-color: var(
       --spectrum-alias-background-color-default,
       var(--spectrum-global-color-default, var(--spectrum-semantic-default-color-background))
