@@ -15,6 +15,7 @@ import { getHierarchies, setHierarchy } from 'app/entities/hierarchy/hierarchy.r
 import HierarchyUpdate from 'app/entities/hierarchy/hierarchy-update';
 import FeatureUpdate from 'app/entities/feature/feature-update';
 import { IFeature, defaultValue as featureDefaultValue } from 'app/shared/model/feature.model';
+import PanelHeader from 'app/shared/components/panel-header';
 
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
@@ -64,35 +65,16 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
     <>
       <div className={props.isFeaturesPanelOpen ? 'FeaturesPanel-Main FeaturesPanel-show' : 'FeaturesPanel-Main FeaturesPanel-hide'}>
         <div className={isFeaturesMinimize ? 'FeaturesPanel FeaturesPanel-minimize' : 'FeaturesPanel FeaturesPanel-maximize'}>
-          <Flex direction="row" justifyContent="center" alignItems="center" marginStart="size-175" marginEnd="size-175">
-            <span className="spectrum-Heading--sizeXXS" style={{ marginRight: 'auto' }}>
-              <Translate contentKey="features.panel.title">_Features</Translate>
-            </span>
-            <ActionButton isQuiet onPress={create}>
-              <Add size="S" />
-            </ActionButton>
-            <div style={{ marginRight: '-11px' }}>
-              {isFeaturesMinimize ? (
-                <ActionButton
-                  onPress={() => {
-                    setFeaturesMinimize(!isFeaturesMinimize);
-                  }}
-                  isQuiet={true}
-                >
-                  <Maximize></Maximize>
-                </ActionButton>
-              ) : (
-                <ActionButton
-                  onPress={() => {
-                    setFeaturesMinimize(!isFeaturesMinimize);
-                  }}
-                  isQuiet={true}
-                >
-                  <Minimize></Minimize>
-                </ActionButton>
-              )}
-            </div>
-          </Flex>
+          <PanelHeader
+            setMinimize={setFeaturesMinimize}
+            isMinimized={isFeaturesMinimize}
+            titleKey='features.panel.title'
+            addIcon={
+              <ActionButton isQuiet onPress={create}>
+                <Add size="S" />
+              </ActionButton>
+            }
+          />
           <Divider size={'S'} />
           <View backgroundColor="gray-75" width="91%" margin="0px auto">
             <Tabs

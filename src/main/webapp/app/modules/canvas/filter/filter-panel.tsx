@@ -9,6 +9,7 @@ import Maximize from '@spectrum-icons/workflow/Maximize';
 import FilterElement from 'app/modules/canvas/filter/filter-element';
 import { Translate } from 'react-jhipster';
 import { applyFilter, clearFilter } from './filter.reducer';
+import PanelHeader from 'app/shared/components/panel-header';
 
 export interface IFilterPanelProp extends StateProps, DispatchProps {}
 
@@ -28,36 +29,9 @@ const FilterPanel = (props: IFilterPanelProp) => {
     <>
       <div className={!isFilterPanelClose ? 'FilterPanel-Main FilterPanel-hide' : 'FilterPanel-Main FilterPanel-show'}>
         <div className={isFilterMinimize ? 'FilterPanel FilterPanel-minimize' : 'FilterPanel FilterPanel-maximize'}>
-          <Flex direction="column" gap="size-100">
-            <View justifySelf="center">
-              <div className="filter-header">
-                <Text>
-                  <h6 className="spectrum-Heading spectrum-Heading--sizeXXS spectrum-Heading--seri">
-                    <Translate contentKey="entity.action.filter">Filter</Translate>
-                  </h6>
-                </Text>
-                {isFilterMinimize ? (
-                  <ActionButton
-                    onPress={() => {
-                      setFilterMinimize(!isFilterMinimize);
-                    }}
-                    isQuiet={true}
-                  >
-                    <Maximize></Maximize>
-                  </ActionButton>
-                ) : (
-                  <ActionButton
-                    onPress={() => {
-                      setFilterMinimize(!isFilterMinimize);
-                    }}
-                    isQuiet={true}
-                  >
-                    <Minimize></Minimize>
-                  </ActionButton>
-                )}
-              </div>
-              <Divider size={'S'} />
-            </View>
+          <PanelHeader setMinimize={setFilterMinimize} isMinimized={isFilterMinimize} titleKey="entity.action.filter" />
+          <Flex direction="column" gap="size-100" justifySelf="center">
+            <Divider size={'S'} />
             <View>
               <div className="filter-body">
                 {props.featuresList &&
@@ -77,10 +51,9 @@ const FilterPanel = (props: IFilterPanelProp) => {
                   variant="cta"
                 >
                   <Text>
-                    {' '}
                     <Translate contentKey="entity.action.filter">Filter</Translate>
-                  </Text>{' '}
-                  <Search/>
+                  </Text>
+                  <Search />
                 </Button>
                 <Button
                   onPress={() => {
@@ -89,7 +62,10 @@ const FilterPanel = (props: IFilterPanelProp) => {
                   marginX={9}
                   variant="primary"
                 >
-                  <Text> <Translate contentKey="entity.action.clear">Clear</Translate></Text>
+                  <Text>
+                    {' '}
+                    <Translate contentKey="entity.action.clear">Clear</Translate>
+                  </Text>
                 </Button>
               </Flex>
             </View>

@@ -12,6 +12,8 @@ import { saveSelectedFilter } from './filter.reducer';
 import { saveDynamicDateRangeMetaData } from './filter-util';
 import Select from 'react-select';
 import { IQueryDTO } from 'app/shared/model/query-dto.model';
+import PinOn from '@spectrum-icons/workflow/PinOn';
+import Pinoff from '@spectrum-icons/workflow/PinOff';
 
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
@@ -173,13 +175,13 @@ const FilterElement = (props: IFilterElementProp) => {
     <>
       <div className="filter-element">
         <View padding={5} margin={5} borderWidth="thin" borderColor="default" backgroundColor="gray-75" borderRadius="regular">
-          <View>{props.feature.name}</View>
+          <span className="spectrum-Body-emphasis--sizeXXS">{props.feature.name}</span>
           {checkIsDateType(props.feature) ? (
             <View>
               <DateRangeComponent onDateChange={onDateChange} />
             </View>
           ) : (
-            <View>
+            <View marginTop="size-125">
               <Select
                 isMulti
                 value={defaultValues}
