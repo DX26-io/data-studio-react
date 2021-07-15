@@ -122,7 +122,9 @@
       "savebookmark": "Save as bookmark",
       "createview": "Create view",
       "next": "Next",
-      "finish": "Finish"
+      "finish": "Finish",
+      "filter": "Filter",
+      "clear": "Clear"
     },
     "options": {
       "more_options": "More options",
@@ -132,8 +134,7 @@
       "export": "Export",
       "import": "Import",
       "delete": "Delete",
-      "no_description": "no description",
-      "filter": "Filter"
+      "no_description": "no description"
     },
     "detail": {
       "field": "Field",

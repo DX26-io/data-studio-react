@@ -10,8 +10,7 @@ import FilterElement from 'app/modules/canvas/filter/filter-element';
 import { Translate } from 'react-jhipster';
 import { applyFilter, clearFilter } from './filter.reducer';
 
-export interface IFilterPanelProp extends StateProps, DispatchProps {
-}
+export interface IFilterPanelProp extends StateProps, DispatchProps {}
 
 const FilterPanel = (props: IFilterPanelProp) => {
   const [isFilterMinimize, setFilterMinimize] = useState(true);
@@ -34,10 +33,9 @@ const FilterPanel = (props: IFilterPanelProp) => {
               <div className="filter-header">
                 <Text>
                   <h6 className="spectrum-Heading spectrum-Heading--sizeXXS spectrum-Heading--seri">
-                    <Translate contentKey="entity.options.filter">Filter</Translate>
+                    <Translate contentKey="entity.action.filter">Filter</Translate>
                   </h6>
                 </Text>
-
                 {isFilterMinimize ? (
                   <ActionButton
                     onPress={() => {
@@ -70,26 +68,30 @@ const FilterPanel = (props: IFilterPanelProp) => {
                     }
                   })}
               </div>
-            </View>
-            <View>
-              <Button
-                onPress={() => {
-                  props.applyFilter(props.selectedFilter, props.visualmetadata, props.view);
-                }}
-                marginX={5}
-                variant="cta"
-              >
-                <Text>Filter</Text> <Search></Search>
-              </Button>
-              <Button
-                onPress={() => {
-                  removeFilter();
-                }}
-                marginX={5}
-                variant="primary"
-              >
-                <Text>Clear</Text>
-              </Button>
+              <Flex direction="row" justifyContent="end" marginTop="size-125" marginBottom="size-125">
+                <Button
+                  onPress={() => {
+                    props.applyFilter(props.selectedFilter, props.visualmetadata, props.view);
+                  }}
+                  marginX={5}
+                  variant="cta"
+                >
+                  <Text>
+                    {' '}
+                    <Translate contentKey="entity.action.filter">Filter</Translate>
+                  </Text>{' '}
+                  <Search/>
+                </Button>
+                <Button
+                  onPress={() => {
+                    removeFilter();
+                  }}
+                  marginX={9}
+                  variant="primary"
+                >
+                  <Text> <Translate contentKey="entity.action.clear">Clear</Translate></Text>
+                </Button>
+              </Flex>
             </View>
           </Flex>
         </div>
@@ -103,11 +105,11 @@ const mapStateToProps = (storeState: IRootState) => ({
   isFilterOpen: storeState.filter.isFilterOpen,
   featuresList: storeState.feature.entities,
   visualmetadata: storeState.views.viewState,
-  selectedFilter: storeState.filter.selectedFilters
+  selectedFilter: storeState.filter.selectedFilters,
 });
 const mapDispatchToProps = {
   applyFilter,
-  clearFilter
+  clearFilter,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
