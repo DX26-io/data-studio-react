@@ -28,7 +28,7 @@ setupAxiosInterceptors(() => actions.clearAuthentication('login.error.unauthoriz
 
 async function init() {
   // loadIcons();
-  await loadConfig();
+  //await loadConfig();
 
   const rootEl = document.getElementById('root');
 

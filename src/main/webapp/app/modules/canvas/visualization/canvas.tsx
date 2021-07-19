@@ -75,7 +75,7 @@ const Canvas = (props: VisualizationProp) => {
       v.height = newItem.h;
       v.w = newItem.w;
       v.width = newItem.w;
-      renderVisualization(v, v.data, null, props);
+      renderVisualization(v, v.data,  "widget", props);
     }
   };
 
