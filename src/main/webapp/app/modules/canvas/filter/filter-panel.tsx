@@ -3,9 +3,7 @@ import { connect } from 'react-redux';
 import { ActionButton, Flex, View, Text, Button, Divider } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import './filter-panel.scss';
-import Minimize from '@spectrum-icons/workflow/Minimize';
 import Search from '@spectrum-icons/workflow/Search';
-import Maximize from '@spectrum-icons/workflow/Maximize';
 import FilterElement from 'app/modules/canvas/filter/filter-element';
 import { Translate } from 'react-jhipster';
 import { applyFilter, clearFilter } from './filter.reducer';
@@ -30,8 +28,8 @@ const FilterPanel = (props: IFilterPanelProp) => {
       <div className={!isFilterPanelClose ? 'FilterPanel-Main FilterPanel-hide' : 'FilterPanel-Main FilterPanel-show'}>
         <div className={isFilterMinimize ? 'FilterPanel FilterPanel-minimize' : 'FilterPanel FilterPanel-maximize'}>
           <PanelHeader setMinimize={setFilterMinimize} isMinimized={isFilterMinimize} titleKey="entity.action.filter" />
+          <Divider size={'S'} />
           <Flex direction="column" gap="size-100" justifySelf="center">
-            <Divider size={'S'} />
             <View>
               <div className="filter-body">
                 {props.featuresList &&

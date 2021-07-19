@@ -6,6 +6,11 @@ import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util'
 import { ICrudGetViewFeaturesAction } from './feature-util';
 import { IFeature, defaultValue } from 'app/shared/model/feature.model';
 
+const addPinnedFeature = (features, feature) => {
+  const _features = features.push(feature);
+  return _features;
+};
+
 export const ACTION_TYPES = {
   FETCH_FEATURE_LIST: 'feature/FETCH_FEATURE_LIST',
   FETCH_FEATURE: 'feature/FETCH_FEATURE',
@@ -14,6 +19,9 @@ export const ACTION_TYPES = {
   DELETE_FEATURE: 'feature/DELETE_FEATURE',
   RESET: 'feature/RESET',
   SET_FEATURE: 'feature/SET_FEATURE',
+  PIN_FEATURE: 'feature/PIN_FEATURE',
+  SET_PINNED_FEATURES: 'feature/SET_PINNED_FEATURES',
+  ADD_PINNED_FEATURE: 'feature/ADD_PINNED_FEATURE',
 };
 
 const initialState = {
@@ -24,6 +32,7 @@ const initialState = {
   updating: false,
   updateSuccess: false,
   feature: (null as unknown) as IFeature,
+  pinnedFeatures: [] as Array<IFeature>,
 };
 
 export type FeatureState = Readonly<typeof initialState>;
@@ -55,6 +64,13 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         updateSuccess: false,
         updating: true,
       };
+    case REQUEST(ACTION_TYPES.PIN_FEATURE):
+      return {
+        ...state,
+        errorMessage: null,
+        updateSuccess: false,
+        updating: true,
+      };
     case FAILURE(ACTION_TYPES.FETCH_FEATURE_LIST):
     case FAILURE(ACTION_TYPES.FETCH_FEATURE):
       return {
@@ -80,11 +96,19 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         updateSuccess: false,
         errorMessage: action.payload,
       };
+    case FAILURE(ACTION_TYPES.PIN_FEATURE):
+      return {
+        ...state,
+        errorMessage: action.payload,
+        updateSuccess: false,
+        updating: false,
+      };
     case SUCCESS(ACTION_TYPES.FETCH_FEATURE_LIST):
       return {
         ...state,
         loading: false,
         entities: action.payload.data,
+        pinnedFeatures: action.payload.data.filter(feature => feature.pin === true),
       };
     case SUCCESS(ACTION_TYPES.FETCH_FEATURE):
       return {
@@ -113,7 +137,12 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         updateSuccess: true,
         feature: defaultValue,
       };
-
+    case SUCCESS(ACTION_TYPES.PIN_FEATURE):
+      return {
+        ...state,
+        updateSuccess: true,
+        updating: false,
+      };
     case ACTION_TYPES.RESET:
       return {
         ...state,
@@ -125,6 +154,16 @@ export default (state: FeatureState = initialState, action): FeatureState => {
       return {
         ...state,
         feature: action.payload,
+      };
+    case ACTION_TYPES.SET_PINNED_FEATURES:
+      return {
+        ...state,
+        pinnedFeatures: action.payload,
+      };
+    case ACTION_TYPES.ADD_PINNED_FEATURE:
+      return {
+        ...state,
+        pinnedFeatures: addPinnedFeature(state.pinnedFeatures, action.payload),
       };
     default:
       return state;
@@ -175,4 +214,14 @@ export const reset = () => ({
 export const setFeature = (feature: IFeature) => ({
   type: ACTION_TYPES.SET_FEATURE,
   payload: feature,
+});
+
+export const pinFeature = (id, pin) => ({
+  type: ACTION_TYPES.PIN_FEATURE,
+  payload: axios.put(`${apiUrl}/pinFilter/?id=${id}&pin=${pin}`),
+});
+
+export const setPinnedFeatures = (features: Array<IFeature>) => ({
+  type: ACTION_TYPES.SET_PINNED_FEATURES,
+  payload: features,
 });
