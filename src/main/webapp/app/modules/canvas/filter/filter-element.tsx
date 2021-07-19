@@ -9,11 +9,12 @@ import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from '../data-constraints/utils/date-util';
 import { checkIsDateType } from '../visualization/util/visualization-utils';
 import { saveSelectedFilter } from './filter.reducer';
-import { saveDynamicDateRangeMetaData } from './filter-util';
+import { saveDynamicDateRangeMetaData, getPin } from './filter-util';
 import Select from 'react-select';
 import { IQueryDTO } from 'app/shared/model/query-dto.model';
 import PinOn from '@spectrum-icons/workflow/PinOn';
-import Pinoff from '@spectrum-icons/workflow/PinOff';
+import PinOff from '@spectrum-icons/workflow/PinOff';
+import { pinFeature } from 'app/entities/feature/feature.reducer';
 
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
@@ -22,6 +23,7 @@ export interface IFilterElementProp extends StateProps, DispatchProps {
 const FilterElement = (props: IFilterElementProp) => {
   const [defaultValues, setdefaultValues] = useState<string[]>();
   const [isLoading, setIsLoading] = useState(false);
+  const [isPinOn, setIsPinOn] = useState(getPin(props.feature.pin));
 
   const updateDefaultValues = data => {
     const filterValues = [];
@@ -171,34 +173,50 @@ const FilterElement = (props: IFilterElementProp) => {
       }
     }
   };
+
+  const togglePin = feature => {
+    setIsPinOn(!isPinOn);
+    props.pinFeature(feature.id, !isPinOn);
+  };
+
   return (
     <>
       <div className="filter-element">
         <View padding={5} margin={5} borderWidth="thin" borderColor="default" backgroundColor="gray-75" borderRadius="regular">
           <span className="spectrum-Body-emphasis--sizeXXS">{props.feature.name}</span>
-          {checkIsDateType(props.feature) ? (
-            <View>
-              <DateRangeComponent onDateChange={onDateChange} />
-            </View>
-          ) : (
-            <View marginTop="size-125">
-              <Select
-                isMulti
-                value={defaultValues}
-                searchable={true}
-                onBlurResetsInput={false}
-                onCloseResetsInput={false}
-                onFocus={onFocus}
-                closeMenuOnSelect={false}
-                classNamePrefix="select"
-                onChange={handleChange}
-                isLoading={isLoading}
-                placeholder={`Search ${props.feature.name}`}
-                onInputChange={handleInputChange}
-                options={props.filterData[props.feature.name]}
-              />
-            </View>
-          )}
+          <Flex direction="row" alignItems="center" gap="size-50">
+            {checkIsDateType(props.feature) ? (
+              <View minWidth="size-3400">
+                <DateRangeComponent onDateChange={onDateChange} />
+              </View>
+            ) : (
+              <View marginTop="size-125" minWidth="size-3400">
+                <Select
+                  isMulti
+                  value={defaultValues}
+                  searchable={true}
+                  onBlurResetsInput={false}
+                  onCloseResetsInput={false}
+                  onFocus={onFocus}
+                  closeMenuOnSelect={false}
+                  classNamePrefix="select"
+                  onChange={handleChange}
+                  isLoading={isLoading}
+                  placeholder={`Search ${props.feature.name}`}
+                  onInputChange={handleInputChange}
+                  options={props.filterData[props.feature.name]}
+                />
+              </View>
+            )}
+            <ActionButton
+              isQuiet
+              onPress={() => {
+                togglePin(props.feature);
+              }}
+            >
+              {isPinOn ? <PinOn size="S" /> : <PinOff size="S" />}
+            </ActionButton>
+          </Flex>
         </View>
       </div>
     </>
@@ -214,6 +232,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 const mapDispatchToProps = {
   saveSelectedFilter,
+  pinFeature,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

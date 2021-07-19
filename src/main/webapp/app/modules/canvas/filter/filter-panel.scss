@@ -5,14 +5,13 @@
     position: absolute;
     margin: 15px;
     box-shadow: 3px 3px 3px 3px #a8a8a8;
-    // overflow-y: hidden;
     height: calc(100% - 79px);
     background-color: var(
       --spectrum-alias-background-color-default,
       var(--spectrum-global-color-default, var(--spectrum-semantic-default-color-background))
     );
     .filter-body {
-      max-height: calc(100vh - 180px);
+      max-height: calc(100vh - 186px);
       overflow: auto;
     }
     .filter-header {

@@ -290,3 +290,7 @@ export const addFilterFromBookmark = (bookmark: IBookmark) => {
 const buildDateRange = (dimensionName, daterange) => {
   return { dimensionName, startDate: daterange[0], endDate: daterange[1] };
 };
+
+export const getPin = pin => {
+  return pin === null || pin === false ? false : true;
+};
