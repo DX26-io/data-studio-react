@@ -1,6 +1,6 @@
 import './header.scss';
 import React, { useEffect, useState } from 'react';
-import { ActionButton, View, Flex } from '@adobe/react-spectrum';
+import { ActionButton, View, Flex, Text } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { createEntity as addVisualmetadataEntity, toggleEditMode } from 'app/entities/visualmetadata/visualmetadata.reducer';
@@ -64,12 +64,17 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
                         <DropdownMenu>
                           {props.selectedFilter[item].map(value => {
                             return (
+                              <div className="filterText">
                               <DropdownItem key={value}>
-                                {value}
-                                <ActionButton onPress={() => removeFromFilter(item, value, i)} isQuiet aria-label="Icon only">
-                                  <Close size={'XS'} />
-                                </ActionButton>
+                                <Text>{value}</Text>
+                                
+                                  <ActionButton onPress={() => removeFromFilter(item, value, i)} isQuiet aria-label="Icon only">
+                                    <Close size={'XS'} />
+                                  </ActionButton>
+                                
+
                               </DropdownItem>
+                              </div>
                             );
                           })}
                         </DropdownMenu>

@@ -1,7 +1,7 @@
 import './header.scss';
 import React, { useState, useEffect, ReactText } from 'react';
 import { Flex, ActionButton, View, DialogContainer, TooltipTrigger, Tooltip, MenuTrigger, Menu, Item, Picker } from '@adobe/react-spectrum';
-import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
+import MoreCircle from '@spectrum-icons/workflow/MoreCircle';
 import SaveAsFloppy from '@spectrum-icons/workflow/SaveAsFloppy';
 import Asset from '@spectrum-icons/workflow/Asset';
 import BookmarkSingle from '@spectrum-icons/workflow/BookmarkSingle';
@@ -22,20 +22,75 @@ import Filter from '@spectrum-icons/workflow/Filter';
 import { translate } from 'react-jhipster';
 import { toggleSearch } from 'app/entities/search/search.reducer';
 import BookmarkUpdate from 'app/entities/bookmarks/bookmark-update';
-import { getBookmarks,applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
+import { getBookmarks, applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import VisualizationShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/visualization-share-modal';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { addFilterFromBookmark } from 'app/modules/canvas/filter/filter-util';
 import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
 import Select from 'react-select';
 import { generateBookmarksOptions } from 'app/entities/bookmarks/bookmark.util';
-import {saveRecentBookmark  } from "app/modules/home/sections/recent.reducer";
+import { saveRecentBookmark } from "app/modules/home/sections/recent.reducer";
+import HeaderIcon from 'app/shared/components/header-icon/header-icon';
+import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
   const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
-  const [dialog, setDialog] = useState<ReactText>();
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const url = new URL(window.location.toString());
+
+  const adminList = [
+    {
+      icon: <CollectionEdit size="M" />,
+      title: translate('views.menu.edit'),
+      onPress: props.toggleEditMode,
+      className: props.isEditMode ? 'enableEdit' : 'disableEdit',
+      data: true
+    },
+    {
+      icon: <GraphBarVerticalAdd size="M" />,
+      title: translate('views.menu.addVisualization'),
+      onPress: setVisualizationsModelOpen,
+      data: true
+    },
+    {
+      icon: <SaveAsFloppy size="M" />,
+      title: translate('views.menu.save'),
+      onPress: props.saveViewState,
+      data: {
+        visualMetadataSet: props.visualmetadata.visualMetadataSet,
+        _id: props.view.id,
+      }
+    },
+    {
+      icon: <Asset size="M" />,
+      title: translate('views.menu.toggleFeatures'),
+      onPress: props.toggleFeaturesPanel,
+    },
+    {
+      icon: <BookmarkSingle size="M" />,
+      title: translate('featureBookmark.home.createLabel'),
+      onPress: setIsBookmarkDialogOpen,
+      data: true
+    },
+   
+    {
+      icon: <Search size="M" />,
+      title: translate('views.menu.search'),
+      onPress: props.toggleSearch,
+    },
+    {
+      icon: <Filter size="M" />,
+      title: translate('views.menu.filter'),
+      onPress: props.toggleFilterPanel
+    },
+    {
+      icon: <ShareAndroid size="M" />,
+      title: translate('views.menu.share'),
+      onPress: setIsShareDialogOpen,
+      data: true
+    }
+  ];
 
   useEffect(() => {
     if (props.view.id) {
@@ -50,28 +105,7 @@ const CanvasHeader = props => {
     });
     setVisualizationsModelOpen(false);
   };
-  const handleToggleEditMode = () => {
-    props.toggleEditMode();
-  };
-  const handleToggleFilterPanel = () => {
-    props.toggleFilterPanel();
-  };
-
-  const saveAllVisualizations = () => {
-    props.saveViewState({
-      visualMetadataSet: props.visualmetadata.visualMetadataSet,
-      _id: props.view.id,
-    });
-  };
-
-  const toggleFeatures = () => {
-    props.toggleFeaturesPanel();
-  };
-
-  const toggleSearchModal = () => {
-    props.toggleSearch();
-  };
-
+  
   useEffect(() => {
     if (props.fetchedFeatureCriteria) {
       const filters = addFilterFromBookmark({ ...props.bookmark, featureCriteria: props.featureCriteria });
@@ -81,9 +115,11 @@ const CanvasHeader = props => {
 
   return (
     <>
+
       <View marginEnd="size-600">
+
         <Flex gap="size-50" wrap="nowrap">
-          <div style={{ minWidth: '305px',paddingRight:'10px'}}>
+          <div style={{ minWidth: '305px', paddingRight: '10px' }}>
             <Select
               className="basic-single"
               classNamePrefix="select"
@@ -97,8 +133,8 @@ const CanvasHeader = props => {
                   const _bookmark = props.bookmarks.filter(b => b.id === selectedOption.value)[0];
                   props.applyBookmark(_bookmark);
                   props.getFeatureCriteria(selectedOption.value.toString());
-                  props.saveRecentBookmark(_bookmark.id,props.view.id);
-                  url.searchParams.set("bookmarkId",selectedOption.value.toString());
+                  props.saveRecentBookmark(_bookmark.id, props.view.id);
+                  url.searchParams.set("bookmarkId", selectedOption.value.toString());
                   window.history.pushState({}, '', url.href);
                 } else {
                   props.applyFilter({}, props.visualmetadata, props.view);
@@ -106,75 +142,26 @@ const CanvasHeader = props => {
                 }
               }}
             />
+
           </div>
-          <TooltipTrigger>
-            <ActionButton onPress={() => handleToggleEditMode()} aria-label="enable edit" isQuiet={true} >
-              <div className={props.isEditMode ? 'enableEdit' : 'disableEdit'}>
-                <CollectionEdit color="informative" size="M" />
-              </div>
-            </ActionButton>
-            <Tooltip>Edit</Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <ActionButton
-              onPress={() => setVisualizationsModelOpen(true)}
-              aria-label="GraphBarVerticalAdd"
-              isQuiet={true}
-              isDisabled={!props.isEditMode}
-            >
-              <GraphBarVerticalAdd size="M" />
-            </ActionButton>
-            <Tooltip>Add Visualization</Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <ActionButton onPress={() => saveAllVisualizations()} aria-label="Save" isQuiet={true} >
-              <SaveAsFloppy size="M" />
-            </ActionButton>
-            <Tooltip>Save</Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <ActionButton onPress={() => toggleFeatures()} aria-label="Features" isQuiet={true} isDisabled={!props.isEditMode}>
-              <Asset size="M" />
-            </ActionButton>
-            <Tooltip>Toggle features</Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <ActionButton onPress={() => setIsBookmarkDialogOpen(true)} aria-label="Bookmarks" isQuiet={true} >
-              <BookmarkSingle size="M" />
-            </ActionButton>
-            <Tooltip>{translate('featureBookmark.home.createLabel')}</Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <MenuTrigger>
-              <ActionButton aria-label="Bookmarks" isQuiet={true} >
-                <MoreSmallListVert size="M" />
-              </ActionButton>
-              <Menu onAction={key => setDialog(key)}>
-                <Item key="Bookmarks">Bookmarks</Item>
-                <Item key="Share">Share</Item>
-                <Item key="Print">Print</Item>
-              </Menu>
-            </MenuTrigger>
-            <Tooltip>More</Tooltip>
-          </TooltipTrigger>
-          <DialogContainer onDismiss={() => setDialog(null)}>{dialog === 'Share' && <VisualizationShareModal />}</DialogContainer>
-          <TooltipTrigger>
-            <ActionButton
-              onPress={() => toggleSearchModal()}
-              aria-label="{translate('views.menu.search')}"
-              isQuiet={true}
-            >
-              <Search size="M" />
-            </ActionButton>
-            <Tooltip>{translate('views.menu.toggle.search')}</Tooltip>
-          </TooltipTrigger>
-          <TooltipTrigger>
-            <ActionButton onPress={() => handleToggleFilterPanel()} isQuiet={true} >
-              <Filter size="M" />
-            </ActionButton>
-            <Tooltip>Filter</Tooltip>
-          </TooltipTrigger>
+
+          <Flex wrap>
+            {adminList && adminList.length > 0 && adminList.map(card => (
+              <HeaderIcon
+                key={card.title}
+                icon={card.icon}
+                title={card.title}
+                className={card.className}
+                onPress={card.onPress}
+                data={card.data}
+              />
+            ))}
+          </Flex>
+
         </Flex>
+        <DialogContainer onDismiss={() => setIsShareDialogOpen(false)}>
+          {isShareDialogOpen && <VisualizationShareModal />}
+        </DialogContainer>
         <DialogContainer type="fullscreen" onDismiss={() => setVisualizationsModelOpen(false)} {...props}>
           {isVisualizationsModelOpen && (
             <VisualizationsList
@@ -190,6 +177,7 @@ const CanvasHeader = props => {
           {isBookmarkDialogOpen && <BookmarkUpdate setOpen={setIsBookmarkDialogOpen} />}
         </DialogContainer>
       </View>
+
     </>
   );
 };
