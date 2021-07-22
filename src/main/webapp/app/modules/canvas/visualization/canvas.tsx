@@ -39,6 +39,7 @@ import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
 import { applyFilter ,saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
+import PinnedCanvasFilters from "./pinned-canvas-filters/pinned-canvas-filters";
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -258,6 +259,7 @@ const Canvas = (props: VisualizationProp) => {
             <Loader />
           </div>
         )}
+        <PinnedCanvasFilters />
         {props.visualMetadataContainerList && props.visualMetadataContainerList.length > 0 && (
           <ReactGridLayout
             className="layout"
