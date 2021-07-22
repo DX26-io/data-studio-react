@@ -4,12 +4,12 @@ import { ActionButton, Flex, View, Text, Button, Divider } from '@adobe/react-sp
 import { IRootState } from 'app/shared/reducers';
 import { IFeature } from 'app/shared/model/feature.model';
 import AsyncSelect from 'react-select/async';
-import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
+import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from '../data-constraints/utils/date-util';
 import { checkIsDateType } from '../visualization/util/visualization-utils';
 import { saveSelectedFilter } from './filter.reducer';
-import { saveDynamicDateRangeMetaData, getPin } from './filter-util';
+import { saveDynamicDateRangeMetaData, getPin, load,generateFilterOptions } from './filter-util';
 import Select from 'react-select';
 import { IQueryDTO } from 'app/shared/model/query-dto.model';
 import PinOn from '@spectrum-icons/workflow/PinOn';
@@ -22,7 +22,6 @@ export interface IFilterElementProp extends StateProps, DispatchProps {
 
 const FilterElement = (props: IFilterElementProp) => {
   const [defaultValues, setdefaultValues] = useState<string[]>();
-  const [isLoading, setIsLoading] = useState(false);
   const [isPinOn, setIsPinOn] = useState(getPin(props.feature.pin));
 
   const updateDefaultValues = data => {
@@ -42,59 +41,20 @@ const FilterElement = (props: IFilterElementProp) => {
       updateDefaultValues(props.selectedFilters[props.feature.name]);
     } else {
       setdefaultValues([]);
+      // props.setFilterLoader(false);
     }
   }, [props.selectedFilters]);
 
-  useEffect(() => {
-    if (props.filterList) {
-      const retVal = props.filterList?.body?.map(function (item) {
-        return {
-          value: item[props.feature.name],
-          label: item[props.feature.name],
-        };
-      });
-      props.filterData[props.feature.name] = retVal;
-      setIsLoading(false);
-    }
-  }, [props.filterList]);
-
-  const load = (q, dimension) => {
-    const query: IQueryDTO = {
-      fields: [{ name: dimension }],
-      distinct: true,
-      limit: 100,
-    };
-    const vId = props.view?.id;
-    if (q) {
-      query.conditionExpressions = [
-        {
-          sourceType: 'FILTER',
-          conditionExpression: {
-            '@type': 'Like',
-            featureName: dimension,
-            caseInsensitive: true,
-            value: q,
-          },
-        },
-      ];
-    }
-    forwardCall(
-      props.view?.viewDashboard?.dashboardDatasource.id,
-      {
-        queryDTO: query,
-        vId,
-        type: 'filters',
-      },
-      vId
-    );
-  };
   const handleInputChange = (newValue: string) => {
-    load(newValue, props.feature.name);
+    // props.setFilterLoader(true);
+    props.setFilterData(null);
+    load(newValue, props.feature.name, props.view?.id, props.view?.viewDashboard?.dashboardDatasource.id);
   };
 
   const onFocus = () => {
-    setIsLoading(true);
-    load(null, props.feature.name);
+    // props.setFilterLoader(true);
+    props.setFilterData(null);
+    load(null, props.feature.name, props.view?.id, props.view?.viewDashboard?.dashboardDatasource.id);
   };
 
   const addValueInFilter = value => {
@@ -201,10 +161,10 @@ const FilterElement = (props: IFilterElementProp) => {
                   closeMenuOnSelect={false}
                   classNamePrefix="select"
                   onChange={handleChange}
-                  isLoading={isLoading}
+                  // isLoading={props.isFilterLoaderOn}
                   placeholder={`Search ${props.feature.name}`}
                   onInputChange={handleInputChange}
-                  options={props.filterData[props.feature.name]}
+                  options={props.filterSelectOptions}
                 />
               </View>
             )}
@@ -225,14 +185,15 @@ const FilterElement = (props: IFilterElementProp) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
-  filterData: storeState.visualmetadata.filterData,
+  filterSelectOptions: generateFilterOptions(storeState.visualizationData.filterData),
   featuresList: storeState.feature.entities,
   selectedFilters: storeState.filter.selectedFilters,
-  filterList: storeState.visualizationData.filterData,
 });
 const mapDispatchToProps = {
   saveSelectedFilter,
   pinFeature,
+  setFilterData
+  // setFilterLoader
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
