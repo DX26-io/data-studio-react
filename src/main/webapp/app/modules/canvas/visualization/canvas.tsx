@@ -259,7 +259,6 @@ const Canvas = (props: VisualizationProp) => {
             <Loader />
           </div>
         )}
-        <PinnedCanvasFilters />
         {props.visualMetadataContainerList && props.visualMetadataContainerList.length > 0 && (
           <ReactGridLayout
             className="layout"
