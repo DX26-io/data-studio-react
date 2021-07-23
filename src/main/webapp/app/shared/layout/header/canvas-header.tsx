@@ -23,7 +23,7 @@ import { translate } from 'react-jhipster';
 import { toggleSearch } from 'app/entities/search/search.reducer';
 import BookmarkUpdate from 'app/entities/bookmarks/bookmark-update';
 import { getBookmarks,applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
-import VisualizationShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/visualization-share-modal';
+import CanvasShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/canvas-share-modal';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { addFilterFromBookmark } from 'app/modules/canvas/filter/filter-util';
 import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
@@ -157,7 +157,7 @@ const CanvasHeader = props => {
             </MenuTrigger>
             <Tooltip>More</Tooltip>
           </TooltipTrigger>
-          <DialogContainer onDismiss={() => setDialog(null)}>{dialog === 'Share' && <VisualizationShareModal />}</DialogContainer>
+          <DialogContainer onDismiss={() => setDialog(null)}>{dialog === 'Share' && <CanvasShareModal />}</DialogContainer>
           <TooltipTrigger>
             <ActionButton
               onPress={() => toggleSearchModal()}

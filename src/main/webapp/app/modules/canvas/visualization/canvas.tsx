@@ -37,8 +37,9 @@ import { VisualMetadataContainerGetOne } from './util/visualmetadata-container.u
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
-import { applyFilter ,saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
+import { applyFilter, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
+import { VisualizationType } from 'app/shared/util/visualization.constants';
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -48,7 +49,7 @@ export interface IIllustrate {
   noDataFoundVisibility: boolean;
 }
 
-export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
+export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
 
 const Canvas = (props: VisualizationProp) => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
@@ -75,7 +76,7 @@ const Canvas = (props: VisualizationProp) => {
       v.height = newItem.h;
       v.w = newItem.w;
       v.width = newItem.w;
-      renderVisualization(v, v.data,null,null);
+      renderVisualization(v, v.data, null, null);
     }
   };
 
@@ -127,7 +128,7 @@ const Canvas = (props: VisualizationProp) => {
         v.data = props.visualData?.body;
         props.hideLoader();
         hideDataNotFound(v.id);
-        renderVisualization(v, props.visualData?.body,"widget",props);
+        renderVisualization(v, props.visualData?.body, "widget", props);
       } else {
         showDataNotFound(v.id);
         props.hideLoader();
@@ -239,7 +240,13 @@ const Canvas = (props: VisualizationProp) => {
                 </div>
               )}
             </div>
-            <div id={`visualization-${v.id}`} className="visualization"></div>
+            <div id={`visualization-${v.id}`} className="visualization">
+              {
+                v.metadataVisual.name === VisualizationType.Iframe && (
+                  <iframe id={`iframe-${v.id}`} />
+                )
+              }
+            </div>
           </div>
         </div>
       );
@@ -329,3 +336,4 @@ type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Canvas);
+

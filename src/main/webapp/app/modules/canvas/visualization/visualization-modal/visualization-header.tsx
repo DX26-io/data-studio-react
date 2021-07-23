@@ -23,6 +23,7 @@ import { CSVLink } from 'react-csv';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { getTransactionData } from '../util/visualization-utils';
+import { VisualizationShareModal } from './visualization-share-modal/visualization-share-modal';
 
 interface IVisualizationHeaderProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
@@ -118,7 +119,7 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
       viz.fields = props.visual.fields;
       handleVisualizationClick(viz);
     } else if (dialog === 'Export') {
-      getTransactionData(props.visual.data,csvLink,setTransactionData);
+      getTransactionData(props.visual.data, csvLink, setTransactionData);
     }
   }, [dialog]);
   return (
@@ -245,6 +246,10 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                 ></VisualizationEditModal>
               )}
               {dialog === 'Data' && <VisualizationDataModal visual={props.visual} />}
+            </DialogContainer>
+
+            <DialogContainer onDismiss={() => setDialog(null)}>
+              {dialog === 'Share' && <VisualizationShareModal view={props.view} visual={props.visual} />}
             </DialogContainer>
           </Flex>
         </Flex>
