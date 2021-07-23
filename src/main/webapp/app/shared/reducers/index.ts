@@ -56,6 +56,7 @@ import search, { SearchState } from 'app/entities/search/search.reducer';
 import featureCriteria, { FeatureCriteriaState } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import hierarchies, { HierarchyState } from 'app/entities/hierarchy/hierarchy.reducer';
 import releases, { ReleasesState } from 'app/modules/administration/release-management/releases.reducer';
+import shareVisualization, { ShareVisualizationState } from 'app/entities/share/share-visualization.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -96,6 +97,7 @@ export interface IRootState {
   readonly featureCriteria: FeatureCriteriaState;
   readonly hierarchies: HierarchyState;
   readonly releases: ReleasesState;
+  readonly shareVisualization: ShareVisualizationState;
 }
 
 const rootReducer = combineReducers<IRootState>({
@@ -136,6 +138,7 @@ const rootReducer = combineReducers<IRootState>({
   featureCriteria,
   hierarchies,
   releases,
+  shareVisualization,
 });
 
 export default rootReducer;

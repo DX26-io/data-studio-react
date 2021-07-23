@@ -6,18 +6,25 @@ import './filter-panel.scss';
 import Search from '@spectrum-icons/workflow/Search';
 import FilterElement from 'app/modules/canvas/filter/filter-element';
 import { Translate } from 'react-jhipster';
-import { applyFilter, clearFilter } from './filter.reducer';
+import { applyFilter, applyFilterForShareLink, clearFilter, clearFilterForShareLink } from './filter.reducer';
 import PanelHeader from 'app/shared/components/panel-header';
+import { IFeature } from 'app/shared/model/feature.model';
+import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
+import { RouteComponentProps } from 'react-router-dom';
 
-export interface IFilterPanelProp extends StateProps, DispatchProps {}
+export interface IFilterPanelProp extends StateProps, DispatchProps, RouteComponentProps { }
 
 const FilterPanel = (props: IFilterPanelProp) => {
   const [isFilterMinimize, setFilterMinimize] = useState(true);
   const [isFilterPanelClose, setFilterPanelClose] = useState(props.isFilterOpen);
+  const params = new URLSearchParams(props.location.search);
+  const visualizationId = params.get('visualizationId');
 
-  const removeFilter = () => {
-    props.clearFilter({}, props.visualmetadata, props.view);
-  };
+  useEffect(() => {
+    if (props.view.id) {
+      props.getViewFeaturesEntities(props.view.id);
+    }
+  }, [props.view]);
 
   useEffect(() => {
     setFilterPanelClose(props.isFilterOpen);
@@ -43,7 +50,12 @@ const FilterPanel = (props: IFilterPanelProp) => {
               <Flex direction="row" justifyContent="end" marginTop="size-125" marginBottom="size-125">
                 <Button
                   onPress={() => {
-                    props.applyFilter(props.selectedFilter, props.visualmetadata, props.view);
+                    if (!visualizationId) {
+                      props.applyFilter(props.selectedFilter, props.visualmetadata, props.view);
+                    } else {
+                      props.applyFilterForShareLink(props.selectedFilter, props.visualmetadataEntity, props.view);
+                    }
+
                   }}
                   marginX={5}
                   variant="cta"
@@ -55,7 +67,11 @@ const FilterPanel = (props: IFilterPanelProp) => {
                 </Button>
                 <Button
                   onPress={() => {
-                    removeFilter();
+                    if (!visualizationId) {
+                      props.clearFilter({}, props.visualmetadata, props.view);
+                    } else {
+                      props.clearFilterForShareLink({}, props.visualmetadataEntity, props.view);
+                    }
                   }}
                   marginX={9}
                   variant="primary"
@@ -80,10 +96,15 @@ const mapStateToProps = (storeState: IRootState) => ({
   featuresList: storeState.feature.entities,
   visualmetadata: storeState.views.viewState,
   selectedFilter: storeState.filter.selectedFilters,
+  visualmetadataEntity: storeState.visualmetadata.entity,
+
 });
 const mapDispatchToProps = {
   applyFilter,
   clearFilter,
+  getViewFeaturesEntities,
+  applyFilterForShareLink,
+  clearFilterForShareLink
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

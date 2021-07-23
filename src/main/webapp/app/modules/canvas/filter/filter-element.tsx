@@ -66,7 +66,7 @@ const FilterElement = (props: IFilterElementProp) => {
       dataType: props.feature.type,
       valueType: 'valueType',
     };
-    updateDefaultValues(props.selectedFilters[props.feature.name]);
+    //updateDefaultValues(props.selectedFilters[props.feature.name]);
     props.saveSelectedFilter(props.selectedFilters);
   };
 
@@ -80,11 +80,11 @@ const FilterElement = (props: IFilterElementProp) => {
         array.splice(index, 1);
         filterParameters[props.feature.name] = array;
         if (filterParameters[props.feature.name].length === 0) delete filterParameters[props.feature.name];
-        updateDefaultValues(filterParameters[props.feature.name]);
+       // updateDefaultValues(filterParameters[props.feature.name]);
         return filterParameters;
       }
     }
-    updateDefaultValues(filterParameters[props.feature.name]);
+   // updateDefaultValues(filterParameters[props.feature.name]);
     return filterParameters;
   }
 

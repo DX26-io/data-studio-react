@@ -19,10 +19,11 @@ import ErrorBoundary from 'app/shared/error/error-boundary';
 import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
 import { isCanvas } from './shared/util/common-utils';
+import  ShareVisualizationHeader  from 'app/entities/share/share-visualization-header';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
 
-export interface IAppProps extends StateProps, DispatchProps {}
+export interface IAppProps extends StateProps, DispatchProps { }
 
 // TODO: Test Cases
 export const App = (props: IAppProps) => {
@@ -43,7 +44,8 @@ export const App = (props: IAppProps) => {
       >
         <View gridArea="header">
           <ErrorBoundary>
-            {props.isHome ? (
+
+            {!props.isShare ? (props.isHome ? (
               <HomeHeader />
             ) : (
               <Header
@@ -57,7 +59,11 @@ export const App = (props: IAppProps) => {
                 isCanvas={props.isCanvas}
                 isHome={props.isHome}
               />
-            )}
+            )) :
+
+              <ShareVisualizationHeader />
+
+            }
           </ErrorBoundary>
         </View>
         <View gridArea="content" flex={true} alignSelf={'stretch'} backgroundColor="default">
@@ -65,7 +71,7 @@ export const App = (props: IAppProps) => {
             <AppRoutes />
           </ErrorBoundary>
         </View>
-        <View gridArea="footer" backgroundColor="default">
+        <View gridArea="footer" position="fixed" bottom={0} backgroundColor="default">
           <Footer />
         </View>
       </Grid>
@@ -87,7 +93,7 @@ export const App = (props: IAppProps) => {
   );
 };
 
-const mapStateToProps = ({ authentication, applicationProfile, locale, home }: IRootState) => ({
+const mapStateToProps = ({ authentication, applicationProfile, locale, home, shareVisualization }: IRootState) => ({
   currentLocale: locale.currentLocale,
   isAuthenticated: authentication.isAuthenticated,
   redirectTo: authentication.redirectTo,
@@ -97,6 +103,7 @@ const mapStateToProps = ({ authentication, applicationProfile, locale, home }: I
   isSwaggerEnabled: applicationProfile.isSwaggerEnabled,
   isCanvas: isCanvas(),
   isHome: home.isHome,
+  isShare: shareVisualization.isShare
 });
 
 const mapDispatchToProps = { setLocale, getSessionWithPath, getProfile };
