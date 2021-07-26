@@ -71,7 +71,7 @@ const ShareVisualization = (props: IShareVisualizationProps) => {
     useEffect(() => {
         if (props.visualDataById) {
             if (props.visualDataById?.data.length > 0) {
-                renderVisualization(props.visualmetadataEntity, props.visualDataById?.data, 'visualization-edit', props);
+                renderVisualization(props.visualmetadataEntity, props.visualDataById?.data, 'visualization-edit');
             }
         }
     }, [props.visualDataById]);
@@ -80,30 +80,6 @@ const ShareVisualization = (props: IShareVisualizationProps) => {
         <>
             <FilterPanel {...props} />
             <Flex direction="column" flex gap="size-75">
-
-                {/* <View >
-
-                    <Flex direction="row" gap="size-100" justifyContent={"space-between"}>
-                        <View>
-                            <span className="spectrum-Heading spectrum-Heading--sizeXXS" >
-                                Title : 
-                            </span>
-                            <span className="spectrum-Body spectrum-Body--sizeXS" >
-                                {props.visualmetadataEntity?.titleProperties?.titleText}
-                            </span>
-                        </View>
-                        <View>
-                            <HeaderIcon
-                                key={translate('views.menu.filter')}
-                                icon={<Filter size="M" />}
-                                title={translate('views.menu.filter')}
-                                onPress={props.toggleFilterPanel}
-                            />
-                        </View>
-                    </Flex>
-
-
-                </View> */}
                 <View >
                     <div id={`visualization-edit-${props.visualmetadataEntity.id}`} className="visualization-share"></div>
                 </View>
@@ -114,7 +90,6 @@ const ShareVisualization = (props: IShareVisualizationProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
     visualmetadataEntity: storeState.visualmetadata.entity,
-
     view: storeState.views.entity,
     visualDataById: storeState.visualizationData.visualDataById,
 });

@@ -45,7 +45,7 @@ export const App = (props: IAppProps) => {
         <View gridArea="header">
           <ErrorBoundary>
 
-            {!props.isShare ? (props.isHome ? (
+            {!props.isShareLinkPage ? (props.isHome ? (
               <HomeHeader />
             ) : (
               <Header
@@ -103,7 +103,7 @@ const mapStateToProps = ({ authentication, applicationProfile, locale, home, sha
   isSwaggerEnabled: applicationProfile.isSwaggerEnabled,
   isCanvas: isCanvas(),
   isHome: home.isHome,
-  isShare: shareVisualization.isShare
+  isShareLinkPage: shareVisualization.isShareLinkPage
 });
 
 const mapDispatchToProps = { setLocale, getSessionWithPath, getProfile };

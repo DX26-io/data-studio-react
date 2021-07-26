@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { ActionButton, Flex, View, Text, Button, Divider } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { IFeature } from 'app/shared/model/feature.model';
-import AsyncSelect from 'react-select/async';
 import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from '../data-constraints/utils/date-util';
@@ -11,7 +10,6 @@ import { checkIsDateType } from '../visualization/util/visualization-utils';
 import { saveSelectedFilter } from './filter.reducer';
 import { saveDynamicDateRangeMetaData, getPin, load,generateFilterOptions } from './filter-util';
 import Select from 'react-select';
-import { IQueryDTO } from 'app/shared/model/query-dto.model';
 import PinOn from '@spectrum-icons/workflow/PinOn';
 import PinOff from '@spectrum-icons/workflow/PinOff';
 import { pinFeature } from 'app/entities/feature/feature.reducer';
@@ -66,7 +64,6 @@ const FilterElement = (props: IFilterElementProp) => {
       dataType: props.feature.type,
       valueType: 'valueType',
     };
-    //updateDefaultValues(props.selectedFilters[props.feature.name]);
     props.saveSelectedFilter(props.selectedFilters);
   };
 
@@ -80,11 +77,9 @@ const FilterElement = (props: IFilterElementProp) => {
         array.splice(index, 1);
         filterParameters[props.feature.name] = array;
         if (filterParameters[props.feature.name].length === 0) delete filterParameters[props.feature.name];
-       // updateDefaultValues(filterParameters[props.feature.name]);
         return filterParameters;
       }
     }
-   // updateDefaultValues(filterParameters[props.feature.name]);
     return filterParameters;
   }
 
