@@ -1,96 +1,66 @@
 import './header.scss';
 import React, { useEffect, useState } from 'react';
-import { ActionButton, View, Flex } from '@adobe/react-spectrum';
+import { View, Flex, Text } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { createEntity as addVisualmetadataEntity, toggleEditMode } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { toggleFilterPanel, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { saveViewState } from 'app/entities/views/views.reducer';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
-import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
+import { applyFilter, addAppliedFilters, removeAppliedFilters, removeOptionFromFilters } from 'app/modules/canvas/filter/filter.reducer';
 import Close from '@spectrum-icons/workflow/Close';
-export interface ICanvasFilterHeaderProps extends StateProps, DispatchProps {
-}
+import Select from 'react-select';
+import { generateOptions } from 'app/shared/util/entity-utils';
+export interface ICanvasFilterHeaderProps extends StateProps, DispatchProps {}
 
 const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
-  const [dropdownOpen, setDropdownOpen] = useState<boolean[]>();
-  const [filters, setFilters] = useState<string[]>();
 
-  let dropdownStatus = [];
-  const toggle = index => {
-    dropdownStatus[index] = !dropdownStatus[index];
-    setDropdownOpen(dropdownStatus);
-  };
+  const formatOptionLabel = ({ value, label }) => (
+    <Flex direction="row" alignItems="center">
+      <span className="spectrum-Body-emphasis--sizeXXS" style={{ marginRight: 'auto' }}>
+        {label}
+      </span>
+      <Close size="S" />
+    </Flex>
+  );
 
-  useEffect(() => {
-    if (props.selectedFilter) {
-      const filterList = Object.keys(props.selectedFilter);
-      dropdownStatus = [];
-      setFilters(filterList);
-      filterList.forEach(item => {
-        dropdownStatus.push(false);
-      });
-      setDropdownOpen(dropdownStatus);
-    }
-  }, [props.selectedFilter]);
-
-  const removeFromFilter = (key, values, index) => {
-    const filter = props.selectedFilter;
-    const position = filter[key].indexOf(values);
-    filter[key].splice(position, 1);
-    toggle(index);
-    props.applyFilter(filter, props.visualmetadata, props.view);
+  const createdSelectedFilterElements = () => {
+    const options = Object.keys(props.selectedFilters).map((featureName, i) => {
+      return (
+        <View minWidth="size-2000" key={`filter-${featureName}`}>
+          <Select
+            key={featureName}
+            value={null}
+            searchable={true}
+            formatOptionLabel={formatOptionLabel}
+            classNamePrefix="select"
+            onChange={(value, actionMeta) => {
+              if (actionMeta.action === 'select-option') {
+                const filters = removeOptionFromFilters(value.value, props.selectedFilters, { name: featureName });
+                props.applyFilter(filters, props.visualmetadata, props.view);
+                props.removeAppliedFilters(value.value, { name: featureName });
+              }
+            }}
+            placeholder={featureName}
+            options={generateOptions(props.selectedFilters[featureName])}
+          />
+        </View>
+      );
+    });
+    return options;
   };
 
   return (
-    <>
-      <View>
-        <Flex direction="row" gap="size-100" wrap>
-          {filters &&
-            filters.length > 0 &&
-            filters.map((item, i) => {
-              if (props.selectedFilter && props.selectedFilter[item] && props.selectedFilter[item].length > 0) {
-                return (
-                  <>
-                    <View key={`filter-${i}`}>
-                      <Dropdown
-                        isOpen={dropdownOpen[i]}
-                        toggle={() => {
-                          toggle(i);
-                        }}
-                      >
-                        <DropdownToggle caret>{item}</DropdownToggle>
-                        <DropdownMenu>
-                          {props.selectedFilter[item].map(value => {
-                            return (
-                              <DropdownItem key={value}>
-                                {value}
-                                <ActionButton onPress={() => removeFromFilter(item, value, i)} isQuiet aria-label="Icon only">
-                                  <Close size={'XS'} />
-                                </ActionButton>
-                              </DropdownItem>
-                            );
-                          })}
-                        </DropdownMenu>
-                      </Dropdown>
-                    </View>
-                  </>
-                );
-              }
-            })}
-        </Flex>
-      </View>
-    </>
+    <Flex direction="row" gap="size-100" marginStart="size-200" wrap>
+      {createdSelectedFilterElements()}
+    </Flex>
   );
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
+  selectedFilters: storeState.filter.selectedFilters,
   view: storeState.views.entity,
-  isAuthenticated: storeState.authentication.isAuthenticated,
-  selectedFilter: storeState.filter.selectedFilters,
   visualmetadata: storeState.views.viewState,
-  filters: storeState.filter.selectedFilters,
 });
 
 const mapDispatchToProps = {
@@ -100,6 +70,8 @@ const mapDispatchToProps = {
   saveViewState,
   saveSelectedFilter,
   applyFilter,
+  addAppliedFilters,
+  removeAppliedFilters,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

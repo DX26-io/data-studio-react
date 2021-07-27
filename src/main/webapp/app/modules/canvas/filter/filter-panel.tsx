@@ -12,6 +12,9 @@ import PanelHeader from 'app/shared/components/panel-header';
 export interface IFilterPanelProp extends StateProps, DispatchProps {}
 
 const FilterPanel = (props: IFilterPanelProp) => {
+
+  // TODO : need to refector this code
+  
   const [isFilterMinimize, setFilterMinimize] = useState(true);
   const [isFilterPanelClose, setFilterPanelClose] = useState(props.isFilterOpen);
 
@@ -43,7 +46,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
               <Flex direction="row" justifyContent="end" marginTop="size-125" marginBottom="size-125">
                 <Button
                   onPress={() => {
-                    props.applyFilter(props.selectedFilter, props.visualmetadata, props.view);
+                    props.applyFilter(props.selectedFilters, props.visualmetadata, props.view);
                   }}
                   marginX={5}
                   variant="cta"
@@ -79,7 +82,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isFilterOpen: storeState.filter.isFilterOpen,
   featuresList: storeState.feature.entities,
   visualmetadata: storeState.views.viewState,
-  selectedFilter: storeState.filter.selectedFilters,
+  selectedFilters: storeState.filter.selectedFilters,
 });
 const mapDispatchToProps = {
   applyFilter,
