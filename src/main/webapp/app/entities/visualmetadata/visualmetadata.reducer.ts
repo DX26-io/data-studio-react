@@ -40,7 +40,7 @@ const initialState = {
   updateSuccess: false,
   newCreated: false,
   deleteSuccess: false,
-  visualMetadataFetch: false,
+  isvisualMetaDataFetched: false,
   rowQuery: null,
   filterData: {},
   selectedFilter: {},
@@ -68,7 +68,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
       return {
         ...state,
         errorMessage: null,
-        visualMetadataFetch: false,
+        isvisualMetaDataFetched: false,
         loading: true,
       };
     case REQUEST(ACTION_TYPES.CREATE_VISUALMETADATA):
@@ -91,7 +91,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
     case FAILURE(ACTION_TYPES.FETCH_VISUALMETADATA):
       return {
         ...state,
-        visualMetadataFetch: false,
+        isvisualMetaDataFetched: false,
         errorMessage: action.payload,
       };
     case REQUEST(ACTION_TYPES.VALIDATE_QUERY):
@@ -129,7 +129,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
       return {
         ...state,
         loading: false,
-        visualMetadataFetch: true,
+        isvisualMetaDataFetched: true,
         entity: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.CREATE_VISUALMETADATA):

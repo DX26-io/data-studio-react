@@ -35,7 +35,7 @@ const ShareVisualization = (props: IShareVisualizationProps) => {
     }, []);
 
     useEffect(() => {
-        if (props.visualMetadataFetch && props.visualmetadataEntity.fields && ValidateFields(props.visualmetadataEntity.fields)) {
+        if (props.isvisualMetaDataFetched && props.visualmetadataEntity.fields && ValidateFields(props.visualmetadataEntity.fields)) {
             props.receiveSocketResponseByVisualId(props.visualmetadataEntity.id);
             const visualMetadata = VisualWrap(props.visualmetadataEntity);
             const queryDTO = visualMetadata.getQueryParameters(props.visualmetadataEntity, {}, getConditionExpression({}), 0);
@@ -48,7 +48,7 @@ const ShareVisualization = (props: IShareVisualizationProps) => {
             };
             forwardCall(datasourceId, body, viewId);
         }
-    }, [props.visualMetadataFetch]);
+    }, [props.isvisualMetaDataFetched]);
 
     useEffect(() => {
         if (props.visualDataById) {
@@ -73,7 +73,7 @@ const mapStateToProps = (storeState: IRootState) => ({
     visualmetadataEntity: storeState.visualmetadata.entity,
     view: storeState.views.entity,
     visualDataById: storeState.visualizationData.visualDataById,
-    visualMetadataFetch: storeState.visualmetadata.visualMetadataFetch,
+    isvisualMetaDataFetched: storeState.visualmetadata.isvisualMetaDataFetched,
 });
 
 const mapDispatchToProps = {
