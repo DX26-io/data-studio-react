@@ -3,7 +3,7 @@ import { icon } from '@fortawesome/fontawesome-svg-core';
 import CollectionEdit from '@spectrum-icons/workflow/CollectionEdit';
 import React from 'react';
 
-interface IHeaderIconProps {
+interface ICanvasHeaderIconProps {
   icon?: any;
   title?: string;
   onPress?: any;
@@ -13,7 +13,7 @@ interface IHeaderIconProps {
   data?: any;
 }
 
-const HeaderIcon: React.FC<IHeaderIconProps> = props => {
+const CanvasHeaderIcon: React.FC<ICanvasHeaderIconProps> = props => {
   return (
     <TooltipTrigger>
       <ActionButton onPress={props.data ? () => { props.onPress(props.data) } : () => { props.onPress() }} aria-label={props.title} isQuiet={true} >
@@ -26,4 +26,4 @@ const HeaderIcon: React.FC<IHeaderIconProps> = props => {
   );
 };
 
-export default HeaderIcon;
+export default CanvasHeaderIcon;

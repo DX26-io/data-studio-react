@@ -30,7 +30,7 @@ import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
 import Select from 'react-select';
 import { generateBookmarksOptions } from 'app/entities/bookmarks/bookmark.util';
 import { saveRecentBookmark } from "app/modules/home/sections/recent.reducer";
-import HeaderIcon from 'app/shared/components/header-icon/header-icon';
+import CanvasHeaderIcon from 'app/shared/components/canvas-header-icon/canvas-header-icon';
 import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
 
 const CanvasHeader = props => {
@@ -39,7 +39,7 @@ const CanvasHeader = props => {
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const url = new URL(window.location.toString());
 
-  const adminList = [
+  const headerIconList = [
     {
       icon: <CollectionEdit size="M" />,
       title: translate('views.menu.edit'),
@@ -146,8 +146,8 @@ const CanvasHeader = props => {
           </div>
 
           <Flex wrap>
-            {adminList && adminList.length > 0 && adminList.map(card => (
-              <HeaderIcon
+            {headerIconList && headerIconList.length > 0 && headerIconList.map(card => (
+              <CanvasHeaderIcon
                 key={card.title}
                 icon={card.icon}
                 title={card.title}
