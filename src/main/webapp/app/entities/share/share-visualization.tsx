@@ -1,20 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-    ActionButton,
-    Button,
-    ButtonGroup,
-    Content,
-    Dialog,
-    DialogContainer,
-    Divider,
-    Flex,
-    Form,
-    Heading,
-    Item,
-    ListBox,
-    TextArea,
-    View,
-} from '@adobe/react-spectrum';
+import React, { useEffect } from 'react';
+import { Flex, View, } from '@adobe/react-spectrum';
 import './share-visualization.scss';
 import { RouteComponentProps } from 'react-router-dom';
 import { IRootState } from 'app/shared/reducers';
@@ -27,9 +12,6 @@ import { receiveSocketResponse, receiveSocketResponseByVisualId } from 'app/shar
 import { renderVisualization, ValidateFields } from 'app/modules/canvas/visualization/util/visualization-render-utils';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
-import HeaderIcon from 'app/shared/components/header-icon/header-icon';
-import { translate } from 'react-jhipster';
-import Filter from '@spectrum-icons/workflow/Filter';
 import { toggleFilterPanel } from 'app/modules/canvas/filter/filter.reducer';
 import FilterPanel from 'app/modules/canvas/filter/filter-panel';
 import { setIsShare } from './share-visualization.reducer';
@@ -53,7 +35,7 @@ const ShareVisualization = (props: IShareVisualizationProps) => {
     }, []);
 
     useEffect(() => {
-        if (props.visualmetadataEntity.fields && ValidateFields(props.visualmetadataEntity.fields)) {
+        if (props.visualMetadataFetch && props.visualmetadataEntity.fields && ValidateFields(props.visualmetadataEntity.fields)) {
             props.receiveSocketResponseByVisualId(props.visualmetadataEntity.id);
             const visualMetadata = VisualWrap(props.visualmetadataEntity);
             const queryDTO = visualMetadata.getQueryParameters(props.visualmetadataEntity, {}, getConditionExpression({}), 0);
@@ -66,7 +48,7 @@ const ShareVisualization = (props: IShareVisualizationProps) => {
             };
             forwardCall(datasourceId, body, viewId);
         }
-    }, [props.visualmetadataEntity]);
+    }, [props.visualMetadataFetch]);
 
     useEffect(() => {
         if (props.visualDataById) {
@@ -91,6 +73,7 @@ const mapStateToProps = (storeState: IRootState) => ({
     visualmetadataEntity: storeState.visualmetadata.entity,
     view: storeState.views.entity,
     visualDataById: storeState.visualizationData.visualDataById,
+    visualMetadataFetch: storeState.visualmetadata.visualMetadataFetch,
 });
 
 const mapDispatchToProps = {

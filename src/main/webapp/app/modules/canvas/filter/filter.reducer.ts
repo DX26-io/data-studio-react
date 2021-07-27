@@ -1,4 +1,4 @@
-import { getVisualizationData, getVisualizationShareData, ValidateFields } from '../visualization/util/visualization-render-utils';
+import { getVisualizationData, ValidateFields } from '../visualization/util/visualization-render-utils';
 import { IViews } from 'app/shared/model/views.model';
 import { hideLoader } from 'app/shared/websocket/websocket.reducer';
 
@@ -114,11 +114,6 @@ export const loadVisualization = (visualmetadata, view, filters) => {
   });
 };
 
-export const applyFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
-  dispatch(saveSelectedFilter(filters));
-  getVisualizationShareData(visualmetadata, view, filters);
-};
-
 export const applyFilter = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
   dispatch(saveSelectedFilter(filters));
   loadVisualization(visualmetadata, view, filters);
@@ -143,9 +138,4 @@ export const removeAppliedFilters = (filter, feature) => dispatch => {
     payload: filter,
     Meta: feature,
   });
-};
-
-export const clearFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
-  dispatch(saveSelectedFilter({}));
-  getVisualizationShareData(visualmetadata, view, filters);
 };
