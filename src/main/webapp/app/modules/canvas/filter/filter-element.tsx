@@ -8,40 +8,20 @@ import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from '../data-constraints/utils/date-util';
 import { checkIsDateType } from '../visualization/util/visualization-utils';
 import { saveSelectedFilter } from './filter.reducer';
-import { saveDynamicDateRangeMetaData, getPin, load,generateFilterOptions } from './filter-util';
+import { saveDynamicDateRangeMetaData, getPin, load, generateFilterOptions } from './filter-util';
 import Select from 'react-select';
 import PinOn from '@spectrum-icons/workflow/PinOn';
 import PinOff from '@spectrum-icons/workflow/PinOff';
 import { pinFeature } from 'app/entities/feature/feature.reducer';
+import { addAppliedFilters, removeAppliedFilters } from './filter.reducer';
+import { generateOptions } from 'app/shared/util/entity-utils';
 
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
 }
 
 const FilterElement = (props: IFilterElementProp) => {
-  const [defaultValues, setdefaultValues] = useState<string[]>();
   const [isPinOn, setIsPinOn] = useState(getPin(props.feature.pin));
-
-  const updateDefaultValues = data => {
-    const filterValues = [];
-    data &&
-      data.forEach(item => {
-        filterValues.push({
-          label: item,
-          value: item,
-        });
-      });
-    setdefaultValues(filterValues);
-  };
-
-  useEffect(() => {
-    if (props.selectedFilters[props.feature.name]) {
-      updateDefaultValues(props.selectedFilters[props.feature.name]);
-    } else {
-      setdefaultValues([]);
-      // props.setFilterLoader(false);
-    }
-  }, [props.selectedFilters]);
 
   const handleInputChange = (newValue: string) => {
     // props.setFilterLoader(true);
@@ -55,46 +35,22 @@ const FilterElement = (props: IFilterElementProp) => {
     load(null, props.feature.name, props.view?.id, props.view?.viewDashboard?.dashboardDatasource.id);
   };
 
-  const addValueInFilter = value => {
-    if (!props.selectedFilters[props.feature.name]) {
-      props.selectedFilters[props.feature.name] = [];
-    }
-    props.selectedFilters[props.feature.name].push(value);
-    props.selectedFilters[props.feature.name]._meta = {
-      dataType: props.feature.type,
-      valueType: 'valueType',
-    };
-    props.saveSelectedFilter(props.selectedFilters);
-  };
-
-  function removeTagFromFilterList(filterParameters, tag) {
-    const array = filterParameters[props.feature.name]
-      ? filterParameters[props.feature.name.toLowerCase()]
-      : filterParameters[props.feature.name];
-    if (array) {
-      const index = array.indexOf(tag);
-      if (index > -1) {
-        array.splice(index, 1);
-        filterParameters[props.feature.name] = array;
-        if (filterParameters[props.feature.name].length === 0) delete filterParameters[props.feature.name];
-        return filterParameters;
-      }
-    }
-    return filterParameters;
-  }
-
   const handleChange = (value, actionMeta) => {
     if (actionMeta.action === 'select-option') {
-      addValueInFilter(actionMeta.option.value);
+      props.addAppliedFilters(actionMeta.option.value, props.feature);
     } else if (actionMeta.action === 'remove-value') {
-      props.saveSelectedFilter(removeTagFromFilterList(props.selectedFilters, actionMeta.removedValue.value));
+      props.removeAppliedFilters(actionMeta.removedValue.value, props.feature);
     }
   };
+
+  // TODO : need to refector this code
 
   function removeFilter(filter) {
     props.selectedFilters[filter] = [];
     props.saveSelectedFilter(props.selectedFilters);
   }
+
+  // TODO : need to refector this code
 
   const addDateRangeFilter = date => {
     if (!props.selectedFilters[props.feature.name]) {
@@ -108,6 +64,7 @@ const FilterElement = (props: IFilterElementProp) => {
     props.saveSelectedFilter(props.selectedFilters);
   };
 
+  // TODO: need to refector this code
   const onDateChange = (startDate, endDate, metadata) => {
     if (startDate && endDate) {
       props.feature.metadata = metadata;
@@ -148,7 +105,7 @@ const FilterElement = (props: IFilterElementProp) => {
               <View marginTop="size-125" minWidth="size-3400">
                 <Select
                   isMulti
-                  value={defaultValues}
+                  value={generateOptions(props.selectedFilters[props.feature.name])}
                   searchable={true}
                   onBlurResetsInput={false}
                   onCloseResetsInput={false}
@@ -156,7 +113,7 @@ const FilterElement = (props: IFilterElementProp) => {
                   closeMenuOnSelect={false}
                   classNamePrefix="select"
                   onChange={handleChange}
-                  // isLoading={props.isFilterLoaderOn}
+                  // TODO:  isLoading={props.isFilterLoaderOn} this will be done later
                   placeholder={`Search ${props.feature.name}`}
                   onInputChange={handleInputChange}
                   options={props.filterSelectOptions}
@@ -181,13 +138,14 @@ const FilterElement = (props: IFilterElementProp) => {
 const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   filterSelectOptions: generateFilterOptions(storeState.visualizationData.filterData),
-  featuresList: storeState.feature.entities,
   selectedFilters: storeState.filter.selectedFilters,
 });
 const mapDispatchToProps = {
   saveSelectedFilter,
   pinFeature,
-  setFilterData
+  setFilterData,
+  addAppliedFilters,
+  removeAppliedFilters,
   // setFilterLoader
 };
 type StateProps = ReturnType<typeof mapStateToProps>;

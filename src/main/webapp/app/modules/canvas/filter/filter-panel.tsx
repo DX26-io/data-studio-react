@@ -15,6 +15,9 @@ import { RouteComponentProps } from 'react-router-dom';
 export interface IFilterPanelProp extends StateProps, DispatchProps, RouteComponentProps { }
 
 const FilterPanel = (props: IFilterPanelProp) => {
+
+  // TODO : need to refector this code
+  
   const [isFilterMinimize, setFilterMinimize] = useState(true);
   const [isFilterPanelClose, setFilterPanelClose] = useState(props.isFilterOpen);
   const params = new URLSearchParams(props.location.search);
@@ -51,9 +54,9 @@ const FilterPanel = (props: IFilterPanelProp) => {
                 <Button
                   onPress={() => {
                     if (!visualizationId) {
-                      props.applyFilter(props.selectedFilter, props.visualmetadata, props.view);
+                      props.applyFilter(props.selectedFilters, props.visualmetadata, props.view);
                     } else {
-                      props.applyFilterForShareLink(props.selectedFilter, props.visualmetadataEntity, props.view);
+                      props.applyFilterForShareLink(props.selectedFilters, props.visualmetadataEntity, props.view);
                     }
 
                   }}
@@ -95,7 +98,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isFilterOpen: storeState.filter.isFilterOpen,
   featuresList: storeState.feature.entities,
   visualmetadata: storeState.views.viewState,
-  selectedFilter: storeState.filter.selectedFilters,
+  selectedFilters: storeState.filter.selectedFilters,
   visualmetadataEntity: storeState.visualmetadata.entity,
 
 });

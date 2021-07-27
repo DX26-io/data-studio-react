@@ -6,12 +6,43 @@ export const ACTION_TYPES = {
   TOGGLE_FILTER_PANEL: 'filter/TOGGLE_FILTER_PANEL',
   TOGGLE_FEATURES_PANEL: 'filter/TOGGLE_FEATURES_PANEL',
   SAVE_SELECTED_FILTER: 'filter/SAVE_SELECTED_FILTER',
+  ADD_SELECTED_FILTER_OPTIONS: 'filter/ADD_SELECTED_FILTER_OPTIONS',
+  REMOVE_SELECTED_FILTER_OPTIONS: 'filter/REMOVE_SELECTED_FILTER_OPTIONS',
 };
 
 const initialState = {
   isFeaturesPanelOpen: false,
   isFilterOpen: false,
   selectedFilters: {},
+};
+
+const addOptionIntoFilters = (filter, filters, feature) => {
+  // const filters = filters[feature.name] ? filters[feature.name.toLowerCase()] : filters[feature.name];
+  if (filters[feature.name] && filters[feature.name].length > 0) {
+    filters[feature.name].push(filter);
+  } else {
+    filters[feature.name] = [];
+    filters[feature.name].push(filter);
+  }
+  filters[feature.name]._meta = {
+    dataType: feature.type,
+    valueType: 'valueType',
+  };
+  return Object.assign({}, filters);
+};
+
+export const removeOptionFromFilters = (filter, filters, feature) => {
+  if (filters[feature.name] && filters[feature.name].length === 0) {
+    delete filters[feature.name];
+    return filters;
+  } else {
+    const index = filters[feature.name].findIndex(item => item === filter);
+    if (index > -1) {
+      filters[feature.name].splice(index, 1);
+      if (filters[feature.name].length === 0) delete filters[feature.name];
+    }
+  }
+  return Object.assign({}, filters);
 };
 
 export type FilterState = Readonly<typeof initialState>;
@@ -37,14 +68,20 @@ export default (state: FilterState = initialState, action): FilterState => {
         isFeaturesPanelOpen: !state.isFeaturesPanelOpen,
         isFilterOpen: state.isFilterOpen && !state.isFeaturesPanelOpen,
       };
+    case ACTION_TYPES.ADD_SELECTED_FILTER_OPTIONS:
+      return {
+        ...state,
+        selectedFilters: addOptionIntoFilters(action.payload, state.selectedFilters, action.Meta),
+      };
+    case ACTION_TYPES.REMOVE_SELECTED_FILTER_OPTIONS:
+      return {
+        ...state,
+        selectedFilters: removeOptionFromFilters(action.payload, state.selectedFilters, action.Meta),
+      };
     default:
       return state;
   }
 };
-
-const apiUrl = 'api/visualmetadata';
-
-// Actions
 
 export const saveSelectedFilter = (selectedFilter: any) => dispatch => {
   dispatch({
@@ -90,6 +127,22 @@ export const applyFilter = (filters: any, visualmetadata: any, view: IViews) => 
 export const clearFilter = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
   dispatch(saveSelectedFilter({}));
   loadVisualization(visualmetadata, view, filters);
+};
+
+export const addAppliedFilters = (filter, feature) => dispatch => {
+  dispatch({
+    type: ACTION_TYPES.ADD_SELECTED_FILTER_OPTIONS,
+    payload: filter,
+    Meta: feature,
+  });
+};
+
+export const removeAppliedFilters = (filter, feature) => dispatch => {
+  dispatch({
+    type: ACTION_TYPES.REMOVE_SELECTED_FILTER_OPTIONS,
+    payload: filter,
+    Meta: feature,
+  });
 };
 
 export const clearFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
