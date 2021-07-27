@@ -199,6 +199,14 @@ export const saveViewState: ICrudPutAction<IViewStateDTO> = entity => async disp
   return result;
 };
 
+export const getViewByDashboardId: ICrudGetDashboardViewsAction<IViews> = dashboardId => {
+  const requestUrl = `${apiUrl}?viewDashboard=${dashboardId}`;
+  return {
+    type: ACTION_TYPES.FETCH_VIEWS_LIST,
+    payload: axios.get<IViews>(`${requestUrl}&cacheBuster=${new Date().getTime()}`),
+  };
+};
+
 export const getDashboardViewEntities: ICrudGetDashboardViewsAction<IViews> = (dashboardId, page, size, sort) => {
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}&viewDashboard=${dashboardId}&paginate=true`;
   return {

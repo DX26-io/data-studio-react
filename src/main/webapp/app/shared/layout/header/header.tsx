@@ -9,6 +9,8 @@ import Logo from 'app/shared/components/logo/logo';
 import { Divider, Flex, View } from '@adobe/react-spectrum';
 import CanvasHeader from './canvas-header';
 import { isCanvas } from 'app/shared/util/common-utils';
+import CanvasDashboardSearchHeader from './canvas-dashboard-search-header';
+
 import { Link } from 'react-router-dom';
 export interface IHeaderProps {
   isAuthenticated: boolean;
@@ -42,6 +44,11 @@ const Header = (props: IHeaderProps) => {
               <Link to="/" style={{ color: 'black' }}>
                 <Logo />
               </Link>
+              {props.isCanvas && (
+              
+                  <CanvasDashboardSearchHeader />
+                
+              )}
             </Flex>
             <Flex justifyContent="end">
               {props.isCanvas && (
