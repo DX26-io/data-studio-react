@@ -3,141 +3,54 @@ import { connect } from 'react-redux';
 import { ActionButton, Flex, View, Text, Button, Divider } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { IFeature } from 'app/shared/model/feature.model';
-import AsyncSelect from 'react-select/async';
-import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
+import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from '../data-constraints/utils/date-util';
 import { checkIsDateType } from '../visualization/util/visualization-utils';
 import { saveSelectedFilter } from './filter.reducer';
-import { saveDynamicDateRangeMetaData } from './filter-util';
+import { saveDynamicDateRangeMetaData, getPin, load, generateFilterOptions } from './filter-util';
 import Select from 'react-select';
-import { IQueryDTO } from 'app/shared/model/query-dto.model';
 import PinOn from '@spectrum-icons/workflow/PinOn';
-import Pinoff from '@spectrum-icons/workflow/PinOff';
+import PinOff from '@spectrum-icons/workflow/PinOff';
+import { pinFeature } from 'app/entities/feature/feature.reducer';
+import { addAppliedFilters, removeAppliedFilters } from './filter.reducer';
+import { generateOptions } from 'app/shared/util/entity-utils';
 
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
 }
 
 const FilterElement = (props: IFilterElementProp) => {
-  const [defaultValues, setdefaultValues] = useState<string[]>();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPinOn, setIsPinOn] = useState(getPin(props.feature.pin));
 
-  const updateDefaultValues = data => {
-    const filterValues = [];
-    data &&
-      data.forEach(item => {
-        filterValues.push({
-          label: item,
-          value: item,
-        });
-      });
-    setdefaultValues(filterValues);
-  };
-
-  useEffect(() => {
-    if (props.selectedFilters[props.feature.name]) {
-      updateDefaultValues(props.selectedFilters[props.feature.name]);
-    } else {
-      setdefaultValues([]);
-    }
-  }, [props.selectedFilters]);
-
-  useEffect(() => {
-    if (props.filterList) {
-      const retVal = props.filterList?.body?.map(function (item) {
-        return {
-          value: item[props.feature.name],
-          label: item[props.feature.name],
-        };
-      });
-      props.filterData[props.feature.name] = retVal;
-      setIsLoading(false);
-    }
-  }, [props.filterList]);
-
-  const load = (q, dimension) => {
-    const query: IQueryDTO = {
-      fields: [{ name: dimension }],
-      distinct: true,
-      limit: 100,
-    };
-    const vId = props.view?.id;
-    if (q) {
-      query.conditionExpressions = [
-        {
-          sourceType: 'FILTER',
-          conditionExpression: {
-            '@type': 'Like',
-            featureName: dimension,
-            caseInsensitive: true,
-            value: q,
-          },
-        },
-      ];
-    }
-    forwardCall(
-      props.view?.viewDashboard?.dashboardDatasource.id,
-      {
-        queryDTO: query,
-        vId,
-        type: 'filters',
-      },
-      vId
-    );
-  };
   const handleInputChange = (newValue: string) => {
-    load(newValue, props.feature.name);
+    // props.setFilterLoader(true);
+    props.setFilterData(null);
+    load(newValue, props.feature.name, props.view?.id, props.view?.viewDashboard?.dashboardDatasource.id);
   };
 
   const onFocus = () => {
-    setIsLoading(true);
-    load(null, props.feature.name);
+    // props.setFilterLoader(true);
+    props.setFilterData(null);
+    load(null, props.feature.name, props.view?.id, props.view?.viewDashboard?.dashboardDatasource.id);
   };
-
-  const addValueInFilter = value => {
-    if (!props.selectedFilters[props.feature.name]) {
-      props.selectedFilters[props.feature.name] = [];
-    }
-    props.selectedFilters[props.feature.name].push(value);
-    props.selectedFilters[props.feature.name]._meta = {
-      dataType: props.feature.type,
-      valueType: 'valueType',
-    };
-    updateDefaultValues(props.selectedFilters[props.feature.name]);
-    props.saveSelectedFilter(props.selectedFilters);
-  };
-
-  function removeTagFromFilterList(filterParameters, tag) {
-    const array = filterParameters[props.feature.name]
-      ? filterParameters[props.feature.name.toLowerCase()]
-      : filterParameters[props.feature.name];
-    if (array) {
-      const index = array.indexOf(tag);
-      if (index > -1) {
-        array.splice(index, 1);
-        filterParameters[props.feature.name] = array;
-        if (filterParameters[props.feature.name].length === 0) delete filterParameters[props.feature.name];
-        updateDefaultValues(filterParameters[props.feature.name]);
-        return filterParameters;
-      }
-    }
-    updateDefaultValues(filterParameters[props.feature.name]);
-    return filterParameters;
-  }
 
   const handleChange = (value, actionMeta) => {
     if (actionMeta.action === 'select-option') {
-      addValueInFilter(actionMeta.option.value);
+      props.addAppliedFilters(actionMeta.option.value, props.feature);
     } else if (actionMeta.action === 'remove-value') {
-      props.saveSelectedFilter(removeTagFromFilterList(props.selectedFilters, actionMeta.removedValue.value));
+      props.removeAppliedFilters(actionMeta.removedValue.value, props.feature);
     }
   };
+
+  // TODO : need to refector this code
 
   function removeFilter(filter) {
     props.selectedFilters[filter] = [];
     props.saveSelectedFilter(props.selectedFilters);
   }
+
+  // TODO : need to refector this code
 
   const addDateRangeFilter = date => {
     if (!props.selectedFilters[props.feature.name]) {
@@ -151,6 +64,7 @@ const FilterElement = (props: IFilterElementProp) => {
     props.saveSelectedFilter(props.selectedFilters);
   };
 
+  // TODO: need to refector this code
   const onDateChange = (startDate, endDate, metadata) => {
     if (startDate && endDate) {
       props.feature.metadata = metadata;
@@ -171,34 +85,50 @@ const FilterElement = (props: IFilterElementProp) => {
       }
     }
   };
+
+  const togglePin = feature => {
+    setIsPinOn(!isPinOn);
+    props.pinFeature(feature.id, !isPinOn);
+  };
+
   return (
     <>
       <div className="filter-element">
         <View padding={5} margin={5} borderWidth="thin" borderColor="default" backgroundColor="gray-75" borderRadius="regular">
           <span className="spectrum-Body-emphasis--sizeXXS">{props.feature.name}</span>
-          {checkIsDateType(props.feature) ? (
-            <View>
-              <DateRangeComponent onDateChange={onDateChange} />
-            </View>
-          ) : (
-            <View marginTop="size-125">
-              <Select
-                isMulti
-                value={defaultValues}
-                searchable={true}
-                onBlurResetsInput={false}
-                onCloseResetsInput={false}
-                onFocus={onFocus}
-                closeMenuOnSelect={false}
-                classNamePrefix="select"
-                onChange={handleChange}
-                isLoading={isLoading}
-                placeholder={`Search ${props.feature.name}`}
-                onInputChange={handleInputChange}
-                options={props.filterData[props.feature.name]}
-              />
-            </View>
-          )}
+          <Flex direction="row" alignItems="center" gap="size-50">
+            {checkIsDateType(props.feature) ? (
+              <View minWidth="size-3400">
+                <DateRangeComponent onDateChange={onDateChange} />
+              </View>
+            ) : (
+              <View marginTop="size-125" minWidth="size-3400">
+                <Select
+                  isMulti
+                  value={generateOptions(props.selectedFilters[props.feature.name])}
+                  searchable={true}
+                  onBlurResetsInput={false}
+                  onCloseResetsInput={false}
+                  onFocus={onFocus}
+                  closeMenuOnSelect={false}
+                  classNamePrefix="select"
+                  onChange={handleChange}
+                  // TODO:  isLoading={props.isFilterLoaderOn} this will be done later
+                  placeholder={`Search ${props.feature.name}`}
+                  onInputChange={handleInputChange}
+                  options={props.filterSelectOptions}
+                />
+              </View>
+            )}
+            <ActionButton
+              isQuiet
+              onPress={() => {
+                togglePin(props.feature);
+              }}
+            >
+              {isPinOn ? <PinOn size="S" /> : <PinOff size="S" />}
+            </ActionButton>
+          </Flex>
         </View>
       </div>
     </>
@@ -207,13 +137,16 @@ const FilterElement = (props: IFilterElementProp) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
-  filterData: storeState.visualmetadata.filterData,
-  featuresList: storeState.feature.entities,
+  filterSelectOptions: generateFilterOptions(storeState.visualizationData.filterData),
   selectedFilters: storeState.filter.selectedFilters,
-  filterList: storeState.visualizationData.filterData,
 });
 const mapDispatchToProps = {
   saveSelectedFilter,
+  pinFeature,
+  setFilterData,
+  addAppliedFilters,
+  removeAppliedFilters,
+  // setFilterLoader
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

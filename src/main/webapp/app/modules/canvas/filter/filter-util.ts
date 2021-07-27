@@ -2,6 +2,8 @@ import { COMPARABLE_DATA_TYPES, FILTER_TYPES } from 'app/shared/util/data-constr
 import { addNewExpression, ConditionExpression } from './condition-expression';
 import { IBookmark } from 'app/shared/model/bookmark.model';
 import { DYNAMIC_DATE_RANGE_CONFIG, tabList } from 'app/shared/util/data-constraints.constants';
+import { IQueryDTO } from 'app/shared/model/query-dto.model';
+import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 
 // const paramObject = {};
 // const selectedFilters = {};
@@ -289,4 +291,50 @@ export const addFilterFromBookmark = (bookmark: IBookmark) => {
 
 const buildDateRange = (dimensionName, daterange) => {
   return { dimensionName, startDate: daterange[0], endDate: daterange[1] };
+};
+
+export const getPin = pin => {
+  return pin === null || pin === false ? false : true;
+};
+
+export const load = (q, dimension, viewId, datasourceId) => {
+  const query: IQueryDTO = {
+    fields: [{ name: dimension }],
+    distinct: true,
+    limit: 100,
+  };
+  if (q) {
+    query.conditionExpressions = [
+      {
+        sourceType: 'FILTER',
+        conditionExpression: {
+          '@type': 'Like',
+          featureName: dimension,
+          caseInsensitive: true,
+          value: q,
+        },
+      },
+    ];
+  }
+  forwardCall(
+    datasourceId,
+    {
+      queryDTO: query,
+      viewId,
+      type: 'filters',
+    },
+    viewId
+  );
+};
+
+export const generateFilterOptions = data => {
+  const options = [];
+  if (data) {
+    const _data = data?.body;
+    _data.forEach(function (option) {
+      const featureName = Object.keys(option)[0];
+      options.push({ value: option[featureName], label: option[featureName] });
+    });
+  }
+  return options;
 };
