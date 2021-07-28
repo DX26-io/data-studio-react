@@ -247,7 +247,7 @@ const Canvas = (props: VisualizationProp) => {
 
   return (
     <>
-      {props.isSocketConnected && <FilterPanel />}
+      {props.isSocketConnected && <FilterPanel {...props} />}
       {props.isSocketConnected && <FeaturesPanel />}
       <View>
         <CanvasFilterHeader />
