@@ -9,6 +9,8 @@ import PinnedFilterElement from './pinned-filter-element';
 
 const ReactGridLayout = WidthProvider(RGL);
 
+// TODO : UI disign issues need to fixed
+
 export interface PinnedCanvasFiltersProps extends StateProps, DispatchProps {}
 
 const PinnedCanvasFilters = (props: PinnedCanvasFiltersProps) => {
@@ -28,15 +30,22 @@ const PinnedCanvasFilters = (props: PinnedCanvasFiltersProps) => {
           <div
             key={'pinned-filters-div'}
             // TODO : marginLeft needs to removed and will be refactored from canvas.tsx
-            style={{ overflowY: 'scroll', overflowX: 'hidden',marginLeft:'6px' }}
+            style={{
+              overflowY: 'auto',
+              overflowX: 'hidden',
+              marginLeft: '6px',
+              backgroundColor: '#fff',
+              borderWidth: 'var(--spectrum-alias-border-size-thin)',
+              borderColor: 'var(--spectrum-alias-border-color)',
+            }}
             className="layout"
-            data-grid={{ i: '1', x: 0, y: 0, w: 2.2, h: props.maxHeight, maxW: Infinity, maxH: Infinity, static: false }}
+            data-grid={{ i: '1', x: 0, y: 0, w: 2.2, h: 4, maxW: Infinity, maxH: Infinity, static: false }}
           >
-            <View borderWidth="thin" borderColor="default" backgroundColor="gray-50" >
-              {props.pinnedFeatures &&
-                props.pinnedFeatures.length > 0 &&
-                props.pinnedFeatures.map((feature, i) => <PinnedFilterElement key={`pinned-filter-element - ${feature.id}`} feature={feature} />)}
-            </View>
+            {props.pinnedFeatures &&
+              props.pinnedFeatures.length > 0 &&
+              props.pinnedFeatures.map((feature, i) => (
+                <PinnedFilterElement key={`pinned-filter-element - ${feature.id}`} feature={feature} />
+              ))}
           </div>
         </ReactGridLayout>
       )}
@@ -45,13 +54,13 @@ const PinnedCanvasFilters = (props: PinnedCanvasFiltersProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  pinnedFeatures: storeState.feature.pinnedFeatures,
+  pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true),
   isEditMode: storeState.visualmetadata.isEditMode,
   filterData: storeState.visualmetadata.filterData,
   isSocketConnected: storeState.visualizationData.isSocketConnected,
   selectedFilters: storeState.filter.selectedFilters,
   isFilterOpen: storeState.filter.isFilterOpen,
-  maxHeight: storeState.feature.pinnedFeatures ? storeState.feature.pinnedFeatures.length + 3 : 0,
+  // maxHeight: storeState.feature.pinnedFeatures ? storeState.feature.pinnedFeatures.length + 1 : 0,
 });
 
 const mapDispatchToProps = {
