@@ -37,8 +37,9 @@ import { VisualMetadataContainerGetOne } from './util/visualmetadata-container.u
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
-import { applyFilter ,saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
+import { applyFilter, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
+import PinnedCanvasFilters from "app/modules/canvas/visualization/pinned-canvas-filters/pinned-canvas-filters";
 
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -48,7 +49,7 @@ export interface IIllustrate {
   noDataFoundVisibility: boolean;
 }
 
-export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
+export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
 
 const Canvas = (props: VisualizationProp) => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
@@ -75,7 +76,7 @@ const Canvas = (props: VisualizationProp) => {
       v.height = newItem.h;
       v.w = newItem.w;
       v.width = newItem.w;
-      renderVisualization(v, v.data,null,null);
+      renderVisualization(v, v.data,  "widget", props);
     }
   };
 
@@ -127,7 +128,7 @@ const Canvas = (props: VisualizationProp) => {
         v.data = props.visualData?.body;
         props.hideLoader();
         hideDataNotFound(v.id);
-        renderVisualization(v, props.visualData?.body,"widget",props);
+        renderVisualization(v, props.visualData?.body, "widget", props);
       } else {
         showDataNotFound(v.id);
         props.hideLoader();
@@ -204,7 +205,7 @@ const Canvas = (props: VisualizationProp) => {
         <div
           className="item widget"
           id={`widget-${v.id}`}
-          key={v.id}
+          key={`viz-widget-${v.id}`}
           data-grid={{
             i: v.id,
             x: v.xPosition || 0,
@@ -218,7 +219,7 @@ const Canvas = (props: VisualizationProp) => {
         >
           <div className="header">
             <VisualizationHeader
-              key={v.id}
+              key={`viz-header-${v.id}`}
               visual={v}
               handleVisualizationClick={handleVisualizationClick}
               view={props.view}
@@ -258,6 +259,7 @@ const Canvas = (props: VisualizationProp) => {
             <Loader />
           </div>
         )}
+        <PinnedCanvasFilters />
         {props.visualMetadataContainerList && props.visualMetadataContainerList.length > 0 && (
           <ReactGridLayout
             className="layout"
@@ -273,6 +275,7 @@ const Canvas = (props: VisualizationProp) => {
             isBounded={false}
             isDraggable={props.isEditMode}
             isResizable={props.isEditMode}
+            key={'viz-grid-layout'}
           >
             {generateWidge}
           </ReactGridLayout>
