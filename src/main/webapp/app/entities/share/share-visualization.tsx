@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Flex, View, } from '@adobe/react-spectrum';
-import './share-visualization.scss';
 import { RouteComponentProps } from 'react-router-dom';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
