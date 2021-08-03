@@ -9,7 +9,7 @@ import Logo from 'app/shared/components/logo/logo';
 import { Divider, Flex, View } from '@adobe/react-spectrum';
 import CanvasHeader from './canvas-header';
 import { isCanvas } from 'app/shared/util/common-utils';
-import CanvasDashboardSearchHeader from './canvas-dashboard-search-header';
+import CanvasSearchHeader from './canvas-search-header';
 
 import { Link } from 'react-router-dom';
 export interface IHeaderProps {
@@ -46,7 +46,7 @@ const Header = (props: IHeaderProps) => {
               </Link>
               {props.isCanvas && (
               
-                  <CanvasDashboardSearchHeader />
+                  <CanvasSearchHeader />
                 
               )}
             </Flex>

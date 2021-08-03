@@ -12,9 +12,11 @@ import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
 import { Flex, View } from '@adobe/react-spectrum';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
-const CanvasDashboardSearchHeader = props => {
+const CanvasSearchHeader = props => {
+  const [dashboardId, setDashboardId] = useState({ "value": '', "label": '' });
+
   const history = useHistory();
-  let dashboard;
+
   useEffect(() => {
     props.getEntities(0, ITEMS_PER_PAGE, null);
   }, []);
@@ -23,9 +25,10 @@ const CanvasDashboardSearchHeader = props => {
     props.getDashboardsByName(newValue);
   };
   const handleInputChangeView = (newValue: string) => {
-    props.getViewsByName(newValue);
+    if(newValue){
+      props.getViewsByName(newValue);
+    }
   };
-
 
   return (
     <>
@@ -35,8 +38,8 @@ const CanvasDashboardSearchHeader = props => {
           <View width={"size-2400"}>
             <Select value={{ "value": props.view?.viewDashboard?.id?.toString(), "label": props.view?.viewDashboard?.dashboardName }} placeholder="Select dashboard" onChange={event => {
               if (event) {
-                dashboard = event;
-                debugger
+                setDashboardId(event);
+
                 props.getDashboardViewEntities(event.value,0, ITEMS_PER_PAGE, 'id,asc');
               }
             }}
@@ -48,7 +51,7 @@ const CanvasDashboardSearchHeader = props => {
           <View width={"size-2400"}>
             <Select value={{ "value": props.view?.id?.toString(), "label": props.view?.viewName }} placeholder="Select view" onChange={event => {
               if (event) {
-                history.push(`/dashboards/build?dahsbordId=${dashboard.value}&viewId=${event.value}`);
+                history.push(`/dashboards/build?dahsbordId=${dashboardId.value}&viewId=${event.value}`);
               }
             }}
               onInputChange={handleInputChangeView}
@@ -76,4 +79,4 @@ const mapDispatchToProps = {
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(CanvasDashboardSearchHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(CanvasSearchHeader);
