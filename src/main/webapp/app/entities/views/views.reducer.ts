@@ -211,7 +211,7 @@ export const getDashboardViewEntities: ICrudGetDashboardViewsAction<IViews> = (d
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}&viewDashboard=${dashboardId}&paginate=true`;
   return {
     type: ACTION_TYPES.FETCH_VIEWS_LIST,
-    payload: axios.get<IViews>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
+    payload: axios.get<IViews>(`${requestUrl}`),
   };
 };
 
