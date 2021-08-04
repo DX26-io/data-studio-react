@@ -76,7 +76,7 @@ const Canvas = (props: VisualizationProp) => {
       v.height = newItem.h;
       v.w = newItem.w;
       v.width = newItem.w;
-      renderVisualization(v, v.data,  "widget", props);
+      renderVisualization(v, v.data, "widget", props);
     }
   };
 
@@ -158,7 +158,8 @@ const Canvas = (props: VisualizationProp) => {
         props.getFeatureCriteria(Number(bookmarkId));
         props.saveRecentBookmark(bookmarkId, params.get('viewId'));
       } else {
-        props.applyFilter({}, props.visualmetadata, props.view);
+        props.saveSelectedFilter({});
+        //props.applyFilter({}, props.visualmetadata, props.view);
       }
     }
   }, [props.visualmetadata]);
@@ -166,7 +167,11 @@ const Canvas = (props: VisualizationProp) => {
   useEffect(() => {
     if (props.isSocketConnected) {
       props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
-      loadVisualization();
+      if (props.visualmetadata?.visualMetadataSet.length > 0) {
+        loadVisualization();
+      } else {
+        props.hideLoader();
+      }
     } else {
       props.receiveSocketResponse();
     }

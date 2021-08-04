@@ -26,7 +26,7 @@ import { getBookmarks, applyBookmark } from 'app/entities/bookmarks/bookmark.red
 import VisualizationShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/visualization-share-modal';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { addFilterFromBookmark } from 'app/modules/canvas/filter/filter-util';
-import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
+import { applyFilter, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import Select from 'react-select';
 import { generateBookmarksOptions } from 'app/entities/bookmarks/bookmark.util';
 import { saveRecentBookmark } from "app/modules/home/sections/recent.reducer";
@@ -73,7 +73,7 @@ const CanvasHeader = props => {
       onPress: setIsBookmarkDialogOpen,
       data: true
     },
-   
+
     {
       icon: <Search size="M" />,
       title: translate('views.menu.search'),
@@ -105,11 +105,11 @@ const CanvasHeader = props => {
     });
     setVisualizationsModelOpen(false);
   };
-  
+
   useEffect(() => {
     if (props.fetchedFeatureCriteria) {
       const filters = addFilterFromBookmark({ ...props.bookmark, featureCriteria: props.featureCriteria });
-      props.applyFilter(filters, props.visualmetadata, props.view);
+      props.saveSelectedFilter(filters);
     }
   }, [props.fetchedFeatureCriteria]);
 
@@ -208,7 +208,8 @@ const mapDispatchToProps = {
   getFeatureCriteria,
   applyFilter,
   applyBookmark,
-  saveRecentBookmark
+  saveRecentBookmark,
+  saveSelectedFilter
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
