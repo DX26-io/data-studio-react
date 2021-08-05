@@ -1,0 +1,93 @@
+#!/bin/bash
+
+echo ""
+echo "[INFO] This script is used for DX26 CI builds only"
+echo ""
+
+set -e
+
+unset DOCKER_USER
+unset DOCKER_PASSWORD
+unset IMAGE
+unset VERSION
+
+function usage()
+{
+    echo ""
+    echo "$(tput setaf 7)👉 Node Integration script $(tput sgr0)"
+    echo ""
+    echo "-du  | --docker-user             Docker Username"
+    echo "-dp  | --docker-password         Docker Password"
+    echo "-i   | --image-name              Image Name"
+    echo "-h   | --help                    Displays all the available options"
+    echo ""
+    echo "$(tput setaf 7)👉 Example usage: $(tput sgr0)"
+    echo "  => ./ci-script"
+    echo "          --docker-user=username"
+    echo "          --docker-password=password"
+    echo "          --image-name=org/imagename"
+    echo ""
+}
+
+while [ "$1" != "" ]; do
+    PARAM=`echo $1 | awk -F= '{print $1}'`
+    VALUE=`echo $1 | awk -F= '{print $2}'`
+    case $PARAM in
+        -h | --help)
+            usage
+            exit
+            ;;
+        -du | --docker-user)
+            DOCKER_USER=$VALUE
+            ;;
+        -dp | --docker-password)
+            DOCKER_PASSWORD=$VALUE
+            ;;
+        -i | --image-name)
+            IMAGE=$VALUE
+            ;;
+        *)
+            echo "$(tput setaf 1)[🛑]  unknown parameter \"$PARAM\" $(tput sgr0)"
+            usage
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+if [[ -z "$DOCKER_USER" ]]; then
+    echo "$(tput setaf 1)[🛑] DOCKER_USER is not specified, specify it using --docker-user | -du flag $(tput sgr0)"
+    exit 1
+fi
+
+if [[ -z "$DOCKER_PASSWORD" ]]; then
+    echo "$(tput setaf 1)[🛑] DOCKER_PASSWORD is not specified, specify it using --docker-password | -dp flag $(tput sgr0)"
+    exit 1
+fi
+
+if [[ -z "$IMAGE" ]]; then
+    echo "$(tput setaf 1)[🛑] IMAGE is not specified, specify it using --image-name | -i flag $(tput sgr0)"
+    exit 1
+fi
+
+VERSION=$(npm version patch)
+
+if [[ -z "$VERSION" ]]; then
+    echo "$(tput setaf 1)[🛑] VERSION unknown, hence exiting $(tput sgr0)"
+    exit 1
+fi
+
+echo "[INFO] Building version: ${IMAGE}:${VERSION}"
+docker build -t $IMAGE:$VERSION .
+
+echo "[INFO] logging into docker"
+docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+
+echo "[INFO] Tagging and pushing versions"
+docker push $IMAGE:$VERSION
+docker tag $IMAGE:$VERSION $IMAGE:latest
+docker push $IMAGE:latest
+
+echo "[INFO] Clean up Images"
+docker rmi $IMAGE:latest
+docker rmi $IMAGE:$VERSION
