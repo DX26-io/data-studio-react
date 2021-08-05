@@ -4,11 +4,11 @@ LABEL maintainer="development@dx26.io"
 
 LABEL name="dx26-io"
 
-RUN mkdir -p /data-studio/
+RUN mkdir -p /data-studio/node_modules/.staging && apk add git
 
 WORKDIR /data-studio/
 
-COPY package*.json /data-studio/
+COPY package.json /data-studio/
 
 RUN npm install
 
