@@ -8,12 +8,15 @@ export const ACTION_TYPES = {
   SAVE_SELECTED_FILTER: 'filter/SAVE_SELECTED_FILTER',
   ADD_SELECTED_FILTER_OPTIONS: 'filter/ADD_SELECTED_FILTER_OPTIONS',
   REMOVE_SELECTED_FILTER_OPTIONS: 'filter/REMOVE_SELECTED_FILTER_OPTIONS',
+  SAVE_DYNAMIC_DATE_RANGEMETA_DATA: 'filter/SAVE_DYNAMIC_DATE_RANGEMETA_DATA',
+  REMOVE_DATE_FILTER: 'filter/REMOVE_DATE_FILTER',
 };
 
 const initialState = {
   isFeaturesPanelOpen: false,
   isFilterOpen: false,
   selectedFilters: {},
+  dynamicDateRangeMetaData: {},
 };
 
 const addOptionIntoFilters = (filter, filters, feature) => {
@@ -31,6 +34,11 @@ const addOptionIntoFilters = (filter, filters, feature) => {
   return Object.assign({}, filters);
 };
 
+const saveDateRangeData = (dynamicDateRangeMetaData: any, dimensionName: string, metaData: any) => {
+  dynamicDateRangeMetaData[dimensionName] = metaData;
+  return dynamicDateRangeMetaData;
+};
+
 export const removeOptionFromFilters = (filter, filters, feature) => {
   if (filters[feature.name] && filters[feature.name].length === 0) {
     delete filters[feature.name];
@@ -43,6 +51,11 @@ export const removeOptionFromFilters = (filter, filters, feature) => {
     }
   }
   return Object.assign({}, filters);
+};
+
+export const removeDateRangeFilters = (filters, feature) => {
+  delete filters[feature];
+  return filters;
 };
 
 export type FilterState = Readonly<typeof initialState>;
@@ -77,6 +90,16 @@ export default (state: FilterState = initialState, action): FilterState => {
       return {
         ...state,
         selectedFilters: removeOptionFromFilters(action.payload, state.selectedFilters, action.Meta),
+      };
+    case ACTION_TYPES.REMOVE_DATE_FILTER:
+      return {
+        ...state,
+        selectedFilters: removeDateRangeFilters(state.selectedFilters, action.payload),
+      };
+    case ACTION_TYPES.SAVE_DYNAMIC_DATE_RANGEMETA_DATA:
+      return {
+        ...state,
+        dynamicDateRangeMetaData: saveDateRangeData(state.dynamicDateRangeMetaData, action.payload, action.Meta),
       };
     default:
       return state;
@@ -131,11 +154,24 @@ export const addAppliedFilters = (filter, feature) => dispatch => {
     Meta: feature,
   });
 };
-
 export const removeAppliedFilters = (filter, feature) => dispatch => {
   dispatch({
-    type: ACTION_TYPES.REMOVE_SELECTED_FILTER_OPTIONS,
     payload: filter,
     Meta: feature,
+  });
+};
+
+export const removeDateFilters = (feature: string) => dispatch => {
+  dispatch({
+    type: ACTION_TYPES.REMOVE_DATE_FILTER,
+    payload: feature,
+  });
+};
+
+export const saveDynamicDateRangeMetaData = (dimensionName: string, metaData: any) => dispatch => {
+  dispatch({
+    type: ACTION_TYPES.SAVE_DYNAMIC_DATE_RANGEMETA_DATA,
+    payload: dimensionName,
+    Meta: metaData,
   });
 };

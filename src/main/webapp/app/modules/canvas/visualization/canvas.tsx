@@ -229,7 +229,7 @@ const Canvas = (props: VisualizationProp) => {
               handleVisualizationClick={handleVisualizationClick}
               view={props.view}
               totalItem={props.visualMetadataContainerList?.length || 0}
-              filterData={props.filterData}
+              filterData={props.filterList}
               isEditMode={props.isEditMode}
               {...props}
             ></VisualizationHeader>
@@ -302,7 +302,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   featuresList: storeState.feature.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
   isEditMode: storeState.visualmetadata.isEditMode,
-  filterData: storeState.visualmetadata.filterData,
+ // filterData: storeState.visualmetadata.filterData,
   visualData: storeState.visualizationData.visualData,
   filterList: storeState.visualizationData.filterData,
   isSocketConnected: storeState.visualizationData.isSocketConnected,
