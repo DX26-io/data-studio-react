@@ -10,18 +10,16 @@ import { applyFilter, applyFilterForShareLink, clearFilter, clearFilterForShareL
 import PanelHeader from 'app/shared/components/panel-header';
 import { IFeature } from 'app/shared/model/feature.model';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
-import { RouteComponentProps } from 'react-router-dom';
 
-
-export interface IFilterPanelProp extends StateProps, DispatchProps, RouteComponentProps { }
+export interface IFilterPanelProp extends StateProps, DispatchProps { 
+   visualizationId? : string
+}
 
 const FilterPanel = (props: IFilterPanelProp) => {
 
   // TODO : need to refector this code
   const [isFilterMinimize, setFilterMinimize] = useState(true);
   const [isFilterPanelClose, setFilterPanelClose] = useState(props.isFilterOpen);
-  const params = new URLSearchParams(props.location.search);
-  const visualizationId = params.get('visualizationId');
 
   useEffect(() => {
     setFilterPanelClose(props.isFilterOpen);
@@ -53,12 +51,11 @@ const FilterPanel = (props: IFilterPanelProp) => {
               <Flex direction="row" justifyContent="end" marginTop="size-125" marginBottom="size-125">
                 <Button
                   onPress={() => {
-                    if (!visualizationId) {
+                    if (!props.visualizationId) {
                       props.applyFilter(props.selectedFilters, props.visualmetadata, props.view);
                     } else {
                       props.applyFilterForShareLink(props.selectedFilters, props.visualmetadataEntity, props.view);
                     }
-
                   }}
                   marginX={5}
                   variant="cta"
@@ -70,18 +67,16 @@ const FilterPanel = (props: IFilterPanelProp) => {
                 </Button>
                 <Button
                   onPress={() => {
-                    if (!visualizationId) {
+                    if (!props.visualizationId) {
                       props.clearFilter({}, props.visualmetadata, props.view);
                     } else {
                       props.clearFilterForShareLink({}, props.visualmetadataEntity, props.view);
                     }
-
                   }}
                   marginX={9}
                   variant="primary"
                 >
                   <Text>
-                    {' '}
                     <Translate contentKey="entity.action.clear">Clear</Translate>
                   </Text>
                 </Button>

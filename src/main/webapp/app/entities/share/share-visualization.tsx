@@ -59,7 +59,7 @@ const ShareVisualization = (props: IShareVisualizationProps) => {
 
     return (
         <>
-            <FilterPanel {...props} />
+            <FilterPanel visualizationId={props.visualmetadataEntity.id} />
             <Flex direction="column" flex gap="size-75">
                 <View id={`visualization-edit-${props.visualmetadataEntity.id}`} height="90vh" >
                 </View>
