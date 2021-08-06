@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dialog, Heading, Divider, Content, ButtonGroup, Button, useDialogContainer, View, Form, TextField } from '@adobe/react-spectrum';
+import { Translate } from 'react-jhipster';
 
 export const CanvasShareModal = () => {
   const dialog = useDialogContainer();
@@ -20,7 +21,7 @@ export const CanvasShareModal = () => {
       </Content>
       <ButtonGroup>
         <Button variant="secondary" onPress={dialog.dismiss}>
-          Cancel
+          <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
         <Button
           onPress={
@@ -28,7 +29,7 @@ export const CanvasShareModal = () => {
           }
           variant="cta"
         >
-          Copy
+           <Translate contentKey="entity.action.copy">Copy</Translate>
         </Button>
       </ButtonGroup>
     </Dialog>

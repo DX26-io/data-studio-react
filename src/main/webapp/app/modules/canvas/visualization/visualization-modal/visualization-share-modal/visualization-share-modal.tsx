@@ -2,7 +2,8 @@ import React from 'react';
 import { Dialog, Heading, Divider, Content, ButtonGroup, Button, useDialogContainer, View, Form, TextField } from '@adobe/react-spectrum';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { IViews } from 'app/shared/model/views.model';
-import { getSharePath } from '../visualization-edit-modal/visualization-edit-modal-util';
+import { getShareLinkUrl } from '../visualization-edit-modal/visualization-edit-modal-util';
+import { Translate } from 'react-jhipster';
 
 export interface IVisualizationShareModalProps {
   view: IViews;
@@ -13,7 +14,7 @@ export const VisualizationShareModal = (props: IVisualizationShareModalProps) =>
   const dialog = useDialogContainer();
 
   const copyDashboardUrl = () => {
-    navigator.clipboard.writeText(getSharePath(props.view,props.visual.id));
+    navigator.clipboard.writeText(getShareLinkUrl(props.view, props.visual.id));
     dialog.dismiss();
   };
 
@@ -23,12 +24,12 @@ export const VisualizationShareModal = (props: IVisualizationShareModalProps) =>
       <Divider />
       <Content>
         <Form labelPosition="side" width="100%">
-          <TextField autoFocus label="Copy URL" defaultValue={getSharePath(props.view,props.visual.id)} />
+          <TextField autoFocus label="Copy URL" defaultValue={getShareLinkUrl(props.view, props.visual.id)} />
         </Form>
       </Content>
       <ButtonGroup>
         <Button variant="secondary" onPress={dialog.dismiss}>
-          Cancel
+          <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
         <Button
           onPress={
@@ -36,7 +37,7 @@ export const VisualizationShareModal = (props: IVisualizationShareModalProps) =>
           }
           variant="cta"
         >
-          Copy
+          <Translate contentKey="entity.action.copy">Copy</Translate>
         </Button>
       </ButtonGroup>
     </Dialog>
