@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { View } from '@adobe/react-spectrum';
-import { RouteComponentProps } from 'react-router-dom';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import { IRootState } from 'app/shared/reducers';
 import { receiveSocketResponse, hideLoader } from 'app/shared/websocket/websocket.reducer';
 import { applyFilter, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
-import FilterElement from 'app/modules/canvas/filter/filter-element';
+import PinnedFilterElement from './pinned-filter-element';
 
 const ReactGridLayout = WidthProvider(RGL);
+
+// TODO : UI disign issues need to fixed
 
 export interface PinnedCanvasFiltersProps extends StateProps, DispatchProps {}
 
@@ -18,37 +19,48 @@ const PinnedCanvasFilters = (props: PinnedCanvasFiltersProps) => {
     isResizable: true,
     items: 5,
     rowHeight: 30,
-    preventCollision: false,
-    compactType: null,
+    preventCollision: true,
     cols: 12,
   };
 
   return (
     <>
-      <View>
-        {props.pinnedFeatures && props.pinnedFeatures.length > 0 && (
-          <ReactGridLayout {...defaultProps}>
+      {props.pinnedFeatures && props.pinnedFeatures.length > 0 && (
+        <ReactGridLayout {...defaultProps} key={'pinned-filters-grid-layout'}>
+          <div
+            key={'pinned-filters-div'}
+            // TODO : marginLeft needs to removed and will be refactored from canvas.tsx
+            style={{
+              overflowY: 'auto',
+              overflowX: 'hidden',
+              marginLeft: '6px',
+              backgroundColor: '#fff',
+              borderWidth: 'var(--spectrum-alias-border-size-thin)',
+              borderColor: 'var(--spectrum-alias-border-color)',
+            }}
+            className="layout"
+            data-grid={{ i: '1', x: 0, y: 0, w: 2.2, h: 4, maxW: Infinity, maxH: Infinity, static: false }}
+          >
             {props.pinnedFeatures &&
               props.pinnedFeatures.length > 0 &&
               props.pinnedFeatures.map((feature, i) => (
-                <div  className="item widget" key={`pinned-filter-${feature.id}`} data-grid={{i, x: i, y: 0,minW:3.5, w: 3.5, h: 3.5, static: false }}>
-                  <FilterElement key={feature.id} feature={feature} />
-                </div>
+                <PinnedFilterElement key={`pinned-filter-element - ${feature.id}`} feature={feature} />
               ))}
-          </ReactGridLayout>
-        )}
-      </View>
+          </div>
+        </ReactGridLayout>
+      )}
     </>
   );
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  pinnedFeatures: storeState.feature.pinnedFeatures,
+  pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true),
   isEditMode: storeState.visualmetadata.isEditMode,
   filterData: storeState.visualmetadata.filterData,
   isSocketConnected: storeState.visualizationData.isSocketConnected,
   selectedFilters: storeState.filter.selectedFilters,
   isFilterOpen: storeState.filter.isFilterOpen,
+  // maxHeight: storeState.feature.pinnedFeatures ? storeState.feature.pinnedFeatures.length + 1 : 0,
 });
 
 const mapDispatchToProps = {

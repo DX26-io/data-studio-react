@@ -79,7 +79,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
   useEffect(() => {
     if (props.visualDataById) {
       if (props.visualDataById?.data.length > 0) {
-        renderVisualization(props.visualmetadataEntity, props.visualDataById?.data, 'visualization-edit');
+        renderVisualization(props.visualmetadataEntity, props.visualDataById?.data, 'visualization-edit',props);
       }
     }
   }, [props.visualDataById]);

@@ -34,6 +34,21 @@ export const getVisualizationData = (visual, view, filter) => {
   }
 };
 
+export const getVisualizationShareData = (visual, view, filter) => {
+  if (visual.fields && ValidateFields(visual.fields)) {
+    const visualMetadata = VisualWrap(visual);
+    const queryDTO = visualMetadata.getQueryParameters(visual, filter, getConditionExpression(filter), 0);
+    const body = {
+      queryDTO,
+      visualMetadata,
+      validationType: REQUIRED_FIELDS,
+      actionType: null,
+      type: 'share-link',
+    };
+    forwardCall(view?.viewDashboard?.dashboardDatasource?.id, body, view.id);
+  }
+};
+
 export const buildQueryDTO = (visualMetaData, filter) => {
   const viz = VisualWrap(visualMetaData);
   return viz.getQueryParameters(visualMetaData, filter, getConditionExpression([]));

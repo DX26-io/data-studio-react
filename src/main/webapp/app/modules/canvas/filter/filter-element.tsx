@@ -21,7 +21,6 @@ export interface IFilterElementProp extends StateProps, DispatchProps {
 }
 
 const FilterElement = (props: IFilterElementProp) => {
-  const [isPinOn, setIsPinOn] = useState(getPin(props.feature.pin));
 
   const handleInputChange = (newValue: string) => {
     // props.setFilterLoader(true);
@@ -87,8 +86,9 @@ const FilterElement = (props: IFilterElementProp) => {
   };
 
   const togglePin = feature => {
-    setIsPinOn(!isPinOn);
-    props.pinFeature(feature.id, !isPinOn);
+    // setIsPinOn(!isPinOn);
+    feature.pin = !feature.pin;
+    props.pinFeature(feature.id, feature.pin);
   };
 
   return (
@@ -126,7 +126,7 @@ const FilterElement = (props: IFilterElementProp) => {
                 togglePin(props.feature);
               }}
             >
-              {isPinOn ? <PinOn size="S" /> : <PinOff size="S" />}
+              {props.feature.pin ? <PinOn size="S" /> : <PinOff size="S" />}
             </ActionButton>
           </Flex>
         </View>
