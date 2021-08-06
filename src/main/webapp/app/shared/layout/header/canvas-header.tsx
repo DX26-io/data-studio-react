@@ -16,7 +16,7 @@ import {
   deleteEntity as deleteVisualmetadataEntity,
   toggleEditMode,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { toggleFeaturesPanel, toggleFilterPanel } from 'app/modules/canvas/filter/filter.reducer';
+import { toggleFeaturesPanel, toggleFilterPanel } from 'app/modules/canvas/filter/filter.reducer'; 
 import { saveViewState } from 'app/entities/views/views.reducer';
 import Filter from '@spectrum-icons/workflow/Filter';
 import { translate } from 'react-jhipster';

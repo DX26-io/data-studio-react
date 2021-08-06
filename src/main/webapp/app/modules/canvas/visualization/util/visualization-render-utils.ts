@@ -364,7 +364,7 @@ export const renderVisualization = (visual, metaData, element = 'widget', props 
 
       const div = $('#' + chartId);
 
-      drawVisualization[visual.metadataVisual.name].drawChart(visual, metaData, div, props);
+      drawVisualization[visual.metadataVisual.name]?.drawChart(visual, metaData, div, props);
     }
   }
 };

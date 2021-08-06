@@ -144,6 +144,13 @@ export const getEntities: ICrudGetAllAction<IDashboard> = (page, size, sort) => 
   };
 };
 
+export const getAllEntities: ICrudGetAllAction<IDashboard> = () => {
+  return {
+    type: ACTION_TYPES.FETCH_DASHBOARD_LIST,
+    payload: axios.get<IDashboard>(`${apiUrl}?cacheBuster=${new Date().getTime()}`),
+  };
+};
+
 export const getEntity: ICrudGetAction<IDashboard> = id => {
   const requestUrl = `${apiUrl}/${id}`;
   return {
