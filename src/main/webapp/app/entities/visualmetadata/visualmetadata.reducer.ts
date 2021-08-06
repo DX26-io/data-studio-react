@@ -40,6 +40,7 @@ const initialState = {
   updateSuccess: false,
   newCreated: false,
   deleteSuccess: false,
+  isvisualMetaDataFetched: false,
   rowQuery: null,
   filterData: {},
   selectedFilter: {},
@@ -57,11 +58,17 @@ export type VisualmetadataState = Readonly<typeof initialState>;
 export default (state: VisualmetadataState = initialState, action): VisualmetadataState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_VISUALMETADATA_LIST):
-    case REQUEST(ACTION_TYPES.FETCH_VISUALMETADATA):
       return {
         ...state,
         errorMessage: null,
         updateSuccess: false,
+        loading: true,
+      };
+    case REQUEST(ACTION_TYPES.FETCH_VISUALMETADATA):
+      return {
+        ...state,
+        errorMessage: null,
+        isvisualMetaDataFetched: false,
         loading: true,
       };
     case REQUEST(ACTION_TYPES.CREATE_VISUALMETADATA):
@@ -80,9 +87,15 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         newCreated: false,
         updating: true,
       };
+
+    case FAILURE(ACTION_TYPES.FETCH_VISUALMETADATA):
+      return {
+        ...state,
+        isvisualMetaDataFetched: false,
+        errorMessage: action.payload,
+      };
     case REQUEST(ACTION_TYPES.VALIDATE_QUERY):
     case FAILURE(ACTION_TYPES.FETCH_VISUALMETADATA_LIST):
-    case FAILURE(ACTION_TYPES.FETCH_VISUALMETADATA):
     case FAILURE(ACTION_TYPES.CREATE_VISUALMETADATA):
       return {
         ...state,
@@ -116,6 +129,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
       return {
         ...state,
         loading: false,
+        isvisualMetaDataFetched: true,
         entity: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.CREATE_VISUALMETADATA):
