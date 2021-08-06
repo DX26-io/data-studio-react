@@ -93,7 +93,7 @@ export const App = (props: IAppProps) => {
   );
 };
 
-const mapStateToProps = ({ authentication, applicationProfile, locale, home, shareVisualization }: IRootState) => ({
+const mapStateToProps = ({ authentication, applicationProfile, locale, home, shareLinkVisualization }: IRootState) => ({
   currentLocale: locale.currentLocale,
   isAuthenticated: authentication.isAuthenticated,
   redirectTo: authentication.redirectTo,
@@ -103,7 +103,7 @@ const mapStateToProps = ({ authentication, applicationProfile, locale, home, sha
   isSwaggerEnabled: applicationProfile.isSwaggerEnabled,
   isCanvas: isCanvas(),
   isHome: home.isHome,
-  isShareLinkPage: shareVisualization.isShareLinkPage
+  isShareLinkPage: shareLinkVisualization.isShareLinkPage
 });
 
 const mapDispatchToProps = { setLocale, getSessionWithPath, getProfile };

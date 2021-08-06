@@ -6,9 +6,9 @@ const initialState = {
   isShareLinkPage: false,
 };
 
-export type ShareVisualizationState = Readonly<typeof initialState>;
+export type shareLinkVisualizationState = Readonly<typeof initialState>;
 
-export default (state: ShareVisualizationState = initialState, action): ShareVisualizationState => {
+export default (state: shareLinkVisualizationState = initialState, action): shareLinkVisualizationState => {
   switch (action.type) {
     case ACTION_TYPES.SET_IS_SHARE_LINK_PAGE:
       return {
@@ -20,7 +20,7 @@ export default (state: ShareVisualizationState = initialState, action): ShareVis
   }
 };
 
-export const setIsShare = (isShare: boolean) => ({
+export const setIsShare = (isShareLinkPage: boolean) => ({
   type: ACTION_TYPES.SET_IS_SHARE_LINK_PAGE,
-  payload: isShare,
+  payload: isShareLinkPage,
 });
