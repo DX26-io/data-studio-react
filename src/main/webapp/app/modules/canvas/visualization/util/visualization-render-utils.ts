@@ -340,8 +340,6 @@ export const renderVisualization = (visual, metaData, element = 'widget', props 
       renderIframe(visual, height, width);
     } else {
       if (visual.fields && ValidateFields(visual.fields)) {
-        let height = widget[0].clientHeight;
-        const width = widget[0].clientWidth;
         const chartId = `chart-${element}-${visual.id}`;
 
         $('#' + chartId).remove('');
