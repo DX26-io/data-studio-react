@@ -13,7 +13,7 @@ export const CanvasShareModal = () => {
   return (
     <Dialog>
       <Heading level={4}>Share</Heading>
-      <Divider />
+       <Divider />
       <Content>
         <Form labelPosition="side" width="100%">
           <TextField autoFocus label="Copy URL" defaultValue={window.location.href} />

@@ -325,56 +325,57 @@ const drawVisualization = {
 export const renderIframe = (item, height, widget) => {
   const iframeLink = item.properties[0].value;
 
-  $(`#iframe-${item.id}`)
-    .attr('width', widget - 30)
-    .attr('height', height - 30)
-    .attr('src', iframeLink);
+  document.getElementById(`iframe-${item.id}`).setAttribute('width', (widget - 30).toString());
+  document.getElementById(`iframe-${item.id}`).setAttribute('height', (height - 30).toString());
+  document.getElementById(`iframe-${item.id}`).setAttribute('src', iframeLink);
 };
 
 export const renderVisualization = (visual, metaData, element = 'widget', props = null) => {
-  const widget = $(`#${element}-${visual.id}`);
-  let height = widget[0].clientHeight;
-  const width = widget[0].clientWidth;
-  if (widget.length > 0) {
+  const widget = document.getElementById(`${element}-${visual.id}`); //$(`#${element}-${visual.id}`);
+  debugger;
+  let height = widget.clientHeight;
+  const width = widget.clientWidth;
+  if (widget) {
     if (visual.metadataVisual.name === VisualizationType.Iframe) {
       renderIframe(visual, height, width);
     } else {
       if (visual.fields && ValidateFields(visual.fields)) {
         const chartId = `chart-${element}-${visual.id}`;
-
+        debugger;
         $('#' + chartId).remove('');
+        document.getElementById(chartId).innerHTML = '';
+
         if (element === 'widget') {
           height = height - 30;
-          $('#visualization-' + visual.id).append(
+          document.getElementById(visual.id).innerHTML =
             '<div id="' +
-              chartId +
-              '" height="' +
-              height +
-              '" width="' +
-              width +
-              '" style="width:' +
-              width +
-              'px; height:' +
-              height +
-              'px;overflow:hidden;position:relative" ></div>'
-          );
+            chartId +
+            '" height="' +
+            height +
+            '" width="' +
+            width +
+            '" style="width:' +
+            width +
+            'px; height:' +
+            height +
+            9 +
+            'px;overflow:hidden;position:relative" ></div>';
         } else {
-          $('#visualization-edit-' + visual.id).append(
+          document.getElementById(visual.id).innerHTML =
             '<div id="' +
-              chartId +
-              '" height="' +
-              height +
-              '" width="' +
-              width +
-              '" style="width:' +
-              width +
-              'px; height:' +
-              height +
-              'px;overflow:hidden;position:relative" ></div>'
-          );
+            chartId +
+            '" height="' +
+            height +
+            '" width="' +
+            width +
+            '" style="width:' +
+            width +
+            'px; height:' +
+            height +
+            'px;overflow:hidden;position:relative" ></div>';
         }
 
-        const div = $('#' + chartId);
+        const div = document.getElementById(chartId);
 
         drawVisualization[visual.metadataVisual.name]?.drawChart(visual, metaData, div, props);
       }
