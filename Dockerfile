@@ -8,7 +8,7 @@ RUN mkdir -p /data-studio/node_modules/.staging && apk add git
 
 WORKDIR /data-studio/
 
-COPY package.json /data-studio/
+COPY package*.json .eslintignore .eslintrc.json tsconfig.json tsconfig.e2e.json ./
 
 RUN npm install
 
