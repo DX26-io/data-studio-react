@@ -61,12 +61,7 @@ const PinnedCanvasFilters = (props: PinnedCanvasFiltersProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true),
-  isEditMode: storeState.visualmetadata.isEditMode,
-  isSocketConnected: storeState.visualizationData.isSocketConnected,
-  selectedFilters: storeState.filter.selectedFilters,
-  isFilterOpen: storeState.filter.isFilterOpen,
-  // maxHeight: storeState.feature.pinnedFeatures ? storeState.feature.pinnedFeatures.length + 1 : 0,
+  pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true)
 });
 
 const mapDispatchToProps = {

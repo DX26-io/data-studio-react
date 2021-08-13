@@ -308,7 +308,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   featuresList: storeState.feature.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
   isEditMode: storeState.visualmetadata.isEditMode,
- // filterData: storeState.visualmetadata.filterData,
   visualData: storeState.visualizationData.visualData,
   filterList: storeState.visualizationData.filterData,
   isSocketConnected: storeState.visualizationData.isSocketConnected,
