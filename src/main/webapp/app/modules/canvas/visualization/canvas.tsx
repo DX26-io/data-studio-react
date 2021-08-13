@@ -238,13 +238,12 @@ const Canvas = (props: VisualizationProp) => {
             <div className="visualBody" id={`visualBody-${v.key}`}>
               {props.pinnedFeatures &&
                 props.pinnedFeatures.length > 0 &&
-                props.pinnedFeatures.map((feature, i) => (
+                props.pinnedFeatures.map((feature) => (
                   <PinnedFilterElement key={`pinned-filter-element - ${feature.id}`} feature={feature} />
                 ))}
 
             </div>
           </div>
-          //<PinnedCanvasFilters />
         )
       } else {
         return (
