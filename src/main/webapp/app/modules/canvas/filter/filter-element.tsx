@@ -7,8 +7,8 @@ import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from '../data-constraints/utils/date-util';
 import { checkIsDateType } from '../visualization/util/visualization-utils';
-import { saveSelectedFilter } from './filter.reducer';
-import { saveDynamicDateRangeMetaData, getPin, load, generateFilterOptions } from './filter-util';
+import { saveDynamicDateRangeMetaData, saveSelectedFilter } from './filter.reducer';
+import { getPin, load, generateFilterOptions } from './filter-util';
 import Select from 'react-select';
 import PinOn from '@spectrum-icons/workflow/PinOn';
 import PinOff from '@spectrum-icons/workflow/PinOff';
@@ -70,9 +70,9 @@ const FilterElement = (props: IFilterElementProp) => {
       if (metadata.dateRangeTab !== 2) {
         props.feature.selected = startDate;
         props.feature.selected2 = endDate;
-      } else {
-        saveDynamicDateRangeMetaData(props.feature.name, metadata);
       }
+      props.saveDynamicDateRangeMetaData(props.feature.name, metadata);
+
       removeFilter(props.feature.name);
       if (startDate) {
         startDate = resetTimezoneData(startDate);
@@ -146,7 +146,7 @@ const mapDispatchToProps = {
   setFilterData,
   addAppliedFilters,
   removeAppliedFilters,
-  // setFilterLoader
+  saveDynamicDateRangeMetaData
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

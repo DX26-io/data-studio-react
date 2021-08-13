@@ -77,7 +77,7 @@ const Canvas = (props: VisualizationProp) => {
       v.height = newItem.h;
       v.w = newItem.w;
       v.width = newItem.w;
-      renderVisualization(v, v.data,  "widget", props);
+      renderVisualization(v, v.data, "widget", props);
     }
   };
 
@@ -159,7 +159,7 @@ const Canvas = (props: VisualizationProp) => {
         props.getFeatureCriteria(Number(bookmarkId));
         props.saveRecentBookmark(bookmarkId, params.get('viewId'));
       } else {
-        props.applyFilter({}, props.visualmetadata, props.view);
+        props.saveSelectedFilter({});
       }
     }
   }, [props.visualmetadata]);
@@ -167,7 +167,11 @@ const Canvas = (props: VisualizationProp) => {
   useEffect(() => {
     if (props.isSocketConnected) {
       props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
-      loadVisualization();
+      if (props.visualmetadata?.visualMetadataSet.length > 0) {
+        loadVisualization();
+      } else {
+        props.hideLoader();
+      }
     } else {
       props.receiveSocketResponse();
     }
@@ -225,7 +229,7 @@ const Canvas = (props: VisualizationProp) => {
               handleVisualizationClick={handleVisualizationClick}
               view={props.view}
               totalItem={props.visualMetadataContainerList?.length || 0}
-              filterData={props.filterData}
+              filterData={props.filterList}
               isEditMode={props.isEditMode}
               {...props}
             ></VisualizationHeader>
@@ -304,7 +308,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   featuresList: storeState.feature.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
   isEditMode: storeState.visualmetadata.isEditMode,
-  filterData: storeState.visualmetadata.filterData,
   visualData: storeState.visualizationData.visualData,
   filterList: storeState.visualizationData.filterData,
   isSocketConnected: storeState.visualizationData.isSocketConnected,

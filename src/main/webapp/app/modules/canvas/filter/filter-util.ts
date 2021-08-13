@@ -185,10 +185,6 @@ export const getConditionExpression = (paramObject: any, additionalFeaturesArray
   return getConditionExpressionForParams(additionalFeaturesArray, paramsArray);
 };
 
-export const saveDynamicDateRangeMetaData = (dimensionName: string, metaData: any) => {
-  dynamicDateRangeMetaData[dimensionName] = metaData;
-};
-
 export const isDateRange = (name, selectedFilters) => {
   if (selectedFilters[name]._meta.dataType) {
     if (selectedFilters[name]._meta.valueType === 'castValueType' || selectedFilters[name]._meta.valueType === 'valueType') {
@@ -335,6 +331,17 @@ export const generateFilterOptions = data => {
       const featureName = Object.keys(option)[0];
       options.push({ value: option[featureName], label: option[featureName] });
     });
+  }
+  return options;
+};
+
+export const generateOptionsForDateRange = (config: any) => {
+  const options = [];
+  if (config.tab === '2') {
+    options.push({ value: config.currentDynamicDateRangeConfig.title, label: config.currentDynamicDateRangeConfig.title });
+  } else {
+    const date = changeDateFormat(config.startDateFormatted) + ' To ' + changeDateFormat(config.endDateFormatted);
+    options.push({ value: date, label: date });
   }
   return options;
 };

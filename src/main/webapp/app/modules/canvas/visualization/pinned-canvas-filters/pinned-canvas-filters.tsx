@@ -61,7 +61,7 @@ const PinnedCanvasFilters = (props: PinnedCanvasFiltersProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true),
+  pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true)
 });
 
 const mapDispatchToProps = {

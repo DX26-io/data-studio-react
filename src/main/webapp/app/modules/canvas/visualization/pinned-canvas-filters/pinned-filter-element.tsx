@@ -7,9 +7,9 @@ import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import DateRangeComponent from 'app/modules/canvas/data-constraints/date-range-component';
 import { resetTimezoneData } from 'app/modules/canvas/data-constraints/utils/date-util';
 import { checkIsDateType } from 'app/modules/canvas/visualization/util/visualization-utils';
-import { saveDynamicDateRangeMetaData, getPin, load, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
+import { getPin, load, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 import Select from 'react-select';
-import { addAppliedFilters, removeAppliedFilters, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
+import { addAppliedFilters, removeAppliedFilters, saveDynamicDateRangeMetaData, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
 
 export interface IPinnedFilterElementProp extends StateProps, DispatchProps {
@@ -64,7 +64,7 @@ const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
         props.feature.selected = startDate;
         props.feature.selected2 = endDate;
       } else {
-        saveDynamicDateRangeMetaData(props.feature.name, metadata);
+        props.saveDynamicDateRangeMetaData(props.feature.name, metadata);
       }
       removeFilter(props.feature.name);
       if (startDate) {
@@ -119,6 +119,7 @@ const mapDispatchToProps = {
   setFilterData,
   addAppliedFilters,
   removeAppliedFilters,
+  saveDynamicDateRangeMetaData
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
