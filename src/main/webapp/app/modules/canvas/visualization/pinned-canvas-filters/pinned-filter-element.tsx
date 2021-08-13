@@ -17,7 +17,6 @@ export interface IPinnedFilterElementProp extends StateProps, DispatchProps {
 }
 
 const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
-
   const handleInputChange = (newValue: string) => {
     props.setFilterData(null);
     load(newValue, props.feature.name, props.view?.id, props.view?.viewDashboard?.dashboardDatasource.id);
@@ -84,6 +83,7 @@ const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
       <Flex alignItems="center">
         {checkIsDateType(props.feature) ? (
           <View minWidth="100%">
+            <span className="spectrum-Body-emphasis--sizeXXS">{props.feature.name}</span>
             <DateRangeComponent onDateChange={onDateChange} />
           </View>
         ) : (

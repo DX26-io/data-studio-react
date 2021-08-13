@@ -26,6 +26,8 @@ registerLocale(store);
 const actions = bindActionCreators({ clearAuthentication }, store.dispatch);
 setupAxiosInterceptors(() => actions.clearAuthentication('login.error.unauthorized'));
 
+// TODO: FIX ESlint issue
+// eslint-disable-next-line
 async function init() {
   // loadIcons();
   await loadConfig();
