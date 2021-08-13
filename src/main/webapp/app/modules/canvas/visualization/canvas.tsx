@@ -159,7 +159,6 @@ const Canvas = (props: VisualizationProp) => {
         props.saveRecentBookmark(bookmarkId, params.get('viewId'));
       } else {
         props.saveSelectedFilter({});
-        //props.applyFilter({}, props.visualmetadata, props.view);
       }
     }
   }, [props.visualmetadata]);
