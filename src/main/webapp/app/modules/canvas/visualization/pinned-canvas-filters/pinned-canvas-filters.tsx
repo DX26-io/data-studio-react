@@ -8,7 +8,7 @@ import PinnedFilterElement from './pinned-filter-element';
 import PinnedFiltersHeader from './pinned-filters-header';
 const ReactGridLayout = WidthProvider(RGL);
 
-export interface PinnedCanvasFiltersProps extends StateProps, DispatchProps {}
+export interface PinnedCanvasFiltersProps extends StateProps, DispatchProps { }
 
 const PinnedCanvasFilters = (props: PinnedCanvasFiltersProps) => {
   const defaultProps = {
@@ -23,38 +23,33 @@ const PinnedCanvasFilters = (props: PinnedCanvasFiltersProps) => {
   return (
     <>
       {props.pinnedFeatures && props.pinnedFeatures.length > 0 && (
-        <ReactGridLayout margin={[15, 15]} {...defaultProps} key={`pinned-filters-grid-layout-${props.pinnedFeatures.length}`}>
-          <div
-            key={'pinned-filters-div'}
-            // TODO : marginLeft needs to removed and will be refactored from canvas.tsx
-            style={{
-              overflowY: 'auto',
-              overflowX: 'hidden',
-              backgroundColor:
-                'var(--spectrum-alias-background-color-gray-75, var(--spectrum-global-color-gray-75, var(--spectrum-semantic-gray-75-color-background)))',
-              borderWidth: 'var(--spectrum-alias-border-size-thin)',
-              borderColor: 'var(--spectrum-alias-border-color)',
-            }}
-            className="layout"
-            data-grid={{
-              i: '1',
-              x: 0,
-              y: 0,
-              w: 2.2,
-              h: 5 + props.pinnedFeatures.length,
-              maxW: Infinity,
-              maxH: Infinity,
-              static: false,
-            }}
-          >
+        <div
+          className="layout widget"
+          id={`filter-pinned-filters-div`}
+          key={`viz-widget-pinned-filters-div`}
+          data-grid={{
+            i: 'pinned-filters-div',
+            x: 0,
+            y: 0,
+            w: 1,
+            h: 5 + props.pinnedFeatures.length,
+            maxW: Infinity,
+            maxH: Infinity,
+            isBounded: true,
+          }}
+        >
+          <div className="header">
             <PinnedFiltersHeader />
+          </div>
+          <div className="visualBody" id={`visualBody-pinned-filters-div`}>
             {props.pinnedFeatures &&
               props.pinnedFeatures.length > 0 &&
               props.pinnedFeatures.map((feature, i) => (
                 <PinnedFilterElement key={`pinned-filter-element - ${feature.id}`} feature={feature} />
               ))}
+
           </div>
-        </ReactGridLayout>
+        </div>
       )}
     </>
   );
