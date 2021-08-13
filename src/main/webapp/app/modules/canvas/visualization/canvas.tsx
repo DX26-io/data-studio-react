@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { View } from '@adobe/react-spectrum';
 import { RouteComponentProps } from 'react-router-dom';
-import RGL, { WidthProvider } from 'react-grid-layout';
 import './canvas.scss';
 import 'flair-visualizations/styles/stylesheets/screen.css';
 import { getEntity as getViewEntity, getCurrentViewState, saveViewState } from 'app/entities/views/views.reducer';
@@ -41,8 +40,11 @@ import { applyFilter, saveSelectedFilter } from 'app/modules/canvas/filter/filte
 import { applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { VisualizationType } from 'app/shared/util/visualization.constants';
 import PinnedCanvasFilters from "app/modules/canvas/visualization/pinned-canvas-filters/pinned-canvas-filters";
+import PinnedFiltersHeader from './pinned-canvas-filters/pinned-filters-header';
+import PinnedFilterElement from './pinned-canvas-filters/pinned-filter-element';
 
-const ReactGridLayout = WidthProvider(RGL);
+import { WidthProvider, Responsive as ResponsiveGridLayout, } from 'react-grid-layout';
+const ReactGridLayout = WidthProvider(ResponsiveGridLayout);
 
 export interface IIllustrate {
   visualizationId: string;
@@ -58,7 +60,7 @@ const Canvas = (props: VisualizationProp) => {
   const params = new URLSearchParams(props.location.search);
 
   const onLayoutChange = _visualmetaList => {
-    props.visualmetadata.visualMetadataSet.map((item, i) => {
+    props.visualmetadata?.visualMetadataSet?.map((item, i) => {
       (item.x = _visualmetaList[i].x),
         (item.y = _visualmetaList[i].y),
         (item.h = _visualmetaList[i].h),
@@ -184,6 +186,13 @@ const Canvas = (props: VisualizationProp) => {
   }, [props.updateSuccess]);
 
   useEffect(() => {
+    props.visualMetadataContainerList.push({
+      key: 'pinned-filters-div',
+      x: 0,
+      y: 0,
+      w: 1,
+      h: 5 + props.pinnedFeatures.length
+    })
     if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
       renderVisualizationById(props.visualmetadataEntity);
     }
@@ -206,55 +215,89 @@ const Canvas = (props: VisualizationProp) => {
   const generateWidge =
     props.visualMetadataContainerList &&
     props.visualMetadataContainerList.map((v, i) => {
-      return (
-        <div
-          className="item widget"
-          id={`widget-${v.id}`}
-          key={`viz-widget-${v.id}`}
-          data-grid={{
-            i: v.id,
-            x: v.xPosition || 0,
-            y: v.yPosition || 0,
-            w: v.width,
-            h: v.height,
-            maxW: Infinity,
-            maxH: Infinity,
-            isBounded: true,
-          }}
-        >
-          <div className="header">
-            <VisualizationHeader
-              key={`viz-header-${v.id}`}
-              visual={v}
-              handleVisualizationClick={handleVisualizationClick}
-              view={props.view}
-              totalItem={props.visualMetadataContainerList?.length || 0}
-              filterData={props.filterList}
-              isEditMode={props.isEditMode}
-              {...props}
-            ></VisualizationHeader>
-          </div>
-          <div style={{ backgroundColor: v.bodyProperties.backgroundColor }} className="visualBody" id={`visualBody-${v.id}`}>
-            <div className="illustrate">
-              {isLoaderDisplay[i]?.noDataFoundVisibility && (
-                <div
-                  style={{ display: isLoaderDisplay[i]?.noDataFoundVisibility ? 'block' : 'none' }}
-                  className={`dataNotFound dataNotFound-${v.id}`}
-                >
-                  <NoDataFoundPlaceHolder />
-                </div>
-              )}
+      if (v.key) {
+        return (
+          <div
+            className="layout widget"
+            id={`filter-${v.key}`}
+            key={`viz-widget-${v.key}`}
+            data-grid={{
+              i: v.key,
+              x: 0,
+              y: 0,
+              w: 1,
+              h: 5 + props.pinnedFeatures.length,
+              maxW: Infinity,
+              maxH: Infinity,
+              isBounded: true,
+            }}
+          >
+            <div className="header">
+              <PinnedFiltersHeader />
             </div>
-            <div id={`visualization-${v.id}`} className="visualization">
-              {
-                v.metadataVisual.name === VisualizationType.Iframe && (
-                  <iframe id={`iframe-${v.id}`} />
-                )
-              }
+            <div className="visualBody" id={`visualBody-${v.key}`}>
+              {props.pinnedFeatures &&
+                props.pinnedFeatures.length > 0 &&
+                props.pinnedFeatures.map((feature, i) => (
+                  <PinnedFilterElement key={`pinned-filter-element - ${feature.id}`} feature={feature} />
+                ))}
+
             </div>
           </div>
-        </div>
-      );
+          //<PinnedCanvasFilters />
+        )
+      } else {
+        return (
+          <div
+            className="item widget"
+            id={`widget-${v.id}`}
+            key={`viz-widget-${v.id}`}
+            data-grid={{
+              i: v.id,
+              x: v.xPosition || 0,
+              y: v.yPosition || 0,
+              w: v.width,
+              h: v.height,
+              maxW: Infinity,
+              maxH: Infinity,
+              isBounded: true,
+            }}
+          >
+            <div className="header">
+              <VisualizationHeader
+                key={`viz-header-${v.id}`}
+                visual={v}
+                handleVisualizationClick={handleVisualizationClick}
+                view={props.view}
+                totalItem={props.visualMetadataContainerList?.length || 0}
+                filterData={props.filterList}
+                isEditMode={props.isEditMode}
+                {...props}
+              ></VisualizationHeader>
+            </div>
+            <div style={{ backgroundColor: v.bodyProperties.backgroundColor }} className="visualBody" id={`visualBody-${v.id}`}>
+              <div className="illustrate">
+                {isLoaderDisplay[i]?.noDataFoundVisibility && (
+                  <div
+                    style={{ display: isLoaderDisplay[i]?.noDataFoundVisibility ? 'block' : 'none' }}
+                    className={`dataNotFound dataNotFound-${v.id}`}
+                  >
+                    <NoDataFoundPlaceHolder />
+                  </div>
+                )}
+              </div>
+              <div id={`visualization-${v.id}`} className="visualization">
+                {
+                  v.metadataVisual.name === VisualizationType.Iframe && (
+                    <iframe id={`iframe-${v.id}`} />
+                  )
+                }
+              </div>
+            </div>
+          </div>
+        );
+      }
+
     });
 
   return (
@@ -270,12 +313,12 @@ const Canvas = (props: VisualizationProp) => {
             <Loader />
           </div>
         )}
-        <PinnedCanvasFilters />
         {props.visualMetadataContainerList && props.visualMetadataContainerList.length > 0 && (
           <ReactGridLayout
             className="layout"
             rowHeight={120}
-            cols={3}
+            breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+            cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 2 }}
             layout={props.visualMetadataContainerList}
             margin={[15, 15]}
             verticalCompact={true}
@@ -316,6 +359,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   isSearchOpen: storeState.search.isSearchOpen,
   selectedFilters: storeState.filter.selectedFilters,
   isFilterOpen: storeState.filter.isFilterOpen,
+  pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true)
+
 });
 
 const mapDispatchToProps = {
