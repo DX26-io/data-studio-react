@@ -331,7 +331,7 @@ export const renderIframe = (item, height, widget) => {
 };
 
 export const renderVisualization = (visual, metaData, element = 'widget', props = null) => {
-  const widget = document.getElementById(`${element}-${visual.id}`); //$(`#${element}-${visual.id}`);
+  const widget = document.getElementById(`${element}-${visual.id}`);
   let height = widget.clientHeight;
   const width = widget.clientWidth;
   if (widget) {
@@ -345,7 +345,7 @@ export const renderVisualization = (visual, metaData, element = 'widget', props 
           document.getElementById(chartId).innerHTML = '';
         }
 
-        let divElement = document.createElement('div');
+        const divElement = document.createElement('div');
         if (element === 'widget') {
           height = height - 30;
 
