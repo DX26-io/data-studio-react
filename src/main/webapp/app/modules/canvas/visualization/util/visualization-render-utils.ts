@@ -66,7 +66,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      clusteredverticalBarChartObj(div[0]);
+      clusteredverticalBarChartObj(div);
     },
   },
   'Clustered Horizontal Bar Chart': {
@@ -80,7 +80,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      clusteredhorizontalBarChartObj(div[0]);
+      clusteredhorizontalBarChartObj(div);
     },
   },
   'Stacked Vertical Bar Chart': {
@@ -94,7 +94,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      stackedverticalBarChartObj(div[0]);
+      stackedverticalBarChartObj(div);
     },
   },
   'Stacked Horizontal Bar Chart': {
@@ -108,7 +108,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      stackedhorizontalBarChartObj(div[0]);
+      stackedhorizontalBarChartObj(div);
     },
   },
   'Line Chart': {
@@ -122,7 +122,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      lineChartObj(div[0]);
+      lineChartObj(div);
     },
   },
   'Combo Chart': {
@@ -136,7 +136,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      comboChartObj(div[0]);
+      comboChartObj(div);
     },
   },
   'Pie Chart': {
@@ -150,7 +150,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      pieChartObj(div[0]);
+      pieChartObj(div);
     },
   },
   'Doughnut Chart': {
@@ -164,7 +164,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      doughnutChartObj(div[0]);
+      doughnutChartObj(div);
     },
   },
   'Pie Grid': {
@@ -178,7 +178,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      pieGridChartObj(div[0]);
+      pieGridChartObj(div);
     },
   },
   'Number Grid': {
@@ -192,7 +192,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      numberGridChartObj(div[0]);
+      numberGridChartObj(div);
     },
   },
   'Bullet Chart': {
@@ -206,14 +206,14 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      bulletChartObj(div[0]);
+      bulletChartObj(div);
     },
   },
   Table: {
     drawChart(visual, metaData, div, broadcast) {
       const config = configuration.GetTableChartConfig(visual);
       const tableChartObj = flairVisualizations.table().config(config).print(false).notification(false).broadcast(broadcast).data(metaData);
-      tableChartObj(div[0]);
+      tableChartObj(div);
     },
   },
   'Pivot Table': {
@@ -226,7 +226,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      pivotTableChartObj(div[0]);
+      pivotTableChartObj(div);
     },
   },
   Sankey: {
@@ -240,7 +240,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      sankeyChartObj(div[0]);
+      sankeyChartObj(div);
     },
   },
   'Heat Map': {
@@ -254,7 +254,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      heatmapChartObj(div[0]);
+      heatmapChartObj(div);
     },
   },
   'Tree Map': {
@@ -268,7 +268,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      treemapChartObj(div[0]);
+      treemapChartObj(div);
     },
   },
   'Scatter plot': {
@@ -282,14 +282,14 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      scatterChartObj(div[0]);
+      scatterChartObj(div);
     },
   },
   KPI: {
     drawChart(visual, metaData, div, broadcast) {
       const config = configuration.GetKPIConfig(visual);
       const kpiChartObj = flairVisualizations.kpi().config(config).print(false).notification(false).broadcast(broadcast).data(metaData);
-      kpiChartObj(div[0]);
+      kpiChartObj(div);
     },
   },
   'Chord Diagram': {
@@ -303,7 +303,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      chorddiagramChartObj(div[0]);
+      chorddiagramChartObj(div);
     },
   },
   'Info-graphic': {
@@ -317,7 +317,7 @@ const drawVisualization = {
         .notification(false)
         .broadcast(broadcast)
         .data(metaData);
-      infographicChartObj(div[0]);
+      infographicChartObj(div);
     },
   },
 };
@@ -340,37 +340,26 @@ export const renderVisualization = (visual, metaData, element = 'widget', props 
     } else {
       if (visual.fields && ValidateFields(visual.fields)) {
         const chartId = `chart-${element}-${visual.id}`;
-        $('#' + chartId).remove('');
-        document.getElementById(chartId).innerHTML = '';
 
+        if (document.getElementById(chartId)) {
+          document.getElementById(chartId).innerHTML = '';
+        }
+
+        let divElement = document.createElement('div');
         if (element === 'widget') {
           height = height - 30;
-          document.getElementById(visual.id).innerHTML =
-            '<div id="' +
-            chartId +
-            '" height="' +
-            height +
-            '" width="' +
-            width +
-            '" style="width:' +
-            width +
-            'px; height:' +
-            height +
-            9 +
-            'px;overflow:hidden;position:relative" ></div>';
+
+          divElement.setAttribute('id', chartId);
+          divElement.setAttribute('height', height.toString());
+          divElement.setAttribute('width', width.toString());
+
+          document.getElementById(`visualization-${visual.id}`).appendChild(divElement);
         } else {
-          document.getElementById(visual.id).innerHTML =
-            '<div id="' +
-            chartId +
-            '" height="' +
-            height +
-            '" width="' +
-            width +
-            '" style="width:' +
-            width +
-            'px; height:' +
-            height +
-            'px;overflow:hidden;position:relative" ></div>';
+          divElement.setAttribute('id', chartId);
+          divElement.setAttribute('height', height.toString());
+          divElement.setAttribute('width', width.toString());
+
+          document.getElementById(`visualization-${visual.id}`).appendChild(divElement);
         }
 
         const div = document.getElementById(chartId);
