@@ -1,3 +1,4 @@
+import { IViews } from 'app/shared/model/views.model';
 import { translate } from 'react-jhipster';
 
 interface ITabData {
@@ -108,4 +109,8 @@ export const generateHierarchiesOptions = hierarchies => {
       options.push({ value: item.id, label: item.name });
     });
   return options;
+};
+
+export const getShareLinkUrl = (view: IViews, visualizationId: string) => {
+  return `${location.host}/dashboards/share?dashboardName=${view.viewDashboard.dashboardName}&viewName=${view.viewName}&dashboarID=${view.viewDashboard.id}&viewId=${view.id}&datasourceId=${view.viewDashboard.dashboardDatasource.id}&visualizationId=${visualizationId}`;
 };

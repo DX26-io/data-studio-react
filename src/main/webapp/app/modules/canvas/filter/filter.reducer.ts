@@ -1,4 +1,4 @@
-import { getVisualizationData, ValidateFields } from '../visualization/util/visualization-render-utils';
+import { getVisualizationData, getVisualizationShareData, ValidateFields } from '../visualization/util/visualization-render-utils';
 import { IViews } from 'app/shared/model/views.model';
 import { hideLoader } from 'app/shared/websocket/websocket.reducer';
 
@@ -161,17 +161,12 @@ export const removeAppliedFilters = (filter, feature) => dispatch => {
   });
 };
 
-export const removeDateFilters = (feature: string) => dispatch => {
-  dispatch({
-    type: ACTION_TYPES.REMOVE_DATE_FILTER,
-    payload: feature,
-  });
+export const applyFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
+  dispatch(saveSelectedFilter(filters));
+  getVisualizationShareData(visualmetadata, view, filters);
 };
 
-export const saveDynamicDateRangeMetaData = (dimensionName: string, metaData: any) => dispatch => {
-  dispatch({
-    type: ACTION_TYPES.SAVE_DYNAMIC_DATE_RANGEMETA_DATA,
-    payload: dimensionName,
-    Meta: metaData,
-  });
+export const clearFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
+  dispatch(saveSelectedFilter({}));
+  getVisualizationShareData(visualmetadata, view, filters);
 };

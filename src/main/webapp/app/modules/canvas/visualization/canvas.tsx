@@ -39,6 +39,7 @@ import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
 import { applyFilter, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
+import { VisualizationType } from 'app/shared/util/visualization.constants';
 import PinnedCanvasFilters from "app/modules/canvas/visualization/pinned-canvas-filters/pinned-canvas-filters";
 
 const ReactGridLayout = WidthProvider(RGL);
@@ -244,7 +245,13 @@ const Canvas = (props: VisualizationProp) => {
                 </div>
               )}
             </div>
-            <div id={`visualization-${v.id}`} className="visualization"></div>
+            <div id={`visualization-${v.id}`} className="visualization">
+              {
+                v.metadataVisual.name === VisualizationType.Iframe && (
+                  <iframe id={`iframe-${v.id}`} />
+                )
+              }
+            </div>
           </div>
         </div>
       );
@@ -336,3 +343,4 @@ type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Canvas);
+

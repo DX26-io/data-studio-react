@@ -3,7 +3,7 @@ import flairVisualizations from 'flair-visualizations/js/main';
 import Configuration from 'flair-visualizations/js/extras/configs/configuration';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { VisualWrap } from './visualmetadata-wrapper';
-import { REQUIRED_FIELDS } from 'app/shared/util/visualization.constants';
+import { REQUIRED_FIELDS, VisualizationType } from 'app/shared/util/visualization.constants';
 import { getConditionExpression } from '../../filter/filter-util';
 
 const configuration = Configuration();
@@ -322,19 +322,31 @@ const drawVisualization = {
   },
 };
 
+export const renderIframe = (item, height, widget) => {
+  const iframeLink = item.properties[0].value;
+
+  document.getElementById(`iframe-${item.id}`).setAttribute('width', (widget - 30).toString());
+  document.getElementById(`iframe-${item.id}`).setAttribute('height', (height - 30).toString());
+  document.getElementById(`iframe-${item.id}`).setAttribute('src', iframeLink);
+};
+
 export const renderVisualization = (visual, metaData, element = 'widget', props = null) => {
-  if (visual.fields && ValidateFields(visual.fields)) {
-    const widget = $(`#${element}-${visual.id}`);
-    if (widget.length > 0) {
-      let height = widget[0].clientHeight;
-      const width = widget[0].clientWidth;
-      const chartId = `chart-${element}-${visual.id}`;
+  const widget = document.getElementById(`${element}-${visual.id}`); //$(`#${element}-${visual.id}`);
+  let height = widget.clientHeight;
+  const width = widget.clientWidth;
+  if (widget) {
+    if (visual.metadataVisual.name === VisualizationType.Iframe) {
+      renderIframe(visual, height, width);
+    } else {
+      if (visual.fields && ValidateFields(visual.fields)) {
+        const chartId = `chart-${element}-${visual.id}`;
+        $('#' + chartId).remove('');
+        document.getElementById(chartId).innerHTML = '';
 
-      $('#' + chartId).remove('');
-      if (element === 'widget') {
-        height = height - 30;
-        $('#visualization-' + visual.id).append(
-          '<div id="' +
+        if (element === 'widget') {
+          height = height - 30;
+          document.getElementById(visual.id).innerHTML =
+            '<div id="' +
             chartId +
             '" height="' +
             height +
@@ -344,11 +356,11 @@ export const renderVisualization = (visual, metaData, element = 'widget', props 
             width +
             'px; height:' +
             height +
-            'px;overflow:hidden;position:relative" ></div>'
-        );
-      } else {
-        $('#visualization-edit-' + visual.id).append(
-          '<div id="' +
+            9 +
+            'px;overflow:hidden;position:relative" ></div>';
+        } else {
+          document.getElementById(visual.id).innerHTML =
+            '<div id="' +
             chartId +
             '" height="' +
             height +
@@ -358,13 +370,13 @@ export const renderVisualization = (visual, metaData, element = 'widget', props 
             width +
             'px; height:' +
             height +
-            'px;overflow:hidden;position:relative" ></div>'
-        );
+            'px;overflow:hidden;position:relative" ></div>';
+        }
+
+        const div = document.getElementById(chartId);
+
+        drawVisualization[visual.metadataVisual.name]?.drawChart(visual, metaData, div, props);
       }
-
-      const div = $('#' + chartId);
-
-      drawVisualization[visual.metadataVisual.name]?.drawChart(visual, metaData, div, props);
     }
   }
 };
