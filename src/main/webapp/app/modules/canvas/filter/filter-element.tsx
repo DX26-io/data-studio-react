@@ -96,7 +96,7 @@ const FilterElement = (props: IFilterElementProp) => {
       <div className="filter-element">
         <View padding={5} margin={5} borderWidth="thin" borderColor="default" backgroundColor="gray-75" borderRadius="regular">
           <span className="spectrum-Body-emphasis--sizeXXS">{props.feature.name}</span>
-          <Flex direction="row" alignItems="center" gap="size-50">
+          <Flex direction="row" justifyContent={"space-between"} alignItems="center" gap="size-50">
             {checkIsDateType(props.feature) ? (
               <View minWidth="size-3400">
                 <DateRangeComponent onDateChange={onDateChange} />

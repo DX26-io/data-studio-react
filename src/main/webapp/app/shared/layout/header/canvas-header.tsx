@@ -23,7 +23,6 @@ import { translate } from 'react-jhipster';
 import { toggleSearch } from 'app/entities/search/search.reducer';
 import BookmarkUpdate from 'app/entities/bookmarks/bookmark-update';
 import { getBookmarks, applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
-import VisualizationShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/visualization-share-modal';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { addFilterFromBookmark } from 'app/modules/canvas/filter/filter-util';
 import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
@@ -32,6 +31,7 @@ import { generateBookmarksOptions } from 'app/entities/bookmarks/bookmark.util';
 import { saveRecentBookmark } from "app/modules/home/sections/recent.reducer";
 import CanvasHeaderIcon from 'app/shared/components/canvas-header-icon/canvas-header-icon';
 import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
+import CanvasShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/canvas-share-modal';
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
@@ -160,7 +160,7 @@ const CanvasHeader = props => {
 
         </Flex>
         <DialogContainer onDismiss={() => setIsShareDialogOpen(false)}>
-          {isShareDialogOpen && <VisualizationShareModal />}
+          {isShareDialogOpen && <CanvasShareModal />}
         </DialogContainer>
         <DialogContainer type="fullscreen" onDismiss={() => setVisualizationsModelOpen(false)} {...props}>
           {isVisualizationsModelOpen && (
