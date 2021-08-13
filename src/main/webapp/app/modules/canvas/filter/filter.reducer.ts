@@ -170,3 +170,18 @@ export const clearFilterForShareLink = (filters: any, visualmetadata: any, view:
   dispatch(saveSelectedFilter({}));
   getVisualizationShareData(visualmetadata, view, filters);
 };
+
+export const removeDateFilters = (feature: string) => dispatch => {
+  dispatch({
+    type: ACTION_TYPES.REMOVE_DATE_FILTER,
+    payload: feature,
+  });
+};
+
+export const saveDynamicDateRangeMetaData = (dimensionName: string, metaData: any) => dispatch => {
+  dispatch({
+    type: ACTION_TYPES.SAVE_DYNAMIC_DATE_RANGEMETA_DATA,
+    payload: dimensionName,
+    Meta: metaData,
+  });
+};
