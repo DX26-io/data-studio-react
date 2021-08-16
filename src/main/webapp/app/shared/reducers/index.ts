@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { loadingBarReducer as loadingBar } from 'react-redux-loading-bar';
 
 import locale, { LocaleState } from './locale';
 import authentication, { AuthenticationState } from './authentication';
@@ -84,7 +83,6 @@ export interface IRootState {
   readonly visualmetadata: VisualmetadataState;
   readonly search: SearchState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
-  readonly loadingBar: any;
   readonly filter: FilterState;
   readonly scheduler: SchedulerState;
   readonly notification: notificationState;
@@ -125,7 +123,6 @@ const rootReducer = combineReducers<IRootState>({
   visualmetadata,
   search,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
-  loadingBar,
   filter,
   scheduler,
   notification,
