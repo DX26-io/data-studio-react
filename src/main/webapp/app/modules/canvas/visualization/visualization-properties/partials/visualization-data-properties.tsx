@@ -28,6 +28,7 @@ import { Field } from 'app/shared/model/field.model';
 import Select from 'react-select';
 import { IHierarchy } from 'app/shared/model/hierarchy.model';
 import { generateHierarchiesOptions } from '../../visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
+import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
 
 export interface IVisualizationDataPropertiesProps {
   features: readonly IFeature[];
@@ -123,7 +124,13 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
       setShowMeasure(false);
     }
   };
-
+  function generate(element) {
+    return props.visual.fields.map((value) =>
+      React.cloneElement(element, {
+        key: value.feature.id,
+      }),
+    );
+  }
   const featureChange = feature => {
     const selectedFeature = props.features.filter(item => {
       return item.name === feature.split('|')[1];
@@ -161,6 +168,25 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
           </Flex>
         </View>
         <Form>
+
+          <List dense={true}>
+            {generate(
+              <ListItem>
+                <ListItemAvatar>
+                  <TableAndChart />
+                </ListItemAvatar>
+                <ListItemText onClick={(a)=>{alert(a)}}
+                  primary="Single-line item"
+                />
+                <ListItemSecondaryAction>
+                  <IconButton onClick={()=>{alert('Delete')}} edge="end" aria-label="delete">
+                    <Delete />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>,
+            )}
+          </List>
+
           <ButtonGroup orientation="vertical">
             {props.visual.fields &&
               props.visual.fields.length > 0 &&

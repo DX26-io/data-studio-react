@@ -23,7 +23,7 @@ export const VisualizationShareModal = (props: IVisualizationShareModalProps) =>
       <Heading level={4}>Share - {props.visual?.titleProperties?.titleText}</Heading>
       <Divider />
       <Content>
-        <Form labelPosition="side" width="100%">
+        <Form labelPosition="top" width="100%">
           <TextField autoFocus label="Copy URL" defaultValue={getShareLinkUrl(props.view, props.visual.id)} />
         </Form>
       </Content>

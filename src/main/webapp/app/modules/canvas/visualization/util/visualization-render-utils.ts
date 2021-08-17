@@ -332,8 +332,8 @@ export const renderIframe = (item, height, widget) => {
 
 export const renderVisualization = (visual, metaData, element = 'widget', props = null) => {
   const widget = document.getElementById(`${element}-${visual.id}`);
-  let height = widget.clientHeight;
-  const width = widget.clientWidth;
+  let height = widget?.clientHeight;
+  const width = widget?.clientWidth;
   if (widget) {
     if (visual.metadataVisual.name === VisualizationType.Iframe) {
       renderIframe(visual, height, width);
@@ -342,7 +342,7 @@ export const renderVisualization = (visual, metaData, element = 'widget', props 
         const chartId = `chart-${element}-${visual.id}`;
 
         if (document.getElementById(chartId)) {
-          document.getElementById(chartId).innerHTML = '';
+          document.getElementById(chartId).remove();
         }
 
         const divElement = document.createElement('div');
