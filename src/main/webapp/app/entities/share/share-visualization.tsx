@@ -31,6 +31,9 @@ const ShareVisualization = (props: IShareVisualizationProps) => {
             props.getVisualmetadataEntity(visualizationId);
             props.getViewEntity(viewId);
         }
+        return () => {
+            props.setIsShare(false);
+        };
     }, []);
 
     useEffect(() => {
