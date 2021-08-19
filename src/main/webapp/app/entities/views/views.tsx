@@ -138,7 +138,7 @@ export const Views = (props: IViewsProps) => {
           title={dashboardEntity.dashboardName}
         >
           {props.account  && (
-            <Button variant="cta" onPress={() => onImportViewClicked()}>
+            <Button marginX={"size-130"} variant="cta" onPress={() => onImportViewClicked()}>
               <Translate contentKey="views.home.importLabel">_Import View</Translate>
             </Button>
           )}

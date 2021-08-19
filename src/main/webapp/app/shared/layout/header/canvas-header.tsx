@@ -42,20 +42,20 @@ const CanvasHeader = props => {
   const headerIconList = [
     {
       icon: <CollectionEdit size="M" />,
-      title: translate('views.menu.edit'),
+      title: translate('canvas.menu.edit'),
       onPress: props.toggleEditMode,
       className: props.isEditMode ? 'enableEdit' : 'disableEdit',
       data: true
     },
     {
       icon: <GraphBarVerticalAdd size="M" />,
-      title: translate('views.menu.addVisualization'),
+      title: translate('canvas.menu.addVisualization'),
       onPress: setVisualizationsModelOpen,
       data: true
     },
     {
       icon: <SaveAsFloppy size="M" />,
-      title: translate('views.menu.save'),
+      title: translate('canvas.menu.save'),
       onPress: props.saveViewState,
       data: {
         visualMetadataSet: props.visualmetadata.visualMetadataSet,
@@ -64,7 +64,7 @@ const CanvasHeader = props => {
     },
     {
       icon: <Asset size="M" />,
-      title: translate('views.menu.toggleFeatures'),
+      title: translate('canvas.menu.toggleFeatures'),
       onPress: props.toggleFeaturesPanel,
     },
     {
@@ -76,17 +76,17 @@ const CanvasHeader = props => {
 
     {
       icon: <Search size="M" />,
-      title: translate('views.menu.search'),
+      title: translate('canvas.menu.search'),
       onPress: props.toggleSearch,
     },
     {
       icon: <Filter size="M" />,
-      title: translate('views.menu.filter'),
+      title: translate('canvas.menu.filter'),
       onPress: props.toggleFilterPanel
     },
     {
       icon: <ShareAndroid size="M" />,
-      title: translate('views.menu.share'),
+      title: translate('canvas.menu.share'),
       onPress: setIsShareDialogOpen,
       data: true
     }

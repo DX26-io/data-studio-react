@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import Select from 'react-select';
 import { getEntities, getDashboardsByName } from 'app/entities/dashboard/dashboard.reducer';
 import { generateDashboardNameOptions, generateViewNameOptions } from './header.util';
-import { getDashboardViewEntities,getViewsByName} from 'app/entities/views/views.reducer';
+import { getDashboardViewEntities, getViewsByName } from 'app/entities/views/views.reducer';
 import { useHistory } from 'react-router-dom';
 import Dashboard from '@spectrum-icons/workflow/Dashboard';
 import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
@@ -25,29 +25,27 @@ const CanvasSearchHeader = props => {
     props.getDashboardsByName(newValue);
   };
   const handleInputChangeView = (newValue: string) => {
-    if(newValue){
+    if (newValue) {
       props.getViewsByName(newValue);
     }
   };
 
   return (
     <>
-      <Flex direction="row" gap={"size-125"}>
+      <Flex marginStart={"size-130"} direction="row" gap={"size-125"}>
         <Flex direction="row" alignItems={"center"}>
-          <View marginX={"size-100"}> <Dashboard aria-label="Dashboard" /></View>
           <View width={"size-2400"}>
             <Select value={{ "value": props.view?.viewDashboard?.id?.toString(), "label": props.view?.viewDashboard?.dashboardName }} placeholder="Select dashboard" onChange={event => {
               if (event) {
                 setDashboardId(event);
 
-                props.getDashboardViewEntities(event.value,0, ITEMS_PER_PAGE, 'id,asc');
+                props.getDashboardViewEntities(event.value, 0, ITEMS_PER_PAGE, 'id,asc');
               }
             }}
               onInputChange={handleInputChangeDashboard}
               options={generateDashboardNameOptions(props.dashboardList)} /></View>
         </Flex>
         <Flex direction="row" alignItems={"center"}>
-          <View marginEnd={"size-100"}><ViewedMarkAs aria-label="ViewedMarkAs" /></View>
           <View width={"size-2400"}>
             <Select value={{ "value": props.view?.id?.toString(), "label": props.view?.viewName }} placeholder="Select view" onChange={event => {
               if (event) {
