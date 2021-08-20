@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import RGL, { WidthProvider } from 'react-grid-layout';
 import { IRootState } from 'app/shared/reducers';
-import { receiveSocketResponse, hideLoader } from 'app/shared/websocket/websocket.reducer';
 import { saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import PinnedFilterElement from './pinned-filter-element';
 import PinnedFiltersHeader from './pinned-filters-header';
-const ReactGridLayout = WidthProvider(RGL);
 
 export interface PinnedCanvasFiltersProps extends StateProps, DispatchProps { }
 
@@ -60,8 +57,6 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-  receiveSocketResponse,
-  hideLoader,
   saveSelectedFilter,
 };
 

@@ -8,8 +8,6 @@ import FilterElement from 'app/modules/canvas/filter/filter-element';
 import { Translate } from 'react-jhipster';
 import { applyFilter, applyFilterForShareLink, clearFilter, clearFilterForShareLink } from './filter.reducer';
 import PanelHeader from 'app/shared/components/panel-header';
-import { IFeature } from 'app/shared/model/feature.model';
-import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 
 export interface IFilterPanelProp extends StateProps, DispatchProps { 
    visualizationId? : string
@@ -24,12 +22,6 @@ const FilterPanel = (props: IFilterPanelProp) => {
   useEffect(() => {
     setFilterPanelClose(props.isFilterOpen);
   }, [props.isFilterOpen]);
-
-  useEffect(() => {
-    if (props.view.id) {
-      props.getViewFeaturesEntities(props.view.id);
-    }
-  }, [props.view]);
 
   return (
     <>
@@ -101,7 +93,6 @@ const mapStateToProps = (storeState: IRootState) => ({
 const mapDispatchToProps = {
   applyFilter,
   clearFilter,
-  getViewFeaturesEntities,
   applyFilterForShareLink,
   clearFilterForShareLink
 };
