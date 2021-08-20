@@ -10,6 +10,7 @@ import { IRootState } from 'app/shared/reducers';
 import {
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
+  reset
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import {
   getVisualizationData,
@@ -61,14 +62,16 @@ const Canvas = (props: VisualizationProp) => {
 
   const onLayoutChange = _visualmetaList => {
     props.visualmetadata?.visualMetadataSet?.map((item, i) => {
-      (item.x = _visualmetaList[i].x),
-        (item.y = _visualmetaList[i].y),
-        (item.h = _visualmetaList[i].h),
-        (item.w = _visualmetaList[i].w),
-        (item.xPosition = _visualmetaList[i].x),
-        (item.yPosition = _visualmetaList[i].y),
-        (item.height = _visualmetaList[i].h),
-        (item.width = _visualmetaList[i].w);
+      if (!item.key) {
+        (item.x = _visualmetaList[i].x),
+          (item.y = _visualmetaList[i].y),
+          (item.h = _visualmetaList[i].h),
+          (item.w = _visualmetaList[i].w),
+          (item.xPosition = _visualmetaList[i].x),
+          (item.yPosition = _visualmetaList[i].y),
+          (item.height = _visualmetaList[i].h),
+          (item.width = _visualmetaList[i].w);
+      }
     });
   };
 
@@ -122,12 +125,15 @@ const Canvas = (props: VisualizationProp) => {
       props.getViewEntity(viewId);
       props.getCurrentViewState(viewId);
     }
+    return () => {
+      props.reset();
+    };
   }, []);
 
   useEffect(() => {
     if (props.visualData) {
       const v = VisualMetadataContainerGetOne(props.visualData.headers.queryId);
-      if (v && props.visualData?.body.length > 0) {
+      if (v && props.visualData?.body?.length > 0) {
         v.data = props.visualData?.body;
         props.hideLoader();
         hideDataNotFound(v.id);
@@ -186,15 +192,17 @@ const Canvas = (props: VisualizationProp) => {
   }, [props.updateSuccess]);
 
   useEffect(() => {
-    props.visualMetadataContainerList.push({
-      key: 'pinned-filters-div',
-      x: 0,
-      y: 0,
-      w: 1,
-      h: 5 + props.pinnedFeatures.length
-    })
-    if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
-      renderVisualizationById(props.visualmetadataEntity);
+    if (props.pinnedFeatures.length > 0) {
+      props.visualMetadataContainerList.push({
+        key: 'pinned-filters-div',
+        x: 0,
+        y: 0,
+        w: 1,
+        h: props.pinnedFeatures.length
+      })
+      if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
+        renderVisualizationById(props.visualmetadataEntity);
+      }
     }
   }, [props.visualMetadataContainerList]);
 
@@ -250,7 +258,7 @@ const Canvas = (props: VisualizationProp) => {
           <div
             className="item widget"
             id={`widget-${v.id}`}
-            key={`viz-widget-${v.id}`}
+            key={`${v.id}`}
             data-grid={{
               i: v.id,
               x: v.xPosition || 0,
@@ -317,10 +325,11 @@ const Canvas = (props: VisualizationProp) => {
             className="layout"
             rowHeight={120}
             breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 2 }}
+            cols={{ lg: 3, md: 3, sm: 2, xs: 2, xxs: 2 }}
             layout={props.visualMetadataContainerList}
             margin={[15, 15]}
             verticalCompact={true}
+            compactType={"vertical"}
             onLayoutChange={onLayoutChange}
             onResizeStop={onResizeStop}
             draggableHandle=".header"
@@ -379,7 +388,8 @@ const mapDispatchToProps = {
   applyFilter,
   applyBookmark,
   hideLoader,
-  saveSelectedFilter
+  saveSelectedFilter,
+  reset
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

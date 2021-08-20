@@ -39,6 +39,7 @@ export interface IVisualMetadataSet {
   isCardRevealed?: boolean;
   isSaved?: boolean;
   id?: string;
+  key?: string;
 }
 
 export const defaultValue: Readonly<IVisualMetadataSet> = {};
