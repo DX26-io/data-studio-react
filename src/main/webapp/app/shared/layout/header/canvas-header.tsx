@@ -145,7 +145,7 @@ const CanvasHeader = props => {
 
           </div>
 
-          <Flex wrap>
+          <Flex wrap gap="size-100" marginTop="size-50">
             {headerIconList && headerIconList.length > 0 && headerIconList.map(card => (
               <CanvasHeaderIcon
                 key={card.title}
