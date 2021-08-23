@@ -37,7 +37,7 @@ const Header = (props: IHeaderProps) => {
           <Flex justifyContent="space-between" alignSelf="center">
             <Flex justifyContent="center" alignItems="center">
               {/* TODO: will be replaced */}
-              <Link to="/" style={{ color: 'black' }}>
+              <Link to="/" style={{ color: 'black',marginRight:'10px' }}>
                 <Logo />
               </Link>
               {props.isCanvas && (

@@ -1,8 +1,7 @@
 import './header.scss';
 import React, { useState, useEffect, ReactText } from 'react';
-import { Flex, ActionButton, View, DialogContainer, TooltipTrigger, Tooltip, MenuTrigger, Menu, Item, Picker } from '@adobe/react-spectrum';
-import MoreCircle from '@spectrum-icons/workflow/MoreCircle';
-import SaveAsFloppy from '@spectrum-icons/workflow/SaveAsFloppy';
+import { Flex, View, DialogContainer } from '@adobe/react-spectrum';
+import SaveFloppy from '@spectrum-icons/workflow/SaveFloppy';
 import Asset from '@spectrum-icons/workflow/Asset';
 import BookmarkSingle from '@spectrum-icons/workflow/BookmarkSingle';
 import Search from '@spectrum-icons/workflow/Search';
@@ -16,7 +15,7 @@ import {
   deleteEntity as deleteVisualmetadataEntity,
   toggleEditMode,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { toggleFeaturesPanel, toggleFilterPanel } from 'app/modules/canvas/filter/filter.reducer'; 
+import { toggleFeaturesPanel, toggleFilterPanel } from 'app/modules/canvas/filter/filter.reducer';
 import { saveViewState } from 'app/entities/views/views.reducer';
 import Filter from '@spectrum-icons/workflow/Filter';
 import { translate } from 'react-jhipster';
@@ -28,7 +27,7 @@ import { addFilterFromBookmark } from 'app/modules/canvas/filter/filter-util';
 import { applyFilter, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import Select from 'react-select';
 import { generateBookmarksOptions } from 'app/entities/bookmarks/bookmark.util';
-import { saveRecentBookmark } from "app/modules/home/sections/recent.reducer";
+import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
 import CanvasHeaderIcon from 'app/shared/components/canvas-header-icon/canvas-header-icon';
 import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
 import CanvasShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/canvas-share-modal';
@@ -45,22 +44,22 @@ const CanvasHeader = props => {
       title: translate('views.menu.edit'),
       onPress: props.toggleEditMode,
       className: props.isEditMode ? 'enableEdit' : 'disableEdit',
-      data: true
+      data: true,
     },
     {
       icon: <GraphBarVerticalAdd size="M" />,
       title: translate('views.menu.addVisualization'),
       onPress: setVisualizationsModelOpen,
-      data: true
+      data: true,
     },
     {
-      icon: <SaveAsFloppy size="M" />,
+      icon: <SaveFloppy size="M" />,
       title: translate('views.menu.save'),
       onPress: props.saveViewState,
       data: {
         visualMetadataSet: props.visualmetadata.visualMetadataSet,
         _id: props.view.id,
-      }
+      },
     },
     {
       icon: <Asset size="M" />,
@@ -71,7 +70,7 @@ const CanvasHeader = props => {
       icon: <BookmarkSingle size="M" />,
       title: translate('featureBookmark.home.createLabel'),
       onPress: setIsBookmarkDialogOpen,
-      data: true
+      data: true,
     },
 
     {
@@ -82,14 +81,14 @@ const CanvasHeader = props => {
     {
       icon: <Filter size="M" />,
       title: translate('views.menu.filter'),
-      onPress: props.toggleFilterPanel
+      onPress: props.toggleFilterPanel,
     },
     {
       icon: <ShareAndroid size="M" />,
       title: translate('views.menu.share'),
       onPress: setIsShareDialogOpen,
-      data: true
-    }
+      data: true,
+    },
   ];
 
   useEffect(() => {
@@ -115,9 +114,7 @@ const CanvasHeader = props => {
 
   return (
     <>
-
       <View marginEnd="size-600">
-
         <Flex gap="size-50" wrap="nowrap">
           <div style={{ minWidth: '305px', paddingRight: '10px' }}>
             <Select
@@ -134,7 +131,7 @@ const CanvasHeader = props => {
                   props.applyBookmark(_bookmark);
                   props.getFeatureCriteria(selectedOption.value.toString());
                   props.saveRecentBookmark(_bookmark.id, props.view.id);
-                  url.searchParams.set("bookmarkId", selectedOption.value.toString());
+                  url.searchParams.set('bookmarkId', selectedOption.value.toString());
                   window.history.pushState({}, '', url.href);
                 } else {
                   props.applyFilter({}, props.visualmetadata, props.view);
@@ -142,26 +139,24 @@ const CanvasHeader = props => {
                 }
               }}
             />
-
           </div>
 
           <Flex wrap gap="size-100" marginTop="size-50">
-            {headerIconList && headerIconList.length > 0 && headerIconList.map(card => (
-              <CanvasHeaderIcon
-                key={card.title}
-                icon={card.icon}
-                title={card.title}
-                className={card.className}
-                onPress={card.onPress}
-                data={card.data}
-              />
-            ))}
+            {headerIconList &&
+              headerIconList.length > 0 &&
+              headerIconList.map(card => (
+                <CanvasHeaderIcon
+                  key={card.title}
+                  icon={card.icon}
+                  title={card.title}
+                  className={card.className}
+                  onPress={card.onPress}
+                  data={card.data}
+                />
+              ))}
           </Flex>
-
         </Flex>
-        <DialogContainer onDismiss={() => setIsShareDialogOpen(false)}>
-          {isShareDialogOpen && <CanvasShareModal />}
-        </DialogContainer>
+        <DialogContainer onDismiss={() => setIsShareDialogOpen(false)}>{isShareDialogOpen && <CanvasShareModal />}</DialogContainer>
         <DialogContainer type="fullscreen" onDismiss={() => setVisualizationsModelOpen(false)} {...props}>
           {isVisualizationsModelOpen && (
             <VisualizationsList
@@ -177,7 +172,6 @@ const CanvasHeader = props => {
           {isBookmarkDialogOpen && <BookmarkUpdate setOpen={setIsBookmarkDialogOpen} />}
         </DialogContainer>
       </View>
-
     </>
   );
 };
@@ -209,7 +203,7 @@ const mapDispatchToProps = {
   applyFilter,
   applyBookmark,
   saveRecentBookmark,
-  saveSelectedFilter
+  saveSelectedFilter,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
