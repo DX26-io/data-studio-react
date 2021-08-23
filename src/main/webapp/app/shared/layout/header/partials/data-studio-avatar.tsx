@@ -16,7 +16,7 @@ const DataStudioAvatar: React.FC = () => {
         <User size="M" />
       </ActionButton>
       <Dialog>
-        <Content>
+        <Content UNSAFE_style={{"maxWidth":"100%","overflow":"hidden"}}>
           <Flex alignItems="center" justifyContent="center" direction="column" gap="size-175">
             <Text>
               <span className="spectrum-Body spectrum-Body--sizeL" data-testid="userGreeting">
