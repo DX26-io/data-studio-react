@@ -19,6 +19,7 @@ exports[`Header tests should render header component and have HTML header tag 1`
             style={
               Object {
                 "color": "black",
+                "marginRight": "10px",
               }
             }
             to="/"
