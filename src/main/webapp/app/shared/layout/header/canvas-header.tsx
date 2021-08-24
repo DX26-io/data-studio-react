@@ -31,9 +31,12 @@ import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
 import CanvasHeaderIcon from 'app/shared/components/canvas-header-icon/canvas-header-icon';
 import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
 import CanvasShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/canvas-share-modal';
+import SearchModal from '../../../entities/search/search-modal';
+
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
+  const [isSearchModelOpen,setSearchModelOpen] = useState(false)
   const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const url = new URL(window.location.toString());
@@ -76,7 +79,8 @@ const CanvasHeader = props => {
     {
       icon: <Search size="M" />,
       title: translate('canvas.menu.search'),
-      onPress: props.toggleSearch,
+      onPress: setSearchModelOpen,
+      data: true
     },
     {
       icon: <Filter size="M" />,
@@ -90,6 +94,7 @@ const CanvasHeader = props => {
       data: true,
     },
   ];
+  
 
   useEffect(() => {
     if (props.view.id) {
@@ -170,6 +175,11 @@ const CanvasHeader = props => {
         </DialogContainer>
         <DialogContainer onDismiss={() => setIsBookmarkDialogOpen(false)}>
           {isBookmarkDialogOpen && <BookmarkUpdate setOpen={setIsBookmarkDialogOpen} />}
+        </DialogContainer>
+        <DialogContainer type="fullscreen" onDismiss={() => setSearchModelOpen(false)}>
+          {isSearchModelOpen && (
+            <SearchModal viewId={props.view.id} setOpen={() => setSearchModelOpen} />
+          )}
         </DialogContainer>
       </View>
     </>

@@ -4,6 +4,7 @@ import {
   Button,
   ButtonGroup,
   Content,
+  useDialogContainer,
   Dialog,
   DialogContainer,
   Divider,
@@ -30,16 +31,15 @@ import {
 import { getEntity as getFeatureEntity } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 import { getQueryDTO } from './search.util';
-
-export interface ISearchModalProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string; viewId: string }> {}
+export interface ISearchModalProps extends StateProps, DispatchProps {
+  setOpen: (isOpen: boolean) => void;
+  viewId: string;
+}
 
 const SearchModal = (props: ISearchModalProps) => {
-  const viewId = props.match.params.viewId;
   const [searchCursorPos, setSearchCursorPos] = useState<number>();
-
   const closeSearch = () => {
-    props.history.push(`/dashboards/build?dahsbordId=${props.match.params.id}&viewId=${props.match.params.viewId}`);
-
+    props.setOpen(false)
   };
 
   useEffect(() => {
@@ -55,9 +55,10 @@ const SearchModal = (props: ISearchModalProps) => {
 
   const handleClose = () => {
     props.resetSearch();
+    props.setOpen(false)
   };
 
-  const handleSearchClick = () => {};
+  const handleSearchClick = () => { };
 
   const findTableVisualization = visualizations => {
     return visualizations.find(item => {
@@ -67,7 +68,7 @@ const SearchModal = (props: ISearchModalProps) => {
 
   const onSearchPressed = () => {
     const queryDTO = getQueryDTO(props.searchText, props.features, props.view, findTableVisualization(props.visualizations));
-    props.doSearch(viewId, queryDTO);
+    props.doSearch(props.viewId, queryDTO);
   };
 
   const onSearchSelect = event => {
@@ -75,13 +76,13 @@ const SearchModal = (props: ISearchModalProps) => {
   };
 
   const onSearchTextChange = value => {
-    props.searchChange(viewId, value);
+    props.searchChange(props.viewId, value);
   };
 
   const onAutoSuggestionItemChange = selectedSet => {
     const item = props.autoSuggestion.find(ft => selectedSet.has(ft.text));
     if (item) {
-      searchItemSelected(viewId, { text: props.searchText, item: item.text, cursor: searchCursorPos });
+      searchItemSelected(props.viewId, { text: props.searchText, item: item.text, cursor: searchCursorPos });
     }
   };
 
@@ -97,58 +98,56 @@ const SearchModal = (props: ISearchModalProps) => {
 
   return (
     <>
-      <DialogContainer type="fullscreenTakeover" onDismiss={handleClose}>
-        <Dialog>
-          <Heading>
-            <Translate contentKey="views.search.title">_Search</Translate>
-          </Heading>
-          <Divider />
-          <Content>
-            <Form isRequired necessityIndicator="icon" width="100%">
-              <Flex alignItems={'center'} direction="column" gap="size-100">
-                <Flex alignItems={'center'} direction="row" width="100%" alignContent="end">
-                  <TextArea
-                    onSelect={onSearchSelect}
-                    width="100%"
-                    labelPosition="side"
-                    labelAlign="end"
-                    marginX={'size-100'}
-                    label={translate('views.search.search')}
-                    value={props.searchText}
-                    onChange={onSearchTextChange}
-                  />
-                  <ActionButton onPress={() => onSearchPressed()} aria-label="{translate('views.menu.search')}">
-                    <Search size="M" />
-                  </ActionButton>
-                </Flex>
-                {rendering}
-                <ListBox
-                  aria-label="Auto-suggestions"
-                  selectionMode="single"
-                  onSelectionChange={onAutoSuggestionItemChange}
-                  items={props.autoSuggestion}
-                >
-                  {item => <Item key={item.text}>{item.text}</Item>}
-                </ListBox>
+      <Dialog>
+        <Heading>
+          <Translate contentKey="views.search.title">_Search</Translate>
+        </Heading>
+        <Divider />
+        <Content>
+          <Form isRequired necessityIndicator="icon" width="100%">
+            <Flex alignItems={'center'} direction="column" gap="size-100">
+              <Flex alignItems={'center'} direction="row" width="100%" alignContent="end">
+                <TextArea
+                  onSelect={onSearchSelect}
+                  width="100%"
+                  labelPosition="side"
+                  labelAlign="end"
+                  marginX={'size-100'}
+                  label={translate('views.search.search')}
+                  value={props.searchText}
+                  onChange={onSearchTextChange}
+                />
+                <ActionButton onPress={() => onSearchPressed()} aria-label="{translate('views.menu.search')}">
+                  <Search size="M" />
+                </ActionButton>
               </Flex>
-            </Form>
-          </Content>
-          <ButtonGroup>
-            <Button variant="secondary" onPress={handleClose} isQuiet={true}>
-              <Translate contentKey="entity.action.cancel">_Cancel</Translate>
-            </Button>
-            <Button onPress={handleSearchClick} variant="primary">
-              <Translate contentKey="entity.action.pin">_Pin</Translate>
-            </Button>
-            <Button onPress={handleSearchClick} variant="primary">
-              <Translate contentKey="entity.action.savebookmark">_Save</Translate>
-            </Button>
-            <Button onPress={handleSearchClick} variant="primary">
-              <Translate contentKey="entity.action.createview">_Create</Translate>
-            </Button>
-          </ButtonGroup>
-        </Dialog>
-      </DialogContainer>
+              {rendering}
+              <ListBox
+                aria-label="Auto-suggestions"
+                selectionMode="single"
+                onSelectionChange={onAutoSuggestionItemChange}
+                items={props.autoSuggestion}
+              >
+                {item => <Item key={item.text}>{item.text}</Item>}
+              </ListBox>
+            </Flex>
+          </Form>
+        </Content>
+        <ButtonGroup>
+          <Button variant="secondary" onPress={handleClose} isQuiet={true}>
+            <Translate contentKey="entity.action.cancel">_Cancel</Translate>
+          </Button>
+          <Button onPress={handleSearchClick} variant="primary">
+            <Translate contentKey="entity.action.pin">_Pin</Translate>
+          </Button>
+          <Button onPress={handleSearchClick} variant="primary">
+            <Translate contentKey="entity.action.savebookmark">_Save</Translate>
+          </Button>
+          <Button onPress={handleSearchClick} variant="primary">
+            <Translate contentKey="entity.action.createview">_Create</Translate>
+          </Button>
+        </ButtonGroup>
+      </Dialog>
     </>
   );
 };

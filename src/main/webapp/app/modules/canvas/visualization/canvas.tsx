@@ -43,6 +43,7 @@ import { VisualizationType } from 'app/shared/util/visualization.constants';
 import PinnedCanvasFilters from "app/modules/canvas/visualization/pinned-canvas-filters/pinned-canvas-filters";
 import PinnedFiltersHeader from './pinned-canvas-filters/pinned-filters-header';
 import PinnedFilterElement from './pinned-canvas-filters/pinned-filter-element';
+import { IBroadcast } from '../../../shared/model/broadcast.model'
 
 import { WidthProvider, Responsive as ResponsiveGridLayout, } from 'react-grid-layout';
 const ReactGridLayout = WidthProvider(ResponsiveGridLayout);
@@ -59,6 +60,14 @@ const Canvas = (props: VisualizationProp) => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
   const [isLoaderDisplay, setIsLoaderDisplay] = useState<IIllustrate[]>([]);
   const params = new URLSearchParams(props.location.search);
+
+  const broadcast: IBroadcast = {
+    selectedFilters: props.selectedFilters,
+    applyFilter: props.applyFilter,
+    visualmetadata: props.visualmetadata,
+    view: props.view,
+    saveSelectedFilter: props.saveSelectedFilter
+  }
 
   const onLayoutChange = _visualmetaList => {
     props.visualmetadata?.visualMetadataSet?.map((item, i) => {
@@ -82,7 +91,7 @@ const Canvas = (props: VisualizationProp) => {
       v.height = newItem.h;
       v.w = newItem.w;
       v.width = newItem.w;
-      renderVisualization(v, v.data, "widget", props);
+      renderVisualization(v, v.data, "widget", broadcast);
     }
   };
 
@@ -137,7 +146,8 @@ const Canvas = (props: VisualizationProp) => {
         v.data = props.visualData?.body;
         props.hideLoader();
         hideDataNotFound(v.id);
-        renderVisualization(v, props.visualData?.body, "widget", props);
+
+        renderVisualization(v, props.visualData?.body, "widget", broadcast);
       } else {
         showDataNotFound(v.id);
         props.hideLoader();
@@ -205,12 +215,6 @@ const Canvas = (props: VisualizationProp) => {
       }
     }
   }, [props.visualMetadataContainerList]);
-
-  useEffect(() => {
-    if (props.isSearchOpen) {
-      props.history.push(`/dashboards/${props.view.viewDashboard.id}/${props.view.id}/search`);
-    }
-  }, [props.isSearchOpen]);
 
   const handleVisualizationClick = v => {
     props.addVisualmetadataEntity({
