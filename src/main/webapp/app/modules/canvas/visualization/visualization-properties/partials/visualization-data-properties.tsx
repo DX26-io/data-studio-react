@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
   ActionButton,
-  Text,
-  Button,
-  ButtonGroup,
   Flex,
   Form,
   Heading,
-  Item,
-  Picker,
   View,
   TooltipTrigger,
   Tooltip,
-  ActionGroup,
 } from '@adobe/react-spectrum';
 import TableAndChart from '@spectrum-icons/workflow/TableAndChart';
 import { IFeature } from 'app/shared/model/feature.model';
@@ -22,11 +16,13 @@ import Properties from 'app/modules/canvas/visualization/visualization-propertie
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 import LockClosed from '@spectrum-icons/workflow/LockClosed';
 import Delete from '@spectrum-icons/workflow/Delete';
-import { getVisualizationFromTranslations } from 'app/modules/canvas/visualization/util/visualization-utils';
 import Select from 'react-select';
 import { Field } from 'app/shared/model/field.model';
+import { IRootState } from 'app/shared/reducers';
+import { addField,deleteField } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { connect } from 'react-redux';
 
-export interface IVisualizationDataPropertiesProps {
+export interface IVisualizationDataPropertiesProps extends StateProps, DispatchProps {
   features: readonly IFeature[];
   visual: IVisualMetadataSet;
   hierarchies?: Array<any>;
@@ -34,12 +30,10 @@ export interface IVisualizationDataPropertiesProps {
 
 const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) => {
   const [selectedField, setSelectedField] = useState<Field>();
-  const [fields, setFields] = useState<Field[]>();
 
   const [showDimension, setShowDimension] = useState(false);
   const [showMeasure, setShowMeasure] = useState(false);
   const [properties, setProperty] = useState([]);
-  const { SelectDimension, SelectMeasure } = getVisualizationFromTranslations();
   const visualWrap = VisualWrap(props.visual);
 
   const hierarchyChange = selectedOption => {
@@ -47,10 +41,6 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
       return item.id === selectedOption.value;
     });
   };
-
-  useEffect(() => {
-    setFields(props.visual.fields);
-  }, [props.visual.fields]);
 
   const getDimensionList = () => {
     const dimensionList = [];
@@ -85,14 +75,6 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
     setSelectedField(field);
   };
 
-
-  const deleteField = (field) => {
-    props.visual.fields = props.visual.fields.filter(function (item) {
-      return item.fieldType.id !== field.fieldType.id
-    });
-    setFields(props.visual.fields);
-  }
-
   const addFieldMeasure = () => {
     const fieldType = visualWrap.nextFieldMeasure(props.visual.fields, props.visual.metadataVisual);
     if (fieldType) {
@@ -110,8 +92,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
         }),
         order: fieldType.order,
       };
-      props.visual.fields.push(field);
-      setFields(props.visual.fields);
+      props.addField(props.visual, field);
       setShowMeasure(true);
       setShowDimension(false);
       setSelectedField(field);
@@ -135,7 +116,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
         }),
         order: fieldType.order,
       };
-      props.visual.fields.push(field);
+      props.addField(props.visual, field);
       setShowDimension(true);
       setShowMeasure(false);
     }
@@ -181,9 +162,9 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
         <Form>
           <>
 
-            {fields &&
-              fields.length > 0 &&
-              fields
+            {props.visual.fields &&
+              props.visual.fields.length > 0 &&
+              props.visual.fields
                 .sort((a, b) => (a.fieldType.order > b.fieldType.order ? 1 : -1))
                 .map((field, i) => (
                   <View borderRadius="large" key={uuid()} borderWidth={selectedField?.fieldType?.id === field.fieldType.id ? 'thicker' : 'thin'} borderColor="default" >
@@ -204,7 +185,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
                           </ActionButton>}
                         {field.fieldType.constraint === 'OPTIONAL' &&
                           <ActionButton isQuiet={true} onPress={() => {
-                            deleteField(field);
+                            props.deleteField(props.visual,field);
                           }}
                           >
                             <Delete />
@@ -277,5 +258,18 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
   );
 };
 
-export default VisualizationDataProperties;
+
+
+const mapStateToProps = (storeState: IRootState) => ({
+});
+
+const mapDispatchToProps = {
+  addField,
+  deleteField
+};
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizationDataProperties);
 

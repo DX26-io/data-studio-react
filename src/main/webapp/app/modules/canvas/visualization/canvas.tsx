@@ -95,6 +95,20 @@ const Canvas = (props: VisualizationProp) => {
     }
   };
 
+  const addPinFilter = () => {
+    if (!props.visualMetadataContainerList.find(item => {
+      return item.key === 'pinned-filters-div';
+    })) {
+      props.visualMetadataContainerList.push({
+        key: 'pinned-filters-div',
+        x: 0,
+        y: 0,
+        w: 1,
+        h: props.pinnedFeatures.length
+      })
+    }
+  }
+
   const renderVisualizationById = item => {
     if (ValidateFields(item.fields)) {
       getVisualizationData(item, props.view, props.selectedFilters);
@@ -203,13 +217,7 @@ const Canvas = (props: VisualizationProp) => {
 
   useEffect(() => {
     if (props.pinnedFeatures.length > 0) {
-      props.visualMetadataContainerList.push({
-        key: 'pinned-filters-div',
-        x: 0,
-        y: 0,
-        w: 1,
-        h: props.pinnedFeatures.length
-      })
+      addPinFilter();
       if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
         renderVisualizationById(props.visualmetadataEntity);
       }

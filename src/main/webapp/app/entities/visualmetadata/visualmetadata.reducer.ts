@@ -4,7 +4,7 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 
-import { IVisualMetadata, defaultValue } from 'app/shared/model/visual-meta-data.model';
+import { IVisualMetadata, defaultValue, IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { IVisualMetaDataDTO } from 'app/shared/model/visualmeta-data-dto.model';
 import { IValidateDTO } from 'app/shared/model/validate.model';
 import {
@@ -29,6 +29,8 @@ export const ACTION_TYPES = {
   VISUAL_METADATA_CONTAINER_ADD: 'visualmetadata/VISUAL_METADATA_CONTAINER_ADD',
   VISUAL_METADATA_CONTAINER_UPDATE: 'visualmetadata/VISUAL_METADATA_CONTAINER_UPDATE',
   VISUAL_METADATA_CONTAINER_REMOVE: 'visualmetadata/VISUAL_METADATA_CONTAINER_REMOVE',
+  VISUAL_METADATA_ADD_FIELD: 'visualmetadata/VISUAL_METADATA_ADD_FIELD',
+  VISUAL_METADATA_DELETE_FIELD: 'visualmetadata/VISUAL_METADATA_DELETE_FIELD',
 };
 
 const initialState = {
@@ -194,6 +196,16 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         ...state,
         visualMetadataContainerList: action.payload,
       };
+    case ACTION_TYPES.VISUAL_METADATA_ADD_FIELD:
+      return {
+        ...state,
+        visual: action.payload,
+      };
+    case ACTION_TYPES.VISUAL_METADATA_DELETE_FIELD:
+      return {
+        ...state,
+        visual: action.payload,
+      };
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
@@ -292,4 +304,26 @@ export const metadataContainerRemove = (id: string) => ({
 export const metadataContainerUpdate = (id: string, widget: any, key: string) => ({
   type: ACTION_TYPES.VISUAL_METADATA_CONTAINER_UPDATE,
   payload: visualMetadataContainerUpdate(id, widget, key),
+});
+
+const addVisualField = (visual: IVisualMetadataSet, field) => {
+  visual.fields.push(field);
+  return Object.assign({}, visual);
+};
+
+export const addField = (visual: IVisualMetadataSet, field) => ({
+  type: ACTION_TYPES.VISUAL_METADATA_ADD_FIELD,
+  payload: addVisualField(visual, field),
+});
+
+export const deleteVisualField = (visual: IVisualMetadataSet, field) => {
+  visual.fields = visual.fields.filter(function (item) {
+    return item.fieldType.id !== field.fieldType.id;
+  });
+  return Object.assign({}, visual);
+};
+
+export const deleteField = (visual: IVisualMetadataSet, field) => ({
+  type: ACTION_TYPES.VISUAL_METADATA_DELETE_FIELD,
+  payload: addVisualField(visual, field),
 });
