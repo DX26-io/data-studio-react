@@ -31,9 +31,12 @@ import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
 import CanvasHeaderIcon from 'app/shared/components/canvas-header-icon/canvas-header-icon';
 import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
 import CanvasShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/canvas-share-modal';
+import SearchModal from '../../../entities/search/search-modal';
+
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
+  const [isSearchModelOpen,setSearchModelOpen] = useState(false)
   const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const url = new URL(window.location.toString());
@@ -41,14 +44,14 @@ const CanvasHeader = props => {
   const headerIconList = [
     {
       icon: <CollectionEdit size="M" />,
-      title: translate('views.menu.edit'),
+      title: translate('canvas.menu.edit'),
       onPress: props.toggleEditMode,
       className: props.isEditMode ? 'enableEdit' : 'disableEdit',
       data: true,
     },
     {
       icon: <GraphBarVerticalAdd size="M" />,
-      title: translate('views.menu.addVisualization'),
+      title: translate('canvas.menu.addVisualization'),
       onPress: setVisualizationsModelOpen,
       data: true,
     },
@@ -63,7 +66,7 @@ const CanvasHeader = props => {
     },
     {
       icon: <Asset size="M" />,
-      title: translate('views.menu.toggleFeatures'),
+      title: translate('canvas.menu.toggleFeatures'),
       onPress: props.toggleFeaturesPanel,
     },
     {
@@ -75,8 +78,9 @@ const CanvasHeader = props => {
 
     {
       icon: <Search size="M" />,
-      title: translate('views.menu.search'),
-      onPress: props.toggleSearch,
+      title: translate('canvas.menu.search'),
+      onPress: setSearchModelOpen,
+      data: true
     },
     {
       icon: <Filter size="M" />,
@@ -85,11 +89,12 @@ const CanvasHeader = props => {
     },
     {
       icon: <ShareAndroid size="M" />,
-      title: translate('views.menu.share'),
+      title: translate('canvas.menu.share'),
       onPress: setIsShareDialogOpen,
       data: true,
     },
   ];
+  
 
   useEffect(() => {
     if (props.view.id) {
@@ -170,6 +175,11 @@ const CanvasHeader = props => {
         </DialogContainer>
         <DialogContainer onDismiss={() => setIsBookmarkDialogOpen(false)}>
           {isBookmarkDialogOpen && <BookmarkUpdate setOpen={setIsBookmarkDialogOpen} />}
+        </DialogContainer>
+        <DialogContainer type="fullscreen" onDismiss={() => setSearchModelOpen(false)}>
+          {isSearchModelOpen && (
+            <SearchModal viewId={props.view.id} setOpen={() => setSearchModelOpen} />
+          )}
         </DialogContainer>
       </View>
     </>

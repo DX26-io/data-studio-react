@@ -8,12 +8,11 @@ import {
   Form,
   Heading,
   Item,
-  ListBox,
   Picker,
   View,
   TooltipTrigger,
   Tooltip,
-  Section,
+  ActionGroup,
 } from '@adobe/react-spectrum';
 import TableAndChart from '@spectrum-icons/workflow/TableAndChart';
 import { IFeature } from 'app/shared/model/feature.model';
@@ -24,11 +23,8 @@ import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata
 import LockClosed from '@spectrum-icons/workflow/LockClosed';
 import Delete from '@spectrum-icons/workflow/Delete';
 import { getVisualizationFromTranslations } from 'app/modules/canvas/visualization/util/visualization-utils';
-import { Field } from 'app/shared/model/field.model';
 import Select from 'react-select';
-import { IHierarchy } from 'app/shared/model/hierarchy.model';
-import { generateHierarchiesOptions } from '../../visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
-import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
+import { Field } from 'app/shared/model/field.model';
 
 export interface IVisualizationDataPropertiesProps {
   features: readonly IFeature[];
@@ -38,11 +34,12 @@ export interface IVisualizationDataPropertiesProps {
 
 const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) => {
   const [selectedField, setSelectedField] = useState<Field>();
+  const [fields, setFields] = useState<Field[]>();
+
   const [showDimension, setShowDimension] = useState(false);
   const [showMeasure, setShowMeasure] = useState(false);
   const [properties, setProperty] = useState([]);
   const { SelectDimension, SelectMeasure } = getVisualizationFromTranslations();
-
   const visualWrap = VisualWrap(props.visual);
 
   const hierarchyChange = selectedOption => {
@@ -50,24 +47,34 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
       return item.id === selectedOption.value;
     });
   };
+
+  useEffect(() => {
+    setFields(props.visual.fields);
+  }, [props.visual.fields]);
+
   const getDimensionList = () => {
-    return props.features.filter(item => {
+    const dimensionList = [];
+    props.features.map(item => {
       if (item.featureType === 'DIMENSION') {
-        return item;
-      }
+        dimensionList.push({ value: item.id, label: item.name })
+      };
     });
+    return dimensionList;
   };
+
   const getMeasureList = () => {
-    return props.features.filter(item => {
+    const measureList = [];
+    props.features.map(item => {
       if (item.featureType === 'MEASURE') {
-        return item;
+        measureList.push({ value: item.id, label: item.name })
       }
     });
+    return measureList;
   };
   const dimensionList = getDimensionList();
   const measureList = getMeasureList();
 
-  const selectedFieldChange = field => {
+  const selectedFieldChange = (field): any => {
     if (field.fieldType.featureType === 'DIMENSION') {
       setShowDimension(true);
       setShowMeasure(false);
@@ -77,6 +84,14 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
     }
     setSelectedField(field);
   };
+
+
+  const deleteField = (field) => {
+    props.visual.fields = props.visual.fields.filter(function (item) {
+      return item.fieldType.id !== field.fieldType.id
+    });
+    setFields(props.visual.fields);
+  }
 
   const addFieldMeasure = () => {
     const fieldType = visualWrap.nextFieldMeasure(props.visual.fields, props.visual.metadataVisual);
@@ -96,6 +111,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
         order: fieldType.order,
       };
       props.visual.fields.push(field);
+      setFields(props.visual.fields);
       setShowMeasure(true);
       setShowDimension(false);
       setSelectedField(field);
@@ -124,21 +140,16 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
       setShowMeasure(false);
     }
   };
-  function generate(element) {
-    return props.visual.fields.map((value) =>
-      React.cloneElement(element, {
-        key: value.feature.id,
-      }),
-    );
-  }
+
   const featureChange = feature => {
     const selectedFeature = props.features.filter(item => {
-      return item.name === feature.split('|')[1];
+      return item.name === feature.label;
     });
     selectedField.feature = selectedFeature[0];
     setProperty([selectedField]);
     setSelectedField(selectedField);
   };
+
   return (
     <>
       <View>
@@ -168,71 +179,58 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
           </Flex>
         </View>
         <Form>
+          <>
 
-          <List dense={true}>
-            {generate(
-              <ListItem>
-                <ListItemAvatar>
-                  <TableAndChart />
-                </ListItemAvatar>
-                <ListItemText onClick={(a)=>{alert(a)}}
-                  primary="Single-line item"
-                />
-                <ListItemSecondaryAction>
-                  <IconButton onClick={()=>{alert('Delete')}} edge="end" aria-label="delete">
-                    <Delete />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>,
-            )}
-          </List>
-
-          <ButtonGroup orientation="vertical">
-            {props.visual.fields &&
-              props.visual.fields.length > 0 &&
-              props.visual.fields
+            {fields &&
+              fields.length > 0 &&
+              fields
                 .sort((a, b) => (a.fieldType.order > b.fieldType.order ? 1 : -1))
                 .map((field, i) => (
-                  <Button
-                    width={'100%'}
-                    marginTop={'size-25'}
-                    variant={selectedField?.fieldType?.id === field.fieldType.id ? 'cta' : 'secondary'}
-                    onPress={() => {
-                      selectedFieldChange(field);
-                    }}
-                    key={uuid()}
-                  >
-                    <div className={'field'}>
-                      <div className={'fieldKey'}>
-                        <div>
+                  <View borderRadius="large" key={uuid()} borderWidth={selectedField?.fieldType?.id === field.fieldType.id ? 'thicker' : 'thin'} borderColor="default" >
+                    <Flex direction="row" justifyContent="space-between">
+                      <Flex direction="column" gap="size-50" justifyContent="space-around">
+                        <ActionButton isQuiet={true} onPress={() => {
+                          selectedFieldChange(field);
+                        }}
+                        >
                           <TableAndChart />
-                        </div>
-                        <div>
-                          <Text> {field.feature?.name || ''}</Text>
-                        </div>
-                      </div>
-                      <div>
-                        {field.fieldType.constraint === 'REQUIRED' && <LockClosed aria-label="Locked" />}
-                        {field.fieldType.constraint === 'OPTIONAL' && <Delete aria-label="Locked" />}
-                      </div>
-                    </div>
-                  </Button>
+                          {field.feature?.name || ''}
+                        </ActionButton>
+                      </Flex>
+                      <Flex direction="column">
+                        {field.fieldType.constraint === 'REQUIRED' &&
+                          <ActionButton isQuiet={true} isDisabled >
+                            <LockClosed />
+                          </ActionButton>}
+                        {field.fieldType.constraint === 'OPTIONAL' &&
+                          <ActionButton isQuiet={true} onPress={() => {
+                            deleteField(field);
+                          }}
+                          >
+                            <Delete />
+                          </ActionButton>}
+
+                      </Flex>
+                    </Flex>
+                  </View>
                 ))}
-          </ButtonGroup>
+          </>
 
           {showDimension && (
             <>
-              <Picker
-                onSelectionChange={selected => featureChange(selected.toString())}
-                label={SelectDimension}
-                selectedKey={selectedField?.feature?.name || ''}
-              >
-                {dimensionList &&
-                  dimensionList.length > 0 &&
-                  dimensionList
-                    .sort((a, b) => (a.name > b.name ? 1 : -1))
-                    .map((feature, i) => <Item key={uuid() + '|' + feature.name}> {feature.name} </Item>)}
-              </Picker>
+
+              <Select
+                onChange={(selected) => {
+                  featureChange(selected)
+                }}
+                className="basic-single"
+                classNamePrefix="select"
+                value={{ value: selectedField?.feature?.id, label: selectedField?.feature?.name }}
+                isSearchable={true}
+                name="dimension"
+                options={dimensionList}
+              />
+
 
               {props.hierarchies && props.hierarchies.length > 0 && (
                 <Select
@@ -249,17 +247,19 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
           )}
 
           {showMeasure && (
-            <Picker
-              onSelectionChange={selected => featureChange(selected.toString())}
-              label={SelectMeasure}
-              selectedKey={selectedField?.feature?.name || ''}
-            >
-              {measureList &&
-                measureList.length > 0 &&
-                measureList
-                  .sort((a, b) => (a.name > b.name ? 1 : -1))
-                  .map((feature, i) => <Item key={uuid() + '|' + feature.name}> {feature.name} </Item>)}
-            </Picker>
+
+            <Select
+              onChange={(selected) => {
+                featureChange(selected)
+              }}
+              className="basic-single"
+              classNamePrefix="select"
+              value={{ value: selectedField?.feature?.id, label: selectedField?.feature?.name }}
+              isSearchable={true}
+              name="measureList"
+              options={measureList}
+            />
+
           )}
         </Form>
         <Form>
@@ -278,3 +278,4 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
 };
 
 export default VisualizationDataProperties;
+

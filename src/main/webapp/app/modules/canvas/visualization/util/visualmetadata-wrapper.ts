@@ -28,7 +28,7 @@ const nextFeature = (fields, fieldTypes) => {
     }
   }
 
-  return fieldTypes[i];
+  return fieldTypes[fields.length];
 };
 
 const nextFieldDimension = (fields, metadataVisual) => {

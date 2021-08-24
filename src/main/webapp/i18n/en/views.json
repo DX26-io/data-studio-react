@@ -59,17 +59,6 @@
         "data": "Data"
       }
     },
-    "menu": {
-      "toggle.search": "Toggle search",
-      "edit": "Edit",
-      "search": "Search",
-      "addVisualization": "Add Visualization",
-      "save": "Save",
-      "toggleFeatures": "Toggle features",
-      "more": "More",
-      "filter": "Filter",
-      "share": "Share"
-    },
     "search": {
       "title": "Search",
       "search": "Search"
