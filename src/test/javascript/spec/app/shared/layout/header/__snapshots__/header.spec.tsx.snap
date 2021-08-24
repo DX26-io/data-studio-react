@@ -19,6 +19,7 @@ exports[`Header tests should render header component and have HTML header tag 1`
             style={
               Object {
                 "color": "black",
+                "marginRight": "10px",
               }
             }
             to="/"
@@ -31,11 +32,12 @@ exports[`Header tests should render header component and have HTML header tag 1`
         />
       </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
       <div
+        className="profile"
         style={
           Object {
             "position": "absolute",
-            "right": "-10px",
-            "top": "12px",
+            "right": "6px",
+            "top": "10px",
           }
         }
       >

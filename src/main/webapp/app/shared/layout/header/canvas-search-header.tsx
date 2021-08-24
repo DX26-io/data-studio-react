@@ -7,13 +7,11 @@ import { getEntities, getDashboardsByName } from 'app/entities/dashboard/dashboa
 import { generateDashboardNameOptions, generateViewNameOptions } from './header.util';
 import { getDashboardViewEntities, getViewsByName } from 'app/entities/views/views.reducer';
 import { useHistory } from 'react-router-dom';
-import Dashboard from '@spectrum-icons/workflow/Dashboard';
-import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
 import { Flex, View } from '@adobe/react-spectrum';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
 const CanvasSearchHeader = props => {
-  const [dashboardId, setDashboardId] = useState({ "value": '', "label": '' });
+  const [dashboardId, setDashboardId] = useState({ value: '', label: '' });
 
   const history = useHistory();
 
@@ -32,28 +30,36 @@ const CanvasSearchHeader = props => {
 
   return (
     <>
-      <Flex marginStart={"size-130"} direction="row" gap={"size-125"}>
-        <Flex direction="row" alignItems={"center"}>
-          <View width={"size-2400"}>
-            <Select value={{ "value": props.view?.viewDashboard?.id?.toString(), "label": props.view?.viewDashboard?.dashboardName }} placeholder="Select dashboard" onChange={event => {
-              if (event) {
-                setDashboardId(event);
-
-                props.getDashboardViewEntities(event.value, 0, ITEMS_PER_PAGE, 'id,asc');
-              }
-            }}
+      <Flex direction="row" gap={'size-125'}>
+        <Flex direction="row" alignItems={'center'}>
+          <View width={'size-2400'}>
+            <Select
+              value={{ value: props.view?.viewDashboard?.id?.toString(), label: props.view?.viewDashboard?.dashboardName }}
+              placeholder="Select dashboard"
+              onChange={event => {
+                if (event) {
+                  setDashboardId(event);
+                  props.getDashboardViewEntities(event.value, 0, ITEMS_PER_PAGE, 'id,asc');
+                }
+              }}
               onInputChange={handleInputChangeDashboard}
-              options={generateDashboardNameOptions(props.dashboardList)} /></View>
+              options={generateDashboardNameOptions(props.dashboardList)}
+            />
+          </View>
         </Flex>
-        <Flex direction="row" alignItems={"center"}>
-          <View width={"size-2400"}>
-            <Select value={{ "value": props.view?.id?.toString(), "label": props.view?.viewName }} placeholder="Select view" onChange={event => {
-              if (event) {
-                history.push(`/dashboards/build?dahsbordId=${dashboardId.value}&viewId=${event.value}`);
-              }
-            }}
+        <Flex direction="row" alignItems={'center'}>
+          <View width={'size-2400'}>
+            <Select
+              value={{ value: props.view?.id?.toString(), label: props.view?.viewName }}
+              placeholder="Select view"
+              onChange={event => {
+                if (event) {
+                  history.push(`/dashboards/build?dahsbordId=${dashboardId.value}&viewId=${event.value}`);
+                }
+              }}
               onInputChange={handleInputChangeView}
-              options={generateViewNameOptions(props.viewList)} />
+              options={generateViewNameOptions(props.viewList)}
+            />
           </View>
         </Flex>
       </Flex>
@@ -65,13 +71,12 @@ const mapStateToProps = (storeState: IRootState) => ({
   dashboardList: storeState.dashboard.entities,
   viewList: storeState.views.entities,
   view: storeState.views.entity,
-
 });
 
 const mapDispatchToProps = {
   getEntities,
   getDashboardViewEntities,
-  getDashboardsByName
+  getDashboardsByName,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

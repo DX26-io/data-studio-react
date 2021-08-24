@@ -37,7 +37,7 @@ const Header = (props: IHeaderProps) => {
           <Flex justifyContent="space-between" alignSelf="center">
             <Flex justifyContent="center" alignItems="center">
               {/* TODO: will be replaced */}
-              <Link to="/" style={{ color: 'black' }}>
+              <Link to="/" style={{ color: 'black',marginRight:'10px' }}>
                 <Logo />
               </Link>
               {props.isCanvas && (
@@ -54,7 +54,7 @@ const Header = (props: IHeaderProps) => {
               )}
             </Flex>
           </Flex>
-          <div style={{ position: 'absolute', right: '-10px', top: '12px' }}>
+          <div style={{ position: 'absolute', right: '6px', top: '10px' }} className="profile">
             {' '}
             <DataStudioAvatar />
           </div>

@@ -24,7 +24,7 @@ const HomeHeader = (props: DispatchProps) => {
     <View
       paddingX="size-150"
       paddingY="size-100"
-      backgroundColor="gray-75"
+      backgroundColor="default"
       borderBottomWidth={'thin'}
       borderTopWidth={'thin'}
       borderBottomColor={'light'}
@@ -54,7 +54,9 @@ const HomeHeader = (props: DispatchProps) => {
             />
           </Flex>
           <Flex alignItems="end">
+          <div className="profile" style={{ position: 'absolute', right: '10px', top: '4px' }}>
             <DataStudioAvatar />
+          </div>
           </Flex>
         </Flex>
       </header>
