@@ -61,7 +61,7 @@ const ViewCreateModal = (props: IViewCreateModalProps) => {
 
   const handleOpenOnSuccessDialog = () => {
     setCreateSuccessDialog(false);
-    history.push(`/dashboards/build?dahsbordId=${dashboardId}&viewId=${props.viewEntity.id}`);
+    history.push(`/dashboards/build?dashboardId=${dashboardId}&viewId=${props.viewEntity.id}`);
   };
 
   useEffect(() => {
