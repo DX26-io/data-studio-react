@@ -45,7 +45,7 @@ const SearchResults = (props: ISearchResultsProps) => {
               url={`/dashboards/${view.viewDashboard.id}/${view.id}/build`}
             />
             <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName}
-             url={`/dashboards/build?dahsbordId=${view.viewDashboard.id}&viewId=${view.id}`} 
+             url={`/dashboards/build?dashboardId=${view.viewDashboard.id}&viewId=${view.id}`} 
              />
           </View>
         }
