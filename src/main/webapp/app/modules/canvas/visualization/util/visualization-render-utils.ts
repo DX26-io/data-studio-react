@@ -352,14 +352,12 @@ export const renderVisualization = (visual, metaData, element = 'widget', props 
           divElement.setAttribute('id', chartId);
           divElement.setAttribute('height', height.toString());
           divElement.setAttribute('width', width.toString());
-
           document.getElementById(`visualization-${visual.id}`).appendChild(divElement);
         } else {
           divElement.setAttribute('id', chartId);
           divElement.setAttribute('height', height.toString());
           divElement.setAttribute('width', width.toString());
-
-          document.getElementById(`visualization-${visual.id}`).appendChild(divElement);
+          document.getElementById(`visualization-edit-${visual.id}`).appendChild(divElement);
         }
 
         const div = document.getElementById(chartId);
