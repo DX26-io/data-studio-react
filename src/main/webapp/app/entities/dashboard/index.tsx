@@ -15,7 +15,6 @@ import ViewPropertiesModal from '../views/view-properties-modal';
 import Canvas from 'app/modules/canvas/visualization/canvas';
 import VisualizationEditModal from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal';
 import VisualizationsDeleteModal from 'app/modules/canvas/visualization/visualization-modal/visualization-delete-modal/visualizations-delete-modal';
-import FeaturesCreateModal from "app/entities/feature/feature-update";
 import SearchModal from "app/entities/search/search-modal";
 import ShareVisualization from "app/entities/share/share-visualization";
 
@@ -29,15 +28,10 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/delete`} component={ViewDeleteModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/search`} component={SearchModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/create`} component={ViewCreateModal} />
-      <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/build/:bookmarkId?`} component={Canvas} />
-
       <ErrorBoundaryRoute exact path={`${match.url}/build`} component={Canvas} />
       <ErrorBoundaryRoute exact path={`${match.url}/share`} component={ShareVisualization} />
-
-
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/edit/:visualizationId`} component={VisualizationEditModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/delete/:visualizationId`} component={VisualizationsDeleteModal} />
-
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={Views} />
       <ErrorBoundaryRoute path={match.url} component={Dashboard} />
     </Switch>
