@@ -7,13 +7,16 @@ import { getEntities as getDashboards, getDashboardsByName } from 'app/entities/
 import { generateDashboardNameOptions, generateViewNameOptions } from './header.util';
 import { getDashboardViewEntities, getViewsByName } from 'app/entities/views/views.reducer';
 import { useHistory } from 'react-router-dom';
-import { Flex, View, ActionButton, Button, Content, Dialog, DialogTrigger } from '@adobe/react-spectrum';
+import { Flex, View, ActionButton, SearchField, Content, Dialog, DialogTrigger, Divider,Text } from '@adobe/react-spectrum';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import Apps from '@spectrum-icons/workflow/Apps';
+import { translate, Translate } from 'react-jhipster';
+import { updateSearchedText } from 'app/modules/home/home.reducer';
 
 const CanvasSearchHeader = props => {
   const [dashboardId, setDashboardId] = useState({ value: '', label: '' });
   const [viewId, setViewId] = useState({ value: '', label: '' });
+  const [searchedText, setSearchedText] = React.useState('');
 
   const history = useHistory();
 
@@ -51,6 +54,13 @@ const CanvasSearchHeader = props => {
     }
   };
 
+  const onChangeSearchedText = event => {
+    setSearchedText(event);
+    if (!event || event === '') {
+      props.updateSearchedText('');
+    }
+  };
+
   return (
     <DialogTrigger type="popover">
       <ActionButton aria-label="User avatar" isQuiet={true} marginEnd="size-200" data-testid="avatarButton">
@@ -60,11 +70,13 @@ const CanvasSearchHeader = props => {
         <Content>
           <Flex direction="column" gap="size-100">
             <View padding={10} margin={5} backgroundColor="gray-75">
-              <span className="spectrum-Body-emphasis--sizeXXS">Dashboard</span>
+              <span className="spectrum-Body-emphasis--sizeXXS">
+                <Translate contentKey="canvas.search.dashboard">Dashboard</Translate>
+              </span>
               <div style={{ marginTop: '5px' }}>
                 <Select
                   value={dashboardId}
-                  placeholder="Select dashboard"
+                  placeholder={translate('canvas.search.selectDashboard')}
                   onChange={selectDashboard}
                   onInputChange={handleInputChangeDashboard}
                   options={generateDashboardNameOptions(props.dashboardList)}
@@ -72,16 +84,43 @@ const CanvasSearchHeader = props => {
               </div>
             </View>
             <View padding={10} margin={5} backgroundColor="gray-75">
-              <span className="spectrum-Body-emphasis--sizeXXS">View</span>
+              <span className="spectrum-Body-emphasis--sizeXXS">
+                <Translate contentKey="canvas.search.view">View</Translate>
+              </span>
               <div style={{ marginTop: '5px' }}>
                 <Select
                   value={viewId}
-                  placeholder="Select view"
+                  placeholder={translate('canvas.search.selectView')}
                   onChange={selectView}
                   onInputChange={handleInputChangeView}
                   options={generateViewNameOptions(props.viewList)}
                 />
               </div>
+            </View>
+            <View marginTop={5} marginBottom={10}>
+              <Text>
+                <Translate contentKey="home.header.search">Search dashboards and views</Translate>
+              </Text>
+              <Divider size="M" marginTop={5}/>
+            </View>
+            <View padding={10} backgroundColor="gray-75">
+              <SearchField
+                placeholder={translate('canvas.search.enterText')}
+                onClear={() => {
+                  setSearchedText('');
+                  props.updateSearchedText('');
+                }}
+                onChange={onChangeSearchedText}
+                onSubmit={event => {
+                  setSearchedText(event);
+                  props.getDashboardsByName(searchedText);
+                  props.getViewsByName(searchedText);
+                  props.updateSearchedText(searchedText);
+                  history.push('/');
+                }}
+                value={searchedText}
+                width={296}
+              />
             </View>
           </Flex>
         </Content>
@@ -94,12 +133,15 @@ const mapStateToProps = (storeState: IRootState) => ({
   dashboardList: storeState.dashboard.entities,
   viewList: storeState.views.entities,
   view: storeState.views.entity,
+  searchedText: storeState.home.searchedText,
 });
 
 const mapDispatchToProps = {
   getDashboards,
   getDashboardViewEntities,
   getDashboardsByName,
+  getViewsByName,
+  updateSearchedText
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
