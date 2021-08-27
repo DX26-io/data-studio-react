@@ -1,5 +1,5 @@
 import React, { ReactText, useEffect, useState } from 'react';
-import { Button, ButtonGroup, Content, Dialog, DialogContainer, Divider, Heading, TextField } from '@adobe/react-spectrum';
+import { Button, ButtonGroup, Content, Dialog, DialogContainer, Divider, Heading, TextField} from '@adobe/react-spectrum';
 import { Translate } from 'react-jhipster';
 import {
   getEntity,
@@ -11,39 +11,43 @@ import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
 
 interface IVisualizationsDeleteModalProps
-  extends StateProps,
-    DispatchProps,
-    RouteComponentProps<{ id: string; visualizationId: string; viewId: string }> {}
+extends StateProps,
+DispatchProps,
+RouteComponentProps<{ id: string; visualizationId: string; viewId: string }> {
+  setOpen: (isOpen: boolean) => any;
+  viewId: number;
+  visualizationId:string
+}
 
 const VisualizationsDeleteModal = (props: IVisualizationsDeleteModalProps) => {
   const [visualizationsTitleConfirmation, setvisualizationsTitleConfirmation] = useState<ReactText>('');
   const [visualizationsTitle, setvisualizationsTitle] = useState('');
-
+  
   useEffect(() => {
-    props.getEntity(props.match.params.visualizationId);
+    props.getEntity(props.visualizationId);
   }, []);
-
   const handleClose = () => {
-    props.history.push(`/dashboards/build?dahsbordId=${props.match.params.id}&viewId=${props.match.params.viewId}`);
+    props.setOpen(false)
   };
   const deleteConfirmation = () => {
     return visualizationsTitleConfirmation !== visualizationsTitle;
   };
-
+  
   useEffect(() => {
     if (props.deleteSuccess) {
-      props.metadataContainerRemove(props.match.params.visualizationId);
+      props.metadataContainerRemove(props.visualizationId);
       handleClose();
     }
     if (props.visualmetadataEntity.id) {
       setvisualizationsTitle(props.visualmetadataEntity.titleProperties.titleText);
     }
   }, [props.deleteSuccess, props.visualmetadataEntity]);
-
+  
   const confirmDelete = () => {
-    props.deleteVisualmetadataEntity(props.match.params.visualizationId);
+    props.deleteVisualmetadataEntity(props.visualizationId);
+    handleClose();
   };
-
+  
   return (
     <DialogContainer onDismiss={handleClose}>
       <Dialog>
@@ -73,7 +77,7 @@ const VisualizationsDeleteModal = (props: IVisualizationsDeleteModalProps) => {
           </Button>
         </ButtonGroup>
       </Dialog>
-    </DialogContainer>
+     </DialogContainer>
   );
 };
 

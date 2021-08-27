@@ -52,11 +52,11 @@ const SearchModal = (props: ISearchModalProps) => {
     props.receiveSocketResponse();
     return props.disconnectSocket;
   }, []);
-
-  const handleClose = () => {
-    props.resetSearch();
-    props.setOpen(false)
-  };
+  
+    const handleClose = () => {
+      props.resetSearch();
+      props.setOpen(false)
+    };
 
   const handleSearchClick = () => { };
 
@@ -117,7 +117,7 @@ const SearchModal = (props: ISearchModalProps) => {
                   value={props.searchText}
                   onChange={onSearchTextChange}
                 />
-                <ActionButton onPress={() => onSearchPressed()} aria-label="{translate('views.menu.search')}">
+                <ActionButton onPress={() => onSearchPressed} aria-label="{translate('views.menu.search')}">
                   <Search size="M" />
                 </ActionButton>
               </Flex>

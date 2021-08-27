@@ -19,8 +19,9 @@ import Delete from '@spectrum-icons/workflow/Delete';
 import Select from 'react-select';
 import { Field } from 'app/shared/model/field.model';
 import { IRootState } from 'app/shared/reducers';
-import { addField,deleteField } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { addField, deleteField } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { connect } from 'react-redux';
+import { DIMENSION, MEASURE } from 'app/shared/util/visualization.constants';
 
 export interface IVisualizationDataPropertiesProps extends StateProps, DispatchProps {
   features: readonly IFeature[];
@@ -31,10 +32,21 @@ export interface IVisualizationDataPropertiesProps extends StateProps, DispatchP
 const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) => {
   const [selectedField, setSelectedField] = useState<Field>();
 
-  const [showDimension, setShowDimension] = useState(false);
+  const [showDimension, setShowDimension] = useState(true);
   const [showMeasure, setShowMeasure] = useState(false);
   const [properties, setProperty] = useState([]);
   const visualWrap = VisualWrap(props.visual);
+
+  useEffect(() => {
+    if (props.visual?.fields?.length > 0 && !selectedField) {
+      props.visual?.fields.map(item => {
+        if (item.fieldType.featureType === DIMENSION) {
+          setSelectedField(item);
+          return;
+        }
+      })
+    }
+  }, []);
 
   const hierarchyChange = selectedOption => {
     selectedField.hierarchy = props.hierarchies.find(item => {
@@ -45,7 +57,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
   const getDimensionList = () => {
     const dimensionList = [];
     props.features.map(item => {
-      if (item.featureType === 'DIMENSION') {
+      if (item.featureType === DIMENSION) {
         dimensionList.push({ value: item.id, label: item.name })
       };
     });
@@ -55,7 +67,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
   const getMeasureList = () => {
     const measureList = [];
     props.features.map(item => {
-      if (item.featureType === 'MEASURE') {
+      if (item.featureType === MEASURE) {
         measureList.push({ value: item.id, label: item.name })
       }
     });
@@ -65,7 +77,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
   const measureList = getMeasureList();
 
   const selectedFieldChange = (field): any => {
-    if (field.fieldType.featureType === 'DIMENSION') {
+    if (field.fieldType.featureType === DIMENSION) {
       setShowDimension(true);
       setShowMeasure(false);
     } else {
@@ -165,7 +177,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
             {props.visual.fields &&
               props.visual.fields.length > 0 &&
               props.visual.fields
-                .sort((a, b) => (a.fieldType.order > b.fieldType.order ? 1 : -1))
+                .sort((a, b) => (a.fieldType.featureType > b.fieldType.featureType ? 1 : -1))
                 .map((field, i) => (
                   <View borderRadius="large" key={uuid()} borderWidth={selectedField?.fieldType?.id === field.fieldType.id ? 'thicker' : 'thin'} borderColor="default" >
                     <Flex direction="row" justifyContent="space-between">
@@ -175,7 +187,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
                         }}
                         >
                           <TableAndChart />
-                          {field.feature?.name || ''}
+                          {field.feature?.name || `Select ${field.fieldType?.featureType?.toLocaleLowerCase()}`}
                         </ActionButton>
                       </Flex>
                       <Flex direction="column">
@@ -185,7 +197,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
                           </ActionButton>}
                         {field.fieldType.constraint === 'OPTIONAL' &&
                           <ActionButton isQuiet={true} onPress={() => {
-                            props.deleteField(props.visual,field);
+                            props.deleteField(props.visual, field);
                           }}
                           >
                             <Delete />

@@ -8,13 +8,14 @@ export const ACTION_TYPES = {
   SET_VISUAL_ERROR: 'visualData/SET_VISUAL_ERROR',
   SET_CONNECTION_STATUS: 'visualData/SET_CONNECTION_STATUS',
   HIDE_LOADER: 'visualData/HIDE_LOADER',
+  SHOW_LOADER: 'visualData/SHOW_LOADER',
 };
 
 const initialState = {
   loading: false,
   errorMessage: null,
   visualData: null,
-  isLoaderOn: true,
+  isLoaderOn: false,
   visualDataById: null,
   filterData: null,
   isSocketConnected: false,
@@ -60,6 +61,11 @@ export default (state: VisualDataState = initialState, action): VisualDataState 
         ...state,
         isLoaderOn: false,
       };
+    case ACTION_TYPES.SHOW_LOADER:
+      return {
+        ...state,
+        isLoaderOn: true,
+      };
 
     default:
       return state;
@@ -93,6 +99,10 @@ export const setSocketConnection = (status: boolean) => ({
 
 export const hideLoader = () => ({
   type: ACTION_TYPES.HIDE_LOADER,
+});
+
+export const showLoader = () => ({
+  type: ACTION_TYPES.SHOW_LOADER,
 });
 
 export const receiveSocketResponse = () => dispatch => {

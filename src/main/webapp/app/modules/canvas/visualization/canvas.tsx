@@ -4,7 +4,7 @@ import { View } from '@adobe/react-spectrum';
 import { RouteComponentProps } from 'react-router-dom';
 import './canvas.scss';
 import 'flair-visualizations/styles/stylesheets/screen.css';
-import { getEntity as getViewEntity, getCurrentViewState, saveViewState } from 'app/entities/views/views.reducer';
+import { getEntity as getViewEntity, getCurrentViewState, saveViewState,reset as resetViews} from 'app/entities/views/views.reducer';
 import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
@@ -32,7 +32,7 @@ import CanvasFilterHeader from 'app/shared/layout/header/canvas-filter-header';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import FeaturesPanel from 'app/modules/canvas/features/features-panel';
-import { receiveSocketResponse, hideLoader } from 'app/shared/websocket/websocket.reducer';
+import { receiveSocketResponse, hideLoader,showLoader } from 'app/shared/websocket/websocket.reducer';
 import { VisualMetadataContainerGetOne } from './util/visualmetadata-container.util';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
@@ -72,7 +72,7 @@ const Canvas = (props: VisualizationProp) => {
   const onLayoutChange = _visualmetaList => {
     props.visualmetadata?.visualMetadataSet?.map((item, i) => {
       if (!item.key) {
-        (item.x = _visualmetaList[i].x),
+        if(item.x) item.x = _visualmetaList[i].x,
           (item.y = _visualmetaList[i].y),
           (item.h = _visualmetaList[i].h),
           (item.w = _visualmetaList[i].w),
@@ -171,6 +171,7 @@ const Canvas = (props: VisualizationProp) => {
 
   useEffect(() => {
     if (props.visualmetadata?.visualMetadataSet?.length > 0) {
+      props.showLoader();
       props.visualmetadata?.visualMetadataSet.map(item => {
         const loader = {
           visualizationId: item.id,
@@ -199,7 +200,7 @@ const Canvas = (props: VisualizationProp) => {
   useEffect(() => {
     if (props.isSocketConnected) {
       props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
-      if (props.visualmetadata?.visualMetadataSet.length > 0) {
+      if (props.visualmetadata?.visualMetadataSet?.length > 0) {
         loadVisualization();
       } else {
         props.hideLoader();
@@ -235,7 +236,7 @@ const Canvas = (props: VisualizationProp) => {
   const generateWidge =
     props.visualMetadataContainerList &&
     props.visualMetadataContainerList.map((v, i) => {
-      if (v.key) {
+      if (v && v.key) {
         return (
           <div
             className="layout widget"
@@ -400,8 +401,10 @@ const mapDispatchToProps = {
   applyFilter,
   applyBookmark,
   hideLoader,
+  showLoader,
   saveSelectedFilter,
-  reset
+  reset,
+  resetViews
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

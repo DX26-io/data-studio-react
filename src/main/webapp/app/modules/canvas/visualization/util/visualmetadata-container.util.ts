@@ -7,7 +7,7 @@ export const VisualMetadataContainerGetOne = (id: string) => {
 };
 
 export const visualMetadataContainerAdd = (widget: any) => {
-  if (widget.constructor === Array) {
+  if (widget?.constructor === Array) {
     const widgetCont = widget.map(function (item) {
       item.visualBuildId = item.visualBuildId || item.id;
       return item;

@@ -128,7 +128,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isFeaturesPanelOpen: storeState.filter.isFeaturesPanelOpen,
   featuresList: storeState.feature.entities,
   feature: storeState.feature.feature,
-  datasourceId: storeState.views.entity.viewDashboard.dashboardDatasource.id,
+  datasourceId: storeState.views.entity.viewDashboard?.dashboardDatasource?.id,
   hierarchies: storeState.hierarchies.hierarchies,
 });
 const mapDispatchToProps = {
