@@ -32,7 +32,6 @@ import CanvasHeaderIcon from 'app/shared/components/canvas-header-icon/canvas-he
 import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
 import CanvasShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/canvas-share-modal';
 import SearchModal from '../../../entities/search/search-modal';
-import SmallScreenMore from './small-screen-more';
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
