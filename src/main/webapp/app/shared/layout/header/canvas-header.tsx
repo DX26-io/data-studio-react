@@ -32,11 +32,11 @@ import CanvasHeaderIcon from 'app/shared/components/canvas-header-icon/canvas-he
 import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
 import CanvasShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/canvas-share-modal';
 import SearchModal from '../../../entities/search/search-modal';
-
+import SmallScreenMore from './small-screen-more';
 
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
-  const [isSearchModelOpen,setSearchModelOpen] = useState(false)
+  const [isSearchModelOpen, setSearchModelOpen] = useState(false);
   const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const url = new URL(window.location.toString());
@@ -75,13 +75,6 @@ const CanvasHeader = props => {
       onPress: setIsBookmarkDialogOpen,
       data: true,
     },
-
-    {
-      icon: <Search size="M" />,
-      title: translate('canvas.menu.search'),
-      onPress: setSearchModelOpen,
-      data: true
-    },
     {
       icon: <Filter size="M" />,
       title: translate('views.menu.filter'),
@@ -93,8 +86,13 @@ const CanvasHeader = props => {
       onPress: setIsShareDialogOpen,
       data: true,
     },
+    {
+      icon: <Search size="M" />,
+      title: translate('canvas.menu.search'),
+      onPress: setSearchModelOpen,
+      data: true,
+    },
   ];
-  
 
   useEffect(() => {
     if (props.view.id) {
@@ -121,7 +119,7 @@ const CanvasHeader = props => {
     <>
       <View marginEnd="size-600">
         <Flex gap="size-50" wrap="nowrap">
-          <div style={{ minWidth: '305px', paddingRight: '10px' }}>
+          <div className="bookmark-box-big-screen" style={{ minWidth: '305px', paddingRight: '10px' }}>
             <Select
               className="basic-single"
               classNamePrefix="select"
@@ -145,8 +143,7 @@ const CanvasHeader = props => {
               }}
             />
           </div>
-
-          <Flex wrap gap="size-100" marginTop="size-50">
+          <Flex wrap gap="size-100" marginTop="size-50" UNSAFE_className="canvas-header-icons-big-screen">
             {headerIconList &&
               headerIconList.length > 0 &&
               headerIconList.map(card => (
@@ -177,9 +174,7 @@ const CanvasHeader = props => {
           {isBookmarkDialogOpen && <BookmarkUpdate setOpen={setIsBookmarkDialogOpen} />}
         </DialogContainer>
         <DialogContainer type="fullscreen" onDismiss={() => setSearchModelOpen(false)}>
-          {isSearchModelOpen && (
-            <SearchModal viewId={props.view.id} setOpen={() => setSearchModelOpen} />
-          )}
+          {isSearchModelOpen && <SearchModal viewId={props.view.id} setOpen={() => setSearchModelOpen} />}
         </DialogContainer>
       </View>
     </>

@@ -7,11 +7,18 @@ import { getEntities as getDashboards, getDashboardsByName } from 'app/entities/
 import { generateDashboardNameOptions, generateViewNameOptions } from './header.util';
 import { getDashboardViewEntities, getViewsByName } from 'app/entities/views/views.reducer';
 import { useHistory } from 'react-router-dom';
-import { Flex, View, ActionButton, SearchField, Content, Dialog, DialogTrigger, Divider,Text } from '@adobe/react-spectrum';
+import { Flex, View, ActionButton, SearchField, Content, Dialog, DialogTrigger, Divider, Text } from '@adobe/react-spectrum';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import Apps from '@spectrum-icons/workflow/Apps';
 import { translate, Translate } from 'react-jhipster';
 import { updateSearchedText } from 'app/modules/home/home.reducer';
+import { getBookmarks, applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
+import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
+import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
+import { applyFilter } from 'app/modules/canvas/filter/filter.reducer';
+import { generateBookmarksOptions } from 'app/entities/bookmarks/bookmark.util';
+
+const url = new URL(window.location.toString());
 
 const CanvasSearchHeader = props => {
   const [dashboardId, setDashboardId] = useState({ value: '', label: '' });
@@ -97,11 +104,40 @@ const CanvasSearchHeader = props => {
                 />
               </div>
             </View>
+            <View padding={10} margin={5} backgroundColor="gray-75" UNSAFE_className="bookmark-box-small-screen">
+              <span className="spectrum-Body-emphasis--sizeXXS">
+                <Translate contentKey="canvas.search.bookmark">Bookmark</Translate>
+              </span>
+              <div style={{ marginTop: '5px' }}>
+                <Select
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isClearable
+                  isSearchable
+                  placeholder={translate('featureBookmark.search')}
+                  value={props.bookmark && props.bookmark.id ? { value: props.bookmark.id, label: props.bookmark.name } : null}
+                  options={props.bookmarkSelectOptions}
+                  onChange={selectedOption => {
+                    if (selectedOption) {
+                      const _bookmark = props.bookmarks.filter(b => b.id === selectedOption.value)[0];
+                      props.applyBookmark(_bookmark);
+                      props.getFeatureCriteria(selectedOption.value.toString());
+                      props.saveRecentBookmark(_bookmark.id, props.view.id);
+                      url.searchParams.set('bookmarkId', selectedOption.value.toString());
+                      window.history.pushState({}, '', url.href);
+                    } else {
+                      props.applyFilter({}, props.visualmetadata, props.view);
+                      props.applyBookmark(null);
+                    }
+                  }}
+                />
+              </div>
+            </View>
             <View marginTop={5} marginBottom={10}>
               <Text>
                 <Translate contentKey="home.header.search">Search dashboards and views</Translate>
               </Text>
-              <Divider size="M" marginTop={5}/>
+              <Divider size="M" marginTop={5} />
             </View>
             <View padding={10} backgroundColor="gray-75">
               <SearchField
@@ -134,6 +170,10 @@ const mapStateToProps = (storeState: IRootState) => ({
   viewList: storeState.views.entities,
   view: storeState.views.entity,
   searchedText: storeState.home.searchedText,
+  bookmarkSelectOptions: generateBookmarksOptions(storeState.bookmarks.bookmarks),
+  bookmarks: storeState.bookmarks.bookmarks,
+  bookmark: storeState.bookmarks.appliedBookmark,
+  visualmetadata: storeState.views.viewState,
 });
 
 const mapDispatchToProps = {
@@ -141,7 +181,12 @@ const mapDispatchToProps = {
   getDashboardViewEntities,
   getDashboardsByName,
   getViewsByName,
-  updateSearchedText
+  updateSearchedText,
+  getFeatureCriteria,
+  getBookmarks,
+  applyFilter,
+  applyBookmark,
+  saveRecentBookmark,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
