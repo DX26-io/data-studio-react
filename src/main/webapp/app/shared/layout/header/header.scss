@@ -56,3 +56,21 @@ Development Ribbon
   width: 40px;
   height: 40px;
 }
+
+@media only screen and (max-width: 1026px) {
+  .bookmark-box-big-screen {
+    display: none;
+  }
+  .canvas-header-icons-big-screen {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 1026px) {
+  .bookmark-box-small-screen {
+    display: none;
+  }
+  .canvas-header-icons-big-screen {
+    display: block;
+  }
+}

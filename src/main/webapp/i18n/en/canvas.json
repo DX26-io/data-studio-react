@@ -11,12 +11,13 @@
       "filter": "Filter",
       "share": "Share"
     },
-    "search":{
-      "selectDashboard":"Select Dashboard",
-      "selectView":"Select View",
-      "enterText":"Enter text and press enter key",
-      "view":"View",
-      "dashboard":"Dashboard"
+    "search": {
+      "selectDashboard": "Select Dashboard",
+      "selectView": "Select View",
+      "enterText": "Enter text and press enter key",
+      "view": "View",
+      "dashboard": "Dashboard",
+      "bookmark": "Bookmark"
     }
   }
 }
