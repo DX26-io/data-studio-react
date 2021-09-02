@@ -41,9 +41,7 @@ const Header = (props: IHeaderProps) => {
                 <Logo />
               </Link>
               {props.isCanvas && (
-              
-                  <CanvasSearchHeader />
-                
+                <CanvasSearchHeader />
               )}
             </Flex>
             <Flex justifyContent="end">
