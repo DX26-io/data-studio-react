@@ -32,7 +32,7 @@ import CanvasFilterHeader from 'app/shared/layout/header/canvas-filter-header';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import FeaturesPanel from 'app/modules/canvas/features/features-panel';
-import { receiveSocketResponse, hideLoader,showLoader } from 'app/shared/websocket/websocket.reducer';
+import { receiveSocketResponse, toggleLoader } from 'app/shared/websocket/websocket.reducer';
 import { VisualMetadataContainerGetOne } from './util/visualmetadata-container.util';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
@@ -113,7 +113,7 @@ const Canvas = (props: VisualizationProp) => {
     if (ValidateFields(item.fields)) {
       getVisualizationData(item, props.view, props.selectedFilters);
     } else {
-      props.hideLoader();
+      props.toggleLoader(false);
     }
   };
 
@@ -158,20 +158,19 @@ const Canvas = (props: VisualizationProp) => {
       const v = VisualMetadataContainerGetOne(props.visualData.headers.queryId);
       if (v && props.visualData?.body?.length > 0) {
         v.data = props.visualData?.body;
-        props.hideLoader();
+        props.toggleLoader(false);
         hideDataNotFound(v.id);
-
         renderVisualization(v, props.visualData?.body, "widget", broadcast);
       } else {
         showDataNotFound(v.id);
-        props.hideLoader();
+        props.toggleLoader(false);
       }
     }
   }, [props.visualData]);
 
   useEffect(() => {
     if (props.visualmetadata?.visualMetadataSet?.length > 0) {
-      props.showLoader();
+      props.toggleLoader(true)
       props.visualmetadata?.visualMetadataSet.map(item => {
         const loader = {
           visualizationId: item.id,
@@ -203,7 +202,7 @@ const Canvas = (props: VisualizationProp) => {
       if (props.visualmetadata?.visualMetadataSet?.length > 0) {
         loadVisualization();
       } else {
-        props.hideLoader();
+        props.toggleLoader(false);
       }
     } else {
       props.receiveSocketResponse();
@@ -338,7 +337,7 @@ const Canvas = (props: VisualizationProp) => {
             className="layout"
             rowHeight={120}
             breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-            cols={{ lg: 3, md: 3, sm: 2, xs: 2, xxs: 2 }}
+            cols={{ lg: 3, md: 3, sm: 2, xs: 1, xxs: 1 }}
             layout={props.visualMetadataContainerList}
             margin={[15, 15]}
             verticalCompact={true}
@@ -400,8 +399,7 @@ const mapDispatchToProps = {
   saveRecentBookmark,
   applyFilter,
   applyBookmark,
-  hideLoader,
-  showLoader,
+  toggleLoader,
   saveSelectedFilter,
   reset,
   resetViews
