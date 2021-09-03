@@ -32,25 +32,16 @@ import { getEntity as getFeatureEntity } from 'app/entities/feature/feature.redu
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 import { getQueryDTO } from './search.util';
 export interface ISearchModalProps extends StateProps, DispatchProps {
-  setOpen: (isOpen: boolean) => void;
+  setOpen: (boolean) => void;
   viewId: string;
 }
 
 const SearchModal = (props: ISearchModalProps) => {
   const [searchCursorPos, setSearchCursorPos] = useState<number>();
-  const closeSearch = () => {
-    props.setOpen(false)
-  };
-
-  useEffect(() => {
-    if (!props.isSearchOpen) {
-      closeSearch();
-    }
-  }, [props.isSearchOpen]);
 
   useEffect(() => {
     props.receiveSocketResponse();
-    return props.disconnectSocket;
+    props.disconnectSocket;
   }, []);
 
   const handleClose = () => {
@@ -153,7 +144,6 @@ const SearchModal = (props: ISearchModalProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  isSearchOpen: storeState.search.isSearchOpen,
   autoSuggestion: storeState.search.autoSuggestion,
   searchText: storeState.search.searchText,
   searchedResults: storeState.search.searchedResults,

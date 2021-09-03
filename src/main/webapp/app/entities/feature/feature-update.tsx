@@ -54,7 +54,7 @@ const FeatureUpdate = (props: IFeatureUpdateProps) => {
   useEffect(() => {
     if (props.updateSuccess) {
       handleClose();
-      props.getViewFeaturesEntities(props.viewId);
+      props.getViewFeaturesEntities(props?.viewId);
     }
   }, [props.updateSuccess]);
 
