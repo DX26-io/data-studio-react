@@ -122,7 +122,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
       sql: datasourceSql ? datasourceSql : null,
       name: datasourceName,
       queryPath: '/api/queries',
-      connectionName: connection.linkId ? connection.linkId : createdConnection.linkId,
+      connectionName: connection.linkId,
       lastUpdated: new Date(),
     });
     props.setExploreModelId(tabId);
@@ -140,7 +140,11 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
   };
 
   const create = () => {
-    props.createDatasource(datasource);
+    if (!isConnectionSelected) {
+      props.createDatasource({ ...datasource, connectionName: createdConnection.linkId });
+    } else {
+      props.createDatasource(datasource);
+    }
   };
 
   const saveConnection = () => {
