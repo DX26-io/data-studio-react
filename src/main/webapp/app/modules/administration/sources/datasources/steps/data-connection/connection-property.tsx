@@ -46,7 +46,7 @@ const ConnectionProperty = (props: ConnectionPropertyProps) => {
           label={property.displayName}
           isRequired={!disabled && property.required && property.fieldType === 'Integer'}
           onChange={setPropertyValue}
-          value={connection.details[property.fieldName] ? connection.details[property.fieldName] : null}
+          value={connection.details[property.fieldName] ? connection.details[property.fieldName] : 0}
         />
       ) : null}
       {property.fieldType === 'Boolean' ? (
