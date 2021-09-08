@@ -23,6 +23,7 @@ export const ACTION_TYPES = {
   SET_BLOB: 'views/SET_BLOB',
   RESET: 'views/RESET',
   REQUEST_RELEASE: 'views/REQUEST_RELEASE',
+  VIEW_FEATURE_CRITERIA: 'view/viewfeaturecriteria',
 };
 
 const initialState = {
@@ -172,6 +173,10 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         ...state,
         exportViewId: action.payload,
       };
+    case ACTION_TYPES.VIEW_FEATURE_CRITERIA:
+      return {
+        ...state,
+      };
     default:
       return state;
   }
@@ -180,6 +185,13 @@ export default (state: ViewsState = initialState, action): ViewsState => {
 const apiUrl = 'api/views';
 
 // Actions
+
+export const ViewFeatureCriteria = (features: any) => {
+  return {
+    type: ACTION_TYPES.VIEW_FEATURE_CRITERIA,
+    payload: axios.post(`api/view-feature-criteria?cacheBuster=${new Date().getTime()}`, features),
+  };
+};
 
 export const getCurrentViewState: ICrudGetDashboardViewsAction<IVisualMetadataSet> = viewId => {
   const requestUrl = `${apiUrl}/${viewId}/viewState`;
@@ -193,9 +205,15 @@ export const saveViewState: ICrudPutAction<IViewStateDTO> = entity => async disp
   const requestUrl = `${apiUrl}/${entity._id}/viewState`;
   const result = await dispatch({
     type: ACTION_TYPES.FETCH_VIEWS_STATE,
-    payload: axios.put(requestUrl, cleanEntity(entity)),
+    payload: axios.put(
+      requestUrl,
+      cleanEntity({
+        visualMetadataSet: entity.visualMetadataSet,
+        _id: entity._id,
+      })
+    ),
   });
-  dispatch(getCurrentViewState(entity._id));
+  dispatch(getCurrentViewState(entity._id), ViewFeatureCriteria(entity.ViewFeatureCriteria));
   return result;
 };
 

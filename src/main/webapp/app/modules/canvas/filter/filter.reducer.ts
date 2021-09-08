@@ -156,6 +156,7 @@ export const addAppliedFilters = (filter, feature) => dispatch => {
 };
 export const removeAppliedFilters = (filter, feature) => dispatch => {
   dispatch({
+    type: ACTION_TYPES.REMOVE_SELECTED_FILTER_OPTIONS,
     payload: filter,
     Meta: feature,
   });
