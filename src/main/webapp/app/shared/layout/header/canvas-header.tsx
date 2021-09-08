@@ -121,7 +121,7 @@ const CanvasHeader = props => {
     <>
       <View marginEnd="size-600">
         <Flex gap="size-50" wrap="nowrap">
-          <div style={{ minWidth: '305px', paddingRight: '10px' }}>
+        <div className="bookmark-box-big-screen" style={{ minWidth: '305px', paddingRight: '10px' }}>
             <Select
               className="basic-single"
               classNamePrefix="select"
