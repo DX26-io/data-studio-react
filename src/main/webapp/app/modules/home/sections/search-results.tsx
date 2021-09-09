@@ -1,9 +1,7 @@
-import React, { useEffect, useState, ReactText } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Item, Content, View, Flex, ProgressBar, DialogContainer } from '@adobe/react-spectrum';
-import { Tabs } from '@react-spectrum/tabs';
+import { View, Flex, ProgressBar, DialogContainer } from '@adobe/react-spectrum';
 import { Translate } from 'react-jhipster';
-import { getMostPopularViews, getRecentlyAccessedBookmarks, getRecentViews } from './recent.reducer';
 import ViewCardContent from 'app/entities/views/view-card/view-card-content';
 import ViewCardThumbnail from 'app/entities/views/view-card/view-card-thumbnail';
 import Card from 'app/shared/components/card/card';
@@ -39,11 +37,6 @@ const SearchResults = (props: ISearchResultsProps) => {
         key={view.id}
         thumbnail={
           <View height="size-3200">
-            <ViewCardThumbnail
-              thumbnailImagePath={view.imageLocation}
-              viewName={view.viewName}
-              url={`/dashboards/${view.viewDashboard.id}/${view.id}/build`}
-            />
             <ViewCardThumbnail thumbnailImagePath={view.imageLocation} viewName={view.viewName}
              url={`/dashboards/build?dashboardId=${view.viewDashboard.id}&viewId=${view.id}`} 
              />
