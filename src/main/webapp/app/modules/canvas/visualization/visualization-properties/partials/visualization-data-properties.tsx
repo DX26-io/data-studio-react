@@ -16,11 +16,12 @@ import { connect } from 'react-redux';
 import { getDataPropertiesTabTranslations } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 import { Tabs } from '@react-spectrum/tabs';
 import Add from '@spectrum-icons/workflow/Add';
+import {
+  generateHierarchiesOptions,
+} from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 
 export interface IVisualizationDataPropertiesProps extends StateProps, DispatchProps {
-  features: readonly IFeature[];
-  visual: IVisualMetadataSet;
-  hierarchies?: Array<any>;
+
 }
 
 const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) => {
@@ -254,7 +255,11 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({});
+const mapStateToProps = (storeState: IRootState) => ({
+  visual: storeState.visualmetadata.entity,
+  features: storeState.feature.entities,
+  hierarchies: generateHierarchiesOptions(storeState.hierarchies.hierarchies),
+});
 
 const mapDispatchToProps = {
   addField,
