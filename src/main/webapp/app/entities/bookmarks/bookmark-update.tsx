@@ -21,7 +21,7 @@ export const BookmarkUpdate = (props: IBookmarkUpdateProps) => {
   const dialog = useDialogContainer();
 
   useEffect(() => {
-    props.setBookmark({ ...bookmark, datasource, featureCriteria: getFilterCriterias(props.selectedFilter, props.features , props.dynamicDateRangeMetaData) });
+    props.setBookmark({ ...bookmark, datasource, featureCriteria: getFilterCriterias(props.selectedFilter, props.features,props.dynamicDateRangeMetaData) });
   }, []);
 
   const handleClose = () => {

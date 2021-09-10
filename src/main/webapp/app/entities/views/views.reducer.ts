@@ -23,7 +23,7 @@ export const ACTION_TYPES = {
   SET_BLOB: 'views/SET_BLOB',
   RESET: 'views/RESET',
   REQUEST_RELEASE: 'views/REQUEST_RELEASE',
-  VIEW_FEATURE_CRITERIA: 'view/viewfeaturecriteria',
+  VIEW_FEATURE_CRITERIA: 'views/VIEW_FEATURE_CRITERIA',
 };
 
 const initialState = {
@@ -213,7 +213,7 @@ export const saveViewState: ICrudPutAction<IViewStateDTO> = entity => async disp
       })
     ),
   });
-  dispatch(getCurrentViewState(entity._id), ViewFeatureCriteria(entity.ViewFeatureCriteria));
+  dispatch(getCurrentViewState(entity._id), ViewFeatureCriteria(entity.viewFeatureCriterias));
   return result;
 };
 

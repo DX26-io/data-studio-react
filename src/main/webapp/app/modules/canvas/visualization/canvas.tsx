@@ -196,10 +196,10 @@ const Canvas = (props: VisualizationProp) => {
         props.getFeatureCriteria(Number(bookmarkId));
         props.saveRecentBookmark(bookmarkId, params.get('viewId'));
       }
-      if (props.view?.viewFeatureCriterias) {
-        if (props.view?.viewFeatureCriterias && props.featuresList && props.featuresList.length > 0) {
-          applyDateFilters(props.view.viewFeatureCriterias, props.selectedFilters, props.featuresList, props.saveSelectedFilter, props.saveDynamicDateRangeMetaData);
-        }
+    }
+    if (props.view?.viewFeatureCriterias) {
+      if (props.view?.viewFeatureCriterias && props.featuresList && props.featuresList.length > 0) {
+        applyDateFilters(props.view.viewFeatureCriterias, props.selectedFilters, props.featuresList, props.saveSelectedFilter, props.saveDynamicDateRangeMetaData);
       }
     }
   }, [props.visualmetadata]);

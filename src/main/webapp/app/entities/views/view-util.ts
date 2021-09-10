@@ -25,7 +25,7 @@ export type ISaveViewState<T> = (visualmetaDataDTO: IViewStateDTO) => IPayload<T
 export interface IViewStateDTO {
   visualMetadataSet: IVisualMetadataSet[];
   _id: number;
-  ViewFeatureCriteria: {
+  viewFeatureCriterias: {
     features: [];
     viewId: number;
   };

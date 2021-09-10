@@ -132,6 +132,7 @@ const addDateRangeFilter = (filterParameters, date, feature) => {
     dataType: type,
     valueType: 'dateRangeValueType',
   };
+  return filterParameters;
 };
 
 const buildDynamicDateRangeObject = (dimensionName, title, customDynamicDateRange) => {
@@ -183,7 +184,7 @@ const parseViewFeatureMetadata = (metadata, feature, value, filterName) => {
 
 const applyViewFeatureCriteria = (viewFeatureCriterias, selectedFilter, featureEntities, saveFilter, saveDynamicDateRangeMetaData) => {
   if (viewFeatureCriterias && viewFeatureCriterias.length > 0) {
-    const filters = selectedFilter;
+    let filters = selectedFilter;
     viewFeatureCriterias.forEach(criteria => {
       const feature = featureEntities && featureEntities.filter(item => item.name === criteria.feature.name)[0];
       const data = parseViewFeatureMetadata(criteria.metadata, feature, criteria.value, feature?.name);
@@ -197,8 +198,8 @@ const applyViewFeatureCriteria = (viewFeatureCriterias, selectedFilter, featureE
       // filterParametersService.saveDynamicDateRangeToolTip(data.tooltipObj);
       // }
       delete filters[feature?.name];
-      addDateRangeFilter(filters, data.values[0], feature);
-      addDateRangeFilter(filters, data.values[1], feature);
+      filters = addDateRangeFilter(filters, data.values[0], feature);
+      filters = addDateRangeFilter(filters, data.values[1], feature);
     });
     saveFilter(filters);
     // filterParametersService.save(filterParametersService.getSelectedFilter());
@@ -460,7 +461,7 @@ export const generateFilterOptions = data => {
 
 export const generateOptionsForDateRange = (config: any) => {
   const options = [];
-  if (config && (config.tab === '2' || config.dateRangeTab === '2')) {
+  if (config && (config.tab === '2' || config.dateRangeTab === 2)) {
     options.push({ value: config.currentDynamicDateRangeConfig.title, label: config.currentDynamicDateRangeConfig.title });
   } else {
     const date = changeDateFormat(config?.startDateFormatted) + ' To ' + changeDateFormat(config?.endDateFormatted);
