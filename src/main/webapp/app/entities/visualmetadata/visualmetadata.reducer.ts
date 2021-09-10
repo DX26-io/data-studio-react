@@ -31,7 +31,7 @@ export const ACTION_TYPES = {
   VISUAL_METADATA_CONTAINER_REMOVE: 'visualmetadata/VISUAL_METADATA_CONTAINER_REMOVE',
   VISUAL_METADATA_ADD_FIELD: 'visualmetadata/VISUAL_METADATA_ADD_FIELD',
   VISUAL_METADATA_DELETE_FIELD: 'visualmetadata/VISUAL_METADATA_DELETE_FIELD',
-  VISUAL_METADATA_UPDATE_EXPRESSION: 'visualmetadata/VISUAL_METADATA_UPDATE_EXPRESSION',
+  VISUAL_METADATA_UPDATE_CONDITION_EXPRESSION: 'visualmetadata/VISUAL_METADATA_UPDATE_CONDITION_EXPRESSION',
 };
 
 const initialState = {
@@ -207,7 +207,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         ...state,
         visual: action.payload,
       };
-    case ACTION_TYPES.VISUAL_METADATA_UPDATE_EXPRESSION:
+    case ACTION_TYPES.VISUAL_METADATA_UPDATE_CONDITION_EXPRESSION:
       return {
         ...state,
         visual: action.payload,
@@ -340,6 +340,6 @@ const setConditionExpression = (visual: IVisualMetadataSet, conditionExpression)
 };
 
 export const updateConditionExpression = (visual: IVisualMetadataSet, conditionExpression) => ({
-  type: ACTION_TYPES.VISUAL_METADATA_UPDATE_EXPRESSION,
+  type: ACTION_TYPES.VISUAL_METADATA_UPDATE_CONDITION_EXPRESSION,
   payload: setConditionExpression(visual, conditionExpression),
 });
