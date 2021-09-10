@@ -75,7 +75,7 @@ const VisualizationEditModal = (props: IVisualizationEditModalProps1) => {
               </View>
               <div className="properties-tab">
                 <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight={'100%'} width="size-4000">
-                  <VisualizationProperties features={props.featuresList} visual={props.visualmetadataEntity} />
+                  <VisualizationProperties  />
                 </View>
               </div>
             </Flex>

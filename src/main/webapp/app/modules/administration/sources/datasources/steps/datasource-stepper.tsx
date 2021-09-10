@@ -50,7 +50,7 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
     datasourceUpdateSuccess,
     datasourceUpdateError,
     createdDatasource,
-    updatedFeatures,
+    updateFeaturesSuccess,
     datasource,
     exploreModelTabId,
   } = props;
@@ -117,16 +117,12 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
   }, [datasourceUpdateSuccess]);
 
   useEffect(() => {
-    if (updatedFeatures) {
+    if (updateFeaturesSuccess) {
       handleClose();
       setUpdateSuccess();
       setIsAddFeaturesCalled(false);
     }
-  }, [updatedFeatures]);
-
-  const isDisabled = () => {
-    // connectionType
-  };
+  }, [updateFeaturesSuccess]);
 
   return (
     <Dialog data-testid="datasource-stepper-dialog" width="80vw" size="L" minHeight="90vh">
@@ -219,7 +215,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isConnectionSelected: storeState.datasourceSteps.isConnectionSelected,
   datasourceUpdateError: storeState.datasources.updateError,
   features: storeState.datasourceSteps.features,
-  updatedFeatures: storeState.connections.updatedFeatures,
+  updateFeaturesSuccess: storeState.connections.updateFeaturesSuccess,
   datasource: storeState.datasourceSteps.datasource,
   exploreModelTabId: storeState.datasourceSteps.exploreModelTabId,
 });

@@ -13,7 +13,7 @@ interface IDimensionsMeasures extends StateProps, DispatchProps {
 }
 
 export const DimensionsMeasures = (props: IDimensionsMeasures) => {
-  const { datasourceId, features, isAddFeaturesCalled, loading, updatedFeaturesRequest } = props;
+  const { datasourceId, features, isAddFeaturesCalled, loading, updateFeaturesRequest } = props;
 
   useEffect(() => {
     if (features.length === 0) {
@@ -41,7 +41,7 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
 
   return (
     <div className="dx26-container">
-      {loading || updatedFeaturesRequest ? (
+      {loading || updateFeaturesRequest ? (
         <ProgressBar label={features.length > 0 ? 'Creating…' : 'Loading…'} isIndeterminate />
       ) : (
         <Paper className="dx26-table-pager">
@@ -127,7 +127,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   features: storeState.connections.features,
   loading: storeState.connections.loading,
   isAddFeaturesCalled: storeState.datasourceSteps.isAddFeaturesCalled,
-  updatedFeaturesRequest: storeState.connections.updatedFeaturesRequest,
+  updateFeaturesRequest: storeState.connections.updateFeaturesRequest,
 });
 
 const mapDispatchToProps = { getFeatures, addFeatures };

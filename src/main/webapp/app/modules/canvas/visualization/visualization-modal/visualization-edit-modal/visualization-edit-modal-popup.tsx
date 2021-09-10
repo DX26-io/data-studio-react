@@ -133,7 +133,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
           </Flex>
           <div className="properties-tab">
             <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight={'100%'} width="size-4000">
-              <VisualizationProperties  hierarchies={props.hierarchies} features={props.featuresList} visual={props.visualmetadataEntity} />
+              <VisualizationProperties   />
             </View>
           </div>
         </Flex>
@@ -149,7 +149,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualDataById: storeState.visualizationData.visualDataById,
   hierarchies: storeState.hierarchies.hierarchies,
   selectedFilters: storeState.filter.selectedFilters,
-
 });
 
 const mapDispatchToProps = {

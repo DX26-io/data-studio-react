@@ -49,7 +49,11 @@
     "editConfiguration": {
       "properties": {
         "chartProperties": "Chart Properties",
-        "dataProperties": "Data Properties",
+        "dataProperties": {
+          "title":"Data Properties",
+          "dimensions":"Dimensions",
+          "measures":"Measures"
+        },
         "hierarchy": "Hierarchy"
       },
       "settings": {

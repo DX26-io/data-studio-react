@@ -5,17 +5,19 @@ import { Form, Heading, Item, Picker, TextField, View, Well } from '@adobe/react
 import { getBorderList } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 import { TitleProperties } from 'app/shared/model/title-properties.model';
 
-export interface IVisualizationTitlePropertiesProps {
-  titleProperties: TitleProperties;
-}
+import { updateFieldTitleProperties } from 'app/entities/visualmetadata/visualmetadata.reducer';
+
+export interface IVisualizationTitlePropertiesProps extends StateProps, DispatchProps {}
 
 const VisualizationTitleProperties = (props: IVisualizationTitlePropertiesProps) => {
   const borderList = getBorderList();
   const [properties, setProperty] = useState([]);
 
   const handleValueChange = (value, property) => {
-    props.titleProperties[property] = value;
-    setProperty([props.titleProperties[property]]);
+    // this needs to be refectored
+    // props.updateFieldTitleProperties(value)
+    props.visual.titleProperties[property] = value;
+    setProperty([props.visual.titleProperties[property]]);
   };
 
   return (
@@ -27,15 +29,15 @@ const VisualizationTitleProperties = (props: IVisualizationTitlePropertiesProps)
         <Form>
           <TextField
             onChange={text => {
-              handleValueChange(text, "titleText")
+              handleValueChange(text, 'titleText');
             }}
-            value={props.titleProperties?.titleText || ''}
+            value={props.visual.titleProperties?.titleText || ''}
             label={'Text'}
           />
           <Picker
-            selectedKey={props.titleProperties?.borderBottom || ''}
+            selectedKey={props.visual.titleProperties?.borderBottom || ''}
             onSelectionChange={text => {
-              handleValueChange(text, "borderBottom");
+              handleValueChange(text, 'borderBottom');
             }}
             label="Border"
             items={borderList}
@@ -44,17 +46,17 @@ const VisualizationTitleProperties = (props: IVisualizationTitlePropertiesProps)
           </Picker>
           <TextField
             onChange={text => {
-              handleValueChange(text, "color")
+              handleValueChange(text, 'color');
             }}
-            value={props.titleProperties?.color ||''}
+            value={props.visual.titleProperties?.color || ''}
             type="color"
             label={'Text Color'}
           />
           <TextField
             onChange={text => {
-              handleValueChange(text, "backgroundColor")
+              handleValueChange(text, 'backgroundColor');
             }}
-            value={props.titleProperties?.backgroundColor||''}
+            value={props.visual.titleProperties?.backgroundColor || ''}
             type="color"
             label={'Background Color'}
           />
@@ -64,4 +66,15 @@ const VisualizationTitleProperties = (props: IVisualizationTitlePropertiesProps)
   );
 };
 
-export default (VisualizationTitleProperties);
+const mapStateToProps = (storeState: IRootState) => ({
+  visual: storeState.visualmetadata.entity,
+});
+
+const mapDispatchToProps = {
+  updateFieldTitleProperties,
+};
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizationTitleProperties);

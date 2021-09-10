@@ -22,11 +22,11 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
   const [isFeatureDialogOpen, setFeatureDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    props.getHierarchies(props.datasourceId);
+    if(props.datasourceId) props.getHierarchies(props.datasourceId);
   }, []);
 
   useEffect(() => {
-    props.getViewFeaturesEntities(props.view.id);
+    if(props.view.id) props.getViewFeaturesEntities(props.view.id);
   }, [props.view]);
 
   const featureFilter = feature => {
@@ -128,7 +128,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isFeaturesPanelOpen: storeState.filter.isFeaturesPanelOpen,
   featuresList: storeState.feature.entities,
   feature: storeState.feature.feature,
-  datasourceId: storeState.views.entity.viewDashboard.dashboardDatasource.id,
+  datasourceId: storeState.views.entity?.viewDashboard?.dashboardDatasource?.id,
   hierarchies: storeState.hierarchies.hierarchies,
 });
 const mapDispatchToProps = {
