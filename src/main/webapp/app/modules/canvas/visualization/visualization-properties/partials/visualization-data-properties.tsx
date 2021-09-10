@@ -16,13 +16,9 @@ import { connect } from 'react-redux';
 import { getDataPropertiesTabTranslations } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 import { Tabs } from '@react-spectrum/tabs';
 import Add from '@spectrum-icons/workflow/Add';
-import {
-  generateHierarchiesOptions,
-} from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
+import { generateHierarchiesOptions } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 
-export interface IVisualizationDataPropertiesProps extends StateProps, DispatchProps {
-
-}
+export interface IVisualizationDataPropertiesProps extends StateProps, DispatchProps {}
 
 const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) => {
   const [activeTabId, setActiveTabId] = useState<ReactText>('DIMENSION');
@@ -138,10 +134,10 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
         return (
           <View key={`data-prop-row-${i}`} marginTop="size-100">
             <Flex direction="row" gap="size-100">
-              <Button width={'200px'} variant="primary" onPress={() => setSelectedField(field)}>
+              <Button width={'200px'} maxWidth={'200px'} variant="primary" onPress={() => setSelectedField(field)}>
                 {' '}
                 {/* {selectedField?.fieldType?.id === field.fieldType.id ? 'primary' : 'cta'} */}
-                {field.feature?.name || 'Select'}
+                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{field.feature?.name || 'Select'}</span>
               </Button>
               {field.fieldType.constraint === 'REQUIRED' && (
                 <ActionButton isQuiet={true} isDisabled>
