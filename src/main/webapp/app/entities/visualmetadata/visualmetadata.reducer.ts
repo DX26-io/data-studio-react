@@ -14,6 +14,30 @@ import {
 } from 'app/modules/canvas/visualization/util/visualmetadata-container.util';
 import { getVisualizationData, ValidateFields } from 'app/modules/canvas/visualization/util/visualization-render-utils';
 import { ICrudPutActionVisual } from './visualmetadata-util';
+import { BodyProperties } from 'app/shared/model/body-properties.model';
+import { TitleProperties } from 'app/shared/model/title-properties.model';
+
+const addVisualField = (visual: IVisualMetadataSet, field) => {
+  visual.fields.push(field);
+  return Object.assign({}, visual);
+};
+
+export const deleteVisualField = (visual: IVisualMetadataSet, field) => {
+  visual.fields = visual.fields.filter(function (item) {
+    return item.fieldType.id !== field.fieldType.id;
+  });
+  return Object.assign({}, visual);
+};
+
+const updateVisualFieldBodyProperties = (visual: IVisualMetadataSet, bodyProperties) => {
+  visual['bodyProperties'] = bodyProperties;
+  return Object.assign({}, visual);
+};
+
+const updateVisualFieldTitleProperties = (visual: IVisualMetadataSet, titleProperties) => {
+  visual['titleProperties'] = titleProperties;
+  return Object.assign({}, visual);
+};
 
 export const ACTION_TYPES = {
   FETCH_VISUALMETADATA_LIST: 'visualmetadata/FETCH_VISUALMETADATA_LIST',
@@ -31,6 +55,8 @@ export const ACTION_TYPES = {
   VISUAL_METADATA_CONTAINER_REMOVE: 'visualmetadata/VISUAL_METADATA_CONTAINER_REMOVE',
   VISUAL_METADATA_ADD_FIELD: 'visualmetadata/VISUAL_METADATA_ADD_FIELD',
   VISUAL_METADATA_DELETE_FIELD: 'visualmetadata/VISUAL_METADATA_DELETE_FIELD',
+  VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES',
+  VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES',
 };
 
 const initialState = {
@@ -206,6 +232,16 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         ...state,
         visual: action.payload,
       };
+    case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES:
+      return {
+        ...state,
+        visual: updateVisualFieldBodyProperties(state.visual, action.payload),
+      };
+    case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES:
+      return {
+        ...state,
+        visual: updateVisualFieldTitleProperties(state.visual, action.payload),
+      };
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
@@ -306,24 +342,22 @@ export const metadataContainerUpdate = (id: string, widget: any, key: string) =>
   payload: visualMetadataContainerUpdate(id, widget, key),
 });
 
-const addVisualField = (visual: IVisualMetadataSet, field) => {
-  visual.fields.push(field);
-  return Object.assign({}, visual);
-};
-
 export const addField = (visual: IVisualMetadataSet, field) => ({
   type: ACTION_TYPES.VISUAL_METADATA_ADD_FIELD,
   payload: addVisualField(visual, field),
 });
 
-export const deleteVisualField = (visual: IVisualMetadataSet, field) => {
-  visual.fields = visual.fields.filter(function (item) {
-    return item.fieldType.id !== field.fieldType.id;
-  });
-  return Object.assign({}, visual);
-};
-
 export const deleteField = (visual: IVisualMetadataSet, field) => ({
   type: ACTION_TYPES.VISUAL_METADATA_DELETE_FIELD,
-  payload: addVisualField(visual, field),
+  payload: deleteVisualField(visual, field),
+});
+
+export const updateFieldBodyProperties = bodyProperties => ({
+  type: ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES,
+  payload: bodyProperties,
+});
+
+export const updateFieldTitleProperties = titleProperties => ({
+  type: ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES,
+  payload: titleProperties,
 });

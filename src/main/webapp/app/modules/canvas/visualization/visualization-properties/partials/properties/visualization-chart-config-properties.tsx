@@ -1,15 +1,10 @@
 import React from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { View,  Heading, Form } from '@adobe/react-spectrum';
-import { IFeature } from 'app/shared/model/feature.model';
-import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
+import { View, Heading, Form } from '@adobe/react-spectrum';
 import Properties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/properties';
 
-export interface IVisualizationChartConfigPropertiesProps {
-  features: readonly IFeature[];
-  visual: IVisualMetadataSet;
-}
+export interface IVisualizationChartConfigPropertiesProps extends StateProps, DispatchProps {}
 
 const VisualizationChartConfigProperties = (props: IVisualizationChartConfigPropertiesProps) => {
   return (
@@ -38,4 +33,14 @@ const VisualizationChartConfigProperties = (props: IVisualizationChartConfigProp
   );
 };
 
-export default (VisualizationChartConfigProperties);
+const mapStateToProps = (storeState: IRootState) => ({
+  visual: storeState.visualmetadata.entity,
+  features: storeState.feature.entities,
+});
+
+const mapDispatchToProps = {};
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizationChartConfigProperties);

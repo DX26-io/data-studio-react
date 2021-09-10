@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { getBorderList } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 import { Form, Heading, Item, Picker, TextField, View } from '@adobe/react-spectrum';
 import { Slider } from '@react-spectrum/slider';
-import { BodyProperties } from 'app/shared/model/body-properties.model';
-export interface IVisualizationBodyPropertiesProps {
-  bodyProperties: BodyProperties;
+import { updateFieldBodyProperties } from 'app/entities/visualmetadata/visualmetadata.reducer';
+
+export interface IVisualizationBodyPropertiesProps extends StateProps, DispatchProps {
 }
 
 const VisualizationBodyProperties = (props: IVisualizationBodyPropertiesProps) => {
@@ -14,8 +14,11 @@ const VisualizationBodyProperties = (props: IVisualizationBodyPropertiesProps) =
   const [properties, setProperty] = useState([]);
 
   const handleValueChange = (value, property) => {
-    props.bodyProperties[property] = value;
-    setProperty([props.bodyProperties[property]]);
+    // this needs to be refectored
+    props.visual.bodyProperties[property] = value;
+    setProperty([props.visual.bodyProperties[property]]);
+    // props.updateFieldBodyProperties(value)
+    
   };
   return (
     <>
@@ -25,7 +28,7 @@ const VisualizationBodyProperties = (props: IVisualizationBodyPropertiesProps) =
         </Heading>
         <Form>
           <Picker
-            selectedKey={props.bodyProperties?.border || ''}
+            selectedKey={props.visual.bodyProperties?.border || ''}
             onSelectionChange={text => {
               handleValueChange(text, 'border');
             }}
@@ -38,7 +41,7 @@ const VisualizationBodyProperties = (props: IVisualizationBodyPropertiesProps) =
             onChange={text => {
               handleValueChange(text, 'backgroundColor');
             }}
-            value={props.bodyProperties?.backgroundColor || ''}
+            value={props.visual.bodyProperties?.backgroundColor || ''}
             type="color"
             label={'Background Color'}
           />
@@ -57,4 +60,15 @@ const VisualizationBodyProperties = (props: IVisualizationBodyPropertiesProps) =
   );
 };
 
-export default (VisualizationBodyProperties);
+const mapStateToProps = (storeState: IRootState) => ({
+  visual: storeState.visualmetadata.entity,
+});
+
+const mapDispatchToProps = {
+ updateFieldBodyProperties
+};
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizationBodyProperties);
