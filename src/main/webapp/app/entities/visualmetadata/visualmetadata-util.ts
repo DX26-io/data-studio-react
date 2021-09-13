@@ -1,5 +1,48 @@
 import { IViews } from 'app/shared/model/views.model';
-import { AxiosPromise } from 'axios';
 import { IPayload, IPayloadResult } from 'react-jhipster';
 
 export declare type ICrudPutActionVisual<T> = (data?: T, view?: IViews, filter?: any) => IPayload<T> | IPayloadResult<T>;
+
+export const addFieldMeasure = (visualWrap, visual) => {
+  const fieldType = visualWrap.nextFieldMeasure(visual.fields, visual.metadataVisual);
+  let field = null;
+  if (fieldType) {
+    field = {
+      fieldType,
+      feature: null,
+      constraint: fieldType.constraint,
+      properties: fieldType.propertyTypes.map(function (item) {
+        return {
+          propertyType: item.propertyType,
+          value: item.propertyType.defaultValue,
+          type: item.propertyType.type,
+          order: item.order,
+        };
+      }),
+      order: fieldType.order,
+    };
+  }
+  return field;
+};
+
+export const addFieldDimension = (visualWrap, visual) => {
+  const fieldType = visualWrap.nextFieldDimension(visual.fields, visual.metadataVisual);
+  let field = null;
+  if (fieldType) {
+    field = {
+      fieldType,
+      feature: null,
+      constraint: fieldType.constraint,
+      properties: fieldType.propertyTypes.map(function (item) {
+        return {
+          propertyType: item.propertyType,
+          value: item.propertyType.defaultValue,
+          type: item.propertyType.type,
+          order: item.order,
+        };
+      }),
+      order: fieldType.order,
+    };
+  }
+  return field;
+};

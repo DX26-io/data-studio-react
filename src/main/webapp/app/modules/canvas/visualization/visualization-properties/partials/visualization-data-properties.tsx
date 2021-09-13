@@ -1,8 +1,5 @@
 import React, { useEffect, useState, ReactText } from 'react';
-import { ActionButton, Flex, Form, Heading, View, TooltipTrigger, Tooltip, Content, Item, Button } from '@adobe/react-spectrum';
-import TableAndChart from '@spectrum-icons/workflow/TableAndChart';
-import { IFeature } from 'app/shared/model/feature.model';
-import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
+import { ActionButton, Flex, Form, View, Content, Item, Button } from '@adobe/react-spectrum';
 import uuid from 'react-uuid';
 import Properties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/properties';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
@@ -11,12 +8,14 @@ import Delete from '@spectrum-icons/workflow/Delete';
 import Select from 'react-select';
 import { Field } from 'app/shared/model/field.model';
 import { IRootState } from 'app/shared/reducers';
-import { addField, deleteField } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { addField, deleteField,updateField} from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { connect } from 'react-redux';
 import { getDataPropertiesTabTranslations } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 import { Tabs } from '@react-spectrum/tabs';
 import Add from '@spectrum-icons/workflow/Add';
-import { generateHierarchiesOptions } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
+import { generateHierarchiesOptions } from 'app/entities/hierarchy/hierarchy.reducer';
+import { getDimensionsList, getMeasuresList } from 'app/entities/feature/feature.reducer';
+import { addFieldDimension, addFieldMeasure } from 'app/entities/visualmetadata/visualmetadata-util';
 
 export interface IVisualizationDataPropertiesProps extends StateProps, DispatchProps {}
 
@@ -24,9 +23,6 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
   const [activeTabId, setActiveTabId] = useState<ReactText>('DIMENSION');
   const [selectedField, setSelectedField] = useState<Field>();
 
-  // const [showDimension, setShowDimension] = useState(false);
-  // const [showMeasure, setShowMeasure] = useState(false);
-  const [properties, setProperty] = useState([]);
   const visualWrap = VisualWrap(props.visual);
 
   const hierarchyChange = selectedOption => {
@@ -35,92 +31,12 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
     });
   };
 
-  const getDimensionList = () => {
-    const dimensionList = [];
-    props.features.map(item => {
-      if (item.featureType === 'DIMENSION') {
-        dimensionList.push({ value: item.id, label: item.name });
-      }
-    });
-    return dimensionList;
-  };
-
-  const getMeasureList = () => {
-    const measureList = [];
-    props.features.map(item => {
-      if (item.featureType === 'MEASURE') {
-        measureList.push({ value: item.id, label: item.name });
-      }
-    });
-    return measureList;
-  };
-  const dimensionList = getDimensionList();
-  const measureList = getMeasureList();
-
-  // const selectedFieldChange = (field): any => {
-  //   if (field.fieldType.featureType === 'DIMENSION') {
-  //     setShowDimension(true);
-  //     setShowMeasure(false);
-  //   } else {
-  //     setShowMeasure(true);
-  //     setShowDimension(false);
-  //   }
-  //   setSelectedField(field);
-  // };
-
-  const addFieldMeasure = () => {
-    const fieldType = visualWrap.nextFieldMeasure(props.visual.fields, props.visual.metadataVisual);
-    if (fieldType) {
-      const field = {
-        fieldType,
-        feature: null,
-        constraint: fieldType.constraint,
-        properties: fieldType.propertyTypes.map(function (item) {
-          return {
-            propertyType: item.propertyType,
-            value: item.propertyType.defaultValue,
-            type: item.propertyType.type,
-            order: item.order,
-          };
-        }),
-        order: fieldType.order,
-      };
-      props.addField(props.visual, field);
-      // setShowMeasure(true);
-      // setShowDimension(false);
-      setSelectedField(field);
-    }
-  };
-
-  const addFieldDimension = () => {
-    const fieldType = visualWrap.nextFieldDimension(props.visual.fields, props.visual.metadataVisual);
-    if (fieldType) {
-      const field = {
-        fieldType,
-        feature: null,
-        constraint: fieldType.constraint,
-        properties: fieldType.propertyTypes.map(function (item) {
-          return {
-            propertyType: item.propertyType,
-            value: item.propertyType.defaultValue,
-            type: item.propertyType.type,
-            order: item.order,
-          };
-        }),
-        order: fieldType.order,
-      };
-      props.addField(props.visual, field);
-      // setShowDimension(true);
-      // setShowMeasure(false);
-    }
-  };
-
-  const featureChange = feature => {
+  const selectFeature = feature => {
     const selectedFeature = props.features.filter(item => {
       return item.name === feature.label;
     });
     selectedField.feature = selectedFeature[0];
-    setProperty([selectedField]);
+    props.updateField(props.visual,selectedField);
     setSelectedField(selectedField);
   };
 
@@ -132,11 +48,14 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
       .sort((a, b) => (a.fieldType.order > b.fieldType.order ? 1 : -1))
       .map((field, i) => {
         return (
-          <View key={`data-prop-row-${i}`} marginTop="size-100">
+          <View key={`data-prop-row-${i}`} padding="size-100" marginBottom="size-100" borderColor="default" borderWidth="thin">
             <Flex direction="row" gap="size-100">
-              <Button width={'200px'} maxWidth={'200px'} variant="primary" onPress={() => setSelectedField(field)}>
-                {' '}
-                {/* {selectedField?.fieldType?.id === field.fieldType.id ? 'primary' : 'cta'} */}
+              <Button
+                variant={selectedField?.fieldType?.id === field.fieldType.id ? 'cta' : 'primary'}
+                width={'200px'}
+                maxWidth={'200px'}
+                onPress={() => setSelectedField(field)}
+              >
                 <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{field.feature?.name || 'Select'}</span>
               </Button>
               {field.fieldType.constraint === 'REQUIRED' && (
@@ -178,24 +97,37 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
               {activeTabId === 'DIMENSION' && (
                 <View>
                   <Flex justifyContent="end">
-                    <ActionButton isQuiet onPress={addFieldDimension}>
+                    <ActionButton
+                      isQuiet
+                      onPress={() => {
+                        const field = addFieldDimension(visualWrap, props.visual);
+                        if (field) {
+                          props.addField(props.visual, field);
+                          setSelectedField(field);
+                        }
+                      }}
+                      marginEnd={'10px'}
+                    >
                       <Add size="S" />
                     </ActionButton>
                   </Flex>
-                  <View marginBottom="size-150">{getSelectedFieldsElements}</View>
+                  <View marginBottom="size-100" marginTop="size-100">
+                    {getSelectedFieldsElements}
+                  </View>
                   <Form>
-                    <Select
-                      onChange={selected => {
-                        featureChange(selected);
-                      }}
-                      className="basic-single"
-                      classNamePrefix="select"
-                      value={{ value: selectedField?.feature?.id, label: selectedField?.feature?.name }}
-                      isSearchable={true}
-                      name="dimension"
-                      options={dimensionList}
-                    />
-
+                    {selectedField && (
+                      <Select
+                        onChange={selected => {
+                          selectFeature(selected);
+                        }}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        value={{ value: selectedField?.feature?.id, label: selectedField?.feature?.name }}
+                        isSearchable={true}
+                        name="dimensions"
+                        options={getDimensionsList(props.features)}
+                      />
+                    )}
                     {props.hierarchies && props.hierarchies.length > 0 && (
                       <Select
                         onChange={hierarchyChange}
@@ -203,7 +135,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
                         classNamePrefix="select"
                         value={{ value: selectedField?.hierarchy?.id, label: selectedField?.hierarchy?.name }}
                         isSearchable={true}
-                        name="hierarchy"
+                        name="hierarchies"
                         options={props.hierarchies}
                       />
                     )}
@@ -213,23 +145,37 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
               {activeTabId === 'MEASURE' && (
                 <View>
                   <Flex justifyContent="end">
-                    <ActionButton isQuiet onPress={addFieldMeasure}>
+                    <ActionButton
+                      isQuiet
+                      onPress={() => {
+                        const field = addFieldMeasure(visualWrap, props.visual);
+                        if (field) {
+                          props.addField(props.visual, field);
+                          setSelectedField(field);
+                        }
+                      }}
+                      marginEnd={'10px'}
+                    >
                       <Add size="S" />
                     </ActionButton>
                   </Flex>
-                  <View marginBottom="size-150">{getSelectedFieldsElements}</View>
+                  <View marginBottom="size-100" marginTop="size-100">
+                    {getSelectedFieldsElements}
+                  </View>
                   <Form>
-                    <Select
-                      onChange={selected => {
-                        featureChange(selected);
-                      }}
-                      className="basic-single"
-                      classNamePrefix="select"
-                      value={{ value: selectedField?.feature?.id, label: selectedField?.feature?.name }}
-                      isSearchable={true}
-                      name="measureList"
-                      options={measureList}
-                    />
+                    {selectedField && (
+                      <Select
+                        onChange={selected => {
+                          selectFeature(selected);
+                        }}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        value={{ value: selectedField?.feature?.id, label: selectedField?.feature?.name }}
+                        isSearchable={true}
+                        name="measuresList"
+                        options={getMeasuresList(props.features)}
+                      />
+                    )}
                   </Form>
                 </View>
               )}
@@ -260,6 +206,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 const mapDispatchToProps = {
   addField,
   deleteField,
+  updateField
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

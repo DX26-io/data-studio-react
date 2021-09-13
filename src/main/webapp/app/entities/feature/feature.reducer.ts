@@ -214,3 +214,23 @@ export const pinFeature = (id, pin) => dispatch => {
     Meta: { id, pin },
   });
 };
+
+export const getDimensionsList = features => {
+  const dimensionsList = [];
+  features.map(item => {
+    if (item.featureType === 'DIMENSION') {
+      dimensionsList.push({ value: item.id, label: item.name });
+    }
+  });
+  return dimensionsList;
+};
+
+export const getMeasuresList = features => {
+  const measuresList = [];
+  features.map(item => {
+    if (item.featureType === 'MEASURE') {
+      measuresList.push({ value: item.id, label: item.name });
+    }
+  });
+  return measuresList;
+};

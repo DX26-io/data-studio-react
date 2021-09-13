@@ -39,6 +39,12 @@ const updateVisualFieldTitleProperties = (visual: IVisualMetadataSet, titlePrope
   return Object.assign({}, visual);
 };
 
+export const updateVisualField = (visual: IVisualMetadataSet, field) => {
+  const fieldIndex = visual.fields.findIndex(item => item.fieldType.id === field.fieldType.id);
+  visual.fields[fieldIndex] = field;
+  return Object.assign({}, visual);
+};
+
 export const ACTION_TYPES = {
   FETCH_VISUALMETADATA_LIST: 'visualmetadata/FETCH_VISUALMETADATA_LIST',
   FETCH_VISUALMETADATA: 'visualmetadata/FETCH_VISUALMETADATA',
@@ -57,6 +63,7 @@ export const ACTION_TYPES = {
   VISUAL_METADATA_DELETE_FIELD: 'visualmetadata/VISUAL_METADATA_DELETE_FIELD',
   VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES',
+  VISUAL_METADATA_UPDATE_FIELD: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD',
 };
 
 const initialState = {
@@ -242,6 +249,11 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         ...state,
         visual: updateVisualFieldTitleProperties(state.visual, action.payload),
       };
+    case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD:
+      return {
+        ...state,
+        visual: action.payload,
+      };
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
@@ -360,4 +372,9 @@ export const updateFieldBodyProperties = bodyProperties => ({
 export const updateFieldTitleProperties = titleProperties => ({
   type: ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES,
   payload: titleProperties,
+});
+
+export const updateField = (visual: IVisualMetadataSet, field) => ({
+  type: ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD,
+  payload: updateVisualField(visual,field),
 });
