@@ -223,3 +223,12 @@ export const deleteHierarchy: ICrudDeleteAction<IHierarchy> = id => async dispat
   });
   return result;
 };
+
+export const generateHierarchiesOptions = hierarchies => {
+  const options = [];
+  hierarchies &&
+    hierarchies.forEach(item => {
+      options.push({ value: item.id, label: item.name });
+    });
+  return options;
+};

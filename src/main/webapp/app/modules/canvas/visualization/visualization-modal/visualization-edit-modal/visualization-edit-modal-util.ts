@@ -120,15 +120,6 @@ export const getBorderList = (): IBorderData[] => {
   ];
 };
 
-export const generateHierarchiesOptions = hierarchies => {
-  const options = [];
-  hierarchies &&
-    hierarchies.forEach(item => {
-      options.push({ value: item.id, label: item.name });
-    });
-  return options;
-};
-
 export const getShareLinkUrl = (view: IViews, visualizationId: string) => {
   return `${location.host}/dashboards/share?dashboardName=${view.viewDashboard.dashboardName}&viewName=${view.viewName}&dashboarID=${view.viewDashboard.id}&viewId=${view.id}&datasourceId=${view.viewDashboard.dashboardDatasource.id}&visualizationId=${visualizationId}`;
 };
