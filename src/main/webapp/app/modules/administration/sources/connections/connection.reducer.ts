@@ -34,8 +34,8 @@ const initialState = {
   updateSuccess: false,
   features: [],
   updateError: null,
-  updatedFeatures: false,
-  updatedFeaturesRequest: false,
+  updateFeaturesSuccess: false,
+  updateFeaturesRequest: false,
   updating: false,
 };
 
@@ -177,21 +177,21 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
     case REQUEST(ACTION_TYPES.CREATE_FEATURES):
       return {
         ...state,
-        updatedFeatures: false,
-        updatedFeaturesRequest: true,
+        updateFeaturesSuccess: false,
+        updateFeaturesRequest: true,
       };
     case FAILURE(ACTION_TYPES.CREATE_FEATURES):
       return {
         ...state,
         errorMessage: action.payload.data,
-        updatedFeatures: false,
-        updatedFeaturesRequest: false,
+        updateFeaturesSuccess: false,
+        updateFeaturesRequest: false,
       };
     case SUCCESS(ACTION_TYPES.CREATE_FEATURES):
       return {
         ...state,
-        updatedFeatures: true,
-        updatedFeaturesRequest: false,
+        updateFeaturesSuccess: true,
+        updateFeaturesRequest: false,
       };
     case ACTION_TYPES.SET_IS_SELECTED_CONNECTION_TYPE:
       return {
@@ -206,6 +206,7 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
         connection: connectionDefaultValue,
         updateSuccess: false,
         updating: false,
+        updateFeaturesSuccess: false,
       };
     case ACTION_TYPES.SET_CONNECTION:
       return {

@@ -97,6 +97,7 @@ working on it
           }}
           value={parseString(props.property.value) || ''}
           label={props.property.propertyType.name}
+          width={'100%'}
         />
       )}
     </>

@@ -163,6 +163,9 @@ const Canvas = (props: VisualizationProp) => {
         renderVisualization(v, props.visualData?.body, "widget", broadcast);
       } else {
         showDataNotFound(v.id);
+        if (document.getElementById('chart-widget-' + v.id)) {
+          document.getElementById('chart-widget-' + v.id).remove();
+        }
         props.toggleLoader(false);
       }
     }

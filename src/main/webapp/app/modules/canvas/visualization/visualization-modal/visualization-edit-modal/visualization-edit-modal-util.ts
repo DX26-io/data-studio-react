@@ -22,7 +22,7 @@ export const getPropertiesTabTranslations = (): ITabData[] => {
     },
     {
       id: 'dataProperties',
-      name: translate('views.editConfiguration.properties.dataProperties'),
+      name: translate('views.editConfiguration.properties.dataProperties.title'),
     },
     // {
     //   id: 'hierarchy',
@@ -30,6 +30,23 @@ export const getPropertiesTabTranslations = (): ITabData[] => {
     // },
   ];
 };
+
+/**
+ * This method returns the list of data properies tab
+ */
+export const getDataPropertiesTabTranslations = (): ITabData[] => {
+  return [
+    {
+      id: 'DIMENSION',
+      name: translate('views.editConfiguration.properties.dataProperties.dimensions'),
+    },
+    {
+      id: 'MEASURE',
+      name: translate('views.editConfiguration.properties.dataProperties.measures'),
+    },
+  ];
+};
+
 /**
  * This method returns the list of border type
  */
@@ -100,15 +117,6 @@ export const getBorderList = (): IBorderData[] => {
       name: 'Hidden',
     },
   ];
-};
-
-export const generateHierarchiesOptions = hierarchies => {
-  const options = [];
-  hierarchies &&
-    hierarchies.forEach(item => {
-      options.push({ value: item.id, label: item.name });
-    });
-  return options;
 };
 
 export const getShareLinkUrl = (view: IViews, visualizationId: string) => {

@@ -55,7 +55,9 @@ export const HierarchyUpdate = (props: HierarchyUpdateProps) => {
   useEffect(() => {
     if (props.updateSuccess) {
       handleClose();
-      props.getHierarchies(props.datasource.id);
+      if(props && props.datasource && props.datasource.id){
+        props.getHierarchies(props.datasource.id);
+      }
     }
   }, [props.updateSuccess]);
 
