@@ -9,7 +9,8 @@
       "toggleFeatures": "Toggle features",
       "more": "More",
       "filter": "Filter",
-      "share": "Share"
+      "share": "Share",
+      "resetFilter": "Reset Filter"
     },
     "search": {
       "selectDashboard": "Select Dashboard",

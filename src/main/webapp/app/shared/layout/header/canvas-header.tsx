@@ -7,6 +7,7 @@ import BookmarkSingle from '@spectrum-icons/workflow/BookmarkSingle';
 import Search from '@spectrum-icons/workflow/Search';
 import GraphBarVerticalAdd from '@spectrum-icons/workflow/GraphBarVerticalAdd';
 import CollectionEdit from '@spectrum-icons/workflow/CollectionEdit';
+import CloseCircle from '@spectrum-icons/workflow/CloseCircle';
 import VisualizationsList from 'app/entities/visualizations/visualizations-list';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
@@ -15,7 +16,7 @@ import {
   deleteEntity as deleteVisualmetadataEntity,
   toggleEditMode,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { toggleFeaturesPanel, toggleFilterPanel } from 'app/modules/canvas/filter/filter.reducer';
+import { toggleFeaturesPanel, toggleFilterPanel,clearFilter,clearFilterForShareLink } from 'app/modules/canvas/filter/filter.reducer';
 import { saveViewState } from 'app/entities/views/views.reducer';
 import Filter from '@spectrum-icons/workflow/Filter';
 import { translate } from 'react-jhipster';
@@ -23,7 +24,7 @@ import { toggleSearch } from 'app/entities/search/search.reducer';
 import BookmarkUpdate from 'app/entities/bookmarks/bookmark-update';
 import { getBookmarks, applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
-import { addFilterFromBookmark, applyDateFilters, getViewFeatureCriteria } from 'app/modules/canvas/filter/filter-util';
+import { addFilterFromBookmark, applyDateFilters, getViewFeatureCriteria, removeFilterForVisualization } from 'app/modules/canvas/filter/filter-util';
 import { applyFilter, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import Select from 'react-select';
 import { generateBookmarksOptions } from 'app/entities/bookmarks/bookmark.util';
@@ -35,6 +36,7 @@ import SearchModal from '../../../entities/search/search-modal';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 
 
+
 const CanvasHeader = props => {
   const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
   const [isSearchModelOpen,setIsSearchModelOpen] = useState(false)
@@ -42,6 +44,12 @@ const CanvasHeader = props => {
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const url = new URL(window.location.toString());
 
+  const resetFilter = () => {
+    if (!props.visualmetadataEntity.id) {
+      props.clearFilter(removeFilterForVisualization(props.selectedFilter,props.featuresList), props.visualmetadata, props.view);
+    } 
+  }
+  
   const headerIconList = [
     {
       icon: <CollectionEdit size="M" />,
@@ -65,6 +73,11 @@ const CanvasHeader = props => {
         _id: props.view.id,
         viewFeatureCriterias : getViewFeatureCriteria(props.selectedFilter,props.features,props.view.id,props.dynamicDateRangeMetaData),
       },
+    },
+    {
+      icon: <CloseCircle size="M" />,
+      title: translate('canvas.menu.resetFilter'),
+      onPress:resetFilter,
     },
     {
       icon: <Asset size="M" />,
@@ -203,6 +216,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   featureCriteria: storeState.featureCriteria.featureCriteria,
   view: storeState.views.entity,
   selectedFilter: storeState.filter.selectedFilters,
+  featuresList: storeState.feature.entities,
   bookmark: storeState.bookmarks.appliedBookmark,
   features: storeState.feature.entities,
   dynamicDateRangeMetaData: storeState.filter.dynamicDateRangeMetaData
@@ -221,7 +235,9 @@ const mapDispatchToProps = {
   applyBookmark,
   saveRecentBookmark,
   saveSelectedFilter,
-  getViewFeaturesEntities
+  getViewFeaturesEntities,
+  clearFilter,
+  clearFilterForShareLink
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
