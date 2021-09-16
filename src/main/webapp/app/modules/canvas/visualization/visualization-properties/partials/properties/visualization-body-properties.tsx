@@ -14,12 +14,13 @@ const VisualizationBodyProperties = (props: IVisualizationBodyPropertiesProps) =
   const [properties, setProperty] = useState([]);
 
   const handleValueChange = (value, property) => {
-    // this needs to be refectored
-    props.visual.bodyProperties[property] = value;
-    setProperty([props.visual.bodyProperties[property]]);
-    // props.updateFieldBodyProperties(value)
-    
-  };
+    const bodyProperties = {
+      value,
+      property
+    }
+    props.updateFieldBodyProperties(bodyProperties)
+  };  
+
   return (
     <>
       <View>
@@ -65,7 +66,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
- updateFieldBodyProperties
+updateFieldBodyProperties
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

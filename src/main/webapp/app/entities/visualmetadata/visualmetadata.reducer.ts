@@ -14,8 +14,6 @@ import {
 } from 'app/modules/canvas/visualization/util/visualmetadata-container.util';
 import { getVisualizationData, ValidateFields } from 'app/modules/canvas/visualization/util/visualization-render-utils';
 import { ICrudPutActionVisual } from './visualmetadata-util';
-import { BodyProperties } from 'app/shared/model/body-properties.model';
-import { TitleProperties } from 'app/shared/model/title-properties.model';
 
 const addVisualField = (visual: IVisualMetadataSet, field) => {
   visual.fields.push(field);
@@ -30,12 +28,12 @@ export const deleteVisualField = (visual: IVisualMetadataSet, field) => {
 };
 
 const updateVisualFieldBodyProperties = (visual: IVisualMetadataSet, bodyProperties) => {
-  visual['bodyProperties'] = bodyProperties;
+  visual.bodyProperties[bodyProperties.property] = bodyProperties.value;
   return Object.assign({}, visual);
 };
 
 const updateVisualFieldTitleProperties = (visual: IVisualMetadataSet, titleProperties) => {
-  visual['titleProperties'] = titleProperties;
+  visual.titleProperties[titleProperties.property] = titleProperties.value;
   return Object.assign({}, visual);
 };
 
@@ -242,12 +240,12 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
     case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES:
       return {
         ...state,
-        visual: updateVisualFieldBodyProperties(state.visual, action.payload),
+        visual: updateVisualFieldBodyProperties(state.entity, action.payload),
       };
     case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES:
       return {
         ...state,
-        visual: updateVisualFieldTitleProperties(state.visual, action.payload),
+        visual: updateVisualFieldTitleProperties(state.entity, action.payload),
       };
     case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD:
       return {

@@ -7,7 +7,6 @@ import VisualizationChartProperties from 'app/modules/canvas/visualization/visua
 import VisualizationDataProperties from 'app/modules/canvas/visualization/visualization-properties/partials/visualization-data-properties';
 import VisualizationHierarchy from 'app/modules/canvas/visualization/visualization-properties/partials/visualization-hierarchy';
 import {
-  generateHierarchiesOptions,
   getPropertiesTabTranslations,
 } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 import { IFeature } from 'app/shared/model/feature.model';
