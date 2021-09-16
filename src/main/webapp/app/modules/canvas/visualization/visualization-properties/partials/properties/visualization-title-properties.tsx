@@ -3,8 +3,6 @@ import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { Form, Heading, Item, Picker, TextField, View, Well } from '@adobe/react-spectrum';
 import { getBorderList } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
-import { TitleProperties } from 'app/shared/model/title-properties.model';
-
 import { updateFieldTitleProperties } from 'app/entities/visualmetadata/visualmetadata.reducer';
 
 export interface IVisualizationTitlePropertiesProps extends StateProps, DispatchProps {}
@@ -15,9 +13,11 @@ const VisualizationTitleProperties = (props: IVisualizationTitlePropertiesProps)
 
   const handleValueChange = (value, property) => {
     // this needs to be refectored
-    // props.updateFieldTitleProperties(value)
-    props.visual.titleProperties[property] = value;
-    setProperty([props.visual.titleProperties[property]]);
+    const titleProperties = {
+      value,
+      property
+    }
+    props.updateFieldTitleProperties(titleProperties)
   };
 
   return (

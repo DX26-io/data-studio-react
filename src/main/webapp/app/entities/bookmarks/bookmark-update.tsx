@@ -21,7 +21,7 @@ export const BookmarkUpdate = (props: IBookmarkUpdateProps) => {
   const dialog = useDialogContainer();
 
   useEffect(() => {
-    props.setBookmark({ ...bookmark, datasource, featureCriteria: getFilterCriterias(props.selectedFilter, props.features) });
+    props.setBookmark({ ...bookmark, datasource, featureCriteria: getFilterCriterias(props.selectedFilter, props.features,props.dynamicDateRangeMetaData) });
   }, []);
 
   const handleClose = () => {
@@ -102,6 +102,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   datasource: storeState.views.entity.viewDashboard.dashboardDatasource,
   selectedFilter: storeState.filter.selectedFilters,
   features: storeState.feature.entities,
+  dynamicDateRangeMetaData: storeState.filter.dynamicDateRangeMetaData
 });
 
 const mapDispatchToProps = { getBookmarks, updateBookmark, createBookmark, reset, deleteBookmark, setBookmark };

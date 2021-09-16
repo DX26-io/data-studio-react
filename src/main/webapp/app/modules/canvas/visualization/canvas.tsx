@@ -37,15 +37,16 @@ import { VisualMetadataContainerGetOne } from './util/visualmetadata-container.u
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
-import { applyFilter, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
+import { applyFilter, saveDynamicDateRangeMetaData, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
+import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { VisualizationType } from 'app/shared/util/visualization.constants';
-import PinnedCanvasFilters from "app/modules/canvas/visualization/pinned-canvas-filters/pinned-canvas-filters";
 import PinnedFiltersHeader from './pinned-canvas-filters/pinned-filters-header';
 import PinnedFilterElement from './pinned-canvas-filters/pinned-filter-element';
 import { IBroadcast } from '../../../shared/model/broadcast.model'
 
 import { WidthProvider, Responsive as ResponsiveGridLayout, } from 'react-grid-layout';
+import { applyDateFilters } from '../filter/filter-util';
 const ReactGridLayout = WidthProvider(ResponsiveGridLayout);
 
 export interface IIllustrate {
@@ -144,6 +145,7 @@ const Canvas = (props: VisualizationProp) => {
   useEffect(() => {
     const viewId = params.get('viewId');
     if (viewId) {
+      props.getViewFeaturesEntities(viewId);
       props.getVisualizationsEntities();
       props.getViewEntity(viewId);
       props.getCurrentViewState(viewId);
@@ -193,16 +195,19 @@ const Canvas = (props: VisualizationProp) => {
         props.getAppliedBookmark(bookmarkId);
         props.getFeatureCriteria(Number(bookmarkId));
         props.saveRecentBookmark(bookmarkId, params.get('viewId'));
-      } else {
-        props.saveSelectedFilter({});
+      }
+    }
+    if (props.view?.viewFeatureCriterias) {
+      if (props.view?.viewFeatureCriterias && props.featuresList && props.featuresList.length > 0) {
+        applyDateFilters(props.view.viewFeatureCriterias, props.selectedFilters, props.featuresList, props.saveSelectedFilter, props.saveDynamicDateRangeMetaData);
       }
     }
   }, [props.visualmetadata]);
 
   useEffect(() => {
     if (props.isSocketConnected) {
-      props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
-      if (props.visualmetadata?.visualMetadataSet?.length > 0) {
+        props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
+      if (props.visualmetadata?.visualMetadataSet.length > 0) {
         loadVisualization();
       } else {
         props.toggleLoader(false);
@@ -404,8 +409,9 @@ const mapDispatchToProps = {
   applyBookmark,
   toggleLoader,
   saveSelectedFilter,
+  getViewFeaturesEntities,
   reset,
-  resetViews
+  saveDynamicDateRangeMetaData
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

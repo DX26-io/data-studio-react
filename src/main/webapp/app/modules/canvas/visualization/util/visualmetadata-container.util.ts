@@ -7,12 +7,12 @@ export const VisualMetadataContainerGetOne = (id: string) => {
 };
 
 export const visualMetadataContainerAdd = (widget: any) => {
-  if (widget?.constructor === Array) {
+  if (widget.constructor === Array) {
+    visualMetadataContainerList = [];
     const widgetCont = widget.map(function (item) {
       item.visualBuildId = item.visualBuildId || item.id;
       return item;
     });
-
     visualMetadataContainerList = visualMetadataContainerList.concat(widgetCont);
   } else {
     const w = widget;

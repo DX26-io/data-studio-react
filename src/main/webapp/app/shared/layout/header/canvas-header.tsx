@@ -23,7 +23,7 @@ import { toggleSearch } from 'app/entities/search/search.reducer';
 import BookmarkUpdate from 'app/entities/bookmarks/bookmark-update';
 import { getBookmarks, applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
-import { addFilterFromBookmark } from 'app/modules/canvas/filter/filter-util';
+import { addFilterFromBookmark, applyDateFilters, getViewFeatureCriteria } from 'app/modules/canvas/filter/filter-util';
 import { applyFilter, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import Select from 'react-select';
 import { generateBookmarksOptions } from 'app/entities/bookmarks/bookmark.util';
@@ -32,6 +32,7 @@ import CanvasHeaderIcon from 'app/shared/components/canvas-header-icon/canvas-he
 import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
 import CanvasShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/canvas-share-modal';
 import SearchModal from '../../../entities/search/search-modal';
+import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 
 
 const CanvasHeader = props => {
@@ -62,6 +63,7 @@ const CanvasHeader = props => {
       data: {
         visualMetadataSet: props.visualmetadata.visualMetadataSet,
         _id: props.view.id,
+        viewFeatureCriterias : getViewFeatureCriteria(props.selectedFilter,props.features,props.view.id,props.dynamicDateRangeMetaData),
       },
     },
     {
@@ -112,7 +114,11 @@ const CanvasHeader = props => {
 
   useEffect(() => {
     if (props.fetchedFeatureCriteria) {
-      const filters = addFilterFromBookmark({ ...props.bookmark, featureCriteria: props.featureCriteria });
+      const bookmarkFilters = addFilterFromBookmark({ ...props.bookmark, featureCriteria: props.featureCriteria });
+      const filters=props.selectedFilter;
+      Object.keys(bookmarkFilters).map((item)=>{
+        filters[item]=bookmarkFilters[item];
+      })
       props.saveSelectedFilter(filters);
     }
   }, [props.fetchedFeatureCriteria]);
@@ -121,7 +127,7 @@ const CanvasHeader = props => {
     <>
       <View marginEnd="size-600">
         <Flex gap="size-50" wrap="nowrap">
-        <div className="bookmark-box-big-screen" style={{ minWidth: '305px', paddingRight: '10px' }}>
+          <div style={{ minWidth: '305px', paddingRight: '10px' }}>
             <Select
               className="basic-single"
               classNamePrefix="select"
@@ -145,7 +151,6 @@ const CanvasHeader = props => {
               }}
             />
           </div>
-
           <Flex wrap gap="size-100" marginTop="size-50">
             {headerIconList &&
               headerIconList.length > 0 &&
@@ -199,6 +204,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   selectedFilter: storeState.filter.selectedFilters,
   bookmark: storeState.bookmarks.appliedBookmark,
+  features: storeState.feature.entities,
+  dynamicDateRangeMetaData: storeState.filter.dynamicDateRangeMetaData
 });
 
 const mapDispatchToProps = {
@@ -214,6 +221,7 @@ const mapDispatchToProps = {
   applyBookmark,
   saveRecentBookmark,
   saveSelectedFilter,
+  getViewFeaturesEntities
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

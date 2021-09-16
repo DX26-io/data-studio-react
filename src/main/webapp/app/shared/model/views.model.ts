@@ -14,6 +14,7 @@ export interface IViews {
   image?: any;
   viewDashboard?: IDashboard;
   selected?: boolean;
+  viewFeatureCriterias?: any;
 }
 
 export const defaultValue: Readonly<IViews> = {

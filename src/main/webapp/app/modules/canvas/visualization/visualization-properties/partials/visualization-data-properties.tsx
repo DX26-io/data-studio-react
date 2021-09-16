@@ -1,7 +1,7 @@
 import React, { useEffect, useState, ReactText } from 'react';
 import { ActionButton, Flex, Form, View, Content, Item, Button } from '@adobe/react-spectrum';
 import uuid from 'react-uuid';
-import Properties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/properties';
+import Properties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/property';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 import LockClosed from '@spectrum-icons/workflow/LockClosed';
 import Delete from '@spectrum-icons/workflow/Delete';
