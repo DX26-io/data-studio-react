@@ -18,6 +18,13 @@
       "header": "Error",
       "content": "Error saving dashboard"
     },
+    "validatioError": {
+      "createNewdashboard": {
+        "name": "This field cannot be longer than 30 characters.",
+        "category": "This field cannot be longer than 30 characters.",
+        "description": "This field cannot be longer than 100 characters."
+      }
+    },
     "delete": {
       "question": "This will permanently delete the selected <strong>{{ name }}</strong> dashboard. If you wish to continue type <em>{{ name }}</em> and click on delete."
     },

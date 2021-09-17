@@ -4,7 +4,7 @@ import { View, Flex, Text } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { createEntity as addVisualmetadataEntity, toggleEditMode } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { toggleFilterPanel, saveSelectedFilter, removeDateRangeFilters } from 'app/modules/canvas/filter/filter.reducer';
+import { toggleFilterPanel, saveSelectedFilter, removeDateFilters } from 'app/modules/canvas/filter/filter.reducer';
 import { saveViewState } from 'app/entities/views/views.reducer';
 import 'bootstrap/dist/css/bootstrap.css';
 import { applyFilter, addAppliedFilters, removeAppliedFilters, removeOptionFromFilters } from 'app/modules/canvas/filter/filter.reducer';
@@ -12,6 +12,7 @@ import Close from '@spectrum-icons/workflow/Close';
 import Select from 'react-select';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import { generateOptionsForDateRange, isDateFilterType, isDateRange } from 'app/modules/canvas/filter/filter-util';
+import { getFeature } from './header.util';
 export interface ICanvasFilterHeaderProps extends StateProps, DispatchProps { }
 
 const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
@@ -40,8 +41,12 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
                   classNamePrefix="select"
                   onChange={(value, actionMeta) => {
                     if (actionMeta.action === 'select-option') {
-                      props.removeDateRangeFilters(props.selectedFilters,featureName);
-                      props.applyFilter(props.selectedFilters, props.visualmetadata, props.view);
+                      const feature = getFeature(props.featureList, featureName);
+                      if (feature && feature.dateFilter !== 'ENABLED') {
+                        props.removeDateFilters(props.selectedFilters, featureName);
+                        props.applyFilter(props.selectedFilters, props.visualmetadata, props.view);
+                      }
+
                     }
                   }}
                   placeholder={featureName}
@@ -84,7 +89,7 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   selectedFilters: storeState.filter.selectedFilters,
   dynamicDateRangeMetaData: storeState.filter.dynamicDateRangeMetaData,
-
+  featureList: storeState.feature.entities,
   view: storeState.views.entity,
   visualmetadata: storeState.views.viewState,
 });
@@ -98,7 +103,7 @@ const mapDispatchToProps = {
   applyFilter,
   addAppliedFilters,
   removeAppliedFilters,
-  removeDateRangeFilters
+  removeDateFilters
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

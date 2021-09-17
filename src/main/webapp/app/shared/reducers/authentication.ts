@@ -166,7 +166,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         ...state,
         loading: false,
         isAuthenticated: false,
-        redirectTo: '/',
+        // redirectTo: '/',
       };
     case ACTION_TYPES.REALM_CREATED:
       return {
