@@ -143,7 +143,7 @@ export const applyFilter = (filters: any, visualmetadata: any, view: IViews) => 
 };
 
 export const clearFilter = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
-  dispatch(saveSelectedFilter(filters));
+  dispatch(saveSelectedFilter({}));
   loadVisualization(visualmetadata, view, filters);
 };
 
