@@ -43,10 +43,9 @@ export const getDataPropertiesTabTranslations = (): ITabData[] => {
     {
       id: 'MEASURE',
       name: translate('views.editConfiguration.properties.dataProperties.measures'),
-    }
+    },
   ];
 };
-
 
 /**
  * This method returns the list of border type

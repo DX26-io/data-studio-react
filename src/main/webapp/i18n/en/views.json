@@ -50,9 +50,9 @@
       "properties": {
         "chartProperties": "Chart Properties",
         "dataProperties": {
-          "title":"Data Properties",
-          "dimensions":"Dimensions",
-          "measures":"Measures"
+          "title": "Data Properties",
+          "dimensions": "Dimensions",
+          "measures": "Measures"
         },
         "hierarchy": "Hierarchy"
       },

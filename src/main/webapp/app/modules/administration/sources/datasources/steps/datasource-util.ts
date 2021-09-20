@@ -66,7 +66,7 @@ export const generateDatasourcesOptions = (datasources = []) => {
   return options;
 };
 
-export const generateConnectionsOptions = (connections) => {
+export const generateConnectionsOptions = connections => {
   const options = [];
   connections.forEach(function (item) {
     options.push({ value: item.id, label: item.name });

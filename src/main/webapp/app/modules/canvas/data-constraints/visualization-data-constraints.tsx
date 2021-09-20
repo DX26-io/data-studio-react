@@ -20,8 +20,11 @@ import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { resetTimezoneData } from 'app/modules/canvas/data-constraints/utils/date-util';
 import DateRangeComponent from './date-range-component';
 import { checkIsDateType, getDimension } from '../visualization/util/visualization-utils';
+import { updateConditionExpression } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { IRootState } from 'app/shared/reducers';
+import { connect } from 'react-redux';
 
-interface IVisualizationDataConstraintsProps {
+interface IVisualizationDataConstraintsProps extends StateProps, DispatchProps {
   features: readonly IFeature[];
   datasource: IDatasources;
   visualMetaData: IVisualMetadataSet;
@@ -258,12 +261,13 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
         changes.push(newCurrent);
       }
     });
-    props.visualMetaData.conditionExpression = applyChanges(props.visualMetaData.conditionExpression, changes);
+    const conditionExpression = applyChanges(props.visualMetaData.conditionExpression, changes);
+    props.updateConditionExpression(props.visualMetaData, conditionExpression)
   };
 
   const removeCondition = condition => {
     if (props.visualMetaData.conditionExpression.uuid === condition.uuid) {
-      props.visualMetaData.conditionExpression = null;
+      props.updateConditionExpression(props.visualMetaData, null)
     } else {
       const changes = [];
       depthFirstVisit(props.visualMetaData.conditionExpression, function (current, previous, previousLeaf, parent) {
@@ -280,7 +284,8 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
           }
         }
       });
-      props.visualMetaData.conditionExpression = applyChanges(props.visualMetaData.conditionExpression, changes);
+      const conditionExpression = applyChanges(props.visualMetaData.conditionExpression, changes);
+      props.updateConditionExpression(props.visualMetaData, conditionExpression)
     }
   };
   const loadComponent = condition => {
@@ -352,8 +357,7 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
           datasource={props.datasource}
           visualMetaData={props.visualMetaData}
           condition={condition}
-          filterData={props.filterData}
-        ></VisualizationDataConstraints>
+          filterData={props.filterData} updateConditionExpression={props.updateConditionExpression}           ></VisualizationDataConstraints>
       </>
     );
   };
@@ -377,7 +381,7 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
   };
 
   const addStartingCondition = () => {
-    props.visualMetaData.conditionExpression = {
+    const conditionExpression = {
       uuid: uuid(),
       '@type': 'Compare',
       comparatorType: 'EQ',
@@ -387,7 +391,8 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
         type: '',
       },
       valueTypes: [],
-    };
+    }
+    props.updateConditionExpression(props.visualMetaData, conditionExpression);
   };
 
   return (
@@ -410,4 +415,14 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
   );
 };
 
-export default VisualizationDataConstraints;
+const mapStateToProps = (storeState: IRootState) => ({
+});
+const mapDispatchToProps = {
+  updateConditionExpression,
+};
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(VisualizationDataConstraints);
+

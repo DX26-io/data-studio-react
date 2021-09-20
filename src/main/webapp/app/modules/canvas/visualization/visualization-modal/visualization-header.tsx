@@ -17,6 +17,7 @@ import 'app/modules/canvas/visualization/canvas.scss';
 import { IViews } from 'app/shared/model/views.model';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
 import VisualizationEditModal from './visualization-edit-modal/visualization-edit-modal-popup';
+import VisualizationDeleteModal from '../../../../modules/canvas/visualization/visualization-modal/visualization-delete-modal/visualizations-delete-modal'
 import { getVisualizationData } from '../util/visualization-render-utils';
 import { VisualizationDataModal } from './visualization-data-modal/visualizations-data-modal';
 import { CSVLink } from 'react-csv';
@@ -226,14 +227,15 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                 </Menu>
               )}
             </MenuTrigger>
-
+            
             {dialog === 'Delete' && (
-              <Redirect
-                to={{
-                  pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/delete/' + props.visual.id,
-                }}
-              />
+               <VisualizationDeleteModal visualizationId={props.visual.id} viewId={props.view.id} 
+               setOpen={() => setDialog(null)}
+               match={null} 
+               history={null} 
+               location={null} />
             )}
+           
             <DialogContainer type={dialog === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => setDialog(null)}>
               {dialog === 'Edit' && (
                 <VisualizationEditModal

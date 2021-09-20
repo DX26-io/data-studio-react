@@ -4,7 +4,7 @@ import { View } from '@adobe/react-spectrum';
 import { RouteComponentProps } from 'react-router-dom';
 import './canvas.scss';
 import 'flair-visualizations/styles/stylesheets/screen.css';
-import { getEntity as getViewEntity, getCurrentViewState, saveViewState } from 'app/entities/views/views.reducer';
+import { getEntity as getViewEntity, getCurrentViewState, saveViewState,reset as resetViews} from 'app/entities/views/views.reducer';
 import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
@@ -73,7 +73,7 @@ const Canvas = (props: VisualizationProp) => {
   const onLayoutChange = _visualmetaList => {
     props.visualmetadata?.visualMetadataSet?.map((item, i) => {
       if (!item.key) {
-        (item.x = _visualmetaList[i].x),
+        if(item.x) item.x = _visualmetaList[i].x,
           (item.y = _visualmetaList[i].y),
           (item.h = _visualmetaList[i].h),
           (item.w = _visualmetaList[i].w),
@@ -243,7 +243,7 @@ const Canvas = (props: VisualizationProp) => {
   const generateWidge =
     props.visualMetadataContainerList &&
     props.visualMetadataContainerList.map((v, i) => {
-      if (v.key) {
+      if (v && v.key) {
         return (
           <div
             className="layout widget"

@@ -59,6 +59,7 @@ export const ACTION_TYPES = {
   VISUAL_METADATA_CONTAINER_REMOVE: 'visualmetadata/VISUAL_METADATA_CONTAINER_REMOVE',
   VISUAL_METADATA_ADD_FIELD: 'visualmetadata/VISUAL_METADATA_ADD_FIELD',
   VISUAL_METADATA_DELETE_FIELD: 'visualmetadata/VISUAL_METADATA_DELETE_FIELD',
+  VISUAL_METADATA_UPDATE_CONDITION_EXPRESSION: 'visualmetadata/VISUAL_METADATA_UPDATE_CONDITION_EXPRESSION',
   VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD',
@@ -237,6 +238,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         ...state,
         visual: action.payload,
       };
+    case ACTION_TYPES.VISUAL_METADATA_UPDATE_CONDITION_EXPRESSION:
     case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES:
       return {
         ...state,
@@ -264,12 +266,6 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
 const apiUrl = 'api/visualmetadata';
 
 // Actions
-
-export const renderVisualizationById = (visual, view, filter) => {
-  if (ValidateFields(visual.fields)) {
-    getVisualizationData(visual, view, filter);
-  }
-};
 
 export const getEntities: ICrudGetAllAction<IVisualMetadata> = (page, size, sort) => ({
   type: ACTION_TYPES.FETCH_VISUALMETADATA_LIST,
@@ -374,5 +370,15 @@ export const updateFieldTitleProperties = titleProperties => ({
 
 export const updateField = (visual: IVisualMetadataSet, field) => ({
   type: ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD,
-  payload: updateVisualField(visual,field),
+  payload: updateVisualField(visual, field),
+});
+
+const setConditionExpression = (visual: IVisualMetadataSet, conditionExpression) => {
+  visual.conditionExpression = conditionExpression;
+  return Object.assign({}, visual);
+};
+
+export const updateConditionExpression = (visual: IVisualMetadataSet, conditionExpression) => ({
+  type: ACTION_TYPES.VISUAL_METADATA_UPDATE_CONDITION_EXPRESSION,
+  payload: setConditionExpression(visual, conditionExpression),
 });

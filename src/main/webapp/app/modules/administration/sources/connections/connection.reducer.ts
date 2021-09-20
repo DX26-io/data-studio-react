@@ -206,7 +206,7 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
         connection: connectionDefaultValue,
         updateSuccess: false,
         updating: false,
-        updateFeaturesSuccess:false
+        updateFeaturesSuccess: false,
       };
     case ACTION_TYPES.SET_CONNECTION:
       return {
