@@ -1,28 +1,30 @@
-import React, { FC, ReactText, useEffect, useRef, useState } from 'react';
-import { ActionButton, DialogContainer, Flex, Item, Menu, MenuTrigger, Text, View } from '@adobe/react-spectrum';
-import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
-import { Translate } from 'react-jhipster';
-import { Redirect } from 'react-router-dom';
-import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
-import Settings from '@spectrum-icons/workflow/Settings';
-import Edit from '@spectrum-icons/workflow/Edit';
-import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
-import Export from '@spectrum-icons/workflow/Export';
-import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
-import Table from '@spectrum-icons/workflow/Table';
-import Delete from '@spectrum-icons/workflow/Delete';
+import './visualizationHeader.scss';
+import { ActionButton, Button, DialogContainer, Flex, Item, Menu, MenuTrigger, Text, View } from '@adobe/react-spectrum';
+import Circle from '@spectrum-icons/workflow/Circle';
 import Copy from '@spectrum-icons/workflow/Copy';
-
+import Delete from '@spectrum-icons/workflow/Delete';
+import Edit from '@spectrum-icons/workflow/Edit';
+import Export from '@spectrum-icons/workflow/Export';
+import MoreSmallListVert from '@spectrum-icons/workflow/MoreSmallListVert';
+import Refresh from '@spectrum-icons/workflow/Refresh';
+import Settings from '@spectrum-icons/workflow/Settings';
+import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
+import Table from '@spectrum-icons/workflow/Table';
+import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
 import 'app/modules/canvas/visualization/canvas.scss';
-import { IViews } from 'app/shared/model/views.model';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
-import VisualizationEditModal from './visualization-edit-modal/visualization-edit-modal-popup';
-import { getVisualizationData } from '../util/visualization-render-utils';
-import { VisualizationDataModal } from './visualization-data-modal/visualizations-data-modal';
-import { CSVLink } from 'react-csv';
+import { IViews } from 'app/shared/model/views.model';
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { IRootState } from 'app/shared/reducers';
+import React, { FC, ReactText, useEffect, useRef, useState } from 'react';
+import { CSVLink } from 'react-csv';
+import { Translate } from 'react-jhipster';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { getVisualizationData } from '../util/visualization-render-utils';
 import { getTransactionData } from '../util/visualization-utils';
+import { VisualizationDataModal } from './visualization-data-modal/visualizations-data-modal';
+import VisualizationEditModal from './visualization-edit-modal/visualization-edit-modal-popup';
 import { VisualizationShareModal } from './visualization-share-modal/visualization-share-modal';
 
 interface IVisualizationHeaderProps extends StateProps, DispatchProps {
@@ -32,12 +34,14 @@ interface IVisualizationHeaderProps extends StateProps, DispatchProps {
   handleVisualizationClick: (visualization) => void;
   isEditMode: boolean;
   filterData: any;
-  filter?: any;
 }
 
 const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
   const [dialog, setDialog] = useState<ReactText>();
   const [transactionData, setTransactionData] = useState([]);
+  const [intervalRegistry, setIntervalRegistry] = useState({});
+  const [isLiveEnable, setLiveEnable] = useState(false)
+
   const csvLink = useRef(null);
   const { handleVisualizationClick } = props;
   const createFields = newVM => {
@@ -110,6 +114,20 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
     }
   };
 
+  const setLiveEnabled = () => {
+    if (!isLiveEnable) {
+      setLiveEnable(true);
+      const intervalData = intervalRegistry;
+      intervalData[props.visual.id] = setInterval(() => {
+        getVisualizationData(props.visual, props.view, props.filter)
+      }, 5000)
+      setIntervalRegistry(intervalData);
+    } else {
+      clearInterval(intervalRegistry[props.visual.id]);
+      setLiveEnable(false)
+    }
+  }
+
   useEffect(() => {
     if (dialog === 'Copy') {
       const viz = createVisualMetadata(props.visual.metadataVisual);
@@ -120,6 +138,8 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
       handleVisualizationClick(viz);
     } else if (dialog === 'Export') {
       getTransactionData(props.visual.data, csvLink, setTransactionData);
+    } else if (dialog === 'Refresh') {
+      getVisualizationData(props.visual, props.view, props.filter);
     }
   }, [dialog]);
   return (
@@ -138,9 +158,12 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
               />
             )}
           </Flex>
-          <Flex direction="column" justifyContent="space-around">
+          <Flex direction="row" justifyContent="space-around">
+            <ActionButton height="size-300" isQuiet={true} onPress={setLiveEnabled} UNSAFE_className={isLiveEnable ? "enableLive" : "disableLive"}>
+              <Circle size={'XS'} aria-label="Default Alert" />
+            </ActionButton>
             <MenuTrigger>
-              <ActionButton isQuiet height="size-300">
+              <ActionButton isQuiet height="size-300" >
                 <Settings size={'XS'} aria-label="Default Alert" />
               </ActionButton>
 
@@ -190,6 +213,12 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                       <Translate contentKey="entity.action.export">Export</Translate>
                     </Text>
                   </Item>
+                  <Item key="Refresh" textValue="Refresh">
+                    <Refresh size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.refresh">Refresh</Translate>
+                    </Text>
+                  </Item>
                 </Menu>
               ) : (
                 <Menu onAction={key => setDialog(key)}>
@@ -221,6 +250,12 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                     <Table size="M" />
                     <Text>
                       <Translate contentKey="entity.action.data">Data</Translate>
+                    </Text>
+                  </Item>
+                  <Item key="Refresh" textValue="Refresh">
+                    <Refresh size="M" />
+                    <Text>
+                      <Translate contentKey="entity.action.refresh">Refresh</Translate>
                     </Text>
                   </Item>
                 </Menu>
@@ -260,8 +295,8 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   editAction: storeState.visualmetadata.editAction,
-
   featuresList: storeState.feature.entities,
+  filter: storeState.filter.selectedFilters,
   view: storeState.views.entity,
 });
 

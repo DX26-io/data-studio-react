@@ -1,0 +1,9 @@
+.disableLive {
+  line-height: 0;
+}
+.enableLive {
+  line-height: 0;
+  svg {
+    fill: var(--spectrum-semantic-informative-color-icon) !important;
+  }
+}
