@@ -1,4 +1,4 @@
-import './visualizationHeader.scss';
+import './visualization-header.scss';
 import { ActionButton, Button, DialogContainer, Flex, Item, Menu, MenuTrigger, Text, View } from '@adobe/react-spectrum';
 import Circle from '@spectrum-icons/workflow/Circle';
 import Copy from '@spectrum-icons/workflow/Copy';
