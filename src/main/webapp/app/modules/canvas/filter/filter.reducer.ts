@@ -94,7 +94,7 @@ export default (state: FilterState = initialState, action): FilterState => {
     case ACTION_TYPES.REMOVE_DATE_FILTER:
       return {
         ...state,
-        selectedFilters: removeDateRangeFilters(state.selectedFilters, action.payload),
+        selectedFilters: removeDateRangeFilters(action.payload, action.Meta),
       };
     case ACTION_TYPES.SAVE_DYNAMIC_DATE_RANGEMETA_DATA:
       return {
@@ -143,7 +143,7 @@ export const applyFilter = (filters: any, visualmetadata: any, view: IViews) => 
 };
 
 export const clearFilter = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
-  dispatch(saveSelectedFilter({}));
+  dispatch(saveSelectedFilter(filters));
   loadVisualization(visualmetadata, view, filters);
 };
 
@@ -163,7 +163,7 @@ export const removeAppliedFilters = (filter, feature) => dispatch => {
 };
 
 export const applyFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
-  dispatch(saveSelectedFilter(filters));
+  dispatch(saveSelectedFilter({}));
   getVisualizationShareData(visualmetadata, view, filters);
 };
 
@@ -172,10 +172,11 @@ export const clearFilterForShareLink = (filters: any, visualmetadata: any, view:
   getVisualizationShareData(visualmetadata, view, filters);
 };
 
-export const removeDateFilters = (feature: string) => dispatch => {
+export const removeDateFilters = (filters, feature) => dispatch => {
   dispatch({
     type: ACTION_TYPES.REMOVE_DATE_FILTER,
-    payload: feature,
+    payload: filters,
+    Meta: feature,
   });
 };
 

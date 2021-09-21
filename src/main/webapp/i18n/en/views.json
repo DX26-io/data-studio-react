@@ -48,7 +48,12 @@
     },
     "editConfiguration": {
       "properties": {
-        "chartProperties": "Chart Properties",
+        "chartProperties": {
+          "title": "Chart Properties",
+          "titleProperties": "Title Properties",
+          "bodyProperties": "Body Properties",
+          "chartConfiguration": "Chart configuration"
+        },
         "dataProperties": {
           "title": "Data Properties",
           "dimensions": "Dimensions",

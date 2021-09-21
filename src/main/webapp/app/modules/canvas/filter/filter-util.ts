@@ -5,6 +5,7 @@ import { DYNAMIC_DATE_RANGE_CONFIG, tabList } from 'app/shared/util/data-constra
 import { IQueryDTO } from 'app/shared/model/query-dto.model';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { dateToString } from '../data-constraints/utils/date-util';
+import { IFeature } from 'app/shared/model/feature.model';
 
 // const paramObject = {};
 // const selectedFilters = {};
@@ -468,4 +469,14 @@ export const generateOptionsForDateRange = (config: any) => {
     options.push({ value: date, label: date });
   }
   return options;
+};
+
+export const removeEnabledFilters = (filters: any, features: readonly IFeature[]) => {
+  const updatedFilter = filters;
+  Object.keys(filters).map((featureName, i) => {
+    if (!features.find(x => x.name === featureName && x.dateFilter === 'ENABLED')) {
+      delete updatedFilter[featureName];
+    }
+  });
+  return updatedFilter;
 };

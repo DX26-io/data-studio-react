@@ -1,5 +1,5 @@
 import React, { useEffect, useState, ReactText } from 'react';
-import { ActionButton, Flex, Form, View, Content, Item, Button } from '@adobe/react-spectrum';
+import { ActionButton, Flex, Form, View, Content, Item, Button, TextField, Heading } from '@adobe/react-spectrum';
 import uuid from 'react-uuid';
 import Properties from 'app/modules/canvas/visualization/visualization-properties/partials/properties/property';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
@@ -8,7 +8,7 @@ import Delete from '@spectrum-icons/workflow/Delete';
 import Select from 'react-select';
 import { Field } from 'app/shared/model/field.model';
 import { IRootState } from 'app/shared/reducers';
-import { addField, deleteField,updateField} from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { addField, deleteField, updateField } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { connect } from 'react-redux';
 import { getDataPropertiesTabTranslations } from 'app/modules/canvas/visualization/visualization-modal/visualization-edit-modal/visualization-edit-modal-util';
 import { Tabs } from '@react-spectrum/tabs';
@@ -16,8 +16,11 @@ import Add from '@spectrum-icons/workflow/Add';
 import { generateHierarchiesOptions } from 'app/entities/hierarchy/hierarchy.reducer';
 import { getDimensionsList, getMeasuresList } from 'app/entities/feature/feature.reducer';
 import { addFieldDimension, addFieldMeasure } from 'app/entities/visualmetadata/visualmetadata-util';
+import Label from '@spectrum-icons/workflow/Label';
+import { translate } from 'react-jhipster';
 
-export interface IVisualizationDataPropertiesProps extends StateProps, DispatchProps {}
+
+export interface IVisualizationDataPropertiesProps extends StateProps, DispatchProps { }
 
 const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) => {
   const [activeTabId, setActiveTabId] = useState<ReactText>('DIMENSION');
@@ -26,9 +29,11 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
   const visualWrap = VisualWrap(props.visual);
 
   const hierarchyChange = selectedOption => {
-    selectedField.hierarchy = props.hierarchies.find(item => {
+    const hierarchy = props.hierarchies.find(item => {
       return item.id === selectedOption.value;
     });
+    selectedField.hierarchy = {};
+    selectedField.hierarchy = hierarchy;
   };
 
   const selectFeature = feature => {
@@ -36,7 +41,7 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
       return item.name === feature.label;
     });
     selectedField.feature = selectedFeature[0];
-    props.updateField(props.visual,selectedField);
+    props.updateField(props.visual, selectedField);
     setSelectedField(selectedField);
   };
 
@@ -115,7 +120,10 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
                     {getSelectedFieldsElements}
                   </View>
                   <Form>
-                    {selectedField && (
+                 
+                   {   selectedField && (
+                     <>
+                      <span className="spectrum-Body-emphasis--sizeXXS">{translate('views.editConfiguration.properties.dataProperties.dimensions')}</span>
                       <Select
                         onChange={selected => {
                           selectFeature(selected);
@@ -127,18 +135,24 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
                         name="dimensions"
                         options={getDimensionsList(props.features)}
                       />
+                    </>
                     )}
-                    {props.hierarchies && props.hierarchies.length > 0 && (
+                    {props.hierarchiesOption && props.hierarchiesOption.length > 0 && (
+                      <>
+                     <span className="spectrum-Body-emphasis--sizeXXS">{translate('hierarchies.hierarchy')}</span>
                       <Select
-                        onChange={hierarchyChange}
-                        className="basic-single"
-                        classNamePrefix="select"
-                        value={{ value: selectedField?.hierarchy?.id, label: selectedField?.hierarchy?.name }}
-                        isSearchable={true}
-                        name="hierarchies"
-                        options={props.hierarchies}
+                      onChange={selected => {
+                        hierarchyChange(selected);
+                      }}
+                      className="basic-single"
+                      classNamePrefix="select"
+                      value={{ value: selectedField?.hierarchy?.value, label: selectedField?.hierarchy?.label }}
+                      isSearchable={true}
+                      name="hierarchies"
+                      options={props.hierarchiesOption}
                       />
-                    )}
+                      </>
+                      )}
                   </Form>
                 </View>
               )}
@@ -164,6 +178,8 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
                   </View>
                   <Form>
                     {selectedField && (
+                       <>
+                     <span className="spectrum-Body-emphasis--sizeXXS">{translate('views.editConfiguration.properties.dataProperties.measures')}</span>
                       <Select
                         onChange={selected => {
                           selectFeature(selected);
@@ -174,8 +190,8 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
                         isSearchable={true}
                         name="measuresList"
                         options={getMeasuresList(props.features)}
-                      />
-                    )}
+                        />
+                        </>)}
                   </Form>
                 </View>
               )}
@@ -200,7 +216,8 @@ const VisualizationDataProperties = (props: IVisualizationDataPropertiesProps) =
 const mapStateToProps = (storeState: IRootState) => ({
   visual: storeState.visualmetadata.entity,
   features: storeState.feature.entities,
-  hierarchies: generateHierarchiesOptions(storeState.hierarchies.hierarchies),
+  hierarchiesOption: generateHierarchiesOptions(storeState.hierarchies.hierarchies),
+  hierarchies: storeState.hierarchies.hierarchies,
 });
 
 const mapDispatchToProps = {

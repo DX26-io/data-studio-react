@@ -18,7 +18,7 @@ export const getPropertiesTabTranslations = (): ITabData[] => {
   return [
     {
       id: 'chartProperties',
-      name: translate('views.editConfiguration.properties.chartProperties'),
+      name: translate('views.editConfiguration.properties.chartProperties.title'),
     },
     {
       id: 'dataProperties',
@@ -28,6 +28,26 @@ export const getPropertiesTabTranslations = (): ITabData[] => {
     //   id: 'hierarchy',
     //   name: translate('views.editConfiguration.properties.hierarchy'),
     // },
+  ];
+};
+
+/**
+ * This method returns the list of properies tab
+ */
+export const getChartPropertiesTranslations = (): ITabData[] => {
+  return [
+    {
+      id: 'titleProperties',
+      name: translate('views.editConfiguration.properties.chartProperties.titleProperties'),
+    },
+    {
+      id: 'bodyProperties',
+      name: translate('views.editConfiguration.properties.chartProperties.bodyProperties'),
+    },
+    {
+      id: 'chartCongifuration',
+      name: translate('views.editConfiguration.properties.chartProperties.chartConfiguration'),
+    },
   ];
 };
 

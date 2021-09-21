@@ -102,7 +102,7 @@ const FilterElement = (props: IFilterElementProp) => {
                 <DateRangeComponent onDateChange={onDateChange} />
               </View>
             ) : (
-              <View marginTop="size-125" minWidth="size-3400">
+              <View marginTop="size-125" minWidth="size-3400" width="100%">
                 <Select
                   isMulti
                   value={generateOptions(props.selectedFilters[props.feature.name])}

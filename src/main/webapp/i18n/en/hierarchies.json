@@ -9,6 +9,7 @@
     "created": "A new hierarchy is created with identifier {{ param }}",
     "updated": "A hierarchy is updated with identifier {{ param }}",
     "deleted": "A hierarchy is deleted with identifier {{ param }}",
+    "hierarchy": "Hierarchy",
     "delete": {
       "question": "Are you sure you want to delete hierarchy {{ login }}?"
     },

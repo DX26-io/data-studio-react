@@ -31,7 +31,7 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
   const history = useHistory();
   const dashboardNameInputEl = useRef(null);
   const [dashboardName, setDashboardName] = useState('');
-  const [dashboardCategory, setCategory] = useState('');
+  const [dashboardCategory, setDashboardCategory] = useState('');
   const [dashboardDescription, setDescription] = useState('');
   const [dashboardDataSource, setDatasource] = useState('');
   const [createSuccessDialog, setCreateSuccessDialog] = useState(false);
@@ -53,7 +53,6 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
     };
     props.createEntity(entity);
   };
-
   const createDashboard = (name, category, description, datasource) => {
     saveEntity({
       dashboardName: name,
@@ -116,13 +115,22 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
                     maxLength={30}
                     validationState={dashboardName?.length < 30 ? 'valid' : 'invalid'}
                     onChange={setDashboardName}
+                    isRequired
                   />
+                  {dashboardName?.length >= 30 && <span className="spectrum-Body-emphasis error-message">
+                    <Translate contentKey="dashboard.validatioError.createNewdashboard.name">Dashboard name cannot be longer than 30 characters.</Translate>
+                  </span>}
                   <TextField
                     label={translate('dashboard.category')}
                     maxLength={30}
                     validationState={dashboardCategory?.length < 30 ? 'valid' : 'invalid'}
-                    onChange={setCategory}
+                    minLength={1}
+                    onChange={setDashboardCategory}
+                    isRequired
                   />
+                  {dashboardCategory?.length >= 30 && <span className="spectrum-Body-emphasis error-message">
+                    <Translate contentKey="dashboard.validatioError.createNewdashboard.category">Category cannot be longer than 30 characters.</Translate>
+                  </span>}
                   <TextArea
                     label={translate('dashboard.description')}
                     maxLength={100}
@@ -130,6 +138,9 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
                     validationState={dashboardDescription?.length < 100 ? 'valid' : 'invalid'}
                     onChange={setDescription}
                   />
+                  {dashboardDescription?.length >= 100 && <span className="spectrum-Body-emphasis error-message">
+                    <Translate contentKey="dashboard.validatioError.createNewdashboard.description">Description cannot be longer than 100 characters.</Translate>
+                  </span>}
                   <span className="spectrum-Body-emphasis--sizeXXS">{translate('dashboard.datasource')}</span>
                   <Select
                     placeholder={translate('dashboard.datasource_placeholder')}
