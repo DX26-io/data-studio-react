@@ -8,7 +8,7 @@ import FilterElement from 'app/modules/canvas/filter/filter-element';
 import { Translate } from 'react-jhipster';
 import { applyFilter, applyFilterForShareLink, clearFilter, clearFilterForShareLink } from './filter.reducer';
 import PanelHeader from 'app/shared/components/panel-header';
-import { removeFilterForVisualization } from './filter-util';
+import { removeEnabledFilters } from './filter-util';
 
 export interface IFilterPanelProp extends StateProps, DispatchProps { 
    visualizationId? : string
@@ -61,7 +61,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
                 <Button
                   onPress={() => {
                     if (!props.visualizationId) {
-                      props.clearFilter(removeFilterForVisualization(props.selectedFilters,props.featuresList), props.visualmetadata, props.view);
+                      props.clearFilter(removeEnabledFilters(props.selectedFilters,props.featuresList), props.visualmetadata, props.view);
                     } else {
                       props.clearFilterForShareLink({}, props.visualmetadataEntity, props.view);
                     }

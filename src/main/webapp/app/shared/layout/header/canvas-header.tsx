@@ -24,7 +24,7 @@ import { toggleSearch } from 'app/entities/search/search.reducer';
 import BookmarkUpdate from 'app/entities/bookmarks/bookmark-update';
 import { getBookmarks, applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
-import { addFilterFromBookmark, applyDateFilters, getViewFeatureCriteria, removeFilterForVisualization } from 'app/modules/canvas/filter/filter-util';
+import { addFilterFromBookmark, applyDateFilters, getViewFeatureCriteria, removeEnabledFilters } from 'app/modules/canvas/filter/filter-util';
 import { applyFilter, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import Select from 'react-select';
 import { generateBookmarksOptions } from 'app/entities/bookmarks/bookmark.util';
@@ -46,7 +46,7 @@ const CanvasHeader = props => {
 
   const resetFilter = () => {
     if (!props.visualmetadataEntity.id) {
-      props.clearFilter(removeFilterForVisualization(props.selectedFilter,props.featuresList), props.visualmetadata, props.view);
+      props.clearFilter(removeEnabledFilters(props.selectedFilter,props.featuresList), props.visualmetadata, props.view);
     } 
   }
   

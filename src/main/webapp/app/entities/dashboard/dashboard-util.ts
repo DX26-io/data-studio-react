@@ -1,19 +1,19 @@
 import { translate } from 'react-jhipster';
 interface IFormData {
-  dashboardName: string;
-  dashboardCategory: string;
+  name: string;
+  category: string;
   dashboardDataSource: string;
 }
 
 /**
  * This method validates the create and edit form enable
  * create or save button respectively
- * @param dashboardName
- * @param dashboardCategory
+ * @param name
+ * @param category
  * @param dashboardDataSource
  */
-export const isCreateEditFormNotValid = ({ dashboardName, dashboardCategory, dashboardDataSource }: IFormData): boolean => {
-  return dashboardName === '' || dashboardCategory === '' || dashboardDataSource === '';
+export const isCreateEditFormNotValid = ({ name, category, dashboardDataSource }: IFormData): boolean => {
+  return name === '' || category === '' || dashboardDataSource === '';
 };
 
 export const generateDatasourcesOptions = datasources => {

@@ -471,7 +471,7 @@ export const generateOptionsForDateRange = (config: any) => {
   return options;
 };
 
-export const removeFilterForVisualization = (filters: any, features: readonly IFeature[]) => {
+export const removeEnabledFilters = (filters: any, features: readonly IFeature[]) => {
   const updatedFilter = filters;
   Object.keys(filters).map((featureName, i) => {
     if (!features.find(x => x.name === featureName && x.dateFilter === 'ENABLED')) {

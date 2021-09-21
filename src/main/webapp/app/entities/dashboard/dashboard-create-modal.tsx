@@ -30,9 +30,9 @@ export interface IDashboardCreateModalProps extends StateProps, DispatchProps {}
 const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
   const history = useHistory();
   const dashboardNameInputEl = useRef(null);
-  const [dashboardName, setDashboardName] = useState('');
-  const [dashboardCategory, setCategory] = useState('');
-  const [dashboardDescription, setDescription] = useState('');
+  const [name, setName] = useState('');
+  const [category, setCategory] = useState('');
+  const [description, setDescription] = useState('');
   const [dashboardDataSource, setDatasource] = useState('');
   const [createSuccessDialog, setCreateSuccessDialog] = useState(false);
   const [createErrorDialog, setCreateErrorDialog] = useState(false);
@@ -53,10 +53,9 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
     };
     props.createEntity(entity);
   };
-
   const createDashboard = (name, category, description, datasource) => {
     saveEntity({
-      dashboardName: name,
+      name,
       category,
       description,
       dashboardDatasource: getDatasourceByName(datasource),
@@ -90,7 +89,7 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
     }
     if (props.errorMessage != null) {
       if (props.errorMessage.response.data.message === 'uniqueError') {
-        setErrorMessage(translate('dashboard.uniqueError.create', { param: dashboardName }));
+        setErrorMessage(translate('dashboard.uniqueError.create', { param: name }));
       } else {
         setErrorMessage(translate('dashboard.error.content'));
       }
@@ -114,32 +113,32 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
                     ref={dashboardNameInputEl}
                     label={translate('dashboard.dashboard_name')}
                     maxLength={30}
-                    validationState={dashboardName?.length < 30 ? 'valid' : 'invalid'}
-                    onChange={setDashboardName}
+                    validationState={name?.length < 30 ? 'valid' : 'invalid'}
+                    onChange={setName}
                     isRequired
                   />
-                  {dashboardName?.length >= 30 && <span className="spectrum-Body-emphasis error-message">
+                  {name?.length >= 30 && <span className="spectrum-Body-emphasis error-message">
                     <Translate contentKey="dashboard.validatioError.createNewdashboard.name"> This field cannot be longer than 30 characters.</Translate>
                   </span>}
                   <TextField
                     label={translate('dashboard.category')}
                     maxLength={30}
-                    validationState={dashboardCategory?.length < 30 ? 'valid' : 'invalid'}
+                    validationState={category?.length < 30 ? 'valid' : 'invalid'}
                     minLength={1}
                     onChange={setCategory}
                     isRequired
                   />
-                  {dashboardCategory?.length >= 30 && <span className="spectrum-Body-emphasis error-message">
+                  {category?.length >= 30 && <span className="spectrum-Body-emphasis error-message">
                     <Translate contentKey="dashboard.validatioError.createNewdashboard.category">This field cannot be longer than 30 characters.</Translate>
                   </span>}
                   <TextArea
                     label={translate('dashboard.description')}
                     maxLength={100}
                     isRequired={false}
-                    validationState={dashboardDescription?.length < 100 ? 'valid' : 'invalid'}
+                    validationState={description?.length < 100 ? 'valid' : 'invalid'}
                     onChange={setDescription}
                   />
-                  {dashboardDescription?.length >= 100 && <span className="spectrum-Body-emphasis error-message">
+                  {description?.length >= 100 && <span className="spectrum-Body-emphasis error-message">
                     <Translate contentKey="dashboard.validatioError.createNewdashboard.description">This field cannot be longer than 100 characters.</Translate>
                   </span>}
                   <span className="spectrum-Body-emphasis--sizeXXS">{translate('dashboard.datasource')}</span>
@@ -162,8 +161,8 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
               <Translate contentKey="entity.action.cancel">Cancel</Translate>
             </Button>
             <Button
-              isDisabled={isCreateEditFormNotValid({ dashboardName, dashboardCategory, dashboardDataSource }) || updating}
-              onPress={() => createDashboard(dashboardName, dashboardCategory, dashboardDescription, dashboardDataSource)}
+              isDisabled={isCreateEditFormNotValid({ name, category, dashboardDataSource }) || updating}
+              onPress={() => createDashboard(name, category, description, dashboardDataSource)}
               variant="cta"
             >
               <Translate contentKey="entity.action.create">Create</Translate>
