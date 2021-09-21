@@ -30,7 +30,7 @@ const VisualizationSettings = (props: IVisualizationSettingsProps) => {
       <Tabs isQuiet={true} density={'compact'} items={getSettingsTabTranslations()} onSelectionChange={key => setActiveTabId(key)}>
         {item => (
           <Item title={item.name}>
-            <Content marginTop="size-250" marginStart="size-125">
+            <Content margin="size-250">
               {activeTabId === 'query' && <VisualizationQuerySetting visual={props.visual} view={props.view} />}
               {activeTabId === 'dataConstraints' && (
                 <VisualizationDataConstraintsSetting

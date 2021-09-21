@@ -335,7 +335,7 @@ export const renderVisualization = (visual, metaData, element = 'widget', props 
   let height = widget?.clientHeight;
   const width = widget?.clientWidth;
   if (widget) {
-    if (visual.metadataVisual.name === VisualizationType.Iframe) {
+    if (visual.metadataVisual?.name === VisualizationType.Iframe) {
       renderIframe(visual, height, width);
     } else {
       if (visual.fields && ValidateFields(visual.fields)) {

@@ -13,19 +13,20 @@ import Table from '@spectrum-icons/workflow/Table';
 import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
 import 'app/modules/canvas/visualization/canvas.scss';
 import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
-import { IViews } from 'app/shared/model/views.model';
-import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
+import VisualizationEditModal from './visualization-edit-modal/visualization-edit-modal-popup';
+import VisualizationDeleteModal from '../../../../modules/canvas/visualization/visualization-modal/visualization-delete-modal/visualizations-delete-modal'
+import { getVisualizationData } from '../util/visualization-render-utils';
+import { VisualizationDataModal } from './visualization-data-modal/visualizations-data-modal';
+import { CSVLink } from 'react-csv';
 import { IRootState } from 'app/shared/reducers';
 import React, { FC, ReactText, useEffect, useRef, useState } from 'react';
-import { CSVLink } from 'react-csv';
 import { Translate } from 'react-jhipster';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { getVisualizationData } from '../util/visualization-render-utils';
 import { getTransactionData } from '../util/visualization-utils';
-import { VisualizationDataModal } from './visualization-data-modal/visualizations-data-modal';
-import VisualizationEditModal from './visualization-edit-modal/visualization-edit-modal-popup';
 import { VisualizationShareModal } from './visualization-share-modal/visualization-share-modal';
+import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
+import { IViews } from 'app/shared/model/views.model';
 
 interface IVisualizationHeaderProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
@@ -261,14 +262,15 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                 </Menu>
               )}
             </MenuTrigger>
-
+            
             {dialog === 'Delete' && (
-              <Redirect
-                to={{
-                  pathname: '/dashboards/' + props.view.viewDashboard.id + '/' + props.view.id + '/delete/' + props.visual.id,
-                }}
-              />
+               <VisualizationDeleteModal visualizationId={props.visual.id} viewId={props.view.id} 
+               setOpen={() => setDialog(null)}
+               match={null} 
+               history={null} 
+               location={null} />
             )}
+           
             <DialogContainer type={dialog === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => setDialog(null)}>
               {dialog === 'Edit' && (
                 <VisualizationEditModal
