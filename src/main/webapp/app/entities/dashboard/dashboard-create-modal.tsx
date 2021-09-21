@@ -118,7 +118,7 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
                     isRequired
                   />
                   {dashboardName?.length >= 30 && <span className="spectrum-Body-emphasis error-message">
-                    <Translate contentKey="dashboard.validatioError.createNewdashboard.name"> This field cannot be longer than 30 characters.</Translate>
+                    <Translate contentKey="dashboard.validatioError.createNewdashboard.name">Dashboard name cannot be longer than 30 characters.</Translate>
                   </span>}
                   <TextField
                     label={translate('dashboard.category')}
@@ -129,7 +129,7 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
                     isRequired
                   />
                   {dashboardCategory?.length >= 30 && <span className="spectrum-Body-emphasis error-message">
-                    <Translate contentKey="dashboard.validatioError.createNewdashboard.category">This field cannot be longer than 30 characters.</Translate>
+                    <Translate contentKey="dashboard.validatioError.createNewdashboard.category">Category cannot be longer than 30 characters.</Translate>
                   </span>}
                   <TextArea
                     label={translate('dashboard.description')}
@@ -139,7 +139,7 @@ const DashboardCreateModal = (props: IDashboardCreateModalProps) => {
                     onChange={setDescription}
                   />
                   {dashboardDescription?.length >= 100 && <span className="spectrum-Body-emphasis error-message">
-                    <Translate contentKey="dashboard.validatioError.createNewdashboard.description">This field cannot be longer than 100 characters.</Translate>
+                    <Translate contentKey="dashboard.validatioError.createNewdashboard.description">Description cannot be longer than 100 characters.</Translate>
                   </span>}
                   <span className="spectrum-Body-emphasis--sizeXXS">{translate('dashboard.datasource')}</span>
                   <Select

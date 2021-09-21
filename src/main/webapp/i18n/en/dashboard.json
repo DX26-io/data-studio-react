@@ -20,9 +20,9 @@
     },
     "validatioError": {
       "createNewdashboard": {
-        "name": "This field cannot be longer than 30 characters.",
-        "category": "This field cannot be longer than 30 characters.",
-        "description": "This field cannot be longer than 100 characters."
+        "name": "Dashboard name cannot be longer than 30 characters.",
+        "category": "Category cannot be longer than 30 characters.",
+        "description": "Description cannot be longer than 100 characters."
       }
     },
     "delete": {
