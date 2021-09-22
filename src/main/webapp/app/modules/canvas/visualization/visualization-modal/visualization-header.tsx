@@ -160,8 +160,8 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
             )}
           </Flex>
           <Flex direction="row" justifyContent="space-around">
-            <ActionButton height="size-300" isQuiet={true} onPress={setLiveEnabled} UNSAFE_className={isLiveEnable ? "enableLive" : "disableLive"}>
-              <Circle size={'XS'} aria-label="Default Alert" />
+            <ActionButton height="size-300" isQuiet={true} onPress={setLiveEnabled} UNSAFE_className={isLiveEnable ? "enable-live" : "disable-live"}>
+              <Circle  id={"live-icon"} size={'XS'} aria-label="Default Alert" />
             </ActionButton>
             <MenuTrigger>
               <ActionButton isQuiet height="size-300" >
@@ -173,51 +173,51 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                   <Item key="Edit" textValue="Edit">
                     <Edit size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.edit">Edit</Translate>
+                      <Translate contentKey="canvas.menu.edit">Edit</Translate>
                     </Text>
                   </Item>
 
                   <Item key="Copy" textValue="Copy">
                     <Copy size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.copy">Copy</Translate>
+                      <Translate contentKey="canvas.menu.copy">Copy</Translate>
                     </Text>
                   </Item>
 
                   <Item key="View" textValue="View">
                     <ViewedMarkAs size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.view">View</Translate>
+                      <Translate contentKey="canvas.menu.view">View</Translate>
                     </Text>
                   </Item>
                   <Item key="Data" textValue="Data">
                     <Table size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.data">Data</Translate>
+                      <Translate contentKey="canvas.menu.data">Data</Translate>
                     </Text>
                   </Item>
                   <Item key="Print" textValue="Print">
                     <MoreSmallListVert size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.more">Print</Translate>
+                      <Translate contentKey="canvas.menu.more">Print</Translate>
                     </Text>
                   </Item>
                   <Item key="Delete" textValue="Delete">
                     <Delete size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.delete">Delete</Translate>
+                      <Translate contentKey="canvas.menu.delete">Delete</Translate>
                     </Text>
                   </Item>
                   <Item key="Export" textValue="Export">
                     <Export size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.export">Export</Translate>
+                      <Translate contentKey="canvas.menu.export">Export</Translate>
                     </Text>
                   </Item>
                   <Item key="Refresh" textValue="Refresh">
                     <Refresh size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.refresh">Refresh</Translate>
+                      <Translate contentKey="canvas.menu.refresh">Refresh</Translate>
                     </Text>
                   </Item>
                 </Menu>
@@ -226,37 +226,37 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                   <Item key="Share" textValue="Share">
                     <ShareAndroid size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.share">Share</Translate>
+                      <Translate contentKey="canvas.menu.share">Share</Translate>
                     </Text>
                   </Item>
                   <Item key="Export" textValue="Export">
                     <Export size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.export">Export</Translate>
+                      <Translate contentKey="canvas.menu.export">Export</Translate>
                     </Text>
                   </Item>
                   <Item key="View" textValue="View">
                     <ViewedMarkAs size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.view">View</Translate>
+                      <Translate contentKey="canvas.menu.view">View</Translate>
                     </Text>
                   </Item>
                   <Item key="Print" textValue="Print">
                     <MoreSmallListVert size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.more">Print</Translate>
+                      <Translate contentKey="canvas.menu.more">Print</Translate>
                     </Text>
                   </Item>
                   <Item key="Data" textValue="Data">
                     <Table size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.data">Data</Translate>
+                      <Translate contentKey="canvas.menu.data">Data</Translate>
                     </Text>
                   </Item>
                   <Item key="Refresh" textValue="Refresh">
                     <Refresh size="M" />
                     <Text>
-                      <Translate contentKey="entity.action.refresh">Refresh</Translate>
+                      <Translate contentKey="canvas.menu.refresh">Refresh</Translate>
                     </Text>
                   </Item>
                 </Menu>

@@ -124,9 +124,7 @@
       "next": "Next",
       "finish": "Finish",
       "filter": "Filter",
-      "clear": "Clear",
-      "refresh": "Refresh",
-      "live": "Live"
+      "clear": "Clear"
     },
     "options": {
       "more_options": "More options",

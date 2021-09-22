@@ -1,9 +1,9 @@
-.disableLive {
+.disable-live {
   line-height: 0;
 }
-.enableLive {
+.enable-live {
   line-height: 0;
-  svg {
+  #live-icon {
     fill: var(--spectrum-semantic-informative-color-icon) !important;
   }
 }
