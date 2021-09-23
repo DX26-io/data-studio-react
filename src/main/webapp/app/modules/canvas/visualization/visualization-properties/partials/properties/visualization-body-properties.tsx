@@ -24,9 +24,6 @@ const VisualizationBodyProperties = (props: IVisualizationBodyPropertiesProps) =
   return (
     <>
       <View>
-        <Heading margin={0} level={4}>
-          Body Properties
-        </Heading>
         <Form>
           <Picker
             selectedKey={props.visual.bodyProperties?.border || ''}

@@ -8,6 +8,7 @@ import { getEntity as getViewEntity, getCurrentViewState, saveViewState,reset as
 import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
+  alternateDimension,
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
   reset
@@ -67,7 +68,8 @@ const Canvas = (props: VisualizationProp) => {
     applyFilter: props.applyFilter,
     visualmetadata: props.visualmetadata,
     view: props.view,
-    saveSelectedFilter: props.saveSelectedFilter
+    saveSelectedFilter: props.saveSelectedFilter,
+    alternateDimension : props.alternateDimension
   }
 
   const onLayoutChange = _visualmetaList => {
@@ -269,7 +271,6 @@ const Canvas = (props: VisualizationProp) => {
                 props.pinnedFeatures.map((feature) => (
                   <PinnedFilterElement key={`pinned-filter-element - ${feature.id}`} feature={feature} />
                 ))}
-
             </div>
           </div>
         )
@@ -388,7 +389,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   selectedFilters: storeState.filter.selectedFilters,
   isFilterOpen: storeState.filter.isFilterOpen,
   pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true)
-
 });
 
 const mapDispatchToProps = {
@@ -411,7 +411,8 @@ const mapDispatchToProps = {
   saveSelectedFilter,
   getViewFeaturesEntities,
   reset,
-  saveDynamicDateRangeMetaData
+  saveDynamicDateRangeMetaData,
+  alternateDimension
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

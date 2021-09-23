@@ -8,6 +8,13 @@ import { Checkbox, Switch, Item, Picker, TextField } from '@adobe/react-spectrum
 import { parseBool, parseString } from 'app/shared/util/common-utils';
 import { ColorSlider } from '@react-spectrum/color';
 import { Property } from 'app/shared/model/property.model';
+import Select from 'react-select';
+import { generateDatasourcesOptions } from 'app/entities/dashboard/dashboard-util';
+import { setDatasource } from 'app/modules/administration/sources/datasources/steps/datasource-steps.reducer';
+import { translate } from 'react-jhipster';
+import { generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
+import { generateAlternativeDimensionsOptions, generateFeaturesOptions } from './property.util';
+
 
 export interface IPropertiesProps {
   features: readonly IFeature[];
@@ -36,6 +43,18 @@ const Properties = (props: IPropertiesProps) => {
     setProperty([props.property.value]);
   };
 
+  const handleChange = (value, actionMeta) => {
+    let values = props.property?.value ? JSON.parse(props.property?.value.toString()) : [];
+    if (actionMeta.action === 'select-option') {
+      values.push({ featureID: actionMeta.option.value, featureName: actionMeta.option.label })
+    } else if (actionMeta.action === 'remove-value') {
+       values = values.filter((item) => {
+       return item.featureID !== actionMeta.removedValue.value
+      })
+    }
+    props.property.value = JSON.stringify(values);
+    setProperty([props.property.value]);
+  };
   return (
     <>
       {props.property.type === 'NUMBER' && (
@@ -74,12 +93,12 @@ const Properties = (props: IPropertiesProps) => {
         <><TextField
           onChange={text => {
             handleValueChange(text);
-          } }
+          }}
           value={parseString(props.property.value)}
           type="color"
           label={props.property.propertyType.name} />
-        
-{/* 
+
+          {/* 
 working on it
           <ColorSlider
             label="Hue (controlled)"
@@ -88,9 +107,9 @@ working on it
               handleValueChange(text);
             } }
             channel="hue" />*/}
-            </> 
+        </>
       )}
-      {props.property.type === 'TEXT' && (
+      {props.property.type === 'TEXT' && props.property.propertyType.name !== 'Alternative Dimensions' && (
         <TextField
           onChange={text => {
             handleValueChange(text);
@@ -99,6 +118,20 @@ working on it
           label={props.property.propertyType.name}
           width={'100%'}
         />
+      )}
+      {props.property.propertyType.name === 'Alternative Dimensions' && (
+        <>
+          <span className="spectrum-Body-emphasis">
+            Alternative Dimensions
+          </span>
+          <Select
+            isMulti
+            onChange={handleChange}
+            value={generateAlternativeDimensionsOptions(props.property.value)}
+            label={props.property.propertyType.name}
+            options={generateFeaturesOptions(props.features)}
+          />
+        </>
       )}
     </>
   );

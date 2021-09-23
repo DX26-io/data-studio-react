@@ -14,6 +14,7 @@ import {
 } from 'app/modules/canvas/visualization/util/visualmetadata-container.util';
 import { getVisualizationData, ValidateFields } from 'app/modules/canvas/visualization/util/visualization-render-utils';
 import { ICrudPutActionVisual } from './visualmetadata-util';
+import { DIMENSION } from 'app/shared/util/visualization.constants';
 
 const addVisualField = (visual: IVisualMetadataSet, field) => {
   visual.fields.push(field);
@@ -382,3 +383,16 @@ export const updateConditionExpression = (visual: IVisualMetadataSet, conditionE
   type: ACTION_TYPES.VISUAL_METADATA_UPDATE_CONDITION_EXPRESSION,
   payload: setConditionExpression(visual, conditionExpression),
 });
+
+export const alternateDimension = (data: any) => {
+  const visual = data.visualmetadata.visualMetadataSet.find(item => {
+    return item.id === data.id;
+  });
+  visual.fields.map(item => {
+    if (item.fieldType.featureType == DIMENSION) {
+      item.feature.id = data.featureID;
+      item.feature.name = data.featureName;
+    }
+  });
+  getVisualizationData(visual, data.view, data.filter);
+};

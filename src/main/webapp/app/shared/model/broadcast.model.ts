@@ -5,6 +5,7 @@ export interface IBroadcast {
   selectedFilters: {};
   saveSelectedFilter: {};
   applyFilter: {};
+  alternateDimension: {};
   visualmetadata: IVisualMetadata;
   view: IViews;
 }

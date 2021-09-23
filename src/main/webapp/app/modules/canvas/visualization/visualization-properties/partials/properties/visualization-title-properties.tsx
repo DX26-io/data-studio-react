@@ -23,9 +23,6 @@ const VisualizationTitleProperties = (props: IVisualizationTitlePropertiesProps)
   return (
     <>
       <View>
-        <Heading marginTop={5} level={4}>
-          Title Properties
-        </Heading>
         <Form>
           <TextField
             onChange={text => {
