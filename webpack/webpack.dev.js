@@ -58,6 +58,7 @@ module.exports = options =>
         },
       ],
       watchOptions: {
+        // comment below line of code when you are working on flair-visualisation
         ignored: /node_modules/,
       },
       https: options.tls,
