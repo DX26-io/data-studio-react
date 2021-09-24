@@ -350,13 +350,13 @@ export const renderVisualization = (visual, metaData, element = 'widget', props 
           height = height - 30;
 
           divElement.setAttribute('id', chartId);
-          divElement.setAttribute('vizID', visual.id);
+          divElement.setAttribute('vizId', visual.id);
           divElement.setAttribute('height', height.toString());
           divElement.setAttribute('width', width.toString());
           document.getElementById(`visualization-${visual.id}`).appendChild(divElement);
         } else {
           divElement.setAttribute('id', chartId);
-          divElement.setAttribute('vizID', visual.id);
+          divElement.setAttribute('vizId', visual.id);
           divElement.setAttribute('height', height.toString());
           divElement.setAttribute('width', width.toString());
           document.getElementById(`visualization-edit-${visual.id}`).appendChild(divElement);

@@ -180,7 +180,6 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                       <Text>
                         <Translate contentKey="canvas.menu.copy">Copy</Translate>
                       </Text>
-
                   </Item>
 
                   <Item key="View" textValue="View">

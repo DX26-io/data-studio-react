@@ -13,7 +13,7 @@ import { generateDatasourcesOptions } from 'app/entities/dashboard/dashboard-uti
 import { setDatasource } from 'app/modules/administration/sources/datasources/steps/datasource-steps.reducer';
 import { translate } from 'react-jhipster';
 import { generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
-import { generateAlternativeDimensionsOptions, generateFeaturesOptions } from './property.util';
+import { generateAlternativeDimensionsOptions, generateFeaturesOptions } from 'app/entities/feature/feature-util';
 
 
 export interface IPropertiesProps {
@@ -46,10 +46,10 @@ const Properties = (props: IPropertiesProps) => {
   const handleChange = (value, actionMeta) => {
     let values = props.property?.value ? JSON.parse(props.property?.value.toString()) : [];
     if (actionMeta.action === 'select-option') {
-      values.push({ featureID: actionMeta.option.value, featureName: actionMeta.option.label })
+      values.push({ featureId: actionMeta.option.value, featureName: actionMeta.option.label })
     } else if (actionMeta.action === 'remove-value') {
        values = values.filter((item) => {
-       return item.featureID !== actionMeta.removedValue.value
+       return item.featureId !== actionMeta.removedValue.value
       })
     }
     props.property.value = JSON.stringify(values);

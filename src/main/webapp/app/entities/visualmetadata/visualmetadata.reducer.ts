@@ -390,7 +390,7 @@ export const alternateDimension = (data: any) => {
   });
   visual.fields.map(item => {
     if (item.fieldType.featureType === DIMENSION) {
-      item.feature.id = data.featureID;
+      item.feature.id = data.featureId;
       item.feature.name = data.featureName;
     }
   });
