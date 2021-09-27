@@ -1,0 +1,12 @@
+.disable-live {
+  line-height: 0;
+}
+.enable-live {
+  line-height: 0;
+  #live-icon {
+    fill: var(--spectrum-semantic-informative-color-icon) !important;
+  }
+}
+.chart-title {
+  margin-left: 9px;
+}

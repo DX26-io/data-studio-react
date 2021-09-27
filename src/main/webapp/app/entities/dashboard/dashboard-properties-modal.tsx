@@ -157,7 +157,7 @@ const DashboardPropertiesModal = (props: IDashboardPropertiesModalProps) => {
               <Translate contentKey="entity.action.cancel">Close</Translate>
             </Button>
 
-            {props.account && hasAuthority(props.account, 'DELETE_' + props.match.params.id + '_DASHBOARDS') && !isEdit && (
+            {props.account && hasAuthority(props.account, 'WRITE_' + props.match.params.id + '_DASHBOARD') && !isEdit && (
               <Button variant="cta" onPress={handleEdit}>
                 <Translate contentKey="entity.action.edit">Edit</Translate>
               </Button>

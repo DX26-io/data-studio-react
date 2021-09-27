@@ -8,8 +8,12 @@ import { getEntity as getViewEntity, getCurrentViewState, saveViewState,reset as
 import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
+  getEntity as getVisualmetadataEntity,
+  updateEntity as updateVisualmetadataEntity,
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
+  alternateDimension,
+  metadataContainerAdd,
   reset,
   pagination,
   setTableActivePage
@@ -19,12 +23,6 @@ import {
   renderVisualization,
   ValidateFields,
 } from 'app/modules/canvas/visualization/util/visualization-render-utils';
-import {
-  getEntity as getVisualmetadataEntity,
-  updateEntity as updateVisualmetadataEntity,
-  metadataContainerAdd,
-  alternateDimension
-} from 'app/entities/visualmetadata/visualmetadata.reducer';
 import VisualizationHeader from './visualization-modal/visualization-header';
 import 'app/modules/canvas/visualization/canvas.scss';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
@@ -276,7 +274,6 @@ const Canvas = (props: VisualizationProp) => {
                 props.pinnedFeatures.map((feature) => (
                   <PinnedFilterElement key={`pinned-filter-element - ${feature.id}`} feature={feature} />
                 ))}
-
             </div>
           </div>
         )

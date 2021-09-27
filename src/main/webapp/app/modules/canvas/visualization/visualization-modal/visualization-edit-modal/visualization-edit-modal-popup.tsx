@@ -15,7 +15,7 @@ import {
   metadataContainerUpdate,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
-import { renderVisualization, ValidateFields } from '../../util/visualization-render-utils';
+import { getVisualizationData, getVisualizationShareData, renderVisualization, ValidateFields } from '../../util/visualization-render-utils';
 import { VisualWrap } from '../../util/visualmetadata-wrapper';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { receiveSocketResponseByVisualId } from 'app/shared/websocket/websocket.reducer';
@@ -43,6 +43,11 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
     props.setVisual(props.visualmetadataEntity);
     dialog.dismiss();
   };
+
+  const handleApply = () => {
+    getVisualizationShareData(props.visualmetadataEntity, props.view, props.selectedFilters);
+  };
+  
 
   const handleSave = () => {
     props.updateVisualmetadataEntity({
@@ -104,7 +109,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
         <Button
           variant="cta"
           onPress={() => {
-            handleClose('apply');
+            handleApply();
           }}
         >
           <Translate contentKey="entity.action.apply">Apply</Translate>
@@ -133,7 +138,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
             </Flex>
           </Flex>
           <div className="properties-tab">
-            <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight={'100%'} width="size-4000">
+            <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight='100%' >
               <VisualizationProperties   />
             </View>
           </div>

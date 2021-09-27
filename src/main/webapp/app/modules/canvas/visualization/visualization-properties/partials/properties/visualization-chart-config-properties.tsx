@@ -10,9 +10,6 @@ const VisualizationChartConfigProperties = (props: IVisualizationChartConfigProp
   return (
     <>
       <View>
-        <Heading margin={0} level={4}>
-          Chart Properties
-        </Heading>
         <Form>
           {props.visual.properties &&
             props.visual.properties.length > 0 &&
