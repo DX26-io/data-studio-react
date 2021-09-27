@@ -19,10 +19,10 @@ export const ValidateFields = fields => {
     });
   return isValid;
 };
-export const getVisualizationData = (visual, view, filter) => {
+export const getVisualizationData = (visual, view, filter, offset = 0) => {
   if (visual.fields && ValidateFields(visual.fields)) {
     const visualMetadata = VisualWrap(visual);
-    const queryDTO = visualMetadata.getQueryParameters(visual, filter, getConditionExpression(filter), 0);
+    const queryDTO = visualMetadata.getQueryParameters(visual, filter, getConditionExpression(filter), offset);
     const body = {
       queryDTO,
       visualMetadata,

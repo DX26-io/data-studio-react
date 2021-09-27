@@ -10,7 +10,9 @@ import { IRootState } from 'app/shared/reducers';
 import {
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
-  reset
+  reset,
+  pagination,
+  setTableActivePage
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import {
   getVisualizationData,
@@ -21,6 +23,7 @@ import {
   getEntity as getVisualmetadataEntity,
   updateEntity as updateVisualmetadataEntity,
   metadataContainerAdd,
+  alternateDimension
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import VisualizationHeader from './visualization-modal/visualization-header';
 import 'app/modules/canvas/visualization/canvas.scss';
@@ -67,7 +70,11 @@ const Canvas = (props: VisualizationProp) => {
     applyFilter: props.applyFilter,
     visualmetadata: props.visualmetadata,
     view: props.view,
-    saveSelectedFilter: props.saveSelectedFilter
+    saveSelectedFilter: props.saveSelectedFilter,
+    alternateDimension : props.alternateDimension,
+    pagination:props.pagination,
+    tableActivePage:props.tableActivePage,
+    setTableActivePage:props.setTableActivePage
   }
 
   const onLayoutChange = _visualmetaList => {
@@ -387,7 +394,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   isSearchOpen: storeState.search.isSearchOpen,
   selectedFilters: storeState.filter.selectedFilters,
   isFilterOpen: storeState.filter.isFilterOpen,
-  pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true)
+  pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true),
+  tableActivePage:storeState.visualmetadata.tableActivePage
 
 });
 
@@ -411,7 +419,10 @@ const mapDispatchToProps = {
   saveSelectedFilter,
   getViewFeaturesEntities,
   reset,
-  saveDynamicDateRangeMetaData
+  saveDynamicDateRangeMetaData,
+  alternateDimension,
+  pagination,
+  setTableActivePage
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
