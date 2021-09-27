@@ -316,8 +316,8 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                 location={null} />
             )}
 
-            <DialogContainer type={action == 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => setMenuAction(null)}>
-              {action == 'Edit' && (
+            <DialogContainer type={action === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => setMenuAction(null)}>
+              {action === 'Edit' && (
                 <VisualizationEditModal
                   id={props.view.viewDashboard.id}
                   setOpen={closeEditDialog}
