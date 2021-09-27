@@ -138,7 +138,7 @@ export const VisualizationEditModal = (props: IVisualizationEditModalProps) => {
             </Flex>
           </Flex>
           <div className="properties-tab">
-            <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight={'100%'} width="size-4000">
+            <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight='100%' >
               <VisualizationProperties   />
             </View>
           </div>

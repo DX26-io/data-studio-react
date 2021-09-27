@@ -42,7 +42,7 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
   const [transactionData, setTransactionData] = useState([]);
   const [intervalRegistry, setIntervalRegistry] = useState({});
   const [isLiveEnable, setLiveEnable] = useState(false)
-
+  
   const csvLink = useRef(null);
   const { handleVisualizationClick } = props;
   const createFields = newVM => {
@@ -148,7 +148,7 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
       <View backgroundColor="gray-200">
         <Flex direction="row" justifyContent="space-between" alignContent="center">
           <Flex direction="column" alignItems="center" justifyContent="space-around">
-            <span>{props.visual?.titleProperties?.titleText}</span>
+            <span className={"chart-title"}>{props.visual?.titleProperties?.titleText}</span>
             {props.visual?.data?.length > 0 && (
               <CSVLink
                 data={transactionData}
@@ -161,7 +161,7 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
           </Flex>
           <Flex direction="row" justifyContent="space-around">
             <ActionButton height="size-300" isQuiet={true} onPress={setLiveEnabled} UNSAFE_className={isLiveEnable ? "enable-live" : "disable-live"}>
-              <Circle  id={"live-icon"} size={'XS'} aria-label="Default Alert" />
+              <Circle id={"live-icon"} size={'XS'} aria-label="Default Alert" />
             </ActionButton>
             <MenuTrigger>
               <ActionButton isQuiet height="size-300" >
@@ -178,10 +178,10 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                   </Item>
 
                   <Item key="Copy" textValue="Copy">
-                    <Copy size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.copy">Copy</Translate>
-                    </Text>
+                      <Copy size="M" />
+                      <Text>
+                        <Translate contentKey="canvas.menu.copy">Copy</Translate>
+                      </Text>
                   </Item>
 
                   <Item key="View" textValue="View">
@@ -262,15 +262,15 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                 </Menu>
               )}
             </MenuTrigger>
-            
+
             {dialog === 'Delete' && (
-               <VisualizationDeleteModal visualizationId={props.visual.id} viewId={props.view.id} 
-               setOpen={() => setDialog(null)}
-               match={null} 
-               history={null} 
-               location={null} />
+              <VisualizationDeleteModal visualizationId={props.visual.id} viewId={props.view.id}
+                setOpen={() => setDialog(null)}
+                match={null}
+                history={null}
+                location={null} />
             )}
-           
+
             <DialogContainer type={dialog === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => setDialog(null)}>
               {dialog === 'Edit' && (
                 <VisualizationEditModal

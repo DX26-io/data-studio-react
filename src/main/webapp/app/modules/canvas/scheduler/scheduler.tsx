@@ -31,7 +31,7 @@ const Scheduler = (props: ISchedulerProps) => {
   const [userList, setUserList] = useState<IDropdown[]>();
   const [webHookList, setWebHookList] = useState<IDropdown[]>();
   const [selectedUserEmail, setSelectedUserEmail] = useState<IEmail[]>();
-  const [selectedWebHooks, setSelectedWebHook] = useState<any[]>();
+  const [selectedWebHooks, setSelectedWebHook] = useState<number[]>();
 
   const [selectedChannel, setSelectedChannel] = useState<string[]>();
   const resetSelectedChannels = () => {
@@ -70,7 +70,6 @@ const Scheduler = (props: ISchedulerProps) => {
       setReportTitle(props.schedulerReport?.report?.titleName);
       setComments(props.schedulerReport?.report?.mailBody);
       setSelectedChannel(props.schedulerReport?.assignReport?.channels);
-
       setStartDate(props.schedulerReport?.constraints?.startDate);
       setEndDate(props.schedulerReport?.constraints?.endDate);
       setSelectedWebHook(props.schedulerReport?.assignReport?.communicationList?.teams);
@@ -190,8 +189,8 @@ const Scheduler = (props: ISchedulerProps) => {
       assignReport: {
         channels: selectedChannel,
         communicationList: {
-          emails: [],
-          teams: [1],
+          emails: selectedUserEmail,
+          teams: selectedWebHooks,
         },
       },
       schedule: {
