@@ -38,11 +38,12 @@ interface IVisualizationHeaderProps extends StateProps, DispatchProps {
 }
 
 const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
-  const [dialog, setDialog] = useState<ReactText>();
   const [transactionData, setTransactionData] = useState([]);
   const [intervalRegistry, setIntervalRegistry] = useState({});
   const [isLiveEnable, setLiveEnable] = useState(false)
-  
+  const [action, setMenuAction] = useState('')
+
+
   const csvLink = useRef(null);
   const { handleVisualizationClick } = props;
   const createFields = newVM => {
@@ -129,20 +130,62 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
     }
   }
 
-  useEffect(() => {
-    if (dialog === 'Copy') {
-      const viz = createVisualMetadata(props.visual.metadataVisual);
-      viz.bodyProperties = props.visual.bodyProperties;
-      viz.properties = props.visual.properties;
-      viz.titleProperties = props.visual.titleProperties;
-      viz.fields = props.visual.fields;
-      handleVisualizationClick(viz);
-    } else if (dialog === 'Export') {
-      getTransactionData(props.visual.data, csvLink, setTransactionData);
-    } else if (dialog === 'Refresh') {
-      getVisualizationData(props.visual, props.view, props.filter);
-    }
-  }, [dialog]);
+  const setAction = {
+    '1': {
+      getAction() {
+        setMenuAction('Edit')
+      },
+    },
+    '2': {
+      getAction() {
+        setMenuAction('Copy')
+        const viz = createVisualMetadata(props.visual.metadataVisual);
+        viz.bodyProperties = props.visual.bodyProperties;
+        viz.properties = props.visual.properties;
+        viz.titleProperties = props.visual.titleProperties;
+        viz.fields = props.visual.fields;
+        handleVisualizationClick(viz);
+      },
+    },
+    '3': {
+      getAction() {
+        setMenuAction('View')
+        getVisualizationData(props.visual, props.view, props.filter);
+      },
+    },
+    '4': {
+      getAction() {
+        setMenuAction('Data')
+      },
+    },
+    '5': {
+      getAction() {
+        setMenuAction('Print')
+      },
+    },
+    '6': {
+      getAction() {
+        setMenuAction('Delete')
+      },
+    },
+    '7': {
+      getAction() {
+        setMenuAction('Export')
+        getTransactionData(props.visual.data, csvLink, setTransactionData);
+      },
+    },
+    '8': {
+      getAction() {
+        setMenuAction('Refresh')
+        getVisualizationData(props.visual, props.view, props.filter);
+      },
+    },
+    '9': {
+      getAction() {
+        setMenuAction('Share')
+      },
+    },
+  };
   return (
     <>
       <View backgroundColor="gray-200">
@@ -169,52 +212,54 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
               </ActionButton>
 
               {props.isEditMode ? (
-                <Menu onAction={key => setDialog(key)}>
-                  <Item key="Edit" textValue="Edit">
+                <Menu onAction={(key) => {
+                  setAction[key].getAction();
+                }}>
+                  <Item key="1" textValue="Edit">
                     <Edit size="M" />
                     <Text>
                       <Translate contentKey="canvas.menu.edit">Edit</Translate>
                     </Text>
                   </Item>
 
-                  <Item key="Copy" textValue="Copy">
-                      <Copy size="M" />
-                      <Text>
-                        <Translate contentKey="canvas.menu.copy">Copy</Translate>
-                      </Text>
+                  <Item key="2" textValue="Copy">
+                    <Copy size="M" />
+                    <Text>
+                      <Translate contentKey="canvas.menu.copy">Copy</Translate>
+                    </Text>
                   </Item>
 
-                  <Item key="View" textValue="View">
+                  <Item key="3" textValue="View">
                     <ViewedMarkAs size="M" />
                     <Text>
                       <Translate contentKey="canvas.menu.view">View</Translate>
                     </Text>
                   </Item>
-                  <Item key="Data" textValue="Data">
+                  <Item key="4" textValue="Data">
                     <Table size="M" />
                     <Text>
                       <Translate contentKey="canvas.menu.data">Data</Translate>
                     </Text>
                   </Item>
-                  <Item key="Print" textValue="Print">
+                  <Item key="5" textValue="Print">
                     <MoreSmallListVert size="M" />
                     <Text>
                       <Translate contentKey="canvas.menu.more">Print</Translate>
                     </Text>
                   </Item>
-                  <Item key="Delete" textValue="Delete">
+                  <Item key="6" textValue="Delete">
                     <Delete size="M" />
                     <Text>
                       <Translate contentKey="canvas.menu.delete">Delete</Translate>
                     </Text>
                   </Item>
-                  <Item key="Export" textValue="Export">
+                  <Item key="7" textValue="Export">
                     <Export size="M" />
                     <Text>
                       <Translate contentKey="canvas.menu.export">Export</Translate>
                     </Text>
                   </Item>
-                  <Item key="Refresh" textValue="Refresh">
+                  <Item key="8" textValue="Refresh">
                     <Refresh size="M" />
                     <Text>
                       <Translate contentKey="canvas.menu.refresh">Refresh</Translate>
@@ -222,38 +267,38 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                   </Item>
                 </Menu>
               ) : (
-                <Menu onAction={key => setDialog(key)}>
-                  <Item key="Share" textValue="Share">
+                <Menu onAction={(key) => { setAction[key].getAction(); }}>
+                  <Item key="9" textValue="Share">
                     <ShareAndroid size="M" />
                     <Text>
                       <Translate contentKey="canvas.menu.share">Share</Translate>
                     </Text>
                   </Item>
-                  <Item key="Export" textValue="Export">
+                  <Item key="7" textValue="Export">
                     <Export size="M" />
                     <Text>
                       <Translate contentKey="canvas.menu.export">Export</Translate>
                     </Text>
                   </Item>
-                  <Item key="View" textValue="View">
+                  <Item key="3" textValue="View">
                     <ViewedMarkAs size="M" />
                     <Text>
                       <Translate contentKey="canvas.menu.view">View</Translate>
                     </Text>
                   </Item>
-                  <Item key="Print" textValue="Print">
+                  <Item key="5" textValue="Print">
                     <MoreSmallListVert size="M" />
                     <Text>
                       <Translate contentKey="canvas.menu.more">Print</Translate>
                     </Text>
                   </Item>
-                  <Item key="Data" textValue="Data">
+                  <Item key="4" textValue="Data">
                     <Table size="M" />
                     <Text>
                       <Translate contentKey="canvas.menu.data">Data</Translate>
                     </Text>
                   </Item>
-                  <Item key="Refresh" textValue="Refresh">
+                  <Item key="8" textValue="Refresh">
                     <Refresh size="M" />
                     <Text>
                       <Translate contentKey="canvas.menu.refresh">Refresh</Translate>
@@ -263,16 +308,16 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
               )}
             </MenuTrigger>
 
-            {dialog === 'Delete' && (
+            {action === 'Delete' && (
               <VisualizationDeleteModal visualizationId={props.visual.id} viewId={props.view.id}
-                setOpen={() => setDialog(null)}
+                setOpen={() => setMenuAction(null)}
                 match={null}
                 history={null}
                 location={null} />
             )}
 
-            <DialogContainer type={dialog === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => setDialog(null)}>
-              {dialog === 'Edit' && (
+            <DialogContainer type={action == 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => setMenuAction(null)}>
+              {action == 'Edit' && (
                 <VisualizationEditModal
                   id={props.view.viewDashboard.id}
                   setOpen={closeEditDialog}
@@ -282,11 +327,11 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                   {...props}
                 ></VisualizationEditModal>
               )}
-              {dialog === 'Data' && <VisualizationDataModal visual={props.visual} />}
+              {action === 'Data' && <VisualizationDataModal visual={props.visual} />}
             </DialogContainer>
 
-            <DialogContainer onDismiss={() => setDialog(null)}>
-              {dialog === 'Share' && <VisualizationShareModal view={props.view} visual={props.visual} />}
+            <DialogContainer onDismiss={() => setMenuAction(null)}>
+              {action === 'Share' && <VisualizationShareModal view={props.view} visual={props.visual} />}
             </DialogContainer>
           </Flex>
         </Flex>
