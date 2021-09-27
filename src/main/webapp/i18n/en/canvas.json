@@ -10,7 +10,18 @@
       "more": "More",
       "filter": "Filter",
       "share": "Share",
-      "resetFilter": "Reset Filter"
+      "resetFilter": "Reset Filter",
+      "update": "Update",
+      "open": "Open",
+      "view": "View",
+      "create": "Create",
+      "apply": "Apply",
+      "discard": "Discard",
+      "export": "Export",
+      "data": "Data",
+      "copy": "Copy",
+      "refresh": "Refresh",
+      "delete": "Delete"
     },
     "search": {
       "selectDashboard": "Select Dashboard",

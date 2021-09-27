@@ -66,7 +66,7 @@ const CanvasHeader = props => {
     },
     {
       icon: <SaveFloppy size="M" />,
-      title: translate('views.menu.save'),
+      title: translate('canvas.menu.save'),
       onPress: props.saveViewState,
       data: {
         visualMetadataSet: props.visualmetadata.visualMetadataSet,
@@ -94,7 +94,7 @@ const CanvasHeader = props => {
    
     {
       icon: <Filter size="M" />,
-      title: translate('views.menu.filter'),
+      title: translate('canvas.menu.filter'),
       onPress: props.toggleFilterPanel,
     },
     {
