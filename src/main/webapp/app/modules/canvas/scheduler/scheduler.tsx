@@ -23,13 +23,13 @@ export interface IDropdown {
 }
 
 const Scheduler = (props: ISchedulerProps) => {
-  const date = new Date();
+  const todayDate = new Date();
   const [channelsList, setChannels] = useState([]);
   const [reportTitle, setReportTitle] = useState(props.visual?.titleProperties?.titleText);
   const [comments, setComments] = useState('');
   const [cronExp, setCronExpression] = useState('');
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date(date.setDate(date.getDate() + 1)));
+  const [endDate, setEndDate] = useState(new Date(todayDate.setDate(todayDate.getDate() + 1)));
   const [userList, setUserList] = useState<IDropdown[]>();
   const [webHookList, setWebHookList] = useState<IDropdown[]>();
   const [selectedUserEmail, setSelectedUserEmail] = useState<IDropdown[]>();
