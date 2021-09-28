@@ -13,6 +13,7 @@ import { buildQueryDTO } from '../visualization/util/visualization-render-utils'
 import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
 import { IEmail } from 'app/shared/model/email.model';
 import { schedulerReportDefaultValue } from 'app/shared/model/scheduler-report.model';
+import { updateEmail, updateWebhook } from './scheduler.util';
 export interface ISchedulerProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
 }
@@ -22,15 +23,16 @@ export interface IDropdown {
 }
 
 const Scheduler = (props: ISchedulerProps) => {
+  const date = new Date();
   const [channelsList, setChannels] = useState([]);
   const [reportTitle, setReportTitle] = useState(props.visual?.titleProperties?.titleText);
   const [comments, setComments] = useState('');
   const [cronExp, setCronExpression] = useState('');
-  const [startDate, setStartDate] = useState(new Date(null));
-  const [endDate, setEndDate] = useState(new Date(null));
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date(date.setDate(date.getDate() + 1)));
   const [userList, setUserList] = useState<IDropdown[]>();
   const [webHookList, setWebHookList] = useState<IDropdown[]>();
-  const [selectedUserEmail, setSelectedUserEmail] = useState<IEmail[]>();
+  const [selectedUserEmail, setSelectedUserEmail] = useState<IDropdown[]>();
   const [selectedWebHooks, setSelectedWebHook] = useState<number[]>();
 
   const [selectedChannel, setSelectedChannel] = useState<string[]>();
@@ -65,15 +67,37 @@ const Scheduler = (props: ISchedulerProps) => {
     }
   }, [props.users]);
 
+  const setDefaultWebHookList = (webhook) => {
+    const list = [];
+    webhook.forEach(element => {
+      const data = webHookList?.find(x => parseInt(x.value) === element);
+      if (data) {
+        list.push(data)
+      }
+    });
+    return list;
+  }
+  const setDefaulSelectedUserEmailList = (userEmails) => {
+    const list = [];
+    userEmails.forEach(element => {
+      const data = userList?.find(x => x.value === `${element.userName} ${element.userEmail}`);
+      if (data) {
+        list.push(data)
+      }
+    });
+    return list;
+  }
+
   useEffect(() => {
     if (props.schedulerReport?.reportLineItem.visualizationId) {
       setReportTitle(props.schedulerReport?.report?.titleName);
       setComments(props.schedulerReport?.report?.mailBody);
       setSelectedChannel(props.schedulerReport?.assignReport?.channels);
-      setStartDate(props.schedulerReport?.constraints?.startDate);
-      setEndDate(props.schedulerReport?.constraints?.endDate);
-      setSelectedWebHook(props.schedulerReport?.assignReport?.communicationList?.teams);
-      setCronExpression(props.schedulerReport?.constraints?.cronExp);
+      setStartDate(props.schedulerReport?.schedule?.startDate);
+      setEndDate(props.schedulerReport?.schedule?.endDate);
+      setSelectedWebHook(setDefaultWebHookList(props.schedulerReport?.assignReport?.communicationList?.teams));
+      setSelectedUserEmail(setDefaulSelectedUserEmailList(props.schedulerReport?.assignReport?.communicationList?.emails))
+      setCronExpression(props.schedulerReport?.schedule?.cronExp);
     }
   }, [props.schedulerReport]);
 
@@ -97,11 +121,11 @@ const Scheduler = (props: ISchedulerProps) => {
   const handleChangeEmail = (value, actionMeta) => {
     const emails = selectedUserEmail || [];
     if (actionMeta.action === 'select-option') {
-      emails.push({ userName: actionMeta.option.value.split(' ')[0], userEmail: actionMeta.option.value.split(' ')[1] });
+      emails.push({ label: actionMeta.option.value, value: actionMeta.option.value });
       setSelectedUserEmail(emails);
     } else if (actionMeta.action === 'remove-value') {
       const filterEmails = emails.filter(element => {
-        if (element.userName !== actionMeta.removedValue.value.split(' ')[0]) {
+        if (element.value !== actionMeta.removedValue.value) {
           return element;
         }
       });
@@ -164,6 +188,7 @@ const Scheduler = (props: ISchedulerProps) => {
       ...schedulerReportDefaultValue,
       datasourceId: props.view.viewDashboard.dashboardDatasource.id,
       dashboardId: props.view.viewDashboard.id.toString(),
+      putCall: props.schedulerReport?.reportLineItem.visualizationId ? true : false,
       constraints: "{}",
       report: {
         userId: '',
@@ -189,8 +214,8 @@ const Scheduler = (props: ISchedulerProps) => {
       assignReport: {
         channels: selectedChannel,
         communicationList: {
-          emails: selectedUserEmail,
-          teams: selectedWebHooks,
+          emails: updateEmail(selectedUserEmail),
+          teams: updateWebhook(selectedWebHooks),
         },
       },
       schedule: {
@@ -262,7 +287,7 @@ const Scheduler = (props: ISchedulerProps) => {
               options={userList}
               className="basic-multi-select"
               classNamePrefix="select"
-              defaultValue={selectedUserEmail}
+              value={selectedUserEmail}
             />
             <p>Select Webhooks </p>
             <Select
@@ -273,7 +298,6 @@ const Scheduler = (props: ISchedulerProps) => {
               className="basic-multi-select"
               classNamePrefix="select"
               value={selectedWebHooks}
-              defaultValue={selectedWebHooks}
             />
 
             <TextArea value={comments} onChange={setComments} label="Comments" />
