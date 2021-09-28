@@ -14,7 +14,7 @@ export const updateEmail = (user: Array<IDropdown>) => {
 export const updateWebhook = webhooks => {
   const webhooksList = [];
   webhooks.forEach(item => {
-    webhooksList.push(parseInt(item.value));
+    webhooksList.push(Number(item.value));
   });
   return webhooksList;
 };

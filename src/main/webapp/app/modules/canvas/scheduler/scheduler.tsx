@@ -70,7 +70,7 @@ const Scheduler = (props: ISchedulerProps) => {
   const setDefaultWebHookList = (webhook) => {
     const list = [];
     webhook.forEach(element => {
-      const data = webHookList?.find(x => parseInt(x.value) === element);
+      const data = webHookList?.find(x => Number(x.value) === element);
       if (data) {
         list.push(data)
       }
