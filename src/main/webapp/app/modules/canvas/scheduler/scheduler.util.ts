@@ -1,20 +1,36 @@
-import { IDropdown } from './scheduler';
-
-export const updateEmail = (user: Array<IDropdown>) => {
-  const userList = [];
-  user.forEach(item => {
-    userList.push({
-      userEmail: item.label.split(' ')[1],
-      userName: item.label.split(' ')[0],
-    });
+export const SetDefaultWebHookList = (webHookList, webhook) => {
+  const options = [];
+  webhook?.forEach(element => {
+    const data = webHookList?.find(x => x.id === element);
+    if (data) {
+      options.push({ value: data.id.toString(), label: data.webhookName });
+    }
   });
-  return userList;
+  return options;
+};
+export const SetDefaulSelectedUserEmailList = (userList, userEmails) => {
+  const options = [];
+  userEmails?.forEach(element => {
+    const data = userList?.find(x => `${x.login} ${x.email}` === `${element.userName} ${element.userEmail}`);
+    if (data) {
+      options.push({ value: `${data.login} ${data.email}`, label: `${data.login} ${data.email}` });
+    }
+  });
+  return options;
 };
 
-export const updateWebhook = webhooks => {
-  const webhooksList = [];
-  webhooks.forEach(item => {
-    webhooksList.push(Number(item.value));
+export const GenerateWebhookOptions = data => {
+  const options = [];
+  data.forEach(element => {
+    options.push({ value: element.id.toString(), label: element.webhookName });
   });
-  return webhooksList;
+  return options;
+};
+
+export const GenerateUserOptions = data => {
+  const options = [];
+  data.forEach(element => {
+    options.push({ value: `${element.login} ${element.email}`, label: `${element.login} s${element.email}` });
+  });
+  return options;
 };
