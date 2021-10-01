@@ -22,7 +22,7 @@ import { IRootState } from 'app/shared/reducers';
 import React, { FC, ReactText, useEffect, useRef, useState } from 'react';
 import { Translate } from 'react-jhipster';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { getTransactionData } from '../util/visualization-utils';
 import { VisualizationShareModal } from './visualization-share-modal/visualization-share-modal';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
@@ -42,6 +42,8 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
   const [intervalRegistry, setIntervalRegistry] = useState({});
   const [isLiveEnable, setLiveEnable] = useState(false)
   const [action, setMenuAction] = useState('')
+  const history = useHistory();
+
 
 
   const csvLink = useRef(null);
@@ -172,6 +174,9 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
       getAction() {
         setMenuAction('Export')
         getTransactionData(props.visual.data, csvLink, setTransactionData);
+        // history.push('/dashboards/view/' + props.view.id + '/export/' + props.visual.id)
+        window.open('/dashboards/view/' + props.view.id + '/export/' + props.visual.id, "_blank");
+
       },
     },
     '8': {
@@ -314,6 +319,15 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                 match={null}
                 history={null}
                 location={null} />
+            )}
+            {action === 'Export' && (
+              <Redirect
+           
+                to={{
+                  pathname: '/dashboards/view/' + props.view.id + '/export/' + props.visual.id,
+                }}
+              />
+         
             )}
 
             <DialogContainer type={action === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => setMenuAction(null)}>

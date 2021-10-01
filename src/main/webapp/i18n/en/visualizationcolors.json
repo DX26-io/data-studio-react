@@ -1,0 +1,25 @@
+{
+  "visualizationcolors": {
+    "home": {
+      "title": "Visualization Colors",
+      "description": "Configur your visualization colors",
+      "createLabel": "Create a new visualization color",
+      "createOrEditLabel": "Create or edit a Visualizationcolors",
+      "notFound": "No Visualizationcolors found"
+    },
+    "created": "A new Visualizationcolors is created with identifier {{ param }}",
+    "updated": "A Visualizationcolors is updated with identifier {{ param }}",
+    "deleted": "A Visualizationcolors is deleted with identifier {{ param }}",
+    "delete": {
+      "question": "Are you sure you want to delete Visualizationcolors {{ id }}?"
+    },
+    "detail": {
+      "title": "Visualizationcolors"
+    },
+    "field": {
+      "id": "ID",
+      "code": "Code",
+      "color": "Color"
+    }
+  }
+}
