@@ -411,7 +411,7 @@ export const alternateDimension = (data: any) => {
   getVisualizationData(visual, data.view, data.filter);
 };
 
-export const pagination = data => {
+export const visualizationTablePagination = data => {
   const visual = data.visualmetadata.visualMetadataSet.find(item => {
     return item.id === data.visualizationId;
   });

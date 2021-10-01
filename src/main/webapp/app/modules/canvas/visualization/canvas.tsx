@@ -15,7 +15,7 @@ import {
   alternateDimension,
   metadataContainerAdd,
   reset,
-  pagination,
+  visualizationTablePagination,
   setTableActivePage
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import {
@@ -70,7 +70,7 @@ const Canvas = (props: VisualizationProp) => {
     view: props.view,
     saveSelectedFilter: props.saveSelectedFilter,
     alternateDimension : props.alternateDimension,
-    pagination:props.pagination,
+    pagination:props.visualizationTablePagination,
     tableActivePage:props.tableActivePage,
     setTableActivePage:props.setTableActivePage
   }
@@ -418,7 +418,7 @@ const mapDispatchToProps = {
   reset,
   saveDynamicDateRangeMetaData,
   alternateDimension,
-  pagination,
+  visualizationTablePagination,
   setTableActivePage
 };
 
