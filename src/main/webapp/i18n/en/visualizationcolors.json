@@ -3,7 +3,7 @@
     "home": {
       "title": "Visualization Colors",
       "description": "Configur your visualization colors",
-      "createLabel": "Create a new visualization color",
+      "createLabel": "Create",
       "createOrEditLabel": "Create or edit a Visualizationcolors",
       "notFound": "No Visualizationcolors found"
     },

@@ -43,13 +43,13 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
           setVisualizationColor({})
           setOpen(true);
         }}
-        data-testid="create-group"
+        data-testid="create-color"
       >
         <Translate contentKey="entity.action.create">Create</Translate>
       </Button>
     </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && <VisualizationcolorsUpdate visualizationcolors={colorCode} />}
+        {isOpen && <VisualizationcolorsUpdate visualizationColors={colorCode} />}
       </DialogContainer>
       <DialogContainer onDismiss={() => setDeleteAlertDialogOpen(false)}>
         {isdeleteAlertDialogOpen && <VisualizationcolorsDelete id={colorCode.id} />}
@@ -76,14 +76,14 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.visualizationcolorsList.map((visualizationcolor, i) => (
+                {props.visualizationColorsList.map((visualizationColor, i) => (
                   <TableRow key={`datasource-${i}`}>
                     <TableCell component="th" scope="row" align="center">
-                      {visualizationcolor.id}
+                      {visualizationColor.id}
                     </TableCell>
-                    <TableCell align="center">{visualizationcolor.code}</TableCell>
+                    <TableCell align="center">{visualizationColor.code}</TableCell>
                     <TableCell align="center">
-                      <div className={'visualization-color'} style={{ 'backgroundColor': visualizationcolor.code }}>
+                      <div className={'visualization-color'} style={{ backgroundColor: visualizationColor.code,height: '25px',width: '25px',margin: 'auto'}}>
 
                       </div>
                     </TableCell>
@@ -91,7 +91,7 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
                       <Flex gap="size-100" justifyContent="center">
                         <a
                           onClick={() => {
-                            setColorCode(visualizationcolor)
+                            setColorCode(visualizationColor)
                             setOpen(true);
                           }}
                         >
@@ -99,7 +99,7 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
                         </a>
                         <a
                           onClick={() => {
-                            setColorCode(visualizationcolor)
+                            setColorCode(visualizationColor)
                             setDeleteAlertDialogOpen(true)
                           }}
                         >
@@ -121,9 +121,9 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
   );
 };
 
-const mapStateToProps = ({ visualizationcolors }: IRootState) => ({
-  visualizationcolorsList: visualizationcolors.entities,
-  loading: visualizationcolors.loading,
+const mapStateToProps = ({ visualizationColors }: IRootState) => ({
+  visualizationColorsList: visualizationColors.entities,
+  loading: visualizationColors.loading,
 });
 
 const mapDispatchToProps = {

@@ -8,20 +8,20 @@ import { ButtonGroup,  Content, Dialog, Divider,   Form,  Heading, TextField, Bu
 
 
 export interface IVisualizationcolorsUpdateProps extends StateProps, DispatchProps {
-  visualizationcolors?: IVisualizationcolors
+  visualizationColors?: IVisualizationcolors
 }
 
 const VisualizationcolorsUpdate = (props: IVisualizationcolorsUpdateProps) => {
-  const [visualizationcolorsCode, setVisualizationcolors] = useState(props.visualizationcolors?.code);
+  const [visualizationColorsCode, setVisualizationColors] = useState(props.visualizationColors?.code);
   const dialog = useDialogContainer();
 
   const saveEntity = () => {
-    const values = { code: visualizationcolorsCode };
+    const values = { code: visualizationColorsCode };
     const entity = {
-      ...props.visualizationcolors,
+      ...props.visualizationColors,
       ...values,
     };
-    if (props.visualizationcolors?.id) {
+    if (props.visualizationColors?.id) {
       props.updateEntity(entity);
     } else {
       props.createEntity(entity);
@@ -32,7 +32,7 @@ const VisualizationcolorsUpdate = (props: IVisualizationcolorsUpdateProps) => {
   return (
     <Dialog size="L">
       <Heading>
-        <Translate contentKey="visualizationcolors.home.createLabel">Create visualization colors</Translate>
+        <Translate contentKey="visualizationcolors.home.createLabel">Create</Translate>
       </Heading>
       <Divider />
       <ButtonGroup>
@@ -45,7 +45,7 @@ const VisualizationcolorsUpdate = (props: IVisualizationcolorsUpdateProps) => {
       </ButtonGroup>
       <Content>
         <Form>
-          <TextField value={visualizationcolorsCode} onChange={setVisualizationcolors} label={translate('visualizationcolors.field.code')} placeholder={translate('visualizationcolors.field.code')} autoFocus />
+          <TextField value={visualizationColorsCode} onChange={setVisualizationColors} label={translate('visualizationcolors.field.code')} placeholder={translate('visualizationcolors.field.code')} autoFocus />
         </Form>
       </Content>
 
@@ -55,7 +55,7 @@ const VisualizationcolorsUpdate = (props: IVisualizationcolorsUpdateProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  visualizationcolorsEntity: storeState.visualizationcolors.entity,
+  visualizationColorsEntity: storeState.visualizationColors.entity,
 });
 
 const mapDispatchToProps = {

@@ -174,9 +174,7 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
       getAction() {
         setMenuAction('Export')
         getTransactionData(props.visual.data, csvLink, setTransactionData);
-        // history.push('/dashboards/view/' + props.view.id + '/export/' + props.visual.id)
-        window.open('/dashboards/view/' + props.view.id + '/export/' + props.visual.id, "_blank");
-
+        window.open(`export-visualisation?viewId=${props.view.id}&visualizationId=${props.visual.id}`);
       },
     },
     '8': {
@@ -320,16 +318,6 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
                 history={null}
                 location={null} />
             )}
-            {action === 'Export' && (
-              <Redirect
-           
-                to={{
-                  pathname: '/dashboards/view/' + props.view.id + '/export/' + props.visual.id,
-                }}
-              />
-         
-            )}
-
             <DialogContainer type={action === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => setMenuAction(null)}>
               {action === 'Edit' && (
                 <VisualizationEditModal

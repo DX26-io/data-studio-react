@@ -56,7 +56,7 @@ import featureCriteria, { FeatureCriteriaState } from 'app/entities/feature-crit
 import hierarchies, { HierarchyState } from 'app/entities/hierarchy/hierarchy.reducer';
 import releases, { ReleasesState } from 'app/modules/administration/release-management/releases.reducer';
 import shareLinkVisualization, { shareLinkVisualizationState } from 'app/entities/share/share-visualization.reducer';
-import visualizationcolors, { VisualizationcolorsState } from 'app/modules/administration/visualization-colors/visualizationcolors.reducer';
+import visualizationColors, { VisualizationColorsState } from 'app/modules/administration/visualization-colors/visualizationcolors.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -83,7 +83,7 @@ export interface IRootState {
   readonly visualizations: VisualizationsState;
   readonly visualmetadata: VisualmetadataState;
   readonly search: SearchState;
-  readonly visualizationcolors: VisualizationcolorsState;
+  readonly visualizationColors: VisualizationColorsState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly filter: FilterState;
   readonly scheduler: SchedulerState;
@@ -124,7 +124,7 @@ const rootReducer = combineReducers<IRootState>({
   visualizations,
   visualmetadata,
   search,
-  visualizationcolors,
+  visualizationColors,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   filter,
   scheduler,
