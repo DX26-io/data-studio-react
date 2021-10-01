@@ -137,7 +137,6 @@ export const updateEntity: ICrudPutAction<IVisualizationcolors> = entity => asyn
 };
 
 export const deleteEntity: ICrudDeleteAction<IVisualizationcolors> = id => async dispatch => {
-  debugger;
   const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
     type: ACTION_TYPES.DELETE_VISUALIZATIONCOLORS,

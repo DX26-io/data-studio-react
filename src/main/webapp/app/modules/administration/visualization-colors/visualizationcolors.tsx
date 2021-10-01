@@ -24,7 +24,7 @@ export interface IVisualizationcolorsProps extends StateProps, DispatchProps, Ro
 export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
   const [isOpen, setOpen] = React.useState(false);
   const [isdeleteAlertDialogOpen, setDeleteAlertDialogOpen] = React.useState(false);
-  const [visualizationcolor, setVisualizationcolor] = React.useState<IVisualizationcolors>();
+  const [colorCode, setColorCode] = React.useState<IVisualizationcolors>();
   useEffect(() => {
     props.getEntities();
   }, []);
@@ -49,10 +49,10 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
       </Button>
     </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && <VisualizationcolorsUpdate visualizationcolors={visualizationcolor} />}
+        {isOpen && <VisualizationcolorsUpdate visualizationcolors={colorCode} />}
       </DialogContainer>
       <DialogContainer onDismiss={() => setDeleteAlertDialogOpen(false)}>
-        {isdeleteAlertDialogOpen && <VisualizationcolorsDelete id={visualizationcolor.id} />}
+        {isdeleteAlertDialogOpen && <VisualizationcolorsDelete id={colorCode.id} />}
       </DialogContainer>
 
       <div className="dx26-container">
@@ -91,7 +91,7 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
                       <Flex gap="size-100" justifyContent="center">
                         <a
                           onClick={() => {
-                            setVisualizationcolor(visualizationcolor)
+                            setColorCode(visualizationcolor)
                             setOpen(true);
                           }}
                         >
@@ -99,7 +99,7 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
                         </a>
                         <a
                           onClick={() => {
-                            setVisualizationcolor(visualizationcolor)
+                            setColorCode(visualizationcolor)
                             setDeleteAlertDialogOpen(true)
                           }}
                         >
