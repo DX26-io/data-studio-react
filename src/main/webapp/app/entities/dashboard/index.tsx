@@ -17,6 +17,7 @@ import VisualizationEditModal from 'app/modules/canvas/visualization/visualizati
 import VisualizationsDeleteModal from 'app/modules/canvas/visualization/visualization-modal/visualization-delete-modal/visualizations-delete-modal';
 import SearchModal from "app/entities/search/search-modal";
 import ShareVisualization from "app/entities/share/share-visualization";
+import exportVisualization from '../../modules/canvas/export/export-visualization';
 
 const Routes = ({ match }) => (
   <>
@@ -30,6 +31,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute exact path={`${match.url}/:id/create`} component={ViewCreateModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/build`} component={Canvas} />
       <ErrorBoundaryRoute exact path={`${match.url}/share`} component={ShareVisualization} />
+      <ErrorBoundaryRoute exact path={`${match.url}/view/:viewId/export/:visualizationId`} component={exportVisualization} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/edit/:visualizationId`} component={VisualizationEditModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/delete/:visualizationId`} component={VisualizationsDeleteModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={Views} />

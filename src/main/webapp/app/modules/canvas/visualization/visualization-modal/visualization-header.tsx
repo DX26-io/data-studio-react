@@ -172,6 +172,7 @@ const VisualizationHeader: FC<IVisualizationHeaderProps> = props => {
       getAction() {
         setMenuAction('Export')
         getTransactionData(props.visual.data, csvLink, setTransactionData);
+        window.open('/dashboards/view/' + props.view.id + '/export/' + props.visual.id, "_blank");
       },
     },
     '8': {
