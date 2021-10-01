@@ -52,7 +52,7 @@ export interface IAssignReport {
 }
 
 export const communicationListDefaultValue: Readonly<ICommunicationList> = {
-  emails: null,
+  emails: [],
   teams: [],
 };
 
