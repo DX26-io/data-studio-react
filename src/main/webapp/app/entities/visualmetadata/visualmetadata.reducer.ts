@@ -64,7 +64,7 @@ export const ACTION_TYPES = {
   VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD',
-  UPDATE_TABLE_PAGENO: 'visualmetadata/UPDATE_TABLE_PAGENO',
+  UPDATE_TABLE_PAGENO: 'UPDATE_TABLE_PAGENO',
 };
 
 const initialState = {
@@ -260,7 +260,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
     case ACTION_TYPES.UPDATE_TABLE_PAGENO:
       return {
         ...state,
-        tableActivePage: state.tableActivePage + 1,
+        tableActivePage: action.payload,
       };
     case ACTION_TYPES.RESET:
       return {
@@ -391,10 +391,12 @@ export const updateConditionExpression = (visual: IVisualMetadataSet, conditionE
   payload: setConditionExpression(visual, conditionExpression),
 });
 
-export const setTableActivePage = action => ({
-  type: ACTION_TYPES.UPDATE_TABLE_PAGENO,
-  payload: action,
-});
+export const setTableActivePage = (action: number) => dispatch => {
+  dispatch({
+    type: ACTION_TYPES.UPDATE_TABLE_PAGENO,
+    payload: action,
+  });
+};
 
 export const alternateDimension = (data: any) => {
   const visual = data.visualmetadata.visualMetadataSet.find(item => {

@@ -1,1 +1,10 @@
-export const SCHEDULER_CHANNELS = { Email: false, Teams: false };
+export const SCHEDULER_CHANNELS = [
+  {
+    key: 'Email',
+    value: false,
+  },
+  {
+    key: 'Teams',
+    value: false,
+  },
+];

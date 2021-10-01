@@ -298,7 +298,11 @@ const getQueryParameters = (visual, filters, conditionExpression, offset) => {
   if (aggExists) {
     query['groupBy'] = dimensionFields;
   }
-  query['limit'] = getQueryLimit(visual, offset);
+
+  if (getChartPropertyValue(visual.properties, Limit, 20) !== 0) {
+    query['limit'] = getChartPropertyValue(visual.properties, Limit, 20);
+  }
+
   const ordersListSortMeasures = applyOrderOnMeasures(measures);
   const ordersListSortDimensions = applyOrderOnDimensions(dimensions);
   query['orders'] = ordersListSortMeasures.concat(ordersListSortDimensions);
