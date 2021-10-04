@@ -59,7 +59,7 @@ export interface IIllustrate {
 export interface VisualisationProp extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
 
 const Canvas = (props: VisualisationProp) => {
-  const [isvisualisationsModelOpen, setvisualisationsModelOpen] = useState(false);
+  const [isVisualisationsModelOpen, setVisualisationsModelOpen] = useState(false);
   const [isLoaderDisplay, setIsLoaderDisplay] = useState<IIllustrate[]>([]);
   const params = new URLSearchParams(props.location.search);
 
@@ -242,7 +242,7 @@ const Canvas = (props: VisualisationProp) => {
       viewId: props.view.id,
       visualMetadata: v,
     });
-    setvisualisationsModelOpen(false);
+    setVisualisationsModelOpen(false);
   };
 
   const generateWidge =
