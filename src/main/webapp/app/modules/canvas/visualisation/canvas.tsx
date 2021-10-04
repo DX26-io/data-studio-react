@@ -3,15 +3,17 @@ import { connect } from 'react-redux';
 import { View } from '@adobe/react-spectrum';
 import { RouteComponentProps } from 'react-router-dom';
 import './canvas.scss';
-import 'flair-visualisations/styles/stylesheets/screen.css';
+import 'flair-visualizations/styles/stylesheets/screen.css';
 import { getEntity as getViewEntity, getCurrentViewState, saveViewState,reset as resetViews} from 'app/entities/views/views.reducer';
-import { getEntities as getvisualisationsEntities } from 'app/entities/visualisations/visualisations.reducer';
+import { getEntities as getVisualisationsEntities } from 'app/entities/visualisations/visualisations.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
   alternateDimension,
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
-  reset
+  reset,
+  visualisationTablePagination,
+  setTableActivePage
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import {
   getVisualisationData,
@@ -41,7 +43,7 @@ import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
 import { applyFilter, saveDynamicDateRangeMetaData, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
-import { visualisationType } from 'app/shared/util/visualisation.constants';
+import { VisualisationType } from 'app/shared/util/visualisation.constants';
 import PinnedFiltersHeader from './pinned-canvas-filters/pinned-filters-header';
 import PinnedFilterElement from './pinned-canvas-filters/pinned-filter-element';
 import { IBroadcast } from '../../../shared/model/broadcast.model'
@@ -69,7 +71,10 @@ const Canvas = (props: IVisualisationProp) => {
     visualmetadata: props.visualmetadata,
     view: props.view,
     saveSelectedFilter: props.saveSelectedFilter,
-    alternateDimension : props.alternateDimension
+    alternateDimension : props.alternateDimension,
+    pagination:props.visualizationTablePagination,
+    tableActivePage:props.tableActivePage,
+    setTableActivePage:props.setTableActivePage
   }
 
   const onLayoutChange = _visualmetaList => {
@@ -316,7 +321,7 @@ const Canvas = (props: IVisualisationProp) => {
               </div>
               <div id={`visualisation-${v.id}`} className="visualisation">
                 {
-                  v.metadataVisual.name === visualisationType.Iframe && (
+                  v.metadataVisual.name === VisualisationType.Iframe && (
                     <iframe id={`iframe-${v.id}`} />
                   )
                 }
@@ -412,7 +417,9 @@ const mapDispatchToProps = {
   getViewFeaturesEntities,
   reset,
   saveDynamicDateRangeMetaData,
-  alternateDimension
+  alternateDimension,
+  visualisationTablePagination,
+  setTableActivePage
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

@@ -46,4 +46,4 @@ export const VisualisationDataModal = (props: IVisualisationDataModalProps) => {
   );
 };
 
-export default visualisationDataModal;
+export default VisualisationDataModal;
