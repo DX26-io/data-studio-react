@@ -56,9 +56,9 @@ export interface IIllustrate {
   noDataFoundVisibility: boolean;
 }
 
-export interface visualisationProp extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
+export interface VisualisationProp extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
 
-const Canvas = (props: visualisationProp) => {
+const Canvas = (props: VisualisationProp) => {
   const [isvisualisationsModelOpen, setvisualisationsModelOpen] = useState(false);
   const [isLoaderDisplay, setIsLoaderDisplay] = useState<IIllustrate[]>([]);
   const params = new URLSearchParams(props.location.search);
