@@ -10,7 +10,7 @@ import {
   Limit,
   MEASURE,
   Sort,
-  visualisationType,
+  VisualisationType,
 } from 'app/shared/util/visualisation.constants';
 
 const nextFeature = (fields, fieldTypes) => {
@@ -203,7 +203,7 @@ const getQueryParametersWithFields = (fields, filters, conditionExpression) => {
 };
 
 const getQueryLimit = (visual, offset) => {
-  if (visual.metadataVisual.name === visualisationType.Table || visual.metadataVisual.name === visualisationType.PivotTable) {
+  if (visual.metadataVisual.name === VisualisationType.Table || visual.metadataVisual.name === VisualisationType.PivotTable) {
     return getChartPropertyValue(visual.properties, Limit, 20) * offset;
   } else {
     return getChartPropertyValue(visual.properties, Limit, 20);

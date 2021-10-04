@@ -72,7 +72,7 @@ const Canvas = (props: IVisualisationProp) => {
     view: props.view,
     saveSelectedFilter: props.saveSelectedFilter,
     alternateDimension : props.alternateDimension,
-    pagination:props.visualizationTablePagination,
+    pagination:props.visualisationTablePagination,
     tableActivePage:props.tableActivePage,
     setTableActivePage:props.setTableActivePage
   }
@@ -393,7 +393,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   isSearchOpen: storeState.search.isSearchOpen,
   selectedFilters: storeState.filter.selectedFilters,
   isFilterOpen: storeState.filter.isFilterOpen,
-  pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true)
+  pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true),
+  tableActivePage:storeState.visualmetadata.tableActivePage
 });
 
 const mapDispatchToProps = {
