@@ -13,9 +13,9 @@ import reducer, {
   getEntity,
   updateEntity,
   reset,
-} from 'app/entities/visualizations/visualizations.reducer';
+} from 'app/entities/visualisations/visualisations.reducer';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-import { IVisualizations, defaultValue } from 'app/shared/model/visualizations.model';
+import { IVisualisations, defaultValue } from 'app/shared/model/visualisations.model';
 
 describe('Entities reducer tests', () => {
   function isEmpty(element): boolean {
@@ -29,7 +29,7 @@ describe('Entities reducer tests', () => {
   const initialState = {
     loading: false,
     errorMessage: null,
-    entities: [] as ReadonlyArray<IVisualizations>,
+    entities: [] as ReadonlyArray<IVisualisations>,
     entity: defaultValue,
     updating: false,
     updateSuccess: false,
@@ -60,7 +60,7 @@ describe('Entities reducer tests', () => {
 
   describe('Requests', () => {
     it('should set state to loading', () => {
-      testMultipleTypes([REQUEST(ACTION_TYPES.FETCH_VISUALIZATIONS_LIST), REQUEST(ACTION_TYPES.FETCH_VISUALIZATIONS)], {}, state => {
+      testMultipleTypes([REQUEST(ACTION_TYPES.FETCH_VISUALISATIONS_LIST), REQUEST(ACTION_TYPES.FETCH_VISUALISATIONS)], {}, state => {
         expect(state).toMatchObject({
           errorMessage: null,
           updateSuccess: false,
@@ -72,9 +72,9 @@ describe('Entities reducer tests', () => {
     it('should set state to updating', () => {
       testMultipleTypes(
         [
-          REQUEST(ACTION_TYPES.CREATE_VISUALIZATIONS),
-          REQUEST(ACTION_TYPES.UPDATE_VISUALIZATIONS),
-          REQUEST(ACTION_TYPES.DELETE_VISUALIZATIONS),
+          REQUEST(ACTION_TYPES.CREATE_VISUALISATIONS),
+          REQUEST(ACTION_TYPES.UPDATE_VISUALISATIONS),
+          REQUEST(ACTION_TYPES.DELETE_VISUALISATIONS),
         ],
         {},
         state => {
@@ -105,11 +105,11 @@ describe('Entities reducer tests', () => {
     it('should set a message in errorMessage', () => {
       testMultipleTypes(
         [
-          FAILURE(ACTION_TYPES.FETCH_VISUALIZATIONS_LIST),
-          FAILURE(ACTION_TYPES.FETCH_VISUALIZATIONS),
-          FAILURE(ACTION_TYPES.CREATE_VISUALIZATIONS),
-          FAILURE(ACTION_TYPES.UPDATE_VISUALIZATIONS),
-          FAILURE(ACTION_TYPES.DELETE_VISUALIZATIONS),
+          FAILURE(ACTION_TYPES.FETCH_VISUALISATIONS_LIST),
+          FAILURE(ACTION_TYPES.FETCH_VISUALISATIONS),
+          FAILURE(ACTION_TYPES.CREATE_VISUALISATIONS),
+          FAILURE(ACTION_TYPES.UPDATE_VISUALISATIONS),
+          FAILURE(ACTION_TYPES.DELETE_VISUALISATIONS),
         ],
         'error message',
         state => {
@@ -128,7 +128,7 @@ describe('Entities reducer tests', () => {
       const payload = { data: [{ 1: 'fake1' }, { 2: 'fake2' }] };
       expect(
         reducer(undefined, {
-          type: SUCCESS(ACTION_TYPES.FETCH_VISUALIZATIONS_LIST),
+          type: SUCCESS(ACTION_TYPES.FETCH_VISUALISATIONS_LIST),
           payload,
         })
       ).toEqual({
@@ -142,7 +142,7 @@ describe('Entities reducer tests', () => {
       const payload = { data: { 1: 'fake1' } };
       expect(
         reducer(undefined, {
-          type: SUCCESS(ACTION_TYPES.FETCH_VISUALIZATIONS),
+          type: SUCCESS(ACTION_TYPES.FETCH_VISUALISATIONS),
           payload,
         })
       ).toEqual({
@@ -156,7 +156,7 @@ describe('Entities reducer tests', () => {
       const payload = { data: 'fake payload' };
       expect(
         reducer(undefined, {
-          type: SUCCESS(ACTION_TYPES.CREATE_VISUALIZATIONS),
+          type: SUCCESS(ACTION_TYPES.CREATE_VISUALISATIONS),
           payload,
         })
       ).toEqual({
@@ -170,7 +170,7 @@ describe('Entities reducer tests', () => {
     it('should delete entity', () => {
       const payload = 'fake payload';
       const toTest = reducer(undefined, {
-        type: SUCCESS(ACTION_TYPES.DELETE_VISUALIZATIONS),
+        type: SUCCESS(ACTION_TYPES.DELETE_VISUALISATIONS),
         payload,
       });
       expect(toTest).toMatchObject({
@@ -193,79 +193,79 @@ describe('Entities reducer tests', () => {
       axios.delete = sinon.stub().returns(Promise.resolve(resolvedObject));
     });
 
-    it('dispatches ACTION_TYPES.FETCH_VISUALIZATIONS_LIST actions', async () => {
+    it('dispatches ACTION_TYPES.FETCH_VISUALISATIONS_LIST actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.FETCH_VISUALIZATIONS_LIST),
+          type: REQUEST(ACTION_TYPES.FETCH_VISUALISATIONS_LIST),
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_VISUALIZATIONS_LIST),
+          type: SUCCESS(ACTION_TYPES.FETCH_VISUALISATIONS_LIST),
           payload: resolvedObject,
         },
       ];
       await store.dispatch(getEntities()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
-    it('dispatches ACTION_TYPES.FETCH_VISUALIZATIONS actions', async () => {
+    it('dispatches ACTION_TYPES.FETCH_VISUALISATIONS actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.FETCH_VISUALIZATIONS),
+          type: REQUEST(ACTION_TYPES.FETCH_VISUALISATIONS),
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_VISUALIZATIONS),
+          type: SUCCESS(ACTION_TYPES.FETCH_VISUALISATIONS),
           payload: resolvedObject,
         },
       ];
       await store.dispatch(getEntity(42666)).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
-    it('dispatches ACTION_TYPES.CREATE_VISUALIZATIONS actions', async () => {
+    it('dispatches ACTION_TYPES.CREATE_VISUALISATIONS actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.CREATE_VISUALIZATIONS),
+          type: REQUEST(ACTION_TYPES.CREATE_VISUALISATIONS),
         },
         {
-          type: SUCCESS(ACTION_TYPES.CREATE_VISUALIZATIONS),
+          type: SUCCESS(ACTION_TYPES.CREATE_VISUALISATIONS),
           payload: resolvedObject,
         },
         {
-          type: REQUEST(ACTION_TYPES.FETCH_VISUALIZATIONS_LIST),
+          type: REQUEST(ACTION_TYPES.FETCH_VISUALISATIONS_LIST),
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_VISUALIZATIONS_LIST),
+          type: SUCCESS(ACTION_TYPES.FETCH_VISUALISATIONS_LIST),
           payload: resolvedObject,
         },
       ];
       await store.dispatch(createEntity({ id: 1 })).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
-    it('dispatches ACTION_TYPES.UPDATE_VISUALIZATIONS actions', async () => {
+    it('dispatches ACTION_TYPES.UPDATE_VISUALISATIONS actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.UPDATE_VISUALIZATIONS),
+          type: REQUEST(ACTION_TYPES.UPDATE_VISUALISATIONS),
         },
         {
-          type: SUCCESS(ACTION_TYPES.UPDATE_VISUALIZATIONS),
+          type: SUCCESS(ACTION_TYPES.UPDATE_VISUALISATIONS),
           payload: resolvedObject,
         },
       ];
       await store.dispatch(updateEntity({ id: 1 })).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
-    it('dispatches ACTION_TYPES.DELETE_VISUALIZATIONS actions', async () => {
+    it('dispatches ACTION_TYPES.DELETE_VISUALISATIONS actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.DELETE_VISUALIZATIONS),
+          type: REQUEST(ACTION_TYPES.DELETE_VISUALISATIONS),
         },
         {
-          type: SUCCESS(ACTION_TYPES.DELETE_VISUALIZATIONS),
+          type: SUCCESS(ACTION_TYPES.DELETE_VISUALISATIONS),
           payload: resolvedObject,
         },
         {
-          type: REQUEST(ACTION_TYPES.FETCH_VISUALIZATIONS_LIST),
+          type: REQUEST(ACTION_TYPES.FETCH_VISUALISATIONS_LIST),
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_VISUALIZATIONS_LIST),
+          type: SUCCESS(ACTION_TYPES.FETCH_VISUALISATIONS_LIST),
           payload: resolvedObject,
         },
       ];

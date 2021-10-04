@@ -51,14 +51,14 @@ const SearchModal = (props: ISearchModalProps) => {
 
   const handleSearchClick = () => { };
 
-  const findTableVisualization = visualizations => {
-    return visualizations.find(item => {
+  const findTableVisualisation = visualisations => {
+    return visualisations.find(item => {
       return item.name === 'Table';
     });
   };
 
   const onSearchPressed = () => {
-    const queryDTO = getQueryDTO(props.searchText, props.features, props.view, findTableVisualization(props.visualizations));
+    const queryDTO = getQueryDTO(props.searchText, props.features, props.view, findTableVisualisation(props.visualisations));
     props.doSearch(props.viewId, queryDTO);
   };
 
@@ -81,7 +81,7 @@ const SearchModal = (props: ISearchModalProps) => {
     <Flex direction="row" height="size-600" gap="size-75">
       <Flex direction="column" height="100%" flex gap="size-75">
         <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="100%">
-          <div style={{ height: '100%' }} id={`visualization-edit-${props.visualmetadataEntity.id}`} className="visualization"></div>
+          <div style={{ height: '100%' }} id={`visualisation-edit-${props.visualmetadataEntity.id}`} className="visualisation"></div>
         </View>
       </Flex>
     </Flex>
@@ -150,7 +150,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   searchStruct: storeState.search.searchStruct,
   visualmetadataEntity: storeState.visualmetadata.entity,
   features: storeState.feature.entities,
-  visualizations: storeState.visualizations.entities,
+  visualisations: storeState.visualisations.entities,
 
   view: storeState.views.entity,
 });

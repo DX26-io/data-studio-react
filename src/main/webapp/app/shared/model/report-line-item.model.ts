@@ -1,13 +1,13 @@
 export interface IReportLineItem {
-  visualizationId: any;
-  visualization: string;
+  visualisationId: any;
+  visualisation: string;
   dimensions: Array<string>;
   measures: Array<string>;
 }
 
 export const reportLineItemDefaultValue: Readonly<IReportLineItem> = {
-  visualizationId: '',
-  visualization: '',
+  visualisationId: '',
+  visualisation: '',
   dimensions: [],
   measures: [],
 };

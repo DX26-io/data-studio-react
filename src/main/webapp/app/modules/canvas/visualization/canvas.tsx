@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { View } from '@adobe/react-spectrum';
 import { RouteComponentProps } from 'react-router-dom';
 import './canvas.scss';
-import 'flair-visualizations/styles/stylesheets/screen.css';
+import 'flair-visualisations/styles/stylesheets/screen.css';
 import { getEntity as getViewEntity, getCurrentViewState, saveViewState,reset as resetViews} from 'app/entities/views/views.reducer';
-import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
+import { getEntities as getvisualisationsEntities } from 'app/entities/visualisations/visualisations.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
   getEntity as getVisualmetadataEntity,
@@ -15,16 +15,16 @@ import {
   alternateDimension,
   metadataContainerAdd,
   reset,
-  visualizationTablePagination,
+  visualisationTablePagination,
   setTableActivePage
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import {
-  getVisualizationData,
-  renderVisualization,
+  getVisualisationData,
+  renderVisualisation,
   ValidateFields,
-} from 'app/modules/canvas/visualization/util/visualization-render-utils';
-import VisualizationHeader from './visualization-modal/visualization-header';
-import 'app/modules/canvas/visualization/canvas.scss';
+} from 'app/modules/canvas/visualisation/util/visualisation-render-utils';
+import VisualisationHeader from '../visualisation/visualisation-modal/visualisation-header';
+import 'app/modules/canvas/visualisation/canvas.scss';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { NoDataFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import Loader from 'app/shared/components/card/loader/loader';
@@ -34,16 +34,16 @@ import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import FeaturesPanel from 'app/modules/canvas/features/features-panel';
 import { receiveSocketResponse, toggleLoader } from 'app/shared/websocket/websocket.reducer';
-import { VisualMetadataContainerGetOne } from './util/visualmetadata-container.util';
+import { visualMetadataContainerGetOne } from '../../canvas/visualisation/util/visualmetadata-container.util';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
 import { applyFilter, saveDynamicDateRangeMetaData, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
-import { VisualizationType } from 'app/shared/util/visualization.constants';
-import PinnedFiltersHeader from './pinned-canvas-filters/pinned-filters-header';
-import PinnedFilterElement from './pinned-canvas-filters/pinned-filter-element';
+import { VisualisationType } from 'app/shared/util/visualisation.constants';
+import PinnedFiltersHeader from '../../canvas/visualisation/pinned-canvas-filters/pinned-filters-header';
+import PinnedFilterElement from '../../canvas/visualisation/pinned-canvas-filters/pinned-filter-element';
 import { IBroadcast } from '../../../shared/model/broadcast.model'
 
 import { WidthProvider, Responsive as ResponsiveGridLayout, } from 'react-grid-layout';
@@ -51,15 +51,15 @@ import { applyDateFilters } from '../filter/filter-util';
 const ReactGridLayout = WidthProvider(ResponsiveGridLayout);
 
 export interface IIllustrate {
-  visualizationId: string;
+  visualisationId: string;
   loaderVisibility: boolean;
   noDataFoundVisibility: boolean;
 }
 
-export interface VisualizationProp extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
+export interface visualisationProp extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
 
-const Canvas = (props: VisualizationProp) => {
-  const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
+const Canvas = (props: visualisationProp) => {
+  const [isvisualisationsModelOpen, setvisualisationsModelOpen] = useState(false);
   const [isLoaderDisplay, setIsLoaderDisplay] = useState<IIllustrate[]>([]);
   const params = new URLSearchParams(props.location.search);
 
@@ -70,7 +70,7 @@ const Canvas = (props: VisualizationProp) => {
     view: props.view,
     saveSelectedFilter: props.saveSelectedFilter,
     alternateDimension : props.alternateDimension,
-    pagination:props.visualizationTablePagination,
+    pagination:props.visualisationTablePagination,
     tableActivePage:props.tableActivePage,
     setTableActivePage:props.setTableActivePage
   }
@@ -91,13 +91,13 @@ const Canvas = (props: VisualizationProp) => {
   };
 
   const onResizeStop = (layout, oldItem, newItem, placeholder, e, element) => {
-    const v = VisualMetadataContainerGetOne(oldItem.i);
+    const v = visualMetadataContainerGetOne(oldItem.i);
     if (v && v.data?.length > 0) {
       v.h = newItem.h;
       v.height = newItem.h;
       v.w = newItem.w;
       v.width = newItem.w;
-      renderVisualization(v, v.data, "widget", broadcast);
+      renderVisualisation(v, v.data, "widget", broadcast);
     }
   };
 
@@ -115,23 +115,23 @@ const Canvas = (props: VisualizationProp) => {
     }
   }
 
-  const renderVisualizationById = item => {
+  const rendervisualisationById = item => {
     if (ValidateFields(item.fields)) {
-      getVisualizationData(item, props.view, props.selectedFilters);
+      getVisualisationData(item, props.view, props.selectedFilters);
     } else {
       props.toggleLoader(false);
     }
   };
 
-  const loadVisualization = () => {
+  const loadvisualisation = () => {
     props.visualmetadata.visualMetadataSet.map((item, i) => {
-      renderVisualizationById(item);
+      rendervisualisationById(item);
     });
   };
 
   const showDataNotFound = id => {
     isLoaderDisplay.map(item => {
-      if (item.visualizationId === id) {
+      if (item.visualisationId === id) {
         item.noDataFoundVisibility = true;
       }
     });
@@ -140,7 +140,7 @@ const Canvas = (props: VisualizationProp) => {
 
   const hideDataNotFound = id => {
     isLoaderDisplay.map(item => {
-      if (item.visualizationId === id) {
+      if (item.visualisationId === id) {
         item.noDataFoundVisibility = false;
       }
     });
@@ -151,7 +151,7 @@ const Canvas = (props: VisualizationProp) => {
     const viewId = params.get('viewId');
     if (viewId) {
       props.getViewFeaturesEntities(viewId);
-      props.getVisualizationsEntities();
+      props.getvisualisationsEntities();
       props.getViewEntity(viewId);
       props.getCurrentViewState(viewId);
     }
@@ -162,12 +162,12 @@ const Canvas = (props: VisualizationProp) => {
 
   useEffect(() => {
     if (props.visualData) {
-      const v = VisualMetadataContainerGetOne(props.visualData.headers.queryId);
+      const v = visualMetadataContainerGetOne(props.visualData.headers.queryId);
       if (v && props.visualData?.body?.length > 0) {
         v.data = props.visualData?.body;
         props.toggleLoader(false);
         hideDataNotFound(v.id);
-        renderVisualization(v, props.visualData?.body, "widget", broadcast);
+        renderVisualisation(v, props.visualData?.body, "widget", broadcast);
       } else {
         showDataNotFound(v.id);
         if (document.getElementById('chart-widget-' + v.id)) {
@@ -183,7 +183,7 @@ const Canvas = (props: VisualizationProp) => {
       props.toggleLoader(true)
       props.visualmetadata?.visualMetadataSet.map(item => {
         const loader = {
-          visualizationId: item.id,
+          visualisationId: item.id,
           loaderVisibility: true,
           noDataFoundVisibility: false,
         };
@@ -213,7 +213,7 @@ const Canvas = (props: VisualizationProp) => {
     if (props.isSocketConnected) {
         props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
       if (props.visualmetadata?.visualMetadataSet.length > 0) {
-        loadVisualization();
+        loadvisualisation();
       } else {
         props.toggleLoader(false);
       }
@@ -224,7 +224,7 @@ const Canvas = (props: VisualizationProp) => {
 
   useEffect(() => {
     if (props.updateSuccess) {
-      renderVisualizationById(props.visualmetadataEntity);
+      rendervisualisationById(props.visualmetadataEntity);
     }
   }, [props.updateSuccess]);
 
@@ -232,17 +232,17 @@ const Canvas = (props: VisualizationProp) => {
     if (props.pinnedFeatures.length > 0) {
       addPinFilter();
       if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
-        renderVisualizationById(props.visualmetadataEntity);
+        rendervisualisationById(props.visualmetadataEntity);
       }
     }
   }, [props.visualMetadataContainerList]);
 
-  const handleVisualizationClick = v => {
+  const handleVisualisationClick = v => {
     props.addVisualmetadataEntity({
       viewId: props.view.id,
       visualMetadata: v,
     });
-    setVisualizationsModelOpen(false);
+    setvisualisationsModelOpen(false);
   };
 
   const generateWidge =
@@ -295,16 +295,16 @@ const Canvas = (props: VisualizationProp) => {
             }}
           >
             <div className="header">
-              <VisualizationHeader
+              <VisualisationHeader
                 key={`viz-header-${v.id}`}
                 visual={v}
-                handleVisualizationClick={handleVisualizationClick}
+                handleVisualisationClick={handleVisualisationClick}
                 view={props.view}
                 totalItem={props.visualMetadataContainerList?.length || 0}
                 filterData={props.filterList}
                 isEditMode={props.isEditMode}
                 {...props}
-              ></VisualizationHeader>
+              ></VisualisationHeader>
             </div>
             <div style={{ backgroundColor: v.bodyProperties.backgroundColor }} className="visualBody" id={`visualBody-${v.id}`}>
               <div className="illustrate">
@@ -317,9 +317,9 @@ const Canvas = (props: VisualizationProp) => {
                   </div>
                 )}
               </div>
-              <div id={`visualization-${v.id}`} className="visualization">
+              <div id={`visualisation-${v.id}`} className="visualisation">
                 {
-                  v.metadataVisual.name === VisualizationType.Iframe && (
+                  v.metadataVisual.name === VisualisationType.Iframe && (
                     <iframe id={`iframe-${v.id}`} />
                   )
                 }
@@ -379,14 +379,14 @@ const mapStateToProps = (storeState: IRootState) => ({
   isCreated: storeState.visualmetadata.newCreated,
   updateSuccess: storeState.visualmetadata.updateSuccess,
   deleteSuccess: storeState.visualmetadata.deleteSuccess,
-  visualizationsList: storeState.visualizations.entities,
+  visualisationsList: storeState.visualisations.entities,
   featuresList: storeState.feature.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
   isEditMode: storeState.visualmetadata.isEditMode,
-  visualData: storeState.visualizationData.visualData,
-  filterList: storeState.visualizationData.filterData,
-  isSocketConnected: storeState.visualizationData.isSocketConnected,
-  isLoaderOn: storeState.visualizationData.isLoaderOn,
+  visualData: storeState.visualisationData.visualData,
+  filterList: storeState.visualisationData.filterData,
+  isSocketConnected: storeState.visualisationData.isSocketConnected,
+  isLoaderOn: storeState.visualisationData.isLoaderOn,
   visualMetadataContainerList: storeState.visualmetadata.visualMetadataContainerList,
   isSearchOpen: storeState.search.isSearchOpen,
   selectedFilters: storeState.filter.selectedFilters,
@@ -399,7 +399,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 const mapDispatchToProps = {
   getViewEntity,
   getCurrentViewState,
-  getVisualizationsEntities,
+  getvisualisationsEntities,
   addVisualmetadataEntity,
   deleteVisualmetadataEntity,
   saveViewState,
@@ -418,7 +418,7 @@ const mapDispatchToProps = {
   reset,
   saveDynamicDateRangeMetaData,
   alternateDimension,
-  visualizationTablePagination,
+  visualisationTablePagination,
   setTableActivePage
 };
 

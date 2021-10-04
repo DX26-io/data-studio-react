@@ -1,4 +1,4 @@
-import { FeatureType } from '../util/visualization.constants';
+import { FeatureType } from '../util/visualisation.constants';
 import { IDatasources, defaultDatasourceValue } from 'app/shared/model/datasources.model';
 
 export interface IFeature {

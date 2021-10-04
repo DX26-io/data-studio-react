@@ -11,7 +11,7 @@
         "dashboard": "Dashboard",
         "views": "Views",
         "feature": "Feature",
-        "visualizations": "Visualizations",
+        "visualisations": "Visualisations",
         "visualmetadata": "Visualmetadata",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },

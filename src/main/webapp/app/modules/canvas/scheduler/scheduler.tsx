@@ -9,7 +9,7 @@ import DatePicker from 'app/shared/components/date-picker/date-picker';
 import { stringToDate } from '../data-constraints/utils/date-util';
 import { Translate } from 'react-jhipster';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
-import { buildQueryDTO } from '../visualization/util/visualization-render-utils';
+import { buildQueryDTO } from '../visualisation/util/visualisation-render-utils';
 import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
 import { GenerateUserOptions, GenerateWebhookOptions, SetDefaulSelectedUserEmailList, SetDefaultWebHookList } from './scheduler.util';
 export interface ISchedulerProps extends StateProps, DispatchProps {
@@ -65,11 +65,11 @@ const Scheduler = (props: ISchedulerProps) => {
       },
       datasourceId: props.view.viewDashboard.dashboardDatasource.id,
       dashboardId: props.view.viewDashboard.id.toString(),
-      putCall: props.schedulerReport?.reportLineItem.visualizationId ? true : false,
+      putCall: props.schedulerReport?.reportLineItem.visualisationId ? true : false,
       constraints: "{}",
       reportLineItem: {
-        visualizationId: props.visual.id,
-        visualizationType: props.visual.metadataVisual.name,
+        visualisationId: props.visual.id,
+        visualisationType: props.visual.metadataVisual.name,
         dimensions: dimentionsAndMeasures.dimensions,
         measures: dimentionsAndMeasures.measures,
       },
@@ -97,7 +97,7 @@ const Scheduler = (props: ISchedulerProps) => {
                 >
                   <Translate contentKey="entity.action.create">Create</Translate>
                 </Button>
-                {props.schedulerReport?.reportLineItem.visualizationId && (
+                {props.schedulerReport?.reportLineItem.visualisationId && (
                   <Button
                     onPress={() => {
                       executeReport();

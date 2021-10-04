@@ -13,18 +13,18 @@ import {
 } from 'app/shared/util/data-constraints.constants';
 import AddCircle from '@spectrum-icons/workflow/AddCircle';
 import RemoveCircle from '@spectrum-icons/workflow/RemoveCircle';
-import './visualization-data-constraints.scss';
+import './visualisation-data-constraints.scss';
 import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { resetTimezoneData } from 'app/modules/canvas/data-constraints/utils/date-util';
 import DateRangeComponent from './date-range-component';
-import { checkIsDateType, getDimension } from '../visualization/util/visualization-utils';
+import { checkIsDateType, getDimension } from '../visualisation/util/visualisation-utils';
 import { updateConditionExpression } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 
-interface IVisualizationDataConstraintsProps extends StateProps, DispatchProps {
+interface IVisualisationDataConstraintsProps extends StateProps, DispatchProps {
   features: readonly IFeature[];
   datasource: IDatasources;
   visualMetaData: IVisualMetadataSet;
@@ -32,7 +32,7 @@ interface IVisualizationDataConstraintsProps extends StateProps, DispatchProps {
   filterData: any;
 }
 
-const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = props => {
+const VisualisationDataConstraints: FC<IVisualisationDataConstraintsProps> = props => {
   const [property, setProperty] = useState([]);
   const [conditionList, setConditionList] = useState(CONDITION_TYPES);
   const [isDisplayDateRange, setDisplayDateRange] = useState(false);
@@ -352,12 +352,12 @@ const VisualizationDataConstraints: FC<IVisualizationDataConstraintsProps> = pro
   const showCondition = condition => {
     return (
       <>
-        <VisualizationDataConstraints
+        <VisualisationDataConstraints
           features={props.features}
           datasource={props.datasource}
           visualMetaData={props.visualMetaData}
           condition={condition}
-          filterData={props.filterData} updateConditionExpression={props.updateConditionExpression}           ></VisualizationDataConstraints>
+          filterData={props.filterData} updateConditionExpression={props.updateConditionExpression}></VisualisationDataConstraints>
       </>
     );
   };
@@ -424,5 +424,5 @@ const mapDispatchToProps = {
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(VisualizationDataConstraints);
+export default connect(mapStateToProps, mapDispatchToProps)(VisualisationDataConstraints);
 

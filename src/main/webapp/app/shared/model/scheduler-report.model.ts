@@ -33,15 +33,15 @@ export const reportDefaultValue: Readonly<IReport> = {
 };
 
 export interface IReportLineItem {
-  visualizationId: any;
-  visualizationType: string;
+  visualisationId: any;
+  visualisationType: string;
   dimensions: Array<string>;
   measures: Array<string>;
 }
 
 export const reportLineItemDefaultValue: Readonly<IReportLineItem> = {
-  visualizationId: '',
-  visualizationType: '',
+  visualisationId: '',
+  visualisationType: '',
   dimensions: [],
   measures: [],
 };

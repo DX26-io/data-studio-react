@@ -11,17 +11,17 @@ import {
   strToDate,
 } from 'app/modules/canvas/data-constraints/utils/date-util';
 import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
-import { ValidateFields } from 'app/modules/canvas/visualization/util/visualization-render-utils';
-import { getDimension } from 'app/modules/canvas/visualization/util/visualization-utils';
-import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
+import { ValidateFields } from 'app/modules/canvas/visualisation/util/visualisation-render-utils';
+import { getDimension } from 'app/modules/canvas/visualisation/util/visualisation-utils';
+import { VisualWrap } from 'app/modules/canvas/visualisation/util/visualmetadata-wrapper';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IViews } from 'app/shared/model/views.model';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
-import { IVisualizations } from 'app/shared/model/visualizations.model';
+import { IVisualisations } from 'app/shared/model/visualisations.model';
 import { COMPARE_TYPES, DYNAMIC_DATE_RANGE_CONFIG } from 'app/shared/util/data-constraints.constants';
-import { BETWEEN } from 'app/shared/util/visualization.constants';
+import { BETWEEN } from 'app/shared/util/visualisation.constants';
 import { trim } from 'lodash';
-import { createVisualMetadata } from '../visualizations/visualizations-util';
+import { createVisualMetadata } from '../visualisations/visualisations-util';
 import { CompareType, SearchResult } from './search.model';
 
 const createDimensions = (features: readonly IFeature[], dimensionsList: Array<string>) => {
@@ -104,9 +104,9 @@ export const createVisualFields = (
   dimensionsList: Array<string>,
   measuresList: Array<string>,
   view: IViews,
-  visualization: IVisualizations
+  visualisation: IVisualisations
 ) => {
-  let visual = createVisualMetadata(visualization, view, 0);
+  let visual = createVisualMetadata(visualisation, view, 0);
   const dimensions = createDimensions(features, dimensionsList);
   const measures = createMeasures(features, measuresList);
   const visualWrap = VisualWrap(visual);
@@ -299,13 +299,13 @@ const createFilterObject = (searchObject: SearchResult, features: readonly IFeat
   return filter;
 };
 
-export const getQueryDTO = (searchText: string, features: readonly IFeature[], view: IViews, visualization: IVisualizations) => {
+export const getQueryDTO = (searchText: string, features: readonly IFeature[], view: IViews, visualisation: IVisualisations) => {
   const measuresList = searchText.substring(0, searchText.search('by')).split(',');
   const dimensionsList = searchText.substring(searchText.search('by'), searchText.search('filter by')).replace('by', '').split(',');
   const condition = searchText.substring(searchText.search('filter by'), searchText.search('order by')).replace('filter by', '').split(',');
   const order = searchText.substring(searchText.search('order by'), searchText.length).replace('order by', '').split(',');
   // const limit = searchText.substring(searchText.search('limit'), searchText.length).replace('limit', '').split(',');
-  const visual = createVisualFields(features, dimensionsList, measuresList, view, visualization);
+  const visual = createVisualFields(features, dimensionsList, measuresList, view, visualisation);
 
   const searchObject = createSearchResult(measuresList, dimensionsList, condition, order, features);
   if (visual.fields && ValidateFields(visual.fields)) {
