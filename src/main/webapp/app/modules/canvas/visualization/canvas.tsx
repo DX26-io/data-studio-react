@@ -8,21 +8,21 @@ import { getEntity as getViewEntity, getCurrentViewState, saveViewState,reset as
 import { getEntities as getVisualizationsEntities } from 'app/entities/visualizations/visualizations.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
-  alternateDimension,
+  getEntity as getVisualmetadataEntity,
+  updateEntity as updateVisualmetadataEntity,
   createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
-  reset
+  alternateDimension,
+  metadataContainerAdd,
+  reset,
+  visualizationTablePagination,
+  setTableActivePage
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import {
   getVisualizationData,
   renderVisualization,
   ValidateFields,
 } from 'app/modules/canvas/visualization/util/visualization-render-utils';
-import {
-  getEntity as getVisualmetadataEntity,
-  updateEntity as updateVisualmetadataEntity,
-  metadataContainerAdd,
-} from 'app/entities/visualmetadata/visualmetadata.reducer';
 import VisualizationHeader from './visualization-modal/visualization-header';
 import 'app/modules/canvas/visualization/canvas.scss';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
@@ -69,7 +69,10 @@ const Canvas = (props: VisualizationProp) => {
     visualmetadata: props.visualmetadata,
     view: props.view,
     saveSelectedFilter: props.saveSelectedFilter,
-    alternateDimension : props.alternateDimension
+    alternateDimension : props.alternateDimension,
+    pagination:props.visualizationTablePagination,
+    tableActivePage:props.tableActivePage,
+    setTableActivePage:props.setTableActivePage
   }
 
   const onLayoutChange = _visualmetaList => {
@@ -388,7 +391,9 @@ const mapStateToProps = (storeState: IRootState) => ({
   isSearchOpen: storeState.search.isSearchOpen,
   selectedFilters: storeState.filter.selectedFilters,
   isFilterOpen: storeState.filter.isFilterOpen,
-  pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true)
+  pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true),
+  tableActivePage:storeState.visualmetadata.tableActivePage
+
 });
 
 const mapDispatchToProps = {
@@ -412,7 +417,9 @@ const mapDispatchToProps = {
   getViewFeaturesEntities,
   reset,
   saveDynamicDateRangeMetaData,
-  alternateDimension
+  alternateDimension,
+  visualizationTablePagination,
+  setTableActivePage
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

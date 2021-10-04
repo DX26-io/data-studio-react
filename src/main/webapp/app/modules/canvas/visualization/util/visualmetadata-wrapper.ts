@@ -193,6 +193,7 @@ const getQueryParametersWithFields = (fields, filters, conditionExpression) => {
   const query = {
     fields,
     conditionExpressions: undefined,
+    offset: 0,
   };
 
   if (conditionExpression && conditionExpression.conditionExpression) {
@@ -285,6 +286,11 @@ const getQueryParameters = (visual, filters, conditionExpression, offset) => {
     return constructMeasureField(item);
   });
   const query = getQueryParametersWithFields(dimensionFields.concat(measureFields), filters, conditionExpression);
+
+  if (visual.metadataVisual.name === 'Table' || visual.metadataVisual.name === 'Pivot Table') {
+    query.offset = getChartPropertyValue(visual.properties, Limit, 20) * offset;
+  }
+
   const aggExists = !!measureFields.filter(function (item) {
     return item.aggregation;
   })[0];

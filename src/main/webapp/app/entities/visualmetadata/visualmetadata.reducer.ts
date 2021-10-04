@@ -410,3 +410,11 @@ export const alternateDimension = (data: any) => {
   });
   getVisualizationData(visual, data.view, data.filter);
 };
+
+export const visualizationTablePagination = data => {
+  const visual = data.visualmetadata.visualMetadataSet.find(item => {
+    return item.id === data.visualizationId;
+  });
+
+  getVisualizationData(visual, data.view, data.filter, data.activePageNo);
+};
