@@ -3,6 +3,7 @@ import { getToken } from 'app/shared/reducers/authentication';
 import { SearchAutoSuggestion, SearchResult } from 'app/entities/search/search.model';
 import { searchCall } from 'app/shared/websocket/proxy-websocket.service';
 
+
 export const ACTION_TYPES = {
   RESET: 'search/RESET',
   TOGGLE_SEARCH_MODAL: 'search/TOGGLE_SEARCH_MODAL',
@@ -20,6 +21,7 @@ const initialState = {
   searchedResults: false,
   autoSuggestion: [] as ReadonlyArray<SearchAutoSuggestion>,
   searchStruct: null as SearchResult,
+  searchStructRequest:false
 };
 
 export type SearchState = Readonly<typeof initialState>;
@@ -49,6 +51,7 @@ export default (state: SearchState = initialState, action): SearchState => {
         searchError: null,
         autoSuggestion: action.payload.autoSuggestion,
         searchStruct: action.payload.searchStruct,
+        searchStructRequest:true,
       };
     case ACTION_TYPES.SET_SEARCH_ITEM_SELECTED_RESPONSE:
       return {
@@ -57,6 +60,7 @@ export default (state: SearchState = initialState, action): SearchState => {
         searchText: action.payload.text,
         autoSuggestion: action.payload.autoSuggestion,
         searchStruct: action.payload.searchStruct,
+        searchStructRequest:true,
       };
     case ACTION_TYPES.SET_SEARCH_TEXT:
       return {
@@ -68,7 +72,9 @@ export default (state: SearchState = initialState, action): SearchState => {
       return {
         ...state,
         searchedResults: true,
+        searchStructRequest:false
       };
+    
     default:
       return state;
   }

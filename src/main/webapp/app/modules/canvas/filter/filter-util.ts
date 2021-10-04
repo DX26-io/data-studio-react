@@ -7,8 +7,6 @@ import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { dateToString } from '../data-constraints/utils/date-util';
 import { IFeature } from 'app/shared/model/feature.model';
 
-// const paramObject = {};
-// const selectedFilters = {};
 let dynamicDateRangeMetaData = {};
 
 export const createBetweenExpressionBody = (value: any, secondValue: any, featureName: string, dataType: string, activeTab: string) => {
@@ -479,4 +477,33 @@ export const removeEnabledFilters = (filters: any, features: readonly IFeature[]
     }
   });
   return updatedFilter;
+};
+
+export const addOptionIntoFilters = (filter, filters, feature) => {
+  if (filters[feature.name] && filters[feature.name].length > 0) {
+    filters[feature.name].push(filter);
+  } else {
+    filters[feature.name] = [];
+    filters[feature.name].push(filter);
+  }
+  filters[feature.name]._meta = {
+    dataType: feature.type,
+    valueType: 'valueType',
+  };
+  return Object.assign({}, filters);
+};
+
+
+export const removeOptionFromFilters = (filter, filters, feature) => {
+  if (filters[feature.name] && filters[feature.name].length === 0) {
+    delete filters[feature.name];
+    return filters;
+  } else {
+    const index = filters[feature.name].findIndex(item => item === filter);
+    if (index > -1) {
+      filters[feature.name].splice(index, 1);
+      if (filters[feature.name].length === 0) delete filters[feature.name];
+    }
+  }
+  return Object.assign({}, filters);
 };

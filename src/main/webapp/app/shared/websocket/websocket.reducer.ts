@@ -8,6 +8,7 @@ export const ACTION_TYPES = {
   SET_VISUAL_ERROR: 'visualData/SET_VISUAL_ERROR',
   SET_CONNECTION_STATUS: 'visualData/SET_CONNECTION_STATUS',
   TOGGLE_LOADER: 'visualData/TOGGLE_LOADER',
+  TOGGLE_LOADING: 'visualData/TOGGLE_LOADING',
 };
 
 const initialState = {
@@ -59,6 +60,12 @@ export default (state: VisualDataState = initialState, action): VisualDataState 
       return {
         ...state,
         isLoaderOn: action.payload,
+        loading: action.payload,
+      };
+    case ACTION_TYPES.TOGGLE_LOADING:
+      return {
+        ...state,
+        loading: action.payload,
       };
     default:
       return state;
@@ -93,6 +100,11 @@ export const setSocketConnection = (status: boolean) => ({
 export const toggleLoader = (isLoaderOn: boolean) => ({
   type: ACTION_TYPES.TOGGLE_LOADER,
   payload: isLoaderOn,
+});
+
+export const toggleLoading = (loading: boolean) => ({
+  type: ACTION_TYPES.TOGGLE_LOADING,
+  payload: loading,
 });
 
 export const receiveSocketResponse = () => dispatch => {
