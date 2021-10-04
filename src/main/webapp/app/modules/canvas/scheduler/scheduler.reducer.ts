@@ -11,6 +11,7 @@ export const ACTION_TYPES = {
   SET_SCHEDULER_REPORT: 'scheduler/SET_SCHEDULER_REPORT',
   FETCH_SCHEDULE_REPORT: 'scheduler/FETCH_SCHEDULE_REPORT',
   EXECUTE_NOW: 'scheduler/EXECUTE_NOW',
+  CANCEL_SCHEDULE_REPORT: 'scheduler/CANCEL_SCHEDULE_REPORT',
 };
 
 const initialState = {
@@ -48,7 +49,7 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
       return {
         ...state,
         loading: false,
-        schedulerReport: action.payload.data.report,
+        schedulerReport: action.payload.data.report ? action.payload.data.report : schedulerReportDefaultValue,
       };
     case SUCCESS(ACTION_TYPES.SCHEDULE_REPORT):
       return {
@@ -60,6 +61,11 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
         ...state,
       };
     case ACTION_TYPES.SET_SCHEDULER_REPORT:
+      return {
+        ...state,
+        schedulerReport: action.payload,
+      };
+    case ACTION_TYPES.CANCEL_SCHEDULE_REPORT:
       return {
         ...state,
         schedulerReport: action.payload,
@@ -106,5 +112,13 @@ export const executeNow = id => {
   return {
     type: ACTION_TYPES.FETCH_SCHEDULE_REPORT,
     payload: axios.get<string>(requestUrl),
+  };
+};
+
+export const cancelScheduleReport = id => {
+  const requestUrl = `${apiUrlSchedule}/${id}`;
+  return {
+    type: ACTION_TYPES.CANCEL_SCHEDULE_REPORT,
+    payload: axios.delete(requestUrl),
   };
 };
