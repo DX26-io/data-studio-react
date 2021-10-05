@@ -70,7 +70,8 @@
     },
     "search": {
       "title": "Search",
-      "search": "Search"
+      "search": "Search",
+      "results":"Results"
     }
   }
 }
