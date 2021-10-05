@@ -17,7 +17,7 @@ import {
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { translate, Translate } from 'react-jhipster';
-import { disconnectSocket, receiveSocketResponse, resetSearch, searchChange, doSearch } from 'app/entities/search/search.reducer';
+import { disconnectSocket, receiveSocketResponse, resetSearch, doSearch } from 'app/entities/search/search.reducer';
 import { forwardCall, searchItemSelected } from 'app/shared/websocket/proxy-websocket.service';
 import Search from '@spectrum-icons/workflow/Search';
 import { getEntity as getVisualmetadataEntity, setVisual } from 'app/entities/visualmetadata/visualmetadata.reducer';
@@ -36,7 +36,7 @@ export interface ISearchModalProps extends StateProps, DispatchProps {
 }
 
 const SearchModal = (props: ISearchModalProps) => {
-  // const [searchCursorPos, setSearchCursorPos] = useState<number>();
+  const [searchText, setSearchText] = useState<string>('');
 
   // const onSearchSelect = event => {
   //   setSearchCursorPos(event.target.selectionStart);
@@ -62,15 +62,15 @@ const SearchModal = (props: ISearchModalProps) => {
   };
 
   const onSearchPressed = () => {
-    props.doSearch(props.viewId, props.searchText);
+    props.doSearch(props.viewId, searchText);
   };
 
   const onSearchTextChange = value => {
-    props.searchChange(props.viewId, value);
+    setSearchText(value);
   };
 
   useEffect(() => {
-    if (props.searchedResults && props.searchStructRequest && props.searchStruct) {
+    if (props.searchStructRequest && props.searchStruct) {
       const queryDTO = convertSearchStructToQueryDTO(props.searchStruct);
       const filters = convertSearchStructToFilters(props.features, props.searchStruct.where.conditions);
       queryDTO['conditionExpressions'] = [getConditionExpression(filters)];
@@ -126,13 +126,12 @@ const SearchModal = (props: ISearchModalProps) => {
             <Flex alignItems={'center'} direction="column" gap="size-100">
               <Flex alignItems={'center'} direction="row" width="100%" alignContent="end">
                 <TextArea
-                  // onSelect={onSearchSelect}
                   width="100%"
                   labelPosition="side"
                   labelAlign="end"
                   marginX={'size-100'}
                   label={translate('views.search.search')}
-                  value={props.searchText}
+                  value={searchText}
                   onChange={onSearchTextChange}
                 />
                 <ActionButton onPress={onSearchPressed} aria-label="{translate('views.menu.search')}" isQuiet>
@@ -210,7 +209,6 @@ const SearchModal = (props: ISearchModalProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   autoSuggestion: storeState.search.autoSuggestion,
   searchText: storeState.search.searchText,
-  searchedResults: storeState.search.searchedResults,
   searchStruct: storeState.search.searchStruct,
   searchStructRequest: storeState.search.searchStructRequest,
   visualmetadataEntity: storeState.visualmetadata.entity,
@@ -225,7 +223,6 @@ const mapDispatchToProps = {
   resetSearch,
   receiveSocketResponse,
   disconnectSocket,
-  searchChange,
   doSearch,
   setVisual,
   getVisualmetadataEntity,

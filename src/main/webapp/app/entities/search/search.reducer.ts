@@ -3,12 +3,10 @@ import { getToken } from 'app/shared/reducers/authentication';
 import { SearchAutoSuggestion, SearchResult } from 'app/entities/search/search.model';
 import { searchCall } from 'app/shared/websocket/proxy-websocket.service';
 
-
 export const ACTION_TYPES = {
   RESET: 'search/RESET',
   TOGGLE_SEARCH_MODAL: 'search/TOGGLE_SEARCH_MODAL',
   SET_SEARCH_RESPONSE: 'search/SET_SEARCH_RESPONSE',
-  SET_SEARCH_TEXT: 'search/SET_SEARCH_TEXT',
   DO_SEARCH: 'search/DO_SEARCH',
   SET_SEARCH_ITEM_SELECTED_RESPONSE: 'search/SET_SEARCH_ITEM_SELECTED_RESPONSE',
   SET_SEARCH_ERROR: 'search/SET_SEARCH_ERROR',
@@ -18,10 +16,9 @@ const initialState = {
   isSearchOpen: false,
   searchError: null as string,
   searchText: '' as string,
-  searchedResults: false,
   autoSuggestion: [] as ReadonlyArray<SearchAutoSuggestion>,
   searchStruct: null as SearchResult,
-  searchStructRequest:false
+  searchStructRequest: false,
 };
 
 export type SearchState = Readonly<typeof initialState>;
@@ -51,7 +48,7 @@ export default (state: SearchState = initialState, action): SearchState => {
         searchError: null,
         autoSuggestion: action.payload.autoSuggestion,
         searchStruct: action.payload.searchStruct,
-        searchStructRequest:true,
+        searchStructRequest: true,
       };
     case ACTION_TYPES.SET_SEARCH_ITEM_SELECTED_RESPONSE:
       return {
@@ -60,21 +57,14 @@ export default (state: SearchState = initialState, action): SearchState => {
         searchText: action.payload.text,
         autoSuggestion: action.payload.autoSuggestion,
         searchStruct: action.payload.searchStruct,
-        searchStructRequest:true,
-      };
-    case ACTION_TYPES.SET_SEARCH_TEXT:
-      return {
-        ...state,
-        searchedResults: false,
-        searchText: action.payload.text,
+        searchStructRequest: true,
       };
     case ACTION_TYPES.DO_SEARCH:
       return {
         ...state,
-        searchedResults: true,
-        searchStructRequest:false
+        searchStructRequest: false,
       };
-    
+
     default:
       return state;
   }
@@ -101,14 +91,6 @@ export const setSearchItemSelectedResponse = (data: any) => ({
   type: ACTION_TYPES.SET_SEARCH_ITEM_SELECTED_RESPONSE,
   payload: data,
 });
-
-export const searchChange: (viewId: string, text: string) => void = (viewId, text) => dispatch => {
-  searchCall(viewId, { text });
-  dispatch({
-    type: ACTION_TYPES.SET_SEARCH_TEXT,
-    payload: { text },
-  });
-};
 
 export const doSearch: (viewId: string, text: any) => void = (viewId, text) => dispatch => {
   searchCall(viewId, { text });

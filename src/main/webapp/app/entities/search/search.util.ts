@@ -325,7 +325,7 @@ export const buildQueryDTO = queryText => {
     .filter(f => !!f.trim());
 };
 
-export const findFeature = (featureName,features) => {
+export const findFeature = (featureName, features) => {
   const _feature = features.filter(f => f.name === featureName);
   return _feature[0];
 };
@@ -355,12 +355,23 @@ export const convertSearchStructToQueryDTO = searchStruct => {
   const fields = groupBy.concat(aggregations);
   let orders = null;
   if (searchStruct.orderBy) {
-    orders = [{
-      direction: searchStruct.orderBy.direction,
-      feature: {
-        name: searchStruct.orderBy.feature,
+    orders = [
+      {
+        direction: searchStruct.orderBy.direction,
+        feature: {
+          name: searchStruct.orderBy.feature,
+        },
       },
-    }];
+    ];
+  } else {
+    orders = [
+      {
+        direction: 'DESC',
+        feature: {
+          name: groupBy[0].name,
+        },
+      },
+    ];
   }
   return { fields, groupBy, orders };
 };
@@ -369,12 +380,12 @@ export const convertSearchStructToFilters = (features, conditions) => {
   let filters = {};
   conditions.map(function (con) {
     const feature = findFeature(con.feature, features);
-    con.statements.map(function(st){
-      if(feature.type==='varchar' || feature.type==='string'){
-        st = st.replace(/["']/g, "");
+    con.statements.map(function (st) {
+      if (feature.type === 'varchar' || feature.type === 'string') {
+        st = st.replace(/["']/g, '');
       }
       filters = addOptionIntoFilters(st, filters, feature);
-    })
+    });
   });
   return filters;
 };
