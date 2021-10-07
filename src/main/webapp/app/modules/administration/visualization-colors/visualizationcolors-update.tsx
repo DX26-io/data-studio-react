@@ -55,7 +55,6 @@ const VisualizationcolorsUpdate = (props: IVisualizationcolorsUpdateProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  visualizationColorsEntity: storeState.visualizationColors.entity,
 });
 
 const mapDispatchToProps = {
