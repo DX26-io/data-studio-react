@@ -18,21 +18,17 @@ import { Button } from "@react-spectrum/button";
 import { getTransactionData } from "../visualisation/util/visualisation-utils";
 import { CSVLink } from 'react-csv';
 
-export interface IExportVisualizationProps extends  StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
+export interface IExportVisualizationProps extends StateProps, DispatchProps, RouteComponentProps<{ visualizationId: string, viewId: string }> { }
 
 const ExportVisualization = (props: IExportVisualizationProps) => {
 
     const [transactionData, setTransactionData] = useState([]);
     const csvLink = useRef(null);
-    const params = new URLSearchParams(props.location.search);
 
     useEffect(() => {
-        const viewId = params.get('viewId');
-        const visualizationId = params.get('visualizationId');
-
-        if (visualizationId) {
-            props.getVisualmetadataEntity(visualizationId);
-            props.getViewEntity(Number(viewId));
+        if (props.match.params.visualizationId) {
+            props.getVisualmetadataEntity(props.match.params.visualizationId);
+            props.getViewEntity(Number(props.match.params.viewId));
         }
     }, []);
 
@@ -101,3 +97,5 @@ type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExportVisualization)
+
+
