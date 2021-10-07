@@ -24,9 +24,9 @@ import { getEntity as getVisualmetadataEntity, setVisual } from 'app/entities/vi
 import { getEntity as getFeatureEntity } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 import { convertSearchStructToQueryDTO, convertSearchStructToFilters } from './search.util';
-import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
+import { getConditionExpression } from './search.util';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
-import { toggleLoading } from 'app/shared/websocket/websocket.reducer';
+import { toggleLoading,setFilterData } from 'app/shared/websocket/websocket.reducer';
 
 // TODO: let the code commented as it will be used in future
 
@@ -54,6 +54,7 @@ const SearchModal = (props: ISearchModalProps) => {
   useEffect(() => {
     props.receiveSocketResponse();
     props.disconnectSocket;
+    props.setFilterData(null);
   }, []);
 
   const handleClose = () => {
@@ -229,6 +230,7 @@ const mapDispatchToProps = {
   getViewEntity,
   getFeatureEntity,
   toggleLoading,
+  setFilterData
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
