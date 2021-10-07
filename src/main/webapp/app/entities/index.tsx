@@ -6,7 +6,7 @@ import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 
 import Dashboard from './dashboard';
 import Views from './views';
-import Visualizations from './visualizations';
+import visualisations from './visualisations';
 
 import Visualmetadata from './visualmetadata';
 import ReportsManagement from "./reports-management";
@@ -18,7 +18,7 @@ const Routes = ({ match }) => (
       {/* prettier-ignore */}
       <ErrorBoundaryRoute path={`${match.url}dashboards`} component={Dashboard} />
       <ErrorBoundaryRoute path={`${match.url}views`} component={Views} />
-      <ErrorBoundaryRoute exact path={`${match.url}visualizations`} component={Visualizations} />
+      <ErrorBoundaryRoute exact path={`${match.url}visualisations`} component={visualisations} />
 
       <ErrorBoundaryRoute path={`${match.url}visualmetadata`} component={Visualmetadata} />
       <ErrorBoundaryRoute path={`${match.url}reports-management`} component={ReportsManagement} />

@@ -1,4 +1,4 @@
-import { Color, DataTypeEnum, PropertyType } from '../util/visualization.constants';
+import { Color, DataTypeEnum, PropertyType } from '../util/visualisation.constants';
 import { ValueElement } from './value-element.model';
 
 export interface PropertyTypePropertyType {

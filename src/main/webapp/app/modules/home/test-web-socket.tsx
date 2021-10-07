@@ -36,7 +36,7 @@ export const TestWebSocket = (props: ITestWebSocketProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  visualData : storeState.visualizationData.visualData
+  visualData : storeState.visualisationData.visualData
 });
 
 const mapDispatchToProps = { receiveSocketResponse };

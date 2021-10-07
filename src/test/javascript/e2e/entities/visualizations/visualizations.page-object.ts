@@ -4,13 +4,13 @@ import { waitUntilAnyDisplayed, waitUntilDisplayed, click, waitUntilHidden, isVi
 
 import NavBarPage from './../../page-objects/navbar-page';
 
-import VisualizationsUpdatePage from './visualizations-update.page-object';
+import VisualisationsUpdatePage from './visualizations-update.page-object';
 
 const expect = chai.expect;
-export class VisualizationsDeleteDialog {
+export class VisualisationsDeleteDialog {
   deleteModal = element(by.className('modal'));
-  private dialogTitle: ElementFinder = element(by.id('datastudioApp.visualizations.delete.question'));
-  private confirmButton = element(by.id('jhi-confirm-delete-visualizations'));
+  private dialogTitle: ElementFinder = element(by.id('datastudioApp.visualisations.delete.question'));
+  private confirmButton = element(by.id('jhi-confirm-delete-visualisations'));
 
   getDialogTitle() {
     return this.dialogTitle;
@@ -21,10 +21,10 @@ export class VisualizationsDeleteDialog {
   }
 }
 
-export default class VisualizationsComponentsPage {
+export default class VisualisationsComponentsPage {
   createButton: ElementFinder = element(by.id('jh-create-entity'));
   deleteButtons = element.all(by.css('div table .btn-danger'));
-  title: ElementFinder = element(by.id('visualizations-heading'));
+  title: ElementFinder = element(by.id('visualisations-heading'));
   noRecords: ElementFinder = element(by.css('#app-view-container .table-responsive div.alert.alert-warning'));
   table: ElementFinder = element(by.css('#app-view-container div.table-responsive > table'));
 
@@ -43,27 +43,27 @@ export default class VisualizationsComponentsPage {
   }
 
   async goToPage(navBarPage: NavBarPage) {
-    await navBarPage.getEntityPage('visualizations');
+    await navBarPage.getEntityPage('visualisations');
     await waitUntilAnyDisplayed([this.noRecords, this.table]);
     return this;
   }
 
-  async goToCreateVisualizations() {
+  async goToCreatevisualisations() {
     await this.createButton.click();
-    return new VisualizationsUpdatePage();
+    return new VisualisationsUpdatePage();
   }
 
-  async deleteVisualizations() {
+  async deleteVisualisations() {
     const deleteButton = this.getDeleteButton(this.records.last());
     await click(deleteButton);
 
-    const visualizationsDeleteDialog = new VisualizationsDeleteDialog();
-    await waitUntilDisplayed(visualizationsDeleteDialog.deleteModal);
-    expect(await visualizationsDeleteDialog.getDialogTitle().getAttribute('id')).to.match(/datastudioApp.visualizations.delete.question/);
-    await visualizationsDeleteDialog.clickOnConfirmButton();
+    const visualisationsDeleteDialog = new VisualisationsDeleteDialog();
+    await waitUntilDisplayed(visualisationsDeleteDialog.deleteModal);
+    expect(await visualisationsDeleteDialog.getDialogTitle().getAttribute('id')).to.match(/datastudioApp.visualisations.delete.question/);
+    await visualisationsDeleteDialog.clickOnConfirmButton();
 
-    await waitUntilHidden(visualizationsDeleteDialog.deleteModal);
+    await waitUntilHidden(visualisationsDeleteDialog.deleteModal);
 
-    expect(await isVisible(visualizationsDeleteDialog.deleteModal)).to.be.false;
+    expect(await isVisible(visualisationsDeleteDialog.deleteModal)).to.be.false;
   }
 }

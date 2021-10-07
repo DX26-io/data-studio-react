@@ -4,88 +4,116 @@ import {
   Button,
   ButtonGroup,
   Content,
-  useDialogContainer,
   Dialog,
-  DialogContainer,
   Divider,
   Flex,
   Form,
   Heading,
-  Item,
-  ListBox,
   TextArea,
   View,
+  ProgressBar,
+  Text,
 } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { translate, Translate } from 'react-jhipster';
-import { RouteComponentProps } from 'react-router-dom';
-import { disconnectSocket, receiveSocketResponse, resetSearch, searchChange, doSearch } from 'app/entities/search/search.reducer';
-import { forwardCall, searchCall, searchItemSelected } from 'app/shared/websocket/proxy-websocket.service';
+import { disconnectSocket, receiveSocketResponse, resetSearch, doSearch } from 'app/entities/search/search.reducer';
+import { forwardCall, searchItemSelected } from 'app/shared/websocket/proxy-websocket.service';
 import Search from '@spectrum-icons/workflow/Search';
-import {
-  getEntity as getVisualmetadataEntity,
-  setVisual,
-  updateEntity as updateVisualmetadataEntity,
-} from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { getEntity as getVisualmetadataEntity, setVisual } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getEntity as getFeatureEntity } from 'app/entities/feature/feature.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
-import { getQueryDTO } from './search.util';
+import { convertSearchStructToQueryDTO, convertSearchStructToFilters } from './search.util';
+import { getConditionExpression } from './search.util';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
+import { toggleLoading,setFilterData } from 'app/shared/websocket/websocket.reducer';
+
+// TODO: let the code commented as it will be used in future
+
 export interface ISearchModalProps extends StateProps, DispatchProps {
   setOpen: (boolean) => void;
   viewId: string;
 }
 
 const SearchModal = (props: ISearchModalProps) => {
-  const [searchCursorPos, setSearchCursorPos] = useState<number>();
+  const [searchText, setSearchText] = useState<string>('');
+
+  // const onSearchSelect = event => {
+  //   setSearchCursorPos(event.target.selectionStart);
+  // };
+
+  // const onAutoSuggestionItemChange = selectedSet => {
+  //   const item = props.autoSuggestion.find(ft => selectedSet.has(ft.text));
+  //   if (item) {
+  //     searchItemSelected(props.viewId, { text: props.searchText, item: item.text, cursor: searchCursorPos });
+  //   }
+  // };
+
+  const handleSearchClick = () => {};
 
   useEffect(() => {
     props.receiveSocketResponse();
     props.disconnectSocket;
+    props.setFilterData(null);
   }, []);
-  
-    const handleClose = () => {
-      props.resetSearch();
-      props.setOpen(false)
-    };
 
-  const handleSearchClick = () => { };
-
-  const findTableVisualization = visualizations => {
-    return visualizations.find(item => {
-      return item.name === 'Table';
-    });
+  const handleClose = () => {
+    props.resetSearch();
+    props.setOpen(false);
   };
 
   const onSearchPressed = () => {
-    const queryDTO = getQueryDTO(props.searchText, props.features, props.view, findTableVisualization(props.visualizations));
-    props.doSearch(props.viewId, queryDTO);
-  };
-
-  const onSearchSelect = event => {
-    setSearchCursorPos(event.target.selectionStart);
+    props.doSearch(props.viewId, searchText);
   };
 
   const onSearchTextChange = value => {
-    props.searchChange(props.viewId, value);
+    setSearchText(value);
   };
 
-  const onAutoSuggestionItemChange = selectedSet => {
-    const item = props.autoSuggestion.find(ft => selectedSet.has(ft.text));
-    if (item) {
-      searchItemSelected(props.viewId, { text: props.searchText, item: item.text, cursor: searchCursorPos });
+  useEffect(() => {
+    if (props.searchStructRequest && props.searchStruct) {
+      const queryDTO = convertSearchStructToQueryDTO(props.searchStruct);
+      const filters = convertSearchStructToFilters(props.features, props.searchStruct.where.conditions);
+      queryDTO['conditionExpressions'] = [getConditionExpression(filters)];
+      queryDTO['limit'] = 20;
+      props.toggleLoading(true);
+      forwardCall(
+        props.datasourceId,
+        {
+          queryDTO,
+          type: 'filters',
+          viewId: props.viewId,
+        },
+        props.viewId
+      );
     }
+  }, [props.searchStructRequest]);
+
+  const generateTableHead = () => {
+    const cells = props.filterData
+      ? Object.keys(props.filterData[0]).map(function (key) {
+          return (
+            <TableCell align="center" key={key}>
+              {key}
+            </TableCell>
+          );
+        })
+      : null;
+    return cells;
   };
 
-  const rendering = props.searchedResults ? (
-    <Flex direction="row" height="size-600" gap="size-75">
-      <Flex direction="column" height="100%" flex gap="size-75">
-        <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="100%">
-          <div style={{ height: '100%' }} id={`visualization-edit-${props.visualmetadataEntity.id}`} className="visualization"></div>
-        </View>
-      </Flex>
-    </Flex>
-  ) : null;
+  const generateTableBody = row => {
+    const cells = row
+      ? Object.keys(row).map(function (key) {
+          return (
+            <TableCell align="center" key={key}>
+              {row[key]}
+            </TableCell>
+          );
+        })
+      : null;
+    return cells;
+  };
 
   return (
     <>
@@ -99,33 +127,69 @@ const SearchModal = (props: ISearchModalProps) => {
             <Flex alignItems={'center'} direction="column" gap="size-100">
               <Flex alignItems={'center'} direction="row" width="100%" alignContent="end">
                 <TextArea
-                  onSelect={onSearchSelect}
                   width="100%"
                   labelPosition="side"
                   labelAlign="end"
                   marginX={'size-100'}
                   label={translate('views.search.search')}
-                  value={props.searchText}
+                  value={searchText}
                   onChange={onSearchTextChange}
                 />
-                <ActionButton onPress={() => onSearchPressed} aria-label="{translate('views.menu.search')}">
+                <ActionButton onPress={onSearchPressed} aria-label="{translate('views.menu.search')}" isQuiet>
                   <Search size="M" />
                 </ActionButton>
               </Flex>
-              {rendering}
-              <ListBox
+              {/* {rendering} */}
+              {/* <ListBox
                 aria-label="Auto-suggestions"
                 selectionMode="single"
                 onSelectionChange={onAutoSuggestionItemChange}
                 items={props.autoSuggestion}
               >
                 {item => <Item key={item.text}>{item.text}</Item>}
-              </ListBox>
+              </ListBox> */}
             </Flex>
           </Form>
+          {props.loading ? (
+            <View marginTop="size-125">
+              <Flex direction="column" gap="size-125" marginTop="size-250">
+                <ProgressBar label="Loading…" isIndeterminate />
+              </Flex>
+            </View>
+          ) : (
+            <React.Fragment>
+              {props.filterData && props.filterData.length > 0 ? (
+                <View marginTop="size-125">
+                  <Flex direction="column" gap="size-125">
+                    <Text>
+                      <Translate contentKey="views.search.results">Results</Translate>
+                    </Text>
+                    <Divider size="M" />
+                  </Flex>
+                </View>
+              ) : null}
+              <View marginTop="size-250">
+                <div className="dx26-container">
+                  <Paper className="dx26-table-pager">
+                    <TableContainer>
+                      <Table aria-label="customized table">
+                        <TableHead>
+                          <TableRow>{generateTableHead()}</TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {props.filterData &&
+                            props.filterData.map((row, i) => <TableRow key={`row-${i}`}>{generateTableBody(row)}</TableRow>)}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Paper>
+                </div>
+              </View>
+            </React.Fragment>
+          )}
         </Content>
         <ButtonGroup>
-          <Button variant="secondary" onPress={handleClose} isQuiet={true}>
+          <Button variant="primary" onPress={handleClose}>
             <Translate contentKey="entity.action.cancel">_Cancel</Translate>
           </Button>
           <Button onPress={handleSearchClick} variant="primary">
@@ -146,25 +210,27 @@ const SearchModal = (props: ISearchModalProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   autoSuggestion: storeState.search.autoSuggestion,
   searchText: storeState.search.searchText,
-  searchedResults: storeState.search.searchedResults,
   searchStruct: storeState.search.searchStruct,
+  searchStructRequest: storeState.search.searchStructRequest,
   visualmetadataEntity: storeState.visualmetadata.entity,
   features: storeState.feature.entities,
-  visualizations: storeState.visualizations.entities,
-
-  view: storeState.views.entity,
+  visualizations: storeState.visualisations.entities,
+  datasourceId: storeState.views.entity?.viewDashboard?.dashboardDatasource?.id,
+  filterData: storeState.visualisationData.filterData?.body,
+  loading: storeState.visualisationData.loading,
 });
 
 const mapDispatchToProps = {
   resetSearch,
   receiveSocketResponse,
   disconnectSocket,
-  searchChange,
   doSearch,
   setVisual,
   getVisualmetadataEntity,
   getViewEntity,
   getFeatureEntity,
+  toggleLoading,
+  setFilterData
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

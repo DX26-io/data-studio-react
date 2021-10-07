@@ -11,10 +11,10 @@ import {
   visualMetadataContainerAdd,
   visualMetadataContainerRemove,
   visualMetadataContainerUpdate,
-} from 'app/modules/canvas/visualization/util/visualmetadata-container.util';
-import { getVisualizationData, ValidateFields } from 'app/modules/canvas/visualization/util/visualization-render-utils';
+} from 'app/modules/canvas/visualisation/util/visualmetadata-container.util';
+import { getVisualisationData, ValidateFields } from 'app/modules/canvas/visualisation/util/visualisation-render-utils';
 import { ICrudPutActionVisual } from './visualmetadata-util';
-import { DIMENSION } from 'app/shared/util/visualization.constants';
+import { DIMENSION } from 'app/shared/util/visualisation.constants';
 
 const addVisualField = (visual: IVisualMetadataSet, field) => {
   visual.fields.push(field);
@@ -408,5 +408,13 @@ export const alternateDimension = (data: any) => {
       item.feature.name = data.featureName;
     }
   });
-  getVisualizationData(visual, data.view, data.filter);
+  getVisualisationData(visual, data.view, data.filter);
+};
+
+export const visualisationTablePagination = data => {
+  const visual = data.visualmetadata.visualMetadataSet.find(item => {
+    return item.id === data.visualizationId;
+  });
+
+  getVisualisationData(visual, data.view, data.filter, data.activePageNo);
 };

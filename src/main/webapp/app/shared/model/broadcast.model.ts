@@ -6,6 +6,9 @@ export interface IBroadcast {
   saveSelectedFilter: {};
   applyFilter: {};
   alternateDimension: {};
+  pagination: {};
+  tableActivePage: number;
   visualmetadata: IVisualMetadata;
   view: IViews;
+  setTableActivePage: {};
 }

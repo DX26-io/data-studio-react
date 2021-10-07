@@ -25,8 +25,8 @@ export const EntitiesMenu = props => (
     <MenuItem icon="asterisk" to="/feature">
       <Translate contentKey="global.menu.entities.feature" />
     </MenuItem>
-    <MenuItem icon="asterisk" to="/visualizations">
-      <Translate contentKey="global.menu.entities.visualizations" />
+    <MenuItem icon="asterisk" to="/visualisations">
+      <Translate contentKey="global.menu.entities.visualisations" />
     </MenuItem>
     <MenuItem icon="asterisk" to="/visualmetadata">
       <Translate contentKey="global.menu.entities.visualmetadata" />

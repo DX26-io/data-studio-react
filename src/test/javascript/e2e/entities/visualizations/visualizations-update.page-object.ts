@@ -3,12 +3,12 @@ import { waitUntilDisplayed, waitUntilHidden, isVisible } from '../../util/utils
 
 const expect = chai.expect;
 
-export default class VisualizationsUpdatePage {
-  pageTitle: ElementFinder = element(by.id('datastudioApp.visualizations.home.createOrEditLabel'));
+export default class VisualisationsUpdatePage {
+  pageTitle: ElementFinder = element(by.id('datastudioApp.visualisations.home.createOrEditLabel'));
   saveButton: ElementFinder = element(by.id('save-entity'));
   cancelButton: ElementFinder = element(by.id('cancel-save'));
-  nameInput: ElementFinder = element(by.css('input#visualizations-name'));
-  functionnameInput: ElementFinder = element(by.css('input#visualizations-functionname'));
+  nameInput: ElementFinder = element(by.css('input#visualisations-name'));
+  functionnameInput: ElementFinder = element(by.css('input#visualisations-functionname'));
 
   getPageTitle() {
     return this.pageTitle;

@@ -28,7 +28,7 @@ const Admin = Loadable({
 });
 
 const Canvas = Loadable({
-  loader: () => import(/* webpackChunkName: "Dx26" */ 'app/modules/canvas/visualization'),
+  loader: () => import(/* webpackChunkName: "Dx26" */ 'app/modules/canvas/visualisation'),
   loading: () => <div>loading ...</div>,
 });
 

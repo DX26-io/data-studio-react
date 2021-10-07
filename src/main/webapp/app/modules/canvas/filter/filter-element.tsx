@@ -6,7 +6,7 @@ import { IFeature } from 'app/shared/model/feature.model';
 import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from '../data-constraints/utils/date-util';
-import { checkIsDateType } from '../visualization/util/visualization-utils';
+import { checkIsDateType } from '../visualisation/util/visualisation-utils';
 import { saveDynamicDateRangeMetaData, saveSelectedFilter } from './filter.reducer';
 import { getPin, load, generateFilterOptions } from './filter-util';
 import Select from 'react-select';
@@ -137,7 +137,7 @@ const FilterElement = (props: IFilterElementProp) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
-  filterSelectOptions: generateFilterOptions(storeState.visualizationData.filterData),
+  filterSelectOptions: generateFilterOptions(storeState.visualisationData.filterData),
   selectedFilters: storeState.filter.selectedFilters,
 });
 const mapDispatchToProps = {

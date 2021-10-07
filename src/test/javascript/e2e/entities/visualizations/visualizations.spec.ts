@@ -2,8 +2,8 @@ import { browser, element, by } from 'protractor';
 
 import NavBarPage from './../../page-objects/navbar-page';
 import SignInPage from './../../page-objects/signin-page';
-import VisualizationsComponentsPage from './visualizations.page-object';
-import VisualizationsUpdatePage from './visualizations-update.page-object';
+import VisualisationsComponentsPage from './visualizations.page-object';
+import VisualisationsUpdatePage from './visualizations-update.page-object';
 import {
   waitUntilDisplayed,
   waitUntilAnyDisplayed,
@@ -16,11 +16,11 @@ import {
 
 const expect = chai.expect;
 
-describe('Visualizations e2e test', () => {
+describe('Visualisations e2e test', () => {
   let navBarPage: NavBarPage;
   let signInPage: SignInPage;
-  let visualizationsComponentsPage: VisualizationsComponentsPage;
-  let visualizationsUpdatePage: VisualizationsUpdatePage;
+  let visualisationsComponentsPage: VisualisationsComponentsPage;
+  let visualisationsUpdatePage: VisualisationsUpdatePage;
 
   before(async () => {
     await browser.get('/');
@@ -40,33 +40,33 @@ describe('Visualizations e2e test', () => {
   beforeEach(async () => {
     await browser.get('/');
     await waitUntilDisplayed(navBarPage.entityMenu);
-    visualizationsComponentsPage = new VisualizationsComponentsPage();
-    visualizationsComponentsPage = await visualizationsComponentsPage.goToPage(navBarPage);
+    visualisationsComponentsPage = new VisualisationsComponentsPage();
+    visualisationsComponentsPage = await visualisationsComponentsPage.goToPage(navBarPage);
   });
 
-  it('should load Visualizations', async () => {
-    expect(await visualizationsComponentsPage.title.getText()).to.match(/Visualizations/);
-    expect(await visualizationsComponentsPage.createButton.isEnabled()).to.be.true;
+  it('should load visualisations', async () => {
+    expect(await visualisationsComponentsPage.title.getText()).to.match(/visualisations/);
+    expect(await visualisationsComponentsPage.createButton.isEnabled()).to.be.true;
   });
 
-  it('should create and delete Visualizations', async () => {
-    const beforeRecordsCount = (await isVisible(visualizationsComponentsPage.noRecords))
+  it('should create and delete visualisations', async () => {
+    const beforeRecordsCount = (await isVisible(visualisationsComponentsPage.noRecords))
       ? 0
-      : await getRecordsCount(visualizationsComponentsPage.table);
-    visualizationsUpdatePage = await visualizationsComponentsPage.goToCreateVisualizations();
-    await visualizationsUpdatePage.enterData();
+      : await getRecordsCount(visualisationsComponentsPage.table);
+    visualisationsUpdatePage = await visualisationsComponentsPage.goToCreatevisualisations();
+    await visualisationsUpdatePage.enterData();
 
-    expect(await visualizationsComponentsPage.createButton.isEnabled()).to.be.true;
-    await waitUntilDisplayed(visualizationsComponentsPage.table);
-    await waitUntilCount(visualizationsComponentsPage.records, beforeRecordsCount + 1);
-    expect(await visualizationsComponentsPage.records.count()).to.eq(beforeRecordsCount + 1);
+    expect(await visualisationsComponentsPage.createButton.isEnabled()).to.be.true;
+    await waitUntilDisplayed(visualisationsComponentsPage.table);
+    await waitUntilCount(visualisationsComponentsPage.records, beforeRecordsCount + 1);
+    expect(await visualisationsComponentsPage.records.count()).to.eq(beforeRecordsCount + 1);
 
-    await visualizationsComponentsPage.deleteVisualizations();
+    await visualisationsComponentsPage.deleteVisualisations();
     if (beforeRecordsCount !== 0) {
-      await waitUntilCount(visualizationsComponentsPage.records, beforeRecordsCount);
-      expect(await visualizationsComponentsPage.records.count()).to.eq(beforeRecordsCount);
+      await waitUntilCount(visualisationsComponentsPage.records, beforeRecordsCount);
+      expect(await visualisationsComponentsPage.records.count()).to.eq(beforeRecordsCount);
     } else {
-      await waitUntilDisplayed(visualizationsComponentsPage.noRecords);
+      await waitUntilDisplayed(visualisationsComponentsPage.noRecords);
     }
   });
 
