@@ -4,7 +4,6 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Col, Row, Table } from 'reactstrap';
 import { Translate, ICrudGetAllAction, translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import { IRootState } from 'app/shared/reducers';
 import { getEntities, setVisualizationColor, deleteEntity } from './visualizationcolors.reducer';
 import { IVisualizationcolors } from 'app/shared/model/visualizationcolors.model';
@@ -13,7 +12,6 @@ import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header
 import { DialogContainer, Flex, Button, ActionButton } from '@adobe/react-spectrum';
 import { colors, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import Edit from '@spectrum-icons/workflow/Edit';
-import './visualizationcolors.scss'
 import VisualizationcolorsUpdate from './visualizationcolors-update';
 import VisualizationcolorsDelete from './visualizationcolors-delete'
 import Delete from '@spectrum-icons/workflow/Delete';
