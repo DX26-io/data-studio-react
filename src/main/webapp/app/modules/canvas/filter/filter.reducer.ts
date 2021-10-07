@@ -1,6 +1,7 @@
 import { getVisualisationData, getVisualisationShareData, ValidateFields } from '../visualisation/util/visualisation-render-utils';
 import { IViews } from 'app/shared/model/views.model';
 import { toggleLoader } from 'app/shared/websocket/websocket.reducer';
+import { addOptionIntoFilters, removeOptionFromFilters } from './filter-util';
 
 export const ACTION_TYPES = {
   TOGGLE_FILTER_PANEL: 'filter/TOGGLE_FILTER_PANEL',
@@ -19,38 +20,9 @@ const initialState = {
   dynamicDateRangeMetaData: {},
 };
 
-const addOptionIntoFilters = (filter, filters, feature) => {
-  // const filters = filters[feature.name] ? filters[feature.name.toLowerCase()] : filters[feature.name];
-  if (filters[feature.name] && filters[feature.name].length > 0) {
-    filters[feature.name].push(filter);
-  } else {
-    filters[feature.name] = [];
-    filters[feature.name].push(filter);
-  }
-  filters[feature.name]._meta = {
-    dataType: feature.type,
-    valueType: 'valueType',
-  };
-  return Object.assign({}, filters);
-};
-
 const saveDateRangeData = (dynamicDateRangeMetaData: any, dimensionName: string, metaData: any) => {
   dynamicDateRangeMetaData[dimensionName] = metaData;
   return dynamicDateRangeMetaData;
-};
-
-export const removeOptionFromFilters = (filter, filters, feature) => {
-  if (filters[feature.name] && filters[feature.name].length === 0) {
-    delete filters[feature.name];
-    return filters;
-  } else {
-    const index = filters[feature.name].findIndex(item => item === filter);
-    if (index > -1) {
-      filters[feature.name].splice(index, 1);
-      if (filters[feature.name].length === 0) delete filters[feature.name];
-    }
-  }
-  return Object.assign({}, filters);
 };
 
 export const removeDateRangeFilters = (filters, feature) => {

@@ -196,7 +196,7 @@ const CanvasHeader = props => {
         </DialogContainer>
         <DialogContainer type="fullscreen" onDismiss={() => setIsSearchModelOpen(false)}>
           {isSearchModelOpen && (
-            <SearchModal viewId={props.view.id} setOpen={() => setIsSearchModelOpen} />
+            <SearchModal viewId={props.view.id} setOpen={setIsSearchModelOpen} />
           )}
         </DialogContainer>
       </View>
