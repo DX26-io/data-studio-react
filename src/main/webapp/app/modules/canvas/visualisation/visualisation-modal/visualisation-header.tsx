@@ -44,6 +44,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
   const [action, setMenuAction] = useState('')
 
 
+
   const csvLink = useRef(null);
   const { handleVisualisationClick } = props;
   const createFields = newVM => {
@@ -172,7 +173,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
       getAction() {
         setMenuAction('Export')
         getTransactionData(props.visual.data, csvLink, setTransactionData);
-        window.open('/dashboards/view/' + props.view.id + '/export/' + props.visual.id, "_blank");
+        window.open(`export-visualisation?viewId=${props.view.id}&visualizationId=${props.visual.id}`);
       },
     },
     '8': {
@@ -316,7 +317,6 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
                 history={null}
                 location={null} />
             )}
-
             <DialogContainer type={action === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => setMenuAction(null)}>
               {action === 'Edit' && (
                 <VisualisationEditModal

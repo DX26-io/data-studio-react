@@ -15,6 +15,7 @@ import { AUTHORITIES } from 'app/config/constants';
 import Login from 'app/modules/login/login';
 import Signup from "app/modules/signup/signup";
 import Realm from "app/modules/realm/realm";
+import exportVisualization from './modules/canvas/export/export-visualization';
 
 const Account = Loadable({
   loader: () => import(/* webpackChunkName: "account" */ 'app/modules/account'),
@@ -42,6 +43,7 @@ const Routes = () => (
       <ErrorBoundaryRoute path="/account/activate/:key?" component={Activate} />
       <ErrorBoundaryRoute path="/account/reset/request" component={PasswordResetInit} />
       <ErrorBoundaryRoute path="/account/reset/finish/:key?" component={PasswordResetFinish} />
+      <ErrorBoundaryRoute exact path={`/export-visualisation`} component={exportVisualization} />
       <ErrorBoundaryRoute path="/canvas" component={Canvas} />
 
       <PrivateRoute path="/administration" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN]} />

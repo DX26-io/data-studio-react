@@ -11,6 +11,7 @@ import Data from '@spectrum-icons/workflow/Data';
 import FileGear from '@spectrum-icons/workflow/FileGear';
 import DataUser from '@spectrum-icons/workflow/DataUser';
 import AssetsPublished from '@spectrum-icons/workflow/AssetsPublished';
+import ColorPalette from '@spectrum-icons/workflow/ColorPalette';
 
 const Admin: React.FC = () => {
   const adminList = [
@@ -67,6 +68,12 @@ const Admin: React.FC = () => {
       link: `/administration/release-management`,
       title: 'releases.home.title',
       description: 'releases.home.description',
+    },
+    {
+      icon: <ColorPalette size="L" />,
+      link: `/administration/visualization-colors`,
+      title: 'visualizationcolors.home.title',
+      description: 'visualizationcolors.home.description',
     },
   ];
   return (

@@ -11,6 +11,8 @@ import Docs from './docs/docs';
 import Sources from './sources';
 import ReportConfiguration from "./reports-configuration";
 import ReleaseMangement from "./release-management";
+import Visualizationcolors from "./visualization-colors/visualizationcolors";
+
 
 const Routes = ({ match }) => (
   <div>
@@ -24,6 +26,8 @@ const Routes = ({ match }) => (
     <ErrorBoundaryRoute exact path={`${match.url}/configuration`} component={Configuration} />
     <ErrorBoundaryRoute exact path={`${match.url}/audits`} component={Audits} />
     <ErrorBoundaryRoute exact path={`${match.url}/logs`} component={Logs} />
+    <ErrorBoundaryRoute exact path={`${match.url}/visualization-colors`} component={Visualizationcolors} />
+
   </div>
 );
 
