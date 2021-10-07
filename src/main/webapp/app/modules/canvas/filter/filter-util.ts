@@ -465,7 +465,11 @@ export const generateFilterOptions = data => {
 export const generateOptionsForDateRange = (config: any) => {
   const options = [];
   if (config && (config.tab === '2' || config.dateRangeTab === 2)) {
-    options.push({ value: config.currentDynamicDateRangeConfig.title, label: config.currentDynamicDateRangeConfig.title });
+    let displayValue = config.currentDynamicDateRangeConfig.title;
+    if (config.currentDynamicDateRangeConfig.isCustom) {
+      displayValue = config.currentDynamicDateRangeConfig.title.replace('X', config.customDynamicDateRange);
+    }
+    options.push({ value: config.currentDynamicDateRangeConfig.title, label: displayValue });
   } else {
     const date = changeDateFormat(config?.startDateFormatted) + ' To ' + changeDateFormat(config?.endDateFormatted);
     options.push({ value: date, label: date });
