@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Translate } from 'react-jhipster';
 import { prepareConnection } from '../datasource-util';
 import { IRootState } from 'app/shared/reducers';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
 import { executeQuery } from '../../datasources.reducer';
 import { Flex, Dialog, Heading, Divider, Content, Button, Header, useDialogContainer, ProgressBar } from '@adobe/react-spectrum';
 

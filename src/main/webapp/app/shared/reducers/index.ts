@@ -25,7 +25,7 @@ import reportConfiguration, {
   ReportConfigurationState,
 } from 'app/modules/administration/reports-configuration/reports-configuration.reducer';
 import reportsManagement, { ReportsManagementState } from 'app/entities/reports-management/reports-management.reducer';
-import visualizationData, { VisualDataState } from 'app/shared/websocket/websocket.reducer';
+import visualisationData, { VisualDataState } from 'app/shared/websocket/websocket.reducer';
 import bookmarks, { BookmarksState } from 'app/entities/bookmarks/bookmark.reducer';
 // prettier-ignore
 import dashboard, {
@@ -40,9 +40,9 @@ import feature, {
   FeatureState
 } from 'app/entities/feature/feature.reducer';
 // prettier-ignore
-import visualizations, {
-  VisualizationsState
-} from 'app/entities/visualizations/visualizations.reducer';
+import visualisations, {
+  VisualisationsState
+} from 'app/entities/visualisations/visualisations.reducer';
 // prettier-ignore
 import visualmetadata, {
   VisualmetadataState
@@ -55,7 +55,7 @@ import search, { SearchState } from 'app/entities/search/search.reducer';
 import featureCriteria, { FeatureCriteriaState } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import hierarchies, { HierarchyState } from 'app/entities/hierarchy/hierarchy.reducer';
 import releases, { ReleasesState } from 'app/modules/administration/release-management/releases.reducer';
-import shareLinkVisualization, { shareLinkVisualizationState } from 'app/entities/share/share-visualization.reducer';
+import shareLinkVisualisation, { shareLinkVisualisationState } from 'app/entities/share/share-visualisation.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -79,7 +79,7 @@ export interface IRootState {
   readonly views: ViewsState;
   readonly feature: FeatureState;
   readonly functions: FunctionState;
-  readonly visualizations: VisualizationsState;
+  readonly visualisations: VisualisationsState;
   readonly visualmetadata: VisualmetadataState;
   readonly search: SearchState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
@@ -90,12 +90,12 @@ export interface IRootState {
   readonly recent: RecentState;
   readonly reportConfiguration: ReportConfigurationState;
   readonly reportsManagement: ReportsManagementState;
-  readonly visualizationData: VisualDataState;
+  readonly visualisationData: VisualDataState;
   readonly bookmarks: BookmarksState;
   readonly featureCriteria: FeatureCriteriaState;
   readonly hierarchies: HierarchyState;
   readonly releases: ReleasesState;
-  readonly shareLinkVisualization: shareLinkVisualizationState;
+  readonly shareLinkVisualisation: shareLinkVisualisationState;
 }
 
 const rootReducer = combineReducers<IRootState>({
@@ -119,7 +119,7 @@ const rootReducer = combineReducers<IRootState>({
   views,
   feature,
   functions,
-  visualizations,
+  visualisations,
   visualmetadata,
   search,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
@@ -130,12 +130,12 @@ const rootReducer = combineReducers<IRootState>({
   recent,
   reportConfiguration,
   reportsManagement,
-  visualizationData,
+  visualisationData,
   bookmarks,
   featureCriteria,
   hierarchies,
   releases,
-  shareLinkVisualization,
+  shareLinkVisualisation,
 });
 
 export default rootReducer;

@@ -1,4 +1,4 @@
-import { DataTypeEnum } from '../util/visualization.constants';
+import { DataTypeEnum } from '../util/visualisation.constants';
 
 export interface ValueElement {
   type?: DataTypeEnum;

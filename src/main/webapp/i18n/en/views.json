@@ -18,7 +18,7 @@
     },
     "created": {
       "header": "Success",
-      "content": "View is created successfully. Click on open to create visualizations."
+      "content": "View is created successfully. Click on open to create visualisations."
     },
     "updated": "A Views is updated with identifier {{ param }}",
     "deleted": "A Views is deleted with identifier {{ param }}",
@@ -70,7 +70,8 @@
     },
     "search": {
       "title": "Search",
-      "search": "Search"
+      "search": "Search",
+      "results": "Results"
     }
   }
 }

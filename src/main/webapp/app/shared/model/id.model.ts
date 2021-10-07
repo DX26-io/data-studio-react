@@ -1,4 +1,4 @@
 export interface ID {
-  visualizationId?: number;
+  visualisationId?: number;
   propertyTypeId?: number;
 }

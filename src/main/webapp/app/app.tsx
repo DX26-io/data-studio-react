@@ -19,7 +19,7 @@ import ErrorBoundary from 'app/shared/error/error-boundary';
 import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
 import { isCanvas } from './shared/util/common-utils';
-import  ShareVisualizationHeader  from 'app/entities/share/share-visualization-header';
+import  ShareVisualisationHeader  from 'app/entities/share/share-visualisation-header';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
 
@@ -61,7 +61,7 @@ export const App = (props: IAppProps) => {
               />
             )) :
 
-              <ShareVisualizationHeader />
+              <ShareVisualisationHeader />
 
             }
           </ErrorBoundary>
@@ -93,7 +93,7 @@ export const App = (props: IAppProps) => {
   );
 };
 
-const mapStateToProps = ({ authentication, applicationProfile, locale, home, shareLinkVisualization }: IRootState) => ({
+const mapStateToProps = ({ authentication, applicationProfile, locale, home, shareLinkVisualisation }: IRootState) => ({
   currentLocale: locale.currentLocale,
   isAuthenticated: authentication.isAuthenticated,
   redirectTo: authentication.redirectTo,
@@ -103,7 +103,7 @@ const mapStateToProps = ({ authentication, applicationProfile, locale, home, sha
   isSwaggerEnabled: applicationProfile.isSwaggerEnabled,
   isCanvas: isCanvas(),
   isHome: home.isHome,
-  isShareLinkPage: shareLinkVisualization.isShareLinkPage
+  isShareLinkPage: shareLinkVisualisation.isShareLinkPage
 });
 
 const mapDispatchToProps = { setLocale, getSessionWithPath, getProfile };
