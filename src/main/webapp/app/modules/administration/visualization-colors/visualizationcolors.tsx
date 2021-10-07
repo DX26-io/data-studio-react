@@ -118,7 +118,7 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
   );
 };
 
-const mapStateToProps = ({ visualizationColors }: IRootState) => ({
+const mapStateToProps = ({ visualizationColors }: any) => ({
   visualizationColorsList: visualizationColors.entities,
   loading: visualizationColors.loading,
 });
