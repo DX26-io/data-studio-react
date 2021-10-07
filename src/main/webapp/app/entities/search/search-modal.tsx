@@ -216,7 +216,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   features: storeState.feature.entities,
   visualizations: storeState.visualisations.entities,
   datasourceId: storeState.views.entity?.viewDashboard?.dashboardDatasource?.id,
-  filterData: storeState.visualmetadata.filterData,
+  filterData: storeState.visualmetadata.filterData?.body,
   loading: storeState.visualmetadata.loading,
 });
 
