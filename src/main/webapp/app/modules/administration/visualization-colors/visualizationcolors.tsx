@@ -83,8 +83,7 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
                     </TableCell>
                     <TableCell align="center">{visualizationColor.code}</TableCell>
                     <TableCell align="center">
-                      <div className={'visualization-color'} style={{ backgroundColor: visualizationColor.code,height: '25px',width: '25px',margin: 'auto'}}>
-
+                      <div style={{ backgroundColor: visualizationColor.code,height: '25px',width: '25px',margin: 'auto'}}>
                       </div>
                     </TableCell>
                     <TableCell align="center">
