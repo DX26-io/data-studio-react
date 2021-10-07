@@ -2,10 +2,10 @@ import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router-dom";
 import { getEntity as getVisualmetadataEntity } from 'app/entities/visualmetadata/visualmetadata.reducer'; import { IRootState } from "app/shared/reducers";
 import { useEffect, useRef, useState } from "react";
-import { ValidateFields } from "../visualization/util/visualization-render-utils";
+import { ValidateFields } from "../visualisation/util/visualisation-render-utils";
 import { getConditionExpression } from "../filter/filter-util";
 import { receiveSocketResponseByVisualId } from "app/shared/websocket/websocket.reducer";
-import { VisualWrap } from "../visualization/util/visualmetadata-wrapper";
+import { VisualWrap } from "../visualisation/util/visualmetadata-wrapper";
 import { forwardCall } from "app/shared/websocket/proxy-websocket.service";
 import React from "react";
 import TableView from "app/shared/components/table/table";
@@ -15,7 +15,7 @@ import { View } from "@react-spectrum/view";
 import SecondaryHeader from "app/shared/layout/secondary-header/secondary-header";
 import { DialogContainer } from "@react-spectrum/dialog";
 import { Button } from "@react-spectrum/button";
-import { getTransactionData } from "../visualization/util/visualization-utils";
+import { getTransactionData } from "../visualisation/util/visualisation-utils";
 import { CSVLink } from 'react-csv';
 
 export interface IExportVisualizationProps extends  StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
@@ -87,7 +87,7 @@ const mapStateToProps = (storeState: IRootState) => ({
     view: storeState.views.entity,
     selectedFilters: storeState.filter.selectedFilters,
     visualmetadataEntity: storeState.visualmetadata.entity,
-    visualDataById: storeState.visualizationData.visualDataById,
+    visualDataById: storeState.visualisationData.visualDataById,
 
 });
 
