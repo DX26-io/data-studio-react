@@ -216,8 +216,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   features: storeState.feature.entities,
   visualizations: storeState.visualisations.entities,
   datasourceId: storeState.views.entity?.viewDashboard?.dashboardDatasource?.id,
-  filterData: storeState.visualmetadata.filterData?.body,
-  loading: storeState.visualmetadata.loading,
+  filterData: storeState.visualisationData.filterData?.body,
+  loading: storeState.visualisationData.loading,
 });
 
 const mapDispatchToProps = {
