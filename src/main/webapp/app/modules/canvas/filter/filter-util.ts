@@ -319,8 +319,12 @@ export const isDateRange = (name, selectedFilters) => {
 export const buildFilterCriteriasForDynamicDateRange = dimensionName => {
   if (dynamicDateRangeMetaData[dimensionName]) {
     const metaData = dynamicDateRangeMetaData[dimensionName];
-    const isCustom = metaData.currentDynamicDateRangeConfig.isCustom ? 'true' : 'false';
-    return isCustom + '||' + metaData.customDynamicDateRange + '||' + metaData.currentDynamicDateRangeConfig.title;
+    if (metaData.currentDynamicDateRangeConfig) {
+      const isCustom = metaData.currentDynamicDateRangeConfig.isCustom ? 'true' : 'false';
+      return isCustom + '||' + metaData.customDynamicDateRange + '||' + metaData.currentDynamicDateRangeConfig.title;
+    } else {
+      return 'false';
+    }
   } else {
     return null;
   }
@@ -492,7 +496,6 @@ export const addOptionIntoFilters = (filter, filters, feature) => {
   };
   return Object.assign({}, filters);
 };
-
 
 export const removeOptionFromFilters = (filter, filters, feature) => {
   if (filters[feature.name] && filters[feature.name].length === 0) {
