@@ -8,7 +8,7 @@ import Search from '@spectrum-icons/workflow/Search';
 import GraphBarVerticalAdd from '@spectrum-icons/workflow/GraphBarVerticalAdd';
 import CollectionEdit from '@spectrum-icons/workflow/CollectionEdit';
 import CloseCircle from '@spectrum-icons/workflow/CloseCircle';
-import VisualizationsList from 'app/entities/visualizations/visualizations-list';
+import VisualisationsList from 'app/entities/visualisations/visualisations-list';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import {
@@ -31,14 +31,14 @@ import { generateBookmarksOptions } from 'app/entities/bookmarks/bookmark.util';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
 import CanvasHeaderIcon from 'app/shared/components/canvas-header-icon/canvas-header-icon';
 import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
-import CanvasShareModal from 'app/modules/canvas/visualization/visualization-modal/visualization-share-modal/canvas-share-modal';
+import CanvasShareModal from 'app/modules/canvas/visualisation/visualisation-modal/visualisation-share-modal/canvas-share-modal';
 import SearchModal from '../../../entities/search/search-modal';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 
 
 
 const CanvasHeader = props => {
-  const [isVisualizationsModelOpen, setVisualizationsModelOpen] = useState(false);
+  const [isVisualisationsModelOpen, setVisualisationsModelOpen] = useState(false);
   const [isSearchModelOpen,setIsSearchModelOpen] = useState(false)
   const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
@@ -60,8 +60,8 @@ const CanvasHeader = props => {
     },
     {
       icon: <GraphBarVerticalAdd size="M" />,
-      title: translate('canvas.menu.addVisualization'),
-      onPress: setVisualizationsModelOpen,
+      title: translate('canvas.menu.addvisualisation'),
+      onPress: setVisualisationsModelOpen,
       data: true,
     },
     {
@@ -117,12 +117,12 @@ const CanvasHeader = props => {
     }
   }, [props.view]);
 
-  const handleVisualizationClick = v => {
+  const handleVisualisationClick = v => {
     props.addVisualmetadataEntity({
       viewId: props.view.id,
       visualMetadata: v,
     });
-    setVisualizationsModelOpen(false);
+    setVisualisationsModelOpen(false);
   };
 
   useEffect(() => {
@@ -180,14 +180,14 @@ const CanvasHeader = props => {
           </Flex>
         </Flex>
         <DialogContainer onDismiss={() => setIsShareDialogOpen(false)}>{isShareDialogOpen && <CanvasShareModal />}</DialogContainer>
-        <DialogContainer type="fullscreen" onDismiss={() => setVisualizationsModelOpen(false)} {...props}>
-          {isVisualizationsModelOpen && (
-            <VisualizationsList
-              handleVisualizationClick={handleVisualizationClick}
+        <DialogContainer type="fullscreen" onDismiss={() => setVisualisationsModelOpen(false)} {...props}>
+          {isVisualisationsModelOpen && (
+            <VisualisationsList
+              handleVisualisationClick={handleVisualisationClick}
               view={props.view}
-              visualizations={props.visualizationsList}
+              visualisations={props.visualisationsList}
               totalItem={props.visualmetadata.visualmetadataList?.length || 0}
-              setVisualizationsModelOpen={setVisualizationsModelOpen}
+              setVisualisationsModelOpen={setVisualisationsModelOpen}
             />
           )}
         </DialogContainer>
@@ -207,7 +207,7 @@ const CanvasHeader = props => {
 const mapStateToProps = (storeState: IRootState) => ({
   isAuthenticated: storeState.authentication.isAuthenticated,
   visualmetadata: storeState.views.viewState,
-  visualizationsList: storeState.visualizations.entities,
+  visualisationsList: storeState.visualisations.entities,
   visualmetadataEntity: storeState.visualmetadata.entity,
   isEditMode: storeState.visualmetadata.isEditMode,
   bookmarkSelectOptions: generateBookmarksOptions(storeState.bookmarks.bookmarks),

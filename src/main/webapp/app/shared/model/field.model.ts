@@ -1,4 +1,4 @@
-import { Constraint } from '../util/visualization.constants';
+import { Constraint } from '../util/visualisation.constants';
 import { IFeature } from './feature.model';
 import { FieldType } from './field-type.model';
 import { Property } from './property.model';

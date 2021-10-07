@@ -214,10 +214,10 @@ const mapStateToProps = (storeState: IRootState) => ({
   searchStructRequest: storeState.search.searchStructRequest,
   visualmetadataEntity: storeState.visualmetadata.entity,
   features: storeState.feature.entities,
-  visualizations: storeState.visualizations.entities,
+  visualizations: storeState.visualisations.entities,
   datasourceId: storeState.views.entity?.viewDashboard?.dashboardDatasource?.id,
-  filterData: storeState.visualizationData.filterData?.body,
-  loading: storeState.visualizationData.loading,
+  filterData: storeState.visualisationData.filterData?.body,
+  loading: storeState.visualisationData.loading,
 });
 
 const mapDispatchToProps = {

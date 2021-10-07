@@ -1,4 +1,4 @@
-import { getVisualizationData, getVisualizationShareData, ValidateFields } from '../visualization/util/visualization-render-utils';
+import { getVisualisationData, getVisualisationShareData, ValidateFields } from '../visualisation/util/visualisation-render-utils';
 import { IViews } from 'app/shared/model/views.model';
 import { toggleLoader } from 'app/shared/websocket/websocket.reducer';
 import { addOptionIntoFilters, removeOptionFromFilters } from './filter-util';
@@ -95,28 +95,28 @@ export const toggleFeaturesPanel: () => void = () => (dispatch, getState) => {
   });
 };
 
-const renderVisualizationById = (item, view, filters) => {
+const renderVisualisationById = (item, view, filters) => {
   if (ValidateFields(item.fields)) {
-    getVisualizationData(item, view, filters);
+    getVisualisationData(item, view, filters);
   } else {
     toggleLoader(false);
   }
 };
 
-export const loadVisualization = (visualmetadata, view, filters) => {
+export const loadVisualisation = (visualmetadata, view, filters) => {
   visualmetadata.visualMetadataSet.map((item, i) => {
-    renderVisualizationById(item, view, filters);
+    renderVisualisationById(item, view, filters);
   });
 };
 
 export const applyFilter = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
   dispatch(saveSelectedFilter(filters));
-  loadVisualization(visualmetadata, view, filters);
+  loadVisualisation(visualmetadata, view, filters);
 };
 
 export const clearFilter = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
   dispatch(saveSelectedFilter(filters));
-  loadVisualization(visualmetadata, view, filters);
+  loadVisualisation(visualmetadata, view, filters);
 };
 
 export const addAppliedFilters = (filter, feature) => dispatch => {
@@ -136,12 +136,12 @@ export const removeAppliedFilters = (filter, feature) => dispatch => {
 
 export const applyFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
   dispatch(saveSelectedFilter({}));
-  getVisualizationShareData(visualmetadata, view, filters);
+  getVisualisationShareData(visualmetadata, view, filters);
 };
 
 export const clearFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
   dispatch(saveSelectedFilter({}));
-  getVisualizationShareData(visualmetadata, view, filters);
+  getVisualisationShareData(visualmetadata, view, filters);
 };
 
 export const removeDateFilters = (filters, feature) => dispatch => {

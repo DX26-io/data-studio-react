@@ -10,17 +10,17 @@ import {
   startOfDay,
   strToDate,
 } from 'app/modules/canvas/data-constraints/utils/date-util';
-import { ValidateFields } from 'app/modules/canvas/visualization/util/visualization-render-utils';
-import { getDimension } from 'app/modules/canvas/visualization/util/visualization-utils';
-import { VisualWrap } from 'app/modules/canvas/visualization/util/visualmetadata-wrapper';
+import { ValidateFields } from '../../modules/canvas/visualisation/util/visualisation-render-utils';
+import { getDimension } from '../../modules/canvas/visualisation/util/visualisation-utils';
+import { VisualWrap } from '../../modules/canvas/visualisation/util/visualmetadata-wrapper';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IViews } from 'app/shared/model/views.model';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
-import { IVisualizations } from 'app/shared/model/visualizations.model';
+import { IVisualisations } from 'app/shared/model/visualisations.model';
 import { COMPARE_TYPES, DYNAMIC_DATE_RANGE_CONFIG } from 'app/shared/util/data-constraints.constants';
-import { BETWEEN } from 'app/shared/util/visualization.constants';
+import { BETWEEN } from 'app/shared/util/visualisation.constants';
 import { trim } from 'lodash';
-import { createVisualMetadata } from '../visualizations/visualizations-util';
+import { createVisualMetadata } from '../visualisations/visualisations-util';
 import { CompareType, SearchResult } from './search.model';
 import { addOptionIntoFilters } from 'app/modules/canvas/filter/filter-util';
 import { COMPARABLE_DATA_TYPES, FILTER_TYPES, CONDITION_TYPES } from 'app/shared/util/data-constraints.constants';
@@ -33,7 +33,6 @@ import uuid from 'react-uuid';
 
 // TODO : there are many duplicate functions, need to remove
 // let the below code commented as they will be used in future
-
 
 let dynamicDateRangeMetaData = {};
 
@@ -99,10 +98,9 @@ export const createCompareFeaturePropertyExpressionBody = (comparatorType, value
     },
     // featureProperty: null,
     uuid: uuid(),
-    identifier:uuid()
+    identifier: uuid(),
   };
 };
-
 
 export const createCompareExpressionBodyForInterval = (
   initialValue: any,
@@ -279,7 +277,7 @@ export const createBodyExpr = (values: any, name: string) => {
     }
   }
   if (valueType === 'compare') {
-    return createCompareFeaturePropertyExpressionBody(meta.comparatorType,values, name);
+    return createCompareFeaturePropertyExpressionBody(meta.comparatorType, values, name);
   } else if (valueType === 'dateRangeValueType') {
     const dataType = meta.dataType || '';
     if (values.length === 2) {
@@ -852,7 +850,7 @@ export const buildFilters = (filter, filters, feature, condition) => {
   filters[feature.name]._meta = {
     dataType: feature.type,
     valueType: compareType && compareType[0] ? 'compare' : 'valueType',
-    comparatorType: compareType && compareType[0] ? compareType[0].value : null
+    comparatorType: compareType && compareType[0] ? compareType[0].value : null,
   };
   return Object.assign({}, filters);
 };

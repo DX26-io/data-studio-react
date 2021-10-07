@@ -1,0 +1,173 @@
+import React, { useEffect, useState } from 'react';
+import { View, Flex, Dialog, Heading, Divider, Content, ButtonGroup, Button, useDialogContainer } from '@adobe/react-spectrum';
+import { IRootState } from 'app/shared/reducers';
+import { connect } from 'react-redux';
+import './visualisation-edit-modal.scss';
+import { useHistory } from 'react-router-dom';
+import VisualisationProperties from 'app/modules/canvas/visualisation/visualisation-properties/visualisation-properties';
+import VisualisationSettings from 'app/modules/canvas/visualisation/visualisation-settings/visualisation-settings';
+import { Translate } from 'react-jhipster';
+import {
+  getEntity as getVisualMetadataEntity,
+  updateEntity as updateVisualmetadataEntity,
+  setVisual,
+  setEditAction,
+  metadataContainerUpdate,
+} from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
+import { getVisualisationData, getVisualisationShareData, renderVisualisation, ValidateFields } from '../../util/visualisation-render-utils';
+import { VisualWrap } from '../../util/visualmetadata-wrapper';
+import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
+import { receiveSocketResponseByVisualId } from 'app/shared/websocket/websocket.reducer';
+import { IViews } from 'app/shared/model/views.model';
+import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
+
+export interface IVisualisationEditModalProps extends StateProps, DispatchProps {
+  id: number;
+  viewId: number;
+  visualisationId: string;
+  setOpen: (isOpen: boolean) => void;
+  filterData: any;
+  view: IViews;
+}
+
+export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
+  const [visualisationData, setData] = useState<any>();
+  const dialog = useDialogContainer();
+  const visualisationId = props.visualisationId;
+  const viewId = props.viewId;
+
+  const handleClose = action => {
+    props.setEditAction(action);
+    props.setOpen(false);
+    props.setVisual(props.visualMetadataEntity);
+    dialog.dismiss();
+  };
+
+  const handleApply = () => {
+    getVisualisationShareData(props.visualMetadataEntity, props.view, props.selectedFilters);
+  };
+  
+
+  const handleSave = () => {
+    props.updateVisualmetadataEntity({
+      viewId,
+      visualMetadata: props.visualMetadataEntity,
+    });
+    props.metadataContainerUpdate(props.visualMetadataEntity.id, props.visualMetadataEntity, 'id');
+    handleClose('save');
+  };
+  useEffect(() => {
+    if (visualisationId) {
+      props.getVisualMetadataEntity(visualisationId);
+      props.getViewEntity(viewId);
+    }
+  }, []);
+
+  useEffect(() => {
+    props.setVisual(props.visualMetadataEntity);
+    if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
+      props.receiveSocketResponseByVisualId(props.visualMetadataEntity.id);
+      const visualMetadata = VisualWrap(props.visualMetadataEntity);
+      const queryDTO = visualMetadata.getQueryParameters(props.visualMetadataEntity, props.selectedFilters, getConditionExpression(props.selectedFilters), 0);
+      const body = {
+        queryDTO,
+        visualMetadata,
+        validationType: 'REQUIRED_FIELDS',
+        actionType: null,
+        type: 'share-link',
+      };
+      forwardCall(props.view?.viewDashboard?.dashboardDatasource?.id, body, props.view.id);
+    }
+  }, [props.visualMetadataEntity]);
+
+  useEffect(() => {
+    if (props.visualDataById) {
+      if (props.visualDataById?.data.length > 0) {
+        renderVisualisation(props.visualMetadataEntity, props.visualDataById?.data, 'visualisation-edit',props);
+        setData(props.visualDataById?.data);
+      }
+    }
+  }, [props.visualDataById]);
+
+  return (
+    <Dialog>
+      <Heading level={4}>{props.visualMetadataEntity?.titleProperties?.titleText}</Heading>
+      <Divider size={'S'} />
+      <ButtonGroup>
+        <Button
+          variant="secondary"
+          onPress={() => {
+            handleClose('discard');
+          }}
+        >
+          <Translate contentKey="entity.action.discard">Discard</Translate>
+        </Button>
+        <Button variant="secondary" onPress={handleSave}>
+          <Translate contentKey="entity.action.save">Save</Translate>
+        </Button>
+        <Button
+          variant="cta"
+          onPress={() => {
+            handleApply();
+          }}
+        >
+          <Translate contentKey="entity.action.apply">Apply</Translate>
+        </Button>
+      </ButtonGroup>
+      <Content>
+        <Flex direction="row" height="100%" gap="size-75">
+          <Flex flex>
+            <Flex direction="column" height="100%" flex gap="size-75">
+              <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="50%">
+                <div style={{ height: '100%' }} id={`visualisation-edit-${props.visualMetadataEntity.id}`} className="visualisation"></div>
+              </View>
+              <div className="settings-tab">
+                <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="50%">
+                  <VisualisationSettings
+                    data={visualisationData}
+                    visual={props.visualMetadataEntity}
+                    view={props.view}
+                    visualisationId={visualisationId}
+                    features={props.featuresList}
+                    datasource={props.view.viewDashboard.dashboardDatasource}
+                    filterData={props.filterData}
+                  />
+                </View>
+              </div>
+            </Flex>
+          </Flex>
+          <div className="properties-tab">
+            <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight='100%' >
+              <VisualisationProperties   />
+            </View>
+          </div>
+        </Flex>
+      </Content>
+    </Dialog>
+  );
+};
+
+const mapStateToProps = (storeState: IRootState) => ({
+  visualMetadataEntity: storeState.visualmetadata.entity,
+  featuresList: storeState.feature.entities,
+  view: storeState.views.entity,
+  visualDataById: storeState.visualisationData.visualDataById,
+  hierarchies: storeState.hierarchies.hierarchies,
+  selectedFilters: storeState.filter.selectedFilters,
+});
+
+const mapDispatchToProps = {
+  setVisual,
+  setEditAction,
+  getVisualMetadataEntity,
+  getViewEntity,
+  updateVisualmetadataEntity,
+  metadataContainerUpdate,
+  receiveSocketResponseByVisualId,
+};
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(VisualisationEditModal);

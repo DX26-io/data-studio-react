@@ -15,7 +15,7 @@
   "dto": "no",
   "searchEngine": false,
   "service": "no",
-  "entityTableName": "visualizations",
+  "entityTableName": "visualisations",
   "databaseType": "postgres",
   "readOnly": false,
   "jpaMetamodelFiltering": false,

@@ -1,4 +1,4 @@
-import { Constraint, FeatureType } from '../util/visualization.constants';
+import { Constraint, FeatureType } from '../util/visualisation.constants';
 import { FieldTypePropertyType } from './field-type-property-type.model';
 export interface FieldType {
   createdBy?: '';
