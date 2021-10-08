@@ -30,6 +30,7 @@ import { IQueryDTO } from 'app/shared/model/query-dto.model';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { dateToString } from 'app/modules/canvas/data-constraints/utils/date-util';
 import uuid from 'react-uuid';
+import { isString } from 'util';
 
 // TODO : there are many duplicate functions, need to remove
 // let the below code commented as they will be used in future
@@ -886,18 +887,25 @@ export const convertSearchStructToQueryDTO = searchStruct => {
   return { fields, groupBy, orders };
 };
 
+export const isStringType = type => {
+  return type === 'varchar' || type === 'string' || type === 'String';
+};
+
 export const convertSearchStructToFilters = (features, conditions) => {
   let filters = {};
   conditions.map(function (con) {
     const feature = findFeature(con.feature, features);
     if (con.statements && con.statements.length > 0) {
       con.statements.map(function (st) {
-        if (feature.type === 'varchar' || feature.type === 'string' || typeof feature.type) {
+        if (isStringType(feature.type) || isDateFilterType(feature.type)) {
           st = st.replace(/["']/g, '');
         }
         filters = buildFilters(st, filters, feature, con.condition);
       });
     } else {
+      if (isStringType(feature.type) || isDateFilterType(feature.type)) {
+        con.statement = con.statement.replace(/["']/g, '');
+      }
       filters = buildFilters(con.statement, filters, feature, con.condition);
     }
   });
