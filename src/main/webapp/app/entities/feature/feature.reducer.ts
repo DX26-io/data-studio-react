@@ -228,8 +228,8 @@ export const getDimensionsList = features => {
 export const getMeasuresList = features => {
   const measuresList = [];
   features.map(item => {
-    if (item.featureType === 'MEASURE') {
-      measuresList.push({ value: item.id, label: item.name });
+    if (item.feature.featureType === 'MEASURE') {
+      measuresList.push({ value: item.feature.id, label: item.feature.name });
     }
   });
   return measuresList;

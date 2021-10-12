@@ -11,7 +11,7 @@ export interface IReport {
   viewId: any;
   shareLink: string;
   buildUrl: string;
-  thresholdAlert: false;
+  thresholdAlert: boolean;
   createdDate?: string;
 }
 
@@ -28,7 +28,7 @@ export const reportDefaultValue: Readonly<IReport> = {
   viewId: '',
   shareLink: '',
   buildUrl: '',
-  thresholdAlert: false,
+  thresholdAlert: true,
   createdDate: '',
 };
 
@@ -117,3 +117,47 @@ export const schedulerReportDefaultValue: Readonly<ISchedulerReport> = {
   putCall: false,
   emailReporter: false,
 };
+export interface ICondition {
+  thresholdMode: string;
+  dynamicThreshold: any;
+  featureName?: any;
+  value?: any;
+  compare: {
+    value: any;
+  };
+}
+
+export const ConditionDefaultValue: Readonly<ICondition> = {
+  thresholdMode: 'Absolute',
+  compare: {
+    value: '',
+  },
+  dynamicThreshold: {},
+};
+export interface IConstraints {
+  time: {
+    featureName: string;
+    value?: number;
+    unit: string;
+  };
+}
+
+export const ConstraintsDefaultValue: Readonly<IConstraints> = {
+  time: {
+    featureName: '',
+    unit: '',
+  },
+};
+
+export interface ITimeConditions {
+  unit?: {
+    value: string;
+  };
+  featureName?: string;
+  value?: number;
+  feature?: {
+    definition: string;
+  };
+}
+
+export const TimeConditionsDefaultValue: Readonly<ITimeConditions> = {};
