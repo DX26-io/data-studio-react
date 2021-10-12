@@ -95,7 +95,7 @@ export default (state: VisualisationsState = initialState, action): Visualisatio
   }
 };
 
-const apiUrl = 'api/visualisations';
+const apiUrl = 'api/visualizations';
 
 // Actions
 
