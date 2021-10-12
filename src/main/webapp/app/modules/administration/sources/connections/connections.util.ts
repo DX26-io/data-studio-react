@@ -1,6 +1,9 @@
 import { IConnectionType, defaultConnectionTypeValue } from 'app/shared/model/connection-type.model';
 import { IConnection, connectionDefaultValue } from 'app/shared/model/connection.model';
 import { IError, defaultValue } from 'app/shared/model/error.model';
+import { translate } from 'react-jhipster';
+import { IDatasources } from 'app/shared/model/datasources.model';
+
 export const onFeaturesFetched = (result: any) => {
   const features = [];
   const metaData = result.metadata;
@@ -53,3 +56,52 @@ export const isFormValid = (connection: IConnection): IError => {
   }
   return error;
 };
+
+export const getSteps = () => {
+  return [
+    translate('connections.steps.connectionType'),
+    translate('connections.steps.newDataConnection'),
+    translate('connections.steps.cacheSettings'),
+  ];
+};
+
+export const isNextDisabled = (
+  connection: IConnection,
+  connectionType: IConnectionType,
+  isConnected: boolean,
+  step: number
+) => {
+  if (connectionType.id === null && step === 0) {
+    return true;
+  } else if (!isConnected && step === 1) {
+    return true;
+  } else if (!connection.connectionParameters.cacheEnabled && step === 2) {
+    return false;
+  } else if (
+    (Number(connection.connectionParameters.cachePurgeAfterMinutes) === 0 ||
+      Number(connection.connectionParameters.refreshAfterTimesRead) === 0 ||
+      Number(connection.connectionParameters.refreshAfterMinutes) === 0) &&
+    step === 2
+  ) {
+    return true;
+  }
+};
+
+export const generateConnectionsOptions = connections => {
+  const options = [];
+  connections.forEach(function (item) {
+    options.push({ value: item.id, label: item.name });
+  });
+  return options;
+};
+
+export const prepareConnection = (connection, connectionType) => {
+  const con = connection;
+  con.connectionType = connectionType.name;
+  con.connectionTypeId = connectionType.id;
+  con.connectionType = connectionType.name;
+  con.connectionParameters = connection.connectionParameters;
+  con.details['@type'] = connectionType.connectionPropertiesSchema.connectionDetailsType;
+  return con;
+};
+

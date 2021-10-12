@@ -1,6 +1,7 @@
 {
   "connections": {
     "home": {
+      "create":"Create Connection",
       "title": "Connections",
       "description": "Manage your datasource connections",
       "updateLabel": "Update Connection"
@@ -11,6 +12,11 @@
     "error": {
       "cache": "please fill all the fields of cache",
       "name": "Connection name is required"
+    },
+    "steps": {
+      "connectionType": "Connection Type",
+      "newDataConnection": "New Data Connection",
+      "cacheSettings": "Cache settings"
     }
   }
 }

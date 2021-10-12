@@ -10,11 +10,13 @@ import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header
 import Edit from '@spectrum-icons/workflow/Edit';
 import ConnectionUpdate from './connection-update';
 import { IConnection, connectionDefaultValue } from 'app/shared/model/connection.model';
+import ConnectionStepper from './connection-stepper';
 
 export interface IConnectionsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export const Connections = (props: IConnectionsProps) => {
   const [isOpen, setOpen] = React.useState(false);
+  const [isConnectionStepperOpen, setConnectionStepperOpen] = React.useState(false);
   const [connection, setConnection] = React.useState<IConnection>(connectionDefaultValue);
 
   useEffect(() => {
@@ -40,18 +42,18 @@ export const Connections = (props: IConnectionsProps) => {
         <Button
           variant="cta"
           onPress={() => {
-            setOpen(true);
-            props.history.push('/administration/sources/datasources');
+            setConnectionStepperOpen(true);
           }}
-          data-testid="create-datasource"
+          data-testid="create-connection"
         >
-          <Translate contentKey="datasources.home.create" >Create Datasource</Translate>
+          <Translate contentKey="entity.action.create">Create</Translate>
         </Button>
       </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
         {isOpen && (
           <ConnectionUpdate setUpdateSuccess={setUpdateSuccess} setOpen={setOpen} connection={connection} {...props}></ConnectionUpdate>
         )}
+        {isConnectionStepperOpen && <ConnectionStepper setUpdateSuccess={setUpdateSuccess} setConnectionStepperOpen={setConnectionStepperOpen} {...props} />}
       </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
