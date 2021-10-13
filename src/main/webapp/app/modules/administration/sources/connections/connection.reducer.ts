@@ -19,7 +19,6 @@ export const ACTION_TYPES = {
   UPDATE_CONNECTION: 'connections/UPDATE_CONNECTION',
   DELETE_CONNECTION: 'connections/DELETE_CONNECTION',
   FETCH_FEATURES: 'connections/FETCH_FEATURES',
-  CREATE_FEATURES: 'connections/CREATE_FEATURES',
   RESET: 'connections/RESET',
   SET_CONNECTION: 'connections/SET_CONNECTION',
 };
@@ -34,8 +33,6 @@ const initialState = {
   updateSuccess: false,
   features: [],
   updateError: null,
-  updateFeaturesSuccess: false,
-  updateFeaturesRequest: false,
   updating: false,
 };
 
@@ -174,25 +171,6 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
         loading: false,
         features: onFeaturesFetched(action.payload.data),
       };
-    case REQUEST(ACTION_TYPES.CREATE_FEATURES):
-      return {
-        ...state,
-        updateFeaturesSuccess: false,
-        updateFeaturesRequest: true,
-      };
-    case FAILURE(ACTION_TYPES.CREATE_FEATURES):
-      return {
-        ...state,
-        errorMessage: action.payload.data,
-        updateFeaturesSuccess: false,
-        updateFeaturesRequest: false,
-      };
-    case SUCCESS(ACTION_TYPES.CREATE_FEATURES):
-      return {
-        ...state,
-        updateFeaturesSuccess: true,
-        updateFeaturesRequest: false,
-      };
     case ACTION_TYPES.SET_IS_SELECTED_CONNECTION_TYPE:
       return {
         ...state,
@@ -206,7 +184,6 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
         connection: connectionDefaultValue,
         updateSuccess: false,
         updating: false,
-        updateFeaturesSuccess: false,
       };
     case ACTION_TYPES.SET_CONNECTION:
       return {
@@ -272,9 +249,3 @@ export const setConnection = (connection: IConnection) => {
   };
 };
 
-// TODO: this needs to be moved in features reducer
-
-export const addFeatures = (featureList: any) => ({
-  type: ACTION_TYPES.CREATE_FEATURES,
-  payload: axios.post(`api/features/list`, featureList),
-});

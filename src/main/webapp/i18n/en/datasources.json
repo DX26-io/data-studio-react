@@ -13,9 +13,6 @@
     "select": "Select Datasource",
     "search": "Search Datasource...",
     "steps": {
-      "connectionType": "Connection Type",
-      "newDataConnection": "New Data Connection",
-      "cacheSettings": "Cache settings",
       "exploreDataModel": "Explore & Data Model",
       "dimensionsMeasures": "Dimensions Measures"
     },

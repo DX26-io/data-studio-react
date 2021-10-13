@@ -9,6 +9,7 @@
     "id": "ID",
     "name": "Name",
     "type": "Type",
+    "select":"Select Connection*",
     "error": {
       "cache": "please fill all the fields of cache",
       "name": "Connection name is required"
