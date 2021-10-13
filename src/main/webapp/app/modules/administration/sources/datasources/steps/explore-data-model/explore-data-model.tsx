@@ -136,20 +136,6 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
     props.getConnectionsTypes();
     props.getConnections();
   }, []);
-
-  // const create = () => {
-  //   if (!isConnectionSelected) {
-  //     props.createDatasource({ ...datasource, connectionName: createdConnection.linkId });
-  //   } else {
-  //     props.createDatasource(datasource);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (updateError) {
-  //     props.setIsSaveConnectionCalled(false);
-  //   }
-  // }, [updateError]);
   
 
   return (
@@ -169,7 +155,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
               classNamePrefix="select"
               isClearable
               isSearchable
-              placeholder={translate('datasources.dataConnection.selectConnectionPlaceholder')}
+              placeholder={translate('connections.dataConnection.selectConnectionPlaceholder')}
               value={props.connection && props.connection.id ? { value: props.connection.id, label: props.connection.name } : null}
               options={props.connectionsSelectOptions}
               onChange={selectedOption => {

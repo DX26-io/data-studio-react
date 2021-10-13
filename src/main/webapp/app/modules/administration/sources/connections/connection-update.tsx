@@ -88,7 +88,7 @@ export const ConnectionUpdate = (props: IConnectionUpdateProps) => {
       <Content>
         <Form data-testid="connection-form">
           <TextField
-            label={translate('datasources.dataConnection.connectionName')}
+            label={translate('connections.dataConnection.connectionName')}
             onChange={event => {
               setConnectionName(event);
               raiseError({ ...connection, name: event });
@@ -98,7 +98,7 @@ export const ConnectionUpdate = (props: IConnectionUpdateProps) => {
           />
           <TextField
             type="text"
-            label={translate('datasources.dataConnection.userName')}
+            label={translate('connections.dataConnection.userName')}
             onChange={event => {
               setUserName(event);
               raiseError({ ...connection, connectionUsername: event });
@@ -107,7 +107,7 @@ export const ConnectionUpdate = (props: IConnectionUpdateProps) => {
           />
           <TextField
             type="password"
-            label={translate('datasources.dataConnection.password')}
+            label={translate('connections.dataConnection.password')}
             onChange={event => {
               setPassword(event);
               raiseError({ ...connection, connectionPassword: event });
@@ -124,12 +124,12 @@ export const ConnectionUpdate = (props: IConnectionUpdateProps) => {
             isSelected={Boolean(cacheEnabled)}
             isEmphasized
           >
-            <Translate contentKey="datasources.cacheProperty.cacheEnabled">Enable cache</Translate>
+            <Translate contentKey='connections.cacheProperty.cacheEnabled'>Enable cache</Translate>
           </Checkbox>
           <TextField
             type="number"
             isDisabled={!cacheEnabled}
-            label={translate('datasources.cacheProperty.cachePurgeAfterMinutes')}
+            label={translate('connections.cacheProperty.cachePurgeAfterMinutes')}
             isRequired={cacheEnabled}
             value={String(cachePurgeAfterMinutes)}
             onChange={event => {
@@ -141,7 +141,7 @@ export const ConnectionUpdate = (props: IConnectionUpdateProps) => {
           <TextField
             type="number"
             isDisabled={!cacheEnabled}
-            label={translate('datasources.cacheProperty.refreshAfterTimesRead')}
+            label={translate('connections.cacheProperty.refreshAfterTimesRead')}
             isRequired={cacheEnabled}
             value={String(refreshAfterTimesRead)}
             onChange={event => {
@@ -153,7 +153,7 @@ export const ConnectionUpdate = (props: IConnectionUpdateProps) => {
           <TextField
             type="number"
             isDisabled={!cacheEnabled}
-            label={translate('datasources.cacheProperty.refreshAfterMinutes')}
+            label={translate('connections.cacheProperty.refreshAfterMinutes')}
             isRequired={cacheEnabled}
             value={String(refreshAfterMinutes)}
             onChange={event => {
