@@ -41,6 +41,8 @@ describe('Entities reducer tests', () => {
     tables: [],
     updateError: null,
     sampleData: [],
+    updateFeaturesSuccess: false,
+    updateFeaturesRequest: false,
   };
 
   function testInitialState(state) {
@@ -105,6 +107,8 @@ describe('Entities reducer tests', () => {
             updateSuccess: false,
             isConnected: false,
             updateError: null,
+            updateFeaturesSuccess: false,
+            updateFeaturesRequest: false,
           },
           {
             type: ACTION_TYPES.RESET,
