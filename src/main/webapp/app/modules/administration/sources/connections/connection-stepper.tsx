@@ -66,10 +66,11 @@ const ConnectionStepper = (props: IConnectionStepperProps) => {
   };
 
   const handleClose = () => {
-    setConnectionStepperOpen(false);
-    dialog.dismiss();
     props.resetSteps();
     props.resetConnection();
+    dialog.dismiss();
+    setConnectionStepperOpen(false);
+    setUpdateSuccess();
   };
 
   const saveConnection = () => {
@@ -116,7 +117,6 @@ const ConnectionStepper = (props: IConnectionStepperProps) => {
 
   useEffect(() => {
     if (connectionUpdateSuccess) {
-      setUpdateSuccess();
       handleClose();
     }
   }, [connectionUpdateSuccess]);

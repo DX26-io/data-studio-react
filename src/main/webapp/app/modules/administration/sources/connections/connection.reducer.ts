@@ -184,6 +184,7 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
         connection: connectionDefaultValue,
         updateSuccess: false,
         updating: false,
+        updateError: null,
       };
     case ACTION_TYPES.SET_CONNECTION:
       return {
@@ -248,4 +249,3 @@ export const setConnection = (connection: IConnection) => {
     payload: connection,
   };
 };
-
