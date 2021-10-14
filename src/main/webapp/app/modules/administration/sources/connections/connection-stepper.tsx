@@ -196,10 +196,10 @@ const ConnectionStepper = (props: IConnectionStepperProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   connectionsTypes: storeState.connections.connectionsTypes,
-  connectionType: storeState.datasourceSteps.connectionType,
-  connection: storeState.datasourceSteps.connection,
+  connectionType: storeState.connectionSteps.connectionType,
+  connection: storeState.connectionSteps.connection,
   isConnected: storeState.datasources.isConnected,
-  isConnectionSelected: storeState.datasourceSteps.isConnectionSelected,
+  isConnectionSelected: storeState.connectionSteps.isConnectionSelected,
   connectionUpdateError: storeState.connections.updateError,
   connectionUpdateSuccess: storeState.connections.updateSuccess,
 });

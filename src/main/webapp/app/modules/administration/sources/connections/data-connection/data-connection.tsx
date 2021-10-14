@@ -136,8 +136,8 @@ export const DataConnection = (props: IDataConnectionProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   connections: storeState.connections.connections,
-  connection: storeState.datasourceSteps.connection,
-  isConnectionSelected: storeState.datasourceSteps.isConnectionSelected,
+  connection: storeState.connectionSteps.connection,
+  isConnectionSelected: storeState.connectionSteps.isConnectionSelected,
   isConnected: storeState.datasources.isConnected,
   errorMessage: storeState.datasources.errorMessage,
   loading: storeState.datasources.loading,
