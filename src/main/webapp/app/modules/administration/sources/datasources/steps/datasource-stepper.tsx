@@ -155,15 +155,6 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
                   {' '}
                   {getStepContent(activeStep)}
                 </View>
-                {/* <Flex justifyContent="end" gap="size-100">
-                  <Button variant="cta" isDisabled={isNextDisabled(datasource, exploreModelTabId, activeStep)} onPress={handleNext}>
-                    {activeStep === 0
-                      ? translate('datasources.home.create')
-                      : activeStep === steps.length - 1
-                      ? translate('entity.action.finish')
-                      : translate('entity.action.next')}
-                  </Button>
-                </Flex> */}
               </div>
             )}
           </div>

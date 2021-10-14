@@ -15,7 +15,6 @@ export const ACTION_TYPES = {
 const initialState = {
   connectionType: defaultConnectionTypeValue,
   connection: connectionDefaultValue,
-  isConnectionSelected: false,
   datasource: defaultDatasourceValue,
   exploreModelTabId: 1,
   features: [],

@@ -33,18 +33,14 @@ export interface IExploreDataModelProps extends StateProps, DispatchProps {}
 
 export const ExploreDataModel = (props: IExploreDataModelProps) => {
   const {
-    connectionUpdateError,
     connectionType,
     connection,
-    isConnectionSelected,
     tables,
     loading,
     datasource,
     updateError,
     exploreModelTabId,
     isSaveConnectionCalled,
-    datasourceUpdateSuccess,
-    createdConnection,
     datasourceError,
   } = props;
 
@@ -70,11 +66,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
         searchTerm: inputValue,
         filter: tabId === 1 ? 'TABLE' : 'SQL',
       };
-      if (isConnectionSelected) {
-        body['connectionLinkId'] = connection.linkId;
-      } else {
-        body['connection'] = prepareConnection(connection, connectionType);
-      }
+      body['connection'] = prepareConnection(connection, connectionType);
       props.listTables(body);
     }
   };
@@ -224,7 +216,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
                   <DialogContainer onDismiss={() => props.resetUpdateError()}>
                     {updateError === 'SAME_NAME_EXISTS' && <DuplicateDatasourceDialog datasource={datasource} />}
                   </DialogContainer>
-                  {datasourceError || connectionUpdateError ? (
+                  {datasourceError  ? (
                     <React.Fragment>
                       <br />
                       <Alert color="notice" />
@@ -245,16 +237,12 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  isConnectionSelected: storeState.datasourceSteps.isConnectionSelected,
   datasource: storeState.datasourceSteps.datasource,
   tables: storeState.datasources.tables,
   loading: storeState.datasources.loading,
   updateError: storeState.datasources.updateError,
   exploreModelTabId: storeState.datasourceSteps.exploreModelTabId,
   isSaveConnectionCalled: storeState.datasourceSteps.isSaveConnectionCalled,
-  connectionUpdateError: storeState.connections.updateError,
-  connectionUpdateSuccess: storeState.connections.updateSuccess,
-  datasourceUpdateSuccess: storeState.datasources.updateSuccess,
   createdConnection: storeState.connections.connection,
   datasourceError: storeState.datasources.errorMessage,
   connectionType: storeState.datasourceSteps.connectionType,
