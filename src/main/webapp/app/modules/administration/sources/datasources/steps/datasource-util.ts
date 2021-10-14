@@ -1,16 +1,8 @@
 import { translate } from 'react-jhipster';
-import { IConnection } from 'app/shared/model/connection.model';
-import { IConnectionType } from 'app/shared/model/connection-type.model';
 import { IDatasources } from 'app/shared/model/datasources.model';
 
 export const getSteps = () => {
-  return [
-    translate('datasources.steps.connectionType'),
-    translate('datasources.steps.newDataConnection'),
-    translate('datasources.steps.cacheSettings'),
-    translate('datasources.steps.exploreDataModel'),
-    translate('datasources.steps.dimensionsMeasures'),
-  ];
+  return [translate('datasources.steps.exploreDataModel'), translate('datasources.steps.dimensionsMeasures')];
 };
 
 export const getFeatureTypes = () => {
@@ -27,31 +19,8 @@ export const prepareConnection = (connection, connectionType) => {
   return con;
 };
 
-export const isNextDisabled = (
-  connection: IConnection,
-  connectionType: IConnectionType,
-  datasource: IDatasources,
-  isConnected: boolean,
-  exploreModelTabId: number,
-  step: number
-) => {
-  if (connectionType.id === null && step === 0) {
-    return true;
-  } else if (!isConnected && step === 1) {
-    return true;
-  } else if (!connection.connectionParameters.cacheEnabled && step === 2) {
-    return false;
-  } else if (
-    (Number(connection.connectionParameters.cachePurgeAfterMinutes) === 0 ||
-      Number(connection.connectionParameters.refreshAfterTimesRead) === 0 ||
-      Number(connection.connectionParameters.refreshAfterMinutes) === 0) &&
-    step === 2
-  ) {
-    return true;
-  } else if (
-    ((exploreModelTabId === 1 && !datasource.name) || (exploreModelTabId === 2 && (!datasource.name || !datasource.sql))) &&
-    step === 3
-  ) {
+export const isNextDisabled = (datasource: IDatasources, exploreModelTabId: number, step: number) => {
+  if (((exploreModelTabId === 1 && !datasource.name) || (exploreModelTabId === 2 && (!datasource.name || !datasource.sql))) && step === 0) {
     return true;
   } else {
     return false;
@@ -72,4 +41,9 @@ export const generateConnectionsOptions = connections => {
     options.push({ value: item.id, label: item.name });
   });
   return options;
+};
+
+export const isShowDataButtonDisabled = datasource => {
+  const x = datasource.name === null || datasource.name === '';
+  return datasource.name === null || datasource.name === '';
 };

@@ -3,12 +3,12 @@ import { IConnection, connectionDefaultValue } from 'app/shared/model/connection
 import { IDatasources, defaultDatasourceValue } from 'app/shared/model/datasources.model';
 import { IConnectionType, defaultConnectionTypeValue } from 'app/shared/model/connection-type.model';
 export const ACTION_TYPES = {
-  SELECT_CONNECTION_TYPE: 'datasourceSteps/SELECT_CONNECTION_TYPE',
-  SELECT_CONNECTION: 'datasourceSteps/SELECT_CONNECTION',
-  SET_CONNECTION: 'datasourceSteps/SET_CONNECTION',
-  RESET: 'datasourceSteps/RESET',
-  IS_SAVE_CONNECTION: 'datasourceSteps/IS_SAVE_CONNECTION',
-  IS_CONNECTION_SELECTED: 'datasourceSteps/IS_CONNECTION_SELECTED',
+  SELECT_CONNECTION_TYPE: 'connectionSteps/SELECT_CONNECTION_TYPE',
+  SELECT_CONNECTION: 'connectionSteps/SELECT_CONNECTION',
+  SET_CONNECTION: 'connectionSteps/SET_CONNECTION',
+  RESET: 'connectionSteps/RESET',
+  IS_SAVE_CONNECTION: 'connectionSteps/IS_SAVE_CONNECTION',
+  IS_CONNECTION_SELECTED: 'connectionSteps/IS_CONNECTION_SELECTED',
 };
 
 const initialState = {
@@ -19,9 +19,9 @@ const initialState = {
   isSaveConnectionCalled: false,
 };
 
-export type DatasourceStepsState = Readonly<typeof initialState>;
+export type ConnectionStepsState = Readonly<typeof initialState>;
 
-export default (state: DatasourceStepsState = initialState, action): DatasourceStepsState => {
+export default (state: ConnectionStepsState = initialState, action): ConnectionStepsState => {
   switch (action.type) {
     case ACTION_TYPES.SELECT_CONNECTION_TYPE:
       return {

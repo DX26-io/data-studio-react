@@ -18,6 +18,7 @@ export const ACTION_TYPES = {
   UPDATE_CONNECTION: 'datasources/UPDATE_CONNECTION',
   SET_IS_CONNECTED: 'datasources/SET_IS_CONNECTED',
   RESET_UPDATE_ERROR: 'datasources/RESET_UPDATE_ERROR',
+  CREATE_FEATURES: 'connections/CREATE_FEATURES',
 };
 
 const initialState = {
@@ -32,6 +33,8 @@ const initialState = {
   tables: [],
   updateError: null,
   sampleData: [],
+  updateFeaturesSuccess: false,
+  updateFeaturesRequest: false,
 };
 
 export type DatasourcesState = Readonly<typeof initialState>;
@@ -199,6 +202,8 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         updateSuccess: false,
         isConnected: false,
         updateError: null,
+        updateFeaturesSuccess: false,
+        updateFeaturesRequest: false,
       };
     case ACTION_TYPES.SET_IS_CONNECTED:
       return {
@@ -210,6 +215,25 @@ export default (state: DatasourcesState = initialState, action): DatasourcesStat
         ...state,
         updateError: null,
       };
+      case REQUEST(ACTION_TYPES.CREATE_FEATURES):
+        return {
+          ...state,
+          updateFeaturesSuccess: false,
+          updateFeaturesRequest: true,
+        };
+      case FAILURE(ACTION_TYPES.CREATE_FEATURES):
+        return {
+          ...state,
+          errorMessage: action.payload.data,
+          updateFeaturesSuccess: false,
+          updateFeaturesRequest: false,
+        };
+      case SUCCESS(ACTION_TYPES.CREATE_FEATURES):
+        return {
+          ...state,
+          updateFeaturesSuccess: true,
+          updateFeaturesRequest: false,
+        };
     default:
       return state;
   }
@@ -294,3 +318,9 @@ export const executeQuery = (body: any) => ({
   type: ACTION_TYPES.QUERY_EXECUTE,
   payload: axios.post('api/query/execute', body),
 });
+
+export const addFeatures = (featureList: any) => ({
+  type: ACTION_TYPES.CREATE_FEATURES,
+  payload: axios.post(`api/features/list`, featureList),
+});
+

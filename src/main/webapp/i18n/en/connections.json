@@ -9,6 +9,7 @@
     "id": "ID",
     "name": "Name",
     "type": "Type",
+    "select":"Select Connection*",
     "error": {
       "cache": "please fill all the fields of cache",
       "name": "Connection name is required"
@@ -17,6 +18,30 @@
       "connectionType": "Connection Type",
       "newDataConnection": "New Data Connection",
       "cacheSettings": "Cache settings"
+    },
+    "connectionsTypes": {
+      "select": "Select"
+    },
+    "dataConnection": {
+      "selectConnectionPlaceholder": "Select Existing Connection",
+      "configDatabaseServer": "Configure database server",
+      "connectionName": "Connection Name",
+      "serverAddress": "Server Address",
+      "port": "Port",
+      "databaseName": "Database Name",
+      "connectionParams": "Connection params",
+      "userName": "User Name",
+      "password": "Password",
+      "testConnection": "Test Connection",
+      "connectionSuccess": "Connection Success",
+      "connectionFailure": "Connection Error. Please check configurations",
+      "or": "OR"
+    },
+    "cacheProperty": {
+      "cacheEnabled": "Enable cache",
+      "cachePurgeAfterMinutes": "Purge after minutes",
+      "refreshAfterTimesRead": "Refresh after times read",
+      "refreshAfterMinutes": "Refresh after minutes"
     }
   }
 }

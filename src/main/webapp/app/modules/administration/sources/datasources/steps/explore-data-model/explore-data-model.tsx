@@ -1,21 +1,13 @@
 import React, { useState, useEffect, ReactText } from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
+import { DialogContainer, View, Button, Flex, Item, Form, ProgressBar, Content, Text } from '@adobe/react-spectrum';
 import {
-  ActionButton,
-  DialogContainer,
-  View,
-  Button,
-  Flex,
-  Item,
-  Form,
-  ProgressBar,
-  Content,
-  AlertDialog,
-  DialogTrigger,
-} from '@adobe/react-spectrum';
-import { prepareConnection } from '../datasource-util';
-import { setConnection, setDatasource, setExploreModelId, setIsSaveConnectionCalled } from '../datasource-steps.reducer';
+  setConnection,
+  setDatasource,
+  setExploreModelId,
+  selectConnectionType,
+} from '../datasource-steps.reducer';
 import { listTables, createDatasource, resetUpdateError } from '../../datasources.reducer';
 import { Translate, translate } from 'react-jhipster';
 import { Tabs } from '@react-spectrum/tabs';
@@ -23,29 +15,32 @@ import Select from 'react-select';
 import SqlQueryContainer from '../sql-query-container/sql-query-container';
 import Alert from '@spectrum-icons/workflow/Alert';
 import SampleData from './sample-data';
-import { createConnection, updateConnection, deleteConnection } from '../../../connections/connection.reducer';
 import DuplicateDatasourceDialog from './duplicate-datasource-dialog';
+import {
+  getConnectionsTypes,
+  getConnections,
+  createConnection,
+  updateConnection,
+  deleteConnection,
+} from '../../../connections/connection.reducer';
+import { generateConnectionsOptions, prepareConnection } from '../../../connections/connections.util';
+import { connectionDefaultValue } from 'app/shared/model/connection.model';
+import { defaultDatasourceValue } from 'app/shared/model/datasources.model';
+import { defaultConnectionTypeValue } from 'app/shared/model/connection-type.model';
+import { isShowDataButtonDisabled } from '../datasource-util';
 
-export interface IExploreDataModelProps extends StateProps, DispatchProps {
-  connectionType: any;
-  connection: any;
-}
+export interface IExploreDataModelProps extends StateProps, DispatchProps {}
 
 export const ExploreDataModel = (props: IExploreDataModelProps) => {
   const {
-    connectionUpdateSuccess,
-    connectionUpdateError,
     connectionType,
     connection,
-    isConnectionSelected,
     tables,
     loading,
     datasource,
     updateError,
     exploreModelTabId,
     isSaveConnectionCalled,
-    datasourceUpdateSuccess,
-    createdConnection,
     datasourceError,
   } = props;
 
@@ -71,11 +66,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
         searchTerm: inputValue,
         filter: tabId === 1 ? 'TABLE' : 'SQL',
       };
-      if (isConnectionSelected) {
-        body['connectionLinkId'] = connection.linkId;
-      } else {
-        body['connection'] = prepareConnection(connection, connectionType);
-      }
+      body['connection'] = prepareConnection(connection, connectionType);
       props.listTables(body);
     }
   };
@@ -133,55 +124,11 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
     control: styles => ({ ...styles, minWidth: '305px' }),
   };
 
-  const rollbackConnection = () => {
-    if (!isConnectionSelected) {
-      props.deleteConnection(connection.id);
-    }
-  };
-
-  const create = () => {
-    if (!isConnectionSelected) {
-      props.createDatasource({ ...datasource, connectionName: createdConnection.linkId });
-    } else {
-      props.createDatasource(datasource);
-    }
-  };
-
-  const saveConnection = () => {
-    const conn = prepareConnection(connection, connectionType);
-    if (!isConnectionSelected) {
-      props.createConnection(conn);
-    } else {
-      props.updateConnection(conn);
-    }
-  };
-
   useEffect(() => {
-    if (connectionUpdateSuccess && connectionUpdateError === null) {
-      create();
-    } else {
-      props.setIsSaveConnectionCalled(false);
-    }
-  }, [connectionUpdateSuccess]);
-
-  useEffect(() => {
-    if (connectionUpdateError && !connectionUpdateSuccess) {
-      rollbackConnection();
-      props.setIsSaveConnectionCalled(false);
-    }
-  }, [connectionUpdateError]);
-
-  useEffect(() => {
-    if (isSaveConnectionCalled) {
-      saveConnection();
-    }
-  }, [isSaveConnectionCalled]);
-
-  useEffect(() => {
-    if (updateError) {
-      props.setIsSaveConnectionCalled(false);
-    }
-  }, [updateError]);
+    props.getConnectionsTypes();
+    props.getConnections();
+  }, []);
+  
 
   return (
     <React.Fragment>
@@ -191,7 +138,35 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
       <Flex direction="column" gap="size-100" alignItems="center">
         {isSaveConnectionCalled ? <ProgressBar label="Creating..." isIndeterminate /> : null}
         <Form isRequired necessityIndicator="icon" minWidth="size-4600">
-          <Tabs aria-label="roles" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
+          <span className="spectrum-Body-emphasis">
+            <Translate contentKey="connections.select">Select Connection*</Translate>
+          </span>
+          <div style={{ minWidth: '305px', marginTop: '10px' }}>
+            <Select
+              className="basic-single"
+              classNamePrefix="select"
+              isClearable
+              isSearchable
+              placeholder={translate('connections.dataConnection.selectConnectionPlaceholder')}
+              value={props.connection && props.connection.id ? { value: props.connection.id, label: props.connection.name } : null}
+              options={props.connectionsSelectOptions}
+              onChange={selectedOption => {
+                if (selectedOption) {
+                  const _connection = props.connections.filter(con => con.id === selectedOption.value)[0];
+                  const _connectionType = props.connectionsTypes.filter(
+                    connectionsType => connectionsType.id === _connection.connectionTypeId
+                  )[0];
+                  props.setConnection(_connection);
+                  props.selectConnectionType(_connectionType);
+                } else {
+                  props.setConnection(connectionDefaultValue);
+                  props.setDatasource(defaultDatasourceValue);
+                  props.selectConnectionType(defaultConnectionTypeValue);
+                }
+              }}
+            />
+          </div>
+          <Tabs aria-label="datasources" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
             {item => (
               <Item title={translate(item.name)}>
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
@@ -206,8 +181,9 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
                           onChange={selectDatasource}
                           styles={selectStyles}
                           defaultValue={{ value: datasource.name, label: datasource.name }}
+                          value={{ value: datasource.name, label: datasource.name }}
                         />
-                        <Button variant="cta" isDisabled={false} onPress={() => setSampleTableOpen(true)}>
+                        <Button variant="cta" isDisabled={isShowDataButtonDisabled(datasource)} onPress={() => setSampleTableOpen(true)}>
                           <Translate contentKey="datasources.exploreDataModel.showData">Show Data</Translate>
                         </Button>
                       </Flex>
@@ -224,7 +200,11 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
                           styles={selectStyles}
                           defaultValue={{ value: datasource.sql, label: datasource.name }}
                         />
-                        <Button variant="cta" isDisabled={false} onPress={() => setSampleTableOpen(true)}>
+                        <Button
+                          variant="cta"
+                          isDisabled={isShowDataButtonDisabled(datasource) || datasource.sql === null || datasource.sql === ''}
+                          onPress={() => setSampleTableOpen(true)}
+                        >
                           <Translate contentKey="datasources.exploreDataModel.showData">Show Data</Translate>
                         </Button>
                       </Flex>
@@ -236,7 +216,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
                   <DialogContainer onDismiss={() => props.resetUpdateError()}>
                     {updateError === 'SAME_NAME_EXISTS' && <DuplicateDatasourceDialog datasource={datasource} />}
                   </DialogContainer>
-                  {datasourceError || connectionUpdateError ? (
+                  {datasourceError  ? (
                     <React.Fragment>
                       <br />
                       <Alert color="notice" />
@@ -257,18 +237,19 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  isConnectionSelected: storeState.datasourceSteps.isConnectionSelected,
   datasource: storeState.datasourceSteps.datasource,
   tables: storeState.datasources.tables,
   loading: storeState.datasources.loading,
   updateError: storeState.datasources.updateError,
   exploreModelTabId: storeState.datasourceSteps.exploreModelTabId,
   isSaveConnectionCalled: storeState.datasourceSteps.isSaveConnectionCalled,
-  connectionUpdateError: storeState.connections.updateError,
-  connectionUpdateSuccess: storeState.connections.updateSuccess,
-  datasourceUpdateSuccess: storeState.datasources.updateSuccess,
   createdConnection: storeState.connections.connection,
   datasourceError: storeState.datasources.errorMessage,
+  connectionType: storeState.datasourceSteps.connectionType,
+  connection: storeState.datasourceSteps.connection,
+  connections: storeState.connections.connections,
+  connectionsTypes: storeState.connections.connectionsTypes,
+  connectionsSelectOptions: generateConnectionsOptions(storeState.connections.connections),
 });
 
 const mapDispatchToProps = {
@@ -280,8 +261,10 @@ const mapDispatchToProps = {
   createConnection,
   updateConnection,
   deleteConnection,
-  setIsSaveConnectionCalled,
   resetUpdateError,
+  getConnectionsTypes,
+  getConnections,
+  selectConnectionType,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

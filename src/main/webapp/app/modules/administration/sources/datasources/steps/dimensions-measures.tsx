@@ -4,7 +4,7 @@ import { Translate, translate } from 'react-jhipster';
 import { getFeatureTypes } from './datasource-util';
 import { IRootState } from 'app/shared/reducers';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
-import { getFeatures, addFeatures } from '../../connections/connection.reducer';
+import { getFeatures } from '../../connections/connection.reducer';
 import { Flex, Picker, Item, Checkbox, Text, ProgressBar } from '@adobe/react-spectrum';
 import { COMPARABLE_DATA_TYPES } from 'app/config/constants';
 
@@ -13,7 +13,7 @@ interface IDimensionsMeasures extends StateProps, DispatchProps {
 }
 
 export const DimensionsMeasures = (props: IDimensionsMeasures) => {
-  const { datasourceId, features, isAddFeaturesCalled, loading, updateFeaturesRequest } = props;
+  const { datasourceId, features, loading, updateFeaturesRequest } = props;
 
   useEffect(() => {
     if (features.length === 0) {
@@ -25,15 +25,6 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
       props.getFeatures(datasourceId, body);
     }
   }, []);
-
-  useEffect(() => {
-    if (isAddFeaturesCalled) {
-      props.addFeatures({
-        datasourceId,
-        featureList: features,
-      });
-    }
-  }, [isAddFeaturesCalled]);
 
   const isTemporalFeature = feature => {
     return COMPARABLE_DATA_TYPES.includes(feature.type.toLowerCase());
@@ -126,11 +117,10 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
 const mapStateToProps = (storeState: IRootState) => ({
   features: storeState.connections.features,
   loading: storeState.connections.loading,
-  isAddFeaturesCalled: storeState.datasourceSteps.isAddFeaturesCalled,
-  updateFeaturesRequest: storeState.connections.updateFeaturesRequest,
+  updateFeaturesRequest: storeState.datasources.updateFeaturesRequest,
 });
 
-const mapDispatchToProps = { getFeatures, addFeatures };
+const mapDispatchToProps = { getFeatures };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

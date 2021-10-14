@@ -66,10 +66,11 @@ const ConnectionStepper = (props: IConnectionStepperProps) => {
   };
 
   const handleClose = () => {
-    setConnectionStepperOpen(false);
-    dialog.dismiss();
     props.resetSteps();
     props.resetConnection();
+    dialog.dismiss();
+    setConnectionStepperOpen(false);
+    setUpdateSuccess();
   };
 
   const saveConnection = () => {
@@ -116,7 +117,6 @@ const ConnectionStepper = (props: IConnectionStepperProps) => {
 
   useEffect(() => {
     if (connectionUpdateSuccess) {
-      setUpdateSuccess();
       handleClose();
     }
   }, [connectionUpdateSuccess]);
@@ -196,10 +196,10 @@ const ConnectionStepper = (props: IConnectionStepperProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   connectionsTypes: storeState.connections.connectionsTypes,
-  connectionType: storeState.datasourceSteps.connectionType,
-  connection: storeState.datasourceSteps.connection,
+  connectionType: storeState.connectionSteps.connectionType,
+  connection: storeState.connectionSteps.connection,
   isConnected: storeState.datasources.isConnected,
-  isConnectionSelected: storeState.datasourceSteps.isConnectionSelected,
+  isConnectionSelected: storeState.connectionSteps.isConnectionSelected,
   connectionUpdateError: storeState.connections.updateError,
   connectionUpdateSuccess: storeState.connections.updateSuccess,
 });

@@ -42,12 +42,12 @@ const CacheProperty = (props: CachePropertyProps) => {
     <Flex direction="column" gap="size-100" alignItems="center">
       <Form necessityIndicator="icon" minWidth="size-4600">
         <Checkbox onChange={setEnableCache} isSelected={cacheEnabled} isEmphasized>
-          <Translate contentKey="datasources.cacheProperty.cacheEnabled">Enable cache</Translate>
+          <Translate contentKey="connections.cacheProperty.cacheEnabled">Enable cache</Translate>
         </Checkbox>
         <TextField
           type="number"
           isDisabled={!cacheEnabled}
-          label={translate('datasources.cacheProperty.cachePurgeAfterMinutes')}
+          label={translate('connections.cacheProperty.cachePurgeAfterMinutes')}
           isRequired={cacheEnabled}
           onChange={setCachePurgeAfterMinutes}
           value={cachePurgeAfterMinutes}
@@ -55,7 +55,7 @@ const CacheProperty = (props: CachePropertyProps) => {
         <TextField
           type="number"
           isDisabled={!cacheEnabled}
-          label={translate('datasources.cacheProperty.refreshAfterTimesRead')}
+          label={translate('connections.cacheProperty.refreshAfterTimesRead')}
           isRequired={cacheEnabled}
           onChange={setRefreshAfterTimesRead}
           value={refreshAfterTimesRead}
@@ -63,7 +63,7 @@ const CacheProperty = (props: CachePropertyProps) => {
         <TextField
           type="number"
           isDisabled={!cacheEnabled}
-          label={translate('datasources.cacheProperty.refreshAfterMinutes')}
+          label={translate('connections.cacheProperty.refreshAfterMinutes')}
           isRequired={cacheEnabled}
           onChange={setRefreshAfterMinutes}
           value={refreshAfterMinutes}

@@ -4,21 +4,17 @@ import { IDatasources, defaultDatasourceValue } from 'app/shared/model/datasourc
 import { IConnectionType, defaultConnectionTypeValue } from 'app/shared/model/connection-type.model';
 export const ACTION_TYPES = {
   SELECT_CONNECTION_TYPE: 'datasourceSteps/SELECT_CONNECTION_TYPE',
-  SELECT_CONNECTION: 'datasourceSteps/SELECT_CONNECTION',
   SET_CONNECTION: 'datasourceSteps/SET_CONNECTION',
   RESET: 'datasourceSteps/RESET',
   SET_DATASOURCE: 'datasourceSteps/SET_DATASOURCE',
   SET_EXPLORE_MODEL_ID: 'datasourceSteps/SET_EXPLORE_MODEL_ID',
   SET_FEATURES: 'datasourceSteps/SET_FEATURES',
   IS_ADD_FEATURES: 'datasourceSteps/IS_ADD_FEATURES',
-  IS_SAVE_CONNECTION: 'datasourceSteps/IS_SAVE_CONNECTION',
-  IS_CONNECTION_SELECTED: 'datasourceSteps/IS_CONNECTION_SELECTED',
 };
 
 const initialState = {
   connectionType: defaultConnectionTypeValue,
   connection: connectionDefaultValue,
-  isConnectionSelected: false,
   datasource: defaultDatasourceValue,
   exploreModelTabId: 1,
   features: [],
@@ -34,17 +30,6 @@ export default (state: DatasourceStepsState = initialState, action): DatasourceS
       return {
         ...state,
         connectionType: action.payload,
-      };
-    case ACTION_TYPES.SELECT_CONNECTION:
-      return {
-        ...state,
-        connection: action.payload,
-        isConnectionSelected: true,
-      };
-    case ACTION_TYPES.IS_CONNECTION_SELECTED:
-      return {
-        ...state,
-        isConnectionSelected: action.payload,
       };
     case ACTION_TYPES.SET_CONNECTION:
       return {
@@ -71,11 +56,6 @@ export default (state: DatasourceStepsState = initialState, action): DatasourceS
         ...state,
         isAddFeaturesCalled: action.payload,
       };
-    case ACTION_TYPES.IS_SAVE_CONNECTION:
-      return {
-        ...state,
-        isSaveConnectionCalled: action.payload,
-      };
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
@@ -91,19 +71,6 @@ export const selectConnectionType = (connectionType: IConnectionType) => {
     payload: connectionType,
   };
 };
-export const selectConnection = (connection: IConnection) => {
-  return {
-    type: ACTION_TYPES.SELECT_CONNECTION,
-    payload: connection,
-  };
-};
-
-export const setIsConnectionSelected = isConnectionSelected => {
-  return {
-    type: ACTION_TYPES.IS_CONNECTION_SELECTED,
-    payload: isConnectionSelected,
-  };
-};
 
 export const setConnection = (connection: IConnection) => {
   return {
@@ -111,6 +78,7 @@ export const setConnection = (connection: IConnection) => {
     payload: connection,
   };
 };
+
 export const resetSteps = () => {
   return {
     type: ACTION_TYPES.RESET,
@@ -142,12 +110,5 @@ export const setIsAddFeaturesCalled = isAddFeaturesCalled => {
   return {
     type: ACTION_TYPES.IS_ADD_FEATURES,
     payload: isAddFeaturesCalled,
-  };
-};
-
-export const setIsSaveConnectionCalled = isSaveConnectionCalled => {
-  return {
-    type: ACTION_TYPES.IS_SAVE_CONNECTION,
-    payload: isSaveConnectionCalled,
   };
 };

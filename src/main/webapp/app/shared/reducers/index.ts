@@ -14,6 +14,7 @@ import datasourceConstraints, {
 import connections, { ConnectionsState } from 'app/modules/administration/sources/connections/connection.reducer';
 import datasources, { DatasourcesState } from 'app/modules/administration/sources/datasources/datasources.reducer';
 import datasourceSteps, { DatasourceStepsState } from 'app/modules/administration/sources/datasources/steps/datasource-steps.reducer';
+import connectionSteps, { ConnectionStepsState } from 'app/modules/administration/sources/connections/connection-steps.reducer';
 import register, { RegisterState } from 'app/modules/account/register/register.reducer';
 import activate, { ActivateState } from 'app/modules/account/activate/activate.reducer';
 import password, { PasswordState } from 'app/modules/account/password/password.reducer';
@@ -76,6 +77,7 @@ export interface IRootState {
   readonly dashboard: DashboardState;
   readonly datasources: DatasourcesState;
   readonly datasourceSteps: DatasourceStepsState;
+  readonly connectionSteps : ConnectionStepsState;
   readonly views: ViewsState;
   readonly feature: FeatureState;
   readonly functions: FunctionState;
@@ -109,6 +111,7 @@ const rootReducer = combineReducers<IRootState>({
   datasourceConstraints,
   connections,
   datasourceSteps,
+  connectionSteps,
   register,
   activate,
   passwordReset,

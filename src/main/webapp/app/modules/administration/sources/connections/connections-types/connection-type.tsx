@@ -31,7 +31,7 @@ const ConnectionType = (props: IConnectionTypeProps) => {
             props.updateIsSelectedConnectionType(connectionType.id);
           }}
         >
-          <Translate contentKey="datasources.connectionsTypes.select">Select</Translate>
+          <Translate contentKey="connections.connectionsTypes.select">Select</Translate>
         </Button>
       </Flex>
     </View>

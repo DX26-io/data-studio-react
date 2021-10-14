@@ -14,7 +14,7 @@ interface ISampleDataprops extends StateProps, DispatchProps {
 export const SampleData = (props: ISampleDataprops) => {
   const dialog = useDialogContainer();
 
-  const { setOpen, isConnectionSelected, connection, connectionType, datasource, sampleData, sampleDataHeader, loading } = props;
+  const { setOpen, connection, connectionType, datasource, sampleData, sampleDataHeader, loading } = props;
 
   useEffect(() => {
     const body = {
@@ -26,11 +26,7 @@ export const SampleData = (props: ISampleDataprops) => {
       },
       sql: datasource.sql ? datasource.sql : null,
     };
-    if (isConnectionSelected) {
-      body['connectionLinkId'] = connection.linkId;
-    } else {
-      body['connection'] = prepareConnection(connection, connectionType);
-    }
+    body['connection'] = prepareConnection(connection, connectionType);
     props.executeQuery(body);
   }, []);
 
@@ -110,7 +106,6 @@ export const SampleData = (props: ISampleDataprops) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   datasource: storeState.datasourceSteps.datasource,
-  isConnectionSelected: storeState.datasourceSteps.isConnectionSelected,
   connection: storeState.datasourceSteps.connection,
   connectionType: storeState.datasourceSteps.connectionType,
   sampleData: storeState.datasources.sampleData,

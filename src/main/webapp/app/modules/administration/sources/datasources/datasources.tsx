@@ -98,13 +98,13 @@ export const Datasources = (props: IDatasourcesProps) => {
             setOpen(true);
             setNew(true);
           }}
-          data-testid="create-group"
+          data-testid="create-datasource"
         >
           <Translate contentKey="entity.action.create">Create</Translate>
         </Button>
       </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && <DatasourceStepper setUpdateSuccess={setUpdateSuccess} setOpen={setOpen} isNew={true} {...props}></DatasourceStepper>}
+        {isOpen && <DatasourceStepper setUpdateSuccess={setUpdateSuccess} setOpen={setOpen} isNew={isNew} {...props}></DatasourceStepper>}
       </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">

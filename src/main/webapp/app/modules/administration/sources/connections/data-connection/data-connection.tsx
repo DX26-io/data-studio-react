@@ -39,7 +39,7 @@ export const DataConnection = (props: IDataConnectionProps) => {
             classNamePrefix="select"
             isClearable
             isSearchable
-            placeholder={translate('datasources.dataConnection.selectConnectionPlaceholder')}
+            placeholder={translate('connections.dataConnection.selectConnectionPlaceholder')}
             value={props.connection && props.connection.id ? { value: props.connection.id, label: props.connection.name } : null}
             options={props.connectionsSelectOptions}
             onChange={selectedOption => {
@@ -59,11 +59,11 @@ export const DataConnection = (props: IDataConnectionProps) => {
         <div style={{ textAlign: 'center', marginTop: '14px' }}>
           {/* TODO : OR needs to be badge component or something else */}
           <span className="spectrum-Heading.spectrum-Heading--sizeL.spectrum-Heading--heavy">
-            <Translate contentKey="datasources.dataConnection.or">OR</Translate>
+            <Translate contentKey="connections.dataConnection.or">OR</Translate>
           </span>
         </div>
         <TextField
-          label={translate('datasources.dataConnection.connectionName')}
+          label={translate('connections.dataConnection.connectionName')}
           onChange={event => {
             props.setConnection({ ...props.connection, name: event });
           }}
@@ -79,7 +79,7 @@ export const DataConnection = (props: IDataConnectionProps) => {
             type="text"
             isDisabled={props.isConnectionSelected}
             isRequired={!props.isConnectionSelected}
-            label={translate('datasources.dataConnection.userName')}
+            label={translate('connections.dataConnection.userName')}
             onChange={event => {
               props.setConnection({ ...props.connection, connectionUsername: event });
             }}
@@ -91,7 +91,7 @@ export const DataConnection = (props: IDataConnectionProps) => {
             type="password"
             isDisabled={props.isConnectionSelected}
             isRequired={!props.isConnectionSelected}
-            label={translate('datasources.dataConnection.password')}
+            label={translate('connections.dataConnection.password')}
             onChange={event => {
               props.setConnection({ ...props.connection, connectionPassword: event });
             }}
@@ -101,7 +101,7 @@ export const DataConnection = (props: IDataConnectionProps) => {
         <br />
         <Flex direction="row" gap="size-200" alignItems="center">
           <Button variant="cta" isDisabled={props.connection.name === ''} onPress={testConnection}>
-            <Translate contentKey="datasources.dataConnection.testConnection">Test Connection</Translate>
+            <Translate contentKey="connections.dataConnection.testConnection">Test Connection</Translate>
           </Button>
           {loading ? <ProgressBar label="Loading…" isIndeterminate /> : null}
 
@@ -110,7 +110,7 @@ export const DataConnection = (props: IDataConnectionProps) => {
               <Checkmark color="positive" />
               <Text marginBottom="size-300">
                 <span className="spectrum-Body-emphasis" style={{ verticalAlign: '-19px', marginLeft: '-12px' }}>
-                  <Translate contentKey="datasources.dataConnection.connectionSuccess">Connection Success</Translate>
+                  <Translate contentKey="connections.dataConnection.connectionSuccess">Connection Success</Translate>
                 </span>
               </Text>
             </React.Fragment>
@@ -121,7 +121,7 @@ export const DataConnection = (props: IDataConnectionProps) => {
               <Text marginBottom="size-300">
                 <span className="spectrum-Body-emphasis error-message" style={{ verticalAlign: '-19px', marginLeft: '-12px' }}>
                   {' '}
-                  <Translate contentKey="datasources.dataConnection.connectionFailure">
+                  <Translate contentKey="connections.dataConnection.connectionFailure">
                     Connection Error. Please check configurations
                   </Translate>
                 </span>
@@ -136,8 +136,8 @@ export const DataConnection = (props: IDataConnectionProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   connections: storeState.connections.connections,
-  connection: storeState.datasourceSteps.connection,
-  isConnectionSelected: storeState.datasourceSteps.isConnectionSelected,
+  connection: storeState.connectionSteps.connection,
+  isConnectionSelected: storeState.connectionSteps.isConnectionSelected,
   isConnected: storeState.datasources.isConnected,
   errorMessage: storeState.datasources.errorMessage,
   loading: storeState.datasources.loading,
