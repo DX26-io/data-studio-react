@@ -74,7 +74,11 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
   };
 
   const create = () => {
-    props.createDatasource({ ...datasource, connectionName: connection.linkId });
+    if(datasource.id){
+      props.updateDatasource({ ...datasource, connectionName: connection.linkId });
+    }else{
+      props.createDatasource({ ...datasource, connectionName: connection.linkId });
+    }
   };
 
   const handleNext = () => {

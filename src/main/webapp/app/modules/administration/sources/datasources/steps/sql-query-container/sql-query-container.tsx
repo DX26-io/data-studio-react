@@ -3,28 +3,24 @@ import { Button, Form } from '@adobe/react-spectrum';
 import './sql-query-container.scss';
 import { format } from 'sql-formatter';
 import { Translate } from 'react-jhipster';
+import { connect } from 'react-redux';
+import { IRootState } from 'app/shared/reducers';
+import { setDatasource } from '../datasource-steps.reducer';
 
-interface ISqlQueryContainerProps {
-  sqlQuery: string;
-  dispatchQuery: (event) => void;
-}
+interface ISqlQueryContainerProps extends StateProps, DispatchProps {}
 
-const SqlQueryContainer: React.FC<ISqlQueryContainerProps> = ({ sqlQuery, dispatchQuery }) => {
+export const SqlQueryContainer = (props: ISqlQueryContainerProps) => {
   const [sqlLines, setSqlLines] = React.useState([]);
-
-  const [sql, setSql] = React.useState('');
-
   const [sqlQuerylength, setSqlQuerylength] = React.useState(0);
 
   const formatQuery = () => {
-    if (sql) {
-      const result = format(sql);
+    if (props.datasource.sql) {
+      const result = format(props.datasource.sql);
       setSqlLines(result.split('\n'));
       setSqlQuerylength(sqlLines.length + 1);
-      setSql(result);
-      dispatchQuery(sql);
+      props.setDatasource({ ...props.datasource, sql:result });
     } else {
-      setSql('');
+      props.setDatasource({ ...props.datasource, sql: '' });
     }
   };
 
@@ -40,12 +36,11 @@ const SqlQueryContainer: React.FC<ISqlQueryContainerProps> = ({ sqlQuery, dispat
           <textarea
             className="form-control sql-query-area"
             rows={sqlQuerylength}
-            value={sql ? sql : sqlQuery}
+            value={props.datasource.sql ? props.datasource.sql : ''}
             onBlur={formatQuery}
             onPaste={formatQuery}
             onChange={event => {
-              setSql(event.target.value);
-              dispatchQuery(event.target.value);
+              props.setDatasource({ ...props.datasource, sql: event.target.value });
             }}
             style={{ width: '30vw' }}
           ></textarea>
@@ -59,4 +54,13 @@ const SqlQueryContainer: React.FC<ISqlQueryContainerProps> = ({ sqlQuery, dispat
   );
 };
 
-export default SqlQueryContainer;
+const mapStateToProps = (storeState: IRootState) => ({
+  datasource: storeState.datasourceSteps.datasource,
+});
+
+const mapDispatchToProps = { setDatasource };
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(mapStateToProps, mapDispatchToProps)(SqlQueryContainer);
