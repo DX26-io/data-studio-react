@@ -8,11 +8,13 @@ import { Translate, getSortState, translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
 import { IRootState } from 'app/shared/reducers';
-import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
+import { Button, Flex, DialogContainer, ActionButton } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 import DatasourceStepper from './steps/datasource-stepper';
+import { setDatasource, setConnection, selectConnectionType, setExploreModelId } from './steps/datasource-steps.reducer';
+import { getConnectionsTypes, getConnections } from '../connections/connection.reducer';
 
 export interface IDatasourcesProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -81,6 +83,11 @@ export const Datasources = (props: IDatasourcesProps) => {
     getAllEntities();
   };
 
+  useEffect(() => {
+    props.getConnectionsTypes();
+    props.getConnections();
+  }, []);
+
   const { datasources, loading, totalItems } = props;
   return (
     <div>
@@ -136,12 +143,24 @@ export const Datasources = (props: IDatasourcesProps) => {
                     <TableCell align="center">{datasource.connectionName}</TableCell>
                     <TableCell align="center">
                       <Flex gap="size-100" justifyContent="center">
-                        <a
-                        // onClick={() => {
-                        // }}
+                        <ActionButton
+                          onPress={() => {
+                            setOpen(true);
+                            setNew(false);
+                            props.setDatasource(datasource);
+                            const _connection = props.connections.filter(con => con.id === datasource.connectionId)[0];
+                            const _connectionType = props.connectionsTypes.filter(
+                              connectionsType => connectionsType.id === _connection.connectionTypeId
+                            )[0];
+                            props.setConnection(_connection);
+                            props.selectConnectionType(_connectionType);
+                            const exploreModelTabId = datasource.sql ? 2 : 1;
+                            props.setExploreModelId(exploreModelTabId);
+                          }}
+                          isQuiet
                         >
                           <Edit size="S" />
-                        </a>
+                        </ActionButton>
                       </Flex>
                     </TableCell>
                   </TableRow>
@@ -169,10 +188,18 @@ const mapStateToProps = (storeState: IRootState) => ({
   datasources: storeState.datasources.datasources,
   loading: storeState.datasources.loading,
   totalItems: storeState.datasources.totalItems,
+  connections: storeState.connections.connections,
+  connectionsTypes: storeState.connections.connectionsTypes,
 });
 
 const mapDispatchToProps = {
   getDatasources,
+  setDatasource,
+  setConnection,
+  selectConnectionType,
+  getConnectionsTypes,
+  getConnections,
+  setExploreModelId,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

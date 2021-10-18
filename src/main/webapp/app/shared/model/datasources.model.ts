@@ -5,6 +5,7 @@ export interface IDatasources {
   name?: string;
   lastUpdated?: Date;
   connectionName?: string;
+  connectionId?:string;
   queryPath?: string;
   sql?: string;
 }
@@ -14,6 +15,7 @@ export const defaultDatasourceValue: Readonly<IDatasources> = {
   name: '',
   lastUpdated: new Date(),
   connectionName: '',
+  connectionId:null,
   queryPath: '',
   sql: '',
 };

@@ -8,7 +8,7 @@ import {
   setExploreModelId,
   selectConnectionType,
 } from '../datasource-steps.reducer';
-import { listTables, createDatasource, resetUpdateError } from '../../datasources.reducer';
+import { listTables, createDatasource, resetUpdateError,getDatasource } from '../../datasources.reducer';
 import { Translate, translate } from 'react-jhipster';
 import { Tabs } from '@react-spectrum/tabs';
 import Select from 'react-select';
@@ -28,6 +28,7 @@ import { connectionDefaultValue } from 'app/shared/model/connection.model';
 import { defaultDatasourceValue } from 'app/shared/model/datasources.model';
 import { defaultConnectionTypeValue } from 'app/shared/model/connection-type.model';
 import { isShowDataButtonDisabled } from '../datasource-util';
+import datasources from '../../datasources';
 
 export interface IExploreDataModelProps extends StateProps, DispatchProps {}
 
@@ -48,8 +49,6 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
 
   const [sqlOptions, setSqlOptions] = React.useState([]);
 
-  const [sql, setSql] = React.useState(datasource.sql);
-
   const [isSampleTableOpen, setSampleTableOpen] = React.useState(false);
 
   const tabs = [
@@ -57,14 +56,12 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
     { id: 2, name: 'datasources.exploreDataModel.sqlmode.name' },
   ];
 
-  const [tabId, setTabId] = useState<ReactText>(exploreModelTabId);
-
   const search = (inputValue, { action }) => {
     setSearchedText(inputValue);
     if (inputValue) {
       const body = {
         searchTerm: inputValue,
-        filter: tabId === 1 ? 'TABLE' : 'SQL',
+        filter: exploreModelTabId === 1 ? 'TABLE' : 'SQL',
       };
       body['connection'] = prepareConnection(connection, connectionType);
       props.listTables(body);
@@ -72,16 +69,10 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
   };
 
   useEffect(() => {
-    if (tabId === 1) {
-      setSql('');
-    }
-  }, [tabId]);
-
-  useEffect(() => {
-    if (tabId === 2 && tables.length === 0) {
+    if (exploreModelTabId === 2 && tables.length === 0) {
       setSqlOptions([
         {
-          value: sql,
+          value: props.datasource.sql,
           label: searchedText,
         },
         ...tables,
@@ -91,17 +82,12 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
     }
   }, [loading]);
 
-  const dispatchQuery = sqlQuery => {
-    setSql(sqlQuery);
-    props.setDatasource({ ...datasource, sql: sqlQuery });
-  };
-
   const selectDatasource = selectedOption => {
     let datasourceSql = '';
     let datasourceName = '';
     if (selectedOption) {
-      if (tabId === 2) {
-        datasourceSql = selectedOption.value ? selectedOption.value : sql;
+      if (exploreModelTabId === 2) {
+        datasourceSql = selectedOption.value ? selectedOption.value : props.datasource.sql;
       }
       datasourceName = selectedOption.label;
     } else {
@@ -116,19 +102,11 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
       connectionName: connection.linkId,
       lastUpdated: new Date(),
     });
-    props.setExploreModelId(tabId);
-    setSql(datasourceSql);
   };
 
   const selectStyles = {
     control: styles => ({ ...styles, minWidth: '305px' }),
-  };
-
-  useEffect(() => {
-    props.getConnectionsTypes();
-    props.getConnections();
-  }, []);
-  
+  };  
 
   return (
     <React.Fragment>
@@ -166,11 +144,13 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
               }}
             />
           </div>
-          <Tabs aria-label="datasources" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
+          <Tabs aria-label="datasources" items={tabs} selectedKey={exploreModelTabId} onSelectionChange={id=>{
+            props.setExploreModelId(id);
+          }}>
             {item => (
               <Item title={translate(item.name)}>
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-                  {tabId === 1 ? (
+                  {exploreModelTabId === 1 ? (
                     <View>
                       <Flex direction="row" gap="size-300" alignItems="center">
                         <Select
@@ -199,6 +179,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
                           onChange={selectDatasource}
                           styles={selectStyles}
                           defaultValue={{ value: datasource.sql, label: datasource.name }}
+                          value={{ value: datasource.sql, label: datasource.name }}
                         />
                         <Button
                           variant="cta"
@@ -209,7 +190,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
                         </Button>
                       </Flex>
                       <br />
-                      <SqlQueryContainer dispatchQuery={dispatchQuery} sqlQuery={sql} />
+                      <SqlQueryContainer/>
                     </View>
                   )}
 
@@ -265,6 +246,7 @@ const mapDispatchToProps = {
   getConnectionsTypes,
   getConnections,
   selectConnectionType,
+  getDatasource
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
