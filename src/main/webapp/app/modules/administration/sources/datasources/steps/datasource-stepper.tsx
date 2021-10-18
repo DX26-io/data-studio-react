@@ -8,7 +8,7 @@ import { translate, Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { View, Flex, Dialog, Heading, Divider, Content, Button, Header, useDialogContainer } from '@adobe/react-spectrum';
-import { getConnectionsTypes, resetConnection } from '../../connections/connection.reducer';
+import {resetConnection } from '../../connections/connection.reducer';
 import { getSteps, isNextDisabled } from './datasource-util';
 import { resetSteps, setIsAddFeaturesCalled } from './datasource-steps.reducer';
 import { reset, createDatasource, updateDatasource, addFeatures } from '../datasources.reducer';
@@ -176,14 +176,13 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-  getConnectionsTypes,
   reset,
   resetSteps,
   createDatasource,
   resetConnection,
   setIsAddFeaturesCalled,
   updateDatasource,
-  addFeatures,
+  addFeatures
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

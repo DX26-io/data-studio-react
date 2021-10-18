@@ -8,7 +8,7 @@ import {
   setExploreModelId,
   selectConnectionType,
 } from '../datasource-steps.reducer';
-import { listTables, createDatasource, resetUpdateError } from '../../datasources.reducer';
+import { listTables, createDatasource, resetUpdateError,getDatasource } from '../../datasources.reducer';
 import { Translate, translate } from 'react-jhipster';
 import { Tabs } from '@react-spectrum/tabs';
 import Select from 'react-select';
@@ -122,13 +122,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
 
   const selectStyles = {
     control: styles => ({ ...styles, minWidth: '305px' }),
-  };
-
-  useEffect(() => {
-    props.getConnectionsTypes();
-    props.getConnections();
-  }, []);
-  
+  };  
 
   return (
     <React.Fragment>
@@ -265,6 +259,7 @@ const mapDispatchToProps = {
   getConnectionsTypes,
   getConnections,
   selectConnectionType,
+  getDatasource
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
