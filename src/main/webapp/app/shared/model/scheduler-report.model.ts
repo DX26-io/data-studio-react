@@ -99,7 +99,7 @@ export interface ISchedulerReport {
   schedule: ISchedule;
   queryDTO: any;
   //   query: any;
-  constraints: any;
+  constraints: string;
   putCall: boolean;
   emailReporter: boolean;
 }
@@ -113,7 +113,7 @@ export const schedulerReportDefaultValue: Readonly<ISchedulerReport> = {
   schedule: scheduleDefaultValue,
   queryDTO: {},
   //   query: any;
-  constraints: {},
+  constraints: '{}',
   putCall: false,
   emailReporter: false,
 };
