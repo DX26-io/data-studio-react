@@ -28,8 +28,8 @@ const initialState = {
   errorMessage: null,
   schedulerReport: schedulerReportDefaultValue,
   users: [] as ReadonlyArray<IUser>,
-  condition: <ICondition>ConditionDefaultValue,
-  timeConditions: <ITimeConditions>TimeConditionsDefaultValue,
+  condition: ConditionDefaultValue as ICondition,
+  timeConditions: TimeConditionsDefaultValue as ITimeConditions,
 };
 
 export type SchedulerState = Readonly<typeof initialState>;
