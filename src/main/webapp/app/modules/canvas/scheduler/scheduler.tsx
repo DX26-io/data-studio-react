@@ -1,5 +1,5 @@
 import React, { ReactText, useEffect, useState } from 'react';
-import { Checkbox, CheckboxGroup, Form, TextField, View, TextArea, Flex, ButtonGroup, Button } from '@adobe/react-spectrum';
+import { Checkbox, CheckboxGroup, Form, TextField, View, TextArea, Flex, ButtonGroup, Button, RadioGroup, Radio } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { SCHEDULER_CHANNELS } from 'app/shared/util/Scheduler.constants';
@@ -11,17 +11,20 @@ import { Translate } from 'react-jhipster';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { buildQueryDTO } from '../visualisation/util/visualisation-render-utils';
 import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
-import { GenerateUserOptions, GenerateWebhookOptions, SetDefaulSelectedUserEmailList, SetDefaultWebHookList } from './scheduler.util';
+import { GenerateUserOptions, GenerateWebhookOptions, getHavingDTO, SetDefaulSelectedUserEmailList, SetDefaultWebHookList, validateAndSetHaving, assignTimeConditionsToScheduledObj } from './scheduler.util';
+import ThresholdAlert from 'app/modules/threshold-alert/thresholdAlert';
 export interface ISchedulerProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
 }
 
 const Scheduler = (props: ISchedulerProps) => {
+
   useEffect(() => {
     props.getUsers();
     props.getWebhookList();
     props.getScheduleReportById(props.visual?.id);
   }, []);
+
 
   const setDimentionsAndMeasures = fields => {
     const dimensions = [];
@@ -43,9 +46,13 @@ const Scheduler = (props: ISchedulerProps) => {
     props.executeNow(props.visual.id);
   };
 
+
   const saveScheduleReport = () => {
     // TODO : this is not the best practice..will be refactored in near future
     const dimentionsAndMeasures = setDimentionsAndMeasures(props.visual.fields);
+    validateAndSetHaving(props.schedulerReport, props.visual, props.condition, props.selectedFilters, setSchedulerReport)
+    const queryDTO = buildQueryDTO(props.visual, props.filters);
+    queryDTO.having = getHavingDTO(props.visual, props.condition, props.selectedFilters);
     props.scheduleReport({
       ...props.schedulerReport,
       report: {
@@ -58,24 +65,25 @@ const Scheduler = (props: ISchedulerProps) => {
         userId: '',
         connectionName: '',
         sourceId: 0,
-        reportName : props.schedulerReport.report.titleName,
-        mailBody : props.schedulerReport.report.mailBody,
-        subject:'',
-        titleName:''
+        reportName: props.schedulerReport.report.titleName,
+        mailBody: props.schedulerReport.report.mailBody,
+        subject: '',
+        titleName: ''
       },
       datasourceId: props.view.viewDashboard.dashboardDatasource.id,
       dashboardId: props.view.viewDashboard.id.toString(),
       putCall: props.schedulerReport?.reportLineItem.visualisationId ? true : false,
-      constraints: "{}",
+      constraints: assignTimeConditionsToScheduledObj(props.timeConditions),
       reportLineItem: {
         visualisationId: props.visual.id,
         visualisationType: props.visual.metadataVisual.name,
         dimensions: dimentionsAndMeasures.dimensions,
         measures: dimentionsAndMeasures.measures,
       },
-      queryDTO: buildQueryDTO(props.visual, props.filters),
+      queryDTO
     });
   };
+
 
   return (
     <>
@@ -190,7 +198,15 @@ const Scheduler = (props: ISchedulerProps) => {
                 props.setSchedulerReport({ ...props.schedulerReport });
               }}
             />
-            <TextField label="cron expression" value={props.schedulerReport?.schedule?.cronExp || ''}
+
+            {
+              props.schedulerReport.report.thresholdAlert && (
+                <ThresholdAlert
+                  visual={props.visual} />
+              )
+            }
+
+            <TextField label="cron expression" value={props.schedulerReport.schedule.cronExp}
               onChange={event => {
                 props.schedulerReport.schedule.cronExp = event
                 props.setSchedulerReport({ ...props.schedulerReport });
@@ -222,6 +238,10 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   account: storeState.authentication.account,
   filters: storeState.filter.selectedFilters,
+  features: storeState.feature.entities,
+  selectedFilters: storeState.filter.selectedFilters,
+  condition: storeState.scheduler.condition,
+  timeConditions: storeState.scheduler.timeConditions
 });
 
 const mapDispatchToProps = { executeNow, getUsers, scheduleReport, getWebhookList, setSchedulerReport, getScheduleReportById, cancelScheduleReport };

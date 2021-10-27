@@ -3,7 +3,14 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 import { cleanEntity, generateOptions } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IUser } from 'app/shared/model/user.model';
-import { schedulerReportDefaultValue, ISchedulerReport } from 'app/shared/model/scheduler-report.model';
+import {
+  schedulerReportDefaultValue,
+  ISchedulerReport,
+  ConditionDefaultValue,
+  ICondition,
+  ITimeConditions,
+  TimeConditionsDefaultValue,
+} from 'app/shared/model/scheduler-report.model';
 
 export const ACTION_TYPES = {
   FETCH_USERS: 'scheduler/FETCH_USERS',
@@ -12,6 +19,8 @@ export const ACTION_TYPES = {
   FETCH_SCHEDULE_REPORT: 'scheduler/FETCH_SCHEDULE_REPORT',
   EXECUTE_NOW: 'scheduler/EXECUTE_NOW',
   CANCEL_SCHEDULE_REPORT: 'scheduler/CANCEL_SCHEDULE_REPORT',
+  SET_CONDITION: 'scheduler/SET_CONDITION',
+  SET_TIME_CONDITIONS: 'scheduler/SET_TIME_CONDITION',
 };
 
 const initialState = {
@@ -19,6 +28,8 @@ const initialState = {
   errorMessage: null,
   schedulerReport: schedulerReportDefaultValue,
   users: [] as ReadonlyArray<IUser>,
+  condition: ConditionDefaultValue as ICondition,
+  timeConditions: TimeConditionsDefaultValue as ITimeConditions,
 };
 
 export type SchedulerState = Readonly<typeof initialState>;
@@ -70,6 +81,16 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
         ...state,
         schedulerReport: action.payload,
       };
+    case ACTION_TYPES.SET_CONDITION:
+      return {
+        ...state,
+        condition: action.payload,
+      };
+    case ACTION_TYPES.SET_TIME_CONDITIONS:
+      return {
+        ...state,
+        timeConditions: action.payload,
+      };
     default:
       return state;
   }
@@ -120,5 +141,19 @@ export const cancelScheduleReport = id => {
   return {
     type: ACTION_TYPES.CANCEL_SCHEDULE_REPORT,
     payload: axios.delete(requestUrl),
+  };
+};
+
+export const setConditions = condition => {
+  return {
+    type: ACTION_TYPES.SET_CONDITION,
+    payload: condition,
+  };
+};
+
+export const setTimeConditions = timeConditions => {
+  return {
+    type: ACTION_TYPES.SET_TIME_CONDITIONS,
+    payload: timeConditions,
   };
 };

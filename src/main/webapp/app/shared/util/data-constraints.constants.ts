@@ -148,3 +148,22 @@ export const tabList = [
     name: 'Dynamic',
   },
 ];
+
+export const COMPARISIONS = [
+  { value: 'EQ', label: 'Equal' },
+  { value: 'NEQ', label: 'Not Equal' },
+  { value: 'GT', label: 'Greater Than' },
+  { value: 'LT', label: 'Less Than' },
+  { value: 'GTE', label: 'Greater Than or Equal To' },
+  { value: 'LTE', label: 'Less Than or Equal To' },
+];
+
+export const AGGREGATION_TYPES = [
+  { value: 'SUM', label: 'Sum' },
+  { value: 'AVG', label: 'Average' },
+];
+
+export const TIME_UNIT = [
+  { value: 'hours', label: 'Hours' },
+  { value: 'days', label: 'Days' },
+];

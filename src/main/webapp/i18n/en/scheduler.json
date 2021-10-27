@@ -1,0 +1,14 @@
+{
+  "scheduler": {
+    "threshold": {
+      "thresholdField": "Threshold field",
+      "threshold": "Threshold",
+      "aggregationTypes": "Aggregation Types",
+      "dimension": "Dimension",
+      "unit": "Unit",
+      "value": "Value",
+      "measure": "Measure",
+      "compare": "Compare"
+    }
+  }
+}
