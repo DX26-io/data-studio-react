@@ -84,7 +84,7 @@ export const getHavingDTO = (visual, condition, selectedFilters) => {
       value: condition.value,
       operations: {},
     },
-    comparatorType: condition.compare.value,
+    comparatorType: condition.compare.value?.value,
   };
   if (condition.thresholdMode === 'dynamic') {
     const dynamicAlertConditionalExpressions = getDynamicAlertConditionalExpressions(visual, condition);
