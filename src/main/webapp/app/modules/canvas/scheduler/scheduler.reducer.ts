@@ -7,8 +7,6 @@ import {
   schedulerReportDefaultValue,
   ISchedulerReport,
   ConditionDefaultValue,
-  ICondition,
-  ITimeConditions,
   TimeConditionsDefaultValue,
 } from 'app/shared/model/scheduler-report.model';
 
@@ -28,8 +26,8 @@ const initialState = {
   errorMessage: null,
   schedulerReport: schedulerReportDefaultValue,
   users: [] as ReadonlyArray<IUser>,
-  condition: ConditionDefaultValue as ICondition,
-  timeConditions: TimeConditionsDefaultValue as ITimeConditions,
+  condition: ConditionDefaultValue,
+  timeConditions: TimeConditionsDefaultValue,
 };
 
 export type SchedulerState = Readonly<typeof initialState>;

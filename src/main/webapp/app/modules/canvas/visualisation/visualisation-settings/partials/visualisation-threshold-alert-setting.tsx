@@ -6,13 +6,14 @@ import Scheduler from 'app/modules/canvas/scheduler/scheduler';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 export interface IVisualisationThresholdAlertSettingProps  {
   visual: IVisualMetadataSet;
+  thresholdAlert:boolean
 }
 
 const VisualisationThresholdAlertSetting = (props: IVisualisationThresholdAlertSettingProps) => {
   return (
     <>
       <View>
-        <Scheduler visual={props.visual} />
+        <Scheduler visual={props.visual} thresholdAlert={props.thresholdAlert} />
       </View>
     </>
   );

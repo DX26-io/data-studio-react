@@ -40,7 +40,8 @@ const VisualisationSettings = (props: IVisualisationSettingsProps) => {
                   visualMetaData={props.visual}
                 />
               )}
-              {activeTabId === 'thresholdAlert' && <VisualisationThresholdAlertSetting visual={props.visual} />}
+              {activeTabId === 'scheduler' && <VisualisationThresholdAlertSetting visual={props.visual} thresholdAlert={false} />}
+              {activeTabId === 'thresholdAlert' && <VisualisationThresholdAlertSetting visual={props.visual} thresholdAlert={true} />}
               {activeTabId === 'data' && <VisualisationDataSetting data={props.data} />}
             </Content>
           </Item>

@@ -33,14 +33,14 @@ export const reportDefaultValue: Readonly<IReport> = {
 };
 
 export interface IReportLineItem {
-  visualisationId: any;
+  visualizationId: any;
   visualisationType: string;
   dimensions: Array<string>;
   measures: Array<string>;
 }
 
 export const reportLineItemDefaultValue: Readonly<IReportLineItem> = {
-  visualisationId: '',
+  visualizationId: '',
   visualisationType: '',
   dimensions: [],
   measures: [],
@@ -156,8 +156,12 @@ export interface ITimeConditions {
   featureName?: string;
   value?: number;
   feature?: {
-    definition: string;
+    definition: any;
   };
 }
 
-export const TimeConditionsDefaultValue: Readonly<ITimeConditions> = {};
+export const TimeConditionsDefaultValue: Readonly<ITimeConditions> = {
+  feature: {
+    definition: {},
+  },
+};

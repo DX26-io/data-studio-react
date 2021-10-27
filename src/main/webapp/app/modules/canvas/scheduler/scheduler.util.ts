@@ -42,7 +42,7 @@ const getMeasureField = (visual, condition) => {
   const visualMetadata = VisualWrap(visual);
   return visual.fields
     .filter(function (item) {
-      return item.feature.featureType === 'MEASURE' && item.feature.definition === condition.featureName.label;
+      return item.feature.featureType === 'MEASURE' && item.feature.definition === condition.featureName?.label;
     })
     .map(function (item) {
       return visualMetadata.constructHavingField(item);
@@ -71,7 +71,7 @@ export const getDynamicAlertConditionalExpressions = (visual, condition) => {
     valueType: 'compare',
   };
 
-  return [featureData, featureData2, condition];
+  return [featureData, featureData2];
 };
 
 export const getHavingDTO = (visual, condition, selectedFilters) => {
@@ -84,7 +84,7 @@ export const getHavingDTO = (visual, condition, selectedFilters) => {
       value: condition.value,
       operations: {},
     },
-    comparatorType: condition.compare.value,
+    comparatorType: condition.compare.value?.value,
   };
   if (condition.thresholdMode === 'dynamic') {
     const dynamicAlertConditionalExpressions = getDynamicAlertConditionalExpressions(visual, condition);
@@ -115,7 +115,7 @@ export const getHavingDTO = (visual, condition, selectedFilters) => {
       ],
     };
   }
-  return [havingDTO, condition];
+  return [havingDTO];
 };
 
 export const validateAndSetHaving = (schedulerReport, visual, condition, selectedFilters, setSchedulerReport) => {
