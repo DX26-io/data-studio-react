@@ -11,8 +11,7 @@ import { Translate } from 'react-jhipster';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { buildQueryDTO } from '../visualisation/util/visualisation-render-utils';
 import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
-import { GenerateUserOptions, GenerateWebhookOptions, getHavingDTO, SetDefaulSelectedUserEmailList, SetDefaultWebHookList, validateAndSetHaving } from './scheduler.util';
-import { ConditionDefaultValue, ConstraintsDefaultValue, ICondition, IConstraints, ITimeConditions, TimeConditionsDefaultValue } from 'app/shared/model/scheduler-report.model';
+import { GenerateUserOptions, GenerateWebhookOptions, getHavingDTO, SetDefaulSelectedUserEmailList, SetDefaultWebHookList, validateAndSetHaving, assignTimeConditionsToScheduledObj } from './scheduler.util';
 import ThresholdAlert from 'app/modules/threshold-alert/thresholdAlert';
 export interface ISchedulerProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
@@ -48,21 +47,6 @@ const Scheduler = (props: ISchedulerProps) => {
   };
 
 
-  const assignTimeConditionsToScheduledObj = () => {
-    if (!props.timeConditions.feature) {
-      return '{}';
-    }
-    const _constraints = {
-      time: {
-        featureName: props.timeConditions.feature.definition,
-        value: props.timeConditions.value,
-        unit: props.timeConditions.unit.value
-      }
-    };
-
-    return JSON.stringify(_constraints);
-  }
-
   const saveScheduleReport = () => {
     // TODO : this is not the best practice..will be refactored in near future
     const dimentionsAndMeasures = setDimentionsAndMeasures(props.visual.fields);
@@ -89,7 +73,7 @@ const Scheduler = (props: ISchedulerProps) => {
       datasourceId: props.view.viewDashboard.dashboardDatasource.id,
       dashboardId: props.view.viewDashboard.id.toString(),
       putCall: props.schedulerReport?.reportLineItem.visualisationId ? true : false,
-      constraints: assignTimeConditionsToScheduledObj(),
+      constraints: assignTimeConditionsToScheduledObj(props.timeConditions),
       reportLineItem: {
         visualisationId: props.visual.id,
         visualisationType: props.visual.metadataVisual.name,

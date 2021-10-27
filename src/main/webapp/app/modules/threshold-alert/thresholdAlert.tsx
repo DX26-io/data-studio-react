@@ -3,19 +3,13 @@ import Select from 'react-select';
 import { connect } from 'react-redux';
 import { IRootState } from "app/shared/reducers";
 import { Translate } from "react-jhipster";
-import { IVisualMetadataSet } from "app/shared/model/visual-meta-data.model";
 import { Flex, Radio, RadioGroup, TextField, View } from "@adobe/react-spectrum";
 import { getDimensionsList, getThresholdMeasuresList } from "app/entities/feature/feature.reducer";
 import { AGGREGATION_TYPES, COMPARABLE_DATA_TYPES, COMPARISIONS, TIME_UNIT } from "app/shared/util/data-constraints.constants";
 import { setConditions, setTimeConditions } from "../canvas/scheduler/scheduler.reducer";
 
 
-
-export interface IThresholdAlertProps extends StateProps, DispatchProps {
-    visual: IVisualMetadataSet;
-}
-
-const ThresholdAlert = (props: IThresholdAlertProps) => {
+const ThresholdAlert = (props) => {
     return (
         <>
             <RadioGroup orientation="horizontal" label="Threshold Type" onChange={(event) => {
@@ -26,7 +20,7 @@ const ThresholdAlert = (props: IThresholdAlertProps) => {
                 <Radio value="Dynamic">Dynamic</Radio>
             </RadioGroup>
 
-            <div className='threshold' style={{}}>
+            <div className='threshold'>
                 {props.condition.thresholdMode === 'Dynamic' && (
 
                     <Flex direction="row" gap="size-150" alignItems="start" >
@@ -49,7 +43,7 @@ const ThresholdAlert = (props: IThresholdAlertProps) => {
 
                         <View width={'20%'} >
                             <span>
-                                <Translate contentKey="scheduler.threshold.aggType">Agg.type*</Translate>
+                                <Translate contentKey="scheduler.threshold.aggregationTypes">Agg.type*</Translate>
                             </span>
                             <Select
                                 isSearchable={true}
@@ -175,7 +169,7 @@ const ThresholdAlert = (props: IThresholdAlertProps) => {
                             options={TIME_UNIT} />
                     </View>
                     <View width={'33%'} >
-                        <TextField label={'Value'} 
+                        <TextField label={'Value'}
                             onChange={(event) => {
                                 props.timeConditions.value = Number(event)
                                 props.setTimeConditions({ ...props.timeConditions })
@@ -191,7 +185,8 @@ const ThresholdAlert = (props: IThresholdAlertProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
     features: storeState.feature.entities,
     condition: storeState.scheduler.condition,
-    timeConditions: storeState.scheduler.timeConditions
+    timeConditions: storeState.scheduler.timeConditions,
+    visual: storeState.visualmetadata.entity
 });
 
 const mapDispatchToProps = {

@@ -3,7 +3,7 @@
     "threshold": {
       "thresholdField": "Threshold field",
       "threshold": "Threshold",
-      "aggType": "Agg Type",
+      "aggregationTypes": "Aggregation Types",
       "dimension": "Dimension",
       "unit": "Unit",
       "value": "Value",

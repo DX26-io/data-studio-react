@@ -127,3 +127,18 @@ export const validateAndSetHaving = (schedulerReport, visual, condition, selecte
   }
   return flag;
 };
+
+export const assignTimeConditionsToScheduledObj = timeConditions => {
+  if (!timeConditions.feature) {
+    return '{}';
+  }
+  const _constraints = {
+    time: {
+      featureName: timeConditions.feature.definition,
+      value: timeConditions.value,
+      unit: timeConditions.unit.value,
+    },
+  };
+
+  return JSON.stringify(_constraints);
+};
