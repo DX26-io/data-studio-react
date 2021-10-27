@@ -88,7 +88,7 @@ const ThresholdAlert = (props) => {
                         </View>
                         <View width={'20%'} >
 
-                            <TextField label="Value"
+                            <TextField label="Value" value={props.condition?.value?.toString() || ''}
                                 onChange={(event) => {
                                     props.timeConditions.value = Number(event)
                                     props.setTimeConditions({ ...props.timeConditions })
@@ -169,7 +169,7 @@ const ThresholdAlert = (props) => {
                             options={TIME_UNIT} />
                     </View>
                     <View width={'33%'} >
-                        <TextField label={'Value'}
+                        <TextField label={'Value'} value={props.condition?.value?.toString() || ''}
                             onChange={(event) => {
                                 props.timeConditions.value = Number(event)
                                 props.setTimeConditions({ ...props.timeConditions })

@@ -15,6 +15,7 @@ import { GenerateUserOptions, GenerateWebhookOptions, getHavingDTO, SetDefaulSel
 import ThresholdAlert from 'app/modules/threshold-alert/thresholdAlert';
 export interface ISchedulerProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
+  thresholdAlert: boolean;
 }
 
 const Scheduler = (props: ISchedulerProps) => {
@@ -24,6 +25,7 @@ const Scheduler = (props: ISchedulerProps) => {
     props.getWebhookList();
     props.getScheduleReportById(props.visual?.id);
   }, []);
+
 
 
   const setDimentionsAndMeasures = fields => {
@@ -52,7 +54,9 @@ const Scheduler = (props: ISchedulerProps) => {
     const dimentionsAndMeasures = setDimentionsAndMeasures(props.visual.fields);
     validateAndSetHaving(props.schedulerReport, props.visual, props.condition, props.selectedFilters, setSchedulerReport)
     const queryDTO = buildQueryDTO(props.visual, props.filters);
-    queryDTO.having = getHavingDTO(props.visual, props.condition, props.selectedFilters);
+    if (props.thresholdAlert) {
+      queryDTO.having = getHavingDTO(props.visual, props.condition, props.selectedFilters);
+    }
     props.scheduleReport({
       ...props.schedulerReport,
       report: {
@@ -65,17 +69,17 @@ const Scheduler = (props: ISchedulerProps) => {
         userId: '',
         connectionName: '',
         sourceId: 0,
-        reportName: props.schedulerReport.report.titleName,
+        reportName: props.schedulerReport.report.reportName,
         mailBody: props.schedulerReport.report.mailBody,
         subject: '',
         titleName: ''
       },
       datasourceId: props.view.viewDashboard.dashboardDatasource.id,
       dashboardId: props.view.viewDashboard.id.toString(),
-      putCall: props.schedulerReport?.reportLineItem.visualisationId ? true : false,
+      putCall: props.schedulerReport?.reportLineItem.visualizationId ? true : false,
       constraints: assignTimeConditionsToScheduledObj(props.timeConditions),
       reportLineItem: {
-        visualisationId: props.visual.id,
+        visualizationId: props.visual.id,
         visualisationType: props.visual.metadataVisual.name,
         dimensions: dimentionsAndMeasures.dimensions,
         measures: dimentionsAndMeasures.measures,
@@ -105,7 +109,7 @@ const Scheduler = (props: ISchedulerProps) => {
                 >
                   <Translate contentKey="entity.action.create">Create</Translate>
                 </Button>
-                {props.schedulerReport?.reportLineItem.visualisationId && (
+                {props.schedulerReport?.reportLineItem.visualizationId && (
                   <Button
                     onPress={() => {
                       executeReport();
@@ -121,7 +125,7 @@ const Scheduler = (props: ISchedulerProps) => {
         </View>
         <View>
           <Form>
-            <TextField value={props.schedulerReport?.report?.titleName} label="Report Name" placeholder="Report Name"
+            <TextField value={props.schedulerReport?.report?.reportName} label="Report Name" placeholder="Report Name"
               onChange={event => {
                 props.schedulerReport.report.titleName = event
                 props.setSchedulerReport({ ...props.schedulerReport });
@@ -200,7 +204,7 @@ const Scheduler = (props: ISchedulerProps) => {
             />
 
             {
-              props.schedulerReport.report.thresholdAlert && (
+              props.thresholdAlert && (
                 <ThresholdAlert
                   visual={props.visual} />
               )
