@@ -11,7 +11,7 @@ export interface IReport {
   viewId: any;
   shareLink: string;
   buildUrl: string;
-  thresholdAlert: false;
+  thresholdAlert: boolean;
   createdDate?: string;
 }
 
@@ -28,19 +28,19 @@ export const reportDefaultValue: Readonly<IReport> = {
   viewId: '',
   shareLink: '',
   buildUrl: '',
-  thresholdAlert: false,
+  thresholdAlert: true,
   createdDate: '',
 };
 
 export interface IReportLineItem {
-  visualisationId: any;
+  visualizationId: any;
   visualisationType: string;
   dimensions: Array<string>;
   measures: Array<string>;
 }
 
 export const reportLineItemDefaultValue: Readonly<IReportLineItem> = {
-  visualisationId: '',
+  visualizationId: '',
   visualisationType: '',
   dimensions: [],
   measures: [],
@@ -99,7 +99,7 @@ export interface ISchedulerReport {
   schedule: ISchedule;
   queryDTO: any;
   //   query: any;
-  constraints: any;
+  constraints: string;
   putCall: boolean;
   emailReporter: boolean;
 }
@@ -113,7 +113,55 @@ export const schedulerReportDefaultValue: Readonly<ISchedulerReport> = {
   schedule: scheduleDefaultValue,
   queryDTO: {},
   //   query: any;
-  constraints: {},
+  constraints: '{}',
   putCall: false,
   emailReporter: false,
+};
+export interface ICondition {
+  thresholdMode: string;
+  dynamicThreshold: any;
+  featureName?: any;
+  value?: any;
+  compare: {
+    value: any;
+  };
+}
+
+export const ConditionDefaultValue: Readonly<ICondition> = {
+  thresholdMode: 'Absolute',
+  compare: {
+    value: '',
+  },
+  dynamicThreshold: {},
+};
+export interface IConstraints {
+  time: {
+    featureName: string;
+    value?: number;
+    unit: string;
+  };
+}
+
+export const ConstraintsDefaultValue: Readonly<IConstraints> = {
+  time: {
+    featureName: '',
+    unit: '',
+  },
+};
+
+export interface ITimeConditions {
+  unit?: {
+    value: string;
+  };
+  featureName?: string;
+  value?: number;
+  feature?: {
+    definition: any;
+  };
+}
+
+export const TimeConditionsDefaultValue: Readonly<ITimeConditions> = {
+  feature: {
+    definition: {},
+  },
 };

@@ -3,7 +3,12 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 import { cleanEntity, generateOptions } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IUser } from 'app/shared/model/user.model';
-import { schedulerReportDefaultValue, ISchedulerReport } from 'app/shared/model/scheduler-report.model';
+import {
+  schedulerReportDefaultValue,
+  ISchedulerReport,
+  ConditionDefaultValue,
+  TimeConditionsDefaultValue,
+} from 'app/shared/model/scheduler-report.model';
 
 export const ACTION_TYPES = {
   FETCH_USERS: 'scheduler/FETCH_USERS',
@@ -12,13 +17,20 @@ export const ACTION_TYPES = {
   FETCH_SCHEDULE_REPORT: 'scheduler/FETCH_SCHEDULE_REPORT',
   EXECUTE_NOW: 'scheduler/EXECUTE_NOW',
   CANCEL_SCHEDULE_REPORT: 'scheduler/CANCEL_SCHEDULE_REPORT',
+  SET_CONDITION: 'scheduler/SET_CONDITION',
+  SET_TIME_CONDITIONS: 'scheduler/SET_TIME_CONDITION',
+  RESET: 'scheduler/RESET',
 };
 
 const initialState = {
   loading: false,
-  errorMessage: null,
+  message: null,
   schedulerReport: schedulerReportDefaultValue,
   users: [] as ReadonlyArray<IUser>,
+  condition: ConditionDefaultValue,
+  timeConditions: TimeConditionsDefaultValue,
+  updateSuccess: false,
+  scheduleReportresponse: null,
 };
 
 export type SchedulerState = Readonly<typeof initialState>;
@@ -29,14 +41,14 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
     case REQUEST(ACTION_TYPES.FETCH_USERS):
       return {
         ...state,
-        errorMessage: null,
+        message: null,
         loading: true,
       };
     case FAILURE(ACTION_TYPES.FETCH_USERS):
       return {
         ...state,
         loading: false,
-        errorMessage: action.payload,
+        message: action.payload,
       };
 
     case SUCCESS(ACTION_TYPES.FETCH_USERS):
@@ -51,10 +63,22 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
         loading: false,
         schedulerReport: action.payload.data.report ? action.payload.data.report : schedulerReportDefaultValue,
       };
+    case REQUEST(ACTION_TYPES.SCHEDULE_REPORT):
+      return {
+        ...state,
+        updateSuccess: false,
+      };
+    case FAILURE(ACTION_TYPES.SCHEDULE_REPORT):
+      return {
+        ...state,
+        updateSuccess: false,
+        scheduleReportresponse: action.payload.data,
+      };
     case SUCCESS(ACTION_TYPES.SCHEDULE_REPORT):
       return {
         ...state,
-        loading: false,
+        updateSuccess: true,
+        scheduleReportresponse: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.EXECUTE_NOW):
       return {
@@ -69,6 +93,20 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
       return {
         ...state,
         schedulerReport: action.payload,
+      };
+    case ACTION_TYPES.SET_CONDITION:
+      return {
+        ...state,
+        condition: action.payload,
+      };
+    case ACTION_TYPES.SET_TIME_CONDITIONS:
+      return {
+        ...state,
+        timeConditions: action.payload,
+      };
+    case ACTION_TYPES.RESET:
+      return {
+        ...initialState,
       };
     default:
       return state;
@@ -120,5 +158,25 @@ export const cancelScheduleReport = id => {
   return {
     type: ACTION_TYPES.CANCEL_SCHEDULE_REPORT,
     payload: axios.delete(requestUrl),
+  };
+};
+
+export const setConditions = condition => {
+  return {
+    type: ACTION_TYPES.SET_CONDITION,
+    payload: condition,
+  };
+};
+
+export const setTimeConditions = timeConditions => {
+  return {
+    type: ACTION_TYPES.SET_TIME_CONDITIONS,
+    payload: timeConditions,
+  };
+};
+
+export const reset = () => {
+  return {
+    type: ACTION_TYPES.RESET,
   };
 };

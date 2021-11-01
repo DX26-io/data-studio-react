@@ -81,6 +81,10 @@ export const getSettingsTabTranslations = (): ITabData[] => {
       name: translate('views.editConfiguration.settings.dataConstraints'),
     },
     {
+      id: 'scheduler',
+      name: translate('views.editConfiguration.settings.scheduler'),
+    },
+    {
       id: 'thresholdAlert',
       name: translate('views.editConfiguration.settings.thresholdAlert'),
     },

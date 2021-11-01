@@ -64,6 +64,7 @@
       "settings": {
         "query": "Query",
         "dataConstraints": "Data Constraints",
+        "scheduler": "Scheduler",
         "thresholdAlert": "Threshold Alert",
         "data": "Data"
       }

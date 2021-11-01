@@ -234,3 +234,13 @@ export const getMeasuresList = features => {
   });
   return measuresList;
 };
+
+export const getThresholdMeasuresList = features => {
+  const measuresList = [];
+  features.map(item => {
+    if (item.feature.featureType === 'MEASURE') {
+      measuresList.push({ value: item.feature.id, label: item.feature.name });
+    }
+  });
+  return measuresList;
+};
