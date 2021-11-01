@@ -142,3 +142,12 @@ export const assignTimeConditionsToScheduledObj = timeConditions => {
 
   return JSON.stringify(_constraints);
 };
+
+export const getReportTitle = visual => {
+  return visual.titleProperties.titleText;
+};
+
+export const getReportName = visual => {
+  const reportName = visual.metadataVisual.name.split(' ').join('-') + '-' + visual.id;
+  return reportName;
+};

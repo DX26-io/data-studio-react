@@ -1,9 +1,29 @@
 import React, { ReactText, useEffect, useState } from 'react';
-import { Checkbox, CheckboxGroup, Form, TextField, View, TextArea, Flex, ButtonGroup, Button, RadioGroup, Radio } from '@adobe/react-spectrum';
+import {
+  Checkbox,
+  CheckboxGroup,
+  Form,
+  TextField,
+  View,
+  TextArea,
+  Flex,
+  ButtonGroup,
+  Button,
+  RadioGroup,
+  Radio,
+} from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { SCHEDULER_CHANNELS } from 'app/shared/util/Scheduler.constants';
-import { getUsers, scheduleReport, getScheduleReportById, executeNow, setSchedulerReport, cancelScheduleReport } from 'app/modules/canvas/scheduler/scheduler.reducer';
+import {
+  getUsers,
+  scheduleReport,
+  getScheduleReportById,
+  executeNow,
+  setSchedulerReport,
+  cancelScheduleReport,
+  reset
+} from 'app/modules/canvas/scheduler/scheduler.reducer';
 import Select from 'react-select';
 import DatePicker from 'app/shared/components/date-picker/date-picker';
 import { stringToDate } from '../data-constraints/utils/date-util';
@@ -11,22 +31,30 @@ import { Translate } from 'react-jhipster';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { buildQueryDTO } from '../visualisation/util/visualisation-render-utils';
 import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
-import { GenerateUserOptions, GenerateWebhookOptions, getHavingDTO, SetDefaulSelectedUserEmailList, SetDefaultWebHookList, validateAndSetHaving, assignTimeConditionsToScheduledObj } from './scheduler.util';
+import {
+  GenerateUserOptions,
+  GenerateWebhookOptions,
+  getHavingDTO,
+  SetDefaulSelectedUserEmailList,
+  SetDefaultWebHookList,
+  validateAndSetHaving,
+  assignTimeConditionsToScheduledObj,
+  getReportTitle,
+  getReportName,
+} from './scheduler.util';
 import ThresholdAlert from 'app/modules/threshold-alert/thresholdAlert';
+import { toast } from "react-toastify";
 export interface ISchedulerProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
   thresholdAlert: boolean;
 }
 
 const Scheduler = (props: ISchedulerProps) => {
-
   useEffect(() => {
     props.getUsers();
     props.getWebhookList();
     props.getScheduleReportById(props.visual?.id);
   }, []);
-
-
 
   const setDimentionsAndMeasures = fields => {
     const dimensions = [];
@@ -48,11 +76,22 @@ const Scheduler = (props: ISchedulerProps) => {
     props.executeNow(props.visual.id);
   };
 
+  useEffect(() => {
+    if(props.updateSuccess){
+      toast.success(props.scheduleReportresponse.message);
+      props.reset();
+      // const timer = setTimeout(() => {
+      // props.reset();
+      // }, 1000);
+      // return () => clearTimeout(timer);
+    }
+
+  }, [props.updateSuccess]);
 
   const saveScheduleReport = () => {
     // TODO : this is not the best practice..will be refactored in near future
     const dimentionsAndMeasures = setDimentionsAndMeasures(props.visual.fields);
-    validateAndSetHaving(props.schedulerReport, props.visual, props.condition, props.selectedFilters, setSchedulerReport)
+    validateAndSetHaving(props.schedulerReport, props.visual, props.condition, props.selectedFilters, setSchedulerReport);
     const queryDTO = buildQueryDTO(props.visual, props.filters);
     if (props.thresholdAlert) {
       queryDTO.having = getHavingDTO(props.visual, props.condition, props.selectedFilters);
@@ -69,25 +108,25 @@ const Scheduler = (props: ISchedulerProps) => {
         userId: '',
         connectionName: '',
         sourceId: 0,
-        reportName: props.schedulerReport.report.reportName,
+        reportName: getReportName(props.visual),
         mailBody: props.schedulerReport.report.mailBody,
         subject: '',
-        titleName: ''
+        titleName: getReportTitle(props.visual),
       },
       datasourceId: props.view.viewDashboard.dashboardDatasource.id,
       dashboardId: props.view.viewDashboard.id.toString(),
       putCall: props.schedulerReport?.reportLineItem.visualizationId ? true : false,
-      constraints: assignTimeConditionsToScheduledObj(props.timeConditions),
+      // constraints: assignTimeConditionsToScheduledObj(props.timeConditions),
+      constraints: "{}",
       reportLineItem: {
         visualizationId: props.visual.id,
         visualisationType: props.visual.metadataVisual.name,
         dimensions: dimentionsAndMeasures.dimensions,
         measures: dimentionsAndMeasures.measures,
       },
-      queryDTO
+      queryDTO,
     });
   };
-
 
   return (
     <>
@@ -96,9 +135,12 @@ const Scheduler = (props: ISchedulerProps) => {
           <Flex direction="column" alignItems="end">
             <View>
               <ButtonGroup>
-                <Button variant="secondary" onPress={() => {
-                  props.cancelScheduleReport(props.visual.id);
-                }}>
+                <Button
+                  variant="secondary"
+                  onPress={() => {
+                    props.cancelScheduleReport(props.visual.id);
+                  }}
+                >
                   <Translate contentKey="entity.action.cancel">Cancel</Translate>
                 </Button>
                 <Button
@@ -125,24 +167,27 @@ const Scheduler = (props: ISchedulerProps) => {
         </View>
         <View>
           <Form>
-            <TextField value={props.schedulerReport?.report?.reportName} label="Report Name" placeholder="Report Name"
+            <TextField
+              value={props.schedulerReport?.report?.titleName}
+              label="Report Name"
+              placeholder="Report Name"
               onChange={event => {
-                props.schedulerReport.report.titleName = event
-                props.setSchedulerReport({ ...props.schedulerReport });
+                props.schedulerReport.report.titleName = event;
+                props.setSchedulerReport(props.schedulerReport);
               }}
             />
-            <CheckboxGroup label="Channels" orientation="horizontal" value={props.schedulerReport?.assignReport?.channels}
-              onChange={(event) => {
+            <CheckboxGroup
+              label="Channels"
+              orientation="horizontal"
+              value={props.schedulerReport?.assignReport?.channels}
+              onChange={event => {
                 props.schedulerReport.assignReport.channels = event;
-                props.setSchedulerReport({ ...props.schedulerReport });
-
-              }}>
+                props.setSchedulerReport(props.schedulerReport);
+              }}
+            >
               {SCHEDULER_CHANNELS.map(item => {
                 return (
-                  <Checkbox
-                    value={item.key}
-                    key={item.key}
-                  >
+                  <Checkbox value={item.key} key={item.key}>
                     {item.key}
                   </Checkbox>
                 );
@@ -185,7 +230,7 @@ const Scheduler = (props: ISchedulerProps) => {
                   teams.splice(postion, 1);
                 }
                 props.schedulerReport.assignReport.communicationList.teams = teams;
-                props.setSchedulerReport({ ...props.schedulerReport });
+                props.setSchedulerReport(props.schedulerReport);
               }}
               label="Share Report with Users"
               isMulti
@@ -193,39 +238,41 @@ const Scheduler = (props: ISchedulerProps) => {
               className="basic-multi-select"
               classNamePrefix="select"
               value={SetDefaultWebHookList(props.webHooks, props.schedulerReport?.assignReport?.communicationList?.teams)}
-
             />
 
-            <TextArea value={props.schedulerReport?.report?.mailBody} label="Comments"
+            <TextArea
+              value={props.schedulerReport?.report?.mailBody}
+              label="Comments"
               onChange={event => {
-                props.schedulerReport.report.mailBody = event
-                props.setSchedulerReport({ ...props.schedulerReport });
+                props.schedulerReport.report.mailBody = event;
+                props.setSchedulerReport(props.schedulerReport);
               }}
             />
 
-            {
-              props.thresholdAlert && (
-                <ThresholdAlert
-                  visual={props.visual} />
-              )
-            }
+            {props.thresholdAlert && <ThresholdAlert visual={props.visual} />}
 
-            <TextField label="cron expression" value={props.schedulerReport.schedule.cronExp}
+            <TextField
+              label="cron expression"
+              value={props.schedulerReport.schedule.cronExp}
               onChange={event => {
-                props.schedulerReport.schedule.cronExp = event
-                props.setSchedulerReport({ ...props.schedulerReport });
+                props.schedulerReport.schedule.cronExp = event;
+                props.setSchedulerReport(props.schedulerReport);
               }}
             />
-            <DatePicker label="Start Date" value={stringToDate(props.schedulerReport?.schedule?.startDate || '')}
+            <DatePicker
+              label="Start Date"
+              value={stringToDate(props.schedulerReport?.schedule?.startDate || '')}
               onChange={event => {
-                props.schedulerReport.schedule.startDate = event
-                props.setSchedulerReport({ ...props.schedulerReport });
+                props.schedulerReport.schedule.startDate = event;
+                props.setSchedulerReport(props.schedulerReport);
               }}
             />
-            <DatePicker label="End Date" value={stringToDate(props.schedulerReport?.schedule?.endDate || '')}
+            <DatePicker
+              label="End Date"
+              value={stringToDate(props.schedulerReport?.schedule?.endDate || '')}
               onChange={event => {
-                props.schedulerReport.schedule.endDate = event
-                props.setSchedulerReport({ ...props.schedulerReport });
+                props.schedulerReport.schedule.endDate = event;
+                props.setSchedulerReport(props.schedulerReport);
               }}
             />
           </Form>
@@ -238,6 +285,8 @@ const Scheduler = (props: ISchedulerProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   users: storeState.scheduler.users,
   schedulerReport: storeState.scheduler.schedulerReport,
+  updateSuccess: storeState.scheduler.updateSuccess,
+  scheduleReportresponse: storeState.scheduler.scheduleReportresponse,
   webHooks: storeState.notification.webHooks,
   view: storeState.views.entity,
   account: storeState.authentication.account,
@@ -245,10 +294,19 @@ const mapStateToProps = (storeState: IRootState) => ({
   features: storeState.feature.entities,
   selectedFilters: storeState.filter.selectedFilters,
   condition: storeState.scheduler.condition,
-  timeConditions: storeState.scheduler.timeConditions
+  timeConditions: storeState.scheduler.timeConditions,
 });
 
-const mapDispatchToProps = { executeNow, getUsers, scheduleReport, getWebhookList, setSchedulerReport, getScheduleReportById, cancelScheduleReport };
+const mapDispatchToProps = {
+  executeNow,
+  getUsers,
+  scheduleReport,
+  getWebhookList,
+  setSchedulerReport,
+  getScheduleReportById,
+  cancelScheduleReport,
+  reset
+};
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
