@@ -84,7 +84,7 @@ export interface ISchedule {
 }
 
 export const scheduleDefaultValue: Readonly<ISchedule> = {
-  cronExp: '',
+  cronExp: '10 4 11 * *',
   timezone: '',
   startDate: new Date(),
   endDate: new Date(),
