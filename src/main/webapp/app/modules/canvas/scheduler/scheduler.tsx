@@ -28,7 +28,7 @@ import {
 import Select from 'react-select';
 import DatePicker from 'app/shared/components/date-picker/date-picker';
 import { stringToDate } from '../data-constraints/utils/date-util';
-import { Translate } from 'react-jhipster';
+import { Translate, translate } from 'react-jhipster';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { buildQueryDTO } from '../visualisation/util/visualisation-render-utils';
 import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
@@ -173,7 +173,7 @@ const Scheduler = (props: ISchedulerProps) => {
           <Form>
             <TextField
               value={props.schedulerReport?.report?.reportName}
-              label="Report Name*"
+              label={translate('reportsManagement.reports.form.reportName')}
               placeholder="Report Name"
               onChange={event => {
                 props.schedulerReport.report.reportName = event;
@@ -183,7 +183,7 @@ const Scheduler = (props: ISchedulerProps) => {
               }}
             />
             <CheckboxGroup
-              label="Channels*"
+              label={translate('reportsManagement.reports.form.channels')}
               orientation="horizontal"
               value={props.schedulerReport?.assignReport?.channels}
               onChange={event => {
@@ -203,7 +203,7 @@ const Scheduler = (props: ISchedulerProps) => {
             </CheckboxGroup>
             {props.schedulerReport.assignReport.channels.includes('Email') ? (
               <React.Fragment>
-                <p>Share Report with Users*</p>
+                <p>{translate('reportsManagement.reports.form.emails')}</p>
                 <Select
                   onChange={(value, actionMeta) => {
                     const emails = props.schedulerReport.assignReport.communicationList.emails;
@@ -223,7 +223,7 @@ const Scheduler = (props: ISchedulerProps) => {
                       setError(errorObj);
                     }
                   }}
-                  label="Share Report with Users*"
+                  label={translate('reportsManagement.reports.form.emails')}
                   isMulti
                   options={GenerateUserOptions(props.users)}
                   className="basic-multi-select"
@@ -234,7 +234,7 @@ const Scheduler = (props: ISchedulerProps) => {
             ) : null}
             {props.schedulerReport.assignReport.channels.includes('Teams') ? (
               <React.Fragment>
-                <p>Select Webhooks*</p>
+                <p>{translate('reportsManagement.reports.form.teams')}</p>
                 <Select
                   onChange={(value, actionMeta) => {
                     const teams = props.schedulerReport.assignReport.communicationList.teams || [];
@@ -249,7 +249,7 @@ const Scheduler = (props: ISchedulerProps) => {
                     const errorObj = isFormValid(props.schedulerReport);
                     setError(errorObj);
                   }}
-                  label="Select webhooks*"
+                  label={translate('reportsManagement.reports.form.teams')}
                   isMulti
                   options={GenerateWebhookOptions(props.webHooks)}
                   className="basic-multi-select"
@@ -260,7 +260,7 @@ const Scheduler = (props: ISchedulerProps) => {
             ) : null}
             <TextArea
               value={props.schedulerReport?.report?.mailBody}
-              label="Comments*"
+              label={translate('reportsManagement.reports.form.comments')}
               onChange={event => {
                 props.schedulerReport.report.mailBody = event;
                 props.setSchedulerReport(props.schedulerReport);
@@ -272,7 +272,7 @@ const Scheduler = (props: ISchedulerProps) => {
             {props.thresholdAlert && <ThresholdAlert visual={props.visual} />}
 
             <TextField
-              label="cron expression*"
+              label={translate('reportsManagement.reports.form.cronExp')}
               value={props.schedulerReport.schedule.cronExp}
               onChange={event => {
                 props.schedulerReport.schedule.cronExp = event;
@@ -282,7 +282,7 @@ const Scheduler = (props: ISchedulerProps) => {
               }}
             />
             <DatePicker
-              label="Start Date*"
+              label={translate('reportsManagement.reports.form.startDate')}
               value={stringToDate(props.schedulerReport?.schedule?.startDate || '')}
               onChange={event => {
                 props.schedulerReport.schedule.startDate = event;
@@ -292,7 +292,7 @@ const Scheduler = (props: ISchedulerProps) => {
               }}
             />
             <DatePicker
-              label="End Date*"
+              label={translate('reportsManagement.reports.form.endDate')}
               value={stringToDate(props.schedulerReport?.schedule?.endDate || '')}
               onChange={event => {
                 props.schedulerReport.schedule.endDate = event;

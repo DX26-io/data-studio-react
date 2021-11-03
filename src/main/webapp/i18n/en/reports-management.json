@@ -72,11 +72,21 @@
       "uniqueError": "Webhook already exists with this name",
       "error": {
         "name": "report name is required",
-        "cronExp":"cron expression is required",
-        "channels":"select at least one channel",
-        "comments":"comments are required",
-        "email":"select at least one email",
-        "teams":"select at least one webhook"
+        "cronExp": "cron expression is required",
+        "channels": "select at least one channel",
+        "comments": "comments are required",
+        "email": "select at least one email",
+        "teams": "select at least one webhook"
+      },
+      "form": {
+        "reportName": "Report Name*",
+        "cronExp": "Cron Expression*",
+        "channels": "Channels*",
+        "comments": "Comments*",
+        "emails": "Share Report with Users*",
+        "teams": "Select Webhooks*",
+        "startDate": "Start Date*",
+        "endDate": "End Date*"
       }
     }
   }
