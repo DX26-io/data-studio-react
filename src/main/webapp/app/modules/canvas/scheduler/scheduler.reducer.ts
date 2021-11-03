@@ -118,10 +118,7 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
       };
     case SUCCESS(ACTION_TYPES.CANCEL_SCHEDULE_REPORT):
       return {
-        ...state,
-        schedulerReport: schedulerReportDefaultValue,
-        scheduleReportresponse: null,
-        updating: false,
+        ...initialState,
       };
     case ACTION_TYPES.SET_CONDITION:
       return {
