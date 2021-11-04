@@ -146,3 +146,7 @@ export const getBorderList = (): IBorderData[] => {
 export const getShareLinkUrl = (view: IViews, visualisationId: string) => {
   return `${location.host}/dashboards/share?dashboardName=${view.viewDashboard.dashboardName}&viewName=${view.viewName}&dashboarID=${view.viewDashboard.id}&viewId=${view.id}&datasourceId=${view.viewDashboard.dashboardDatasource.id}&visualisationId=${visualisationId}`;
 };
+
+export const getBuildUrl = (viewId: number, dashboardId: number) => {
+  return `${location.host}/dashboards/build?dashboardId=${dashboardId}&viewId=${viewId}`;
+};

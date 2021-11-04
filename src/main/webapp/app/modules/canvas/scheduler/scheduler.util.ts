@@ -1,5 +1,7 @@
 import { VisualWrap } from '../visualisation/util/visualmetadata-wrapper';
 import { getConditionExpressionForParams } from '../filter/filter-util';
+import { ISchedulerReport } from 'app/shared/model/scheduler-report.model';
+import { IError, defaultValue } from 'app/shared/model/error.model';
 
 export const SetDefaultWebHookList = (webHookList, webhook) => {
   const options = [];
@@ -150,4 +152,28 @@ export const getReportTitle = visual => {
 export const getReportName = visual => {
   const reportName = visual.metadataVisual.name.split(' ').join('-') + '-' + visual.id;
   return reportName;
+};
+
+export const isFormValid = (scheduler: ISchedulerReport) => {
+  let error = defaultValue;
+  if (!scheduler.report?.reportName) {
+    error = { translationKey: 'reportsManagement.reports.error.name', isValid: false };
+    return error;
+  } else if (scheduler.assignReport?.channels.length === 0) {
+    error = { translationKey: 'reportsManagement.reports.error.channels', isValid: false };
+    return error;
+  } else if (scheduler.assignReport?.channels.includes('Email') && scheduler.assignReport?.communicationList?.emails.length === 0) {
+    error = { translationKey: 'reportsManagement.reports.error.email', isValid: false };
+    return error;
+  } else if (scheduler.assignReport?.channels.includes('Teams') && scheduler.assignReport?.communicationList?.teams.length === 0) {
+    error = { translationKey: 'reportsManagement.reports.error.teams', isValid: false };
+    return error;
+  } else if (!scheduler.report?.mailBody) {
+    error = { translationKey: 'reportsManagement.reports.error.comments', isValid: false };
+    return error;
+  } else if (!scheduler.schedule?.cronExp) {
+    error = { translationKey: 'reportsManagement.reports.error.cronExp', isValid: false };
+    return error;
+  }
+  return error;
 };

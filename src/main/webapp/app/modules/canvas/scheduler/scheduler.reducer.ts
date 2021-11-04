@@ -25,12 +25,13 @@ export const ACTION_TYPES = {
 const initialState = {
   loading: false,
   message: null,
-  schedulerReport: schedulerReportDefaultValue,
+  schedulerReport: schedulerReportDefaultValue as ISchedulerReport,
   users: [] as ReadonlyArray<IUser>,
   condition: ConditionDefaultValue,
   timeConditions: TimeConditionsDefaultValue,
   updateSuccess: false,
   scheduleReportresponse: null,
+  updating: false,
 };
 
 export type SchedulerState = Readonly<typeof initialState>;
@@ -57,6 +58,18 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
         loading: false,
         users: action.payload.data,
       };
+    case REQUEST(ACTION_TYPES.FETCH_SCHEDULE_REPORT):
+      return {
+        ...state,
+        loading: true,
+        scheduleReportresponse: null,
+      };
+    case FAILURE(ACTION_TYPES.FETCH_SCHEDULE_REPORT):
+      return {
+        ...state,
+        loading: false,
+        scheduleReportresponse: action.payload.data,
+      };
     case SUCCESS(ACTION_TYPES.FETCH_SCHEDULE_REPORT):
       return {
         ...state,
@@ -67,18 +80,21 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
       return {
         ...state,
         updateSuccess: false,
+        updating: true,
       };
     case FAILURE(ACTION_TYPES.SCHEDULE_REPORT):
       return {
         ...state,
         updateSuccess: false,
         scheduleReportresponse: action.payload.data,
+        updating: false,
       };
     case SUCCESS(ACTION_TYPES.SCHEDULE_REPORT):
       return {
         ...state,
         updateSuccess: true,
         scheduleReportresponse: action.payload.data,
+        updating: false,
       };
     case SUCCESS(ACTION_TYPES.EXECUTE_NOW):
       return {
@@ -89,10 +105,20 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
         ...state,
         schedulerReport: action.payload,
       };
-    case ACTION_TYPES.CANCEL_SCHEDULE_REPORT:
+    case REQUEST(ACTION_TYPES.CANCEL_SCHEDULE_REPORT):
       return {
         ...state,
-        schedulerReport: action.payload,
+        updating: true,
+      };
+    case FAILURE(ACTION_TYPES.CANCEL_SCHEDULE_REPORT):
+      return {
+        ...state,
+        scheduleReportresponse: action.payload.data,
+        updating: false,
+      };
+    case SUCCESS(ACTION_TYPES.CANCEL_SCHEDULE_REPORT):
+      return {
+        ...initialState,
       };
     case ACTION_TYPES.SET_CONDITION:
       return {
@@ -106,7 +132,12 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
       };
     case ACTION_TYPES.RESET:
       return {
-        ...initialState,
+        ...state,
+        loading: false,
+        message: null,
+        condition: ConditionDefaultValue,
+        timeConditions: TimeConditionsDefaultValue,
+        updateSuccess: false,
       };
     default:
       return state;
