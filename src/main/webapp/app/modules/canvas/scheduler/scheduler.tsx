@@ -138,11 +138,16 @@ const Scheduler = (props: ISchedulerProps) => {
       <Flex direction="column" gap="size-100">
         <View>
           <Flex direction="row" justifyContent="space-between">
-            <Flex>
+            <Flex gap="size-100">
               {(!error.isValid || props.scheduleReportresponse?.message) && (
-                <span className="spectrum-Body-emphasis">
-                  {error.isValid ? props.scheduleReportresponse?.message : <Translate contentKey={error.translationKey}></Translate>}
-                </span>
+                <React.Fragment>
+                  <Alert color="Informative" />
+                  <Text>
+                    <span className="spectrum-Body-emphasis">
+                      {error.isValid ? props.scheduleReportresponse?.message : <Translate contentKey={error.translationKey}></Translate>}
+                    </span>
+                  </Text>
+                </React.Fragment>
               )}
             </Flex>
             <Flex>
