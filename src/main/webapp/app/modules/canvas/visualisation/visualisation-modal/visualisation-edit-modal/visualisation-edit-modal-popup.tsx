@@ -38,6 +38,7 @@ import { receiveSocketResponseByVisualId } from 'app/shared/websocket/websocket.
 import { IViews } from 'app/shared/model/views.model';
 import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
 import TreeCollapse from '@spectrum-icons/workflow/TreeCollapse';
+import TreeExpand from '@spectrum-icons/workflow/TreeExpand';
 
 export interface IVisualisationEditModalProps extends StateProps, DispatchProps {
   id: number;
@@ -110,7 +111,7 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
         setData(props.visualDataById?.data);
       }
     }
-  }, [props.visualDataById,toggleVisualisation]);
+  }, [props.visualDataById, toggleVisualisation]);
 
   return (
     <Dialog>
@@ -142,10 +143,14 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
           <Flex flex>
             <Flex direction="column" height="100%" flex gap="size-75">
               <Flex justifyContent="end">
-                <ActionButton marginEnd={'-10px'} isQuiet onPress={()=>{
-                  setToggleVisualisation(!toggleVisualisation);
-                }}>
-                  <TreeCollapse size="S" />
+                <ActionButton
+                  marginEnd={'-10px'}
+                  isQuiet
+                  onPress={() => {
+                    setToggleVisualisation(!toggleVisualisation);
+                  }}
+                >
+                  {toggleVisualisation ? <TreeCollapse size="S" /> : <TreeExpand size="S" />}
                 </ActionButton>
               </Flex>
               {toggleVisualisation && (
