@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Flex, Dialog, Heading, Divider, Content, ButtonGroup, Button, useDialogContainer } from '@adobe/react-spectrum';
+import {
+  View,
+  Flex,
+  Dialog,
+  Heading,
+  Divider,
+  Content,
+  ButtonGroup,
+  Button,
+  useDialogContainer,
+  ActionButton,
+} from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import './visualisation-edit-modal.scss';
@@ -15,12 +26,18 @@ import {
   metadataContainerUpdate,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
-import { getVisualisationData, getVisualisationShareData, renderVisualisation, ValidateFields } from '../../util/visualisation-render-utils';
+import {
+  getVisualisationData,
+  getVisualisationShareData,
+  renderVisualisation,
+  ValidateFields,
+} from '../../util/visualisation-render-utils';
 import { VisualWrap } from '../../util/visualmetadata-wrapper';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { receiveSocketResponseByVisualId } from 'app/shared/websocket/websocket.reducer';
 import { IViews } from 'app/shared/model/views.model';
 import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
+import TreeCollapse from '@spectrum-icons/workflow/TreeCollapse';
 
 export interface IVisualisationEditModalProps extends StateProps, DispatchProps {
   id: number;
@@ -32,6 +49,7 @@ export interface IVisualisationEditModalProps extends StateProps, DispatchProps 
 }
 
 export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
+  const [toggleVisualisation, setToggleVisualisation] = useState(true);
   const [visualisationData, setData] = useState<any>();
   const dialog = useDialogContainer();
   const visualisationId = props.visualisationId;
@@ -47,7 +65,6 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
   const handleApply = () => {
     getVisualisationShareData(props.visualMetadataEntity, props.view, props.selectedFilters);
   };
-  
 
   const handleSave = () => {
     props.updateVisualmetadataEntity({
@@ -69,7 +86,12 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
     if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
       props.receiveSocketResponseByVisualId(props.visualMetadataEntity.id);
       const visualMetadata = VisualWrap(props.visualMetadataEntity);
-      const queryDTO = visualMetadata.getQueryParameters(props.visualMetadataEntity, props.selectedFilters, getConditionExpression(props.selectedFilters), 0);
+      const queryDTO = visualMetadata.getQueryParameters(
+        props.visualMetadataEntity,
+        props.selectedFilters,
+        getConditionExpression(props.selectedFilters),
+        0
+      );
       const body = {
         queryDTO,
         visualMetadata,
@@ -82,13 +104,13 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
   }, [props.visualMetadataEntity]);
 
   useEffect(() => {
-    if (props.visualDataById) {
+    if (props.visualDataById && toggleVisualisation) {
       if (props.visualDataById?.data.length > 0) {
-        renderVisualisation(props.visualMetadataEntity, props.visualDataById?.data, 'visualisation-edit',props);
+        renderVisualisation(props.visualMetadataEntity, props.visualDataById?.data, 'visualisation-edit', props);
         setData(props.visualDataById?.data);
       }
     }
-  }, [props.visualDataById]);
+  }, [props.visualDataById,toggleVisualisation]);
 
   return (
     <Dialog>
@@ -119,9 +141,22 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
         <Flex direction="row" height="100%" gap="size-75">
           <Flex flex>
             <Flex direction="column" height="100%" flex gap="size-75">
-              <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="50%">
-                <div style={{ height: '100%' }} id={`visualisation-edit-${props.visualMetadataEntity.id}`} className="visualisation"></div>
-              </View>
+              <Flex justifyContent="end">
+                <ActionButton marginEnd={'-10px'} isQuiet onPress={()=>{
+                  setToggleVisualisation(!toggleVisualisation);
+                }}>
+                  <TreeCollapse size="S" />
+                </ActionButton>
+              </Flex>
+              {toggleVisualisation && (
+                <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="50%">
+                  <div
+                    style={{ height: '100%' }}
+                    id={`visualisation-edit-${props.visualMetadataEntity.id}`}
+                    className="visualisation"
+                  ></div>
+                </View>
+              )}
               <div className="settings-tab">
                 <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="50%">
                   <VisualisationSettings
@@ -138,8 +173,8 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
             </Flex>
           </Flex>
           <div className="properties-tab">
-            <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight='100%' >
-              <VisualisationProperties   />
+            <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="100%">
+              <VisualisationProperties />
             </View>
           </div>
         </Flex>
