@@ -6,9 +6,10 @@ import { IUser } from 'app/shared/model/user.model';
 import {
   schedulerReportDefaultValue,
   ISchedulerReport,
-  ConditionDefaultValue,
-  TimeConditionsDefaultValue,
+  conditionDefaultValue,
+  timeConditionsDefaultValue,
 } from 'app/shared/model/scheduler-report.model';
+import { buildCondition, buildTimeConditions } from './scheduler.util';
 
 export const ACTION_TYPES = {
   FETCH_USERS: 'scheduler/FETCH_USERS',
@@ -19,6 +20,7 @@ export const ACTION_TYPES = {
   CANCEL_SCHEDULE_REPORT: 'scheduler/CANCEL_SCHEDULE_REPORT',
   SET_CONDITION: 'scheduler/SET_CONDITION',
   SET_TIME_CONDITIONS: 'scheduler/SET_TIME_CONDITION',
+  SET_TIME_COMPATIBLE_DIMENSIONS: 'scheduler/SET_TIME_COMPATIBLE_DIMENSIONS',
   RESET: 'scheduler/RESET',
 };
 
@@ -27,11 +29,12 @@ const initialState = {
   message: null,
   schedulerReport: schedulerReportDefaultValue as ISchedulerReport,
   users: [] as ReadonlyArray<IUser>,
-  condition: ConditionDefaultValue,
-  timeConditions: TimeConditionsDefaultValue,
+  condition: conditionDefaultValue,
+  timeConditions: timeConditionsDefaultValue,
   updateSuccess: false,
   scheduleReportresponse: null,
   updating: false,
+  timeCompatibleDimensions: null,
 };
 
 export type SchedulerState = Readonly<typeof initialState>;
@@ -75,6 +78,14 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
         ...state,
         loading: false,
         schedulerReport: action.payload.data.report ? action.payload.data.report : schedulerReportDefaultValue,
+        timeConditions:
+          action.payload.data.report && action.payload.data.report.report.thresholdAlert
+            ? buildTimeConditions(JSON.parse(action.payload.data.report.constraints).time)
+            : timeConditionsDefaultValue,
+        condition:
+          action.payload.data.report && action.payload.data.report.report.thresholdAlert
+            ? buildCondition(JSON.parse(action.payload.data.report.query))
+            : conditionDefaultValue,
       };
     case REQUEST(ACTION_TYPES.SCHEDULE_REPORT):
       return {
@@ -130,13 +141,16 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
         ...state,
         timeConditions: action.payload,
       };
+    case ACTION_TYPES.SET_TIME_COMPATIBLE_DIMENSIONS:
+      return {
+        ...state,
+        timeCompatibleDimensions: action.payload,
+      };
     case ACTION_TYPES.RESET:
       return {
         ...state,
         loading: false,
         message: null,
-        condition: ConditionDefaultValue,
-        timeConditions: TimeConditionsDefaultValue,
         updateSuccess: false,
       };
     default:
@@ -203,6 +217,13 @@ export const setTimeConditions = timeConditions => {
   return {
     type: ACTION_TYPES.SET_TIME_CONDITIONS,
     payload: timeConditions,
+  };
+};
+
+export const setTimeCompatibleDimensions = timeCompatibleDimensions => {
+  return {
+    type: ACTION_TYPES.SET_TIME_COMPATIBLE_DIMENSIONS,
+    payload: timeCompatibleDimensions,
   };
 };
 
