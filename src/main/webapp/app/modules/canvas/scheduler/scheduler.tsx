@@ -24,13 +24,13 @@ import {
   setSchedulerReport,
   cancelScheduleReport,
   reset,
+  setTimeCompatibleDimensions
 } from 'app/modules/canvas/scheduler/scheduler.reducer';
 import Select from 'react-select';
 import DatePicker from 'app/shared/components/date-picker/date-picker';
 import { stringToDate } from '../data-constraints/utils/date-util';
 import { Translate, translate } from 'react-jhipster';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
-import { buildQueryDTO } from '../visualisation/util/visualisation-render-utils';
 import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
 import {
   GenerateUserOptions,
@@ -38,13 +38,15 @@ import {
   getHavingDTO,
   SetDefaulSelectedUserEmailList,
   SetDefaultWebHookList,
-  validateAndSetHaving,
   assignTimeConditionsToScheduledObj,
   getReportTitle,
   getReportName,
   isFormValid,
+  buildQueryDTO,
+  getSchedulerConditionExpression,
+  getTimeCompatibleDimensions
 } from './scheduler.util';
-import ThresholdAlert from 'app/modules/threshold-alert/thresholdAlert';
+import ThresholdAlert from './threshold-alert';
 import { toast } from 'react-toastify';
 import {
   getShareLinkUrl,
@@ -52,6 +54,8 @@ import {
 } from 'app/modules/canvas/visualisation/visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-util';
 import { IError, defaultValue } from 'app/shared/model/error.model';
 import Alert from '@spectrum-icons/workflow/Alert';
+import { buildQueryDTO as buildQueryDTOFromVizRender } from '../visualisation/util/visualisation-render-utils';
+import thresholdAlert from './threshold-alert';
 
 export interface ISchedulerProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
@@ -60,11 +64,13 @@ export interface ISchedulerProps extends StateProps, DispatchProps {
 
 const Scheduler = (props: ISchedulerProps) => {
   const [error, setError] = useState(defaultValue);
+  const [schedulerId, setSchedlerId] = useState(props.thresholdAlert ? 'threshold_alert_:' + props.visual?.id : props.visual?.id);
 
   useEffect(() => {
     props.getUsers();
     props.getWebhookList();
-    props.getScheduleReportById(props.visual?.id);
+    props.getScheduleReportById(schedulerId);
+    props.setTimeCompatibleDimensions(getTimeCompatibleDimensions(props.features));
   }, []);
 
   const setDimentionsAndMeasures = fields => {
@@ -84,7 +90,7 @@ const Scheduler = (props: ISchedulerProps) => {
   };
 
   const executeReport = () => {
-    props.executeNow(props.visual.id);
+    props.executeNow(schedulerId);
   };
 
   useEffect(() => {
@@ -96,11 +102,17 @@ const Scheduler = (props: ISchedulerProps) => {
   const saveScheduleReport = () => {
     // TODO : this is not the best practice..will be refactored in near future
     const dimentionsAndMeasures = setDimentionsAndMeasures(props.visual.fields);
-    validateAndSetHaving(props.schedulerReport, props.visual, props.condition, props.selectedFilters, setSchedulerReport);
-    const queryDTO = buildQueryDTO(props.visual, props.filters);
-    if (props.thresholdAlert) {
-      queryDTO.having = getHavingDTO(props.visual, props.condition, props.selectedFilters);
+    let queryDTO = null;
+    if(props.thresholdAlert){
+      queryDTO = buildQueryDTO(props.visual, props.filters, props.timeConditions);
+      queryDTO['having'] = getHavingDTO(props.visual, props.condition, props.selectedFilters,props.timeConditions);
+      queryDTO['conditionExpression'] = getSchedulerConditionExpression(props.visual, props.condition, props.selectedFilters,props.timeConditions);
+    }else{
+      queryDTO =buildQueryDTOFromVizRender(props.visual, props.filters);
     }
+    // if (props.thresholdAlert) {
+    //   queryDTO['having'] = getHavingDTO(props.visual, props.condition, props.selectedFilters);
+    // }
     props.scheduleReport({
       ...props.schedulerReport,
       report: {
@@ -109,7 +121,7 @@ const Scheduler = (props: ISchedulerProps) => {
         viewId: props.view.id,
         shareLink: getShareLinkUrl(props.view, props.visual.id),
         buildUrl: getBuildUrl(props.view.viewDashboard.id, props.view.id),
-        thresholdAlert: false,
+        thresholdAlert: props.thresholdAlert,
         userId: '',
         connectionName: '',
         sourceId: props.view.viewDashboard.dashboardDatasource.id,
@@ -121,8 +133,7 @@ const Scheduler = (props: ISchedulerProps) => {
       datasourceId: props.view.viewDashboard.dashboardDatasource.id,
       dashboardId: props.view.viewDashboard.id.toString(),
       putCall: props.schedulerReport?.reportLineItem.visualizationId ? true : false,
-      // constraints: assignTimeConditionsToScheduledObj(props.timeConditions),
-      constraints: '{}',
+      constraints: assignTimeConditionsToScheduledObj(props.timeConditions, props.thresholdAlert),
       reportLineItem: {
         visualizationId: props.visual.id,
         visualisationType: props.visual.metadataVisual.name,
@@ -156,7 +167,7 @@ const Scheduler = (props: ISchedulerProps) => {
                   <Button
                     variant="negative"
                     onPress={() => {
-                      props.cancelScheduleReport(props.visual.id);
+                      props.cancelScheduleReport(schedulerId);
                     }}
                   >
                     <Translate contentKey="entity.action.cancel">Cancel</Translate>
@@ -338,6 +349,7 @@ const mapDispatchToProps = {
   getScheduleReportById,
   cancelScheduleReport,
   reset,
+  setTimeCompatibleDimensions
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

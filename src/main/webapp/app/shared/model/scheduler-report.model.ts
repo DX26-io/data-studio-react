@@ -127,12 +127,22 @@ export interface ICondition {
   };
 }
 
+// export interface IDynamicThreshold {
+//   thresholdMode: string;
+//   dynamicThreshold: any;
+//   featureName?: any;
+//   value?: any;
+//   compare: {
+//     value: any;
+//   };
+// }
+
 export const ConditionDefaultValue: Readonly<ICondition> = {
-  thresholdMode: 'Absolute',
+  thresholdMode: 'absolute',
   compare: {
     value: '',
   },
-  dynamicThreshold: {},
+  dynamicThreshold: {aggregation:null,dimension:{definition:null},unit:null,value:null},
 };
 export interface IConstraints {
   time: {

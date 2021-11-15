@@ -1,7 +1,8 @@
 import { VisualWrap } from '../visualisation/util/visualmetadata-wrapper';
-import { getConditionExpressionForParams } from '../filter/filter-util';
+import { getConditionExpressionForParams, getConditionExpression } from '../filter/filter-util';
 import { ISchedulerReport } from 'app/shared/model/scheduler-report.model';
 import { IError, defaultValue } from 'app/shared/model/error.model';
+import { isDateFilterType } from 'app/entities/search/search.util';
 
 export const SetDefaultWebHookList = (webHookList, webhook) => {
   const options = [];
@@ -51,13 +52,26 @@ const getMeasureField = (visual, condition) => {
     })[0];
 };
 
-export const getDynamicAlertConditionalExpressions = (visual, condition) => {
-  const visualMetadata = VisualWrap(visual);
+const getDimensionField = visual => {
+  return visual.fields.filter(function (item) {
+    return item.feature.featureType === 'DIMENSION';
+  })[0];
+};
 
+export const getDynamicAlertConditionalExpressions = (visual, condition, timeConditions) => {
+  const visualMetadata = VisualWrap(visual);
   const featureData = {};
-  const featureDefinition = condition.dynamicThreshold.dimension.definition;
-  featureData[featureDefinition] = [condition.dynamicThreshold.value + ' ' + condition.dynamicThreshold.unit.value];
-  const initialValue = condition.dynamicThreshold.unit.value === 'days' ? "__FLAIR_NOW('day', __FLAIR_NOW())" : '__FLAIR_NOW()';
+  let featureDefinition = '';
+  let initialValue = {};
+  if (condition.thresholdMode === 'dynamic') {
+    featureDefinition = condition.dynamicThreshold.dimension.definition.value;
+    featureData[featureDefinition] = [condition.dynamicThreshold.value + ' ' + condition.dynamicThreshold.unit.value];
+    initialValue = condition.dynamicThreshold.unit.value === 'days' ? "__FLAIR_NOW('day', __FLAIR_NOW())" : '__FLAIR_NOW()';
+  } else {
+    featureDefinition = timeConditions.feature.definition.value;
+    featureData[featureDefinition] = [timeConditions.value + ' ' + timeConditions.value];
+    initialValue = timeConditions.unit.value === 'days' ? "__FLAIR_NOW('day', __FLAIR_NOW())" : '__FLAIR_NOW()';
+  }
   featureData[featureDefinition]._meta = {
     operator: '-',
     initialValue,
@@ -66,7 +80,8 @@ export const getDynamicAlertConditionalExpressions = (visual, condition) => {
   };
 
   const featureData2 = {};
-  const dimension = visualMetadata.getFieldDimensions()[0];
+  // const dimension = visualMetadata.getFieldDimensions()[0];
+  const dimension = getDimensionField(visual);
   const featureDef = dimension.feature.name;
   featureData2[featureDefinition] = ['A.' + featureDef, 'B.' + featureDef];
   featureData2[featureDefinition]._meta = {
@@ -76,7 +91,13 @@ export const getDynamicAlertConditionalExpressions = (visual, condition) => {
   return [featureData, featureData2];
 };
 
-export const getHavingDTO = (visual, condition, selectedFilters) => {
+export const getSchedulerConditionExpression = (visual, condition, selectedFilters, timeConditions) => {
+  const dynamicAlertConditionalExpressions = getDynamicAlertConditionalExpressions(visual, condition, timeConditions);
+  const conditionExpressionForParams = getConditionExpression(selectedFilters, dynamicAlertConditionalExpressions);
+  return conditionExpressionForParams;
+};
+
+export const getHavingDTO = (visual, condition, selectedFilters, timeConditions) => {
   const visualMetadata = VisualWrap(visual);
   const havingField = getMeasureField(visual, condition);
   const havingDTO = {
@@ -89,14 +110,14 @@ export const getHavingDTO = (visual, condition, selectedFilters) => {
     comparatorType: condition.compare.value?.value,
   };
   if (condition.thresholdMode === 'dynamic') {
-    const dynamicAlertConditionalExpressions = getDynamicAlertConditionalExpressions(visual, condition);
-    const conditionExpressionForParams = getConditionExpressionForParams(selectedFilters, dynamicAlertConditionalExpressions);
+    // const dynamicAlertConditionalExpressions = getDynamicAlertConditionalExpressions(visual, condition);
+    const conditionExpressionForParams = getSchedulerConditionExpression(visual, condition, selectedFilters, timeConditions);
     const query = visualMetadata.getQueryParametersWithFields(
       [
         {
-          name: condition.dynamicThreshold.field,
-          aggregation: condition.dynamicThreshold.aggregation.opt,
-          alias: condition.dynamicThreshold.field,
+          name: condition.dynamicThreshold.field.value,
+          aggregation: condition.dynamicThreshold.aggregation.value,
+          alias: condition.dynamicThreshold.field.value,
         },
       ],
       selectedFilters,
@@ -120,23 +141,46 @@ export const getHavingDTO = (visual, condition, selectedFilters) => {
   return [havingDTO];
 };
 
-export const validateAndSetHaving = (schedulerReport, visual, condition, selectedFilters, setSchedulerReport) => {
-  let flag = true;
-  if (schedulerReport.report.thresholdAlert) {
-    schedulerReport.queryDTO.having = getHavingDTO(visual, condition, selectedFilters);
-    schedulerReport.queryDTO.having[0].feature ? (flag = true) : (flag = false);
-    setSchedulerReport({ ...schedulerReport });
+// export const validateAndSetHaving = (schedulerReport, visual, condition, selectedFilters, setSchedulerReport) => {
+//   let flag = true;
+//   if (schedulerReport.report.thresholdAlert) {
+//     schedulerReport.queryDTO.having = getHavingDTO(visual, condition, selectedFilters);
+//     schedulerReport.queryDTO.having[0].feature ? (flag = true) : (flag = false);
+//     setSchedulerReport(schedulerReport);
+//   }
+//   return flag;
+// };
+
+const getAdditionalConditionalExpressions = timeConditions => {
+  const additionalFeatures = [];
+  if (timeConditions.feature) {
+    const featureData = {};
+    const featureDefinition = timeConditions.feature.definition.value;
+    featureData[featureDefinition] = [timeConditions.value + ' ' + timeConditions.unit.value];
+    const initialValue = timeConditions.unit.value === 'days' ? "__FLAIR_NOW('day', __FLAIR_NOW())" : '__FLAIR_NOW()';
+    featureData[featureDefinition]._meta = {
+      operator: '-',
+      initialValue,
+      endValue: '__FLAIR_NOW()',
+      valueType: 'intervalValueType',
+    };
+    additionalFeatures.push(featureData);
   }
-  return flag;
+  return additionalFeatures;
 };
 
-export const assignTimeConditionsToScheduledObj = timeConditions => {
-  if (!timeConditions.feature) {
+export const buildQueryDTO = (visualMetaData, filter, timeConditions) => {
+  const viz = VisualWrap(visualMetaData);
+  return viz.getQueryParameters(visualMetaData, filter, getConditionExpression(getAdditionalConditionalExpressions(timeConditions)));
+};
+
+export const assignTimeConditionsToScheduledObj = (timeConditions, thresholdAlert) => {
+  if (!timeConditions.feature || !thresholdAlert) {
     return '{}';
   }
   const _constraints = {
     time: {
-      featureName: timeConditions.feature.definition,
+      featureName: timeConditions.feature.definition.value,
       value: timeConditions.value,
       unit: timeConditions.unit.value,
     },
@@ -176,4 +220,15 @@ export const isFormValid = (scheduler: ISchedulerReport) => {
     return error;
   }
   return error;
+};
+
+export const getTimeCompatibleDimensions = features => {
+  const timeCompatibleDimensions = features
+    .filter(feature => {
+      return feature.featureType === 'DIMENSION';
+    })
+    .filter(feature => {
+      return isDateFilterType(feature.type);
+    });
+  return timeCompatibleDimensions;
 };

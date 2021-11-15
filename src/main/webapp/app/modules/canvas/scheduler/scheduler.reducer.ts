@@ -9,6 +9,66 @@ import {
   ConditionDefaultValue,
   TimeConditionsDefaultValue,
 } from 'app/shared/model/scheduler-report.model';
+import { AGGREGATION_TYPES, COMPARABLE_DATA_TYPES, COMPARISIONS, TIME_UNIT } from 'app/shared/util/data-constraints.constants';
+
+const buildCondition = query => {
+  const condition = {
+    featureName: null,
+    compare: null,
+    thresholdMode: null,
+    dynamicThreshold: { field: null, aggregation: null, dimension: { definition: null }, unit: null, value: null },
+  };
+  if (query.having) {
+    condition.featureName = { value: query.having[0].feature.name, label: query.having[0].feature.name };
+    condition.compare = {
+      value: COMPARISIONS.filter(item => {
+        return item.value === query.having[0].comparatorType;
+      })[0],
+    };
+    const operation = JSON.parse(query.having[0].operation || '{}');
+    if (operation['@type'] === 'arithmetic') {
+      const innerQuery = operation.operations[0].value;
+      const scalar = operation.operations[1].value;
+      const conditionExpression = innerQuery.conditionExpressions[0].conditionExpression.firstExpression;
+      const field = innerQuery.fields[0];
+      condition.dynamicThreshold = {
+        field: { value: field.name, label: field.name },
+        aggregation: AGGREGATION_TYPES.find(function (item) {
+          return item.value === field.aggregation;
+        }),
+        // dimension: timeCompatibleDimensions.find(function (item) {
+        //   return item.definition === conditionExpression.featureName;
+        // }),
+        dimension: { definition: { value: conditionExpression.featureName, label: conditionExpression.featureName } },
+        unit: TIME_UNIT.find(function (unit) {
+          return unit.value === conditionExpression.valueType.interval.split(' ')[1];
+        }),
+        value: conditionExpression.valueType.interval.split(' ')[0],
+      };
+      condition.thresholdMode = 'dynamic';
+      condition['value'] = 100 - Math.round(scalar * 100);
+    } else {
+      condition.thresholdMode = 'absolute';
+      condition['value'] = operation.value;
+    }
+  }
+  return condition;
+};
+
+const buildTimeConditions = timeConditions => {
+  const _timeConditions = { feature: {}, unit: {}, value: null };
+  if (timeConditions) {
+    // timeConditions.feature = timeCompatibleDimensions.find(function (item) {
+    //     return item.definition === timeConditions.featureName;
+    // });
+    _timeConditions.feature = { definition: { value: timeConditions.featureName, label: timeConditions.featureName } };
+    _timeConditions.value = timeConditions.value;
+    _timeConditions.unit = TIME_UNIT.find(function (unit) {
+      return unit.value === timeConditions.unit;
+    });
+  }
+  return _timeConditions;
+};
 
 export const ACTION_TYPES = {
   FETCH_USERS: 'scheduler/FETCH_USERS',
@@ -19,6 +79,7 @@ export const ACTION_TYPES = {
   CANCEL_SCHEDULE_REPORT: 'scheduler/CANCEL_SCHEDULE_REPORT',
   SET_CONDITION: 'scheduler/SET_CONDITION',
   SET_TIME_CONDITIONS: 'scheduler/SET_TIME_CONDITION',
+  SET_TIME_COMPATIBLE_DIMENSIONS: 'scheduler/SET_TIME_COMPATIBLE_DIMENSIONS',
   RESET: 'scheduler/RESET',
 };
 
@@ -32,6 +93,7 @@ const initialState = {
   updateSuccess: false,
   scheduleReportresponse: null,
   updating: false,
+  timeCompatibleDimensions: null,
 };
 
 export type SchedulerState = Readonly<typeof initialState>;
@@ -75,6 +137,14 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
         ...state,
         loading: false,
         schedulerReport: action.payload.data.report ? action.payload.data.report : schedulerReportDefaultValue,
+        timeConditions:
+          action.payload.data.report && action.payload.data.report.report.thresholdAlert
+            ? buildTimeConditions(JSON.parse(action.payload.data.report.constraints).time)
+            : TimeConditionsDefaultValue,
+        condition:
+          action.payload.data.report && action.payload.data.report.report.thresholdAlert
+            ? buildCondition(JSON.parse(action.payload.data.report.query))
+            : ConditionDefaultValue,
       };
     case REQUEST(ACTION_TYPES.SCHEDULE_REPORT):
       return {
@@ -129,6 +199,11 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
       return {
         ...state,
         timeConditions: action.payload,
+      };
+    case ACTION_TYPES.SET_TIME_COMPATIBLE_DIMENSIONS:
+      return {
+        ...state,
+        timeCompatibleDimensions: action.payload,
       };
     case ACTION_TYPES.RESET:
       return {
@@ -203,6 +278,13 @@ export const setTimeConditions = timeConditions => {
   return {
     type: ACTION_TYPES.SET_TIME_CONDITIONS,
     payload: timeConditions,
+  };
+};
+
+export const setTimeCompatibleDimensions = timeCompatibleDimensions => {
+  return {
+    type: ACTION_TYPES.SET_TIME_COMPATIBLE_DIMENSIONS,
+    payload: timeCompatibleDimensions,
   };
 };
 

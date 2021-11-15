@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import VisualisationQuerySetting from 'app/modules/canvas/visualisation/visualisation-settings/partials/visualisation-query-setting';
 import VisualisationDataConstraintsSetting from 'app/modules/canvas/visualisation/visualisation-settings/partials/visualisation-data-constraints-setting';
 import VisualisationDataSetting from 'app/modules/canvas/visualisation/visualisation-settings/partials/visualisation-data-setting';
-import VisualisationThresholdAlertSetting from 'app/modules/canvas/visualisation/visualisation-settings/partials/visualisation-threshold-alert-setting';
 import { Content } from '@react-spectrum/view';
 import { Tabs, Item } from '@react-spectrum/tabs';
 import { getSettingsTabTranslations } from 'app/modules/canvas/visualisation/visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-util';
@@ -12,6 +11,7 @@ import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { IViews } from 'app/shared/model/views.model';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IDatasources } from 'app/shared/model/datasources.model';
+import Scheduler from 'app/modules/canvas/scheduler/scheduler';
 
 export interface IVisualisationSettingsProps {
   visualisationId: ReactNode;
@@ -40,8 +40,8 @@ const VisualisationSettings = (props: IVisualisationSettingsProps) => {
                   visualMetaData={props.visual}
                 />
               )}
-              {activeTabId === 'scheduler' && <VisualisationThresholdAlertSetting visual={props.visual} thresholdAlert={false} />}
-              {activeTabId === 'thresholdAlert' && <VisualisationThresholdAlertSetting visual={props.visual} thresholdAlert={true} />}
+              {activeTabId === 'scheduler' && <Scheduler visual={props.visual} thresholdAlert={false} />}
+              {activeTabId === 'thresholdAlert' && <Scheduler visual={props.visual} thresholdAlert={true} />}
               {activeTabId === 'data' && <VisualisationDataSetting data={props.data} />}
             </Content>
           </Item>
