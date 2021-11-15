@@ -33,11 +33,11 @@ import { Translate, translate } from 'react-jhipster';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
 import {
-  GenerateUserOptions,
-  GenerateWebhookOptions,
+  generateUserOptions,
+  generateWebhookOptions,
   getHavingDTO,
-  SetDefaulSelectedUserEmailList,
-  SetDefaultWebHookList,
+  setDefaulSelectedUserEmailList,
+  setDefaultWebHookList,
   assignTimeConditionsToScheduledObj,
   getReportTitle,
   getReportName,
@@ -241,10 +241,10 @@ const Scheduler = (props: ISchedulerProps) => {
                   }}
                   label={translate('reportsManagement.reports.form.emails')}
                   isMulti
-                  options={GenerateUserOptions(props.users)}
+                  options={generateUserOptions(props.users)}
                   className="basic-multi-select"
                   classNamePrefix="select"
-                  value={SetDefaulSelectedUserEmailList(props.users, props.schedulerReport?.assignReport?.communicationList?.emails)}
+                  value={setDefaulSelectedUserEmailList(props.users, props.schedulerReport?.assignReport?.communicationList?.emails)}
                 />
               </React.Fragment>
             ) : null}
@@ -267,10 +267,10 @@ const Scheduler = (props: ISchedulerProps) => {
                   }}
                   label={translate('reportsManagement.reports.form.teams')}
                   isMulti
-                  options={GenerateWebhookOptions(props.webHooks)}
+                  options={generateWebhookOptions(props.webHooks)}
                   className="basic-multi-select"
                   classNamePrefix="select"
-                  value={SetDefaultWebHookList(props.webHooks, props.schedulerReport?.assignReport?.communicationList?.teams)}
+                  value={setDefaultWebHookList(props.webHooks, props.schedulerReport?.assignReport?.communicationList?.teams)}
                 />
               </React.Fragment>
             ) : null}

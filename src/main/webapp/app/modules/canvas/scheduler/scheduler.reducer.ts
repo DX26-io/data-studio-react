@@ -6,69 +6,10 @@ import { IUser } from 'app/shared/model/user.model';
 import {
   schedulerReportDefaultValue,
   ISchedulerReport,
-  ConditionDefaultValue,
-  TimeConditionsDefaultValue,
+  conditionDefaultValue,
+  timeConditionsDefaultValue,
 } from 'app/shared/model/scheduler-report.model';
-import { AGGREGATION_TYPES, COMPARABLE_DATA_TYPES, COMPARISIONS, TIME_UNIT } from 'app/shared/util/data-constraints.constants';
-
-const buildCondition = query => {
-  const condition = {
-    featureName: null,
-    compare: null,
-    thresholdMode: null,
-    dynamicThreshold: { field: null, aggregation: null, dimension: { definition: null }, unit: null, value: null },
-  };
-  if (query.having) {
-    condition.featureName = { value: query.having[0].feature.name, label: query.having[0].feature.name };
-    condition.compare = {
-      value: COMPARISIONS.filter(item => {
-        return item.value === query.having[0].comparatorType;
-      })[0],
-    };
-    const operation = JSON.parse(query.having[0].operation || '{}');
-    if (operation['@type'] === 'arithmetic') {
-      const innerQuery = operation.operations[0].value;
-      const scalar = operation.operations[1].value;
-      const conditionExpression = innerQuery.conditionExpressions[0].conditionExpression.firstExpression;
-      const field = innerQuery.fields[0];
-      condition.dynamicThreshold = {
-        field: { value: field.name, label: field.name },
-        aggregation: AGGREGATION_TYPES.find(function (item) {
-          return item.value === field.aggregation;
-        }),
-        // dimension: timeCompatibleDimensions.find(function (item) {
-        //   return item.definition === conditionExpression.featureName;
-        // }),
-        dimension: { definition: { value: conditionExpression.featureName, label: conditionExpression.featureName } },
-        unit: TIME_UNIT.find(function (unit) {
-          return unit.value === conditionExpression.valueType.interval.split(' ')[1];
-        }),
-        value: conditionExpression.valueType.interval.split(' ')[0],
-      };
-      condition.thresholdMode = 'dynamic';
-      condition['value'] = 100 - Math.round(scalar * 100);
-    } else {
-      condition.thresholdMode = 'absolute';
-      condition['value'] = operation.value;
-    }
-  }
-  return condition;
-};
-
-const buildTimeConditions = timeConditions => {
-  const _timeConditions = { feature: {}, unit: {}, value: null };
-  if (timeConditions) {
-    // timeConditions.feature = timeCompatibleDimensions.find(function (item) {
-    //     return item.definition === timeConditions.featureName;
-    // });
-    _timeConditions.feature = { definition: { value: timeConditions.featureName, label: timeConditions.featureName } };
-    _timeConditions.value = timeConditions.value;
-    _timeConditions.unit = TIME_UNIT.find(function (unit) {
-      return unit.value === timeConditions.unit;
-    });
-  }
-  return _timeConditions;
-};
+import { buildCondition, buildTimeConditions } from './scheduler.util';
 
 export const ACTION_TYPES = {
   FETCH_USERS: 'scheduler/FETCH_USERS',
@@ -88,8 +29,8 @@ const initialState = {
   message: null,
   schedulerReport: schedulerReportDefaultValue as ISchedulerReport,
   users: [] as ReadonlyArray<IUser>,
-  condition: ConditionDefaultValue,
-  timeConditions: TimeConditionsDefaultValue,
+  condition: conditionDefaultValue,
+  timeConditions: timeConditionsDefaultValue,
   updateSuccess: false,
   scheduleReportresponse: null,
   updating: false,
@@ -140,11 +81,11 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
         timeConditions:
           action.payload.data.report && action.payload.data.report.report.thresholdAlert
             ? buildTimeConditions(JSON.parse(action.payload.data.report.constraints).time)
-            : TimeConditionsDefaultValue,
+            : timeConditionsDefaultValue,
         condition:
           action.payload.data.report && action.payload.data.report.report.thresholdAlert
             ? buildCondition(JSON.parse(action.payload.data.report.query))
-            : ConditionDefaultValue,
+            : conditionDefaultValue,
       };
     case REQUEST(ACTION_TYPES.SCHEDULE_REPORT):
       return {
@@ -210,8 +151,6 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
         ...state,
         loading: false,
         message: null,
-        condition: ConditionDefaultValue,
-        timeConditions: TimeConditionsDefaultValue,
         updateSuccess: false,
       };
     default:

@@ -1,10 +1,17 @@
 import { VisualWrap } from '../visualisation/util/visualmetadata-wrapper';
 import { getConditionExpressionForParams, getConditionExpression } from '../filter/filter-util';
-import { ISchedulerReport } from 'app/shared/model/scheduler-report.model';
 import { IError, defaultValue } from 'app/shared/model/error.model';
 import { isDateFilterType } from 'app/entities/search/search.util';
+import { TIME_UNIT, AGGREGATION_TYPES, COMPARISIONS } from 'app/shared/util/data-constraints.constants';
+import {
+  schedulerReportDefaultValue,
+  ISchedulerReport,
+  conditionDefaultValue,
+  timeConditionsDefaultValue,
+  ITimeConditions,
+} from 'app/shared/model/scheduler-report.model';
 
-export const SetDefaultWebHookList = (webHookList, webhook) => {
+export const setDefaultWebHookList = (webHookList, webhook) => {
   const options = [];
   webhook?.forEach(element => {
     const data = webHookList?.find(x => x.id === element);
@@ -14,7 +21,7 @@ export const SetDefaultWebHookList = (webHookList, webhook) => {
   });
   return options;
 };
-export const SetDefaulSelectedUserEmailList = (userList, userEmails) => {
+export const setDefaulSelectedUserEmailList = (userList, userEmails) => {
   const options = [];
   userEmails?.forEach(element => {
     const data = userList?.find(x => `${x.login} ${x.email}` === `${element.userName} ${element.userEmail}`);
@@ -25,7 +32,7 @@ export const SetDefaulSelectedUserEmailList = (userList, userEmails) => {
   return options;
 };
 
-export const GenerateWebhookOptions = data => {
+export const generateWebhookOptions = data => {
   const options = [];
   data.forEach(element => {
     options.push({ value: element.id.toString(), label: element.webhookName });
@@ -33,7 +40,7 @@ export const GenerateWebhookOptions = data => {
   return options;
 };
 
-export const GenerateUserOptions = data => {
+export const generateUserOptions = data => {
   const options = [];
   data.forEach(element => {
     options.push({ value: `${element.login} ${element.email}`, label: `${element.login} s${element.email}` });
@@ -231,4 +238,65 @@ export const getTimeCompatibleDimensions = features => {
       return isDateFilterType(feature.type);
     });
   return timeCompatibleDimensions;
+};
+
+export const buildCondition = query => {
+  const condition = {
+    featureName: null,
+    compare: null,
+    thresholdMode: null,
+    dynamicThreshold: { field: null, aggregation: null, dimension: { definition: null }, unit: null, value: null },
+  };
+  if (query.having) {
+    condition.featureName = { value: query.having[0].feature.name, label: query.having[0].feature.name };
+    condition.compare = {
+      value: COMPARISIONS.filter(item => {
+        return item.value === query.having[0].comparatorType;
+      })[0],
+    };
+    const operation = JSON.parse(query.having[0].operation || '{}');
+    if (operation['@type'] === 'arithmetic') {
+      const innerQuery = operation.operations[0].value;
+      const scalar = operation.operations[1].value;
+      const conditionExpression = innerQuery.conditionExpressions[0].conditionExpression.firstExpression;
+      const field = innerQuery.fields[0];
+      condition.dynamicThreshold = {
+        field: { value: field.name, label: field.name },
+        aggregation: AGGREGATION_TYPES.find(function (item) {
+          return item.value === field.aggregation;
+        }),
+        // let this code commented..will be used in future
+        // dimension: timeCompatibleDimensions.find(function (item) {
+        //   return item.definition === conditionExpression.featureName;
+        // }),
+        dimension: { definition: { value: conditionExpression.featureName, label: conditionExpression.featureName } },
+        unit: TIME_UNIT.find(function (unit) {
+          return unit.value === conditionExpression.valueType.interval.split(' ')[1];
+        }),
+        value: conditionExpression.valueType.interval.split(' ')[0],
+      };
+      condition.thresholdMode = 'dynamic';
+      condition['value'] = 100 - Math.round(scalar * 100);
+    } else {
+      condition.thresholdMode = 'absolute';
+      condition['value'] = operation.value;
+    }
+  }
+  return condition;
+};
+
+export const buildTimeConditions = (timeConditions) => {
+  const _timeConditions = { feature: {definition:null}, unit: {}, value: null };
+  if (timeConditions) {
+    // let this code commented..will be used in future
+    // timeConditions.feature = timeCompatibleDimensions.find(function (item) {
+    //     return item.definition === timeConditions.featureName;
+    // });
+    _timeConditions.feature = { definition: { value: timeConditions.featureName, label: timeConditions.featureName } };
+    _timeConditions.value = timeConditions.value;
+    _timeConditions.unit = TIME_UNIT.find(function (unit) {
+      return unit.value === timeConditions.unit;
+    });
+  }
+  return _timeConditions;
 };

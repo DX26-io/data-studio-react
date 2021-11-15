@@ -177,9 +177,7 @@ const ThresholdAlert = props => {
               <Select
                 isSearchable={true}
                 onChange={event => {
-                  if (props.timeConditions?.feature?.definition) {
-                    props.timeConditions.feature.definition = event;
-                  }
+                  props.timeConditions.feature.definition = event;
                   props.setTimeConditions(props.timeConditions);
                 }}
                 value={props.timeConditions?.feature?.definition}
