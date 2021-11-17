@@ -10,7 +10,7 @@ import {
   timeConditionsDefaultValue,
 } from 'app/shared/model/scheduler-report.model';
 import { buildCondition, buildTimeConditions } from './scheduler.util';
-
+import { IError, defaultValue } from 'app/shared/model/error.model';
 export const ACTION_TYPES = {
   FETCH_USERS: 'scheduler/FETCH_USERS',
   SCHEDULE_REPORT: 'scheduler/SCHEDULE_REPORT',
@@ -22,11 +22,12 @@ export const ACTION_TYPES = {
   SET_TIME_CONDITIONS: 'scheduler/SET_TIME_CONDITION',
   SET_TIME_COMPATIBLE_DIMENSIONS: 'scheduler/SET_TIME_COMPATIBLE_DIMENSIONS',
   RESET: 'scheduler/RESET',
+  SET_ERROR_MESSAGE: 'scheduler/SET_ERROR_MESSAGE',
 };
 
 const initialState = {
   loading: false,
-  message: null,
+  errorMessage: defaultValue as IError,
   schedulerReport: schedulerReportDefaultValue as ISchedulerReport,
   users: [] as ReadonlyArray<IUser>,
   condition: conditionDefaultValue,
@@ -42,25 +43,6 @@ export type SchedulerState = Readonly<typeof initialState>;
 // Reducer
 export default (state: SchedulerState = initialState, action): SchedulerState => {
   switch (action.type) {
-    case REQUEST(ACTION_TYPES.FETCH_USERS):
-      return {
-        ...state,
-        message: null,
-        loading: true,
-      };
-    case FAILURE(ACTION_TYPES.FETCH_USERS):
-      return {
-        ...state,
-        loading: false,
-        message: action.payload,
-      };
-
-    case SUCCESS(ACTION_TYPES.FETCH_USERS):
-      return {
-        ...state,
-        loading: false,
-        users: action.payload.data,
-      };
     case REQUEST(ACTION_TYPES.FETCH_SCHEDULE_REPORT):
       return {
         ...state,
@@ -146,11 +128,16 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
         ...state,
         timeCompatibleDimensions: action.payload,
       };
+    case ACTION_TYPES.SET_ERROR_MESSAGE:
+      return {
+        ...state,
+        errorMessage: action.payload,
+      };
     case ACTION_TYPES.RESET:
       return {
         ...state,
         loading: false,
-        message: null,
+        errorMessage: defaultValue,
         updateSuccess: false,
       };
     default:
@@ -224,6 +211,13 @@ export const setTimeCompatibleDimensions = timeCompatibleDimensions => {
   return {
     type: ACTION_TYPES.SET_TIME_COMPATIBLE_DIMENSIONS,
     payload: timeCompatibleDimensions,
+  };
+};
+
+export const setErrorMessage = error => {
+  return {
+    type: ACTION_TYPES.SET_ERROR_MESSAGE,
+    payload: error,
   };
 };
 

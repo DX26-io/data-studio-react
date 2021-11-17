@@ -76,7 +76,8 @@
         "channels": "select at least one channel",
         "comments": "comments are required",
         "email": "select at least one email",
-        "teams": "select at least one webhook"
+        "teams": "select at least one webhook",
+        "alert":"All thershold fields are required"
       },
       "form": {
         "reportName": "Report Name*",
