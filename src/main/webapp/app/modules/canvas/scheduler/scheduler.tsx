@@ -17,14 +17,14 @@ import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { SCHEDULER_CHANNELS } from 'app/shared/util/Scheduler.constants';
 import {
-  getUsers,
   scheduleReport,
   getScheduleReportById,
   executeNow,
   setSchedulerReport,
   cancelScheduleReport,
   reset,
-  setTimeCompatibleDimensions
+  setTimeCompatibleDimensions,
+  setErrorMessage,
 } from 'app/modules/canvas/scheduler/scheduler.reducer';
 import Select from 'react-select';
 import DatePicker from 'app/shared/components/date-picker/date-picker';
@@ -44,7 +44,7 @@ import {
   isFormValid,
   buildQueryDTO,
   getSchedulerConditionExpression,
-  getTimeCompatibleDimensions
+  getTimeCompatibleDimensions,
 } from './scheduler.util';
 import ThresholdAlert from './threshold-alert';
 import { toast } from 'react-toastify';
@@ -52,10 +52,11 @@ import {
   getShareLinkUrl,
   getBuildUrl,
 } from 'app/modules/canvas/visualisation/visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-util';
-import { IError, defaultValue } from 'app/shared/model/error.model';
 import Alert from '@spectrum-icons/workflow/Alert';
 import { buildQueryDTO as buildQueryDTOFromVizRender } from '../visualisation/util/visualisation-render-utils';
-import thresholdAlert from './threshold-alert';
+import { getUsers } from 'app/modules/administration/user-management/users/user.reducer';
+import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+
 
 export interface ISchedulerProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
@@ -63,11 +64,10 @@ export interface ISchedulerProps extends StateProps, DispatchProps {
 }
 
 const Scheduler = (props: ISchedulerProps) => {
-  const [error, setError] = useState(defaultValue);
   const [schedulerId, setSchedlerId] = useState(props.thresholdAlert ? 'threshold_alert_:' + props.visual?.id : props.visual?.id);
 
   useEffect(() => {
-    props.getUsers();
+    props.getUsers(0,ITEMS_PER_PAGE,'email,asc');
     props.getWebhookList();
     props.getScheduleReportById(schedulerId);
     props.setTimeCompatibleDimensions(getTimeCompatibleDimensions(props.features));
@@ -100,19 +100,20 @@ const Scheduler = (props: ISchedulerProps) => {
   }, [props.updateSuccess]);
 
   const saveScheduleReport = () => {
-    // TODO : this is not the best practice..will be refactored in near future
     const dimentionsAndMeasures = setDimentionsAndMeasures(props.visual.fields);
     let queryDTO = null;
-    if(props.thresholdAlert){
+    if (props.thresholdAlert) {
       queryDTO = buildQueryDTO(props.visual, props.filters, props.timeConditions);
-      queryDTO['having'] = getHavingDTO(props.visual, props.condition, props.selectedFilters,props.timeConditions);
-      queryDTO['conditionExpression'] = getSchedulerConditionExpression(props.visual, props.condition, props.selectedFilters,props.timeConditions);
-    }else{
-      queryDTO =buildQueryDTOFromVizRender(props.visual, props.filters);
+      queryDTO['having'] = getHavingDTO(props.visual, props.condition, props.selectedFilters, props.timeConditions);
+      queryDTO['conditionExpression'] = getSchedulerConditionExpression(
+        props.visual,
+        props.condition,
+        props.selectedFilters,
+        props.timeConditions
+      );
+    } else {
+      queryDTO = buildQueryDTOFromVizRender(props.visual, props.filters);
     }
-    // if (props.thresholdAlert) {
-    //   queryDTO['having'] = getHavingDTO(props.visual, props.condition, props.selectedFilters);
-    // }
     props.scheduleReport({
       ...props.schedulerReport,
       report: {
@@ -150,12 +151,16 @@ const Scheduler = (props: ISchedulerProps) => {
         <View>
           <Flex direction="row" justifyContent="space-between">
             <Flex gap="size-100">
-              {(!error.isValid || props.scheduleReportresponse?.message) && (
+              {(!props.errorMessage?.isValid || props.scheduleReportresponse?.message) && (
                 <React.Fragment>
                   <Alert color="Informative" />
                   <Text>
                     <span className="spectrum-Body-emphasis">
-                      {error.isValid ? props.scheduleReportresponse?.message : <Translate contentKey={error.translationKey}></Translate>}
+                      {props.errorMessage?.isValid ? (
+                        props.scheduleReportresponse?.message
+                      ) : (
+                        <Translate contentKey={props.errorMessage?.translationKey}></Translate>
+                      )}
                     </span>
                   </Text>
                 </React.Fragment>
@@ -172,7 +177,7 @@ const Scheduler = (props: ISchedulerProps) => {
                   >
                     <Translate contentKey="entity.action.cancel">Cancel</Translate>
                   </Button>
-                  <Button onPress={saveScheduleReport} variant="cta" isDisabled={props.updating}>
+                  <Button onPress={saveScheduleReport} variant="cta" isDisabled={props.updating || !props.errorMessage?.isValid}>
                     <Translate contentKey="entity.action.save">Create</Translate>
                   </Button>
                   {props.schedulerReport?.reportLineItem.visualizationId && (
@@ -195,7 +200,7 @@ const Scheduler = (props: ISchedulerProps) => {
                 props.schedulerReport.report.reportName = event;
                 props.setSchedulerReport(props.schedulerReport);
                 const errorObj = isFormValid(props.schedulerReport);
-                setError(errorObj);
+                props.setErrorMessage(errorObj);
               }}
             />
             <CheckboxGroup
@@ -206,7 +211,7 @@ const Scheduler = (props: ISchedulerProps) => {
                 props.schedulerReport.assignReport.channels = event;
                 props.setSchedulerReport(props.schedulerReport);
                 const errorObj = isFormValid(props.schedulerReport);
-                setError(errorObj);
+                props.setErrorMessage(errorObj);
               }}
             >
               {SCHEDULER_CHANNELS.map(item => {
@@ -234,10 +239,10 @@ const Scheduler = (props: ISchedulerProps) => {
                         }
                       });
                       props.schedulerReport.assignReport.communicationList.emails = filterEmails;
-                      props.setSchedulerReport(props.schedulerReport);
-                      const errorObj = isFormValid(props.schedulerReport);
-                      setError(errorObj);
                     }
+                    props.setSchedulerReport(props.schedulerReport);
+                    const errorObj = isFormValid(props.schedulerReport);
+                    props.setErrorMessage(errorObj);
                   }}
                   label={translate('reportsManagement.reports.form.emails')}
                   isMulti
@@ -263,7 +268,7 @@ const Scheduler = (props: ISchedulerProps) => {
                     props.schedulerReport.assignReport.communicationList.teams = teams;
                     props.setSchedulerReport(props.schedulerReport);
                     const errorObj = isFormValid(props.schedulerReport);
-                    setError(errorObj);
+                    props.setErrorMessage(errorObj);
                   }}
                   label={translate('reportsManagement.reports.form.teams')}
                   isMulti
@@ -281,7 +286,7 @@ const Scheduler = (props: ISchedulerProps) => {
                 props.schedulerReport.report.mailBody = event;
                 props.setSchedulerReport(props.schedulerReport);
                 const errorObj = isFormValid(props.schedulerReport);
-                setError(errorObj);
+                props.setErrorMessage(errorObj);
               }}
             />
 
@@ -294,7 +299,7 @@ const Scheduler = (props: ISchedulerProps) => {
                 props.schedulerReport.schedule.cronExp = event;
                 props.setSchedulerReport(props.schedulerReport);
                 const errorObj = isFormValid(props.schedulerReport);
-                setError(errorObj);
+                props.setErrorMessage(errorObj);
               }}
             />
             <DatePicker
@@ -304,7 +309,7 @@ const Scheduler = (props: ISchedulerProps) => {
                 props.schedulerReport.schedule.startDate = event;
                 props.setSchedulerReport(props.schedulerReport);
                 const errorObj = isFormValid(props.schedulerReport);
-                setError(errorObj);
+                props.setErrorMessage(errorObj);
               }}
             />
             <DatePicker
@@ -314,7 +319,7 @@ const Scheduler = (props: ISchedulerProps) => {
                 props.schedulerReport.schedule.endDate = event;
                 props.setSchedulerReport(props.schedulerReport);
                 const errorObj = isFormValid(props.schedulerReport);
-                setError(errorObj);
+                props.setErrorMessage(errorObj);
               }}
             />
           </Form>
@@ -325,7 +330,7 @@ const Scheduler = (props: ISchedulerProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  users: storeState.scheduler.users,
+  users: storeState.userManagement.users,
   schedulerReport: storeState.scheduler.schedulerReport,
   updateSuccess: storeState.scheduler.updateSuccess,
   scheduleReportresponse: storeState.scheduler.scheduleReportresponse,
@@ -338,6 +343,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   condition: storeState.scheduler.condition,
   timeConditions: storeState.scheduler.timeConditions,
   updating: storeState.scheduler.updating,
+  errorMessage: storeState.scheduler.errorMessage,
 });
 
 const mapDispatchToProps = {
@@ -349,7 +355,8 @@ const mapDispatchToProps = {
   getScheduleReportById,
   cancelScheduleReport,
   reset,
-  setTimeCompatibleDimensions
+  setTimeCompatibleDimensions,
+  setErrorMessage,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

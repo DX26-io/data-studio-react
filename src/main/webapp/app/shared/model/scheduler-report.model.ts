@@ -141,13 +141,14 @@ export interface IDynamicThreshold {
 
 export const conditionDefaultValue: Readonly<ICondition> = {
   thresholdMode: 'absolute',
-  featureName: null,
+  featureName: {label:null,value:null},
   value:null,
   compare: {
     value: '',
   },
-  dynamicThreshold: { aggregation: null, dimension: { definition: null }, unit: null, value: null },
+  dynamicThreshold: { aggregation: {label:null,value:null}, dimension: { definition: {label:null,value:null} }, unit: {label:null,value:null}, value: null },
 };
+
 export interface IConstraints {
   time: {
     featureName: string;
@@ -170,7 +171,7 @@ export interface ITimeConditions {
 }
 
 export const timeConditionsDefaultValue: Readonly<ITimeConditions> = {
-  unit: null,
+  unit: {label:null,value:null},
   value: null,
-  feature: {definition:null},
+  feature: {definition:{label:null,value:null}},
 };

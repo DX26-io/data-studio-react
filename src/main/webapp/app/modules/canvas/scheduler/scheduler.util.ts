@@ -4,11 +4,9 @@ import { IError, defaultValue } from 'app/shared/model/error.model';
 import { isDateFilterType } from 'app/entities/search/search.util';
 import { TIME_UNIT, AGGREGATION_TYPES, COMPARISIONS } from 'app/shared/util/data-constraints.constants';
 import {
-  schedulerReportDefaultValue,
   ISchedulerReport,
-  conditionDefaultValue,
-  timeConditionsDefaultValue,
   ITimeConditions,
+  ICondition,
 } from 'app/shared/model/scheduler-report.model';
 
 export const setDefaultWebHookList = (webHookList, webhook) => {
@@ -229,6 +227,32 @@ export const isFormValid = (scheduler: ISchedulerReport) => {
   return error;
 };
 
+export const isValidThresholdAlertForm = (condition: ICondition, timeConditions: ITimeConditions) => {
+  let error = defaultValue;
+  if (
+    !condition.featureName.value ||
+    !condition.value ||
+    !condition.compare.value ||
+    !timeConditions.feature.definition.value ||
+    !timeConditions.unit.value ||
+    !timeConditions.value
+  ) {
+    error = { translationKey: 'reportsManagement.reports.error.alert', isValid: false };
+    return error;
+  } else if (
+    condition.thresholdMode === 'dynamic' && (
+    !condition.dynamicThreshold.aggregation ||
+    !condition.dynamicThreshold.dimension.definition ||
+    !condition.dynamicThreshold.unit ||
+    !condition.dynamicThreshold.value
+    )
+  ) {
+    error = { translationKey: 'reportsManagement.reports.error.alert', isValid: false };
+    return error;
+  }
+  return error;
+};
+
 export const getTimeCompatibleDimensions = features => {
   const timeCompatibleDimensions = features
     .filter(feature => {
@@ -285,8 +309,8 @@ export const buildCondition = query => {
   return condition;
 };
 
-export const buildTimeConditions = (timeConditions) => {
-  const _timeConditions = { feature: {definition:null}, unit: {}, value: null };
+export const buildTimeConditions = timeConditions => {
+  const _timeConditions = { feature: { definition: null }, unit: {}, value: null };
   if (timeConditions) {
     // let this code commented..will be used in future
     // timeConditions.feature = timeCompatibleDimensions.find(function (item) {

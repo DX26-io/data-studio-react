@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
-import { Translate } from 'react-jhipster';
+import { Translate, translate } from 'react-jhipster';
 import { Flex, Radio, RadioGroup, TextField, View } from '@adobe/react-spectrum';
 import { getDimensionsList, getThresholdMeasuresList } from 'app/entities/feature/feature.reducer';
 import { AGGREGATION_TYPES, COMPARABLE_DATA_TYPES, COMPARISIONS, TIME_UNIT } from 'app/shared/util/data-constraints.constants';
-import { setConditions, setTimeConditions } from './scheduler.reducer';
+import { setConditions, setTimeConditions, setErrorMessage } from './scheduler.reducer';
+import { isValidThresholdAlertForm } from './scheduler.util';
 
 const ThresholdAlert = props => {
   return (
     <>
       <RadioGroup
         orientation="horizontal"
-        label="Threshold Type"
+        label={translate('thresholdAlert.thresholdType')}
         onChange={event => {
           props.condition.thresholdMode = event;
           props.setConditions(props.condition);
@@ -21,8 +22,12 @@ const ThresholdAlert = props => {
         value={props.condition?.thresholdMode}
         isEmphasized
       >
-        <Radio value="absolute">Absolute</Radio>
-        <Radio value="dynamic">Dynamic</Radio>
+        <Radio value="absolute">
+          <Translate contentKey="thresholdAlert.absolute">Absolute</Translate>
+        </Radio>
+        <Radio value="dynamic">
+          <Translate contentKey="thresholdAlert.dynamic">Dynamic</Translate>
+        </Radio>
       </RadioGroup>
       <div className="threshold">
         {props.condition.thresholdMode === 'dynamic' && (
@@ -30,7 +35,7 @@ const ThresholdAlert = props => {
             <Flex direction="row" gap="size-150" alignItems="center">
               <View width={'20%'}>
                 <span className="spectrum-Body-emphasis--sizeXXS">
-                  <Translate contentKey="scheduler.threshold.thresholdField">Threshold field*</Translate>
+                  <Translate contentKey="thresholdAlert.thresholdField">Threshold field*</Translate>
                 </span>
                 <View marginTop="size-100">
                   <Select
@@ -41,6 +46,8 @@ const ThresholdAlert = props => {
                     onChange={event => {
                       props.condition.dynamicThreshold.field = event;
                       props.setConditions(props.condition);
+                      const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
+                      props.setErrorMessage(errorObj);
                     }}
                     options={getThresholdMeasuresList(
                       props.visual.fields.filter(item => {
@@ -52,7 +59,7 @@ const ThresholdAlert = props => {
               </View>
               <View width={'20%'}>
                 <span className="spectrum-Body-emphasis--sizeXXS">
-                  <Translate contentKey="scheduler.threshold.aggregationTypes">Agg.type*</Translate>
+                  <Translate contentKey="thresholdAlert.aggregationTypes">Agg.type*</Translate>
                 </span>
                 <View marginTop="size-100">
                   <Select
@@ -61,6 +68,8 @@ const ThresholdAlert = props => {
                     onChange={event => {
                       props.condition.dynamicThreshold.aggregation = event;
                       props.setConditions(props.condition);
+                      const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
+                      props.setErrorMessage(errorObj);
                     }}
                     options={AGGREGATION_TYPES}
                   />
@@ -68,7 +77,7 @@ const ThresholdAlert = props => {
               </View>
               <View width={'20%'}>
                 <span className="spectrum-Body-emphasis--sizeXXS">
-                  <Translate contentKey="scheduler.threshold.dimension">Dimension*</Translate>
+                  <Translate contentKey="thresholdAlert.dimension">Dimension*</Translate>
                 </span>
                 <View marginTop="size-100">
                   <Select
@@ -76,6 +85,8 @@ const ThresholdAlert = props => {
                     onChange={event => {
                       props.condition.dynamicThreshold.dimension.definition = event;
                       props.setConditions(props.condition);
+                      const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
+                      props.setErrorMessage(errorObj);
                     }}
                     value={props.condition?.dynamicThreshold?.dimension?.definition}
                     options={getDimensionsList(
@@ -88,7 +99,7 @@ const ThresholdAlert = props => {
               </View>
               <View width={'20%'}>
                 <span className="spectrum-Body-emphasis--sizeXXS">
-                  <Translate contentKey="scheduler.threshold.unit">Unit*</Translate>
+                  <Translate contentKey="thresholdAlert.unit">Unit*</Translate>
                 </span>
                 <View marginTop="size-100">
                   <Select
@@ -97,6 +108,8 @@ const ThresholdAlert = props => {
                     onChange={event => {
                       props.condition.dynamicThreshold.unit = event;
                       props.setConditions(props.condition);
+                      const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
+                      props.setErrorMessage(errorObj);
                     }}
                     value={props.condition.dynamicThreshold?.unit}
                     options={TIME_UNIT}
@@ -105,11 +118,13 @@ const ThresholdAlert = props => {
               </View>
               <View width={'20%'}>
                 <TextField
-                  label="Value"
+                  label={translate('thresholdAlert.value')}
                   value={props.condition?.dynamicThreshold?.value}
                   onChange={event => {
                     props.condition.dynamicThreshold.value = Number(event);
                     props.setConditions(props.condition);
+                    const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
+                    props.setErrorMessage(errorObj);
                   }}
                 />
               </View>
@@ -120,7 +135,7 @@ const ThresholdAlert = props => {
         <Flex direction="row" gap="size-150" alignItems="center">
           <View width={'33%'}>
             <span className="spectrum-Body-emphasis--sizeXXS">
-              <Translate contentKey="scheduler.threshold.measure">Measure*</Translate>
+              <Translate contentKey="thresholdAlert.measure">Measure*</Translate>
             </span>
             <View marginTop="size-100">
               <Select
@@ -130,6 +145,8 @@ const ThresholdAlert = props => {
                 onChange={event => {
                   props.condition.featureName = event;
                   props.setConditions(props.condition);
+                  const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
+                  props.setErrorMessage(errorObj);
                 }}
                 options={getThresholdMeasuresList(
                   props.visual.fields.filter(item => {
@@ -141,7 +158,7 @@ const ThresholdAlert = props => {
           </View>
           <View width={'33%'}>
             <span className="spectrum-Body-emphasis--sizeXXS">
-              <Translate contentKey="scheduler.threshold.compare">Compare*</Translate>
+              <Translate contentKey="thresholdAlert.compare">Compare*</Translate>
             </span>
             <View marginTop="size-100">
               <Select
@@ -151,6 +168,8 @@ const ThresholdAlert = props => {
                 onChange={event => {
                   props.condition.compare.value = event;
                   props.setConditions(props.condition);
+                  const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
+                  props.setErrorMessage(errorObj);
                 }}
                 options={COMPARISIONS}
               />
@@ -158,11 +177,13 @@ const ThresholdAlert = props => {
           </View>
           <View width={'33%'}>
             <TextField
-              label={'Threshold'}
+              label={translate('thresholdAlert.value')}
               value={props.condition?.value?.toString() || ''}
               onChange={event => {
                 props.condition.value = event;
                 props.setConditions(props.condition);
+                const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
+                props.setErrorMessage(errorObj);
               }}
             />
           </View>
@@ -171,7 +192,7 @@ const ThresholdAlert = props => {
         <Flex direction="row" gap="size-150" alignItems="center">
           <View width={'33%'}>
             <span className="spectrum-Body-emphasis--sizeXXS">
-              <Translate contentKey="scheduler.threshold.dimension">Dimension*</Translate>
+              <Translate contentKey="thresholdAlert.dimension">Dimension*</Translate>
             </span>
             <View marginTop="size-100">
               <Select
@@ -179,6 +200,8 @@ const ThresholdAlert = props => {
                 onChange={event => {
                   props.timeConditions.feature.definition = event;
                   props.setTimeConditions(props.timeConditions);
+                  const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
+                  props.setErrorMessage(errorObj);
                 }}
                 value={props.timeConditions?.feature?.definition}
                 options={getDimensionsList(
@@ -191,7 +214,7 @@ const ThresholdAlert = props => {
           </View>
           <View width={'33%'}>
             <span className="spectrum-Body-emphasis--sizeXXS">
-              <Translate contentKey="scheduler.threshold.unit">Unit*</Translate>
+              <Translate contentKey="thresholdAlert.unit">Unit*</Translate>
             </span>
             <View marginTop="size-100">
               <Select
@@ -200,6 +223,8 @@ const ThresholdAlert = props => {
                 onChange={event => {
                   props.timeConditions.unit = event;
                   props.setTimeConditions(props.timeConditions);
+                  const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
+                  props.setErrorMessage(errorObj);
                 }}
                 value={props.timeConditions?.unit}
                 options={TIME_UNIT}
@@ -208,11 +233,13 @@ const ThresholdAlert = props => {
           </View>
           <View width={'33%'}>
             <TextField
-              label={'Value'}
+              label={translate('thresholdAlert.value')}
               value={props.timeConditions?.value?.toString() || ''}
               onChange={event => {
                 props.timeConditions.value = Number(event);
                 props.setTimeConditions(props.timeConditions);
+                const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
+                props.setErrorMessage(errorObj);
               }}
             />
           </View>
@@ -231,6 +258,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 const mapDispatchToProps = {
   setConditions,
   setTimeConditions,
+  setErrorMessage,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
