@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
-import { cleanEntity, generateOptions } from 'app/shared/util/entity-utils';
+import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IUser } from 'app/shared/model/user.model';
 import {
@@ -29,7 +29,6 @@ const initialState = {
   loading: false,
   errorMessage: defaultValue as IError,
   schedulerReport: schedulerReportDefaultValue as ISchedulerReport,
-  users: [] as ReadonlyArray<IUser>,
   condition: conditionDefaultValue,
   timeConditions: timeConditionsDefaultValue,
   updateSuccess: false,
@@ -106,12 +105,72 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
     case FAILURE(ACTION_TYPES.CANCEL_SCHEDULE_REPORT):
       return {
         ...state,
-        scheduleReportresponse: action.payload.data,
         updating: false,
       };
     case SUCCESS(ACTION_TYPES.CANCEL_SCHEDULE_REPORT):
       return {
-        ...initialState,
+        ...state,
+        updating:false,
+        scheduleReportresponse:{message:'Report is cancelled'},
+        errorMessage: {
+          translationKey: '',
+          isValid: true,
+        },
+        schedulerReport: {
+          datasourceId: '',
+          dashboardId: '',
+          report: {
+            userId: '',
+            connectionName: '',
+            reportName: '',
+            sourceId: 0,
+            subject: '',
+            titleName: '',
+            mailBody: '',
+            dashboardName: '',
+            viewName: '',
+            viewId: '',
+            shareLink: '',
+            buildUrl: '',
+            thresholdAlert: true,
+            createdDate: '',
+          },
+          queryDTO: {},
+          constraints: '{}',
+          putCall: false,
+          emailReporter: false,
+          reportLineItem: {
+            visualizationId: '',
+            visualisationType: '',
+            dimensions: [],
+            measures: [],
+          },
+          schedule: {
+            cronExp: '10 4 11 * *',
+            timezone: '',
+            startDate: new Date(),
+            endDate: new Date(),
+          },
+          assignReport: {
+            channels: [],
+            communicationList: { emails: [], teams: [] },
+          },
+        },
+        condition: {
+          thresholdMode: 'absolute',
+          featureName: { label: null, value: null },
+          value: null,
+          compare: {
+            value: '',
+          },
+          dynamicThreshold: {
+            aggregation: { label: null, value: null },
+            dimension: { definition: { label: null, value: null } },
+            unit: { label: null, value: null },
+            value: null,
+          },
+        },
+        timeConditions: { unit: { label: null, value: null }, value: null, feature: { definition: { label: null, value: null } } },
       };
     case ACTION_TYPES.SET_CONDITION:
       return {
@@ -137,7 +196,6 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
       return {
         ...state,
         loading: false,
-        errorMessage: defaultValue,
         updateSuccess: false,
       };
     default:
