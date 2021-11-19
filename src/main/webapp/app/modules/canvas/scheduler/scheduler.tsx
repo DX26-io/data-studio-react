@@ -57,7 +57,6 @@ import { buildQueryDTO as buildQueryDTOFromVizRender } from '../visualisation/ut
 import { getUsers } from 'app/modules/administration/user-management/users/user.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
-
 export interface ISchedulerProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
   thresholdAlert: boolean;
@@ -67,7 +66,7 @@ const Scheduler = (props: ISchedulerProps) => {
   const [schedulerId, setSchedlerId] = useState(props.thresholdAlert ? 'threshold_alert_:' + props.visual?.id : props.visual?.id);
 
   useEffect(() => {
-    props.getUsers(0,ITEMS_PER_PAGE,'email,asc');
+    props.getUsers(0, ITEMS_PER_PAGE, 'email,asc');
     props.getWebhookList();
     props.getScheduleReportById(schedulerId);
     props.setTimeCompatibleDimensions(getTimeCompatibleDimensions(props.features));
@@ -96,6 +95,10 @@ const Scheduler = (props: ISchedulerProps) => {
   useEffect(() => {
     if (props.updateSuccess) {
       props.reset();
+      props.setErrorMessage({
+        translationKey: '',
+        isValid: true,
+      });
     }
   }, [props.updateSuccess]);
 
@@ -170,6 +173,7 @@ const Scheduler = (props: ISchedulerProps) => {
               <View>
                 <ButtonGroup>
                   <Button
+                    isDisabled={props.updating}
                     variant="negative"
                     onPress={() => {
                       props.cancelScheduleReport(schedulerId);

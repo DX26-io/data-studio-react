@@ -1,5 +1,3 @@
-import { any } from 'prop-types';
-
 export interface IReport {
   userId: any;
   connectionName: string;
@@ -141,12 +139,17 @@ export interface IDynamicThreshold {
 
 export const conditionDefaultValue: Readonly<ICondition> = {
   thresholdMode: 'absolute',
-  featureName: {label:null,value:null},
-  value:null,
+  featureName: { label: null, value: null },
+  value: null,
   compare: {
     value: '',
   },
-  dynamicThreshold: { aggregation: {label:null,value:null}, dimension: { definition: {label:null,value:null} }, unit: {label:null,value:null}, value: null },
+  dynamicThreshold: {
+    aggregation: { label: null, value: null },
+    dimension: { definition: { label: null, value: null } },
+    unit: { label: null, value: null },
+    value: null,
+  },
 };
 
 export interface IConstraints {
@@ -167,11 +170,11 @@ export const ConstraintsDefaultValue: Readonly<IConstraints> = {
 export interface ITimeConditions {
   unit?: any;
   value?: number;
-  feature: {definition:any};
+  feature: { definition: any };
 }
 
 export const timeConditionsDefaultValue: Readonly<ITimeConditions> = {
-  unit: {label:null,value:null},
+  unit: { label: null, value: null },
   value: null,
-  feature: {definition:{label:null,value:null}},
+  feature: { definition: { label: null, value: null } },
 };
