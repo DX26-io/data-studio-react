@@ -184,7 +184,7 @@ const Scheduler = (props: ISchedulerProps) => {
                   <Button onPress={saveScheduleReport} variant="cta" isDisabled={props.updating || !props.errorMessage?.isValid}>
                     <Translate contentKey="entity.action.save">Create</Translate>
                   </Button>
-                  {props.schedulerReport?.reportLineItem.visualizationId && (
+                  {schedulerId && (
                     <Button onPress={executeReport} variant="cta">
                       <Translate contentKey="entity.action.runnow">Run Now</Translate>
                     </Button>
