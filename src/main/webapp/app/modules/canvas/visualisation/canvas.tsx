@@ -301,11 +301,11 @@ const Canvas = (props: IVisualisationProp) => {
                 key={`viz-header-${v.id}`}
                 visual={v}
                 handleVisualisationClick={handlevisualisationClick}
-                view={props.view}
+                // view={props.view}
                 totalItem={props.visualMetadataContainerList?.length || 0}
-                filterData={props.filterList}
+                // filterData={props.filterData}
                 isEditMode={props.isEditMode}
-                {...props}
+                // {...props}
               ></VisualisationHeader>
             </div>
             <div style={{ backgroundColor: v.bodyProperties.backgroundColor }} className="visualBody" id={`visualBody-${v.id}`}>
@@ -386,7 +386,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualmetadataEntity: storeState.visualmetadata.entity,
   isEditMode: storeState.visualmetadata.isEditMode,
   visualData: storeState.visualisationData.visualData,
-  filterList: storeState.visualisationData.filterData,
+  filterData: storeState.visualisationData.filterData,
   isSocketConnected: storeState.visualisationData.isSocketConnected,
   isLoaderOn: storeState.visualisationData.isLoaderOn,
   visualMetadataContainerList: storeState.visualmetadata.visualMetadataContainerList,

@@ -30,11 +30,11 @@ import { IViews } from 'app/shared/model/views.model';
 
 interface IVisualisationHeaderProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
-  view: IViews;
+  // view: IViews;
   totalItem: number;
   handleVisualisationClick: (visualisation) => void;
   isEditMode: boolean;
-  filterData: any;
+  // filterData: any;
 }
 
 const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
@@ -322,10 +322,10 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
                 <VisualisationEditModal
                   id={props.view.viewDashboard.id}
                   setOpen={closeEditDialog}
-                  viewId={props.view.id}
+                  // viewId={props.view.id}
                   visualisationId={props.visual.id}
-                  filterData={props.filterData}
-                  {...props}
+                  // filterData={props.filterData}
+                  // {...props}
                 ></VisualisationEditModal>
               )}
               {action === 'Data' && <VisualisationDataModal visual={props.visual} />}
@@ -346,6 +346,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   featuresList: storeState.feature.entities,
   filter: storeState.filter.selectedFilters,
   view: storeState.views.entity,
+  filterData: storeState.visualisationData.filterData,
 });
 
 const mapDispatchToProps = {};

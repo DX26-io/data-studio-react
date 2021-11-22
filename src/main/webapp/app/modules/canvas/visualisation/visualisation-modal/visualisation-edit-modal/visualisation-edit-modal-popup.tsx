@@ -42,11 +42,11 @@ import TreeExpand from '@spectrum-icons/workflow/TreeExpand';
 
 export interface IVisualisationEditModalProps extends StateProps, DispatchProps {
   id: number;
-  viewId: number;
+  // viewId: number;
   visualisationId: string;
   setOpen: (isOpen: boolean) => void;
-  filterData: any;
-  view: IViews;
+  // filterData: any;
+  // view: IViews;
 }
 
 export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
@@ -54,7 +54,7 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
   const [visualisationData, setData] = useState<any>();
   const dialog = useDialogContainer();
   const visualisationId = props.visualisationId;
-  const viewId = props.viewId;
+  // const viewId = props.viewId;
 
   const handleClose = action => {
     props.setEditAction(action);
@@ -69,7 +69,7 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
 
   const handleSave = () => {
     props.updateVisualmetadataEntity({
-      viewId,
+      viewId:props.view.id,
       visualMetadata: props.visualMetadataEntity,
     });
     props.metadataContainerUpdate(props.visualMetadataEntity.id, props.visualMetadataEntity, 'id');
@@ -78,7 +78,7 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
   useEffect(() => {
     if (visualisationId) {
       props.getVisualMetadataEntity(visualisationId);
-      props.getViewEntity(viewId);
+      props.getViewEntity(props.view.id);
     }
   }, []);
 
@@ -195,6 +195,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualDataById: storeState.visualisationData.visualDataById,
   hierarchies: storeState.hierarchies.hierarchies,
   selectedFilters: storeState.filter.selectedFilters,
+  filterData: storeState.visualisationData.filterData,
 });
 
 const mapDispatchToProps = {
