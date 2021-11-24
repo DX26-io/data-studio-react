@@ -7,37 +7,47 @@ import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { VisualWrap } from 'app/modules/canvas/visualisation/util/visualmetadata-wrapper';
 import { IViews } from 'app/shared/model/views.model';
 import { ValidateFields } from '../../util/visualisation-render-utils';
-export interface IVisualisationQuerySettingProps extends StateProps, DispatchProps {
-}
+export interface IVisualisationQuerySettingProps extends StateProps, DispatchProps {}
 
 const VisualisationQuerySetting = (props: IVisualisationQuerySettingProps) => {
   const [rowQuery, setRowQuery] = useState<ReactText>('');
   let wrap;
 
   useEffect(() => {
-    if (props.rowQuery && props.rowQuery.validationResultType === 'SUCCESS') {
-      setRowQuery(props.rowQuery.rawQuery);
+    if (props.visual.id && props.visual.fields && ValidateFields(props.visual.fields)) {
+      wrap = VisualWrap(props.visual);
+      props.validateQuery({
+        datasourceId: props.view.viewDashboard.dashboardDatasource.id,
+        visualMetadataId: props.visual.id,
+        queryDTO: wrap.getQueryParameters(props.visual, {}, null, null),
+      });
     }
-    if ((props.visual.id && props.view?.id && rowQuery === '') || props.updateSuccess) {
-      if (props.visual.fields && ValidateFields(props.visual.fields)) {
-        wrap = VisualWrap(props.visual);
-        props.validateQuery({
-          datasourceId: props.view.viewDashboard.dashboardDatasource.id,
-          visualMetadataId: props.visual.id,
-          queryDTO: wrap.getQueryParameters(props.visual, {}, null, null),
-        });
-      }
+  }, []);
+
+  useEffect(() => {
+    // if (props.rowQuery && props.rowQuery.validationResultType === 'SUCCESS') {
+    //   setRowQuery(props.rowQuery.rawQuery);
+    // }
+    // if (props.visual.id && props.view?.id && rowQuery === '' && props.updateSuccess) {
+    if (props.visual.fields && ValidateFields(props.visual.fields)) {
+      wrap = VisualWrap(props.visual);
+      props.validateQuery({
+        datasourceId: props.view.viewDashboard.dashboardDatasource.id,
+        visualMetadataId: props.visual.id,
+        queryDTO: wrap.getQueryParameters(props.visual, {}, null, null),
+      });
     }
-    if (props.validateQueryError) {
-      setRowQuery(props.validateQueryError);
-    }
-  // }, [props.rowQuery, props.visual, props.view, props.validateQueryError]);
-}, [props.visual]);
+    // }
+    // if (props.validateQueryError) {
+    //   setRowQuery(props.validateQueryError);
+    // }
+    // }, [props.rowQuery, props.visual, props.view, props.validateQueryError]);
+  }, [props.visual]);
 
   return (
     <>
       <View>
-        <span className="query"> {rowQuery}</span>
+        <span className="query"> {props.rowQuery?.rawQuery}</span>
       </View>
     </>
   );
