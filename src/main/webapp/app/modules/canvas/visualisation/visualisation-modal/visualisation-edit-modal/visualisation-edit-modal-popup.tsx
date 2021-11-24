@@ -39,6 +39,7 @@ import { IViews } from 'app/shared/model/views.model';
 import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
 import TreeCollapse from '@spectrum-icons/workflow/TreeCollapse';
 import TreeExpand from '@spectrum-icons/workflow/TreeExpand';
+import { validate as validateQuery } from 'app/entities/visualmetadata/visualmetadata.reducer';
 
 export interface IVisualisationEditModalPopUpProps extends StateProps, DispatchProps {
   id: number;
@@ -63,7 +64,7 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
 
   const handleSave = () => {
     props.updateVisualmetadataEntity({
-      viewId:props.view.id,
+      viewId: props.view.id,
       visualMetadata: props.visualMetadataEntity,
     });
     props.metadataContainerUpdate(props.visualMetadataEntity.id, props.visualMetadataEntity, 'id');
@@ -75,6 +76,15 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
       props.getVisualMetadataEntity(props.visualMetadataEntity.id);
     }
   }, []);
+
+  const _validateQuery = () => {
+    const wrap = VisualWrap(props.visualMetadataEntity);
+    props.validateQuery({
+      datasourceId: props.view.viewDashboard.dashboardDatasource.id,
+      visualMetadataId: props.visualMetadataEntity.id,
+      queryDTO: wrap.getQueryParameters(props.visualMetadataEntity, {}, null, null),
+    });
+  };
 
   useEffect(() => {
     if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
@@ -94,6 +104,7 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
         actionType: null,
         type: 'share-link',
       };
+      _validateQuery();
       forwardCall(props.view?.viewDashboard?.dashboardDatasource?.id, body, props.view.id);
     }
   }, [props.visualMetadataEntity]);
@@ -200,6 +211,7 @@ const mapDispatchToProps = {
   updateVisualmetadataEntity,
   metadataContainerUpdate,
   receiveSocketResponseByVisualId,
+  validateQuery,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
