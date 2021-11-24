@@ -318,11 +318,8 @@ const Canvas = (props: IVisualisationProp) => {
                 key={`viz-header-${v.id}`}
                 visual={v}
                 handleVisualisationClick={handlevisualisationClick}
-                // view={props.view}
                 totalItem={props.visualMetadataContainerList?.length || 0}
-                // filterData={props.filterData}
                 isEditMode={props.isEditMode}
-                // {...props}
               ></VisualisationHeader>
             </div>
             <div style={{ backgroundColor: v.bodyProperties.backgroundColor }} className="visualBody" id={`visualBody-${v.id}`}>
@@ -359,10 +356,6 @@ const Canvas = (props: IVisualisationProp) => {
                       getVisualisationData(props.visual, props.view, props.selectedFilters);
                     }
                   }}
-                  // viewId={props.view.id}
-                  // visualisationId={props.visual.id}
-                  // filterData={props.filterData}
-                  // {...props}
                 ></VisualisationEditModalPopUp>
               )}
               {props.visualisationAction === 'Data' && <VisualisationDataModal visual={props.visualMetadataEntity} />}
@@ -441,7 +434,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true),
   tableActivePage: storeState.visualmetadata.tableActivePage,
   editAction: storeState.visualmetadata.editAction,
-  // filter: storeState.filter.selectedFilters,
 });
 
 const mapDispatchToProps = {

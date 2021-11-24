@@ -42,19 +42,13 @@ import TreeExpand from '@spectrum-icons/workflow/TreeExpand';
 
 export interface IVisualisationEditModalPopUpProps extends StateProps, DispatchProps {
   id: number;
-  // viewId: number;
-  // visualisationId: string;
   setOpen: (isOpen: boolean) => void;
-  // filterData: any;
-  // view: IViews;
 }
 
 export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpProps) => {
   const [toggleVisualisation, setToggleVisualisation] = useState(true);
   const [visualisationData, setData] = useState<any>();
   const dialog = useDialogContainer();
-  // const visualisationId = props.visualisationId;
-  // const viewId = props.viewId;
 
   const handleClose = action => {
     props.setEditAction(action);
@@ -79,7 +73,6 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
   useEffect(() => {
     if (props.visualMetadataEntity.id) {
       props.getVisualMetadataEntity(props.visualMetadataEntity.id);
-      // props.getViewEntity(props.view.id);
     }
   }, []);
 
@@ -191,7 +184,6 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
 
 const mapStateToProps = (storeState: IRootState) => ({
   visualMetadataEntity: storeState.visualmetadata.entity,
-  // visual: storeState.visualmetadata.visual,
   featuresList: storeState.feature.entities,
   view: storeState.views.entity,
   visualDataById: storeState.visualisationData.visualDataById,

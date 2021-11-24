@@ -8,8 +8,6 @@ import { VisualWrap } from 'app/modules/canvas/visualisation/util/visualmetadata
 import { IViews } from 'app/shared/model/views.model';
 import { ValidateFields } from '../../util/visualisation-render-utils';
 export interface IVisualisationQuerySettingProps extends StateProps, DispatchProps {
-  // visual: IVisualMetadataSet;
-  // view: IViews;
 }
 
 const VisualisationQuerySetting = (props: IVisualisationQuerySettingProps) => {
