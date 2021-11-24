@@ -10,7 +10,7 @@ import { ValidateFields } from '../../util/visualisation-render-utils';
 export interface IVisualisationQuerySettingProps extends StateProps, DispatchProps {}
 
 const VisualisationQuerySetting = (props: IVisualisationQuerySettingProps) => {
-  const [rowQuery, setRowQuery] = useState<ReactText>('');
+  // const [rowQuery, setRowQuery] = useState<ReactText>('');
   let wrap;
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const VisualisationQuerySetting = (props: IVisualisationQuerySettingProps) => {
   return (
     <>
       <View>
-        <span className="query"> {props.rowQuery?.rawQuery}</span>
+        <span className="query"> {props.validateQueryError ? props.validateQueryError : props.rowQuery?.rawQuery}</span>
       </View>
     </>
   );

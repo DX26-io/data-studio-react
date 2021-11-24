@@ -78,7 +78,7 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
 
   useEffect(() => {
     if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
-      props.setVisual(props.visualMetadataEntity);
+      // props.setVisual(props.visualMetadataEntity);
       props.receiveSocketResponseByVisualId(props.visualMetadataEntity.id);
       const visualMetadata = VisualWrap(props.visualMetadataEntity);
       const queryDTO = visualMetadata.getQueryParameters(
