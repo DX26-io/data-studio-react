@@ -8,8 +8,8 @@ import { VisualWrap } from 'app/modules/canvas/visualisation/util/visualmetadata
 import { IViews } from 'app/shared/model/views.model';
 import { ValidateFields } from '../../util/visualisation-render-utils';
 export interface IVisualisationQuerySettingProps extends StateProps, DispatchProps {
-  visual: IVisualMetadataSet;
-  view: IViews;
+  // visual: IVisualMetadataSet;
+  // view: IViews;
 }
 
 const VisualisationQuerySetting = (props: IVisualisationQuerySettingProps) => {
@@ -33,7 +33,8 @@ const VisualisationQuerySetting = (props: IVisualisationQuerySettingProps) => {
     if (props.validateQueryError) {
       setRowQuery(props.validateQueryError);
     }
-  }, [props.rowQuery, props.visual, props.view, props.validateQueryError]);
+  // }, [props.rowQuery, props.visual, props.view, props.validateQueryError]);
+}, [props.visual]);
 
   return (
     <>
@@ -48,6 +49,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   rowQuery: storeState.visualmetadata.rowQuery,
   validateQueryError: storeState.visualmetadata.validateQueryError,
   updateSuccess: storeState.visualmetadata.updateSuccess,
+  visual: storeState.visualmetadata.entity,
+  view: storeState.views.entity,
 });
 
 const mapDispatchToProps = { validateQuery };

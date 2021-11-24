@@ -31,7 +31,7 @@ const VisualisationSettings = (props: IVisualisationSettingsProps) => {
         {item => (
           <Item title={item.name}>
             <Content margin="size-250">
-              {activeTabId === 'query' && <VisualisationQuerySetting visual={props.visual} view={props.view} />}
+              {activeTabId === 'query' && <VisualisationQuerySetting />}
               {activeTabId === 'dataConstraints' && (
                 <VisualisationDataConstraintsSetting
                   filterData={props.filterData}

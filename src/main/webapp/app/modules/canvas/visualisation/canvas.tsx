@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { View } from '@adobe/react-spectrum';
+import { View, DialogContainer } from '@adobe/react-spectrum';
 import { RouteComponentProps } from 'react-router-dom';
 import './canvas.scss';
 import 'flair-visualizations/styles/stylesheets/screen.css';
-import { getEntity as getViewEntity, getCurrentViewState, saveViewState,reset as resetViews} from 'app/entities/views/views.reducer';
+import { getEntity as getViewEntity, getCurrentViewState, saveViewState, reset as resetViews } from 'app/entities/views/views.reducer';
 import { getEntities as getVisualisationsEntities } from 'app/entities/visualisations/visualisations.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
@@ -13,7 +13,7 @@ import {
   deleteEntity as deleteVisualmetadataEntity,
   reset,
   visualisationTablePagination,
-  setTableActivePage
+  setTableActivePage,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import {
   getVisualisationData,
@@ -46,10 +46,18 @@ import { applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { VisualisationType } from 'app/shared/util/visualisation.constants';
 import PinnedFiltersHeader from './pinned-canvas-filters/pinned-filters-header';
 import PinnedFilterElement from './pinned-canvas-filters/pinned-filter-element';
-import { IBroadcast } from '../../../shared/model/broadcast.model'
+import { IBroadcast } from '../../../shared/model/broadcast.model';
 
-import { WidthProvider, Responsive as ResponsiveGridLayout, } from 'react-grid-layout';
+import { WidthProvider, Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import { applyDateFilters } from '../filter/filter-util';
+
+import { setVisualisationAction } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import  VisualisationEditModalPopUp  from './visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-popup';
+import VisualisationDataModal from './visualisation-modal/visualisation-data-modal/visualisations-data-modal';
+import VisualisationShareModal from './visualisation-modal/visualisation-share-modal/visualisation-share-modal';
+import VisualisationsDeleteModal from './visualisation-modal/visualisation-delete-modal/visualisations-delete-modal';
+
+
 const ReactGridLayout = WidthProvider(ResponsiveGridLayout);
 
 export interface IIllustrate {
@@ -58,7 +66,7 @@ export interface IIllustrate {
   noDataFoundVisibility: boolean;
 }
 
-export interface IVisualisationProp extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
+export interface IVisualisationProp extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 const Canvas = (props: IVisualisationProp) => {
   const [isvisualisationsModelOpen, setVisualisationsModelOpen] = useState(false);
@@ -71,23 +79,24 @@ const Canvas = (props: IVisualisationProp) => {
     visualmetadata: props.visualmetadata,
     view: props.view,
     saveSelectedFilter: props.saveSelectedFilter,
-    alternateDimension : props.alternateDimension,
-    pagination:props.visualisationTablePagination,
-    tableActivePage:props.tableActivePage,
-    setTableActivePage:props.setTableActivePage
-  }
+    alternateDimension: props.alternateDimension,
+    pagination: props.visualisationTablePagination,
+    tableActivePage: props.tableActivePage,
+    setTableActivePage: props.setTableActivePage,
+  };
 
   const onLayoutChange = _visualmetaList => {
     props.visualmetadata?.visualMetadataSet?.map((item, i) => {
       if (!item.key) {
-        if(item.x) item.x = _visualmetaList[i].x,
-          (item.y = _visualmetaList[i].y),
-          (item.h = _visualmetaList[i].h),
-          (item.w = _visualmetaList[i].w),
-          (item.xPosition = _visualmetaList[i].x),
-          (item.yPosition = _visualmetaList[i].y),
-          (item.height = _visualmetaList[i].h),
-          (item.width = _visualmetaList[i].w);
+        if (item.x)
+          (item.x = _visualmetaList[i].x),
+            (item.y = _visualmetaList[i].y),
+            (item.h = _visualmetaList[i].h),
+            (item.w = _visualmetaList[i].w),
+            (item.xPosition = _visualmetaList[i].x),
+            (item.yPosition = _visualmetaList[i].y),
+            (item.height = _visualmetaList[i].h),
+            (item.width = _visualmetaList[i].w);
       }
     });
   };
@@ -99,23 +108,25 @@ const Canvas = (props: IVisualisationProp) => {
       v.height = newItem.h;
       v.w = newItem.w;
       v.width = newItem.w;
-      renderVisualisation(v, v.data, "widget", broadcast);
+      renderVisualisation(v, v.data, 'widget', broadcast);
     }
   };
 
   const addPinFilter = () => {
-    if (!props.visualMetadataContainerList.find(item => {
-      return item.key === 'pinned-filters-div';
-    })) {
+    if (
+      !props.visualMetadataContainerList.find(item => {
+        return item.key === 'pinned-filters-div';
+      })
+    ) {
       props.visualMetadataContainerList.push({
         key: 'pinned-filters-div',
         x: 0,
         y: 0,
         w: 1,
-        h: props.pinnedFeatures.length
-      })
+        h: props.pinnedFeatures.length,
+      });
     }
-  }
+  };
 
   const renderVisualisationById = item => {
     if (ValidateFields(item.fields)) {
@@ -169,7 +180,7 @@ const Canvas = (props: IVisualisationProp) => {
         v.data = props.visualData?.body;
         props.toggleLoader(false);
         hideDataNotFound(v.id);
-        renderVisualisation(v, props.visualData?.body, "widget", broadcast);
+        renderVisualisation(v, props.visualData?.body, 'widget', broadcast);
       } else {
         showDataNotFound(v.id);
         if (document.getElementById('chart-widget-' + v.id)) {
@@ -182,7 +193,7 @@ const Canvas = (props: IVisualisationProp) => {
 
   useEffect(() => {
     if (props.visualmetadata?.visualMetadataSet?.length > 0) {
-      props.toggleLoader(true)
+      props.toggleLoader(true);
       props.visualmetadata?.visualMetadataSet.map(item => {
         const loader = {
           visualisationId: item.id,
@@ -206,14 +217,20 @@ const Canvas = (props: IVisualisationProp) => {
     }
     if (props.view?.viewFeatureCriterias) {
       if (props.view?.viewFeatureCriterias && props.featuresList && props.featuresList.length > 0) {
-        applyDateFilters(props.view.viewFeatureCriterias, props.selectedFilters, props.featuresList, props.saveSelectedFilter, props.saveDynamicDateRangeMetaData);
+        applyDateFilters(
+          props.view.viewFeatureCriterias,
+          props.selectedFilters,
+          props.featuresList,
+          props.saveSelectedFilter,
+          props.saveDynamicDateRangeMetaData
+        );
       }
     }
   }, [props.visualmetadata]);
 
   useEffect(() => {
     if (props.isSocketConnected) {
-        props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
+      props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
       if (props.visualmetadata?.visualMetadataSet.length > 0) {
         loadvisualisation();
       } else {
@@ -226,7 +243,7 @@ const Canvas = (props: IVisualisationProp) => {
 
   useEffect(() => {
     if (props.updateSuccess) {
-      renderVisualisationById(props.visualmetadataEntity);
+      renderVisualisationById(props.visualMetadataEntity);
     }
   }, [props.updateSuccess]);
 
@@ -234,7 +251,7 @@ const Canvas = (props: IVisualisationProp) => {
     if (props.pinnedFeatures.length > 0) {
       addPinFilter();
       if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
-        renderVisualisationById(props.visualmetadataEntity);
+        renderVisualisationById(props.visualMetadataEntity);
       }
     }
   }, [props.visualMetadataContainerList]);
@@ -273,12 +290,12 @@ const Canvas = (props: IVisualisationProp) => {
             <div className="visualBody" id={`visualBody-${v.key}`}>
               {props.pinnedFeatures &&
                 props.pinnedFeatures.length > 0 &&
-                props.pinnedFeatures.map((feature) => (
+                props.pinnedFeatures.map(feature => (
                   <PinnedFilterElement key={`pinned-filter-element - ${feature.id}`} feature={feature} />
                 ))}
             </div>
           </div>
-        )
+        );
       } else {
         return (
           <div
@@ -320,17 +337,43 @@ const Canvas = (props: IVisualisationProp) => {
                 )}
               </div>
               <div id={`visualisation-${v.id}`} className="visualisation">
-                {
-                  v.metadataVisual.name === VisualisationType.Iframe && (
-                    <iframe id={`iframe-${v.id}`} />
-                  )
-                }
+                {v.metadataVisual.name === VisualisationType.Iframe && <iframe id={`iframe-${v.id}`} />}
               </div>
             </div>
+            {props.visualisationAction === 'Delete' && (
+              <VisualisationsDeleteModal
+                visualisationId={props.visualMetadataEntity.id}
+                viewId={props.view.id}
+                setOpen={() => props.setVisualisationAction(null)}
+                match={null}
+                history={null}
+                location={null}
+              />
+            )}
+            <DialogContainer type={props.visualisationAction === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => props.setVisualisationAction(null)}>
+              {props.visualisationAction === 'Edit' && (
+                <VisualisationEditModalPopUp
+                  id={props.view.viewDashboard.id}
+                  setOpen={()=>{
+                    if (props.editAction === 'save') {
+                      getVisualisationData(props.visual, props.view, props.selectedFilters);
+                    }
+                  }}
+                  // viewId={props.view.id}
+                  // visualisationId={props.visual.id}
+                  // filterData={props.filterData}
+                  // {...props}
+                ></VisualisationEditModalPopUp>
+              )}
+              {props.visualisationAction === 'Data' && <VisualisationDataModal visual={props.visualMetadataEntity} />}
+            </DialogContainer>
+
+            <DialogContainer onDismiss={() => props.setVisualisationAction(null)}>
+              {props.visualisationAction === 'Share' && <VisualisationShareModal view={props.view} visual={props.visualMetadataEntity} />}
+            </DialogContainer>
           </div>
         );
       }
-
     });
 
   return (
@@ -355,7 +398,7 @@ const Canvas = (props: IVisualisationProp) => {
             layout={props.visualMetadataContainerList}
             margin={[15, 15]}
             verticalCompact={true}
-            compactType={"vertical"}
+            compactType={'vertical'}
             onLayoutChange={onLayoutChange}
             onResizeStop={onResizeStop}
             draggableHandle=".header"
@@ -383,7 +426,9 @@ const mapStateToProps = (storeState: IRootState) => ({
   deleteSuccess: storeState.visualmetadata.deleteSuccess,
   visualisationsList: storeState.visualisations.entities,
   featuresList: storeState.feature.entities,
-  visualmetadataEntity: storeState.visualmetadata.entity,
+  visualMetadataEntity: storeState.visualmetadata.entity,
+  visualisationAction: storeState.visualmetadata.visualisationAction,
+  visual: storeState.visualmetadata.entity,
   isEditMode: storeState.visualmetadata.isEditMode,
   visualData: storeState.visualisationData.visualData,
   filterData: storeState.visualisationData.filterData,
@@ -394,7 +439,9 @@ const mapStateToProps = (storeState: IRootState) => ({
   selectedFilters: storeState.filter.selectedFilters,
   isFilterOpen: storeState.filter.isFilterOpen,
   pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true),
-  tableActivePage:storeState.visualmetadata.tableActivePage
+  tableActivePage: storeState.visualmetadata.tableActivePage,
+  editAction: storeState.visualmetadata.editAction,
+  // filter: storeState.filter.selectedFilters,
 });
 
 const mapDispatchToProps = {
@@ -420,11 +467,11 @@ const mapDispatchToProps = {
   saveDynamicDateRangeMetaData,
   alternateDimension,
   visualisationTablePagination,
-  setTableActivePage
+  setTableActivePage,
+  setVisualisationAction
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Canvas);
-

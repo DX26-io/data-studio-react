@@ -55,6 +55,7 @@ export const ACTION_TYPES = {
   TOGGLE_EDIT_MODE: 'visualmetadata/TOGGLE_EDIT_MODE',
   SET_VISUAL: 'visualmetadata/SET_VISUAL',
   SET_EDIT_ACTION: 'visualmetadata/SET_EDIT_ACTION',
+  SET_VIZ_ACTION: 'visualmetadata/SET_VIZ_ACTION',
   VISUAL_METADATA_CONTAINER_ADD: 'visualmetadata/VISUAL_METADATA_CONTAINER_ADD',
   VISUAL_METADATA_CONTAINER_UPDATE: 'visualmetadata/VISUAL_METADATA_CONTAINER_UPDATE',
   VISUAL_METADATA_CONTAINER_REMOVE: 'visualmetadata/VISUAL_METADATA_CONTAINER_REMOVE',
@@ -82,10 +83,11 @@ const initialState = {
   selectedFilter: {},
   validateQueryError: null,
   isEditMode: false,
-  visual: {},
+  visual: {} as IVisualMetadataSet,
   editAction: '',
   visualMetadataContainerList: [],
   tableActivePage: 0,
+  visualisationAction: '',
 };
 
 export type VisualmetadataState = Readonly<typeof initialState>;
@@ -209,7 +211,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
     case ACTION_TYPES.SET_VISUAL:
       return {
         ...state,
-        visual: action.payload,
+        entity: action.payload,
       };
     case ACTION_TYPES.SET_EDIT_ACTION:
       return {
@@ -261,6 +263,11 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
       return {
         ...state,
         tableActivePage: action.payload,
+      };
+    case ACTION_TYPES.SET_VIZ_ACTION:
+      return {
+        ...state,
+        visualisationAction: action.payload,
       };
     case ACTION_TYPES.RESET:
       return {
@@ -328,13 +335,18 @@ export const toggleEditMode = () => ({
 });
 
 export const setVisual = v => ({
-  type: ACTION_TYPES.TOGGLE_EDIT_MODE,
+  type: ACTION_TYPES.SET_VISUAL,
   payload: v,
 });
 
 export const setEditAction = action => ({
-  type: ACTION_TYPES.TOGGLE_EDIT_MODE,
+  type: ACTION_TYPES.SET_EDIT_ACTION,
   payload: action,
+});
+
+export const setVisualisationAction = vizAction => ({
+  type: ACTION_TYPES.SET_VIZ_ACTION,
+  payload: vizAction,
 });
 
 export const reset = () => ({

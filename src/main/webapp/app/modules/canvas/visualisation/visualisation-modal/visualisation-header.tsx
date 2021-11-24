@@ -13,10 +13,10 @@ import Table from '@spectrum-icons/workflow/Table';
 import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
 import 'app/modules/canvas/visualisation/canvas.scss';
 import { VisualWrap } from 'app/modules/canvas/visualisation/util/visualmetadata-wrapper';
-import VisualisationEditModal from './visualisation-edit-modal/visualisation-edit-modal-popup';
-import VisualisationsDeleteModal from './visualisation-delete-modal/visualisations-delete-modal'
+import VisualisationEditModalPopUp from './visualisation-edit-modal/visualisation-edit-modal-popup';
+import VisualisationsDeleteModal from './visualisation-delete-modal/visualisations-delete-modal';
 import { getVisualisationData } from '../util/visualisation-render-utils';
-import  VisualisationDataModal  from './visualisation-data-modal/visualisations-data-modal';
+import VisualisationDataModal from './visualisation-data-modal/visualisations-data-modal';
 import { CSVLink } from 'react-csv';
 import { IRootState } from 'app/shared/reducers';
 import React, { FC, ReactText, useEffect, useRef, useState } from 'react';
@@ -27,6 +27,7 @@ import { getTransactionData } from '../util/visualisation-utils';
 import VisualisationShareModal from './visualisation-share-modal/visualisation-share-modal';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { IViews } from 'app/shared/model/views.model';
+import { setVisualisationAction, setVisual } from 'app/entities/visualmetadata/visualmetadata.reducer';
 
 interface IVisualisationHeaderProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
@@ -40,10 +41,8 @@ interface IVisualisationHeaderProps extends StateProps, DispatchProps {
 const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
   const [transactionData, setTransactionData] = useState([]);
   const [intervalRegistry, setIntervalRegistry] = useState({});
-  const [isLiveEnable, setLiveEnable] = useState(false)
-  const [action, setMenuAction] = useState('')
-
-
+  const [isLiveEnable, setLiveEnable] = useState(false);
+  // const [action, props.setVisualisationAction] = useState('')
 
   const csvLink = useRef(null);
   const { handleVisualisationClick } = props;
@@ -110,36 +109,36 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
     return VisualWrap(newVM);
   };
 
-  const closeEditDialog = () => {
-    if (props.editAction === 'save') {
-      const visual = props.visual;
-      getVisualisationData(visual, props.view, props.filter);
-    }
-  };
+  // const closeEditDialog = () => {
+  //   if (props.editAction === 'save') {
+  //     const visual = props.visual;
+  //     getVisualisationData(visual, props.view, props.selectedFilters);
+  //   }
+  // };
 
   const setLiveEnabled = () => {
     if (!isLiveEnable) {
       setLiveEnable(true);
       const intervalData = intervalRegistry;
       intervalData[props.visual.id] = setInterval(() => {
-        getVisualisationData(props.visual, props.view, props.filter)
-      }, 5000)
+        getVisualisationData(props.visual, props.view, props.selectedFilters);
+      }, 5000);
       setIntervalRegistry(intervalData);
     } else {
       clearInterval(intervalRegistry[props.visual.id]);
-      setLiveEnable(false)
+      setLiveEnable(false);
     }
-  }
+  };
 
   const setAction = {
     '1': {
       getAction() {
-        setMenuAction('Edit')
+        props.setVisualisationAction('Edit');
       },
     },
     '2': {
       getAction() {
-        setMenuAction('Copy')
+        props.setVisualisationAction('Copy');
         const viz = createVisualMetadata(props.visual.metadataVisual);
         viz.bodyProperties = props.visual.bodyProperties;
         viz.properties = props.visual.properties;
@@ -150,50 +149,55 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
     },
     '3': {
       getAction() {
-        setMenuAction('View')
-        getVisualisationData(props.visual, props.view, props.filter);
+        props.setVisualisationAction('View');
+        getVisualisationData(props.visual, props.view, props.selectedFilters);
       },
     },
     '4': {
       getAction() {
-        setMenuAction('Data')
+        props.setVisualisationAction('Data');
       },
     },
     '5': {
       getAction() {
-        setMenuAction('Print')
+        props.setVisualisationAction('Print');
       },
     },
     '6': {
       getAction() {
-        setMenuAction('Delete')
+        props.setVisualisationAction('Delete');
       },
     },
     '7': {
       getAction() {
-        setMenuAction('Export')
+        props.setVisualisationAction('Export');
         getTransactionData(props.visual.data, csvLink, setTransactionData);
         window.open(`export-visualisation?viewId=${props.view.id}&visualizationId=${props.visual.id}`);
       },
     },
     '8': {
       getAction() {
-        setMenuAction('Refresh')
-        getVisualisationData(props.visual, props.view, props.filter);
+        props.setVisualisationAction('Refresh');
+        getVisualisationData(props.visual, props.view, props.selectedFilters);
       },
     },
     '9': {
       getAction() {
-        setMenuAction('Share')
+        props.setVisualisationAction('Share');
       },
     },
+  };
+
+  const onActionMenu = key => {
+    setAction[key].getAction();
+    props.setVisual(props.visual);
   };
   return (
     <>
       <View backgroundColor="gray-200">
         <Flex direction="row" justifyContent="space-between" alignContent="center">
           <Flex direction="column" alignItems="center" justifyContent="space-around">
-            <span className={"chart-title"}>{props.visual?.titleProperties?.titleText}</span>
+            <span className={'chart-title'}>{props.visual?.titleProperties?.titleText}</span>
             {props.visual?.data?.length > 0 && (
               <CSVLink
                 data={transactionData}
@@ -205,18 +209,26 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
             )}
           </Flex>
           <Flex direction="row" justifyContent="space-around">
-            <ActionButton height="size-300" isQuiet={true} onPress={setLiveEnabled} UNSAFE_className={isLiveEnable ? "enable-live" : "disable-live"}>
-              <Circle id={"live-icon"} size={'XS'} aria-label="Default Alert" />
+            <ActionButton
+              height="size-300"
+              isQuiet={true}
+              onPress={setLiveEnabled}
+              UNSAFE_className={isLiveEnable ? 'enable-live' : 'disable-live'}
+            >
+              <Circle id={'live-icon'} size={'XS'} aria-label="Default Alert" />
             </ActionButton>
             <MenuTrigger>
-              <ActionButton isQuiet height="size-300" >
+              <ActionButton isQuiet height="size-300">
                 <Settings size={'XS'} aria-label="Default Alert" />
               </ActionButton>
 
               {props.isEditMode ? (
-                <Menu onAction={(key) => {
-                  setAction[key].getAction();
-                }}>
+                <Menu
+                  onAction={key => {
+                    // setAction[key].getAction();
+                    onActionMenu(key);
+                  }}
+                >
                   <Item key="1" textValue="Edit">
                     <Edit size="M" />
                     <Text>
@@ -269,7 +281,11 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
                   </Item>
                 </Menu>
               ) : (
-                <Menu onAction={(key) => { setAction[key].getAction(); }}>
+                <Menu
+                  onAction={key => {
+                    onActionMenu(key);
+                  }}
+                >
                   <Item key="9" textValue="Share">
                     <ShareAndroid size="M" />
                     <Text>
@@ -310,30 +326,30 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
               )}
             </MenuTrigger>
 
-            {action === 'Delete' && (
+            {/* {action === 'Delete' && (
               <VisualisationsDeleteModal visualisationId={props.visual.id} viewId={props.view.id}
-                setOpen={() => setMenuAction(null)}
+                setOpen={() => props.setVisualisationAction(null)}
                 match={null}
                 history={null}
                 location={null} />
             )}
-            <DialogContainer type={action === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => setMenuAction(null)}>
+            <DialogContainer type={action === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => props.setVisualisationAction(null)}>
               {action === 'Edit' && (
-                <VisualisationEditModal
+                <VisualisationEditModalPopUp
                   id={props.view.viewDashboard.id}
                   setOpen={closeEditDialog}
                   // viewId={props.view.id}
                   visualisationId={props.visual.id}
                   // filterData={props.filterData}
                   // {...props}
-                ></VisualisationEditModal>
+                ></VisualisationEditModalPopUp>
               )}
               {action === 'Data' && <VisualisationDataModal visual={props.visual} />}
             </DialogContainer>
 
-            <DialogContainer onDismiss={() => setMenuAction(null)}>
+            <DialogContainer onDismiss={() => props.setVisualisationAction(null)}>
               {action === 'Share' && <VisualisationShareModal view={props.view} visual={props.visual} />}
-            </DialogContainer>
+            </DialogContainer> */}
           </Flex>
         </Flex>
       </View>
@@ -344,12 +360,15 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
 const mapStateToProps = (storeState: IRootState) => ({
   editAction: storeState.visualmetadata.editAction,
   featuresList: storeState.feature.entities,
-  filter: storeState.filter.selectedFilters,
+  selectedFilters: storeState.filter.selectedFilters,
   view: storeState.views.entity,
   filterData: storeState.visualisationData.filterData,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  setVisualisationAction,
+  setVisual,
+};
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

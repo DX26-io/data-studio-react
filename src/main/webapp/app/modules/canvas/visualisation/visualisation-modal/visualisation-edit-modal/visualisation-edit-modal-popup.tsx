@@ -40,20 +40,20 @@ import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
 import TreeCollapse from '@spectrum-icons/workflow/TreeCollapse';
 import TreeExpand from '@spectrum-icons/workflow/TreeExpand';
 
-export interface IVisualisationEditModalProps extends StateProps, DispatchProps {
+export interface IVisualisationEditModalPopUpProps extends StateProps, DispatchProps {
   id: number;
   // viewId: number;
-  visualisationId: string;
+  // visualisationId: string;
   setOpen: (isOpen: boolean) => void;
   // filterData: any;
   // view: IViews;
 }
 
-export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
+export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpProps) => {
   const [toggleVisualisation, setToggleVisualisation] = useState(true);
   const [visualisationData, setData] = useState<any>();
   const dialog = useDialogContainer();
-  const visualisationId = props.visualisationId;
+  // const visualisationId = props.visualisationId;
   // const viewId = props.viewId;
 
   const handleClose = action => {
@@ -75,16 +75,17 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
     props.metadataContainerUpdate(props.visualMetadataEntity.id, props.visualMetadataEntity, 'id');
     handleClose('save');
   };
+
   useEffect(() => {
-    if (visualisationId) {
-      props.getVisualMetadataEntity(visualisationId);
-      props.getViewEntity(props.view.id);
+    if (props.visualMetadataEntity.id) {
+      props.getVisualMetadataEntity(props.visualMetadataEntity.id);
+      // props.getViewEntity(props.view.id);
     }
   }, []);
 
   useEffect(() => {
-    props.setVisual(props.visualMetadataEntity);
     if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
+      props.setVisual(props.visualMetadataEntity);
       props.receiveSocketResponseByVisualId(props.visualMetadataEntity.id);
       const visualMetadata = VisualWrap(props.visualMetadataEntity);
       const queryDTO = visualMetadata.getQueryParameters(
@@ -168,7 +169,7 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
                     data={visualisationData}
                     visual={props.visualMetadataEntity}
                     view={props.view}
-                    visualisationId={visualisationId}
+                    visualisationId={props.visualMetadataEntity.id}
                     features={props.featuresList}
                     datasource={props.view.viewDashboard.dashboardDatasource}
                     filterData={props.filterData}
@@ -190,6 +191,7 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   visualMetadataEntity: storeState.visualmetadata.entity,
+  // visual: storeState.visualmetadata.visual,
   featuresList: storeState.feature.entities,
   view: storeState.views.entity,
   visualDataById: storeState.visualisationData.visualDataById,
@@ -211,4 +213,4 @@ const mapDispatchToProps = {
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(VisualisationEditModal);
+export default connect(mapStateToProps, mapDispatchToProps)(VisualisationEditModalPopUp);
