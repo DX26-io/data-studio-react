@@ -1,16 +1,12 @@
 import React from 'react';
 import { Dialog, Heading, Divider, Content, ButtonGroup, Button, useDialogContainer, View, Form, TextField } from '@adobe/react-spectrum';
-import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
-import { IViews } from 'app/shared/model/views.model';
 import { getShareLinkUrl } from '../visualisation-edit-modal/visualisation-edit-modal-util';
 import { Translate } from 'react-jhipster';
+import { IRootState } from 'app/shared/reducers';
+import { connect } from 'react-redux';
 
-export interface IVisualisationShareModalProps {
-  view: IViews;
-  visual: IVisualMetadataSet;
-}
 
-export const VisualisationShareModal = (props: IVisualisationShareModalProps) => {
+export const VisualisationShareModal = (props) => {
   const dialog = useDialogContainer();
 
   const copyDashboardUrl = () => {
@@ -44,4 +40,9 @@ export const VisualisationShareModal = (props: IVisualisationShareModalProps) =>
   );
 };
 
-export default VisualisationShareModal;
+const mapStateToProps = (storeState: IRootState) => ({
+  visual: storeState.visualmetadata.entity,
+  view: storeState.views.entity,
+});
+
+export default connect(mapStateToProps, null)(VisualisationShareModal);

@@ -42,7 +42,6 @@ import TreeExpand from '@spectrum-icons/workflow/TreeExpand';
 import { validate as validateQuery } from 'app/entities/visualmetadata/visualmetadata.reducer';
 
 export interface IVisualisationEditModalPopUpProps extends StateProps, DispatchProps {
-  id: number;
   setOpen: (isOpen: boolean) => void;
 }
 
@@ -88,7 +87,6 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
 
   useEffect(() => {
     if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
-      // props.setVisual(props.visualMetadataEntity);
       props.receiveSocketResponseByVisualId(props.visualMetadataEntity.id);
       const visualMetadata = VisualWrap(props.visualMetadataEntity);
       const queryDTO = visualMetadata.getQueryParameters(
@@ -169,15 +167,7 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
               )}
               <div className="settings-tab">
                 <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="50%">
-                  <VisualisationSettings
-                    data={visualisationData}
-                    visual={props.visualMetadataEntity}
-                    view={props.view}
-                    visualisationId={props.visualMetadataEntity.id}
-                    features={props.featuresList}
-                    datasource={props.view.viewDashboard.dashboardDatasource}
-                    filterData={props.filterData}
-                  />
+                  <VisualisationSettings />
                 </View>
               </div>
             </Flex>

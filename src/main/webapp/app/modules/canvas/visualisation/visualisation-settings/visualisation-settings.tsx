@@ -2,28 +2,14 @@ import React, { ReactNode, ReactText, useState } from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import VisualisationQuerySetting from 'app/modules/canvas/visualisation/visualisation-settings/partials/visualisation-query-setting';
-import VisualisationDataConstraintsSetting from 'app/modules/canvas/visualisation/visualisation-settings/partials/visualisation-data-constraints-setting';
-import VisualisationDataSetting from 'app/modules/canvas/visualisation/visualisation-settings/partials/visualisation-data-setting';
-import { Content } from '@react-spectrum/view';
+import { Content, View } from '@react-spectrum/view';
 import { Tabs, Item } from '@react-spectrum/tabs';
 import { getSettingsTabTranslations } from 'app/modules/canvas/visualisation/visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-util';
-import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
-import { IViews } from 'app/shared/model/views.model';
-import { IFeature } from 'app/shared/model/feature.model';
-import { IDatasources } from 'app/shared/model/datasources.model';
 import Scheduler from 'app/modules/canvas/scheduler/scheduler';
+import VisualisationDataConstraints from 'app/modules/canvas/data-constraints/visualisation-data-constraints';
+import TableView from 'app/shared/components/table/table';
 
-export interface IVisualisationSettingsProps {
-  visualisationId: ReactNode;
-  visual: IVisualMetadataSet;
-  view: IViews;
-  data?: any;
-  features?: readonly IFeature[];
-  datasource?: IDatasources;
-  filterData?: any;
-}
-
-const VisualisationSettings = (props: IVisualisationSettingsProps) => {
+const VisualisationSettings = props => {
   const [activeTabId, setActiveTabId] = useState<ReactText>('query');
   return (
     <>
@@ -32,17 +18,12 @@ const VisualisationSettings = (props: IVisualisationSettingsProps) => {
           <Item title={item.name}>
             <Content margin="size-250">
               {activeTabId === 'query' && <VisualisationQuerySetting />}
-              {activeTabId === 'dataConstraints' && (
-                <VisualisationDataConstraintsSetting
-                  filterData={props.filterData}
-                  features={props.features}
-                  datasource={props.datasource}
-                  visualMetaData={props.visual}
-                />
+              {activeTabId === 'dataConstraints' && <VisualisationDataConstraints />}
+              {activeTabId === 'scheduler' && <Scheduler thresholdAlert={false} />}
+              {activeTabId === 'thresholdAlert' && <Scheduler thresholdAlert={true} />}
+              {activeTabId === 'data' && props.visualDataById && props.visualDataById?.data.length > 0 && (
+                <TableView data={props.visualDataById?.data} />
               )}
-              {activeTabId === 'scheduler' && <Scheduler visual={props.visual} thresholdAlert={false} />}
-              {activeTabId === 'thresholdAlert' && <Scheduler visual={props.visual} thresholdAlert={true} />}
-              {activeTabId === 'data' && <VisualisationDataSetting data={props.data} />}
             </Content>
           </Item>
         )}
@@ -51,4 +32,8 @@ const VisualisationSettings = (props: IVisualisationSettingsProps) => {
   );
 };
 
-export default VisualisationSettings;
+const mapStateToProps = (storeState: IRootState) => ({
+  visualDataById: storeState.visualisationData.visualDataById,
+});
+
+export default connect(mapStateToProps, null)(VisualisationSettings);

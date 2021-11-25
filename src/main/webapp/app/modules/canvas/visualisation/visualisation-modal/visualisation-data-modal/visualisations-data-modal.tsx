@@ -7,11 +7,7 @@ import TableView from 'app/shared/components/table/table';
 import { CSVLink } from 'react-csv';
 import { getTransactionData } from '../../util/visualisation-utils';
 
-export interface IVisualisationDataModalProps {
-  visual: any;
-}
-
-export const VisualisationDataModal = (props: IVisualisationDataModalProps) => {
+export const VisualisationDataModal = props => {
   const dialog = useDialogContainer();
   const [transactionData, setTransactionData] = useState([]);
   const csvLink = useRef(null);
@@ -46,4 +42,8 @@ export const VisualisationDataModal = (props: IVisualisationDataModalProps) => {
   );
 };
 
-export default VisualisationDataModal;
+const mapStateToProps = (storeState: IRootState) => ({
+  visual: storeState.visualmetadata.entity,
+});
+
+export default connect(mapStateToProps, null)(VisualisationDataModal);

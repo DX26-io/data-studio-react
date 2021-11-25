@@ -339,18 +339,12 @@ const Canvas = (props: IVisualisationProp) => {
             </div>
             {props.visualisationAction === 'Delete' && (
               <VisualisationsDeleteModal
-                visualisationId={props.visualMetadataEntity.id}
-                viewId={props.view.id}
                 setOpen={() => props.setVisualisationAction(null)}
-                match={null}
-                history={null}
-                location={null}
               />
             )}
             <DialogContainer type={props.visualisationAction === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => props.setVisualisationAction(null)}>
               {props.visualisationAction === 'Edit' && (
                 <VisualisationEditModalPopUp
-                  id={props.view.viewDashboard.id}
                   setOpen={()=>{
                     if (props.editAction === 'save') {
                       getVisualisationData(props.visual, props.view, props.selectedFilters);
@@ -362,7 +356,7 @@ const Canvas = (props: IVisualisationProp) => {
             </DialogContainer>
 
             <DialogContainer onDismiss={() => props.setVisualisationAction(null)}>
-              {props.visualisationAction === 'Share' && <VisualisationShareModal view={props.view} visual={props.visualMetadataEntity} />}
+              {props.visualisationAction === 'Share' && <VisualisationShareModal />}
             </DialogContainer>
           </div>
         );

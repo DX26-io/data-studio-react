@@ -6,17 +6,13 @@ import {
   deleteEntity as deleteVisualmetadataEntity,
   metadataContainerRemove,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
 
 interface IVisualisationsDeleteModalProps
 extends StateProps,
-DispatchProps,
-RouteComponentProps<{ id: string; visualisationId: string; viewId: string }> {
+DispatchProps {
   setOpen: (isOpen: boolean) => any;
-  viewId: number;
-  visualisationId:string
 }
 
 const VisualisationsDeleteModal = (props: IVisualisationsDeleteModalProps) => {
@@ -24,7 +20,7 @@ const VisualisationsDeleteModal = (props: IVisualisationsDeleteModalProps) => {
   const [visualisationsTitle, setVisualisationsTitle] = useState('');
   
   useEffect(() => {
-    props.getEntity(props.visualisationId);
+    props.getEntity(props.visualMetadataEntity.id);
   }, []);
   const handleClose = () => {
     props.setOpen(false)
@@ -35,7 +31,7 @@ const VisualisationsDeleteModal = (props: IVisualisationsDeleteModalProps) => {
   
   useEffect(() => {
     if (props.deleteSuccess) {
-      props.metadataContainerRemove(props.visualisationId);
+      props.metadataContainerRemove(props.visualMetadataEntity.id);
       handleClose();
     }
     if (props.visualMetadataEntity.id) {
@@ -44,7 +40,7 @@ const VisualisationsDeleteModal = (props: IVisualisationsDeleteModalProps) => {
   }, [props.deleteSuccess, props.visualMetadataEntity]);
   
   const confirmDelete = () => {
-    props.deleteVisualmetadataEntity(props.visualisationId);
+    props.deleteVisualmetadataEntity(props.visualMetadataEntity.id);
     handleClose();
   };
   
