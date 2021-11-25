@@ -14,7 +14,6 @@ import {
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import './visualisation-edit-modal.scss';
-import { useHistory } from 'react-router-dom';
 import VisualisationProperties from 'app/modules/canvas/visualisation/visualisation-properties/visualisation-properties';
 import VisualisationSettings from 'app/modules/canvas/visualisation/visualisation-settings/visualisation-settings';
 import { Translate } from 'react-jhipster';
@@ -35,7 +34,6 @@ import {
 import { VisualWrap } from '../../util/visualmetadata-wrapper';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { receiveSocketResponseByVisualId } from 'app/shared/websocket/websocket.reducer';
-import { IViews } from 'app/shared/model/views.model';
 import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
 import TreeCollapse from '@spectrum-icons/workflow/TreeCollapse';
 import TreeExpand from '@spectrum-icons/workflow/TreeExpand';
@@ -47,7 +45,6 @@ export interface IVisualisationEditModalPopUpProps extends StateProps, DispatchP
 
 export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpProps) => {
   const [toggleVisualisation, setToggleVisualisation] = useState(true);
-  const [visualisationData, setData] = useState<any>();
   const dialog = useDialogContainer();
 
   const handleClose = action => {
@@ -111,7 +108,6 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
     if (props.visualDataById && toggleVisualisation) {
       if (props.visualDataById?.data.length > 0) {
         renderVisualisation(props.visualMetadataEntity, props.visualDataById?.data, 'visualisation-edit', props);
-        setData(props.visualDataById?.data);
       }
     }
   }, [props.visualDataById, toggleVisualisation]);

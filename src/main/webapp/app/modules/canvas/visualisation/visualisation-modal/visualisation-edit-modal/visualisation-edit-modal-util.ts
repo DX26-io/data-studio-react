@@ -1,5 +1,6 @@
 import { IViews } from 'app/shared/model/views.model';
 import { translate } from 'react-jhipster';
+import { VisualWrap } from '../../util/visualmetadata-wrapper';
 
 interface ITabData {
   id: string;
@@ -149,4 +150,66 @@ export const getShareLinkUrl = (view: IViews, visualisationId: string) => {
 
 export const getBuildUrl = (viewId: number, dashboardId: number) => {
   return `${location.host}/dashboards/build?dashboardId=${dashboardId}&viewId=${viewId}`;
+};
+
+export const createFields = newVM => {
+  newVM.fields = newVM.metadataVisual.fieldTypes
+    .filter(function (item) {
+      return item.constraint === 'REQUIRED';
+    })
+    .map(function (item) {
+      return {
+        fieldType: item,
+        feature: null,
+        constraint: item.constraint,
+      };
+    });
+
+  return newVM;
+};
+
+export const createProperties = newVM => {
+  newVM.properties = newVM.metadataVisual.propertyTypes.map(function (item) {
+    return {
+      propertyType: item.propertyType,
+      value: item.propertyType.defaultValue,
+      order: item.order,
+      type: item.propertyType.type,
+    };
+  });
+  return newVM;
+};
+
+export const createVisualMetadata = (visualisation,view,totalItem) => {
+  let newVM = {
+    isCardRevealed: true,
+    isSaved: false,
+    viewId: view.id,
+    titleProperties: {
+      titleText: visualisation.name,
+      backgroundColor: '#fafafa',
+      borderBottom: 'none',
+      color: '#676a6c',
+    },
+    bodyProperties: {
+      opacity: 1,
+      backgroundColor: `var(--spectrum-global-color-static-gray-50)`,
+      border: 'none',
+    },
+    visualBuildId: visualisation.id + 'a' + Math.round(Math.random() * 1000000),
+    width: 1,
+    w: 1,
+    xPosition: (totalItem * 2) % (3 || 12),
+    x: (totalItem * 2) % (3 || 12),
+    height: 3,
+    h: 3,
+    yPosition: 1000,
+    y: 1000,
+    metadataVisual: visualisation,
+    views: view,
+    datasource: view.viewDashboard.dashboardDatasource.id,
+  };
+  newVM = createProperties(newVM);
+  newVM = createFields(newVM);
+  return VisualWrap(newVM);
 };

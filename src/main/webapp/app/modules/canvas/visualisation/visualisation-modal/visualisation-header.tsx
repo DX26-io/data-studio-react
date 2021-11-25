@@ -12,7 +12,6 @@ import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
 import Table from '@spectrum-icons/workflow/Table';
 import ViewedMarkAs from '@spectrum-icons/workflow/ViewedMarkAs';
 import 'app/modules/canvas/visualisation/canvas.scss';
-import { VisualWrap } from 'app/modules/canvas/visualisation/util/visualmetadata-wrapper';
 import { getVisualisationData } from '../util/visualisation-render-utils';
 import { CSVLink } from 'react-csv';
 import { IRootState } from 'app/shared/reducers';
@@ -22,6 +21,7 @@ import { connect } from 'react-redux';
 import { getTransactionData } from '../util/visualisation-utils';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { setVisualisationAction, setVisual } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import  {createVisualMetadata}  from './visualisation-edit-modal/visualisation-edit-modal-util';
 
 interface IVisualisationHeaderProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
@@ -31,73 +31,13 @@ interface IVisualisationHeaderProps extends StateProps, DispatchProps {
 }
 
 const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
+
   const [transactionData, setTransactionData] = useState([]);
   const [intervalRegistry, setIntervalRegistry] = useState({});
   const [isLiveEnable, setLiveEnable] = useState(false);
-
   const csvLink = useRef(null);
   const { handleVisualisationClick } = props;
-  const createFields = newVM => {
-    newVM.fields = newVM.metadataVisual.fieldTypes
-      .filter(function (item) {
-        return item.constraint === 'REQUIRED';
-      })
-      .map(function (item) {
-        return {
-          fieldType: item,
-          feature: null,
-          constraint: item.constraint,
-        };
-      });
 
-    return newVM;
-  };
-
-  const createProperties = newVM => {
-    newVM.properties = newVM.metadataVisual.propertyTypes.map(function (item) {
-      return {
-        propertyType: item.propertyType,
-        value: item.propertyType.defaultValue,
-        order: item.order,
-        type: item.propertyType.type,
-      };
-    });
-    return newVM;
-  };
-
-  const createVisualMetadata = visualisation => {
-    let newVM = {
-      isCardRevealed: true,
-      isSaved: false,
-      viewId: props.view.id,
-      titleProperties: {
-        titleText: visualisation.name,
-        backgroundColor: '#fafafa',
-        borderBottom: 'none',
-        color: '#676a6c',
-      },
-      bodyProperties: {
-        opacity: 1,
-        backgroundColor: `var(--spectrum-global-color-static-gray-50)`,
-        border: 'none',
-      },
-      visualBuildId: visualisation.id + 'a' + Math.round(Math.random() * 1000000),
-      width: 1,
-      w: 1,
-      xPosition: (props.totalItem * 2) % (3 || 12),
-      x: (props.totalItem * 2) % (3 || 12),
-      height: 3,
-      h: 3,
-      yPosition: 1000,
-      y: 1000,
-      metadataVisual: visualisation,
-      views: props.view,
-      datasource: props.view.viewDashboard.dashboardDatasource.id,
-    };
-    newVM = createProperties(newVM);
-    newVM = createFields(newVM);
-    return VisualWrap(newVM);
-  };
 
   const setLiveEnabled = () => {
     if (!isLiveEnable) {
@@ -122,7 +62,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
     '2': {
       getAction() {
         props.setVisualisationAction('Copy');
-        const viz = createVisualMetadata(props.visual.metadataVisual);
+        const viz = createVisualMetadata(props.visual.metadataVisual,props.view,props.totalItem);
         viz.bodyProperties = props.visual.bodyProperties;
         viz.properties = props.visual.properties;
         viz.titleProperties = props.visual.titleProperties;
@@ -208,7 +148,6 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
               {props.isEditMode ? (
                 <Menu
                   onAction={key => {
-                    // setAction[key].getAction();
                     onActionMenu(key);
                   }}
                 >
