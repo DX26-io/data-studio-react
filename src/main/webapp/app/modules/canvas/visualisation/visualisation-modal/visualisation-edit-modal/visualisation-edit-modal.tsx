@@ -69,7 +69,7 @@ const VisualisationEditModal = (props: IVisualisationEditModalProps1) => {
                 <Flex direction="column" height="100%" flex gap="size-75">
                   <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%"></View>
                   <View borderWidth="thin" borderColor="default" borderRadius="regular" height="50%">
-                    <VisualisationSettings visual={props.visualmetadataEntity} view={props.view} visualisationId={visualisationId} />
+                    <VisualisationSettings  />
                   </View>
                 </Flex>
               </View>

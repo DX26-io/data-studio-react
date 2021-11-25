@@ -14,7 +14,6 @@ import {
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import './visualisation-edit-modal.scss';
-import { useHistory } from 'react-router-dom';
 import VisualisationProperties from 'app/modules/canvas/visualisation/visualisation-properties/visualisation-properties';
 import VisualisationSettings from 'app/modules/canvas/visualisation/visualisation-settings/visualisation-settings';
 import { Translate } from 'react-jhipster';
@@ -35,26 +34,18 @@ import {
 import { VisualWrap } from '../../util/visualmetadata-wrapper';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { receiveSocketResponseByVisualId } from 'app/shared/websocket/websocket.reducer';
-import { IViews } from 'app/shared/model/views.model';
 import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
 import TreeCollapse from '@spectrum-icons/workflow/TreeCollapse';
 import TreeExpand from '@spectrum-icons/workflow/TreeExpand';
+import { validate as validateQuery } from 'app/entities/visualmetadata/visualmetadata.reducer';
 
-export interface IVisualisationEditModalProps extends StateProps, DispatchProps {
-  id: number;
-  viewId: number;
-  visualisationId: string;
+export interface IVisualisationEditModalPopUpProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
-  filterData: any;
-  view: IViews;
 }
 
-export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
+export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpProps) => {
   const [toggleVisualisation, setToggleVisualisation] = useState(true);
-  const [visualisationData, setData] = useState<any>();
   const dialog = useDialogContainer();
-  const visualisationId = props.visualisationId;
-  const viewId = props.viewId;
 
   const handleClose = action => {
     props.setEditAction(action);
@@ -69,21 +60,29 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
 
   const handleSave = () => {
     props.updateVisualmetadataEntity({
-      viewId,
+      viewId: props.view.id,
       visualMetadata: props.visualMetadataEntity,
     });
     props.metadataContainerUpdate(props.visualMetadataEntity.id, props.visualMetadataEntity, 'id');
     handleClose('save');
   };
+
   useEffect(() => {
-    if (visualisationId) {
-      props.getVisualMetadataEntity(visualisationId);
-      props.getViewEntity(viewId);
+    if (props.visualMetadataEntity.id) {
+      props.getVisualMetadataEntity(props.visualMetadataEntity.id);
     }
   }, []);
 
+  const _validateQuery = () => {
+    const wrap = VisualWrap(props.visualMetadataEntity);
+    props.validateQuery({
+      datasourceId: props.view.viewDashboard.dashboardDatasource.id,
+      visualMetadataId: props.visualMetadataEntity.id,
+      queryDTO: wrap.getQueryParameters(props.visualMetadataEntity, {}, null, null),
+    });
+  };
+
   useEffect(() => {
-    props.setVisual(props.visualMetadataEntity);
     if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
       props.receiveSocketResponseByVisualId(props.visualMetadataEntity.id);
       const visualMetadata = VisualWrap(props.visualMetadataEntity);
@@ -100,6 +99,7 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
         actionType: null,
         type: 'share-link',
       };
+      _validateQuery();
       forwardCall(props.view?.viewDashboard?.dashboardDatasource?.id, body, props.view.id);
     }
   }, [props.visualMetadataEntity]);
@@ -108,7 +108,6 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
     if (props.visualDataById && toggleVisualisation) {
       if (props.visualDataById?.data.length > 0) {
         renderVisualisation(props.visualMetadataEntity, props.visualDataById?.data, 'visualisation-edit', props);
-        setData(props.visualDataById?.data);
       }
     }
   }, [props.visualDataById, toggleVisualisation]);
@@ -164,15 +163,7 @@ export const VisualisationEditModal = (props: IVisualisationEditModalProps) => {
               )}
               <div className="settings-tab">
                 <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="50%">
-                  <VisualisationSettings
-                    data={visualisationData}
-                    visual={props.visualMetadataEntity}
-                    view={props.view}
-                    visualisationId={visualisationId}
-                    features={props.featuresList}
-                    datasource={props.view.viewDashboard.dashboardDatasource}
-                    filterData={props.filterData}
-                  />
+                  <VisualisationSettings />
                 </View>
               </div>
             </Flex>
@@ -195,6 +186,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualDataById: storeState.visualisationData.visualDataById,
   hierarchies: storeState.hierarchies.hierarchies,
   selectedFilters: storeState.filter.selectedFilters,
+  filterData: storeState.visualisationData.filterData,
 });
 
 const mapDispatchToProps = {
@@ -205,9 +197,10 @@ const mapDispatchToProps = {
   updateVisualmetadataEntity,
   metadataContainerUpdate,
   receiveSocketResponseByVisualId,
+  validateQuery,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(VisualisationEditModal);
+export default connect(mapStateToProps, mapDispatchToProps)(VisualisationEditModalPopUp);

@@ -58,7 +58,6 @@ import { getUsers } from 'app/modules/administration/user-management/users/user.
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
 export interface ISchedulerProps extends StateProps, DispatchProps {
-  visual: IVisualMetadataSet;
   thresholdAlert: boolean;
 }
 
@@ -348,6 +347,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   timeConditions: storeState.scheduler.timeConditions,
   updating: storeState.scheduler.updating,
   errorMessage: storeState.scheduler.errorMessage,
+  visual: storeState.visualmetadata.entity,
 });
 
 const mapDispatchToProps = {

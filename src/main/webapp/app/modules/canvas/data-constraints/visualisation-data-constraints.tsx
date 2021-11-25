@@ -24,15 +24,16 @@ import { updateConditionExpression } from 'app/entities/visualmetadata/visualmet
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 
-interface IVisualisationDataConstraintsProps extends StateProps, DispatchProps {
-  features: readonly IFeature[];
-  datasource: IDatasources;
-  visualMetaData: IVisualMetadataSet;
-  condition: any;
-  filterData: any;
-}
+// interface IVisualisationDataConstraintsProps extends StateProps, DispatchProps {
+//   // TODO
+//   // features: readonly IFeature[];
+//   // datasource: IDatasources;
+//   // visualMetaData: IVisualMetadataSet;
+//   // condition: any;
+//   // filterData: any;
+// }
 
-const VisualisationDataConstraints: FC<IVisualisationDataConstraintsProps> = props => {
+const VisualisationDataConstraints= (props) => {
   const [property, setProperty] = useState([]);
   const [conditionList, setConditionList] = useState(CONDITION_TYPES);
   const [isDisplayDateRange, setDisplayDateRange] = useState(false);
@@ -262,12 +263,12 @@ const VisualisationDataConstraints: FC<IVisualisationDataConstraintsProps> = pro
       }
     });
     const conditionExpression = applyChanges(props.visualMetaData.conditionExpression, changes);
-    props.updateConditionExpression(props.visualMetaData, conditionExpression)
+    props.updateConditionExpression(props.visualMetaData, conditionExpression);
   };
 
   const removeCondition = condition => {
     if (props.visualMetaData.conditionExpression.uuid === condition.uuid) {
-      props.updateConditionExpression(props.visualMetaData, null)
+      props.updateConditionExpression(props.visualMetaData, null);
     } else {
       const changes = [];
       depthFirstVisit(props.visualMetaData.conditionExpression, function (current, previous, previousLeaf, parent) {
@@ -285,7 +286,7 @@ const VisualisationDataConstraints: FC<IVisualisationDataConstraintsProps> = pro
         }
       });
       const conditionExpression = applyChanges(props.visualMetaData.conditionExpression, changes);
-      props.updateConditionExpression(props.visualMetaData, conditionExpression)
+      props.updateConditionExpression(props.visualMetaData, conditionExpression);
     }
   };
   const loadComponent = condition => {
@@ -353,11 +354,14 @@ const VisualisationDataConstraints: FC<IVisualisationDataConstraintsProps> = pro
     return (
       <>
         <VisualisationDataConstraints
-          features={props.features}
-          datasource={props.datasource}
-          visualMetaData={props.visualMetaData}
-          condition={condition}
-          filterData={props.filterData} updateConditionExpression={props.updateConditionExpression}></VisualisationDataConstraints>
+          // TODO : 
+          // features={props.features}
+          // datasource={props.datasource}
+          // visualMetaData={props.visualMetaData}
+          // condition={condition}
+          // filterData={props.filterData}
+          // updateConditionExpression={props.updateConditionExpression}
+        />
       </>
     );
   };
@@ -391,7 +395,7 @@ const VisualisationDataConstraints: FC<IVisualisationDataConstraintsProps> = pro
         type: '',
       },
       valueTypes: [],
-    }
+    };
     props.updateConditionExpression(props.visualMetaData, conditionExpression);
   };
 
@@ -416,13 +420,18 @@ const VisualisationDataConstraints: FC<IVisualisationDataConstraintsProps> = pro
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
+  visualMetaData: storeState.visualmetadata.entity,
+  features: storeState.feature.entities,
+  visualDataById: storeState.visualisationData.visualDataById,
+  filterData: storeState.visualisationData.filterData,
+  datasource: storeState.views.entity.viewDashboard.dashboardDatasource,
+  condition:storeState.visualmetadata.entity.conditionExpression
 });
 const mapDispatchToProps = {
   updateConditionExpression,
 };
 
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
+// type StateProps = ReturnType<typeof mapStateToProps>;
+// type DispatchProps = typeof mapDispatchToProps;
 
 export default connect(mapStateToProps, mapDispatchToProps)(VisualisationDataConstraints);
-
