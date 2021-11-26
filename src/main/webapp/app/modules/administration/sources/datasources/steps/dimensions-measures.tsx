@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { getFeatures } from '../../connections/connection.reducer';
 import { Flex, Picker, Item, Checkbox, Text, ProgressBar } from '@adobe/react-spectrum';
 import { COMPARABLE_DATA_TYPES } from 'app/config/constants';
+import { setFeatures } from './datasource-steps.reducer';
 
 interface IDimensionsMeasures extends StateProps, DispatchProps {
   datasourceId: number;
@@ -16,14 +17,12 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
   const { datasourceId, features, loading, updateFeaturesRequest } = props;
 
   useEffect(() => {
-    if (features.length === 0) {
-      const body = {
-        metaRetrieved: true,
-        limit: 1,
-        distinct: false,
-      };
-      props.getFeatures(datasourceId, body);
-    }
+    const body = {
+      metaRetrieved: true,
+      limit: 1,
+      distinct: false,
+    };
+    props.getFeatures(datasourceId, body);
   }, []);
 
   const isTemporalFeature = feature => {
@@ -63,6 +62,7 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
                         <Checkbox
                           onChange={() => {
                             feature.isSelected = !feature.isSelected;
+                            props.setFeatures(features);
                           }}
                           defaultSelected={feature.isSelected}
                           isEmphasized
@@ -77,6 +77,7 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
                         defaultSelectedKey={feature.featureType}
                         onSelectionChange={selected => {
                           feature.featureType = selected;
+                          props.setFeatures(features);
                         }}
                       >
                         {item => <Item key={item.name}>{item.name}</Item>}
@@ -87,6 +88,7 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
                         <Checkbox
                           onChange={() => {
                             feature.dateFilter = feature.dateFilter ? 'DISABLED' : 'ENABLED';
+                            props.setFeatures(features);
                           }}
                           defaultSelected={feature.dateFilter === 'ENABLED' ? true : false}
                           isEmphasized
@@ -98,6 +100,7 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
                       <Checkbox
                         onChange={() => {
                           feature.featureCacheType = feature.featureCacheType ? 'DISABLED' : 'ENABLED';
+                          props.setFeatures(features);
                         }}
                         defaultSelected={feature.featureCacheType === 'ENABLED' ? true : false}
                         isEmphasized
@@ -120,7 +123,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updateFeaturesRequest: storeState.datasources.updateFeaturesRequest,
 });
 
-const mapDispatchToProps = { getFeatures };
+const mapDispatchToProps = { getFeatures, setFeatures };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

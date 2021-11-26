@@ -3,6 +3,7 @@
     "home": {
       "title": "Datasources",
       "create": "Create Datasource",
+      "update":"Update Datasource",
       "edit": "Edit Datasource",
       "description": "Manage your datasources"
     },
