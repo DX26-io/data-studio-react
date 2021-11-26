@@ -47,7 +47,6 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
     datasource,
     exploreModelTabId,
     connection,
-    updatedFeatures,
     features,
   } = props;
   const classes = useStyles();
@@ -87,10 +86,9 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
       create();
     }
     if (activeStep === 1) {
-      const _features = updatedFeatures && updatedFeatures.length > 0 ? updatedFeatures : features;
       props.addFeatures({
         datasourceId: createdDatasource.id,
-        featureList: _features,
+        featureList: features,
       });
     }
   };
@@ -175,7 +173,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   createdDatasource: storeState.datasources.entity,
   datasourceUpdateSuccess: storeState.datasources.updateSuccess,
   datasourceUpdateError: storeState.datasources.updateError,
-  updatedFeatures: storeState.datasourceSteps.features,
   features: storeState.connections.features,
   updateFeaturesSuccess: storeState.datasources.updateFeaturesSuccess,
   datasource: storeState.datasourceSteps.datasource,

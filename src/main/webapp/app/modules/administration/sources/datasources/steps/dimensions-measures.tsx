@@ -62,7 +62,6 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
                         <Checkbox
                           onChange={() => {
                             feature.isSelected = !feature.isSelected;
-                            props.setFeatures(features);
                           }}
                           defaultSelected={feature.isSelected}
                           isEmphasized
@@ -77,7 +76,6 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
                         defaultSelectedKey={feature.featureType}
                         onSelectionChange={selected => {
                           feature.featureType = selected;
-                          props.setFeatures(features);
                         }}
                       >
                         {item => <Item key={item.name}>{item.name}</Item>}
@@ -88,7 +86,6 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
                         <Checkbox
                           onChange={() => {
                             feature.dateFilter = feature.dateFilter ? 'DISABLED' : 'ENABLED';
-                            props.setFeatures(features);
                           }}
                           defaultSelected={feature.dateFilter === 'ENABLED' ? true : false}
                           isEmphasized
@@ -100,7 +97,6 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
                       <Checkbox
                         onChange={() => {
                           feature.featureCacheType = feature.featureCacheType ? 'DISABLED' : 'ENABLED';
-                          props.setFeatures(features);
                         }}
                         defaultSelected={feature.featureCacheType === 'ENABLED' ? true : false}
                         isEmphasized
