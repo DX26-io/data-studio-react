@@ -104,7 +104,7 @@ export const Filters = (props: IFiltersProps) => {
               </ComboBox>
             ) : null}
             {/* TODO : start date and end date will be added into filters once date component is ready */}
-            <TextField label={translate('reports-management.reports.filters.reportName')} onChange={setReportName} value={reportName} />
+            <TextField label={translate('reportsManagement.reports.filters.reportName')} onChange={setReportName} value={reportName} />
             <Checkbox onChange={setThresholdAlert} isEmphasized marginTop="size-300">
               <Translate contentKey="reports-management.reports.thresholdAlert">Threshold Alert</Translate>
             </Checkbox>

@@ -14,14 +14,14 @@ const ReportsManagement = (props: RouteComponentProps) => {
     {
       icon: <Report size="L" />,
       link: `${match.url}/reports`,
-      title: 'reports-management.reports.title',
-      description: 'reports-management.reports.description',
+      title: 'reportsManagement.reports.title',
+      description: 'reportsManagement.reports.description',
     },
     {
       icon: <Feed size="L" />,
       link: `${match.url}/reports-logger`,
-      title: 'reports-management.taskLogger.title',
-      description: 'reports-management.taskLogger.description',
+      title: 'reportsManagement.taskLogger.title',
+      description: 'reportsManagement.taskLogger.description',
     },
   ];
   return (
@@ -29,9 +29,9 @@ const ReportsManagement = (props: RouteComponentProps) => {
       <SecondaryHeader
         breadcrumbItems={[
           { label: translate('home.title'), route: '/' },
-          { label: translate('reports-management.home.title'), route: '/administration/report-management' },
+          { label: translate('reportsManagement.home.title'), route: '/administration/report-management' },
         ]}
-        title={translate('reports-management.home.title')}
+        title={translate('reportsManagement.home.title')}
       />
       <Flex direction="row" gap="size-700" justifyContent="center" height="100%" marginTop="10%">
         {reportsManagementList.map(card => (
