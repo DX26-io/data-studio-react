@@ -17,7 +17,6 @@ DispatchProps {
 
 const VisualisationsDeleteModal = (props: IVisualisationsDeleteModalProps) => {
   const [visualisationsTitleConfirmation, setVisualisationsTitleConfirmation] = useState<ReactText>('');
-  const [visualisationsTitle, setVisualisationsTitle] = useState('');
   
   useEffect(() => {
     props.getEntity(props.visualMetadataEntity.id);
@@ -26,18 +25,8 @@ const VisualisationsDeleteModal = (props: IVisualisationsDeleteModalProps) => {
     props.setOpen(false)
   };
   const deleteConfirmation = () => {
-    return visualisationsTitleConfirmation !== visualisationsTitle;
+    return visualisationsTitleConfirmation !== props.visualMetadataEntity.titleProperties.titleText;
   };
-  
-  useEffect(() => {
-    if (props.deleteSuccess) {
-      props.metadataContainerRemove(props.visualMetadataEntity.id);
-      handleClose();
-    }
-    if (props.visualMetadataEntity.id) {
-      setVisualisationsTitle(props.visualMetadataEntity.titleProperties.titleText);
-    }
-  }, [props.deleteSuccess, props.visualMetadataEntity]);
   
   const confirmDelete = () => {
     props.deleteVisualmetadataEntity(props.visualMetadataEntity.id);
@@ -52,12 +41,12 @@ const VisualisationsDeleteModal = (props: IVisualisationsDeleteModalProps) => {
         </Heading>
         <Divider />
         <Content>
-          <Translate contentKey="datastudioApp.visualmetadata.delete.question" interpolate={{ name: visualisationsTitle }}>
+          <Translate contentKey="datastudioApp.visualmetadata.delete.question" interpolate={{ name: props.visualMetadataEntity.titleProperties.titleText }}>
             This will permanently delete the selected dashboard
           </Translate>
           <TextField
             marginTop="size-250"
-            placeholder={visualisationsTitle}
+            placeholder={props.visualMetadataEntity.titleProperties.titleText}
             isRequired
             isQuiet
             width="size-3600"

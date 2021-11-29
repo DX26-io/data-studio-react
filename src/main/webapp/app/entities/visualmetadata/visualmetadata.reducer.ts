@@ -195,8 +195,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         updating: false,
         deleteSuccess: true,
         newCreated: false,
-        entity: {},
-        visualMetadataContainerList: visualMetadataContainerRemove(action.payload.headers['x-flairbiapp-params']),
+        visualMetadataContainerList: visualMetadataContainerRemove(state.entity.id),
       };
     case SUCCESS(ACTION_TYPES.VALIDATE_QUERY):
       return {
@@ -326,7 +325,6 @@ export const deleteEntity: ICrudDeleteAction<IVisualMetadata> = id => async disp
     type: ACTION_TYPES.DELETE_VISUALMETADATA,
     payload: axios.delete(requestUrl),
   });
-  // dispatch(getEntities());
   return result;
 };
 
