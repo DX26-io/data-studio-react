@@ -60,8 +60,8 @@ const Admin: React.FC = () => {
     {
       icon: <FileGear size="L" />,
       link: `/administration/reports-configuration`,
-      title: 'reports-management.reportConfiguration.title',
-      description: 'reports-management.reportConfiguration.description',
+      title: 'reportsManagement.reportConfiguration.title',
+      description: 'reportsManagement.reportConfiguration.description',
     },
     {
       icon: <AssetsPublished size="L" />,

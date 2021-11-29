@@ -71,10 +71,10 @@ export const Reports = (props: IReportsProps) => {
       <SecondaryHeader
         breadcrumbItems={[
           { label: 'Home', route: '/' },
-          { label: translate('reports-management.home.title'), route: '/reports-management' },
-          { label: translate('reports-management.reports.title'), route: '/reports-management/reports' },
+          { label: translate('reportsManagement.home.title'), route: '/reports-management' },
+          { label: translate('reportsManagement.reports.title'), route: '/reports-management/reports' },
         ]}
-        title={translate('reports-management.reports.title')}
+        title={translate('reportsManagement.reports.title')}
       ></SecondaryHeader>
       {/* <DialogContainer onDismiss={() => setOpen(false)}>
         {isOpen && (

@@ -38,13 +38,13 @@ export const Teams = (props: ITeamsProps) => {
       <SecondaryHeader
         breadcrumbItems={[
           { label: translate('home.title'), route: '/' },
-          { label: translate('reports-management.reportConfiguration.title'), route: '/administration/reports-configuration' },
+          { label: translate('reportsManagement.reportConfiguration.title'), route: '/administration/reports-configuration' },
           {
-            label: translate('reports-management.reportConfiguration.teams.title'),
+            label: translate('reportsManagement.reportConfiguration.teams.title'),
             route: '/administration/reports-configuration/teams',
           },
         ]}
-        title={translate('reports-management.reportConfiguration.teams.title')}
+        title={translate('reportsManagement.reportConfiguration.teams.title')}
       >
         <Button
           variant="cta"
