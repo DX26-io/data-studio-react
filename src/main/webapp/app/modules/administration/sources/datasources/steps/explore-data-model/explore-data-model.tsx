@@ -1,14 +1,9 @@
 import React, { useState, useEffect, ReactText } from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
-import { DialogContainer, View, Button, Flex, Item, Form, ProgressBar, Content, Text } from '@adobe/react-spectrum';
-import {
-  setConnection,
-  setDatasource,
-  setExploreModelId,
-  selectConnectionType,
-} from '../datasource-steps.reducer';
-import { listTables, createDatasource, resetUpdateError,getDatasource } from '../../datasources.reducer';
+import { DialogContainer, View, Button, Flex, Item, Form, ProgressBar, Content, Text, Divider } from '@adobe/react-spectrum';
+import { setConnection, setDatasource, setExploreModelId, selectConnectionType } from '../datasource-steps.reducer';
+import { listTables, createDatasource, resetUpdateError, getDatasource, createDatasourceWithAction } from '../../datasources.reducer';
 import { Translate, translate } from 'react-jhipster';
 import { Tabs } from '@react-spectrum/tabs';
 import Select from 'react-select';
@@ -106,7 +101,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
 
   const selectStyles = {
     control: styles => ({ ...styles, minWidth: '305px' }),
-  };  
+  };
 
   return (
     <React.Fragment>
@@ -144,9 +139,14 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
               }}
             />
           </div>
-          <Tabs aria-label="datasources" items={tabs} selectedKey={exploreModelTabId} onSelectionChange={id=>{
-            props.setExploreModelId(id);
-          }}>
+          <Tabs
+            aria-label="datasources"
+            items={tabs}
+            selectedKey={exploreModelTabId}
+            onSelectionChange={id => {
+              props.setExploreModelId(id);
+            }}
+          >
             {item => (
               <Item title={translate(item.name)}>
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
@@ -190,14 +190,32 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
                         </Button>
                       </Flex>
                       <br />
-                      <SqlQueryContainer/>
+                      <SqlQueryContainer />
                     </View>
                   )}
-
+                  {props.datasource.id && (
+                    <React.Fragment>
+                      <br />
+                      <p className="spectrum-Heading spectrum-Heading--sizeXXS" style={{ marginBottom: '10px' }}>
+                        <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
+                      </p>
+                      <Divider size="M" />{' '}
+                      <Button
+                        data-testid="delete"
+                        variant="negative"
+                        marginTop="size-175"
+                        onPress={() => {
+                          props.createDatasourceWithAction({ ...datasource, id: null }, 'DELETE');
+                        }}
+                      >
+                        <Translate contentKey="entity.action.delete">Delete</Translate>
+                      </Button>
+                    </React.Fragment>
+                  )}
                   <DialogContainer onDismiss={() => props.resetUpdateError()}>
                     {updateError === 'SAME_NAME_EXISTS' && <DuplicateDatasourceDialog datasource={datasource} />}
                   </DialogContainer>
-                  {datasourceError  ? (
+                  {datasourceError ? (
                     <React.Fragment>
                       <br />
                       <Alert color="notice" />
@@ -246,7 +264,8 @@ const mapDispatchToProps = {
   getConnectionsTypes,
   getConnections,
   selectConnectionType,
-  getDatasource
+  getDatasource,
+  createDatasourceWithAction,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

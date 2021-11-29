@@ -8,10 +8,10 @@ import { translate, Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { View, Flex, Dialog, Heading, Divider, Content, Button, Header, useDialogContainer } from '@adobe/react-spectrum';
-import {resetConnection } from '../../connections/connection.reducer';
+import { resetConnection } from '../../connections/connection.reducer';
 import { getSteps, isNextDisabled } from './datasource-util';
 import { resetSteps, setIsAddFeaturesCalled } from './datasource-steps.reducer';
-import { reset, createDatasource, updateDatasource, addFeatures } from '../datasources.reducer';
+import { reset, createDatasource, updateDatasource, addFeatures, createDatasourceWithAction } from '../datasources.reducer';
 import ExploreDataModel from './explore-data-model/explore-data-model';
 import DimensionMeasures from './dimensions-measures';
 
@@ -74,9 +74,9 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
   };
 
   const create = () => {
-    if(datasource.id){
-      props.updateDatasource({ ...datasource, connectionName: connection.linkId });
-    }else{
+    if (datasource.id) {
+      props.createDatasourceWithAction({ ...datasource, connectionName: connection.linkId, id: null }, 'EDIT');
+    } else {
       props.createDatasource({ ...datasource, connectionName: connection.linkId });
     }
   };
@@ -114,8 +114,8 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
     <Dialog data-testid="datasource-stepper-dialog" width="80vw" size="L" minHeight="90vh">
       <Heading>
         <Flex alignItems="center" gap="size-100">
-          {!isNew ? (
-            <Translate contentKey="datasources.home.edit">Edit Datasource</Translate>
+          {datasource.id ? (
+            <Translate contentKey="datasources.home.update">Update Datasource</Translate>
           ) : (
             <Translate contentKey="datasources.home.create">Create Datasource</Translate>
           )}
@@ -128,7 +128,7 @@ const DatasourceStepper = (props: IDatasourceStepperProps) => {
           </Button>
           <Button variant="cta" isDisabled={isNextDisabled(datasource, exploreModelTabId, activeStep)} onPress={handleNext}>
             {activeStep === 0
-              ? translate('datasources.home.create')
+              ? translate('entity.action.save')
               : activeStep === steps.length - 1
               ? translate('entity.action.finish')
               : translate('entity.action.next')}
@@ -173,7 +173,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   createdDatasource: storeState.datasources.entity,
   datasourceUpdateSuccess: storeState.datasources.updateSuccess,
   datasourceUpdateError: storeState.datasources.updateError,
-  features: storeState.datasourceSteps.features,
+  features: storeState.connections.features,
   updateFeaturesSuccess: storeState.datasources.updateFeaturesSuccess,
   datasource: storeState.datasourceSteps.datasource,
   exploreModelTabId: storeState.datasourceSteps.exploreModelTabId,
@@ -186,7 +186,8 @@ const mapDispatchToProps = {
   resetConnection,
   setIsAddFeaturesCalled,
   updateDatasource,
-  addFeatures
+  addFeatures,
+  createDatasourceWithAction,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
