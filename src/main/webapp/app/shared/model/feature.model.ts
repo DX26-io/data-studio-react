@@ -21,6 +21,7 @@ export interface IFeature {
   metadata: any;
   selected: string;
   selected2: string;
+  isSelected: boolean;
 }
 
 export const defaultValue: Readonly<IFeature> = {
@@ -43,4 +44,5 @@ export const defaultValue: Readonly<IFeature> = {
   metadata: {},
   selected: '',
   selected2: '',
+  isSelected: true,
 };

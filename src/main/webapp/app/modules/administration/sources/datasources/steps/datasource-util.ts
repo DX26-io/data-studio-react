@@ -47,3 +47,14 @@ export const isShowDataButtonDisabled = datasource => {
   const x = datasource.name === null || datasource.name === '';
   return datasource.name === null || datasource.name === '';
 };
+
+export const onFeaturesFetched = (features, metaData) => {
+  const _features = [];
+  features.forEach(item => {
+    if (metaData[item.name]) {
+      item.isSelected = item.isSelected === null || item.isSelected ? true : false;
+      _features.push(item);
+    }
+  });
+  return _features;
+};

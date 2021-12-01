@@ -1,20 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Translate, translate } from 'react-jhipster';
-import { getFeatureTypes } from './datasource-util';
+import { getFeatureTypes, onFeaturesFetched } from './datasource-util';
 import { IRootState } from 'app/shared/reducers';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import { getFeatures } from '../../connections/connection.reducer';
 import { Flex, Picker, Item, Checkbox, Text, ProgressBar } from '@adobe/react-spectrum';
 import { COMPARABLE_DATA_TYPES } from 'app/config/constants';
 import { setFeatures } from './datasource-steps.reducer';
+import { getDatasourceFeaturesEntities } from 'app/entities/feature/feature.reducer';
 
 interface IDimensionsMeasures extends StateProps, DispatchProps {
   datasourceId: number;
 }
 
 export const DimensionsMeasures = (props: IDimensionsMeasures) => {
-  const { datasourceId, features, loading, updateFeaturesRequest } = props;
+  const {
+    updatedFeatures,
+    metaData,
+    datasourceId,
+    features,
+    loading,
+    updateFeaturesRequest,
+    isFeaturesReceived,
+    isMetaDataReceived,
+  } = props;
 
   useEffect(() => {
     const body = {
@@ -23,7 +33,15 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
       distinct: false,
     };
     props.getFeatures(datasourceId, body);
+    props.getDatasourceFeaturesEntities(datasourceId);
   }, []);
+
+  useEffect(() => {
+    if (isMetaDataReceived && isFeaturesReceived) {
+      const _updatedFeatures = onFeaturesFetched(features, metaData);
+      props.setFeatures(_updatedFeatures);
+    }
+  }, [isFeaturesReceived, isMetaDataReceived]);
 
   const isTemporalFeature = feature => {
     return COMPARABLE_DATA_TYPES.includes(feature.type.toLowerCase());
@@ -55,7 +73,7 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {features.map((feature, i) => (
+                {updatedFeatures.map((feature, i) => (
                   <TableRow key={`feature-${i}`}>
                     <TableCell align="center">
                       <Flex direction="row" gap="size-100" alignItems="center">
@@ -75,7 +93,7 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
                         items={getFeatureTypes()}
                         defaultSelectedKey={feature.featureType}
                         onSelectionChange={selected => {
-                          feature.featureType = selected;
+                          feature.featureType = selected.toString();
                         }}
                       >
                         {item => <Item key={item.name}>{item.name}</Item>}
@@ -84,8 +102,8 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
                     <TableCell align="center">
                       {isTemporalFeature(feature) ? (
                         <Checkbox
-                          onChange={() => {
-                            feature.dateFilter = feature.dateFilter ? 'DISABLED' : 'ENABLED';
+                          onChange={event => {
+                            feature.dateFilter = event ? 'ENABLED' : 'DISABLED';
                           }}
                           defaultSelected={feature.dateFilter === 'ENABLED' ? true : false}
                           isEmphasized
@@ -95,8 +113,8 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
                     <TableCell align="center">
                       {' '}
                       <Checkbox
-                        onChange={() => {
-                          feature.featureCacheType = feature.featureCacheType ? 'DISABLED' : 'ENABLED';
+                        onChange={event => {
+                          feature.featureCacheType = event ? 'ENABLED' : 'DISABLED';
                         }}
                         defaultSelected={feature.featureCacheType === 'ENABLED' ? true : false}
                         isEmphasized
@@ -114,12 +132,16 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  features: storeState.connections.features,
+  metaData: storeState.connections.metaData,
   loading: storeState.connections.loading,
   updateFeaturesRequest: storeState.datasources.updateFeaturesRequest,
+  features: storeState.feature.entities,
+  isFeaturesReceived: storeState.feature.isFeaturesReceived,
+  isMetaDataReceived: storeState.connections.isMetaDataReceived,
+  updatedFeatures: storeState.datasourceSteps.features,
 });
 
-const mapDispatchToProps = { getFeatures, setFeatures };
+const mapDispatchToProps = { getFeatures, setFeatures, getDatasourceFeaturesEntities };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
