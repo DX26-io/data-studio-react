@@ -177,7 +177,7 @@ const apiUrl = 'api/features';
 
 export const getViewFeaturesEntities: ICrudGetViewFeaturesAction<IFeature> = viewId => ({
   type: ACTION_TYPES.FETCH_FEATURE_LIST,
-  payload: axios.get<IFeature>(`${apiUrl}?view=${viewId}&cacheBuster=${new Date().getTime()}`),
+  payload: axios.get<IFeature>(`${apiUrl}?view=${viewId}&isSelected=true&cacheBuster=${new Date().getTime()}`),
 });
 
 export const getDatasourceFeaturesEntities: ICrudGetViewFeaturesAction<IFeature> = datasourceId => ({
