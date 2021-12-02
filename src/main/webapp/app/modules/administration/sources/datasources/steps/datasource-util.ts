@@ -47,3 +47,33 @@ export const isShowDataButtonDisabled = datasource => {
   const x = datasource.name === null || datasource.name === '';
   return datasource.name === null || datasource.name === '';
 };
+
+export const onMetaDataFetched = (featuresMetaData: any) => {
+  const features = [];
+  const metaData = featuresMetaData.metadata;
+  const data = featuresMetaData.data[0];
+  Object.keys(metaData).forEach(function (key) {
+    features.push({
+      name: key,
+      featureType: typeof data[key] === 'string' || data[key] instanceof String ? 'DIMENSION' : 'MEASURE',
+      type: metaData[key],
+      isSelected: true,
+    });
+  });
+  return features;
+};
+
+export const onFeaturesFetched = (features, featuresMetaData) => {
+  let _features = [];
+  if (features && features.length > 0) {
+    features.forEach(item => {
+      if (Object.prototype.hasOwnProperty.call(featuresMetaData.metadata, item.name)) {
+        item.isSelected = item.isSelected === null || item.isSelected ? true : false;
+        _features.push(item);
+      }
+    });
+  } else {
+    _features = onMetaDataFetched(featuresMetaData);
+  }
+  return _features;
+};

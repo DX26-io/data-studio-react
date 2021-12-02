@@ -173,7 +173,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   createdDatasource: storeState.datasources.entity,
   datasourceUpdateSuccess: storeState.datasources.updateSuccess,
   datasourceUpdateError: storeState.datasources.updateError,
-  features: storeState.connections.features,
+  features: storeState.datasourceSteps.features,
   updateFeaturesSuccess: storeState.datasources.updateFeaturesSuccess,
   datasource: storeState.datasourceSteps.datasource,
   exploreModelTabId: storeState.datasourceSteps.exploreModelTabId,

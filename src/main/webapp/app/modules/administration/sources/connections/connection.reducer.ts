@@ -8,7 +8,7 @@ import { IConnection, connectionDefaultValue } from 'app/shared/model/connection
 
 import { IConnectionType, defaultConnectionTypeValue } from 'app/shared/model/connection-type.model';
 
-import { onFeaturesFetched, onConnectionTypeFetched, setIsSelectedConnectionType } from './connections.util';
+import { onConnectionTypeFetched, setIsSelectedConnectionType } from './connections.util';
 
 export const ACTION_TYPES = {
   FETCH_CONNECTIONS: 'connections/FETCH_CONNECTIONS',
@@ -18,7 +18,7 @@ export const ACTION_TYPES = {
   CREATE_CONNECTION: 'connections/CREATE_CONNECTION',
   UPDATE_CONNECTION: 'connections/UPDATE_CONNECTION',
   DELETE_CONNECTION: 'connections/DELETE_CONNECTION',
-  FETCH_FEATURES: 'connections/FETCH_FEATURES',
+  FETCH_META_DATA: 'connections/FETCH_META_DATA',
   RESET: 'connections/RESET',
   SET_CONNECTION: 'connections/SET_CONNECTION',
 };
@@ -31,9 +31,10 @@ const initialState = {
   connectionsTypes: [] as IConnectionType[],
   totalItems: 0,
   updateSuccess: false,
-  features: [],
+  featuresMetaData: null,
   updateError: null,
   updating: false,
+  isMetaDataReceived: false,
 };
 
 export type ConnectionsState = Readonly<typeof initialState>;
@@ -154,22 +155,25 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
         updateSuccess: true,
         errorMessage: null,
       };
-    case REQUEST(ACTION_TYPES.FETCH_FEATURES):
+    case REQUEST(ACTION_TYPES.FETCH_META_DATA):
       return {
         ...state,
         loading: true,
+        isMetaDataReceived: false,
       };
-    case FAILURE(ACTION_TYPES.FETCH_FEATURES):
+    case FAILURE(ACTION_TYPES.FETCH_META_DATA):
       return {
         ...state,
         loading: false,
         errorMessage: action.payload.data,
+        isMetaDataReceived: false,
       };
-    case SUCCESS(ACTION_TYPES.FETCH_FEATURES):
+    case SUCCESS(ACTION_TYPES.FETCH_META_DATA):
       return {
         ...state,
         loading: false,
-        features: onFeaturesFetched(action.payload.data),
+        featuresMetaData: action.payload.data,
+        isMetaDataReceived: true,
       };
     case ACTION_TYPES.SET_IS_SELECTED_CONNECTION_TYPE:
       return {
@@ -239,7 +243,7 @@ export const updateIsSelectedConnectionType = (id: number) => ({
 });
 
 export const getFeatures = (datasourceId: number, body: any) => ({
-  type: ACTION_TYPES.FETCH_FEATURES,
+  type: ACTION_TYPES.FETCH_META_DATA,
   payload: axios.post(`${apiUrl}/features/${datasourceId}?cacheBuster=${new Date().getTime()}`, body),
 });
 

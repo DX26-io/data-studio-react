@@ -2,6 +2,7 @@ import datasources from '../datasources';
 import { IConnection, connectionDefaultValue } from 'app/shared/model/connection.model';
 import { IDatasources, defaultDatasourceValue } from 'app/shared/model/datasources.model';
 import { IConnectionType, defaultConnectionTypeValue } from 'app/shared/model/connection-type.model';
+import { IFeature } from 'app/shared/model/feature.model';
 export const ACTION_TYPES = {
   SELECT_CONNECTION_TYPE: 'datasourceSteps/SELECT_CONNECTION_TYPE',
   SET_CONNECTION: 'datasourceSteps/SET_CONNECTION',
@@ -17,7 +18,7 @@ const initialState = {
   connection: connectionDefaultValue,
   datasource: defaultDatasourceValue,
   exploreModelTabId: 1,
-  features: [],
+  features: [] as IFeature[],
   isAddFeaturesCalled: false,
   isSaveConnectionCalled: false,
 };

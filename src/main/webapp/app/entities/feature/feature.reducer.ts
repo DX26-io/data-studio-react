@@ -34,6 +34,7 @@ const initialState = {
   updating: false,
   updateSuccess: false,
   feature: (null as unknown) as IFeature,
+  isFeaturesReceived: false,
 };
 
 export type FeatureState = Readonly<typeof initialState>;
@@ -43,6 +44,10 @@ export type FeatureState = Readonly<typeof initialState>;
 export default (state: FeatureState = initialState, action): FeatureState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_FEATURE_LIST):
+      return {
+        ...state,
+        isFeaturesReceived: false,
+      };
     case REQUEST(ACTION_TYPES.FETCH_FEATURE):
       return {
         ...state,
@@ -73,6 +78,10 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         updating: true,
       };
     case FAILURE(ACTION_TYPES.FETCH_FEATURE_LIST):
+      return {
+        ...state,
+        isFeaturesReceived: false,
+      };
     case FAILURE(ACTION_TYPES.FETCH_FEATURE):
       return {
         ...state,
@@ -109,6 +118,7 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         ...state,
         loading: false,
         entities: action.payload.data,
+        isFeaturesReceived: true,
       };
     case SUCCESS(ACTION_TYPES.FETCH_FEATURE):
       return {
@@ -167,7 +177,12 @@ const apiUrl = 'api/features';
 
 export const getViewFeaturesEntities: ICrudGetViewFeaturesAction<IFeature> = viewId => ({
   type: ACTION_TYPES.FETCH_FEATURE_LIST,
-  payload: axios.get<IFeature>(`${apiUrl}?view=${viewId}&cacheBuster=${new Date().getTime()}`),
+  payload: axios.get<IFeature>(`${apiUrl}?view=${viewId}&isSelected=true&cacheBuster=${new Date().getTime()}`),
+});
+
+export const getDatasourceFeaturesEntities: ICrudGetViewFeaturesAction<IFeature> = datasourceId => ({
+  type: ACTION_TYPES.FETCH_FEATURE_LIST,
+  payload: axios.get<IFeature>(`${apiUrl}?datasourceId=${datasourceId}&cacheBuster=${new Date().getTime()}`),
 });
 
 export const getEntities: ICrudGetAllAction<IFeature> = (page, size, sort) => ({

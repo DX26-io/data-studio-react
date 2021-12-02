@@ -4,21 +4,6 @@ import { IError, defaultValue } from 'app/shared/model/error.model';
 import { translate } from 'react-jhipster';
 import { IDatasources } from 'app/shared/model/datasources.model';
 
-export const onFeaturesFetched = (result: any) => {
-  const features = [];
-  const metaData = result.metadata;
-  const data = result.data[0];
-  Object.keys(metaData).forEach(function (key) {
-    features.push({
-      name: key,
-      featureType: typeof data[key] === 'string' || data[key] instanceof String ? 'DIMENSION' : 'MEASURE',
-      type: metaData[key],
-      isSelected: true,
-    });
-  });
-  return features;
-};
-
 export const onConnectionTypeFetched = (result: Array<IConnectionType>) => {
   const connectionTypes = [];
   result.forEach(function (item) {

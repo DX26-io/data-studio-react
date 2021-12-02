@@ -23,7 +23,6 @@ import { connectionDefaultValue } from 'app/shared/model/connection.model';
 import { defaultDatasourceValue } from 'app/shared/model/datasources.model';
 import { defaultConnectionTypeValue } from 'app/shared/model/connection-type.model';
 import { isShowDataButtonDisabled } from '../datasource-util';
-import datasources from '../../datasources';
 
 export interface IExploreDataModelProps extends StateProps, DispatchProps {}
 
