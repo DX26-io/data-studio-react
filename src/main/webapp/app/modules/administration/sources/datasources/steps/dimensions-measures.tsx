@@ -17,7 +17,7 @@ interface IDimensionsMeasures extends StateProps, DispatchProps {
 export const DimensionsMeasures = (props: IDimensionsMeasures) => {
   const {
     updatedFeatures,
-    metaData,
+    featuresMetaData,
     datasourceId,
     features,
     loading,
@@ -38,7 +38,7 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
 
   useEffect(() => {
     if (isMetaDataReceived && isFeaturesReceived) {
-      const _updatedFeatures = onFeaturesFetched(features, metaData);
+      const _updatedFeatures = onFeaturesFetched(features, featuresMetaData);
       props.setFeatures(_updatedFeatures);
     }
   }, [isFeaturesReceived, isMetaDataReceived]);
@@ -132,7 +132,7 @@ export const DimensionsMeasures = (props: IDimensionsMeasures) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  metaData: storeState.connections.metaData,
+  featuresMetaData: storeState.connections.featuresMetaData,
   loading: storeState.connections.loading,
   updateFeaturesRequest: storeState.datasources.updateFeaturesRequest,
   features: storeState.feature.entities,

@@ -31,7 +31,7 @@ const initialState = {
   connectionsTypes: [] as IConnectionType[],
   totalItems: 0,
   updateSuccess: false,
-  metaData: null,
+  featuresMetaData: null,
   updateError: null,
   updating: false,
   isMetaDataReceived: false,
@@ -172,7 +172,7 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
       return {
         ...state,
         loading: false,
-        metaData: action.payload.data?.metadata,
+        featuresMetaData: action.payload.data,
         isMetaDataReceived: true,
       };
     case ACTION_TYPES.SET_IS_SELECTED_CONNECTION_TYPE:
