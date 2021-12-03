@@ -32,12 +32,11 @@ exports[`Header tests should render header component and have HTML header tag 1`
         />
       </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
       <div
-        className="profile"
         style={
           Object {
             "position": "absolute",
-            "right": "6px",
-            "top": "10px",
+            "right": "-10px",
+            "top": "8px",
           }
         }
       >

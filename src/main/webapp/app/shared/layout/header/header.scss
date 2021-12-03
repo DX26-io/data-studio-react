@@ -40,23 +40,6 @@ Development Ribbon
   }
 }
 
-.profile {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  background-color: var(
-    --spectrum-alias-background-color-gray-75,
-    var(--spectrum-global-color-gray-75, var(--spectrum-semantic-gray-75-color-background))
-  );
-  border-color: var(--spectrum-alias-border-color);
-}
-
-._spectrum-ActionButton--quiet_7a745._is-active_7a745 {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-}
-
 @media only screen and (max-width: 1026px) {
   .bookmark-box-big-screen {
     display: none;

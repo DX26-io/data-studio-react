@@ -52,7 +52,7 @@ const Header = (props: IHeaderProps) => {
               )}
             </Flex>
           </Flex>
-          <div style={{ position: 'absolute', right: '6px', top: '10px' }} className="profile">
+          <div style={{ position: 'absolute', right: '-10px', top: '8px' }}>
             {' '}
             <DataStudioAvatar />
           </div>

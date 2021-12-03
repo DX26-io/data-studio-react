@@ -54,7 +54,7 @@ const HomeHeader = (props: DispatchProps) => {
             />
           </Flex>
           <Flex alignItems="end">
-          <div className="profile" style={{ position: 'absolute', right: '10px', top: '4px' }}>
+          <div style={{ position: 'absolute', right: '-10px', top: '4px' }}>
             <DataStudioAvatar />
           </div>
           </Flex>
