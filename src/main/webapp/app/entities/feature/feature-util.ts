@@ -1,6 +1,7 @@
 import { IPayload } from 'react-jhipster/src/type/redux-action.type';
 import { IError, defaultValue } from 'app/shared/model/error.model';
 import { IFeature } from 'app/shared/model/feature.model';
+import { translate } from 'react-jhipster';
 
 /**
  * This is a special get type as views are dependent on dashboards
@@ -42,12 +43,18 @@ export const generateAlternativeDimensionsOptions = data => {
   return options;
 };
 
-export const generateFeaturesOptions = data => {
+export const generateFeaturesOptions = features => {
   const options = [];
-  if (data) {
-    data.forEach(function (option) {
-      options.push({ value: option['id'], label: option['name'] });
-    });
-  }
+  features.forEach(option => {
+    options.push({ value: option.id, label: option.name });
+  });
+  return options;
+};
+
+export const generateOptions = features => {
+  const options = [];
+  features.forEach(option => {
+    options.push({ value: option.name, label: option.name });
+  });
   return options;
 };

@@ -6,7 +6,7 @@ import { Content, View } from '@react-spectrum/view';
 import { Tabs, Item } from '@react-spectrum/tabs';
 import { getSettingsTabTranslations } from 'app/modules/canvas/visualisation/visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-util';
 import Scheduler from 'app/modules/canvas/scheduler/scheduler';
-import VisualisationDataConstraints from 'app/modules/canvas/data-constraints/visualisation-data-constraints';
+import DataConstraints from 'app/modules/canvas/data-constraints/data-constraints';
 import TableView from 'app/shared/components/table/table';
 
 const VisualisationSettings = props => {
@@ -18,7 +18,7 @@ const VisualisationSettings = props => {
           <Item title={item.name}>
             <Content margin="size-250">
               {activeTabId === 'query' && <VisualisationQuerySetting />}
-              {activeTabId === 'dataConstraints' && <VisualisationDataConstraints />}
+              {activeTabId === 'dataConstraints' && <DataConstraints />}
               {activeTabId === 'scheduler' && <Scheduler thresholdAlert={false} />}
               {activeTabId === 'thresholdAlert' && <Scheduler thresholdAlert={true} />}
               {activeTabId === 'data' && props.visualDataById && props.visualDataById?.data.length > 0 && (

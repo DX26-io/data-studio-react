@@ -44,6 +44,11 @@ export const updateVisualField = (visual: IVisualMetadataSet, field) => {
   return Object.assign({}, visual);
 };
 
+const buildConditionExpression = (visual: IVisualMetadataSet, conditionExpression) => {
+  visual.conditionExpression = conditionExpression;
+  return Object.assign({}, visual);
+};
+
 export const ACTION_TYPES = {
   FETCH_VISUALMETADATA_LIST: 'visualmetadata/FETCH_VISUALMETADATA_LIST',
   FETCH_VISUALMETADATA: 'visualmetadata/FETCH_VISUALMETADATA',
@@ -61,7 +66,7 @@ export const ACTION_TYPES = {
   VISUAL_METADATA_CONTAINER_REMOVE: 'visualmetadata/VISUAL_METADATA_CONTAINER_REMOVE',
   VISUAL_METADATA_ADD_FIELD: 'visualmetadata/VISUAL_METADATA_ADD_FIELD',
   VISUAL_METADATA_DELETE_FIELD: 'visualmetadata/VISUAL_METADATA_DELETE_FIELD',
-  VISUAL_METADATA_UPDATE_CONDITION_EXPRESSION: 'visualmetadata/VISUAL_METADATA_UPDATE_CONDITION_EXPRESSION',
+  VISUAL_METADATA_SET_CONDITION_EXPRESSION: 'visualmetadata/VISUAL_METADATA_SET_CONDITION_EXPRESSION',
   VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD',
@@ -88,6 +93,7 @@ const initialState = {
   visualMetadataContainerList: [],
   tableActivePage: 0,
   visualisationAction: '',
+  conditionExpression:null
 };
 
 export type VisualmetadataState = Readonly<typeof initialState>;
@@ -242,7 +248,11 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         ...state,
         visual: action.payload,
       };
-    case ACTION_TYPES.VISUAL_METADATA_UPDATE_CONDITION_EXPRESSION:
+    case ACTION_TYPES.VISUAL_METADATA_SET_CONDITION_EXPRESSION:
+      return {
+        ...state,
+        conditionExpression: action.payload,
+      };
     case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES:
       return {
         ...state,
@@ -391,14 +401,9 @@ export const updateField = (visual: IVisualMetadataSet, field) => ({
   payload: updateVisualField(visual, field),
 });
 
-const setConditionExpression = (visual: IVisualMetadataSet, conditionExpression) => {
-  visual.conditionExpression = conditionExpression;
-  return Object.assign({}, visual);
-};
-
-export const updateConditionExpression = (visual: IVisualMetadataSet, conditionExpression) => ({
-  type: ACTION_TYPES.VISUAL_METADATA_UPDATE_CONDITION_EXPRESSION,
-  payload: setConditionExpression(visual, conditionExpression),
+export const updateConditionExpression = (conditionExpression) => ({
+  type: ACTION_TYPES.VISUAL_METADATA_SET_CONDITION_EXPRESSION,
+  payload: conditionExpression,
 });
 
 export const setTableActivePage = (action: number) => dispatch => {
