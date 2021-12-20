@@ -19,6 +19,7 @@ const AndOrCondition = (props: IAndOrConditionProps) => {
       {(props._condition['@type'] === 'Or' || props._condition['@type'] === 'And') && (
         <div className="condition-component-wrapper">
           <Condition key={`firstExpression-${props._condition.uuid}`} condition={props._condition.firstExpression} />
+          <div style={{width:'200px',marginTop:'8px'}}>
           <Select
             onChange={selected => {
               props._condition['@type'] = selected.value;
@@ -29,6 +30,7 @@ const AndOrCondition = (props: IAndOrConditionProps) => {
             value={compositeType}
             options={COMPOSITE_TYPES}
           />
+          </div>
           <Condition key={`secondExpression-${props._condition.uuid}`} condition={props._condition.secondExpression} />
         </div>
       )}

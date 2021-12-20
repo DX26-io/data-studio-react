@@ -149,7 +149,6 @@ const Condition = (props: IConditionProps) => {
               )}
               {(_condition['@type'] === 'Compare' || _condition['@type'] === 'Like') && (
                 <TextField
-                  height={'38px'}
                   value={_condition?.value}
                   onChange={event => {
                     _condition.value = event;
