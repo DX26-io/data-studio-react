@@ -16,28 +16,25 @@ const AndOrCondition = (props: IAndOrConditionProps) => {
   const [compositeType, setCompositeType] = useState();
   return (
     <>
-      {(props._condition['@type'] === 'Or' || props._condition['@type'] === 'And') && (
-        <div className="condition-component-wrapper">
-          <Condition condition={props.conditionExpression.firstExpression} />
-          <Select
-            onChange={selected => {
-              props._condition['@type'] = selected.value;
-              setCompositeType(selected);
-            }}
-            className="basic-single"
-            classNamePrefix="select"
-            value={compositeType}
-            options={COMPOSITE_TYPES}
-          />
-          <Condition condition={props.conditionExpression.secondExpression} />
-        </div>
-      )}
+      <div className="condition-component-wrapper">
+        <Condition condition={props._condition.firstExpression} />
+        <Select
+          onChange={selected => {
+            props._condition['@type'] = selected.value;
+            setCompositeType(selected);
+          }}
+          className="basic-single"
+          classNamePrefix="select"
+          value={compositeType}
+          options={COMPOSITE_TYPES}
+        />
+        <Condition condition={props._condition.secondExpression} />
+      </div>
     </>
   );
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  conditionExpression: storeState.visualmetadata.conditionExpression,
   visualMetaData: storeState.visualmetadata.entity,
 });
 const mapDispatchToProps = {

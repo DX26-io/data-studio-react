@@ -182,7 +182,7 @@ const Condition = (props: IConditionProps) => {
             </Flex>
           </View>
         )}
-        <AndOrCondition _condition={_condition} />
+        {(_condition['@type'] === 'Or' || _condition['@type'] === 'And') && <AndOrCondition _condition={_condition} />}
       </Form>
     </>
   );

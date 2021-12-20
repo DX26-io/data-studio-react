@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, View } from '@adobe/react-spectrum';
 import uuid from 'react-uuid';
 import './visualisation-data-constraints.scss';
@@ -9,7 +9,14 @@ import { Translate } from 'react-jhipster';
 import Condition from './condition';
 
 const DataConstraints = props => {
-  
+  // const [props.conditionExpression, _setConditionExpression] = useState();
+
+  // useEffect(() => {
+  //   if (props.conditionExpression) {
+  //     console.log("props.conditionExpression"+props.conditionExpression);
+  //   }
+  // }, [props.conditionExpression]);
+
   const addStartingCondition = () => {
     const conditionExpression = {
       uuid: uuid(),
@@ -22,7 +29,7 @@ const DataConstraints = props => {
       },
       valueTypes: [],
     };
-    props.updateConditionExpression(conditionExpression);
+     props.updateConditionExpression(conditionExpression);
   };
 
   return (
