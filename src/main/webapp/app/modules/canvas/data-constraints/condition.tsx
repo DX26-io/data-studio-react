@@ -96,7 +96,7 @@ const Condition = (props: IConditionProps) => {
 
   return (
     <>
-      <Form>
+      <Form >
         {_condition['@type'] !== 'Or' && _condition['@type'] !== 'And' && (
           <View>
             <Flex direction="row" gap="size-100" justifyContent="start" alignItems="center">
@@ -182,7 +182,7 @@ const Condition = (props: IConditionProps) => {
             </Flex>
           </View>
         )}
-        {(_condition['@type'] === 'Or' || _condition['@type'] === 'And') && <AndOrCondition _condition={_condition} />}
+ <AndOrCondition _condition={_condition} />
       </Form>
     </>
   );

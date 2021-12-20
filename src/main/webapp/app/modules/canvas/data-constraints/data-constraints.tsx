@@ -9,13 +9,6 @@ import { Translate } from 'react-jhipster';
 import Condition from './condition';
 
 const DataConstraints = props => {
-  // const [props.conditionExpression, _setConditionExpression] = useState();
-
-  // useEffect(() => {
-  //   if (props.conditionExpression) {
-  //     console.log("props.conditionExpression"+props.conditionExpression);
-  //   }
-  // }, [props.conditionExpression]);
 
   const addStartingCondition = () => {
     const conditionExpression = {
@@ -29,7 +22,7 @@ const DataConstraints = props => {
       },
       valueTypes: [],
     };
-     props.updateConditionExpression(conditionExpression);
+    props.updateConditionExpression(conditionExpression);
   };
 
   return (
@@ -45,7 +38,7 @@ const DataConstraints = props => {
             <Translate contentKey="dataConstraints.add"> Add Condition</Translate>
           </Button>
         )}
-        {props.conditionExpression && <Condition condition={props.conditionExpression} />}
+        {props.conditionExpression && <Condition key={props.conditionExpression.uuid} condition={props.conditionExpression} />}
       </View>
     </>
   );
