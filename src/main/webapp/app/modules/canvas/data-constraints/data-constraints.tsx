@@ -9,7 +9,7 @@ import { Translate } from 'react-jhipster';
 import Condition from './condition';
 
 const DataConstraints = props => {
-  // const [remountComponent, setRemountComponent] = useState(true);
+  const [remountComponentKey, setRemountComponentKey] = useState(1);
 
   const addStartingCondition = () => {
     const conditionExpression = {
@@ -31,6 +31,11 @@ const DataConstraints = props => {
       props.updateConditionExpression(props.visualMetaData.conditionExpression);
     }
   }, []);
+
+  useEffect(() => {
+    const _remountComponentKey = remountComponentKey + 1;
+    setRemountComponentKey(_remountComponentKey);
+  }, [props.conditionExpression]);
 
   const save = () => {
     props.updateEntity({
@@ -58,10 +63,10 @@ const DataConstraints = props => {
         )}
         {props.conditionExpression && (
           <React.Fragment>
-            <Condition key={props.conditionExpression.uuid} condition={props.conditionExpression} />
+            <Condition key={remountComponentKey} condition={props.conditionExpression} />
             <Flex direction="row" justifyContent="end" alignItems="end" gap="size-100" marginTop="size-100">
               <Button variant="cta" onPress={clear}>
-                <Translate contentKey="entity.action.cancel">Cancel</Translate>
+                <Translate contentKey="entity.action.clear">Clear</Translate>
               </Button>
               <Button variant="cta" onPress={save} isDisabled={props.updating}>
                 <Translate contentKey="entity.action.save">Save</Translate>

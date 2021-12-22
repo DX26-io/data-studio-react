@@ -67,7 +67,7 @@ const Condition = (props: IConditionProps) => {
     let condition = { ..._condition };
     condition.featureName = selected.value;
     const _feature = props.features.filter(f => f.name === selected.value)[0];
-    if (condition.valueType) {
+    if (!condition.valueType) {
       condition = { ...condition, valueType: { type: '' } };
     }
     setFeature({ value: condition.featureName, label: condition.featureName });
@@ -119,6 +119,7 @@ const Condition = (props: IConditionProps) => {
 
   const onCompareInputChange = event => {
     _condition.value = event;
+    _condition.valueType.value = event;
     setConditionValue(event);
     _setCondition(_condition);
     updateCondition();
@@ -173,7 +174,7 @@ const Condition = (props: IConditionProps) => {
                   classNamePrefix="select"
                   value={comparisonType}
                   isSearchable={true}
-                  options={comparisonTypes}
+                  options={comparisonTypes.length > 0 ? comparisonTypes : simpleTypes}
                 />
               </div>
               {_condition['@type'] === 'Compare' && (
