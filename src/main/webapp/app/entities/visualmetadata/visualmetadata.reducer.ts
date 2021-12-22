@@ -93,7 +93,7 @@ const initialState = {
   visualMetadataContainerList: [],
   tableActivePage: 0,
   visualisationAction: '',
-  conditionExpression:null
+  conditionExpression: null,
 };
 
 export type VisualmetadataState = Readonly<typeof initialState>;
@@ -124,6 +124,11 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         updating: true,
       };
     case REQUEST(ACTION_TYPES.UPDATE_VISUALMETADATA):
+      return {
+        ...state,
+        updating: true,
+        updateSuccess:false
+      };
     case REQUEST(ACTION_TYPES.DELETE_VISUALMETADATA):
       return {
         ...state,
@@ -149,7 +154,12 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         newCreated: false,
         errorMessage: action.payload,
       };
-    case FAILURE(ACTION_TYPES.UPDATE_VISUALMETADATA):
+    case FAILURE(ACTION_TYPES.UPDATE_VISUALMETADATA):return{
+      ...state,
+      updating:false,
+      errorMessage:action.payload.data,
+      updateSuccess:false,
+    };
     case FAILURE(ACTION_TYPES.DELETE_VISUALMETADATA):
       return {
         ...state,
@@ -401,7 +411,7 @@ export const updateField = (visual: IVisualMetadataSet, field) => ({
   payload: updateVisualField(visual, field),
 });
 
-export const updateConditionExpression = (conditionExpression) => ({
+export const updateConditionExpression = conditionExpression => ({
   type: ACTION_TYPES.VISUAL_METADATA_SET_CONDITION_EXPRESSION,
   payload: conditionExpression,
 });

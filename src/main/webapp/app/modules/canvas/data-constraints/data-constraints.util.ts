@@ -28,7 +28,7 @@ export const getCompareTypeOptions = () => {
   return options;
 };
 
-const simpleTypes = getConditionTypesOptions().filter(item => {
+export const simpleTypes = getConditionTypesOptions().filter(item => {
   return item.value.type === 'simple';
 });
 
@@ -131,3 +131,5 @@ export const depthFirstVisit = (expression, visitors) => {
     }
   }
 };
+
+

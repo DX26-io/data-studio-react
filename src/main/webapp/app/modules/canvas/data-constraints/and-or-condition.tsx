@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flex, ActionButton } from '@adobe/react-spectrum';
 import uuid from 'react-uuid';
 import { updateConditionExpression } from 'app/entities/visualmetadata/visualmetadata.reducer';
@@ -14,22 +14,34 @@ interface IAndOrConditionProps extends DispatchProps {
 
 const AndOrCondition = (props: IAndOrConditionProps) => {
   const [compositeType, setCompositeType] = useState();
+
+  const getCompositeType=()=>{
+    const _compositeType = COMPOSITE_TYPES.filter(c => c.value['@type'] === props._condition['@type'])[0];
+    setCompositeType(_compositeType);
+  }
+
+  useEffect(() => {
+    if (props._condition['@type'] === 'Or' || props._condition['@type'] === 'And') {
+      getCompositeType();
+    }
+  }, [props._condition]);
+
   return (
     <>
       {(props._condition['@type'] === 'Or' || props._condition['@type'] === 'And') && (
         <div className="condition-component-wrapper">
           <Condition key={`firstExpression-${props._condition.uuid}`} condition={props._condition.firstExpression} />
-          <div style={{width:'200px',marginTop:'8px'}}>
-          <Select
-            onChange={selected => {
-              props._condition['@type'] = selected.value;
-              setCompositeType(selected);
-            }}
-            className="basic-single"
-            classNamePrefix="select"
-            value={compositeType}
-            options={COMPOSITE_TYPES}
-          />
+          <div style={{ width: '200px', marginTop: '8px' }}>
+            <Select
+              onChange={selected => {
+                props._condition['@type'] = selected.value['@type'];
+                setCompositeType(selected);
+              }}
+              className="basic-single"
+              classNamePrefix="select"
+              value={compositeType}
+              options={COMPOSITE_TYPES}
+            />
           </div>
           <Condition key={`secondExpression-${props._condition.uuid}`} condition={props._condition.secondExpression} />
         </div>

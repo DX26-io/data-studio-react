@@ -19,7 +19,7 @@ const AddRemoveAction = (props: IAddRemoveActionProps) => {
     depthFirstVisit(props.conditionExpression, function (current, previous, previousLeaf, parent) {
       if (current.uuid === props._condition.uuid) {
         const newCurrent = {
-          firstExpression: { ...current },
+          firstExpression: { ...props._condition },
           '@type': 'Or',
           secondExpression: {
             uuid: uuid(),
@@ -33,7 +33,7 @@ const AddRemoveAction = (props: IAddRemoveActionProps) => {
             valueTypes: [],
           },
         };
-        newCurrent['uuid'] = current.uuid;
+        newCurrent['uuid'] = props._condition.uuid;
         newCurrent.firstExpression.uuid = uuid();
         changes.push(newCurrent);
       }

@@ -12,9 +12,19 @@ import { generateFilterOptions, load } from '../filter/filter-util';
 import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import { generateOptions } from 'app/entities/feature/feature-util';
 import { translate } from 'react-jhipster';
-import { getDimension, getComparisonTypes, isDateType, getCompareTypeOptions, getContainsValues } from './data-constraints.util';
+import {
+  simpleTypes,
+  getDimension,
+  getComparisonTypes,
+  isDateType,
+  getCompareTypeOptions,
+  getContainsValues,
+  depthFirstVisit,
+  applyChanges,
+} from './data-constraints.util';
 import AddRemoveAction from './add-remove-action';
 import AndOrCondition from './and-or-condition';
+import { COMPARE_TYPES } from 'app/shared/util/data-constraints.constants';
 
 interface IConditionProps extends StateProps, DispatchProps {
   condition: any;
@@ -24,11 +34,23 @@ const Condition = (props: IConditionProps) => {
   //   const [property, setProperty] = useState([]);
   //   const [isDisplayDateRange, setDisplayDateRange] = useState(false);
   const [_condition, _setCondition] = useState(props.condition);
-
   const [comparisonTypes, setComparisonTypes] = useState([]);
   const [comparisonType, setComparisonType] = useState(null);
   const [compareType, setCompareType] = useState(null);
   const [containsValues, setContainsValues] = useState([]);
+  const [feature, setFeature] = useState();
+  const [conditionValue, setConditionValue] = useState();
+
+  const updateCondition = () => {
+    const changes = [];
+    depthFirstVisit(props.conditionExpression, function (current, previous, previousLeaf, parent) {
+      if (current.uuid === _condition.uuid) {
+        changes.push(_condition);
+      }
+    });
+    const conditionExpression = applyChanges(props.conditionExpression, changes);
+    props.updateConditionExpression(conditionExpression);
+  };
 
   const onDateChange = (fromDate, toDate, metadata) => {
     if (fromDate && toDate) {
@@ -48,6 +70,7 @@ const Condition = (props: IConditionProps) => {
     if (condition.valueType) {
       condition = { ...condition, valueType: { type: '' } };
     }
+    setFeature({ value: condition.featureName, label: condition.featureName });
     condition.valueType.type = _feature.type;
     _setCondition(condition);
     const _comparisonTypes = getComparisonTypes(_feature.type);
@@ -60,10 +83,10 @@ const Condition = (props: IConditionProps) => {
     setComparisonType(_comparisonType);
   };
 
-  const selectCompareType = _compareType => {
-    _condition['comparatorType'] = _compareType.value;
+  const selectCompareType = _compareTypeTemp => {
+    _condition['comparatorType'] = _compareTypeTemp.value;
     _setCondition(_condition);
-    setCompareType(_compareType);
+    setCompareType(_compareTypeTemp);
   };
 
   const onContaintsInputFocus = () => {
@@ -78,7 +101,6 @@ const Condition = (props: IConditionProps) => {
 
   const onContaintsHandleChange = (value, actionMeta) => {
     if (actionMeta.action === 'select-option') {
-      //   const dimension = getDimension(props.features, _condition.featureName);
       _condition.valueTypes.push({
         '@type': 'valueType',
         value: actionMeta.option.value,
@@ -92,31 +114,52 @@ const Condition = (props: IConditionProps) => {
       _condition?.values.splice(_condition?.values.indexOf(actionMeta.removedValue.value), 1);
     }
     setContainsValues(getContainsValues(_condition));
+    updateCondition();
   };
+
+  const onCompareInputChange = event => {
+    _condition.value = event;
+    setConditionValue(event);
+    _setCondition(_condition);
+    updateCondition();
+  };
+
+  useEffect(() => {
+    if (props.condition['@type'] !== 'Or' && props.condition['@type'] !== 'And' && props.condition?.featureName) {
+      _setCondition(props.condition);
+      setFeature({ value: props.condition.featureName, label: props.condition.featureName });
+      if (props.condition['@type']) {
+        const _comparisonType = simpleTypes.filter(c => c.value['@type'] === props.condition['@type'])[0];
+        setComparisonType(_comparisonType);
+      }
+      if (props.condition['@type'] === 'Compare' && props.condition['comparatorType']) {
+        const _compareType = COMPARE_TYPES.filter(c => c.value === props.condition['comparatorType'])[0];
+        setCompareType({ label: _compareType.displayName, value: _compareType.value });
+      }
+      if ((props.condition['@type'] === 'Compare' || props.condition['@type'] === 'Like') && props.condition?.value) {
+        setConditionValue(props.condition.value);
+      }
+      if ((props.condition['@type'] === 'Contains' || props.condition['@type'] === 'NotContains') && props.condition?.values.length > 0) {
+        setContainsValues(getContainsValues(props.condition));
+      }
+    }
+  }, [props.condition]);
 
   return (
     <>
-      <Form >
+      <Form>
         {_condition['@type'] !== 'Or' && _condition['@type'] !== 'And' && (
           <View>
             <Flex direction="row" gap="size-100" justifyContent="start" alignItems="center">
               <div style={{ minWidth: '200px' }}>
                 <Select
                   placeholder={translate('features.home.title')}
-                  styles={{
-                    placeholder: base => ({
-                      ...base,
-                      fontSize: '1em',
-                      fontWeight: 400,
-                      color: 'black',
-                    }),
-                  }}
                   onChange={selected => {
                     selectFeature(selected);
                   }}
                   className="basic-single"
                   classNamePrefix="select"
-                  value={{ value: _condition.featureName, label: _condition.featureName }}
+                  value={feature}
                   isSearchable={true}
                   options={props.featureOptions}
                 />
@@ -149,10 +192,9 @@ const Condition = (props: IConditionProps) => {
               )}
               {(_condition['@type'] === 'Compare' || _condition['@type'] === 'Like') && (
                 <TextField
-                  value={_condition?.value}
+                  value={conditionValue}
                   onChange={event => {
-                    _condition.value = event;
-                    _setCondition(_condition);
+                    onCompareInputChange(event);
                   }}
                 />
               )}
@@ -181,7 +223,7 @@ const Condition = (props: IConditionProps) => {
             </Flex>
           </View>
         )}
- <AndOrCondition _condition={_condition} />
+        <AndOrCondition _condition={_condition} />
       </Form>
     </>
   );
@@ -193,7 +235,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   features: storeState.feature.entities,
   visualDataById: storeState.visualisationData.visualDataById,
   datasource: storeState.views.entity.viewDashboard.dashboardDatasource,
-  // condition: storeState.visualmetadata.entity.conditionExpression,
+  conditionExpression: storeState.visualmetadata.conditionExpression,
   filterSelectOptions: generateFilterOptions(storeState.visualisationData.filterData),
   view: storeState.views.entity,
 });
