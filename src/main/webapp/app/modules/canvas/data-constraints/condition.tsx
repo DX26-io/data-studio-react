@@ -31,14 +31,12 @@ interface IConditionProps extends StateProps, DispatchProps {
 }
 
 const Condition = (props: IConditionProps) => {
-  //   const [property, setProperty] = useState([]);
-  //   const [isDisplayDateRange, setDisplayDateRange] = useState(false);
   const [_condition, _setCondition] = useState(props.condition);
   const [comparisonTypes, setComparisonTypes] = useState([]);
-  const [comparisonType, setComparisonType] = useState(null);
-  const [compareType, setCompareType] = useState(null);
+  const [comparisonType, setComparisonType] = useState({});
+  const [compareType, setCompareType] = useState({});
   const [containsValues, setContainsValues] = useState([]);
-  const [feature, setFeature] = useState();
+  const [feature, setFeature] = useState({value:'',label:''});
   const [conditionValue, setConditionValue] = useState();
 
   const updateCondition = () => {
