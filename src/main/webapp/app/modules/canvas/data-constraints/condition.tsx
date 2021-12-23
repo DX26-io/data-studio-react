@@ -102,7 +102,7 @@ const Condition = (props: IConditionProps) => {
       _condition.valueTypes.push({
         '@type': 'valueType',
         value: actionMeta.option.value,
-        type: _condition.valueType.type,
+        type: _condition?.valueType?.type ? _condition?.valueType?.type :  _condition.valueTypes[0].type,
       });
       _condition.values = [];
       _condition.valueTypes.forEach(item => {

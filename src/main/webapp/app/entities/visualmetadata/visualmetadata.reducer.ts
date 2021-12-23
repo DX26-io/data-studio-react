@@ -7,6 +7,7 @@ import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util'
 import { IVisualMetadata, defaultValue, IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { IVisualMetaDataDTO } from 'app/shared/model/visualmeta-data-dto.model';
 import { IValidateDTO } from 'app/shared/model/validate.model';
+import { IQueryValidationResponse, defaultValue as queryValidationResponse } from 'app/shared/model/query-validation-response.model';
 import {
   visualMetadataContainerAdd,
   visualMetadataContainerRemove,
@@ -83,10 +84,9 @@ const initialState = {
   newCreated: false,
   deleteSuccess: false,
   isvisualMetaDataFetched: false,
-  rowQuery: null,
+  validateQueryResponse: queryValidationResponse as IQueryValidationResponse,
   filterData: {},
   selectedFilter: {},
-  validateQueryError: null,
   isEditMode: false,
   visual: {} as IVisualMetadataSet,
   editAction: '',
@@ -127,7 +127,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
       return {
         ...state,
         updating: true,
-        updateSuccess:false
+        updateSuccess: false,
       };
     case REQUEST(ACTION_TYPES.DELETE_VISUALMETADATA):
       return {
@@ -145,6 +145,10 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         errorMessage: action.payload,
       };
     case REQUEST(ACTION_TYPES.VALIDATE_QUERY):
+      return {
+        ...state,
+        validateQueryResponse: queryValidationResponse,
+      };
     case FAILURE(ACTION_TYPES.FETCH_VISUALMETADATA_LIST):
     case FAILURE(ACTION_TYPES.CREATE_VISUALMETADATA):
       return {
@@ -154,12 +158,13 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         newCreated: false,
         errorMessage: action.payload,
       };
-    case FAILURE(ACTION_TYPES.UPDATE_VISUALMETADATA):return{
-      ...state,
-      updating:false,
-      errorMessage:action.payload.data,
-      updateSuccess:false,
-    };
+    case FAILURE(ACTION_TYPES.UPDATE_VISUALMETADATA):
+      return {
+        ...state,
+        updating: false,
+        errorMessage: action.payload.data,
+        updateSuccess: false,
+      };
     case FAILURE(ACTION_TYPES.DELETE_VISUALMETADATA):
       return {
         ...state,
@@ -172,7 +177,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
     case FAILURE(ACTION_TYPES.VALIDATE_QUERY):
       return {
         ...state,
-        validateQueryError: action.payload,
+        validateQueryResponse: queryValidationResponse,
       };
     case SUCCESS(ACTION_TYPES.FETCH_VISUALMETADATA_LIST):
       return {
@@ -216,7 +221,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
     case SUCCESS(ACTION_TYPES.VALIDATE_QUERY):
       return {
         ...state,
-        rowQuery: action.payload.data,
+        validateQueryResponse: action.payload.data,
       };
     case ACTION_TYPES.TOGGLE_EDIT_MODE:
       return {

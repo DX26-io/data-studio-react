@@ -8,14 +8,14 @@ const VisualisationQuerySetting = (props) => {
   return (
     <>
       <View>
-        <span className="query"> {props.validateQueryError ? props.validateQueryError : props.rowQuery?.rawQuery}</span>
+        <span className="query"> {props.validateQueryError ? props.validateQueryError : props.validateQueryResponse?.rawQuery}</span>
       </View>
     </>
   );
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  rowQuery: storeState.visualmetadata.rowQuery,
+  validateQueryResponse: storeState.visualmetadata.validateQueryResponse,
   validateQueryError: storeState.visualmetadata.validateQueryError,
 });
 
