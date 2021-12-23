@@ -81,27 +81,23 @@ const DataConstraints = props => {
             <Translate contentKey="dataConstraints.add"> Add Condition</Translate>
           </Button>
         )}
-        {props.conditionExpression && (
-          <React.Fragment>
-            <Condition key={remountComponentKey} condition={props.conditionExpression} />
-            {props.validateQueryResponse?.error && (
-              <Flex justifyContent="start" alignItems="start" gap="size-100">
-                <React.Fragment>
-                  <Alert color="Informative" />
-                  <span className="spectrum-Body-emphasis">{props.validateQueryResponse?.error}</span>
-                </React.Fragment>
-              </Flex>
-            )}
-            <Flex direction="row" justifyContent="end" alignItems="end" gap="size-100" marginTop="size-100">
-              <Button variant="cta" onPress={clear}>
-                <Translate contentKey="entity.action.clear">Clear</Translate>
-              </Button>
-              <Button variant="cta" onPress={validateQuery} isDisabled={props.updating}>
-                <Translate contentKey="entity.action.save">Save</Translate>
-              </Button>
-            </Flex>
-          </React.Fragment>
+        {props.conditionExpression && <Condition key={remountComponentKey} condition={props.conditionExpression} />}
+        {props.validateQueryResponse?.error && (
+          <Flex justifyContent="start" alignItems="start" gap="size-100">
+            <React.Fragment>
+              <Alert color="Informative" />
+              <span className="spectrum-Body-emphasis">{props.validateQueryResponse?.error}</span>
+            </React.Fragment>
+          </Flex>
         )}
+        <Flex direction="row" justifyContent="end" alignItems="end" gap="size-100" marginTop="size-100">
+          <Button variant="cta" onPress={clear}>
+            <Translate contentKey="entity.action.clear">Clear</Translate>
+          </Button>
+          <Button variant="cta" onPress={validateQuery} isDisabled={props.updating}>
+            <Translate contentKey="entity.action.save">Save</Translate>
+          </Button>
+        </Flex>
       </View>
     </>
   );
