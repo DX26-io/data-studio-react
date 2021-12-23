@@ -11,7 +11,6 @@ import {
   strToDate,
 } from 'app/modules/canvas/data-constraints/utils/date-util';
 import { ValidateFields } from '../../modules/canvas/visualisation/util/visualisation-render-utils';
-import { getDimension } from '../../modules/canvas/visualisation/util/visualisation-utils';
 import { VisualWrap } from '../../modules/canvas/visualisation/util/visualmetadata-wrapper';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IViews } from 'app/shared/model/views.model';

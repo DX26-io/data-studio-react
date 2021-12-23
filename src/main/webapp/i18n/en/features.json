@@ -4,7 +4,8 @@
       "title": "Features",
       "createLabel": "Create Feature",
       "updateLabel": "Update Feature",
-      "notFound": "No Features found"
+      "notFound": "No Features found",
+      "select":"Select Feature"
     },
     "created": "A new Feature is created with identifier {{ param }}",
     "updated": "A Feature is updated with identifier {{ param }}",

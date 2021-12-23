@@ -180,12 +180,6 @@ export const checkIsDateType = dimension => {
   return isDateType;
 };
 
-export const getDimension = (features, dimension) => {
-  return features.find(element => {
-    return element.name === dimension;
-  });
-};
-
 export const getTransactionData = async (data: Array<any>, csvLink: any, setTransactionData: any) => {
   await Promise.resolve(setTransactionData(data));
   return csvLink.current.link.click();
