@@ -22,8 +22,8 @@ interface IDateRangeComponentProps {
 }
 
 const DateRangeComponent = (props: IDateRangeComponentProps) => {
-  const [startDate, setStartDate] = useState(new Date(null));
-  const [endDate, setEndDate] = useState(new Date(null));
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [customDynamicDateRange, setCustomDynamicDateRange] = useState('0');
   const [dateRangeTab, setDateRangeTab] = useState<ReactText>('0');
   const [isdynamicDateRangeConfig, setDynamicDateRangeConfig] = useState<ReactText>('');
@@ -75,20 +75,24 @@ const DateRangeComponent = (props: IDateRangeComponentProps) => {
 
   const handleStartDateChange = date => {
     setStartDate(date);
+    onInputChange();
   };
   const handleEndDateChange = date => {
     setEndDate(date);
+    onInputChange();
   };
 
   useEffect(() => {
-    onInputChange();
-  }, [startDate, endDate]);
-
-  useEffect(() => {
     if (props.condition) {
-      setDateRangeTab(props.condition?.metadata?.tab.toString());
-      setStartDate(new Date(props.condition?.valueType?.value));
-      setEndDate(new Date(props.condition?.secondValueType?.value));
+      if (props.condition?.metadata?.tab.toString()) {
+        setDateRangeTab(props.condition?.metadata?.tab.toString());
+      }
+      if (props.condition?.valueType?.value) {
+        setStartDate(new Date(props.condition?.valueType?.value));
+      }
+      if (props.condition?.secondValueType?.value) {
+        setEndDate(new Date(props.condition?.secondValueType?.value));
+      }
       if (props.condition?.metadata?.tab === TAB_DYNAMIC) {
         setCustomDynamicDateRange(props.condition?.metadata?.customDynamicDateRange);
         setDynamicDateRangeConfig(props.condition?.metadata?.currentDynamicDateRangeConfig?.title);
