@@ -65,6 +65,7 @@ const DataConstraints = props => {
       datasourceId: props.view.viewDashboard.dashboardDatasource.id,
       visualMetadataId: props.visualMetaData.id,
       queryDTO: wrap.getQueryParameters(props.visualMetaData, {}, null, null),
+      conditionExpression: props.conditionExpression
     });
   };
 
@@ -82,21 +83,23 @@ const DataConstraints = props => {
           </Button>
         )}
         {props.conditionExpression && <Condition key={remountComponentKey} condition={props.conditionExpression} />}
-        {props.validateQueryResponse?.error && (
-          <Flex justifyContent="start" alignItems="start" gap="size-100">
-            <React.Fragment>
-              <Alert color="Informative" />
-              <span className="spectrum-Body-emphasis">{props.validateQueryResponse?.error}</span>
-            </React.Fragment>
+        <Flex direction="row" justifyContent="space-between" marginTop="size-100">
+          <Flex gap="size-100">
+            {props.validateQueryResponse?.error && (
+              <React.Fragment>
+                <Alert color="Informative" />
+                <span className="spectrum-Body-emphasis">{props.validateQueryResponse?.error}</span>
+              </React.Fragment>
+            )}
           </Flex>
-        )}
-        <Flex direction="row" justifyContent="end" alignItems="end" gap="size-100" marginTop="size-100">
-          <Button variant="cta" onPress={clear}>
-            <Translate contentKey="entity.action.clear">Clear</Translate>
-          </Button>
-          <Button variant="cta" onPress={validateQuery} isDisabled={props.updating}>
-            <Translate contentKey="entity.action.save">Save</Translate>
-          </Button>
+          <Flex gap="size-100">
+            <Button variant="cta" onPress={clear}>
+              <Translate contentKey="entity.action.clear">Clear</Translate>
+            </Button>
+            <Button variant="cta" onPress={validateQuery} isDisabled={props.updating}>
+              <Translate contentKey="entity.action.save">Save</Translate>
+            </Button>
+          </Flex>
         </Flex>
       </View>
     </>
