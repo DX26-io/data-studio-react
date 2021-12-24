@@ -36,7 +36,7 @@ const Condition = (props: IConditionProps) => {
   const [comparisonType, setComparisonType] = useState({});
   const [compareType, setCompareType] = useState({});
   const [containsValues, setContainsValues] = useState([]);
-  const [feature, setFeature] = useState({value:'',label:''});
+  const [feature, setFeature] = useState({ value: '', label: '' });
   const [conditionValue, setConditionValue] = useState();
 
   const updateCondition = () => {
@@ -52,12 +52,13 @@ const Condition = (props: IConditionProps) => {
 
   const onDateChange = (fromDate, toDate, metadata) => {
     if (fromDate && toDate) {
-      // const dimension = getDimension(props.features, _condition.featureName);
       fromDate = resetTimezoneData(fromDate);
       toDate = resetTimezoneData(toDate);
       _condition.valueType = { value: fromDate, type: _condition.valueType.type, '@type': 'valueType' };
       _condition.secondValueType = { value: toDate, type: _condition.valueType.type, '@type': 'valueType' };
       _condition.metadata = metadata;
+      _setCondition(_condition);
+      updateCondition();
     }
   };
 
@@ -102,7 +103,7 @@ const Condition = (props: IConditionProps) => {
       _condition.valueTypes.push({
         '@type': 'valueType',
         value: actionMeta.option.value,
-        type: _condition?.valueType?.type ? _condition?.valueType?.type :  _condition.valueTypes[0].type,
+        type: _condition?.valueType?.type ? _condition?.valueType?.type : _condition.valueTypes[0].type,
       });
       _condition.values = [];
       _condition.valueTypes.forEach(item => {
