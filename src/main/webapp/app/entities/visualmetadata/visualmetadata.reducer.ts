@@ -177,7 +177,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
     case FAILURE(ACTION_TYPES.VALIDATE_QUERY):
       return {
         ...state,
-        validateQueryResponse: queryValidationResponse,
+        validateQueryResponse: { ...queryValidationResponse, error: action.payload.message, validationResultType: 'FAILURE' },
       };
     case SUCCESS(ACTION_TYPES.FETCH_VISUALMETADATA_LIST):
       return {
