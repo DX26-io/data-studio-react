@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
+import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction, translate } from 'react-jhipster';
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IUser } from 'app/shared/model/user.model';
@@ -35,6 +35,7 @@ const initialState = {
   scheduleReportresponse: null,
   updating: false,
   timeCompatibleDimensions: null,
+  reportExecuting: false,
 };
 
 export type SchedulerState = Readonly<typeof initialState>;
@@ -88,9 +89,21 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
         scheduleReportresponse: action.payload.data,
         updating: false,
       };
+    case REQUEST(ACTION_TYPES.EXECUTE_NOW):
+      return {
+        ...state,
+        reportExecuting: true,
+      };
+    case FAILURE(ACTION_TYPES.EXECUTE_NOW):
+      return {
+        ...state,
+        reportExecuting: false,
+      };
     case SUCCESS(ACTION_TYPES.EXECUTE_NOW):
       return {
         ...state,
+        reportExecuting: false,
+        scheduleReportresponse: { message: translate('reportsManagement.reports.executeNowMessage') },
       };
     case ACTION_TYPES.SET_SCHEDULER_REPORT:
       return {
@@ -110,8 +123,8 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
     case SUCCESS(ACTION_TYPES.CANCEL_SCHEDULE_REPORT):
       return {
         ...state,
-        updating:false,
-        scheduleReportresponse:{message:'Report is cancelled'},
+        updating: false,
+        scheduleReportresponse: { message: 'Report is cancelled' },
         errorMessage: {
           translationKey: '',
           isValid: true,
@@ -238,7 +251,7 @@ export const setSchedulerReport = (schedulerReport: ISchedulerReport) => ({
 export const executeNow = id => {
   const requestUrl = `api/executeImmediate/${id}`;
   return {
-    type: ACTION_TYPES.FETCH_SCHEDULE_REPORT,
+    type: ACTION_TYPES.EXECUTE_NOW,
     payload: axios.get<string>(requestUrl),
   };
 };

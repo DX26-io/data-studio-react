@@ -184,7 +184,7 @@ const Scheduler = (props: ISchedulerProps) => {
                     <Translate contentKey="entity.action.save">Create</Translate>
                   </Button>
                   {schedulerId && (
-                    <Button onPress={executeReport} variant="cta">
+                    <Button onPress={executeReport} variant="cta" isDisabled={props.reportExecuting}>
                       <Translate contentKey="entity.action.runnow">Run Now</Translate>
                     </Button>
                   )}
@@ -348,6 +348,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.scheduler.updating,
   errorMessage: storeState.scheduler.errorMessage,
   visual: storeState.visualmetadata.entity,
+  reportExecuting: storeState.scheduler.reportExecuting,
 });
 
 const mapDispatchToProps = {
