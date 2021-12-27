@@ -70,6 +70,7 @@
       "viewTicket": "View Ticket",
       "reportRecipient": "Report Recipient",
       "uniqueError": "Webhook already exists with this name",
+      "executeNowMessage":"Report is executed successfully",
       "error": {
         "name": "report name is required",
         "cronExp": "cron expression is required",
