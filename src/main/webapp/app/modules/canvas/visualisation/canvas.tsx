@@ -35,7 +35,7 @@ import CanvasFilterHeader from 'app/shared/layout/header/canvas-filter-header';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import FeaturesPanel from 'app/modules/canvas/features/features-panel';
-import { receiveSocketResponse, toggleLoader } from 'app/shared/websocket/websocket.reducer';
+import { receiveSocketResponse, toggleLoader,reset as resetVisualisationData } from 'app/shared/websocket/websocket.reducer';
 import { visualMetadataContainerGetOne } from './util/visualmetadata-container.util';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
@@ -170,6 +170,7 @@ const Canvas = (props: IVisualisationProp) => {
     }
     return () => {
       props.reset();
+      props.resetVisualisationData();
     };
   }, []);
 
@@ -454,7 +455,8 @@ const mapDispatchToProps = {
   alternateDimension,
   visualisationTablePagination,
   setTableActivePage,
-  setVisualisationAction
+  setVisualisationAction,
+  resetVisualisationData
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
