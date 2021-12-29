@@ -75,10 +75,10 @@ export const Teams = (props: ITeamsProps) => {
                     <Translate contentKey="global.field.id">ID</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="reports.reportConfiguration.teams.name">Name</Translate>
+                    <Translate contentKey="reportsManagement.reportConfiguration.teams.name">Name</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="reports.reportConfiguration.teams.url">URL</Translate>
+                    <Translate contentKey="reportsManagement.reportConfiguration.teams.url">URL</Translate>
                   </TableCell>
                   <TableCell align="center">
                     <Translate contentKey="entity.action.manage">Manage</Translate>
