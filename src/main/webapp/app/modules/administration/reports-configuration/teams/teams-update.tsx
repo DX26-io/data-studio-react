@@ -56,9 +56,9 @@ export const TeamsUpdate = (props: ITeamsUpdateProps) => {
       <Heading>
         <Flex alignItems="center" gap="size-100" data-testid="team-config-form-heading">
           {teamConfig.id ? (
-            <Translate contentKey="reports.reportConfiguration.teams.updateLabel">Update MS Teams Configurationp</Translate>
+            <Translate contentKey="reportsManagement.reportConfiguration.teams.updateLabel">Update MS Teams Configurationp</Translate>
           ) : (
-            <Translate contentKey="reports.reportConfiguration.teams.createLabel">Create MS Teams Configuration</Translate>
+            <Translate contentKey="reportsManagement.reportConfiguration.teams.createLabel">Create MS Teams Configuration</Translate>
           )}
         </Flex>
       </Heading>

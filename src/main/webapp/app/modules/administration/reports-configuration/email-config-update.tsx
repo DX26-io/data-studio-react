@@ -54,9 +54,9 @@ export const EmailConfigUpdate = (props: IEmailConfigUpdateProps) => {
       <Heading>
         <Flex alignItems="center" gap="size-100" data-testid="email-config-form-heading">
           {emailConfig.id ? (
-            <Translate contentKey="reports.reportConfiguration.email.updateLabel">Update Email Configurationp</Translate>
+            <Translate contentKey="reportsManagement.reportConfiguration.email.updateLabel">Update Email Configurationp</Translate>
           ) : (
-            <Translate contentKey="reports.reportConfiguration.email.createLabel">Create Email Configuration</Translate>
+            <Translate contentKey="reportsManagement.reportConfiguration.email.createLabel">Create Email Configuration</Translate>
           )}
         </Flex>
       </Heading>
