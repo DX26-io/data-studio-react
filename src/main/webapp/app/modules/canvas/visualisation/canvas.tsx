@@ -35,7 +35,7 @@ import CanvasFilterHeader from 'app/shared/layout/header/canvas-filter-header';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import FeaturesPanel from 'app/modules/canvas/features/features-panel';
-import { receiveSocketResponse, toggleLoader,reset as resetVisualisationData } from 'app/shared/websocket/websocket.reducer';
+import { receiveSocketResponse, toggleLoader, reset as resetVisualisationData } from 'app/shared/websocket/websocket.reducer';
 import { visualMetadataContainerGetOne } from './util/visualmetadata-container.util';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
@@ -51,12 +51,11 @@ import { IBroadcast } from '../../../shared/model/broadcast.model';
 import { WidthProvider, Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import { applyDateFilters } from '../filter/filter-util';
 
-import { setVisualisationAction } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import  VisualisationEditModalPopUp  from './visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-popup';
+import { setVisualisationAction, metadataContainerUpdate } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import VisualisationEditModalPopUp from './visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-popup';
 import VisualisationDataModal from './visualisation-modal/visualisation-data-modal/visualisations-data-modal';
 import VisualisationShareModal from './visualisation-modal/visualisation-share-modal/visualisation-share-modal';
 import VisualisationsDeleteModal from './visualisation-modal/visualisation-delete-modal/visualisations-delete-modal';
-
 
 const ReactGridLayout = WidthProvider(ResponsiveGridLayout);
 
@@ -86,18 +85,17 @@ const Canvas = (props: IVisualisationProp) => {
   };
 
   const onLayoutChange = _visualmetaList => {
-    props.visualmetadata?.visualMetadataSet?.map((item, i) => {
-      if (!item.key) {
-        if (item.x)
-          (item.x = _visualmetaList[i].x),
-            (item.y = _visualmetaList[i].y),
-            (item.h = _visualmetaList[i].h),
-            (item.w = _visualmetaList[i].w),
-            (item.xPosition = _visualmetaList[i].x),
-            (item.yPosition = _visualmetaList[i].y),
-            (item.height = _visualmetaList[i].h),
-            (item.width = _visualmetaList[i].w);
-      }
+    _visualmetaList.map((item, i) => {
+      const v = visualMetadataContainerGetOne(item.i);
+      v.x = item.x;
+      v.y = item.y;
+      v.h = item.h;
+      v.w = item.w;
+      v.xPosition = item.x;
+      v.yPosition = item.y;
+      v.height = item.h;
+      v.width = item.w;
+      props.metadataContainerUpdate(v.id, v, 'id');
     });
   };
 
@@ -108,6 +106,7 @@ const Canvas = (props: IVisualisationProp) => {
       v.height = newItem.h;
       v.w = newItem.w;
       v.width = newItem.w;
+      props.metadataContainerUpdate(v.id, v, 'id');
       renderVisualisation(v, v.data, 'widget', broadcast);
     }
   };
@@ -337,15 +336,14 @@ const Canvas = (props: IVisualisationProp) => {
                 {v.metadataVisual.name === VisualisationType.Iframe && <iframe id={`iframe-${v.id}`} />}
               </div>
             </div>
-            {props.visualisationAction === 'Delete' && (
-              <VisualisationsDeleteModal
-                setOpen={() => props.setVisualisationAction(null)}
-              />
-            )}
-            <DialogContainer type={props.visualisationAction === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'} onDismiss={() => props.setVisualisationAction(null)}>
+            {props.visualisationAction === 'Delete' && <VisualisationsDeleteModal setOpen={() => props.setVisualisationAction(null)} />}
+            <DialogContainer
+              type={props.visualisationAction === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'}
+              onDismiss={() => props.setVisualisationAction(null)}
+            >
               {props.visualisationAction === 'Edit' && (
                 <VisualisationEditModalPopUp
-                  setOpen={()=>{
+                  setOpen={() => {
                     if (props.editAction === 'save') {
                       getVisualisationData(props.visual, props.view, props.selectedFilters);
                     }
@@ -455,7 +453,8 @@ const mapDispatchToProps = {
   visualisationTablePagination,
   setTableActivePage,
   setVisualisationAction,
-  resetVisualisationData
+  resetVisualisationData,
+  metadataContainerUpdate,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
