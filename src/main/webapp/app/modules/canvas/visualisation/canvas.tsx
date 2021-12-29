@@ -194,7 +194,6 @@ const Canvas = (props: IVisualisationProp) => {
 
   useEffect(() => {
     if (props.visualmetadata?.visualMetadataSet?.length > 0) {
-      props.toggleLoader(true);
       props.visualmetadata?.visualMetadataSet.map(item => {
         const loader = {
           visualisationId: item.id,
@@ -373,7 +372,7 @@ const Canvas = (props: IVisualisationProp) => {
       </View>
       <View>
         {props.isLoaderOn && (
-          <div style={{ display: props.isLoaderOn ? 'block' : 'none' }} className="loader-element">
+          <div className="loader-element">
             <Loader />
           </div>
         )}

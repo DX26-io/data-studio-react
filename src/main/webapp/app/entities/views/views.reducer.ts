@@ -9,11 +9,14 @@ import { IVisualMetadataSet, IVisualMetadata } from 'app/shared/model/visual-met
 
 import { ICrudGetDashboardViewsAction, ICrudViewDeleteAction, ISaveViewState, IViewStateDTO } from './view-util';
 import FileSaver from 'file-saver';
+import { translate } from 'react-jhipster';
+import { toast } from 'react-toastify';
 
 export const ACTION_TYPES = {
   FETCH_VIEWS_LIST: 'views/FETCH_VIEWS_LIST',
   FETCH_VIEWS: 'views/FETCH_VIEWS',
   FETCH_VIEWS_STATE: 'views/FETCH_VIEWS_STATE',
+  SAVE_VIEWS_STATE: 'views/SAVE_VIEWS_STATE',
   CREATE_VIEWS: 'views/CREATE_VIEWS',
   UPDATE_VIEWS: 'views/UPDATE_VIEWS',
   DELETE_VIEWS: 'views/DELETE_VIEWS',
@@ -23,7 +26,7 @@ export const ACTION_TYPES = {
   SET_BLOB: 'views/SET_BLOB',
   RESET: 'views/RESET',
   REQUEST_RELEASE: 'views/REQUEST_RELEASE',
-  VIEW_FEATURE_CRITERIA: 'views/VIEW_FEATURE_CRITERIA',
+  SAVE_VIEW_FEATURE_CRITERIA: 'views/SAVE_VIEW_FEATURE_CRITERIA',
 };
 
 const initialState = {
@@ -77,6 +80,11 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         updateSuccess: false,
         updating: true,
       };
+    case REQUEST(ACTION_TYPES.SAVE_VIEWS_STATE):
+      return {
+        ...state,
+        updating: true,
+      };
     case FAILURE(ACTION_TYPES.FETCH_VIEWS_LIST):
     case FAILURE(ACTION_TYPES.IMPORT_VIEW):
     case FAILURE(ACTION_TYPES.FETCH_VIEWS):
@@ -98,6 +106,12 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         updating: false,
         updateSuccess: false,
         errorMessage: action.payload,
+      };
+    case FAILURE(ACTION_TYPES.SAVE_VIEWS_STATE):
+      return {
+        ...state,
+        updating: false,
+        errorMessage: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.FETCH_VIEWS_LIST):
       return {
@@ -150,6 +164,12 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         ...state,
         uploadSucceeded: true,
       };
+    case SUCCESS(ACTION_TYPES.SAVE_VIEWS_STATE):
+      toast.success(translate('canvas.saveMessage'));
+      return {
+        ...state,
+        updating: false,
+      };
     case ACTION_TYPES.SET_BLOB: {
       const { name, data, contentType } = action.payload;
       return {
@@ -173,7 +193,7 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         ...state,
         exportViewId: action.payload,
       };
-    case ACTION_TYPES.VIEW_FEATURE_CRITERIA:
+    case ACTION_TYPES.SAVE_VIEW_FEATURE_CRITERIA:
       return {
         ...state,
       };
@@ -186,9 +206,9 @@ const apiUrl = 'api/views';
 
 // Actions
 
-export const ViewFeatureCriteria = (features: any) => {
+export const saveViewFeatureCriteria = (features: any) => {
   return {
-    type: ACTION_TYPES.VIEW_FEATURE_CRITERIA,
+    type: ACTION_TYPES.SAVE_VIEW_FEATURE_CRITERIA,
     payload: axios.post(`api/view-feature-criteria?cacheBuster=${new Date().getTime()}`, features),
   };
 };
@@ -204,7 +224,7 @@ export const getCurrentViewState: ICrudGetDashboardViewsAction<IVisualMetadataSe
 export const saveViewState: ICrudPutAction<IViewStateDTO> = entity => async dispatch => {
   const requestUrl = `${apiUrl}/${entity._id}/viewState`;
   const result = await dispatch({
-    type: ACTION_TYPES.FETCH_VIEWS_STATE,
+    type: ACTION_TYPES.SAVE_VIEWS_STATE,
     payload: axios.put(
       requestUrl,
       cleanEntity({
@@ -213,7 +233,8 @@ export const saveViewState: ICrudPutAction<IViewStateDTO> = entity => async disp
       })
     ),
   });
-  dispatch(getCurrentViewState(entity._id), ViewFeatureCriteria(entity.viewFeatureCriterias));
+  dispatch(saveViewFeatureCriteria(entity.viewFeatureCriterias));
+  // getCurrentViewState(entity._id)
   return result;
 };
 

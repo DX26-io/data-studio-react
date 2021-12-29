@@ -30,6 +30,7 @@
       "view": "View",
       "dashboard": "Dashboard",
       "bookmark": "Bookmark"
-    }
+    },
+    "saveMessage":"Your changes are saved"
   }
 }
