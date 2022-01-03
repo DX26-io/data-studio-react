@@ -1,6 +1,7 @@
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { translate } from 'react-jhipster';
 import { IPayload, IPayloadResult } from 'react-jhipster/src/type/redux-action.type';
+import { IViews } from 'app/shared/model/views.model';
 
 /**
  * This is a special delete type as views are dependent on dashboards
@@ -30,3 +31,13 @@ export interface IViewStateDTO {
     viewId: number;
   };
 }
+
+export const generateViewNameOptions = (views: Array<IViews>) => {
+  const options = [];
+  views &&
+    views.forEach(item => {
+      options.push({ value: item.id, label: item.viewName });
+    });
+  return options;
+};
+

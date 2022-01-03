@@ -58,3 +58,7 @@ export const generateOptions = features => {
   });
   return options;
 };
+
+export const getFeature = (featureList: readonly IFeature[], feature: string) => {
+  return featureList.find(item => item.name === feature);
+};
