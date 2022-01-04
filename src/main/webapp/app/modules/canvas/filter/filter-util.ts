@@ -4,7 +4,7 @@ import { IBookmark } from 'app/shared/model/bookmark.model';
 import { DYNAMIC_DATE_RANGE_CONFIG, tabList } from 'app/shared/util/data-constraints.constants';
 import { IQueryDTO } from 'app/shared/model/query-dto.model';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
-import { dateToString } from '../data-constraints/utils/date-util';
+import { dateToString } from 'app/shared/util/date-utils';
 import { IFeature } from 'app/shared/model/feature.model';
 
 let dynamicDateRangeMetaData = {};

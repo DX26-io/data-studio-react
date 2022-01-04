@@ -5,7 +5,7 @@ import { IRootState } from 'app/shared/reducers';
 import { IFeature } from 'app/shared/model/feature.model';
 import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import DateRangeComponent from 'app/modules/canvas/data-constraints/date-range-component';
-import { resetTimezoneData } from 'app/modules/canvas/data-constraints/utils/date-util';
+import { resetTimezoneData } from 'app/shared/util/date-utils';
 import { checkIsDateType } from 'app/modules/canvas/visualisation/util/visualisation-utils';
 import { getPin, load, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 import Select from 'react-select';

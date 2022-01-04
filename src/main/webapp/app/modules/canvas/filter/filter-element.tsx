@@ -5,7 +5,7 @@ import { IRootState } from 'app/shared/reducers';
 import { IFeature } from 'app/shared/model/feature.model';
 import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import DateRangeComponent from '../data-constraints/date-range-component';
-import { resetTimezoneData } from '../data-constraints/utils/date-util';
+import { resetTimezoneData } from 'app/shared/util/date-utils';
 import { checkIsDateType } from '../visualisation/util/visualisation-utils';
 import { saveDynamicDateRangeMetaData, saveSelectedFilter } from './filter.reducer';
 import { getPin, load, generateFilterOptions } from './filter-util';

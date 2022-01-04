@@ -3,7 +3,7 @@ import { ActionButton, Button, Flex, Item, Picker, TextField, View, Form } from 
 import uuid from 'react-uuid';
 import './visualisation-data-constraints.scss';
 import Select, { components, PlaceholderProps } from 'react-select';
-import { resetTimezoneData } from 'app/modules/canvas/data-constraints/utils/date-util';
+import { resetTimezoneData } from 'app/shared/util/date-utils';
 import DateRangeComponent from './date-range-component';
 import { updateConditionExpression } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { IRootState } from 'app/shared/reducers';

@@ -12,7 +12,7 @@ import {
   getStartDateRangeTimeUnit,
   adjustStartDateRangeInterval,
   stringToDate,
-} from 'app/modules/canvas/data-constraints/utils/date-util';
+} from 'app/shared/util/date-utils';
 import DatePicker from 'app/shared/components/date-picker/date-picker';
 import { DYNAMIC_DATE_RANGE_CONFIG, tabList } from 'app/shared/util/data-constraints.constants';
 

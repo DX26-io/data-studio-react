@@ -28,7 +28,7 @@ import {
 } from 'app/modules/canvas/scheduler/scheduler.reducer';
 import Select from 'react-select';
 import DatePicker from 'app/shared/components/date-picker/date-picker';
-import { stringToDate } from '../data-constraints/utils/date-util';
+import { stringToDate } from 'app/shared/util/date-utils';
 import { Translate, translate } from 'react-jhipster';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
