@@ -29,9 +29,6 @@ export const Filters = (props: IFiltersProps) => {
   const [reportName, setReportName] = React.useState('');
   const [isThresholdAlert, setThresholdAlert] = React.useState(false);
 
-  // const [dashboardId, setDashboardId] = useState({ value: '', label: '' });
-  // const [viewId, setViewId] = useState({ value: '', label: '' });
-
   useEffect(() => {
     props.getDashboards(0, ITEMS_PER_PAGE, 'id,asc');
     props.getViews(0, ITEMS_PER_PAGE, 'id,asc');
