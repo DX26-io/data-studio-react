@@ -12,7 +12,7 @@ import Close from '@spectrum-icons/workflow/Close';
 import Select from 'react-select';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import { generateOptionsForDateRange, isDateFilterType, isDateRange } from 'app/modules/canvas/filter/filter-util';
-import { getFeature } from './header.util';
+import { getFeature } from 'app/entities/feature/feature-util';
 export interface ICanvasFilterHeaderProps extends StateProps, DispatchProps { }
 
 const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {

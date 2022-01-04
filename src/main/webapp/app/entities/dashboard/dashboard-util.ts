@@ -1,4 +1,5 @@
 import { translate } from 'react-jhipster';
+import { IDashboard } from 'app/shared/model/dashboard.model';
 interface IFormData {
   dashboardName: string;
   dashboardCategory: string;
@@ -21,6 +22,15 @@ export const generateDatasourcesOptions = datasources => {
   datasources &&
     datasources.forEach(item => {
       options.push({ value: item.name, label: item.name });
+    });
+  return options;
+};
+
+export const generateDashboardNameOptions = (dashboards) => {
+  const options = [];
+  dashboards &&
+    dashboards.forEach(item => {
+      options.push({ value: item.id, label: item.dashboardName });
     });
   return options;
 };

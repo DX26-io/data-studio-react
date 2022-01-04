@@ -89,28 +89,28 @@ export const Reports = (props: IReportsProps) => {
               <TableHead>
                 <TableRow>
                   <TableCell align="center">
-                    <Translate contentKey="reports-management.reports.no">No.</Translate>
+                    <Translate contentKey="reportsManagement.reports.no">No.</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="reports-management.reports.reportName">Report Name</Translate>
+                    <Translate contentKey="reportsManagement.reports.reportName">Report Name</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="reports-management.reports.dashboardName">Dashboard Name</Translate>
+                    <Translate contentKey="reportsManagement.reports.dashboardName">Dashboard Name</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="reports-management.reports.thresholdAlert">Threshold Alert</Translate>
+                    <Translate contentKey="reportsManagement.reports.thresholdAlert">Threshold Alert</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="reports-management.reports.subject">Subject</Translate>
+                    <Translate contentKey="reportsManagement.reports.subject">Subject</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="reports-management.reports.run">Run</Translate>
+                    <Translate contentKey="reportsManagement.reports.run">Run</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="reports-management.reports.createdBy">Created By</Translate>
+                    <Translate contentKey="reportsManagement.reports.createdBy">Created By</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="reports-management.reports.createdDate">Created Date</Translate>
+                    <Translate contentKey="reportsManagement.reports.createdDate">Created Date</Translate>
                   </TableCell>
                   <TableCell align="center">
                     <Translate contentKey="entity.action.manage">Manage</Translate>
@@ -124,19 +124,19 @@ export const Reports = (props: IReportsProps) => {
                       {i + 1}
                     </TableCell>
 
-                    <TableCell align="center">{report.report.title_name}</TableCell>
-                    <TableCell align="center">{report.report.dashboard_name}</TableCell>
+                    <TableCell align="center">{report.report.reportName}</TableCell>
+                    <TableCell align="center">{report.report.dashboardName}</TableCell>
                     <TableCell align="center">
                       {report.report.thresholdAlert ? (
-                        <Translate contentKey="reports-management.reports.thresholdAlertYes">Yes</Translate>
+                        <Translate contentKey="reportsManagement.reports.thresholdAlertYes">Yes</Translate>
                       ) : (
-                        <Translate contentKey="reports-management.reports.thresholdAlertNo">No</Translate>
+                        <Translate contentKey="reportsManagement.reports.thresholdAlertNo">No</Translate>
                       )}
                     </TableCell>
 
                     <TableCell align="center">{report.report.subject}</TableCell>
-                    <TableCell align="center">{report.schedule.cron_exp}</TableCell>
-                    <TableCell align="center">{report.report.userid}</TableCell>
+                    <TableCell align="center">{report.schedule.cronExp}</TableCell>
+                    <TableCell align="center">{report.report.userId}</TableCell>
                     <TableCell align="center">{report.report.createdDate}</TableCell>
 
                     <TableCell align="center">

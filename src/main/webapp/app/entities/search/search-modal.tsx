@@ -131,7 +131,7 @@ const SearchModal = (props: ISearchModalProps) => {
                   labelPosition="side"
                   labelAlign="end"
                   marginX={'size-100'}
-                  label={translate('views.search.search')}
+                  label={translate('views.searchView.search')}
                   value={searchText}
                   onChange={onSearchTextChange}
                 />

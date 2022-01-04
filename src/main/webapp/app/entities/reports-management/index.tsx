@@ -7,7 +7,7 @@ const Routes = ({ match }) => (
   <div>
     <ErrorBoundaryRoute exact path={match.url} component={ReportManagement} />
     <ErrorBoundaryRoute exact path={`${match.url}/reports`} component={Reports} />
-    <ErrorBoundaryRoute exact path={`${match.url}/task-logger`} component={Reports} />
+    {/* <ErrorBoundaryRoute exact path={`${match.url}/task-logger`} component={Reports} /> */}
   </div>
 );
 
