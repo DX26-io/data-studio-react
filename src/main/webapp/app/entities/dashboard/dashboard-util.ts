@@ -26,7 +26,7 @@ export const generateDatasourcesOptions = datasources => {
   return options;
 };
 
-export const generateDashboardNameOptions = (dashboards: Array<IDashboard>) => {
+export const generateDashboardNameOptions = (dashboards) => {
   const options = [];
   dashboards &&
     dashboards.forEach(item => {

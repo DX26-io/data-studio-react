@@ -34,3 +34,12 @@ export const isFormValid = (user: IUser): IError => {
   }
   return error;
 };
+
+export const generateUsersOptions = users => {
+  const options = [];
+  users &&
+    users.forEach(item => {
+      options.push({ value: item.login, label: item.firstName + ' ' + item.lastName });
+    });
+  return options;
+};

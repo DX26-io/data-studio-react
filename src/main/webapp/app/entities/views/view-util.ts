@@ -32,7 +32,7 @@ export interface IViewStateDTO {
   };
 }
 
-export const generateViewNameOptions = (views: Array<IViews>) => {
+export const generateViewNameOptions = (views) => {
   const options = [];
   views &&
     views.forEach(item => {
