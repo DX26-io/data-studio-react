@@ -126,7 +126,8 @@
       "finish": "Finish",
       "filter": "Filter",
       "clear": "Clear",
-      "search": "Search"
+      "search": "Search",
+      "reset": "Reset"
     },
     "options": {
       "more_options": "More options",

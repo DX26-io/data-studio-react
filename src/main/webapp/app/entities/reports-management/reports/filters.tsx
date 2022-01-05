@@ -13,11 +13,15 @@ import { getDashboardsByName, getEntities as getDashboards } from 'app/entities/
 import { getDashboardViewEntities, getViewsByName, getEntities as getViews } from 'app/entities/views/views.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { getUsers, searchUsers } from 'app/modules/administration/user-management/users/user.reducer';
-import { generateUsersOptions } from 'app/modules/administration/user-management/users/user.util';
+import { generateUsersOptions, getUserFullName } from 'app/modules/administration/user-management/users/user.util';
 import { fetchReports } from '../reports-management.reducer';
 import { findUserId, isAdmin } from './reports.util';
 import { generateDashboardNameOptions } from 'app/entities/dashboard/dashboard-util';
 import { generateViewNameOptions } from 'app/entities/views/view-util';
+import DatePicker from 'app/shared/components/date-picker/date-picker';
+import { stringToDate, strToDate } from 'app/shared/util/date-utils';
+
+// TODO : check the notification API is working fine with start and end date filters 
 
 export interface IFiltersProps extends StateProps, DispatchProps {}
 
@@ -25,9 +29,14 @@ export const Filters = (props: IFiltersProps) => {
   const [expanded, setExpanded] = React.useState(false);
   const [searchedDahboard, setSearchedDahboard] = React.useState({ value: '', label: '' });
   const [searchedView, setSearchedView] = React.useState({ value: '', label: '' });
-  const [searchedUser, setSearchedUser] = React.useState({ value: '', label: '' });
+  const [searchedUser, setSearchedUser] = React.useState({
+    value: props.account.login,
+    label: getUserFullName(props.account),
+  });
   const [reportName, setReportName] = React.useState('');
   const [isThresholdAlert, setThresholdAlert] = React.useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
     props.getDashboards(0, ITEMS_PER_PAGE, 'id,asc');
@@ -40,8 +49,8 @@ export const Filters = (props: IFiltersProps) => {
       0,
       findUserId(props.account, searchedUser.value),
       reportName,
-      '',
-      '',
+      strToDate(startDate),
+      strToDate(endDate),
       isThresholdAlert,
       searchedDahboard.label,
       searchedView.label
@@ -74,6 +83,36 @@ export const Filters = (props: IFiltersProps) => {
     }
   };
 
+  const handleStartDateChange = date => {
+    if (date) {
+      setStartDate(date);
+    } else {
+      setStartDate(null);
+    }
+  };
+
+  const handleEndDateChange = date => {
+    if (date) {
+      setEndDate(date);
+    } else {
+      setEndDate(null);
+    }
+  };
+
+  const reset = () => {
+    setSearchedDahboard({ value: '', label: '' });
+    setSearchedView({ value: '', label: '' });
+    setSearchedUser({
+      value: props.account.login,
+      label: getUserFullName(props.account),
+    });
+    setReportName('');
+    setThresholdAlert(false);
+    setStartDate(null);
+    setEndDate(null);
+    search();
+  };
+
   return (
     <Accordion
       expanded={expanded}
@@ -89,7 +128,7 @@ export const Filters = (props: IFiltersProps) => {
       </AccordionSummary>
       <AccordionDetails>
         <View marginBottom="size-400">
-          <Flex direction="row" gap="size-250" justifyContent="center" alignItems="center">
+          <Flex direction="row" gap="size-250" justifyContent="start" alignItems="center" wrap>
             <div style={{ width: '250px' }}>
               <Select
                 isClearable
@@ -147,8 +186,21 @@ export const Filters = (props: IFiltersProps) => {
             <Checkbox onChange={setThresholdAlert} isEmphasized>
               <Translate contentKey="reportsManagement.reports.thresholdAlert">Threshold Alert</Translate>
             </Checkbox>
+            <DatePicker
+              label={translate('reportsManagement.reports.filters.startDate')}
+              onChange={handleStartDateChange}
+              value={stringToDate(startDate)}
+            />
+            <DatePicker
+              label={translate('reportsManagement.reports.filters.endDate')}
+              onChange={handleEndDateChange}
+              value={stringToDate(endDate)}
+            />
             <Button variant="cta" marginStart="size-150" onPress={search}>
               <Translate contentKey="entity.action.search">Search</Translate>
+            </Button>
+            <Button variant="cta" marginStart="size-150" onPress={reset}>
+              <Translate contentKey="entity.action.reset">Reset</Translate>
             </Button>
           </Flex>
         </View>
