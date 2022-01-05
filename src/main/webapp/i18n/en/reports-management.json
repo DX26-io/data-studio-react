@@ -53,8 +53,8 @@
       "thresholdAlertNo": "No",
       "filters": {
         "title": "Filters",
-        "fromDate": "From Date",
-        "toDate": "To Date",
+        "startDate": "Start Date",
+        "endDate": "End Date",
         "reportName": "Report Name"
       },
       "webhookName": "Webhook Name",

@@ -35,11 +35,15 @@ export const isFormValid = (user: IUser): IError => {
   return error;
 };
 
+export const getUserFullName = account => {
+  return account.firstName + ' ' + account.lastName;
+};
+
 export const generateUsersOptions = users => {
   const options = [];
   users &&
     users.forEach(item => {
-      options.push({ value: item.login, label: item.firstName + ' ' + item.lastName });
+      options.push({ value: item.login, label: getUserFullName(item) });
     });
   return options;
 };

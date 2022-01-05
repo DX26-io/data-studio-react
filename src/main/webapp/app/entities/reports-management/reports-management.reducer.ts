@@ -48,23 +48,23 @@ export const fetchReports = (
   page: number,
   userName?: string,
   reportName?: string,
-  startDate?: string,
-  endDate?: string,
+  startDate?: Date,
+  endDate?: Date,
   thresholdAlert?: boolean,
   dashboardName?: string,
   viewName?: string
 ) => dispatch => {
   userName = userName ? userName : '';
   reportName = reportName ? reportName : '';
-  startDate = startDate ? startDate : '';
-  endDate = endDate ? endDate : '';
+  const _startDate = startDate ? startDate : '';
+  const _endDate = endDate ? endDate : '';
   thresholdAlert = thresholdAlert ? thresholdAlert : false;
   dashboardName = dashboardName ? dashboardName : '';
   viewName = viewName ? viewName : '';
   dispatch({
     type: ACTION_TYPES.FETCH_REPORTS,
     payload: axios.get(
-      `${apiUrl}?userName=${userName}&reportName=${reportName}&startDate=${startDate}&endDate=${endDate}&thresholdAlert=${thresholdAlert}&dashboardName=${dashboardName}&viewName=${viewName}&pageSize=${pageSize}&page=${page}`
+      `${apiUrl}?userName=${userName}&reportName=${reportName}&startDate=${_startDate}&endDate=${_endDate}&thresholdAlert=${thresholdAlert}&dashboardName=${dashboardName}&viewName=${viewName}&pageSize=${pageSize}&page=${page}`
     ),
   });
 };

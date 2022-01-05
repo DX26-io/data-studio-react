@@ -9,7 +9,7 @@ import {
   resetTimezoneData,
   startOfDay,
   strToDate,
-} from 'app/modules/canvas/data-constraints/utils/date-util';
+} from 'app/shared/util/date-utils';
 import { ValidateFields } from '../../modules/canvas/visualisation/util/visualisation-render-utils';
 import { VisualWrap } from '../../modules/canvas/visualisation/util/visualmetadata-wrapper';
 import { IFeature } from 'app/shared/model/feature.model';
@@ -27,7 +27,7 @@ import { addNewExpression, ConditionExpression } from 'app/modules/canvas/filter
 import { IBookmark } from 'app/shared/model/bookmark.model';
 import { IQueryDTO } from 'app/shared/model/query-dto.model';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
-import { dateToString } from 'app/modules/canvas/data-constraints/utils/date-util';
+import { dateToString } from 'app/shared/util/date-utils';
 import uuid from 'react-uuid';
 import { isString } from 'util';
 
