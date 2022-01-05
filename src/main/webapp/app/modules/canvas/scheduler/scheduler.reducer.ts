@@ -23,6 +23,7 @@ export const ACTION_TYPES = {
   SET_TIME_COMPATIBLE_DIMENSIONS: 'scheduler/SET_TIME_COMPATIBLE_DIMENSIONS',
   RESET: 'scheduler/RESET',
   SET_ERROR_MESSAGE: 'scheduler/SET_ERROR_MESSAGE',
+  FETCH_WEBHOOK: 'scheduler/FETCH_WEBHOOK',
 };
 
 const initialState = {
@@ -36,6 +37,7 @@ const initialState = {
   updating: false,
   timeCompatibleDimensions: null,
   reportExecuting: false,
+  webHooks: [] as ReadonlyArray<any>,
 };
 
 export type SchedulerState = Readonly<typeof initialState>;
@@ -185,6 +187,24 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
         },
         timeConditions: { unit: { label: null, value: null }, value: null, feature: { definition: { label: null, value: null } } },
       };
+    case REQUEST(ACTION_TYPES.FETCH_WEBHOOK):
+      return {
+        ...state,
+        errorMessage: null,
+        loading: true,
+      };
+    case FAILURE(ACTION_TYPES.FETCH_WEBHOOK):
+      return {
+        ...state,
+        loading: false,
+        errorMessage: action.payload,
+      };
+    case SUCCESS(ACTION_TYPES.FETCH_WEBHOOK):
+      return {
+        ...state,
+        loading: false,
+        webHooks: action.payload.data,
+      };
     case ACTION_TYPES.SET_CONDITION:
       return {
         ...state,
@@ -224,6 +244,14 @@ export const getUsers: ICrudGetAllAction<IUser> = () => {
   return {
     type: ACTION_TYPES.FETCH_USERS,
     payload: axios.get<IUser>(requestUrl),
+  };
+};
+
+export const getWebhookList: ICrudGetAllAction<any> = () => {
+  const requestUrl = `api/notification/getTeamConfig/?id=0`;
+  return {
+    type: ACTION_TYPES.FETCH_WEBHOOK,
+    payload: axios.get<any>(requestUrl),
   };
 };
 

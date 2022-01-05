@@ -50,7 +50,6 @@ import visualmetadata, {
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import filter, { FilterState } from 'app/modules/canvas/filter/filter.reducer';
 import scheduler, { SchedulerState } from 'app/modules/canvas/scheduler/scheduler.reducer';
-import notification, { notificationState } from 'app/modules/canvas/scheduler/notification.reducer';
 import functions, { FunctionState } from 'app/entities/functions/function.reducer';
 import search, { SearchState } from 'app/entities/search/search.reducer';
 import featureCriteria, { FeatureCriteriaState } from 'app/entities/feature-criteria/feature-criteria.reducer';
@@ -87,7 +86,6 @@ export interface IRootState {
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly filter: FilterState;
   readonly scheduler: SchedulerState;
-  readonly notification: notificationState;
   readonly home: HomeState;
   readonly recent: RecentState;
   readonly reportConfiguration: ReportConfigurationState;
@@ -128,7 +126,6 @@ const rootReducer = combineReducers<IRootState>({
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   filter,
   scheduler,
-  notification,
   home,
   recent,
   reportConfiguration,

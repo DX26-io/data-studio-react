@@ -25,13 +25,12 @@ import {
   reset,
   setTimeCompatibleDimensions,
   setErrorMessage,
+  getWebhookList
 } from 'app/modules/canvas/scheduler/scheduler.reducer';
 import Select from 'react-select';
 import DatePicker from 'app/shared/components/date-picker/date-picker';
 import { stringToDate } from 'app/shared/util/date-utils';
 import { Translate, translate } from 'react-jhipster';
-import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
-import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
 import {
   generateUserOptions,
   generateWebhookOptions,
@@ -40,7 +39,6 @@ import {
   setDefaultWebHookList,
   assignTimeConditionsToScheduledObj,
   getReportTitle,
-  getReportName,
   isFormValid,
   buildQueryDTO,
   getSchedulerConditionExpression,
@@ -337,7 +335,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   schedulerReport: storeState.scheduler.schedulerReport,
   updateSuccess: storeState.scheduler.updateSuccess,
   scheduleReportresponse: storeState.scheduler.scheduleReportresponse,
-  webHooks: storeState.notification.webHooks,
+  webHooks: storeState.scheduler.webHooks,
   view: storeState.views.entity,
   account: storeState.authentication.account,
   filters: storeState.filter.selectedFilters,
