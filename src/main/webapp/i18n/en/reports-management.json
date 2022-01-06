@@ -71,6 +71,7 @@
       "reportRecipient": "Report Recipient",
       "uniqueError": "Webhook already exists with this name",
       "executeNowMessage":"Report is executed successfully",
+      "cancelledMessage":"Report is cancelled",
       "error": {
         "name": "report name is required",
         "cronExp": "cron expression is required",

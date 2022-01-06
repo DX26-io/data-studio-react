@@ -80,7 +80,7 @@ export const Reports = (props: IReportsProps) => {
         title={translate('reportsManagement.reports.title')}
       ></SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && <Scheduler thresholdAlert={thresholdAlert} visualisationId={visualisationId} />}
+        {isOpen && <Scheduler thresholdAlert={thresholdAlert} visualisationId={visualisationId} setOpen={setOpen} />}
       </DialogContainer>
       <div className="dx26-container">
         <Filters />

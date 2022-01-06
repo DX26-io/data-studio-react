@@ -59,6 +59,7 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
       return {
         ...state,
         loading: false,
+        scheduleReportresponse: action.payload.data.report ? null : action.payload.data,
         schedulerReport: action.payload.data.report ? action.payload.data.report : schedulerReportDefaultValue,
         timeConditions:
           action.payload.data.report && action.payload.data.report.report.thresholdAlert
@@ -124,7 +125,7 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
       return {
         ...state,
         updating: false,
-        scheduleReportresponse: { message: 'Report is cancelled' },
+        scheduleReportresponse: { message: translate('reportsManagement.reports.cancelledMessage')},
         errorMessage: {
           translationKey: '',
           isValid: true,

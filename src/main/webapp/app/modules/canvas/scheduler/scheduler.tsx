@@ -12,6 +12,11 @@ import {
   RadioGroup,
   Radio,
   Text,
+  Dialog,
+  Heading,
+  Header,
+  Divider,
+  Content,
 } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
@@ -60,6 +65,7 @@ import { getEntity as getVisualMetadata } from 'app/entities/visualmetadata/visu
 export interface ISchedulerProps extends StateProps, DispatchProps {
   thresholdAlert: boolean;
   visualisationId?: string;
+  setOpen?: (isOpen: boolean) => void;
 }
 
 const Scheduler = (props: ISchedulerProps) => {
@@ -97,6 +103,10 @@ const Scheduler = (props: ISchedulerProps) => {
     props.executeNow(schedulerId);
   };
 
+  const closeDialog = () => {
+    props.setOpen(false);
+  };
+
   useEffect(() => {
     if (props.updateSuccess) {
       props.reset();
@@ -104,6 +114,9 @@ const Scheduler = (props: ISchedulerProps) => {
         translationKey: '',
         isValid: true,
       });
+      if (props.visualisationId) {
+        closeDialog();
+      }
     }
   }, [props.updateSuccess]);
 
@@ -154,187 +167,198 @@ const Scheduler = (props: ISchedulerProps) => {
   };
 
   return (
-    <>
-      <Flex direction="column" gap="size-100">
-        <View>
-          <Flex direction="row" justifyContent="space-between">
-            <Flex gap="size-100">
-              {(!props.errorMessage?.isValid || props.scheduleReportresponse?.message) && (
-                <React.Fragment>
-                  <Alert color="Informative" />
-                  <Text>
-                    <span className="spectrum-Body-emphasis">
-                      {props.errorMessage?.isValid ? (
-                        props.scheduleReportresponse?.message
-                      ) : (
-                        <Translate contentKey={props.errorMessage?.translationKey}></Translate>
-                      )}
-                    </span>
-                  </Text>
-                </React.Fragment>
-              )}
-            </Flex>
-            <Flex>
-              <View>
-                <ButtonGroup>
-                  <Button
-                    isDisabled={props.updating}
-                    variant="negative"
-                    onPress={() => {
-                      props.cancelScheduleReport(schedulerId);
-                    }}
-                  >
-                    <Translate contentKey="entity.action.cancel">Cancel</Translate>
-                  </Button>
-                  <Button onPress={saveScheduleReport} variant="cta" isDisabled={props.updating || !props.errorMessage?.isValid}>
-                    <Translate contentKey="entity.action.save">Create</Translate>
-                  </Button>
-                  {schedulerId && (
-                    <Button onPress={executeReport} variant="cta" isDisabled={props.reportExecuting}>
-                      <Translate contentKey="entity.action.runnow">Run Now</Translate>
-                    </Button>
+    <Dialog data-testid="scheduler-form-dialog">
+      <Heading>
+        <Flex alignItems="center" gap="size-100" data-testid="scheduler-form-heading">
+          {(!props.errorMessage?.isValid || props.scheduleReportresponse?.message) && (
+            <React.Fragment>
+              <Alert color="Informative" />
+              <Text>
+                <span className="spectrum-Body-emphasis">
+                  {props.errorMessage?.isValid ? (
+                    props.scheduleReportresponse?.message
+                  ) : (
+                    <Translate contentKey={props.errorMessage?.translationKey}></Translate>
                   )}
-                </ButtonGroup>
-              </View>
-            </Flex>
-          </Flex>
-        </View>
-        <View>
-          <Form>
-            <TextField
-              value={props.schedulerReport?.report?.reportName}
-              label={translate('reportsManagement.reports.form.reportName')}
-              placeholder="Report Name"
-              onChange={event => {
-                props.schedulerReport.report.reportName = event;
-                props.setSchedulerReport(props.schedulerReport);
-                const errorObj = isFormValid(props.schedulerReport);
-                props.setErrorMessage(errorObj);
-              }}
-            />
-            <CheckboxGroup
-              label={translate('reportsManagement.reports.form.channels')}
-              orientation="horizontal"
-              value={props.schedulerReport?.assignReport?.channels}
-              onChange={event => {
-                props.schedulerReport.assignReport.channels = event;
-                props.setSchedulerReport(props.schedulerReport);
-                const errorObj = isFormValid(props.schedulerReport);
-                props.setErrorMessage(errorObj);
-              }}
-            >
-              {SCHEDULER_CHANNELS.map(item => {
-                return (
-                  <Checkbox value={item.key} key={item.key}>
-                    {item.key}
-                  </Checkbox>
-                );
-              })}
-            </CheckboxGroup>
-            {props.schedulerReport.assignReport.channels.includes('Email') ? (
-              <React.Fragment>
-                <p>{translate('reportsManagement.reports.form.emails')}</p>
-                <Select
-                  onChange={(value, actionMeta) => {
-                    const emails = props.schedulerReport.assignReport.communicationList.emails;
-                    if (actionMeta.action === 'select-option') {
-                      emails.push({ userName: actionMeta.option.value.split(' ')[0], userEmail: actionMeta.option.value.split(' ')[1] });
-                      props.schedulerReport.assignReport.communicationList.emails = emails;
-                      props.setSchedulerReport({ ...props.schedulerReport });
-                    } else if (actionMeta.action === 'remove-value') {
-                      const filterEmails = emails.filter(element => {
-                        if (`${element.userName} ${element.userEmail}` !== actionMeta.removedValue.value) {
-                          return element;
-                        }
-                      });
-                      props.schedulerReport.assignReport.communicationList.emails = filterEmails;
-                    }
-                    props.setSchedulerReport(props.schedulerReport);
-                    const errorObj = isFormValid(props.schedulerReport);
-                    props.setErrorMessage(errorObj);
-                  }}
-                  label={translate('reportsManagement.reports.form.emails')}
-                  isMulti
-                  options={generateUserOptions(props.users)}
-                  className="basic-multi-select"
-                  classNamePrefix="select"
-                  value={setDefaulSelectedUserEmailList(props.users, props.schedulerReport?.assignReport?.communicationList?.emails)}
-                />
-              </React.Fragment>
-            ) : null}
-            {props.schedulerReport.assignReport.channels.includes('Teams') ? (
-              <React.Fragment>
-                <p>{translate('reportsManagement.reports.form.teams')}</p>
-                <Select
-                  onChange={(value, actionMeta) => {
-                    const teams = props.schedulerReport.assignReport.communicationList.teams || [];
-                    if (actionMeta.action === 'select-option') {
-                      teams.push(Number(actionMeta.option.value));
-                    } else if (actionMeta.action === 'remove-value') {
-                      const postion = teams.indexOf(Number(actionMeta.removedValue.value));
-                      teams.splice(postion, 1);
-                    }
-                    props.schedulerReport.assignReport.communicationList.teams = teams;
-                    props.setSchedulerReport(props.schedulerReport);
-                    const errorObj = isFormValid(props.schedulerReport);
-                    props.setErrorMessage(errorObj);
-                  }}
-                  label={translate('reportsManagement.reports.form.teams')}
-                  isMulti
-                  options={generateWebhookOptions(props.webHooks)}
-                  className="basic-multi-select"
-                  classNamePrefix="select"
-                  value={setDefaultWebHookList(props.webHooks, props.schedulerReport?.assignReport?.communicationList?.teams)}
-                />
-              </React.Fragment>
-            ) : null}
-            <TextArea
-              value={props.schedulerReport?.report?.mailBody}
-              label={translate('reportsManagement.reports.form.comments')}
-              onChange={event => {
-                props.schedulerReport.report.mailBody = event;
-                props.setSchedulerReport(props.schedulerReport);
-                const errorObj = isFormValid(props.schedulerReport);
-                props.setErrorMessage(errorObj);
-              }}
-            />
+                </span>
+              </Text>
+            </React.Fragment>
+          )}
+        </Flex>
+      </Heading>
+      <Header data-testid="scheduler-form-action">
+        <Flex alignItems="center" gap="size-100">
+          {props.visualisationId && (
+            <Button onPress={closeDialog} variant="primary">
+              <Translate contentKey="entity.action.close">Close</Translate>
+            </Button>
+          )}
+          <Button onPress={saveScheduleReport} variant="cta" isDisabled={props.updating || !props.errorMessage?.isValid}>
+            <Translate contentKey="entity.action.save">Create</Translate>
+          </Button>
+          {schedulerId && (
+            <Button onPress={executeReport} variant="cta" isDisabled={props.reportExecuting}>
+              <Translate contentKey="entity.action.runnow">Run Now</Translate>
+            </Button>
+          )}
+        </Flex>
+      </Header>
+      <Divider />
+      <Content>
+        <Form>
+          <TextField
+            value={props.schedulerReport?.report?.reportName}
+            label={translate('reportsManagement.reports.form.reportName')}
+            placeholder="Report Name"
+            onChange={event => {
+              props.schedulerReport.report.reportName = event;
+              props.setSchedulerReport(props.schedulerReport);
+              const errorObj = isFormValid(props.schedulerReport);
+              props.setErrorMessage(errorObj);
+            }}
+          />
+          <CheckboxGroup
+            label={translate('reportsManagement.reports.form.channels')}
+            orientation="horizontal"
+            value={props.schedulerReport?.assignReport?.channels}
+            onChange={event => {
+              props.schedulerReport.assignReport.channels = event;
+              props.setSchedulerReport(props.schedulerReport);
+              const errorObj = isFormValid(props.schedulerReport);
+              props.setErrorMessage(errorObj);
+            }}
+          >
+            {SCHEDULER_CHANNELS.map(item => {
+              return (
+                <Checkbox value={item.key} key={item.key}>
+                  {item.key}
+                </Checkbox>
+              );
+            })}
+          </CheckboxGroup>
+          {props.schedulerReport.assignReport.channels.includes('Email') ? (
+            <React.Fragment>
+              <p>{translate('reportsManagement.reports.form.emails')}</p>
+              <Select
+                onChange={(value, actionMeta) => {
+                  const emails = props.schedulerReport.assignReport.communicationList.emails;
+                  if (actionMeta.action === 'select-option') {
+                    emails.push({ userName: actionMeta.option.value.split(' ')[0], userEmail: actionMeta.option.value.split(' ')[1] });
+                    props.schedulerReport.assignReport.communicationList.emails = emails;
+                    props.setSchedulerReport({ ...props.schedulerReport });
+                  } else if (actionMeta.action === 'remove-value') {
+                    const filterEmails = emails.filter(element => {
+                      if (`${element.userName} ${element.userEmail}` !== actionMeta.removedValue.value) {
+                        return element;
+                      }
+                    });
+                    props.schedulerReport.assignReport.communicationList.emails = filterEmails;
+                  }
+                  props.setSchedulerReport(props.schedulerReport);
+                  const errorObj = isFormValid(props.schedulerReport);
+                  props.setErrorMessage(errorObj);
+                }}
+                label={translate('reportsManagement.reports.form.emails')}
+                isMulti
+                options={generateUserOptions(props.users)}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                value={setDefaulSelectedUserEmailList(props.users, props.schedulerReport?.assignReport?.communicationList?.emails)}
+              />
+            </React.Fragment>
+          ) : null}
+          {props.schedulerReport.assignReport.channels.includes('Teams') ? (
+            <React.Fragment>
+              <p>{translate('reportsManagement.reports.form.teams')}</p>
+              <Select
+                onChange={(value, actionMeta) => {
+                  const teams = props.schedulerReport.assignReport.communicationList.teams || [];
+                  if (actionMeta.action === 'select-option') {
+                    teams.push(Number(actionMeta.option.value));
+                  } else if (actionMeta.action === 'remove-value') {
+                    const postion = teams.indexOf(Number(actionMeta.removedValue.value));
+                    teams.splice(postion, 1);
+                  }
+                  props.schedulerReport.assignReport.communicationList.teams = teams;
+                  props.setSchedulerReport(props.schedulerReport);
+                  const errorObj = isFormValid(props.schedulerReport);
+                  props.setErrorMessage(errorObj);
+                }}
+                label={translate('reportsManagement.reports.form.teams')}
+                isMulti
+                options={generateWebhookOptions(props.webHooks)}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                value={setDefaultWebHookList(props.webHooks, props.schedulerReport?.assignReport?.communicationList?.teams)}
+              />
+            </React.Fragment>
+          ) : null}
+          <TextArea
+            value={props.schedulerReport?.report?.mailBody}
+            label={translate('reportsManagement.reports.form.comments')}
+            onChange={event => {
+              props.schedulerReport.report.mailBody = event;
+              props.setSchedulerReport(props.schedulerReport);
+              const errorObj = isFormValid(props.schedulerReport);
+              props.setErrorMessage(errorObj);
+            }}
+          />
 
-            {props.thresholdAlert && <ThresholdAlert visual={props.visual} />}
+          {props.thresholdAlert && <ThresholdAlert visual={props.visual} />}
 
-            <TextField
-              label={translate('reportsManagement.reports.form.cronExp')}
-              value={props.schedulerReport.schedule.cronExp}
-              onChange={event => {
-                props.schedulerReport.schedule.cronExp = event;
-                props.setSchedulerReport(props.schedulerReport);
-                const errorObj = isFormValid(props.schedulerReport);
-                props.setErrorMessage(errorObj);
-              }}
-            />
-            <DatePicker
-              label={translate('reportsManagement.reports.form.startDate')}
-              value={stringToDate(props.schedulerReport?.schedule?.startDate || '')}
-              onChange={event => {
-                props.schedulerReport.schedule.startDate = event;
-                props.setSchedulerReport(props.schedulerReport);
-                const errorObj = isFormValid(props.schedulerReport);
-                props.setErrorMessage(errorObj);
-              }}
-            />
-            <DatePicker
-              label={translate('reportsManagement.reports.form.endDate')}
-              value={stringToDate(props.schedulerReport?.schedule?.endDate || '')}
-              onChange={event => {
-                props.schedulerReport.schedule.endDate = event;
-                props.setSchedulerReport(props.schedulerReport);
-                const errorObj = isFormValid(props.schedulerReport);
-                props.setErrorMessage(errorObj);
-              }}
-            />
-          </Form>
-        </View>
-      </Flex>
-    </>
+          <TextField
+            label={translate('reportsManagement.reports.form.cronExp')}
+            value={props.schedulerReport.schedule.cronExp}
+            onChange={event => {
+              props.schedulerReport.schedule.cronExp = event;
+              props.setSchedulerReport(props.schedulerReport);
+              const errorObj = isFormValid(props.schedulerReport);
+              props.setErrorMessage(errorObj);
+            }}
+          />
+          <DatePicker
+            label={translate('reportsManagement.reports.form.startDate')}
+            value={stringToDate(props.schedulerReport?.schedule?.startDate || '')}
+            onChange={event => {
+              props.schedulerReport.schedule.startDate = event;
+              props.setSchedulerReport(props.schedulerReport);
+              const errorObj = isFormValid(props.schedulerReport);
+              props.setErrorMessage(errorObj);
+            }}
+          />
+          <DatePicker
+            label={translate('reportsManagement.reports.form.endDate')}
+            value={stringToDate(props.schedulerReport?.schedule?.endDate || '')}
+            onChange={event => {
+              props.schedulerReport.schedule.endDate = event;
+              props.setSchedulerReport(props.schedulerReport);
+              const errorObj = isFormValid(props.schedulerReport);
+              props.setErrorMessage(errorObj);
+            }}
+          />
+          {!props.scheduleReportresponse?.message.includes('report is not found') ? (
+            <React.Fragment>
+              <span className="spectrum-Heading spectrum-Heading--sizeXXS">
+                <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
+              </span>
+              <Divider size="M" />{' '}
+            </React.Fragment>
+          ) : null}
+        </Form>
+        {!props.scheduleReportresponse?.message?.includes('report is not found') ? (
+          <Button
+            marginTop="size-175"
+            isDisabled={props.updating}
+            variant="negative"
+            onPress={() => {
+              props.cancelScheduleReport(schedulerId);
+            }}
+          >
+            <Translate contentKey="entity.action.delete">Delete</Translate>
+          </Button>
+        ) : null}
+      </Content>
+    </Dialog>
   );
 };
 
