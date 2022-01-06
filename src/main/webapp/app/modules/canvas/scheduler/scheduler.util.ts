@@ -3,11 +3,7 @@ import { getConditionExpressionForParams, getConditionExpression } from '../filt
 import { IError, defaultValue } from 'app/shared/model/error.model';
 import { isDateFilterType } from 'app/entities/search/search.util';
 import { TIME_UNIT, AGGREGATION_TYPES, COMPARISIONS } from 'app/shared/util/data-constraints.constants';
-import {
-  ISchedulerReport,
-  ITimeConditions,
-  ICondition,
-} from 'app/shared/model/scheduler-report.model';
+import { ISchedulerReport, ITimeConditions, ICondition } from 'app/shared/model/scheduler-report.model';
 
 export const setDefaultWebHookList = (webHookList, webhook) => {
   const options = [];
@@ -240,12 +236,11 @@ export const isValidThresholdAlertForm = (condition: ICondition, timeConditions:
     error = { translationKey: 'reportsManagement.reports.error.alert', isValid: false };
     return error;
   } else if (
-    condition.thresholdMode === 'dynamic' && (
-    !condition.dynamicThreshold.aggregation ||
-    !condition.dynamicThreshold.dimension.definition ||
-    !condition.dynamicThreshold.unit ||
-    !condition.dynamicThreshold.value
-    )
+    condition.thresholdMode === 'dynamic' &&
+    (!condition.dynamicThreshold.aggregation ||
+      !condition.dynamicThreshold.dimension.definition ||
+      !condition.dynamicThreshold.unit ||
+      !condition.dynamicThreshold.value)
   ) {
     error = { translationKey: 'reportsManagement.reports.error.alert', isValid: false };
     return error;
@@ -323,4 +318,9 @@ export const buildTimeConditions = timeConditions => {
     });
   }
   return _timeConditions;
+};
+
+export const getSchedulerId = (visual: any, visualisationId: string, thresholdAlert: boolean) => {
+  const schedulerId = visualisationId ? visualisationId : visual?.id;
+  return thresholdAlert ? 'threshold_alert_:' + schedulerId : schedulerId;
 };

@@ -30,7 +30,6 @@ import Select from 'react-select';
 import DatePicker from 'app/shared/components/date-picker/date-picker';
 import { stringToDate } from 'app/shared/util/date-utils';
 import { Translate, translate } from 'react-jhipster';
-import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { getWebhookList } from 'app/modules/canvas/scheduler/notification.reducer';
 import {
   generateUserOptions,
@@ -45,9 +44,9 @@ import {
   buildQueryDTO,
   getSchedulerConditionExpression,
   getTimeCompatibleDimensions,
+  getSchedulerId,
 } from './scheduler.util';
 import ThresholdAlert from './threshold-alert';
-import { toast } from 'react-toastify';
 import {
   getShareLinkUrl,
   getBuildUrl,
@@ -56,18 +55,25 @@ import Alert from '@spectrum-icons/workflow/Alert';
 import { buildQueryDTO as buildQueryDTOFromVizRender } from '../visualisation/util/visualisation-render-utils';
 import { getUsers } from 'app/modules/administration/user-management/users/user.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+import { getEntity as getVisualMetadata } from 'app/entities/visualmetadata/visualmetadata.reducer';
 
 export interface ISchedulerProps extends StateProps, DispatchProps {
   thresholdAlert: boolean;
+  visualisationId?: string;
 }
 
 const Scheduler = (props: ISchedulerProps) => {
-  const [schedulerId, setSchedlerId] = useState(props.thresholdAlert ? 'threshold_alert_:' + props.visual?.id : props.visual?.id);
+  const [schedulerId, setSchedlerId] = useState(getSchedulerId(props.visual, props.visualisationId, props.thresholdAlert));
 
   useEffect(() => {
     props.getUsers(0, ITEMS_PER_PAGE, 'email,asc');
     props.getWebhookList();
-    props.getScheduleReportById(schedulerId);
+    if (schedulerId) {
+      props.getScheduleReportById(schedulerId);
+    }
+    if (!props.visual?.id) {
+      props.getVisualMetadata(schedulerId);
+    }
     props.setTimeCompatibleDimensions(getTimeCompatibleDimensions(props.features));
   }, []);
 
@@ -362,6 +368,7 @@ const mapDispatchToProps = {
   reset,
   setTimeCompatibleDimensions,
   setErrorMessage,
+  getVisualMetadata,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
