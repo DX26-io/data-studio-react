@@ -4,6 +4,7 @@ import { IError, defaultValue } from 'app/shared/model/error.model';
 import { isDateFilterType } from 'app/entities/search/search.util';
 import { TIME_UNIT, AGGREGATION_TYPES, COMPARISIONS } from 'app/shared/util/data-constraints.constants';
 import { ISchedulerReport, ITimeConditions, ICondition } from 'app/shared/model/scheduler-report.model';
+import { getVisualisationData } from '../visualisation/util/visualisation-render-utils';
 
 export const setDefaultWebHookList = (webHookList, webhook) => {
   const options = [];
@@ -322,5 +323,9 @@ export const buildTimeConditions = timeConditions => {
 
 export const getSchedulerId = (visual: any, visualisationId: string, thresholdAlert: boolean) => {
   const schedulerId = visualisationId ? visualisationId : visual?.id;
-  return thresholdAlert ? 'threshold_alert_:' + schedulerId : schedulerId;
+  return thresholdAlert && !schedulerId.includes('threshold_alert_') ? 'threshold_alert_:' + schedulerId : schedulerId;
+};
+
+export const getVisualisationId = (visualisationId: string, thresholdAlert: boolean) => {
+  return thresholdAlert ? visualisationId.split(':')[1] : visualisationId;
 };

@@ -37,25 +37,27 @@ const ThresholdAlert = props => {
                 <span className="spectrum-Body-emphasis--sizeXXS">
                   <Translate contentKey="thresholdAlert.thresholdField">Threshold field*</Translate>
                 </span>
-                <View marginTop="size-100">
-                  <Select
-                    className="threshold"
-                    styles={{ width: 1000 }}
-                    isSearchable={true}
-                    value={props.condition?.dynamicThreshold?.field}
-                    onChange={event => {
-                      props.condition.dynamicThreshold.field = event;
-                      props.setConditions(props.condition);
-                      const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
-                      props.setErrorMessage(errorObj);
-                    }}
-                    options={getThresholdMeasuresList(
-                      props.visual.fields.filter(item => {
-                        return item.feature.featureType === 'MEASURE';
-                      })
-                    )}
-                  />
-                </View>
+                {props.visual?.fields && (
+                  <View marginTop="size-100">
+                    <Select
+                      className="threshold"
+                      styles={{ width: 1000 }}
+                      isSearchable={true}
+                      value={props.condition?.dynamicThreshold?.field}
+                      onChange={event => {
+                        props.condition.dynamicThreshold.field = event;
+                        props.setConditions(props.condition);
+                        const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={getThresholdMeasuresList(
+                        props.visual.fields.filter(item => {
+                          return item.feature.featureType === 'MEASURE';
+                        })
+                      )}
+                    />
+                  </View>
+                )}
               </View>
               <View width={'20%'}>
                 <span className="spectrum-Body-emphasis--sizeXXS">
@@ -90,9 +92,10 @@ const ThresholdAlert = props => {
                     }}
                     value={props.condition?.dynamicThreshold?.dimension?.definition}
                     options={getDimensionsList(
-                      props.features.filter(feature => {
-                        return COMPARABLE_DATA_TYPES.includes(feature.type) !== false;
-                      })
+                      props.features &&
+                        props.features.filter(feature => {
+                          return COMPARABLE_DATA_TYPES.includes(feature.type) !== false;
+                        })
                     )}
                   />
                 </View>
@@ -137,24 +140,26 @@ const ThresholdAlert = props => {
             <span className="spectrum-Body-emphasis--sizeXXS">
               <Translate contentKey="thresholdAlert.measure">Measure*</Translate>
             </span>
-            <View marginTop="size-100">
-              <Select
-                styles={{ width: 1000 }}
-                isSearchable={true}
-                value={props.condition?.featureName}
-                onChange={event => {
-                  props.condition.featureName = event;
-                  props.setConditions(props.condition);
-                  const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
-                  props.setErrorMessage(errorObj);
-                }}
-                options={getThresholdMeasuresList(
-                  props.visual.fields.filter(item => {
-                    return item.feature.featureType === 'MEASURE';
-                  })
-                )}
-              />
-            </View>
+            {props.visual?.fields && (
+              <View marginTop="size-100">
+                <Select
+                  styles={{ width: 1000 }}
+                  isSearchable={true}
+                  value={props.condition?.featureName}
+                  onChange={event => {
+                    props.condition.featureName = event;
+                    props.setConditions(props.condition);
+                    const errorObj = isValidThresholdAlertForm(props.condition, props.timeConditions);
+                    props.setErrorMessage(errorObj);
+                  }}
+                  options={getThresholdMeasuresList(
+                    props.visual.fields.filter(item => {
+                      return item.feature.featureType === 'MEASURE';
+                    })
+                  )}
+                />
+              </View>
+            )}
           </View>
           <View width={'33%'}>
             <span className="spectrum-Body-emphasis--sizeXXS">
@@ -205,9 +210,10 @@ const ThresholdAlert = props => {
                 }}
                 value={props.timeConditions?.feature?.definition}
                 options={getDimensionsList(
-                  props.features.filter(feature => {
-                    return COMPARABLE_DATA_TYPES.includes(feature.type) !== false;
-                  })
+                  props.features &&
+                    props.features.filter(feature => {
+                      return COMPARABLE_DATA_TYPES.includes(feature.type) !== false;
+                    })
                 )}
               />
             </View>

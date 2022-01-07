@@ -50,6 +50,7 @@ import {
   getSchedulerConditionExpression,
   getTimeCompatibleDimensions,
   getSchedulerId,
+  getVisualisationId,
 } from './scheduler.util';
 import ThresholdAlert from './threshold-alert';
 import {
@@ -78,7 +79,7 @@ const Scheduler = (props: ISchedulerProps) => {
       props.getScheduleReportById(schedulerId);
     }
     if (!props.visual?.id) {
-      props.getVisualMetadata(schedulerId);
+      props.getVisualMetadata(getVisualisationId(props.visualisationId, props.thresholdAlert));
     }
     props.setTimeCompatibleDimensions(getTimeCompatibleDimensions(props.features));
   }, []);
@@ -167,7 +168,7 @@ const Scheduler = (props: ISchedulerProps) => {
   };
 
   return (
-    <Dialog data-testid="scheduler-form-dialog">
+    <Dialog data-testid="scheduler-form-dialog" size="L">
       <Heading>
         <Flex alignItems="center" gap="size-100" data-testid="scheduler-form-heading">
           {(!props.errorMessage?.isValid || props.scheduleReportresponse?.message) && (
