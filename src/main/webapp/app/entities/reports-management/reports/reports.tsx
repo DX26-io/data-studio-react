@@ -5,13 +5,16 @@ import { Translate, getSortState, translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { IRootState } from 'app/shared/reducers';
-import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
+import { Button, Flex, DialogContainer, Dialog } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 import { fetchReports } from '../reports-management.reducer';
 import Filters from './filters';
 import { findUserId } from './reports.util';
+import Scheduler from 'app/modules/canvas/scheduler/scheduler';
+import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
+import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 
 export interface IReportsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -20,6 +23,8 @@ export const Reports = (props: IReportsProps) => {
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
   const [isOpen, setOpen] = React.useState(false);
+  const [thresholdAlert, setThresholdAlert] = React.useState(false);
+  const [visualisationId, setVisualisationId] = React.useState('');
 
   const getReports = () => {
     props.fetchReports(pagination.itemsPerPage, pagination.activePage, findUserId(props.account, ''));
@@ -76,11 +81,9 @@ export const Reports = (props: IReportsProps) => {
         ]}
         title={translate('reportsManagement.reports.title')}
       ></SecondaryHeader>
-      {/* <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && (
-
-        )}
-      </DialogContainer> */}
+      <DialogContainer onDismiss={() => setOpen(false)}>
+        {isOpen && <Scheduler thresholdAlert={thresholdAlert} visualisationId={visualisationId} setOpen={setOpen} />}
+      </DialogContainer>
       <div className="dx26-container">
         <Filters />
         <Paper className="dx26-table-pager">
@@ -143,8 +146,11 @@ export const Reports = (props: IReportsProps) => {
                       <Flex gap="size-100" justifyContent="center">
                         <a
                           onClick={() => {
-                            // setOpen(true);
-                            // TODO
+                            setOpen(true);
+                            setThresholdAlert(report.report.thresholdAlert);
+                            setVisualisationId(report.reportLineItem.visualizationId);
+                            props.getViewFeaturesEntities(report.report.viewId);
+                            props.getViewEntity(report.report.viewId);
                           }}
                         >
                           <Edit size="S" />
@@ -177,7 +183,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
 });
 
-const mapDispatchToProps = { fetchReports };
+const mapDispatchToProps = { fetchReports,getViewFeaturesEntities,getViewEntity };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
