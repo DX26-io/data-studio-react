@@ -4,7 +4,7 @@ import { IError, defaultValue } from 'app/shared/model/error.model';
 import { isDateFilterType } from 'app/entities/search/search.util';
 import { TIME_UNIT, AGGREGATION_TYPES, COMPARISIONS } from 'app/shared/util/data-constraints.constants';
 import { ISchedulerReport, ITimeConditions, ICondition } from 'app/shared/model/scheduler-report.model';
-import { getVisualisationData } from '../visualisation/util/visualisation-render-utils';
+import { getVisualisationData, buildQueryDTO } from '../visualisation/util/visualisation-render-utils';
 
 export const setDefaultWebHookList = (webHookList, webhook) => {
   const options = [];
@@ -171,7 +171,7 @@ const getAdditionalConditionalExpressions = timeConditions => {
   return additionalFeatures;
 };
 
-export const buildQueryDTO = (visualMetaData, filter, timeConditions) => {
+export const getQueryDTO = (visualMetaData, filter, timeConditions) => {
   const viz = VisualWrap(visualMetaData);
   return viz.getQueryParameters(visualMetaData, filter, getConditionExpression(getAdditionalConditionalExpressions(timeConditions)));
 };
@@ -328,4 +328,11 @@ export const getSchedulerId = (visual: any, visualisationId: string, thresholdAl
 
 export const getVisualisationId = (visualisationId: string, thresholdAlert: boolean) => {
   return thresholdAlert ? visualisationId.split(':')[1] : visualisationId;
+};
+
+export const buildThresholdAlertQueryDTO = (visual: any, selectedFilters: any, condition: any, timeConditions: any) => {
+  const queryDTO = getQueryDTO(visual, selectedFilters, timeConditions);
+  queryDTO['having'] = getHavingDTO(visual, condition, selectedFilters, timeConditions);
+  queryDTO['conditionExpression'] = getSchedulerConditionExpression(visual, condition, selectedFilters, timeConditions);
+  return queryDTO;
 };

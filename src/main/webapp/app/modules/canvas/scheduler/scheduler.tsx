@@ -46,11 +46,12 @@ import {
   getReportTitle,
   getReportName,
   isFormValid,
-  buildQueryDTO,
+  getQueryDTO,
   getSchedulerConditionExpression,
   getTimeCompatibleDimensions,
   getSchedulerId,
   getVisualisationId,
+  buildThresholdAlertQueryDTO,
 } from './scheduler.util';
 import ThresholdAlert from './threshold-alert';
 import {
@@ -122,19 +123,12 @@ const Scheduler = (props: ISchedulerProps) => {
   }, [props.updateSuccess]);
 
   const saveScheduleReport = () => {
-    const dimentionsAndMeasures = setDimentionsAndMeasures(props.visual.fields);
     let queryDTO = null;
+    const dimentionsAndMeasures = setDimentionsAndMeasures(props.visual.fields);
     if (props.thresholdAlert) {
-      queryDTO = buildQueryDTO(props.visual, props.filters, props.timeConditions);
-      queryDTO['having'] = getHavingDTO(props.visual, props.condition, props.selectedFilters, props.timeConditions);
-      queryDTO['conditionExpression'] = getSchedulerConditionExpression(
-        props.visual,
-        props.condition,
-        props.selectedFilters,
-        props.timeConditions
-      );
+      queryDTO = buildThresholdAlertQueryDTO(props.visual, props.selectedFilters, props.condition, props.timeConditions);
     } else {
-      queryDTO = buildQueryDTOFromVizRender(props.visual, props.filters);
+      queryDTO = buildQueryDTOFromVizRender(props.visual, props.selectedFilters);
     }
     props.scheduleReport({
       ...props.schedulerReport,
@@ -371,7 +365,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   webHooks: storeState.notification.webHooks,
   view: storeState.views.entity,
   account: storeState.authentication.account,
-  filters: storeState.filter.selectedFilters,
   features: storeState.feature.entities,
   selectedFilters: storeState.filter.selectedFilters,
   condition: storeState.scheduler.condition,

@@ -14,6 +14,7 @@ import Filters from './filters';
 import { findUserId } from './reports.util';
 import Scheduler from 'app/modules/canvas/scheduler/scheduler';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
+import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 
 export interface IReportsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -149,6 +150,7 @@ export const Reports = (props: IReportsProps) => {
                             setThresholdAlert(report.report.thresholdAlert);
                             setVisualisationId(report.reportLineItem.visualizationId);
                             props.getViewFeaturesEntities(report.report.viewId);
+                            props.getViewEntity(report.report.viewId);
                           }}
                         >
                           <Edit size="S" />
@@ -181,7 +183,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
 });
 
-const mapDispatchToProps = { fetchReports,getViewFeaturesEntities };
+const mapDispatchToProps = { fetchReports,getViewFeaturesEntities,getViewEntity };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
