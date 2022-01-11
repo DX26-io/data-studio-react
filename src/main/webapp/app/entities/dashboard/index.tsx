@@ -13,7 +13,6 @@ import ViewCreateModal from '../views/view-create-modal';
 import ViewDeleteModal from '../views/view-delete-modal';
 import ViewPropertiesModal from '../views/view-properties-modal';
 import Canvas from 'app/modules/canvas/visualisation/canvas';
-import VisualisationEditModal from 'app/modules/canvas/visualisation/visualisation-modal/visualisation-edit-modal/visualisation-edit-modal';
 import VisualisationsDeleteModal from 'app/modules/canvas/visualisation/visualisation-modal/visualisation-delete-modal/visualisations-delete-modal';
 import SearchModal from "app/entities/search/search-modal";
 import ShareVisualisation from "app/entities/share/share-visualisation";
@@ -30,7 +29,6 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute exact path={`${match.url}/:id/create`} component={ViewCreateModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/build`} component={Canvas} />
       <ErrorBoundaryRoute exact path={`${match.url}/share`} component={ShareVisualisation} />
-      <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/edit/:visualisationId`} component={VisualisationEditModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/:viewId/delete/:visualisationId`} component={VisualisationsDeleteModal} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={Views} />
       <ErrorBoundaryRoute path={match.url} component={Dashboard} />

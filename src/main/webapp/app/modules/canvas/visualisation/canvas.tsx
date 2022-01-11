@@ -336,26 +336,6 @@ const Canvas = (props: IVisualisationProp) => {
                 {v.metadataVisual.name === VisualisationType.Iframe && <iframe id={`iframe-${v.id}`} />}
               </div>
             </div>
-            {props.visualisationAction === 'Delete' && <VisualisationsDeleteModal setOpen={() => props.setVisualisationAction(null)} />}
-            <DialogContainer
-              type={props.visualisationAction === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'}
-              onDismiss={() => props.setVisualisationAction(null)}
-            >
-              {props.visualisationAction === 'Edit' && (
-                <VisualisationEditModalPopUp
-                  setOpen={() => {
-                    if (props.editAction === 'save') {
-                      getVisualisationData(props.visual, props.view, props.selectedFilters);
-                    }
-                  }}
-                ></VisualisationEditModalPopUp>
-              )}
-              {props.visualisationAction === 'Data' && <VisualisationDataModal visual={props.visualMetadataEntity} />}
-            </DialogContainer>
-
-            <DialogContainer onDismiss={() => props.setVisualisationAction(null)}>
-              {props.visualisationAction === 'Share' && <VisualisationShareModal />}
-            </DialogContainer>
           </div>
         );
       }
@@ -397,6 +377,15 @@ const Canvas = (props: IVisualisationProp) => {
           </ReactGridLayout>
         )}
       </View>
+      <DialogContainer
+        type={props.visualisationAction === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'}
+        onDismiss={() => props.setVisualisationAction(null)}
+      >
+        {props .visualisationAction === 'Edit' && <VisualisationEditModalPopUp />}
+        {props.visualisationAction === 'Data' && <VisualisationDataModal visual={props.visualMetadataEntity} />}
+        {props.visualisationAction === 'Share' && <VisualisationShareModal />}
+      </DialogContainer>
+      {props.visualisationAction === 'Delete' && <VisualisationsDeleteModal />}
     </>
   );
 };

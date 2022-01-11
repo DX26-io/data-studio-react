@@ -1,38 +1,33 @@
 import React, { ReactText, useEffect, useState } from 'react';
-import { Button, ButtonGroup, Content, Dialog, DialogContainer, Divider, Heading, TextField} from '@adobe/react-spectrum';
+import { Button, ButtonGroup, Content, Dialog, DialogContainer, Divider, Heading, TextField } from '@adobe/react-spectrum';
 import { Translate } from 'react-jhipster';
 import {
   getEntity,
   deleteEntity as deleteVisualmetadataEntity,
   metadataContainerRemove,
+  setVisualisationAction,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
 
-interface IVisualisationsDeleteModalProps
-extends StateProps,
-DispatchProps {
-  setOpen: (isOpen: boolean) => any;
-}
+interface IVisualisationsDeleteModalProps extends StateProps, DispatchProps {}
 
 const VisualisationsDeleteModal = (props: IVisualisationsDeleteModalProps) => {
   const [visualisationsTitleConfirmation, setVisualisationsTitleConfirmation] = useState<ReactText>('');
-  
-  useEffect(() => {
-    props.getEntity(props.visualMetadataEntity.id);
-  }, []);
+
   const handleClose = () => {
-    props.setOpen(false)
+    props.setVisualisationAction(null);
   };
   const deleteConfirmation = () => {
     return visualisationsTitleConfirmation !== props.visualMetadataEntity.titleProperties.titleText;
   };
-  
+
   const confirmDelete = () => {
     props.deleteVisualmetadataEntity(props.visualMetadataEntity.id);
-    handleClose();
+    props.metadataContainerRemove(props.visualMetadataEntity.id);
+    props.setVisualisationAction(null);
   };
-  
+
   return (
     <DialogContainer onDismiss={handleClose}>
       <Dialog>
@@ -41,7 +36,10 @@ const VisualisationsDeleteModal = (props: IVisualisationsDeleteModalProps) => {
         </Heading>
         <Divider />
         <Content>
-          <Translate contentKey="datastudioApp.visualmetadata.delete.question" interpolate={{ name: props.visualMetadataEntity.titleProperties.titleText }}>
+          <Translate
+            contentKey="datastudioApp.visualmetadata.delete.question"
+            interpolate={{ name: props.visualMetadataEntity.titleProperties.titleText }}
+          >
             This will permanently delete the selected dashboard
           </Translate>
           <TextField
@@ -62,7 +60,7 @@ const VisualisationsDeleteModal = (props: IVisualisationsDeleteModalProps) => {
           </Button>
         </ButtonGroup>
       </Dialog>
-     </DialogContainer>
+    </DialogContainer>
   );
 };
 
@@ -71,7 +69,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   deleteSuccess: storeState.visualmetadata.deleteSuccess,
 });
 
-const mapDispatchToProps = { getEntity, deleteVisualmetadataEntity, metadataContainerRemove };
+const mapDispatchToProps = { getEntity, deleteVisualmetadataEntity, metadataContainerRemove, setVisualisationAction };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

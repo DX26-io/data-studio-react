@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { getTransactionData } from '../util/visualisation-utils';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { setVisualisationAction, setVisual } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import  {createVisualMetadata}  from './visualisation-edit-modal/visualisation-edit-modal-util';
+import { createVisualMetadata } from './visualisation-edit-modal/visualisation-edit-modal-util';
 
 interface IVisualisationHeaderProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
@@ -31,13 +31,11 @@ interface IVisualisationHeaderProps extends StateProps, DispatchProps {
 }
 
 const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
-
   const [transactionData, setTransactionData] = useState([]);
   const [intervalRegistry, setIntervalRegistry] = useState({});
   const [isLiveEnable, setLiveEnable] = useState(false);
   const csvLink = useRef(null);
   const { handleVisualisationClick } = props;
-
 
   const setLiveEnabled = () => {
     if (!isLiveEnable) {
@@ -62,7 +60,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
     '2': {
       getAction() {
         props.setVisualisationAction('Copy');
-        const viz = createVisualMetadata(props.visual.metadataVisual,props.view,props.totalItem);
+        const viz = createVisualMetadata(props.visual.metadataVisual, props.view, props.totalItem);
         viz.bodyProperties = props.visual.bodyProperties;
         viz.properties = props.visual.properties;
         viz.titleProperties = props.visual.titleProperties;
