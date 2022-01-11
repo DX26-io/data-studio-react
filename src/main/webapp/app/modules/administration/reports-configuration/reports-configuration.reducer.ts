@@ -16,6 +16,7 @@ export const ACTION_TYPES = {
   RESET_TEAM_CONFIG: 'reports-configuration/RESET_TEAM_CONFIG',
   FETCH_JIRA_CONFIG: 'reports-configuration/FETCH_JIRA_CONFIG',
   DELETE_CHANNEL_CONFIG: 'reports-configuration/DELETE_CHANNEL_CONFIG',
+  RESET: 'reports-configuration/RESET',
 };
 
 const initialState = {
@@ -190,11 +191,17 @@ export default (state: ReportConfigurationState = initialState, action): ReportC
         ...state,
         teamConfig: action.payload,
       };
-
     case ACTION_TYPES.RESET_TEAM_CONFIG:
       return {
         ...state,
         teamConfig: teamConfigDefaultValue,
+        updateSuccess: false,
+        updating: false,
+        errorMessage: null,
+      };
+    case ACTION_TYPES.RESET:
+      return {
+        ...state,
         updateSuccess: false,
         updating: false,
         errorMessage: null,
@@ -244,6 +251,10 @@ export const setTeamConfig = (teamConfig: IEmailConfig) => ({
 
 export const resetTeamConfig = () => ({
   type: ACTION_TYPES.RESET_TEAM_CONFIG,
+});
+
+export const reset = () => ({
+  type: ACTION_TYPES.RESET,
 });
 
 export const setConfig = (config: IEmailConfig | ITeamConfig) => dispatch => {
