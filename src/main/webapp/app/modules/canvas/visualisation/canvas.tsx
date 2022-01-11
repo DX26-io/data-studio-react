@@ -382,7 +382,7 @@ const Canvas = (props: IVisualisationProp) => {
         onDismiss={() => props.setVisualisationAction(null)}
       >
         {props .visualisationAction === 'Edit' && <VisualisationEditModalPopUp />}
-        {props.visualisationAction === 'Data' && <VisualisationDataModal visual={props.visualMetadataEntity} />}
+        {props.visualisationAction === 'Data' && <VisualisationDataModal />}
         {props.visualisationAction === 'Share' && <VisualisationShareModal />}
       </DialogContainer>
       {props.visualisationAction === 'Delete' && <VisualisationsDeleteModal />}
