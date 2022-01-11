@@ -336,7 +336,6 @@ const Canvas = (props: IVisualisationProp) => {
                 {v.metadataVisual.name === VisualisationType.Iframe && <iframe id={`iframe-${v.id}`} />}
               </div>
             </div>
-            {props.visualisationAction === 'Delete' && <VisualisationsDeleteModal setOpen={() => props.setVisualisationAction(null)} />}
           </div>
         );
       }
@@ -386,6 +385,7 @@ const Canvas = (props: IVisualisationProp) => {
         {props.visualisationAction === 'Data' && <VisualisationDataModal visual={props.visualMetadataEntity} />}
         {props.visualisationAction === 'Share' && <VisualisationShareModal />}
       </DialogContainer>
+      {props.visualisationAction === 'Delete' && <VisualisationsDeleteModal />}
     </>
   );
 };
