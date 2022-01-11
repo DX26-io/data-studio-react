@@ -23,6 +23,7 @@ import {
   setVisual,
   setEditAction,
   metadataContainerUpdate,
+  setVisualisationAction,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 import {
@@ -40,7 +41,6 @@ import TreeExpand from '@spectrum-icons/workflow/TreeExpand';
 import { validate as validateQuery } from 'app/entities/visualmetadata/visualmetadata.reducer';
 
 export interface IVisualisationEditModalPopUpProps extends StateProps, DispatchProps {
-  setOpen: (isOpen: boolean) => void;
 }
 
 export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpProps) => {
@@ -49,7 +49,7 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
 
   const handleClose = action => {
     props.setEditAction(action);
-    props.setOpen(false);
+    props.setVisualisationAction(null);
     props.setVisual(props.visualMetadataEntity);
     dialog.dismiss();
   };
@@ -67,9 +67,27 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
     handleClose('save');
   };
 
+  const shareLinkfForwardCall = () => {
+    const visualMetadata = VisualWrap(props.visualMetadataEntity);
+    const queryDTO = visualMetadata.getQueryParameters(
+      props.visualMetadataEntity,
+      props.selectedFilters,
+      getConditionExpression(props.selectedFilters),
+      0
+    );
+    const body = {
+      queryDTO,
+      visualMetadata,
+      validationType: 'REQUIRED_FIELDS',
+      actionType: null,
+      type: 'share-link',
+    };
+    forwardCall(props.view?.viewDashboard?.dashboardDatasource?.id, body, props.view.id);
+  };
+
   useEffect(() => {
     if (props.visualMetadataEntity.id) {
-      props.getVisualMetadataEntity(props.visualMetadataEntity.id);
+      props.receiveSocketResponseByVisualId(props.visualMetadataEntity.id);
     }
   }, []);
 
@@ -84,23 +102,8 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
 
   useEffect(() => {
     if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
-      props.receiveSocketResponseByVisualId(props.visualMetadataEntity.id);
-      const visualMetadata = VisualWrap(props.visualMetadataEntity);
-      const queryDTO = visualMetadata.getQueryParameters(
-        props.visualMetadataEntity,
-        props.selectedFilters,
-        getConditionExpression(props.selectedFilters),
-        0
-      );
-      const body = {
-        queryDTO,
-        visualMetadata,
-        validationType: 'REQUIRED_FIELDS',
-        actionType: null,
-        type: 'share-link',
-      };
       _validateQuery();
-      forwardCall(props.view?.viewDashboard?.dashboardDatasource?.id, body, props.view.id);
+      shareLinkfForwardCall();
     }
   }, [props.visualMetadataEntity]);
 
@@ -198,6 +201,7 @@ const mapDispatchToProps = {
   metadataContainerUpdate,
   receiveSocketResponseByVisualId,
   validateQuery,
+  setVisualisationAction,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
