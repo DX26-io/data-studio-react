@@ -47,6 +47,15 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
   const [toggleVisualisation, setToggleVisualisation] = useState(true);
   const dialog = useDialogContainer();
 
+  const _validateQuery = () => {
+    const wrap = VisualWrap(props.visualMetadataEntity);
+    props.validateQuery({
+      datasourceId: props.view.viewDashboard.dashboardDatasource.id,
+      visualMetadataId: props.visualMetadataEntity.id,
+      queryDTO: wrap.getQueryParameters(props.visualMetadataEntity, {}, null, null),
+    });
+  };
+
   const handleClose = action => {
     props.setEditAction(action);
     props.setVisualisationAction(null);
@@ -55,6 +64,7 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
   };
 
   const handleApply = () => {
+    _validateQuery();
     getVisualisationShareData(props.visualMetadataEntity, props.view, props.selectedFilters);
   };
 
@@ -90,15 +100,6 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
       props.receiveSocketResponseByVisualId(props.visualMetadataEntity.id);
     }
   }, []);
-
-  const _validateQuery = () => {
-    const wrap = VisualWrap(props.visualMetadataEntity);
-    props.validateQuery({
-      datasourceId: props.view.viewDashboard.dashboardDatasource.id,
-      visualMetadataId: props.visualMetadataEntity.id,
-      queryDTO: wrap.getQueryParameters(props.visualMetadataEntity, {}, null, null),
-    });
-  };
 
   useEffect(() => {
     if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {

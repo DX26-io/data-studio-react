@@ -4,7 +4,7 @@ import { Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
 import Alert from '@spectrum-icons/workflow/Alert';
 import { Flex, useDialogContainer, Dialog, Heading, Divider, Content, Form, Button, TextField, Header, Text } from '@adobe/react-spectrum';
-import { fetchEmailConfig, createEmailConfig, deleteChannelConfig } from './reports-configuration.reducer';
+import { fetchEmailConfig, createEmailConfig, deleteChannelConfig,reset } from './reports-configuration.reducer';
 import ChannelProperty from './channel-property';
 import { isFormValid } from './reports-configuration.util';
 
@@ -28,6 +28,7 @@ export const EmailConfigUpdate = (props: IEmailConfigUpdateProps) => {
   const handleClose = () => {
     setOpen(false);
     dialog.dismiss();
+    props.reset();
     history.push(`${match.url}?channel=`);
   };
 
@@ -110,7 +111,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updateSuccess: storeState.reportConfiguration.updateSuccess,
 });
 
-const mapDispatchToProps = { fetchEmailConfig, createEmailConfig, deleteChannelConfig };
+const mapDispatchToProps = { fetchEmailConfig, createEmailConfig, deleteChannelConfig,reset };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
