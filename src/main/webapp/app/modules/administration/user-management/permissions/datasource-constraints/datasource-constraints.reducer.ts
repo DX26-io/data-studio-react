@@ -2,7 +2,7 @@ import axios from 'axios';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { ICrudPutAction, ICrudDeleteAction, ICrudGetAllAction, ICrudGetAction } from 'react-jhipster';
 import { IDatasourceConstraints, defaultValue } from 'app/shared/model/datasource-constraints.model';
-
+import { defaultValue as conditionDefaultValue } from 'app/shared/model/feature-constraint.model';
 export const ACTION_TYPES = {
   FETCH_USER_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_USER_DATASOURCE_CONSTRAINTS',
   FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS',
@@ -15,6 +15,16 @@ export const ACTION_TYPES = {
   ADD_CONSTRAINT: 'datasource-constraints/ADD_CONSTRAINT',
   REMOVE_CONSTRAINT: 'datasource-constraints/REMOVE_CONSTRAINT',
   RESET: 'datasource-constraints/RESET',
+  ADD_CONDITION_VALUES: 'datasource-constraints/ADD_CONDITION_VALUES',
+  REMOVE_CONDITION_VALUES: 'datasource-constraints/REMOVE_CONDITION_VALUES',
+};
+
+const updateConditionInConstraint = (constraint, condition) => {
+  const index = constraint.constraintDefinition.featureConstraints.indexOf(condition);
+  if (index > -1) {
+    constraint.constraintDefinition.featureConstraints[index] = condition;
+  }
+  return constraint;
 };
 
 const removeConstraintFromList = (constraint, condition) => {
@@ -26,8 +36,30 @@ const removeConstraintFromList = (constraint, condition) => {
 };
 
 const addConstraintIntoList = constraint => {
-  constraint.constraintDefinition.featureConstraints.push(defaultValue);
+  constraint.constraintDefinition.featureConstraints.push({...conditionDefaultValue});
   return constraint;
+};
+
+const addValueIntoCondition = (constraint, condition, value) => {
+  if (condition.values) {
+    condition.values.push(value);
+  } else {
+    condition.values = [];
+    condition.values.push(value);
+  }
+  return updateConditionInConstraint(constraint, condition);
+};
+
+const removeValueFromCondition = (constraint, condition, value) => {
+  if (value && condition.values.length > 1) {
+    const index = condition.values.indexOf(value);
+    if (index > -1) {
+      condition.values.splice(index, 1);
+    }
+  } else {
+    condition.values = [];
+  }
+  return updateConditionInConstraint(constraint, condition);
 };
 
 const initialState = {
@@ -195,6 +227,16 @@ export default (state: DatasourceConstraintsState = initialState, action): Datas
         ...state,
         constraint: removeConstraintFromList(state.constraint, action.payload),
       };
+    case ACTION_TYPES.ADD_CONDITION_VALUES:
+      return {
+        ...state,
+        constraint: addValueIntoCondition(state.constraint, action.payload.condition, action.payload.value),
+      };
+    case ACTION_TYPES.REMOVE_CONDITION_VALUES:
+      return {
+        ...state,
+        constraint: removeValueFromCondition(state.constraint, action.payload.condition, action.payload.value),
+      };
     case ACTION_TYPES.RESET:
       return {
         ...state,
@@ -261,4 +303,14 @@ export const removeConstraint = condition => ({
 
 export const reset = () => ({
   type: ACTION_TYPES.RESET,
+});
+
+export const addConditionValue = (condition, value) => ({
+  type: ACTION_TYPES.ADD_CONDITION_VALUES,
+  payload: { condition, value },
+});
+
+export const removeConditionValue = (condition, value) => ({
+  type: ACTION_TYPES.REMOVE_CONDITION_VALUES,
+  payload: { condition, value },
 });
