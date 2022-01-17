@@ -6,6 +6,7 @@ import {
   getUserDatasourceConstraints,
   reset,
   getDatasourceConstraints,
+  setDatasourceConstraints,
 } from './datasource-constraints.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Flex } from '@adobe/react-spectrum';
@@ -28,11 +29,17 @@ export const DatasourceConstraints = (props: IDatasourceConstraintsProps) => {
 
   const { constraints, routeProps, updateSuccess } = props;
 
+  const updateUserIntoConstraint = login => {
+    const _user = props.users.filter(f => f.login === login)[0];
+    props.setDatasourceConstraints({ ...props.constraint, user: _user });
+  };
+
   const fetchConstraints = () => {
     let endURL = '';
     if (user) {
       endURL = `?user=${user}`;
       props.getUserDatasourceConstraints(user);
+      updateUserIntoConstraint(user);
     } else if (group) {
       endURL = `?group=${group}`;
       props.getUserGroupDatasourceConstraints(group);
@@ -118,6 +125,8 @@ export const DatasourceConstraints = (props: IDatasourceConstraintsProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   constraints: storeState.datasourceConstraints.constraints,
   updateSuccess: storeState.datasourceConstraints.updateSuccess,
+  users: storeState.userManagement.users,
+  constraint: storeState.datasourceConstraints.constraint,
 });
 
 const mapDispatchToProps = {
@@ -126,6 +135,7 @@ const mapDispatchToProps = {
   reset,
   getDatasourceConstraints,
   getFeatures,
+  setDatasourceConstraints,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
