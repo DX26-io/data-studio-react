@@ -3,6 +3,7 @@ import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util'
 import { ICrudPutAction, ICrudDeleteAction, ICrudGetAllAction, ICrudGetAction } from 'react-jhipster';
 import { IDatasourceConstraints, defaultValue } from 'app/shared/model/datasource-constraints.model';
 import { defaultValue as conditionDefaultValue } from 'app/shared/model/feature-constraint.model';
+import { object } from 'prop-types';
 export const ACTION_TYPES = {
   FETCH_USER_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_USER_DATASOURCE_CONSTRAINTS',
   FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS',
@@ -15,8 +16,12 @@ export const ACTION_TYPES = {
   ADD_CONSTRAINT: 'datasource-constraints/ADD_CONSTRAINT',
   REMOVE_CONSTRAINT: 'datasource-constraints/REMOVE_CONSTRAINT',
   RESET: 'datasource-constraints/RESET',
-  ADD_CONDITION_VALUES: 'datasource-constraints/ADD_CONDITION_VALUES',
-  REMOVE_CONDITION_VALUES: 'datasource-constraints/REMOVE_CONDITION_VALUES',
+  UPDATE_CONDITION_VALUES: 'datasource-constraints/UPDATE_CONDITION_VALUES',
+};
+
+const resetConstraint = (constraint, condition) => {
+  constraint.constraintDefinition.featureConstraints[0] = condition;
+  return Object.assign({}, constraint);
 };
 
 const updateConditionInConstraint = (constraint, condition) => {
@@ -24,7 +29,7 @@ const updateConditionInConstraint = (constraint, condition) => {
   if (index > -1) {
     constraint.constraintDefinition.featureConstraints[index] = condition;
   }
-  return constraint;
+  return Object.assign({}, constraint);
 };
 
 const removeConstraintFromList = (constraint, condition) => {
@@ -32,30 +37,17 @@ const removeConstraintFromList = (constraint, condition) => {
   if (index > -1) {
     constraint.constraintDefinition.featureConstraints.splice(index, 1);
   }
-  return constraint;
+  return Object.assign({}, constraint);
 };
 
 const addConstraintIntoList = constraint => {
-  constraint.constraintDefinition.featureConstraints.push({...conditionDefaultValue});
-  return constraint;
+  constraint.constraintDefinition.featureConstraints.push({ ...conditionDefaultValue });
+  return Object.assign({}, constraint);
 };
 
-const addValueIntoCondition = (constraint, condition, value) => {
-  if (condition.values) {
-    condition.values.push(value);
-  } else {
-    condition.values = [];
-    condition.values.push(value);
-  }
-  return updateConditionInConstraint(constraint, condition);
-};
-
-const removeValueFromCondition = (constraint, condition, value) => {
-  if (value && condition.values.length > 1) {
-    const index = condition.values.indexOf(value);
-    if (index > -1) {
-      condition.values.splice(index, 1);
-    }
+const updateConditionStateValues = (constraint, condition, values) => {
+  if (values && values.length > 0) {
+    condition.values = values.map(val => val.value);
   } else {
     condition.values = [];
   }
@@ -215,7 +207,7 @@ export default (state: DatasourceConstraintsState = initialState, action): Datas
     case ACTION_TYPES.SET_DATASOURCE_CONSTRAINTS:
       return {
         ...state,
-        constraint: action.payload,
+        constraint: Object.assign({}, action.payload),
       };
     case ACTION_TYPES.ADD_CONSTRAINT:
       return {
@@ -227,20 +219,15 @@ export default (state: DatasourceConstraintsState = initialState, action): Datas
         ...state,
         constraint: removeConstraintFromList(state.constraint, action.payload),
       };
-    case ACTION_TYPES.ADD_CONDITION_VALUES:
+    case ACTION_TYPES.UPDATE_CONDITION_VALUES:
       return {
         ...state,
-        constraint: addValueIntoCondition(state.constraint, action.payload.condition, action.payload.value),
-      };
-    case ACTION_TYPES.REMOVE_CONDITION_VALUES:
-      return {
-        ...state,
-        constraint: removeValueFromCondition(state.constraint, action.payload.condition, action.payload.value),
+        constraint: updateConditionStateValues(state.constraint, action.payload.condition, action.payload.values),
       };
     case ACTION_TYPES.RESET:
       return {
         ...state,
-        constraint: defaultValue,
+        constraint: resetConstraint(defaultValue, { '@type': '', featureName: '', values: [] }),
         updateSuccess: false,
         errorMessage: null,
       };
@@ -305,12 +292,7 @@ export const reset = () => ({
   type: ACTION_TYPES.RESET,
 });
 
-export const addConditionValue = (condition, value) => ({
-  type: ACTION_TYPES.ADD_CONDITION_VALUES,
-  payload: { condition, value },
-});
-
-export const removeConditionValue = (condition, value) => ({
-  type: ACTION_TYPES.REMOVE_CONDITION_VALUES,
-  payload: { condition, value },
+export const updateConditionValues = (condition, values) => ({
+  type: ACTION_TYPES.UPDATE_CONDITION_VALUES,
+  payload: { condition, values },
 });

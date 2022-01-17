@@ -34,8 +34,7 @@ import {
   deleteDatasourceConstraints,
   addConstraint,
   removeConstraint,
-  addConditionValue,
-  removeConditionValue,
+  updateConditionValues,
 } from './datasource-constraints.reducer';
 import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
@@ -48,7 +47,7 @@ import SeparatorIcon from 'app/shared/components/separator/separator-icon';
 import { addCommaSeparatedValuesIntoConstraint } from 'app/shared/components/separator/separator.util';
 import { SEPARATORS } from 'app/config/constants';
 import Select from 'react-select';
-import { load, loadV2, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
+import { loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 
 export interface IDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
@@ -58,8 +57,6 @@ export interface IDatasourceConstraintUpdateProps extends StateProps, DispatchPr
 export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
   const { setOpen, updateSuccess, history, updating } = props;
   const [error, setError] = useState(defaultValue);
-  const [login, setLogin] = React.useState('');
-  const [datasourceName, setDatasourceName] = React.useState('');
   const [separator, setSeparator] = useState(SEPARATORS[0].id);
   const [featureConstraint, setFeatureConstraint] = useState();
 
@@ -111,20 +108,16 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
 
   const handleInputChange = (constraint: any, newValue: string) => {
     props.setFilterData(null);
-    loadV2(constraint, props.constraint.datasource.id, newValue);
+    loadFilterOptions(constraint.featureName, props.constraint.datasource.id, newValue);
   };
 
   const onFocus = constraint => {
     props.setFilterData(null);
-    loadV2(constraint, props.constraint.datasource.id);
+    loadFilterOptions(constraint.featureName, props.constraint.datasource.id);
   };
 
   const handleChange = (selectedOption, actionMeta, con) => {
-    if (actionMeta.action === 'select-option') {
-      props.addConditionValue(con, selectedOption[0].value);
-    } else if (actionMeta.action === 'remove-value') {
-      props.removeConditionValue(con, selectedOption ? selectedOption[0].value : selectedOption);
-    }
+    props.updateConditionValues(con, selectedOption);
   };
 
   useEffect(() => {
@@ -161,7 +154,6 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
             onChange={event => {
               let filteredUsers = [];
               if (event) {
-                setLogin(event.value);
                 filteredUsers = props.searchedUsers.filter(item => {
                   return item.id === event.value;
                 });
@@ -180,7 +172,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
             isSearchable={true}
             name="users"
             options={generateUserOptions(props.users)}
-            value={{label:props.constraint.user.login,value:props.constraint.user.login}}
+            value={{ label: props.constraint.user.login, value: props.constraint.user.login }}
           />
 
           {
@@ -191,7 +183,6 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                   placeholder={translate('datasources.search')}
                   onChange={event => {
                     if (event) {
-                      setDatasourceName(event.label);
                       const filteredDatasource = props.datasources.filter(item => {
                         return item.id === event.value;
                       });
@@ -204,7 +195,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                   isSearchable={true}
                   name="datasources"
                   options={generateDatasourcesOptions(props.datasources)}
-                  value={{label:props.constraint.datasource.name,value:props.constraint.datasource.name}}
+                  value={{ label: props.constraint.datasource.name, value: props.constraint.datasource.name }}
                 />
               </div>
             </>
@@ -217,22 +208,24 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
           </View>
           {props.constraint.constraintDefinition.featureConstraints.map((con, i) => (
             <Flex alignItems="center" gap="size-100" key={`constraint-${i}`}>
-              <Picker
-                isDisabled={!props.constraint.datasource.id}
-                key={`constraint-type-${i}`}
-                onSelectionChange={selected => {
-                  con['@type'] = selected;
-                  props.setDatasourceConstraints(props.constraint);
-                }}
-                selectedKey={con['@type']}
-                placeholder={translate('permissions.datasourceConstraints.selectType')}
-              >
-                {CONSTRAINT_TYPES.map(item => (
-                  <Item key={item}>{item}</Item>
-                ))}
-              </Picker>
               <div style={{ minWidth: '200px' }}>
                 <Select
+                  placeholder={translate('permissions.datasourceConstraints.selectType')}
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isDisabled={!props.constraint.datasource.id}
+                  value={{ value: con['@type'], label: con['@type'] }}
+                  onChange={selected => {
+                    con['@type'] = selected.value;
+                    props.setDatasourceConstraints(props.constraint);
+                  }}
+                  options={generateOptions(CONSTRAINT_TYPES)}
+                  style={{ minWidth: '200' }}
+                />
+              </div>
+              <div style={{ minWidth: '200px' }}>
+                <Select
+                  isDisabled={!props.constraint.datasource.id}
                   placeholder={translate('permissions.datasourceConstraints.selectField')}
                   onChange={event => {
                     if (event) {
@@ -242,7 +235,6 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                       });
                       if (filteredFeatures && filteredFeatures.length > 0) {
                         con.featureName = filteredFeatures[0].name;
-                        con['@type']=filteredFeatures[0].type
                         props.setDatasourceConstraints(props.constraint);
                       }
                       con['isCommaSeparatedInputOn'] = false;
@@ -253,14 +245,15 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                   isSearchable={true}
                   name="features"
                   options={generateFeatureNameOptions(props.features)}
-                  value={{value:con.featureName,label:con.featureName}}
+                  value={{ value: con.featureName, label: con.featureName }}
                 />
               </div>
               {con.isCommaSeparatedInputOn ? (
                 <SeparatorInput values={con.values} dispatchCommaSeparatedValues={dispatchCommaSeparatedValues} separator={separator} />
               ) : (
-                <View marginTop="size-125" minWidth="size-3400" width="100%">
+                <div style={{ minWidth: '300px' }}>
                   <Select
+                    isDisabled={!props.constraint.datasource.id}
                     isMulti
                     value={generateOptions(con.values)}
                     searchable={true}
@@ -280,17 +273,10 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                     }}
                     options={props.filterSelectOptions}
                   />
-                </View>
+                </div>
               )}
 
               <SeparatorIcon toggleCommaSeparator={toggleCommaSeparator} condition={con} />
-
-              {/* <ActionButton isQuiet onPress={()=>{
-                toggleCommaSeparator(con);
-              }}>
-                <Separator size="S" />
-              </ActionButton> */}
-
               <ActionButton
                 isQuiet
                 onPress={() => {
@@ -299,7 +285,6 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
               >
                 <AddCircel size="S" />
               </ActionButton>
-
               {i !== 0 ? (
                 <ActionButton
                   isQuiet
@@ -367,8 +352,7 @@ const mapDispatchToProps = {
   addConstraint,
   removeConstraint,
   setFilterData,
-  addConditionValue,
-  removeConditionValue,
+  updateConditionValues,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

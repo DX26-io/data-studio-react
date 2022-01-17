@@ -420,34 +420,29 @@ export const getPin = pin => {
   return pin === null || pin === false ? false : true;
 };
 
-export const load = (q, dimension, viewId, datasourceId) => {
+export const loadFilterOptions = (featureName, datasourceId,value?) => {
   const query: IQueryDTO = {
-    fields: [{ name: dimension }],
+    fields: [{ name: featureName }],
     distinct: true,
-    limit: 100,
+    limit: 20,
   };
-  if (q) {
+  if (value) {
     query.conditionExpressions = [
       {
         sourceType: 'FILTER',
         conditionExpression: {
           '@type': 'Like',
-          featureName: dimension,
+          featureName,
           caseInsensitive: true,
-          value: q,
+          value,
         },
       },
     ];
   }
-  forwardCall(
-    datasourceId,
-    {
-      queryDTO: query,
-      viewId,
-      type: 'filters',
-    },
-    viewId
-  );
+  forwardCall(datasourceId, {
+    queryDTO: query,
+    type: 'filters',
+  });
 };
 
 export const generateFilterOptions = data => {
@@ -513,31 +508,4 @@ export const removeOptionFromFilters = (filter, filters, feature) => {
     }
   }
   return Object.assign({}, filters);
-};
-
-export const loadV2 = (constraint, datasourceId,val?) => {
-  const query: IQueryDTO = {
-    fields: [{ name: constraint.featureName }],
-    distinct: true,
-    limit: 100,
-  };
-  if (val) {
-    query.conditionExpressions = [
-      {
-        sourceType: 'FILTER',
-        conditionExpression: {
-          '@type': 'Like',
-          featureType: { featureName: constraint.featureName, type: constraint.featureName.type },
-          caseInsensitive: true,
-          value: val,
-        },
-      },
-    ];
-  }
-  query.distinct = true;
-  query.limit = 20;
-  forwardCall(datasourceId, {
-    queryDTO: query,
-    type: 'filters',
-  });
 };

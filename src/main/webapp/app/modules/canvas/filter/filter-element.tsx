@@ -8,7 +8,7 @@ import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from 'app/shared/util/date-utils';
 import { checkIsDateType } from '../visualisation/util/visualisation-utils';
 import { saveDynamicDateRangeMetaData, saveSelectedFilter } from './filter.reducer';
-import { getPin, load, generateFilterOptions } from './filter-util';
+import { getPin, loadFilterOptions, generateFilterOptions } from './filter-util';
 import Select from 'react-select';
 import PinOn from '@spectrum-icons/workflow/PinOn';
 import PinOff from '@spectrum-icons/workflow/PinOff';
@@ -23,15 +23,13 @@ export interface IFilterElementProp extends StateProps, DispatchProps {
 const FilterElement = (props: IFilterElementProp) => {
 
   const handleInputChange = (newValue: string) => {
-    // props.setFilterLoader(true);
     props.setFilterData(null);
-    load(newValue, props.feature.name, props.view?.id, props.view?.viewDashboard?.dashboardDatasource.id);
+    loadFilterOptions(props.feature.name,props.view?.viewDashboard?.dashboardDatasource.id,newValue);
   };
 
   const onFocus = () => {
-    // props.setFilterLoader(true);
     props.setFilterData(null);
-    load(null, props.feature.name, props.view?.id, props.view?.viewDashboard?.dashboardDatasource.id);
+    loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id);
   };
 
   const handleChange = (value, actionMeta) => {
