@@ -8,7 +8,7 @@ import DateRangeComponent from './date-range-component';
 import { updateConditionExpression } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { generateFilterOptions, load } from '../filter/filter-util';
+import { generateFilterOptions, loadFilterOptions } from '../filter/filter-util';
 import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import { generateOptions } from 'app/entities/feature/feature-util';
 import { translate } from 'react-jhipster';
@@ -90,12 +90,12 @@ const Condition = (props: IConditionProps) => {
 
   const onContaintsInputFocus = () => {
     props.setFilterData(null);
-    load(null, _condition.featureName, props.view?.id, props.view?.viewDashboard?.dashboardDatasource.id);
+    loadFilterOptions(_condition.featureName,props.view?.viewDashboard?.dashboardDatasource.id);
   };
 
   const onContaintsHandleInputChange = newValue => {
     props.setFilterData(null);
-    load(newValue, _condition.featureName, props.view?.id, props.view?.viewDashboard?.dashboardDatasource.id);
+    loadFilterOptions(_condition.featureName, props.view?.viewDashboard?.dashboardDatasource.id,newValue);
   };
 
   const onContaintsHandleChange = (value, actionMeta) => {

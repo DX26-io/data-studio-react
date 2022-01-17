@@ -6,11 +6,8 @@ export const isFormValid = (constraint: IDatasourceConstraints): IError => {
   if (!constraint.datasource.id) {
     error = { translationKey: 'permissions.datasourceConstraints.error.datasource', isValid: false };
     return error;
-  } else if (!constraint.user.id) {
+  } else if (!constraint.user.login) {
     error = { translationKey: 'permissions.datasourceConstraints.error.user', isValid: false };
-    return error;
-  } else if (!constraint.constraintDefinition.featureConstraints[0]['@type']) {
-    error = { translationKey: 'permissions.datasourceConstraints.error.type', isValid: false };
     return error;
   } else if (!constraint.constraintDefinition.featureConstraints[0].featureName) {
     error = { translationKey: 'permissions.datasourceConstraints.error.feature', isValid: false };

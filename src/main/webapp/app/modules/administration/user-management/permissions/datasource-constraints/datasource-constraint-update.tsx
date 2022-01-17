@@ -34,9 +34,9 @@ import {
   deleteDatasourceConstraints,
   addConstraint,
   removeConstraint,
+  updateConditionValues,
 } from './datasource-constraints.reducer';
-import AsyncSelect from 'react-select/async';
-import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
+import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import AddCircel from '@spectrum-icons/workflow/AddCircle';
 import RemoveCircle from '@spectrum-icons/workflow/RemoveCircle';
@@ -47,6 +47,7 @@ import SeparatorIcon from 'app/shared/components/separator/separator-icon';
 import { addCommaSeparatedValuesIntoConstraint } from 'app/shared/components/separator/separator.util';
 import { SEPARATORS } from 'app/config/constants';
 import Select from 'react-select';
+import { loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 
 export interface IDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
@@ -56,8 +57,6 @@ export interface IDatasourceConstraintUpdateProps extends StateProps, DispatchPr
 export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
   const { setOpen, updateSuccess, history, updating } = props;
   const [error, setError] = useState(defaultValue);
-  const [login, setLogin] = React.useState('');
-  const [datasourceName, setDatasourceName] = React.useState('');
   const [separator, setSeparator] = useState(SEPARATORS[0].id);
   const [featureConstraint, setFeatureConstraint] = useState();
 
@@ -80,7 +79,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
     props.getUsers(0, ITEMS_PER_PAGE);
   }, []);
 
-  const saveUser = () => {
+  const save = () => {
     if (props.constraint.id) {
       props.updateDatasourceConstraints(props.constraint);
     } else {
@@ -90,35 +89,6 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
 
   const remove = () => {
     props.deleteDatasourceConstraints(props.constraint.id);
-  };
-
-  const loadFilters = selectedOption => {
-    // TODO : this will be done once khushbu's pr is merged
-    // // var vId = constraint.id;
-    // var vId = null;
-    // var query = {};
-    // query['fields'] = [{ name: featureName }];
-    // if (q) {
-    //     query['conditionExpressions'] = [{
-    //         sourceType: 'FILTER',
-    //         conditionExpression: {
-    //             '@type': 'Like',
-    //             featureType: { featureName: featureName, type: constraint.featureName.type },
-    //             caseInsensitive: true,
-    //             value: q
-    //         }
-    //     }];
-    // }
-    // query['distinct'] = true;
-    // query['limit'] = 20;
-    // forwardCallV2()
-    // proxyGrpcService.forwardCallV2(
-    //     vm.datasourceConstraint.datasource.id, {
-    //     queryDTO: query,
-    //     type: 'filters'
-    // }
-    // );
-    // }
   };
 
   const dispatchCommaSeparatedValues = receivedCommaSeparatedvalues => {
@@ -136,9 +106,23 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
     props.setDatasourceConstraints(props.constraint);
   };
 
-  const selectStyles = {
-    control: styles => ({ ...styles, minWidth: '305px' }),
+  const handleInputChange = (constraint: any, newValue: string) => {
+    props.setFilterData(null);
+    loadFilterOptions(constraint.featureName, props.constraint.datasource.id, newValue);
   };
+
+  const onFocus = constraint => {
+    props.setFilterData(null);
+    loadFilterOptions(constraint.featureName, props.constraint.datasource.id);
+  };
+
+  const handleChange = (selectedOption, actionMeta, con) => {
+    props.updateConditionValues(con, selectedOption);
+  };
+
+  useEffect(() => {
+    setError(isFormValid(props.constraint));
+  }, [props.constraint]);
 
   return (
     <Dialog data-testid="datasource-constraint-form-dialog" width="80vw" minHeight="60vh">
@@ -157,7 +141,7 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
           <Button variant="secondary" onPress={handleClose} data-testid="datasource-constraint-form-cancel">
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
-          <Button variant="cta" onPress={saveUser} isDisabled={updating || !error.isValid} data-testid="datasource-constraint-form-submit">
+          <Button variant="cta" onPress={save} isDisabled={updating || !error.isValid} data-testid="datasource-constraint-form-submit">
             <Translate contentKey="entity.action.save">Save</Translate>
           </Button>
         </Flex>
@@ -170,7 +154,6 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
             onChange={event => {
               let filteredUsers = [];
               if (event) {
-                setLogin(event.value);
                 filteredUsers = props.searchedUsers.filter(item => {
                   return item.id === event.value;
                 });
@@ -180,7 +163,6 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
                   });
                 }
                 props.setDatasourceConstraints({ ...props.constraint, user: filteredUsers[0] });
-                setError(isFormValid({ ...props.constraint, user: filteredUsers[0] }));
               }
             }}
             placeholder={translate('userManagement.search')}
@@ -190,130 +172,111 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
             isSearchable={true}
             name="users"
             options={generateUserOptions(props.users)}
-            defaultValue={login ? login : props.constraint.user.login}
+            value={{ label: props.constraint.user.login, value: props.constraint.user.login }}
           />
 
           {
-             <>
+            <>
               <span className="spectrum-Body-emphasis--sizeXXS">{translate('datasources.select')}</span>
-              <Select
-                placeholder={translate('datasources.search')}
-                onChange={event => {
-                  if (event) {
-                    setDatasourceName(event.label);
-                    const filteredDatasource = props.datasources.filter(item => {
-                      return item.id === event.value;
-                    });
-                    props.setDatasourceConstraints({ ...props.constraint, datasource: filteredDatasource[0] });
-                    props.getFeatures(Number(event.value), 'DIMENSION');
-                    setError(isFormValid({ ...props.constraint, datasource: filteredDatasource[0] }));
-                  }
-                }}
-                className="basic-single"
-                classNamePrefix="select"
-                isSearchable={true}
-                name="datasources"
-                options={generateDatasourcesOptions(props.datasources)}
-                defaultValue={datasourceName ? datasourceName : props.constraint.datasource.name}
-              />
+              <div style={{ minWidth: '250px' }}>
+                <Select
+                  placeholder={translate('datasources.search')}
+                  onChange={event => {
+                    if (event) {
+                      const filteredDatasource = props.datasources.filter(item => {
+                        return item.id === event.value;
+                      });
+                      props.setDatasourceConstraints({ ...props.constraint, datasource: filteredDatasource[0] });
+                      props.getFeatures(Number(event.value), 'DIMENSION');
+                    }
+                  }}
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isSearchable={true}
+                  name="datasources"
+                  options={generateDatasourcesOptions(props.datasources)}
+                  value={{ label: props.constraint.datasource.name, value: props.constraint.datasource.name }}
+                />
+              </div>
             </>
-
           }
           <View>
             <span className="spectrum-Heading spectrum-Heading--sizeXXS">
               <Translate contentKey="permissions.datasourceConstraints.constraints">Constraints</Translate>
             </span>
-            <Divider size="M" marginTop="size-100" marginBottom="size-200" />
+            <Divider size="M" marginTop="size-200" marginBottom="size-200" />
           </View>
           {props.constraint.constraintDefinition.featureConstraints.map((con, i) => (
-            <Flex alignItems="center" gap="size-200" key={`constraint-${i}`}>
-              <Picker
-                isDisabled={!props.constraint.datasource.id}
-                key={`constraint-type-${i}`}
-                onSelectionChange={selected => {
-                  con['@type'] = selected;
-                  props.setDatasourceConstraints(props.constraint);
-                  setError(isFormValid(props.constraint));
-                }}
-                selectedKey={con['@type']}
-                placeholder={translate('permissions.datasourceConstraints.selectType')}
-              >
-                {CONSTRAINT_TYPES.map(item => (
-                  <Item key={item}>{item}</Item>
-                ))}
-              </Picker>
-
-              <Select
-                placeholder={translate('permissions.datasourceConstraints.selectField')}
-                isDisabled={!props.constraint.datasource.id}
-                onChange={item => {
-                  props.setDatasourceConstraints({ ...props.constraint, datasource: item.value });
-                  props.getFeatures(Number(item.value), 'DIMENSION');
-                  setError(isFormValid({ ...props.constraint, datasource: item.value }));
-                }}
-                className="basic-single"
-                classNamePrefix="select"
-                isSearchable={true}
-                name="hierarchy"
-                options={generateDatasourcesOptions(props.datasources)}
-                defaultValue={con.featureName ? con.featureName : ''}
-              />
-
-              <Select
-                placeholder={translate('permissions.datasourceConstraints.selectField')}
-                onChange={event => {
-                  if (event) {
-                    con.featureName = event.label;
-                    const filteredFeatures = props.features.filter(item => {
-                      return item.id === event.value;
-                    });
-                    if (filteredFeatures && filteredFeatures.length > 0) {
-                      con.featureName = filteredFeatures[0].name;
-                      props.setDatasourceConstraints(props.constraint);
+            <Flex alignItems="center" gap="size-100" key={`constraint-${i}`}>
+              <div style={{ minWidth: '200px' }}>
+                <Select
+                  placeholder={translate('permissions.datasourceConstraints.selectType')}
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isDisabled={!props.constraint.datasource.id}
+                  value={{ value: con['@type'], label: con['@type'] }}
+                  onChange={selected => {
+                    con['@type'] = selected.value;
+                    props.setDatasourceConstraints(props.constraint);
+                  }}
+                  options={generateOptions(CONSTRAINT_TYPES)}
+                  style={{ minWidth: '200' }}
+                />
+              </div>
+              <div style={{ minWidth: '200px' }}>
+                <Select
+                  isDisabled={!props.constraint.datasource.id}
+                  placeholder={translate('permissions.datasourceConstraints.selectField')}
+                  onChange={event => {
+                    if (event) {
+                      con.featureName = event.label;
+                      const filteredFeatures = props.features.filter(item => {
+                        return item.id === event.value;
+                      });
+                      if (filteredFeatures && filteredFeatures.length > 0) {
+                        con.featureName = filteredFeatures[0].name;
+                        props.setDatasourceConstraints(props.constraint);
+                      }
+                      con['isCommaSeparatedInputOn'] = false;
                     }
-                    setError(isFormValid(props.constraint));
-                    con['isCommaSeparatedInputOn'] = false;
-                  }
-                }}
-                className="basic-single"
-                classNamePrefix="select"
-                isSearchable={true}
-                name="features"
-                options={generateFeatureNameOptions(props.features)}
-                defaultValue={con.featureName ? con.featureName : ''}
-              />
-
-              {/* TODO : this will be done once khushbu's pr is merged */}
-
+                  }}
+                  className="basic-single"
+                  classNamePrefix="select"
+                  isSearchable={true}
+                  name="features"
+                  options={generateFeatureNameOptions(props.features)}
+                  value={{ value: con.featureName, label: con.featureName }}
+                />
+              </div>
               {con.isCommaSeparatedInputOn ? (
                 <SeparatorInput values={con.values} dispatchCommaSeparatedValues={dispatchCommaSeparatedValues} separator={separator} />
               ) : (
-                <AsyncSelect
-                  isDisabled={!props.constraint.datasource.id}
-                  isClearable
-                  isSearchable
-                  isMulti
-                  value={generateOptions(con.values)}
-                  defaultValue={generateOptions(con.values)}
-                  // options={generateOptions(con.values)}
-                  className="basic-multi-select"
-                  classNamePrefix="select"
-                  // onInputChange={loadFilters}
-                  loadOptions={loadFilters}
-                  // onChange={selectDatasource}
-                  styles={selectStyles}
-                  // defaultValue={{ value: datasource.name, label: datasource.name }}
-                />
+                <div style={{ minWidth: '300px' }}>
+                  <Select
+                    isDisabled={!props.constraint.datasource.id}
+                    isMulti
+                    value={generateOptions(con.values)}
+                    searchable={true}
+                    onBlurResetsInput={false}
+                    onCloseResetsInput={false}
+                    onFocus={() => {
+                      onFocus(con);
+                    }}
+                    closeMenuOnSelect={false}
+                    classNamePrefix="select"
+                    onChange={(value, actionMeta) => {
+                      handleChange(value, actionMeta, con);
+                    }}
+                    placeholder={`Search ${con.featureName}`}
+                    onInputChange={event => {
+                      handleInputChange(con, event);
+                    }}
+                    options={props.filterSelectOptions}
+                  />
+                </div>
               )}
 
               <SeparatorIcon toggleCommaSeparator={toggleCommaSeparator} condition={con} />
-
-              {/* <ActionButton isQuiet onPress={()=>{
-                toggleCommaSeparator(con);
-              }}>
-                <Separator size="S" />
-              </ActionButton> */}
-
               <ActionButton
                 isQuiet
                 onPress={() => {
@@ -322,7 +285,6 @@ export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
               >
                 <AddCircel size="S" />
               </ActionButton>
-
               {i !== 0 ? (
                 <ActionButton
                   isQuiet
@@ -373,6 +335,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   users: storeState.userManagement.users,
   searchedUsers: storeState.userManagement.searchedUsers,
   constraint: storeState.datasourceConstraints.constraint,
+  filterSelectOptions: generateFilterOptions(storeState.visualisationData.filterData),
 });
 
 const mapDispatchToProps = {
@@ -388,6 +351,8 @@ const mapDispatchToProps = {
   deleteDatasourceConstraints,
   addConstraint,
   removeConstraint,
+  setFilterData,
+  updateConditionValues,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

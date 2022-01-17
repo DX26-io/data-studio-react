@@ -7,7 +7,7 @@ import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import DateRangeComponent from 'app/modules/canvas/data-constraints/date-range-component';
 import { resetTimezoneData } from 'app/shared/util/date-utils';
 import { checkIsDateType } from 'app/modules/canvas/visualisation/util/visualisation-utils';
-import { getPin, load, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
+import { getPin, loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 import Select from 'react-select';
 import { addAppliedFilters, removeAppliedFilters, saveDynamicDateRangeMetaData, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
@@ -19,12 +19,12 @@ export interface IPinnedFilterElementProp extends StateProps, DispatchProps {
 const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
   const handleInputChange = (newValue: string) => {
     props.setFilterData(null);
-    load(newValue, props.feature.name, props.view?.id, props.view?.viewDashboard?.dashboardDatasource.id);
+    loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id,newValue);
   };
 
   const onFocus = () => {
     props.setFilterData(null);
-    load(null, props.feature.name, props.view?.id, props.view?.viewDashboard?.dashboardDatasource.id);
+    loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id);
   };
 
   const handleChange = (value, actionMeta) => {
