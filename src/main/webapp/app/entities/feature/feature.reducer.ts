@@ -190,6 +190,11 @@ export const getEntities: ICrudGetAllAction<IFeature> = (page, size, sort) => ({
   payload: axios.get<IFeature>(`${apiUrl}?cacheBuster=${new Date().getTime()}`),
 });
 
+export const getEntitiesByFeatureType = (datasourceId: number, featureType: string) => ({
+  type: ACTION_TYPES.FETCH_FEATURE_LIST,
+  payload: axios.get(`api/features?datasource=${datasourceId}&featureType=${featureType}`),
+});
+
 export const createEntity: ICrudPutAction<IFeature> = entity => ({
   type: ACTION_TYPES.CREATE_FEATURE,
   payload: axios.post<IFeature>(`${apiUrl}`, entity),

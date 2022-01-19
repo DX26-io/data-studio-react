@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import {
-  getFeatures,
   getUserGroupDatasourceConstraints,
   getUserDatasourceConstraints,
   reset,
@@ -15,6 +14,7 @@ import Edit from '@spectrum-icons/workflow/Edit';
 import { Translate, translate } from 'react-jhipster';
 import { toast } from 'react-toastify';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
+import { getEntitiesByFeatureType as getFeatures } from 'app/entities/feature/feature.reducer';
 
 // TODO : when hit the url,params should be visible
 

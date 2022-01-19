@@ -27,7 +27,6 @@ import { getDatasourcesByName, getDatasources } from 'app/modules/administration
 import { CONSTRAINT_TYPES } from 'app/config/constants';
 import {
   setDatasourceConstraints,
-  getFeatures,
   reset,
   createDatasourceConstraints,
   updateDatasourceConstraints,
@@ -36,6 +35,7 @@ import {
   removeConstraint,
   updateConditionValues,
 } from './datasource-constraints.reducer';
+import { getEntitiesByFeatureType as getFeatures } from 'app/entities/feature/feature.reducer';
 import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import AddCircel from '@spectrum-icons/workflow/AddCircle';
@@ -331,7 +331,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   datasources: storeState.datasources.datasources,
   updateSuccess: storeState.datasourceConstraints.updateSuccess,
   updating: storeState.datasourceConstraints.updating,
-  features: storeState.datasourceConstraints.features,
+  features: storeState.feature.entities,
   users: storeState.userManagement.users,
   searchedUsers: storeState.userManagement.searchedUsers,
   constraint: storeState.datasourceConstraints.constraint,

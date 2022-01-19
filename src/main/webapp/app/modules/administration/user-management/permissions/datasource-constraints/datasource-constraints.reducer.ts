@@ -7,7 +7,6 @@ import { object } from 'prop-types';
 export const ACTION_TYPES = {
   FETCH_USER_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_USER_DATASOURCE_CONSTRAINTS',
   FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS',
-  FETCH_FEATURES: 'permission/FETCH_FEATURES',
   FETCH_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_DATASOURCE_CONSTRAINTS',
   SET_DATASOURCE_CONSTRAINTS: 'datasource-constraints/SET_DATASOURCE_CONSTRAINTS',
   CREATE_DATASOURCE_CONSTRAINTS: 'datasource-constraints/CREATE_DATASOURCE_CONSTRAINTS',
@@ -81,12 +80,6 @@ export default (state: DatasourceConstraintsState = initialState, action): Datas
         errorMessage: null,
         loading: true,
       };
-    case REQUEST(ACTION_TYPES.FETCH_FEATURES):
-      return {
-        ...state,
-        errorMessage: null,
-        loading: true,
-      };
     case REQUEST(ACTION_TYPES.FETCH_DATASOURCE_CONSTRAINTS):
       return {
         ...state,
@@ -122,12 +115,6 @@ export default (state: DatasourceConstraintsState = initialState, action): Datas
         errorMessage: action.payload,
       };
     case FAILURE(ACTION_TYPES.FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS):
-      return {
-        ...state,
-        loading: false,
-        errorMessage: action.payload,
-      };
-    case FAILURE(ACTION_TYPES.FETCH_FEATURES):
       return {
         ...state,
         loading: false,
@@ -171,12 +158,6 @@ export default (state: DatasourceConstraintsState = initialState, action): Datas
         ...state,
         loading: false,
         constraints: action.payload.data,
-      };
-    case SUCCESS(ACTION_TYPES.FETCH_FEATURES):
-      return {
-        ...state,
-        loading: false,
-        features: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.FETCH_DATASOURCE_CONSTRAINTS):
       return {
@@ -266,12 +247,6 @@ export const updateDatasourceConstraints: ICrudPutAction<IDatasourceConstraints>
 export const deleteDatasourceConstraints: ICrudDeleteAction<IDatasourceConstraints> = (id: number) => ({
   type: ACTION_TYPES.DELETE_DATASOURCE_CONSTRAINTS,
   payload: axios.delete(`${apiUrl}/${id}`),
-});
-
-// TODO : below menthod will be removed once khushbu's pr is merged with master
-export const getFeatures = (datasourceId: number, featureType: string) => ({
-  type: ACTION_TYPES.FETCH_FEATURES,
-  payload: axios.get(`api/features?datasource=${datasourceId}&featureType=${featureType}`),
 });
 
 export const setDatasourceConstraints = (constraint: IDatasourceConstraints) => ({
