@@ -61,7 +61,7 @@ export const UserDatasourceConstraints = (props: IUserDatasourceConstraintsProps
 
   useEffect(() => {
     if (updateSuccess) {
-      // fetchConstraints();
+      fetchConstraints(getSearchParam('user', routeProps.location.search));
     }
   }, [updateSuccess]);
 
@@ -119,10 +119,10 @@ export const UserDatasourceConstraints = (props: IUserDatasourceConstraintsProps
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  constraints: storeState.datasourceConstraints.constraints,
-  updateSuccess: storeState.datasourceConstraints.updateSuccess,
+  constraints: storeState.userDatasourceConstraints.constraints,
+  updateSuccess: storeState.userDatasourceConstraints.updateSuccess,
   users: storeState.userManagement.users,
-  constraint: storeState.datasourceConstraints.constraint,
+  constraint: storeState.userDatasourceConstraints.constraint,
 });
 
 const mapDispatchToProps = {

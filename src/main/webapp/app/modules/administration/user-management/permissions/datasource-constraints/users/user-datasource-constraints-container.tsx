@@ -55,7 +55,7 @@ export const UserDatasourceConstraintsContainer = (props: IUserDatasourceConstra
   );
 };
 const mapStateToProps = (storeState: IRootState) => ({
-  updating: storeState.datasourceConstraints.updating,
+  updating: storeState.userDatasourceConstraints.updating,
 });
 const mapDispatchToProps = { receiveSocketResponse };
 type StateProps = ReturnType<typeof mapStateToProps>;

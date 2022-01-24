@@ -8,7 +8,7 @@ import administration, { AdministrationState } from 'app/modules/administration/
 import userManagement, { UserManagementState } from 'app/modules/administration/user-management/users/user.reducer';
 import userGroups, { UserGroupsState } from 'app/modules/administration/user-management/groups/user-group.reducer';
 import permissions, { PermissionsState } from 'app/modules/administration/user-management/permissions/permissions.reducer';
-import datasourceConstraints, {
+import userDatasourceConstraints, {
   UserDatasourceConstraintsState,
 } from 'app/modules/administration/user-management/permissions/datasource-constraints/users/user-datasource-constraints.reducer';
 import connections, { ConnectionsState } from 'app/modules/administration/sources/connections/connection.reducer';
@@ -67,7 +67,7 @@ export interface IRootState {
   readonly userManagement: UserManagementState;
   readonly userGroups: UserGroupsState;
   readonly permissions: PermissionsState;
-  readonly datasourceConstraints: UserDatasourceConstraintsState;
+  readonly userDatasourceConstraints: UserDatasourceConstraintsState;
   readonly connections: ConnectionsState;
   readonly register: RegisterState;
   readonly activate: ActivateState;
@@ -108,7 +108,7 @@ const rootReducer = combineReducers<IRootState>({
   userManagement,
   userGroups,
   permissions,
-  datasourceConstraints,
+  userDatasourceConstraints,
   connections,
   datasourceSteps,
   connectionSteps,

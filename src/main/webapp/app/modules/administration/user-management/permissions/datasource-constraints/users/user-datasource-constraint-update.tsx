@@ -334,12 +334,12 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
 
 const mapStateToProps = (storeState: IRootState) => ({
   datasources: storeState.datasources.datasources,
-  updateSuccess: storeState.datasourceConstraints.updateSuccess,
-  updating: storeState.datasourceConstraints.updating,
+  updateSuccess: storeState.userDatasourceConstraints.updateSuccess,
+  updating: storeState.userDatasourceConstraints.updating,
   features: storeState.feature.entities,
   users: storeState.userManagement.users,
   searchedUsers: storeState.userManagement.searchedUsers,
-  constraint: storeState.datasourceConstraints.constraint,
+  constraint: storeState.userDatasourceConstraints.constraint,
   filterSelectOptions: generateFilterOptions(storeState.visualisationData.filterData),
 });
 
