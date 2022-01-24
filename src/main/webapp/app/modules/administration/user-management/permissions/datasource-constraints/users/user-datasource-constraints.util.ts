@@ -1,7 +1,7 @@
-import { IDatasourceConstraints } from 'app/shared/model/datasource-constraints.model';
+import { IUserDatasourceConstraints } from 'app/shared/model/user-datasource-constraints.model';
 import { IError, defaultValue } from 'app/shared/model/error.model';
 
-export const isFormValid = (constraint: IDatasourceConstraints): IError => {
+export const isFormValid = (constraint: IUserDatasourceConstraints): IError => {
   let error = defaultValue;
   if (!constraint.datasource.id) {
     error = { translationKey: 'permissions.datasourceConstraints.error.datasource', isValid: false };

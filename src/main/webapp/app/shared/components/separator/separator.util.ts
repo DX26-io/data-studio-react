@@ -1,7 +1,7 @@
-import { IDatasourceConstraints, defaultValue } from 'app/shared/model/datasource-constraints.model';
+import { IUserDatasourceConstraints, defaultValue } from 'app/shared/model/user-datasource-constraints.model';
 export const addCommaSeparatedValuesIntoConstraint = (
   commaSeparatedValues: string,
-  constraint: IDatasourceConstraints,
+  constraint: IUserDatasourceConstraints,
   condition: any,
   separator: string
 ) => {

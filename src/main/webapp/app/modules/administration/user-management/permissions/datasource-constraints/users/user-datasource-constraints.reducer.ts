@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { ICrudPutAction, ICrudDeleteAction, ICrudGetAllAction, ICrudGetAction } from 'react-jhipster';
-import { IDatasourceConstraints, defaultValue } from 'app/shared/model/datasource-constraints.model';
-import { defaultValue as conditionDefaultValue } from 'app/shared/model/feature-constraint.model';
-import { object } from 'prop-types';
+import { IUserDatasourceConstraints, defaultValue } from 'app/shared/model/user-datasource-constraints.model';
+import { defaultValue as conditionDefaultValue } from 'app/shared/model/user-feature-constraint.model';
 export const ACTION_TYPES = {
   FETCH_USER_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_USER_DATASOURCE_CONSTRAINTS',
   FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS',
@@ -229,27 +228,27 @@ export const getUserDatasourceConstraints = (login: string) => ({
   payload: axios.get(`${apiUrl}?user.login=${login}`),
 });
 
-export const getDatasourceConstraints: ICrudGetAction<IDatasourceConstraints> = (id: number) => ({
+export const getDatasourceConstraints: ICrudGetAction<IUserDatasourceConstraints> = (id: number) => ({
   type: ACTION_TYPES.FETCH_DATASOURCE_CONSTRAINTS,
   payload: axios.get(`${apiUrl}/${id}`),
 });
 
-export const createDatasourceConstraints: ICrudPutAction<IDatasourceConstraints> = entity => ({
+export const createDatasourceConstraints: ICrudPutAction<IUserDatasourceConstraints> = entity => ({
   type: ACTION_TYPES.CREATE_DATASOURCE_CONSTRAINTS,
   payload: axios.post(`${apiUrl}`, entity),
 });
 
-export const updateDatasourceConstraints: ICrudPutAction<IDatasourceConstraints> = entity => ({
+export const updateDatasourceConstraints: ICrudPutAction<IUserDatasourceConstraints> = entity => ({
   type: ACTION_TYPES.CREATE_DATASOURCE_CONSTRAINTS,
   payload: axios.put(`${apiUrl}`, entity),
 });
 
-export const deleteDatasourceConstraints: ICrudDeleteAction<IDatasourceConstraints> = (id: number) => ({
+export const deleteDatasourceConstraints: ICrudDeleteAction<IUserDatasourceConstraints> = (id: number) => ({
   type: ACTION_TYPES.DELETE_DATASOURCE_CONSTRAINTS,
   payload: axios.delete(`${apiUrl}/${id}`),
 });
 
-export const setDatasourceConstraints = (constraint: IDatasourceConstraints) => ({
+export const setDatasourceConstraints = (constraint: IUserDatasourceConstraints) => ({
   type: ACTION_TYPES.SET_DATASOURCE_CONSTRAINTS,
   payload: constraint,
 });
