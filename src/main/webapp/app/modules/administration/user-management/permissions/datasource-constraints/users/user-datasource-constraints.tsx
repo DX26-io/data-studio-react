@@ -6,7 +6,7 @@ import {
   reset,
   getDatasourceConstraints,
   setDatasourceConstraints,
-} from './datasource-constraints.reducer';
+} from './user-datasource-constraints.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Flex } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
@@ -15,15 +15,15 @@ import { Translate, translate } from 'react-jhipster';
 import { toast } from 'react-toastify';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import { getEntitiesByFeatureType as getFeatures } from 'app/entities/feature/feature.reducer';
-
+import { getSearchParam } from '../../permissions-util';
 // TODO : when hit the url,params should be visible
 
-export interface IDatasourceConstraintsProps extends StateProps, DispatchProps {
+export interface IUserDatasourceConstraintsProps extends StateProps, DispatchProps {
   routeProps: any;
   setOpen: (isOpen: boolean) => void;
 }
 
-export const DatasourceConstraints = (props: IDatasourceConstraintsProps) => {
+export const UserDatasourceConstraints = (props: IUserDatasourceConstraintsProps) => {
   const [user, setUser] = React.useState(null);
   const [group, setGroup] = React.useState(null);
 
@@ -34,38 +34,34 @@ export const DatasourceConstraints = (props: IDatasourceConstraintsProps) => {
     props.setDatasourceConstraints({ ...props.constraint, user: _user });
   };
 
-  const fetchConstraints = () => {
+  const fetchConstraints = _user => {
     let endURL = '';
-    if (user) {
-      endURL = `?user=${user}`;
-      props.getUserDatasourceConstraints(user);
-      updateUserIntoConstraint(user);
-    } else if (group) {
-      endURL = `?group=${group}`;
-      props.getUserGroupDatasourceConstraints(group);
+    if (_user) {
+      endURL = `?user=${_user}`;
+      props.getUserDatasourceConstraints(_user);
+      updateUserIntoConstraint(_user);
     }
+    //  else if (group) {
+    //   endURL = `?group=${group}`;
+    //   props.getUserGroupDatasourceConstraints(group);
+    // }
     if (routeProps.location.search && routeProps.location.search !== endURL) {
       routeProps.history.push(`${routeProps.location.pathname}${endURL}`);
     }
   };
 
   useEffect(() => {
-    fetchConstraints();
-  }, [user, group]);
-
-  useEffect(() => {
     if (routeProps.location.search) {
-      const params = new URLSearchParams(routeProps.location.search);
-      const groupName = params.get('group');
-      const login = params.get('user');
-      setUser(login);
-      setGroup(groupName);
+      fetchConstraints(getSearchParam('user', routeProps.location.search));
+      // const groupName = params.get('group');
+      // setUser(login);
+      // setGroup(groupName);
     }
   }, [routeProps.location.search]);
 
   useEffect(() => {
     if (updateSuccess) {
-      fetchConstraints();
+      // fetchConstraints();
     }
   }, [updateSuccess]);
 
@@ -141,4 +137,4 @@ const mapDispatchToProps = {
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(DatasourceConstraints);
+export default connect(mapStateToProps, mapDispatchToProps)(UserDatasourceConstraints);

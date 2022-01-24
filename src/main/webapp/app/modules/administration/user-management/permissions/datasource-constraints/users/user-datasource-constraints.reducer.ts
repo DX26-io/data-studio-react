@@ -63,10 +63,10 @@ const initialState = {
   constraint: defaultValue,
 };
 
-export type DatasourceConstraintsState = Readonly<typeof initialState>;
+export type UserDatasourceConstraintsState = Readonly<typeof initialState>;
 
 // Reducer
-export default (state: DatasourceConstraintsState = initialState, action): DatasourceConstraintsState => {
+export default (state: UserDatasourceConstraintsState = initialState, action): UserDatasourceConstraintsState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_USER_DATASOURCE_CONSTRAINTS):
       return {

@@ -15,3 +15,8 @@ export const findViewsPermissionsChanges = (viewsPermissions: any) => {
   }
   return permissionChanges;
 };
+
+export const getSearchParam = (param, route) => {
+  const params = new URLSearchParams(route);
+  return params.get(param) ? params.get(param) : '';
+};

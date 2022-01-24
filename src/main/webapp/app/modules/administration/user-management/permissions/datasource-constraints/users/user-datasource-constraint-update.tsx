@@ -34,13 +34,18 @@ import {
   addConstraint,
   removeConstraint,
   updateConditionValues,
-} from './datasource-constraints.reducer';
+} from './user-datasource-constraints.reducer';
 import { getEntitiesByFeatureType as getFeatures } from 'app/entities/feature/feature.reducer';
 import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import AddCircel from '@spectrum-icons/workflow/AddCircle';
 import RemoveCircle from '@spectrum-icons/workflow/RemoveCircle';
-import { generateDatasourcesOptions, generateFeatureNameOptions, generateUserOptions, isFormValid } from './datasource-constraints.util';
+import {
+  generateDatasourcesOptions,
+  generateFeatureNameOptions,
+  generateUserOptions,
+  isFormValid,
+} from './user-datasource-constraints.util';
 import Separators from 'app/shared/components/separator/separators';
 import SeparatorInput from 'app/shared/components/separator/separator-input';
 import SeparatorIcon from 'app/shared/components/separator/separator-icon';
@@ -49,12 +54,12 @@ import { SEPARATORS } from 'app/config/constants';
 import Select from 'react-select';
 import { loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 
-export interface IDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
+export interface IUserDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
   history: any;
 }
 
-export const UserUpdate = (props: IDatasourceConstraintUpdateProps) => {
+export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintUpdateProps) => {
   const { setOpen, updateSuccess, history, updating } = props;
   const [error, setError] = useState(defaultValue);
   const [separator, setSeparator] = useState(SEPARATORS[0].id);
@@ -358,4 +363,4 @@ const mapDispatchToProps = {
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserUpdate);
+export default connect(mapStateToProps, mapDispatchToProps)(UserDatasourceConstraintUpdate);
