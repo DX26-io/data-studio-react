@@ -11,6 +11,9 @@ import permissions, { PermissionsState } from 'app/modules/administration/user-m
 import userDatasourceConstraints, {
   UserDatasourceConstraintsState,
 } from 'app/modules/administration/user-management/permissions/datasource-constraints/users/user-datasource-constraints.reducer';
+import userGroupDatasourceConstraints, {
+  UserGroupDatasourceConstraintsState,
+} from 'app/modules/administration/user-management/permissions/datasource-constraints/groups/user-group-datasource-constraints.reducer';
 import connections, { ConnectionsState } from 'app/modules/administration/sources/connections/connection.reducer';
 import datasources, { DatasourcesState } from 'app/modules/administration/sources/datasources/datasources.reducer';
 import datasourceSteps, { DatasourceStepsState } from 'app/modules/administration/sources/datasources/steps/datasource-steps.reducer';
@@ -68,6 +71,7 @@ export interface IRootState {
   readonly userGroups: UserGroupsState;
   readonly permissions: PermissionsState;
   readonly userDatasourceConstraints: UserDatasourceConstraintsState;
+  readonly userGroupDatasourceConstraints: UserGroupDatasourceConstraintsState;
   readonly connections: ConnectionsState;
   readonly register: RegisterState;
   readonly activate: ActivateState;
@@ -77,7 +81,7 @@ export interface IRootState {
   readonly dashboard: DashboardState;
   readonly datasources: DatasourcesState;
   readonly datasourceSteps: DatasourceStepsState;
-  readonly connectionSteps : ConnectionStepsState;
+  readonly connectionSteps: ConnectionStepsState;
   readonly views: ViewsState;
   readonly feature: FeatureState;
   readonly functions: FunctionState;
@@ -109,6 +113,7 @@ const rootReducer = combineReducers<IRootState>({
   userGroups,
   permissions,
   userDatasourceConstraints,
+  userGroupDatasourceConstraints,
   connections,
   datasourceSteps,
   connectionSteps,

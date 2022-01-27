@@ -1,27 +1,34 @@
 import React, { useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Grid, View, DialogContainer } from '@adobe/react-spectrum';
-import UsersGroups from '../../users-groups';
+import UsersGroups from '../users-groups';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { translate } from 'react-jhipster';
-import UserDatasourceConstraints from './user-datasource-constraints';
-import PermissionsActionTitle from '../../permissions-action-title';
-import DatasourceConstraintUpdate from './user-datasource-constraint-update';
+import UserDatasourceConstraints from './users/user-datasource-constraints';
+import UserGroupDatasourceConstraints from './groups/user-group-datasource-constraints';
+import PermissionsActionTitle from '../permissions-action-title';
+import UserDatasourceConstraintUpdate from './users/user-datasource-constraint-update';
+import UserGroupDatasourceConstraintUpdate from './groups/user-group-datasource-constraint-update';
 import { receiveSocketResponse } from 'app/shared/websocket/websocket.reducer';
 
-export interface IUserDatasourceConstraintsContainerProps extends StateProps, DispatchProps, RouteComponentProps {}
+export interface IDatasourceConstraintsProps extends StateProps, DispatchProps, RouteComponentProps {}
 
-export const UserDatasourceConstraintsContainer = (props: IUserDatasourceConstraintsContainerProps) => {
-  const [isOpen, setOpen] = React.useState(false);
+export const DatasourceConstraints = (props: IDatasourceConstraintsProps) => {
+  const [isUserDatasourceConstraintDialogOpen, setUserDatasourceConstraintDialogOpen] = React.useState(false);
+  const [isUserGroupDatasourceConstraintDialogOpen, setUserGroupDatasourceConstraintDialogOpen] = React.useState(false);
 
   useEffect(() => {
     props.receiveSocketResponse();
   }, []);
 
   const handleClick = () => {
-    setOpen(true);
+    if (props.searchUrl.includes('user')) {
+      setUserDatasourceConstraintDialogOpen(true);
+    } else {
+      setUserGroupDatasourceConstraintDialogOpen(true);
+    }
   };
 
   return (
@@ -37,9 +44,10 @@ export const UserDatasourceConstraintsContainer = (props: IUserDatasourceConstra
         ]}
         title={translate('permissions.datasourceConstraints.title')}
       ></SecondaryHeader>
-      <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && (
-          <DatasourceConstraintUpdate setOpen={setOpen} {...props}></DatasourceConstraintUpdate>
+      <DialogContainer onDismiss={() => setUserDatasourceConstraintDialogOpen(false)}>
+        {isUserDatasourceConstraintDialogOpen && <UserDatasourceConstraintUpdate setOpen={setUserDatasourceConstraintDialogOpen} />}
+        {isUserGroupDatasourceConstraintDialogOpen && (
+          <UserGroupDatasourceConstraintUpdate setOpen={setUserGroupDatasourceConstraintDialogOpen} />
         )}
       </DialogContainer>
       <Grid areas={['users datasources']} columns={['1fr', '2fr']} rows={['auto']} data-testid="permission-container">
@@ -48,7 +56,11 @@ export const UserDatasourceConstraintsContainer = (props: IUserDatasourceConstra
         </View>
         <View gridArea="datasources" borderXWidth="thin" borderColor="default" height="100vh">
           <PermissionsActionTitle handleClick={handleClick} updating={props.updating} translateActionKey="entity.action.create" />
-          <UserDatasourceConstraints routeProps={props} setOpen={setOpen} />
+          {props.searchUrl.includes('user') ? (
+            <UserDatasourceConstraints routeProps={props} setOpen={setUserDatasourceConstraintDialogOpen} />
+          ) : (
+            <UserGroupDatasourceConstraints routeProps={props} setOpen={setUserGroupDatasourceConstraintDialogOpen} />
+          )}
         </View>
       </Grid>
     </div>
@@ -56,9 +68,10 @@ export const UserDatasourceConstraintsContainer = (props: IUserDatasourceConstra
 };
 const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.userDatasourceConstraints.updating,
+  searchUrl: storeState.permissions.searchUrl,
 });
 const mapDispatchToProps = { receiveSocketResponse };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserDatasourceConstraintsContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(DatasourceConstraints);

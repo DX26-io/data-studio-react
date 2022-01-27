@@ -9,6 +9,7 @@ export const ACTION_TYPES = {
   FETCH_VIEWS_PERMISSIONS: 'permission/FETCH_VIEWS_PERMISSIONS',
   UPDATE_PERMISSIONS: 'permission/UPDATE_PERMISSIONS',
   RESET_VIEWS_PERMISSIONS: 'permission/RESET_VIEWS_PERMISSIONS',
+  SET_SEARCH_URL: 'permission/SET_SEARCH_URL',
 };
 
 const initialState = {
@@ -22,6 +23,7 @@ const initialState = {
   totalViewsPermissions: 0,
   updateSuccess: false,
   updating: false,
+  searchUrl: '',
 };
 
 export type PermissionsState = Readonly<typeof initialState>;
@@ -112,6 +114,11 @@ export default (state: PermissionsState = initialState, action): PermissionsStat
         viewsPermissions: [],
         totalViewsPermissions: 0,
       };
+    case ACTION_TYPES.SET_SEARCH_URL:
+      return {
+        ...state,
+        searchUrl: action.payload,
+      };
     default:
       return state;
   }
@@ -166,4 +173,9 @@ export const updateUserPermissions = (permissions: Array<IPermission>, login: st
 
 export const resetViewsPermissions = () => ({
   type: ACTION_TYPES.RESET_VIEWS_PERMISSIONS,
+});
+
+export const setSearchUrl = searchUrl => ({
+  type: ACTION_TYPES.SET_SEARCH_URL,
+  payload: searchUrl,
 });

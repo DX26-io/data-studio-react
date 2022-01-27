@@ -41,7 +41,7 @@ const UserManagement = (props: RouteComponentProps) => {
     },
     {
       icon: <DataUser size="L" />,
-      link: `${match.url}/datasource-constraints/users`,
+      link: `${match.url}/datasource-constraints`,
       title: 'permissions.datasourceConstraints.title',
       description: 'permissions.datasourceConstraints.description',
     },

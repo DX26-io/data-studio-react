@@ -20,8 +20,6 @@ import {
   ActionButton,
 } from '@adobe/react-spectrum';
 import { defaultValue } from 'app/shared/model/error.model';
-import { ComboBox, Item } from '@react-spectrum/combobox';
-import { searchUsers, getUsers } from 'app/modules/administration/user-management/users/user.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { getDatasourcesByName, getDatasources } from 'app/modules/administration/sources/datasources/datasources.reducer';
 import { CONSTRAINT_TYPES } from 'app/config/constants';
@@ -33,36 +31,27 @@ import {
   deleteDatasourceConstraints,
   addConstraint,
   removeConstraint,
-  updateConditionValues,
-} from './user-datasource-constraints.reducer';
+  updateCondition
+} from './user-group-datasource-constraints.reducer';
 import { getEntitiesByFeatureType as getFeatures } from 'app/entities/feature/feature.reducer';
-import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import AddCircel from '@spectrum-icons/workflow/AddCircle';
 import RemoveCircle from '@spectrum-icons/workflow/RemoveCircle';
-import {
-  generateDatasourcesOptions,
-  generateFeatureNameOptions,
-  generateUserOptions,
-  isFormValid,
-} from './user-datasource-constraints.util';
-import Separators from 'app/shared/components/separator/separators';
-import SeparatorInput from 'app/shared/components/separator/separator-input';
-import SeparatorIcon from 'app/shared/components/separator/separator-icon';
-import { addCommaSeparatedValuesIntoConstraint } from 'app/shared/components/separator/separator.util';
-import { SEPARATORS } from 'app/config/constants';
+import { generateDatasourcesOptions, generateFeatureNameOptions, isFormValid } from './user-group-datasource-constraints.util';
 import Select from 'react-select';
 import { loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
+import { IDatasources } from 'app/shared/model/datasources.model';
+import { IFeature } from 'app/shared/model/feature.model';
 
-export interface IUserDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
+export interface IUserGroupDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
 }
 
-export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintUpdateProps) => {
+export const UserGroupDatasourceConstraintUpdate = (props: IUserGroupDatasourceConstraintUpdateProps) => {
   const { setOpen, updateSuccess, updating } = props;
   const [error, setError] = useState(defaultValue);
-  const [separator, setSeparator] = useState(SEPARATORS[0].id);
-  const [featureConstraint, setFeatureConstraint] = useState();
+  const [datasource, setDatasource] = useState<IDatasources>(null);
+  const [feature, setFeature] = useState<IFeature>(null);
 
   const dialog = useDialogContainer();
 
@@ -80,7 +69,6 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
 
   useEffect(() => {
     props.getDatasources(0, ITEMS_PER_PAGE, 'lastUpdated,desc');
-    props.getUsers(0, ITEMS_PER_PAGE);
   }, []);
 
   const save = () => {
@@ -95,43 +83,28 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
     props.deleteDatasourceConstraints(props.constraint.id);
   };
 
-  const dispatchCommaSeparatedValues = receivedCommaSeparatedvalues => {
-    const _constraint = addCommaSeparatedValuesIntoConstraint(receivedCommaSeparatedvalues, props.constraint, featureConstraint, separator);
-    props.setDatasourceConstraints(_constraint);
-  };
-
-  const toggleCommaSeparator = _featureConstraint => {
-    if (_featureConstraint['isCommaSeparatedInputOn'] !== undefined) {
-      _featureConstraint['isCommaSeparatedInputOn'] = !_featureConstraint['isCommaSeparatedInputOn'];
-    } else {
-      _featureConstraint['isCommaSeparatedInputOn'] = true;
-    }
-    setFeatureConstraint(_featureConstraint);
-    props.setDatasourceConstraints(props.constraint);
-  };
-
-  const handleInputChange = (constraint: any, newValue: string) => {
-    props.setFilterData(null);
-    loadFilterOptions(constraint.featureName, props.constraint.datasource.id, newValue);
-  };
-
-  const onFocus = constraint => {
-    props.setFilterData(null);
-    loadFilterOptions(constraint.featureName, props.constraint.datasource.id);
-  };
-
-  const handleChange = (selectedOption, actionMeta, con) => {
-    props.updateConditionValues(con, selectedOption);
-  };
-
   useEffect(() => {
     setError(isFormValid(props.constraint));
+    if (props.constraint?.datasource) {
+      setDatasource(props.constraint?.datasource);
+    }
   }, [props.constraint]);
 
+  const getFeature = id => {
+    if(id){
+      const filteredFeatures = props.features.filter(item => {
+        return item.id === id;
+      })[0];
+      return {label:filteredFeatures.name,value:filteredFeatures.id};
+    }else{
+      return {label:'',value:''};
+    }
+  };
+
   return (
-    <Dialog data-testid="datasource-constraint-form-dialog" width="80vw" minHeight="60vh">
+    <Dialog data-testid="group-datasource-constraint-form-dialog" width="80vw" minHeight="60vh">
       <Heading>
-        <Flex alignItems="center" gap="size-100" data-testid="datasource-constraint-form-heading">
+        <Flex alignItems="center" gap="size-100" data-testid="group-datasource-constraint-form-heading">
           {props.constraint.id !== '' ? (
             <Translate contentKey="permissions.datasourceConstraints.editLabel">Edit Constraints</Translate>
           ) : (
@@ -139,46 +112,24 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
           )}
         </Flex>
       </Heading>
-      <Header data-testid="datasource-constraint-form-action">
+      <Header data-testid="group-datasource-constraint-form-action">
         <Flex alignItems="center" gap="size-100">
-          <Separators setSeparator={setSeparator} />
-          <Button variant="secondary" onPress={handleClose} data-testid="datasource-constraint-form-cancel">
+          <Button variant="secondary" onPress={handleClose} data-testid="group-datasource-constraint-form-cancel">
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
-          <Button variant="cta" onPress={save} isDisabled={updating || !error.isValid} data-testid="datasource-constraint-form-submit">
+          <Button
+            variant="cta"
+            onPress={save}
+            isDisabled={updating || !error.isValid}
+            data-testid="group-datasource-constraint-form-submit"
+          >
             <Translate contentKey="entity.action.save">Save</Translate>
           </Button>
         </Flex>
       </Header>
       <Divider />
       <Content>
-        <Form data-testid="datasource-constraint-form">
-          <span className="spectrum-Body-emphasis--sizeXXS">{translate('userManagement.select')}</span>
-          <Select
-            onChange={event => {
-              let filteredUsers = [];
-              if (event) {
-                filteredUsers = props.searchedUsers.filter(item => {
-                  return item.id === event.value;
-                });
-                if (filteredUsers && filteredUsers.length === 0) {
-                  filteredUsers = props.users.filter(item => {
-                    return item.id === event.value;
-                  });
-                }
-                props.setDatasourceConstraints({ ...props.constraint, user: filteredUsers[0] });
-              }
-            }}
-            placeholder={translate('userManagement.search')}
-            label={translate('userManagement.select')}
-            className="basic-single"
-            classNamePrefix="select"
-            isSearchable={true}
-            name="users"
-            options={generateUserOptions(props.users)}
-            value={{ label: props.constraint.user.login, value: props.constraint.user.login }}
-          />
-
+        <Form data-testid="group-datasource-constraint-form">
           {
             <>
               <span className="spectrum-Body-emphasis--sizeXXS">{translate('datasources.select')}</span>
@@ -189,8 +140,9 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
                     if (event) {
                       const filteredDatasource = props.datasources.filter(item => {
                         return item.id === event.value;
-                      });
-                      props.setDatasourceConstraints({ ...props.constraint, datasource: filteredDatasource[0] });
+                      })[0];
+                      setDatasource(filteredDatasource);
+                      props.setDatasourceConstraints({ ...props.constraint, datasourceId: filteredDatasource.id });
                       props.getFeatures(Number(event.value), 'DIMENSION');
                     }
                   }}
@@ -199,7 +151,7 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
                   isSearchable={true}
                   name="datasources"
                   options={generateDatasourcesOptions(props.datasources)}
-                  value={{ label: props.constraint.datasource.name, value: props.constraint.datasource.name }}
+                  value={{ label: datasource?.name, value: datasource?.id }}
                 />
               </div>
             </>
@@ -214,34 +166,18 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
             <Flex alignItems="center" gap="size-100" key={`constraint-${i}`}>
               <div style={{ minWidth: '200px' }}>
                 <Select
-                  placeholder={translate('permissions.datasourceConstraints.selectType')}
-                  className="basic-single"
-                  classNamePrefix="select"
-                  isDisabled={!props.constraint.datasource.id}
-                  value={{ value: con['@type'], label: con['@type'] }}
-                  onChange={selected => {
-                    con['@type'] = selected.value;
-                    props.setDatasourceConstraints(props.constraint);
-                  }}
-                  options={generateOptions(CONSTRAINT_TYPES)}
-                  style={{ minWidth: '200' }}
-                />
-              </div>
-              <div style={{ minWidth: '200px' }}>
-                <Select
-                  isDisabled={!props.constraint.datasource.id}
                   placeholder={translate('permissions.datasourceConstraints.selectField')}
                   onChange={event => {
                     if (event) {
-                      con.featureName = event.label;
+                      con['@type'] = 'Feature';
                       const filteredFeatures = props.features.filter(item => {
                         return item.id === event.value;
-                      });
-                      if (filteredFeatures && filteredFeatures.length > 0) {
-                        con.featureName = filteredFeatures[0].name;
+                      })[0];
+                      if (filteredFeatures) {
+                        con.id = filteredFeatures.id;
                         props.setDatasourceConstraints(props.constraint);
                       }
-                      con['isCommaSeparatedInputOn'] = false;
+                      props.updateCondition(con);
                     }
                   }}
                   className="basic-single"
@@ -249,38 +185,9 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
                   isSearchable={true}
                   name="features"
                   options={generateFeatureNameOptions(props.features)}
-                  value={{ value: con.featureName, label: con.featureName }}
+                  value={getFeature(con.id)}
                 />
               </div>
-              {con.isCommaSeparatedInputOn ? (
-                <SeparatorInput values={con.values} dispatchCommaSeparatedValues={dispatchCommaSeparatedValues} separator={separator} />
-              ) : (
-                <div style={{ minWidth: '300px' }}>
-                  <Select
-                    isDisabled={!props.constraint.datasource.id}
-                    isMulti
-                    value={generateOptions(con.values)}
-                    searchable={true}
-                    onBlurResetsInput={false}
-                    onCloseResetsInput={false}
-                    onFocus={() => {
-                      onFocus(con);
-                    }}
-                    closeMenuOnSelect={false}
-                    classNamePrefix="select"
-                    onChange={(value, actionMeta) => {
-                      handleChange(value, actionMeta, con);
-                    }}
-                    placeholder={`Search ${con.featureName}`}
-                    onInputChange={event => {
-                      handleInputChange(con, event);
-                    }}
-                    options={props.filterSelectOptions}
-                  />
-                </div>
-              )}
-
-              <SeparatorIcon toggleCommaSeparator={toggleCommaSeparator} condition={con} />
               <ActionButton
                 isQuiet
                 onPress={() => {
@@ -301,7 +208,6 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
               ) : null}
             </Flex>
           ))}
-
           {props.constraint.id !== '' ? (
             <React.Fragment>
               <span className="spectrum-Heading spectrum-Heading--sizeXXS">
@@ -333,21 +239,17 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
 
 const mapStateToProps = (storeState: IRootState) => ({
   datasources: storeState.datasources.datasources,
-  updateSuccess: storeState.userDatasourceConstraints.updateSuccess,
-  updating: storeState.userDatasourceConstraints.updating,
+  updateSuccess: storeState.userGroupDatasourceConstraints.updateSuccess,
+  updating: storeState.userGroupDatasourceConstraints.updating,
   features: storeState.feature.entities,
-  users: storeState.userManagement.users,
-  searchedUsers: storeState.userManagement.searchedUsers,
-  constraint: storeState.userDatasourceConstraints.constraint,
+  constraint: storeState.userGroupDatasourceConstraints.constraint,
   filterSelectOptions: generateFilterOptions(storeState.visualisationData.filterData),
 });
 
 const mapDispatchToProps = {
   setDatasourceConstraints,
   getDatasources,
-  searchUsers,
   getDatasourcesByName,
-  getUsers,
   getFeatures,
   reset,
   createDatasourceConstraints,
@@ -355,11 +257,10 @@ const mapDispatchToProps = {
   deleteDatasourceConstraints,
   addConstraint,
   removeConstraint,
-  setFilterData,
-  updateConditionValues,
+  updateCondition
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserDatasourceConstraintUpdate);
+export default connect(mapStateToProps, mapDispatchToProps)(UserGroupDatasourceConstraintUpdate);

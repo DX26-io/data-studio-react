@@ -41,7 +41,7 @@ const Admin: React.FC = () => {
     },
     {
       icon: <DataUser size="L" />,
-      link: `/administration/user-management/datasource-constraints/users`,
+      link: `/administration/user-management/datasource-constraints`,
       title: 'permissions.datasourceConstraints.title',
       description: 'permissions.datasourceConstraints.description',
     },
