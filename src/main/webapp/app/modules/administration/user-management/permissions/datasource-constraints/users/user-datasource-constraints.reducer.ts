@@ -4,17 +4,17 @@ import { ICrudPutAction, ICrudDeleteAction, ICrudGetAllAction, ICrudGetAction } 
 import { IUserDatasourceConstraints, defaultValue } from 'app/shared/model/user-datasource-constraints.model';
 import { defaultValue as conditionDefaultValue } from 'app/shared/model/user-feature-constraint.model';
 export const ACTION_TYPES = {
-  FETCH_USER_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_USER_DATASOURCE_CONSTRAINTS',
-  FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS',
-  FETCH_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_DATASOURCE_CONSTRAINTS',
-  SET_DATASOURCE_CONSTRAINTS: 'datasource-constraints/SET_DATASOURCE_CONSTRAINTS',
-  CREATE_DATASOURCE_CONSTRAINTS: 'datasource-constraints/CREATE_DATASOURCE_CONSTRAINTS',
-  UPDATE_DATASOURCE_CONSTRAINTS: 'datasource-constraints/UPDATE_DATASOURCE_CONSTRAINTS',
-  DELETE_DATASOURCE_CONSTRAINTS: 'datasource-constraints/DELETE_DATASOURCE_CONSTRAINTS',
-  ADD_CONSTRAINT: 'datasource-constraints/ADD_CONSTRAINT',
-  REMOVE_CONSTRAINT: 'datasource-constraints/REMOVE_CONSTRAINT',
-  RESET: 'datasource-constraints/RESET',
-  UPDATE_CONDITION_VALUES: 'datasource-constraints/UPDATE_CONDITION_VALUES',
+  FETCH_USER_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/FETCH_USER_DATASOURCE_CONSTRAINTS',
+  FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS',
+  FETCH_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/FETCH_DATASOURCE_CONSTRAINTS',
+  SET_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/SET_DATASOURCE_CONSTRAINTS',
+  CREATE_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/CREATE_DATASOURCE_CONSTRAINTS',
+  UPDATE_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/UPDATE_DATASOURCE_CONSTRAINTS',
+  DELETE_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/DELETE_DATASOURCE_CONSTRAINTS',
+  ADD_CONSTRAINT: 'user-datasource-constraints/ADD_CONSTRAINT',
+  REMOVE_CONSTRAINT: 'user-datasource-constraints/REMOVE_CONSTRAINT',
+  RESET: 'user-datasource-constraints/RESET',
+  UPDATE_CONDITION_VALUES: 'user-datasource-constraints/UPDATE_CONDITION_VALUES',
 };
 
 const resetConstraint = (constraint, condition) => {

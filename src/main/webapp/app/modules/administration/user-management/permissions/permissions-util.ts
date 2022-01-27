@@ -20,3 +20,20 @@ export const getSearchParam = (param, route) => {
   const params = new URLSearchParams(route);
   return params.get(param) ? params.get(param) : '';
 };
+
+export const generateDatasourcesOptions = datasources => {
+  const options = [];
+  datasources &&
+    datasources.forEach(item => {
+      options.push({ value: item.id, label: item.name });
+    });
+  return options;
+};
+export const generateFeatureNameOptions = featurs => {
+  const options = [];
+  featurs &&
+    featurs.forEach(item => {
+      options.push({ value: item.id, label: item.name });
+    });
+  return options;
+};

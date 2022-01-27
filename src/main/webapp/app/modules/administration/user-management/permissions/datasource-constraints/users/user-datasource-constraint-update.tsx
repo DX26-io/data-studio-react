@@ -40,12 +40,7 @@ import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import AddCircel from '@spectrum-icons/workflow/AddCircle';
 import RemoveCircle from '@spectrum-icons/workflow/RemoveCircle';
-import {
-  generateDatasourcesOptions,
-  generateFeatureNameOptions,
-  generateUserOptions,
-  isFormValid,
-} from './user-datasource-constraints.util';
+import { generateUserOptions, isFormValid } from './user-datasource-constraints.util';
 import Separators from 'app/shared/components/separator/separators';
 import SeparatorInput from 'app/shared/components/separator/separator-input';
 import SeparatorIcon from 'app/shared/components/separator/separator-icon';
@@ -53,6 +48,7 @@ import { addCommaSeparatedValuesIntoConstraint } from 'app/shared/components/sep
 import { SEPARATORS } from 'app/config/constants';
 import Select from 'react-select';
 import { loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
+import { generateDatasourcesOptions, generateFeatureNameOptions } from '../../permissions-util';
 
 export interface IUserDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;

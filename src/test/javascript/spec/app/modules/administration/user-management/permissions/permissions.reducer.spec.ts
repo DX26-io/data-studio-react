@@ -147,6 +147,7 @@ describe('permissions reducer tests', () => {
         totalViewsPermissions: 0,
         updateSuccess: false,
         updating: false,
+        searchUrl: '',
       };
       const payload = {
         ...initialState,

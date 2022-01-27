@@ -31,17 +31,18 @@ import {
   deleteDatasourceConstraints,
   addConstraint,
   removeConstraint,
-  updateCondition
+  updateCondition,
 } from './user-group-datasource-constraints.reducer';
 import { getEntitiesByFeatureType as getFeatures } from 'app/entities/feature/feature.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import AddCircel from '@spectrum-icons/workflow/AddCircle';
 import RemoveCircle from '@spectrum-icons/workflow/RemoveCircle';
-import { generateDatasourcesOptions, generateFeatureNameOptions, isFormValid } from './user-group-datasource-constraints.util';
+import { isFormValid } from './user-group-datasource-constraints.util';
 import Select from 'react-select';
 import { loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 import { IDatasources } from 'app/shared/model/datasources.model';
 import { IFeature } from 'app/shared/model/feature.model';
+import { generateDatasourcesOptions, generateFeatureNameOptions } from '../../permissions-util';
 
 export interface IUserGroupDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
@@ -91,13 +92,13 @@ export const UserGroupDatasourceConstraintUpdate = (props: IUserGroupDatasourceC
   }, [props.constraint]);
 
   const getFeature = id => {
-    if(id){
+    if (id) {
       const filteredFeatures = props.features.filter(item => {
         return item.id === id;
       })[0];
-      return {label:filteredFeatures.name,value:filteredFeatures.id};
-    }else{
-      return {label:'',value:''};
+      return { label: filteredFeatures.name, value: filteredFeatures.id };
+    } else {
+      return { label: '', value: '' };
     }
   };
 
@@ -257,7 +258,7 @@ const mapDispatchToProps = {
   deleteDatasourceConstraints,
   addConstraint,
   removeConstraint,
-  updateCondition
+  updateCondition,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
