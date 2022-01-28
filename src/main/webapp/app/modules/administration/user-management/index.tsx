@@ -4,7 +4,7 @@ import Users from './users/users';
 import UserGroups from './groups/user-groups';
 import DashboardPermissionsContainer from './permissions/dashboards/dashboard-permissions-container';
 import DatasourcePermissionContainer from './permissions/datasources/datasource-permissions-container';
-import DatasourceConstraintsContainer from './permissions/datasource-constraints/datasource-constraints-container';
+import DatasourceConstraints from './permissions/datasource-constraints/datasource-constraints';
 import UserManagement from './user-management';
 
 const Routes = ({ match }) => (
@@ -14,7 +14,7 @@ const Routes = ({ match }) => (
     <ErrorBoundaryRoute exact path={`${match.url}/groups`} component={UserGroups} />
     <ErrorBoundaryRoute exact path={`${match.url}/dashboard-permissions`} component={DashboardPermissionsContainer} />
     <ErrorBoundaryRoute exact path={`${match.url}/datasource-permissions`} component={DatasourcePermissionContainer} />
-    <ErrorBoundaryRoute exact path={`${match.url}/datasource-constraints`} component={DatasourceConstraintsContainer} />
+    <ErrorBoundaryRoute exact path={`${match.url}/datasource-constraints`} component={DatasourceConstraints} />
   </div>
 );
 

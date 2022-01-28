@@ -1,48 +1,21 @@
 import axios from 'axios';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { ICrudPutAction, ICrudDeleteAction, ICrudGetAllAction, ICrudGetAction } from 'react-jhipster';
-import { IDatasourceConstraints, defaultValue } from 'app/shared/model/datasource-constraints.model';
-import { defaultValue as conditionDefaultValue } from 'app/shared/model/feature-constraint.model';
-import { object } from 'prop-types';
+import { IUserDatasourceConstraints, defaultValue } from 'app/shared/model/user-datasource-constraints.model';
+import { defaultValue as conditionDefaultValue } from 'app/shared/model/user-feature-constraint.model';
+import {removeConstraintFromList,resetConstraint,updateConditionInConstraint,addConstraintIntoList } from '../../permissions-util';
 export const ACTION_TYPES = {
-  FETCH_USER_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_USER_DATASOURCE_CONSTRAINTS',
-  FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS',
-  FETCH_FEATURES: 'permission/FETCH_FEATURES',
-  FETCH_DATASOURCE_CONSTRAINTS: 'datasource-constraints/FETCH_DATASOURCE_CONSTRAINTS',
-  SET_DATASOURCE_CONSTRAINTS: 'datasource-constraints/SET_DATASOURCE_CONSTRAINTS',
-  CREATE_DATASOURCE_CONSTRAINTS: 'datasource-constraints/CREATE_DATASOURCE_CONSTRAINTS',
-  UPDATE_DATASOURCE_CONSTRAINTS: 'datasource-constraints/UPDATE_DATASOURCE_CONSTRAINTS',
-  DELETE_DATASOURCE_CONSTRAINTS: 'datasource-constraints/DELETE_DATASOURCE_CONSTRAINTS',
-  ADD_CONSTRAINT: 'datasource-constraints/ADD_CONSTRAINT',
-  REMOVE_CONSTRAINT: 'datasource-constraints/REMOVE_CONSTRAINT',
-  RESET: 'datasource-constraints/RESET',
-  UPDATE_CONDITION_VALUES: 'datasource-constraints/UPDATE_CONDITION_VALUES',
-};
-
-const resetConstraint = (constraint, condition) => {
-  constraint.constraintDefinition.featureConstraints[0] = condition;
-  return Object.assign({}, constraint);
-};
-
-const updateConditionInConstraint = (constraint, condition) => {
-  const index = constraint.constraintDefinition.featureConstraints.indexOf(condition);
-  if (index > -1) {
-    constraint.constraintDefinition.featureConstraints[index] = condition;
-  }
-  return Object.assign({}, constraint);
-};
-
-const removeConstraintFromList = (constraint, condition) => {
-  const index = constraint.constraintDefinition.featureConstraints.indexOf(condition);
-  if (index > -1) {
-    constraint.constraintDefinition.featureConstraints.splice(index, 1);
-  }
-  return Object.assign({}, constraint);
-};
-
-const addConstraintIntoList = constraint => {
-  constraint.constraintDefinition.featureConstraints.push({ ...conditionDefaultValue });
-  return Object.assign({}, constraint);
+  FETCH_USER_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/FETCH_USER_DATASOURCE_CONSTRAINTS',
+  FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS',
+  FETCH_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/FETCH_DATASOURCE_CONSTRAINTS',
+  SET_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/SET_DATASOURCE_CONSTRAINTS',
+  CREATE_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/CREATE_DATASOURCE_CONSTRAINTS',
+  UPDATE_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/UPDATE_DATASOURCE_CONSTRAINTS',
+  DELETE_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/DELETE_DATASOURCE_CONSTRAINTS',
+  ADD_CONSTRAINT: 'user-datasource-constraints/ADD_CONSTRAINT',
+  REMOVE_CONSTRAINT: 'user-datasource-constraints/REMOVE_CONSTRAINT',
+  RESET: 'user-datasource-constraints/RESET',
+  UPDATE_CONDITION_VALUES: 'user-datasource-constraints/UPDATE_CONDITION_VALUES',
 };
 
 const updateConditionStateValues = (constraint, condition, values) => {
@@ -64,10 +37,10 @@ const initialState = {
   constraint: defaultValue,
 };
 
-export type DatasourceConstraintsState = Readonly<typeof initialState>;
+export type UserDatasourceConstraintsState = Readonly<typeof initialState>;
 
 // Reducer
-export default (state: DatasourceConstraintsState = initialState, action): DatasourceConstraintsState => {
+export default (state: UserDatasourceConstraintsState = initialState, action): UserDatasourceConstraintsState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_USER_DATASOURCE_CONSTRAINTS):
       return {
@@ -76,12 +49,6 @@ export default (state: DatasourceConstraintsState = initialState, action): Datas
         loading: true,
       };
     case REQUEST(ACTION_TYPES.FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS):
-      return {
-        ...state,
-        errorMessage: null,
-        loading: true,
-      };
-    case REQUEST(ACTION_TYPES.FETCH_FEATURES):
       return {
         ...state,
         errorMessage: null,
@@ -127,12 +94,6 @@ export default (state: DatasourceConstraintsState = initialState, action): Datas
         loading: false,
         errorMessage: action.payload,
       };
-    case FAILURE(ACTION_TYPES.FETCH_FEATURES):
-      return {
-        ...state,
-        loading: false,
-        errorMessage: action.payload,
-      };
     case FAILURE(ACTION_TYPES.FETCH_DATASOURCE_CONSTRAINTS):
       return {
         ...state,
@@ -172,12 +133,6 @@ export default (state: DatasourceConstraintsState = initialState, action): Datas
         loading: false,
         constraints: action.payload.data,
       };
-    case SUCCESS(ACTION_TYPES.FETCH_FEATURES):
-      return {
-        ...state,
-        loading: false,
-        features: action.payload.data,
-      };
     case SUCCESS(ACTION_TYPES.FETCH_DATASOURCE_CONSTRAINTS):
       return {
         ...state,
@@ -212,7 +167,7 @@ export default (state: DatasourceConstraintsState = initialState, action): Datas
     case ACTION_TYPES.ADD_CONSTRAINT:
       return {
         ...state,
-        constraint: addConstraintIntoList(state.constraint),
+        constraint: addConstraintIntoList(state.constraint,conditionDefaultValue),
       };
     case ACTION_TYPES.REMOVE_CONSTRAINT:
       return {
@@ -248,33 +203,27 @@ export const getUserDatasourceConstraints = (login: string) => ({
   payload: axios.get(`${apiUrl}?user.login=${login}`),
 });
 
-export const getDatasourceConstraints: ICrudGetAction<IDatasourceConstraints> = (id: number) => ({
+export const getDatasourceConstraints: ICrudGetAction<IUserDatasourceConstraints> = (id: number) => ({
   type: ACTION_TYPES.FETCH_DATASOURCE_CONSTRAINTS,
   payload: axios.get(`${apiUrl}/${id}`),
 });
 
-export const createDatasourceConstraints: ICrudPutAction<IDatasourceConstraints> = entity => ({
+export const createDatasourceConstraints: ICrudPutAction<IUserDatasourceConstraints> = entity => ({
   type: ACTION_TYPES.CREATE_DATASOURCE_CONSTRAINTS,
   payload: axios.post(`${apiUrl}`, entity),
 });
 
-export const updateDatasourceConstraints: ICrudPutAction<IDatasourceConstraints> = entity => ({
+export const updateDatasourceConstraints: ICrudPutAction<IUserDatasourceConstraints> = entity => ({
   type: ACTION_TYPES.CREATE_DATASOURCE_CONSTRAINTS,
   payload: axios.put(`${apiUrl}`, entity),
 });
 
-export const deleteDatasourceConstraints: ICrudDeleteAction<IDatasourceConstraints> = (id: number) => ({
+export const deleteDatasourceConstraints: ICrudDeleteAction<IUserDatasourceConstraints> = (id: number) => ({
   type: ACTION_TYPES.DELETE_DATASOURCE_CONSTRAINTS,
   payload: axios.delete(`${apiUrl}/${id}`),
 });
 
-// TODO : below menthod will be removed once khushbu's pr is merged with master
-export const getFeatures = (datasourceId: number, featureType: string) => ({
-  type: ACTION_TYPES.FETCH_FEATURES,
-  payload: axios.get(`api/features?datasource=${datasourceId}&featureType=${featureType}`),
-});
-
-export const setDatasourceConstraints = (constraint: IDatasourceConstraints) => ({
+export const setDatasourceConstraints = (constraint: IUserDatasourceConstraints) => ({
   type: ACTION_TYPES.SET_DATASOURCE_CONSTRAINTS,
   payload: constraint,
 });

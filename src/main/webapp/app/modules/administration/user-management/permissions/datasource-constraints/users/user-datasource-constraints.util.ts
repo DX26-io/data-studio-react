@@ -1,7 +1,7 @@
-import { IDatasourceConstraints } from 'app/shared/model/datasource-constraints.model';
+import { IUserDatasourceConstraints } from 'app/shared/model/user-datasource-constraints.model';
 import { IError, defaultValue } from 'app/shared/model/error.model';
 
-export const isFormValid = (constraint: IDatasourceConstraints): IError => {
+export const isFormValid = (constraint: IUserDatasourceConstraints): IError => {
   let error = defaultValue;
   if (!constraint.datasource.id) {
     error = { translationKey: 'permissions.datasourceConstraints.error.datasource', isValid: false };
@@ -24,22 +24,6 @@ export const generateUserOptions = users => {
   users &&
     users.forEach(item => {
       options.push({ value: item.id, label: item.login });
-    });
-  return options;
-};
-export const generateDatasourcesOptions = datasources => {
-  const options = [];
-  datasources &&
-    datasources.forEach(item => {
-      options.push({ value: item.id, label: item.name });
-    });
-  return options;
-};
-export const generateFeatureNameOptions = featurs => {
-  const options = [];
-  featurs &&
-    featurs.forEach(item => {
-      options.push({ value: item.id, label: item.name });
     });
   return options;
 };

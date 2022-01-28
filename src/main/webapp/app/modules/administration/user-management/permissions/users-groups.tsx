@@ -3,15 +3,14 @@ import { connect } from 'react-redux';
 import { getUserGroups, searchUserGroups } from '../groups/user-group.reducer';
 import { getUsers, searchUsers } from '../users/user.reducer';
 import { IRootState } from 'app/shared/reducers';
-import { Flex, Text, SearchField, ListBox, Item, Section, Content, View } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Text, SearchField, ListBox, Item, Section, Content, View } from '@adobe/react-spectrum';
 import User from '@spectrum-icons/workflow/User';
 import UserGroup from '@spectrum-icons/workflow/UserGroup';
-import { useAsyncList } from '@react-stately/data';
 import { Tabs } from '@react-spectrum/tabs';
-import { Translate, translate } from 'react-jhipster';
+import { translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE, ACTIVE_PAGE } from 'app/shared/util/pagination.constants';
-
+import { setSearchUrl } from './permissions.reducer';
+import { getSearchParam } from './permissions-util';
 export interface IUsersGroupsProps extends StateProps, DispatchProps {
   permissionProps: any;
 }
@@ -41,12 +40,14 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
   const setGroupName = event => {
     const group = getParam(event);
     const endURL = `?page=${ACTIVE_PAGE}&group=${group.value}`;
+    props.setSearchUrl(endURL);
     pushParams(endURL);
   };
 
   const setLogin = event => {
     const user = getParam(event);
     const endURL = `?page=${ACTIVE_PAGE}&user=${user.value}`;
+    props.setSearchUrl(endURL);
     pushParams(endURL);
   };
 
@@ -57,6 +58,15 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
 
   useEffect(() => {
     fetchUsersGroups();
+    if (permissionProps?.location?.search) {
+      const group = getSearchParam('group', permissionProps.location.search);
+      if (group) {
+        setTabId(2);
+      } else {
+        setTabId(1);
+      }
+      props.setSearchUrl(permissionProps.location.search);
+    }
   }, []);
 
   useEffect(() => {
@@ -131,7 +141,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   searchedGroups: storeState.userGroups.searchedGroups,
 });
 
-const mapDispatchToProps = { getUserGroups, getUsers, searchUsers, searchUserGroups };
+const mapDispatchToProps = { getUserGroups, getUsers, searchUsers, searchUserGroups, setSearchUrl };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
