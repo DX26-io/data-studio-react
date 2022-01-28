@@ -58,13 +58,15 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
 
   useEffect(() => {
     fetchUsersGroups();
-    const group = getSearchParam('group', permissionProps.location.search);
-    if (group) {
-      setTabId(2);
-    } else {
-      setTabId(1);
+    if (permissionProps?.location?.search) {
+      const group = getSearchParam('group', permissionProps.location.search);
+      if (group) {
+        setTabId(2);
+      } else {
+        setTabId(1);
+      }
+      props.setSearchUrl(permissionProps.location.search);
     }
-    props.setSearchUrl(permissionProps.location.search);
   }, []);
 
   useEffect(() => {
