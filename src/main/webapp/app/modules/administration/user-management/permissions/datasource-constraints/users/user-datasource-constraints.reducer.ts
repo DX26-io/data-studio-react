@@ -3,6 +3,7 @@ import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util'
 import { ICrudPutAction, ICrudDeleteAction, ICrudGetAllAction, ICrudGetAction } from 'react-jhipster';
 import { IUserDatasourceConstraints, defaultValue } from 'app/shared/model/user-datasource-constraints.model';
 import { defaultValue as conditionDefaultValue } from 'app/shared/model/user-feature-constraint.model';
+import {removeConstraintFromList,resetConstraint,updateConditionInConstraint,addConstraintIntoList } from '../../permissions-util';
 export const ACTION_TYPES = {
   FETCH_USER_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/FETCH_USER_DATASOURCE_CONSTRAINTS',
   FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS: 'user-datasource-constraints/FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS',
@@ -15,32 +16,6 @@ export const ACTION_TYPES = {
   REMOVE_CONSTRAINT: 'user-datasource-constraints/REMOVE_CONSTRAINT',
   RESET: 'user-datasource-constraints/RESET',
   UPDATE_CONDITION_VALUES: 'user-datasource-constraints/UPDATE_CONDITION_VALUES',
-};
-
-const resetConstraint = (constraint, condition) => {
-  constraint.constraintDefinition.featureConstraints[0] = condition;
-  return Object.assign({}, constraint);
-};
-
-const updateConditionInConstraint = (constraint, condition) => {
-  const index = constraint.constraintDefinition.featureConstraints.indexOf(condition);
-  if (index > -1) {
-    constraint.constraintDefinition.featureConstraints[index] = condition;
-  }
-  return Object.assign({}, constraint);
-};
-
-const removeConstraintFromList = (constraint, condition) => {
-  const index = constraint.constraintDefinition.featureConstraints.indexOf(condition);
-  if (index > -1) {
-    constraint.constraintDefinition.featureConstraints.splice(index, 1);
-  }
-  return Object.assign({}, constraint);
-};
-
-const addConstraintIntoList = constraint => {
-  constraint.constraintDefinition.featureConstraints.push({ ...conditionDefaultValue });
-  return Object.assign({}, constraint);
 };
 
 const updateConditionStateValues = (constraint, condition, values) => {
@@ -192,7 +167,7 @@ export default (state: UserDatasourceConstraintsState = initialState, action): U
     case ACTION_TYPES.ADD_CONSTRAINT:
       return {
         ...state,
-        constraint: addConstraintIntoList(state.constraint),
+        constraint: addConstraintIntoList(state.constraint,conditionDefaultValue),
       };
     case ACTION_TYPES.REMOVE_CONSTRAINT:
       return {

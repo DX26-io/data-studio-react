@@ -4,6 +4,7 @@ import { ICrudPutAction, ICrudDeleteAction, ICrudGetAction } from 'react-jhipste
 import { IUserGroupDatasourceConstraints, defaultValue } from 'app/shared/model/user-group-datasource-constraints.model';
 import { defaultValue as conditionDefaultValue, IUserGroupFeatureConstraint } from 'app/shared/model/user-group-feature-constraint.model';
 import { onFetchDatasourceConstraints } from './user-group-datasource-constraints.util';
+import {removeConstraintFromList,resetConstraint,updateConditionInConstraint,addConstraintIntoList } from '../../permissions-util';
 export const ACTION_TYPES = {
   FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS: 'user-group-datasource-constraints/FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS',
   FETCH_DATASOURCE_CONSTRAINTS: 'user-group-datasource-constraints/FETCH_DATASOURCE_CONSTRAINTS',
@@ -15,32 +16,6 @@ export const ACTION_TYPES = {
   UPDATE_CONDITION: 'user-group-datasource-constraints/UPDATE_CONDITION',
   REMOVE_CONSTRAINT: 'user-group-datasource-constraints/REMOVE_CONSTRAINT',
   RESET: 'user-group-datasource-constraints/RESET',
-};
-
-const resetConstraint = (constraint, condition) => {
-  constraint.constraintDefinition.featureConstraints[0] = condition;
-  return Object.assign({}, constraint);
-};
-
-const updateConditionInConstraint = (constraint, condition) => {
-  const index = constraint.constraintDefinition.featureConstraints.indexOf(condition);
-  if (index > -1) {
-    constraint.constraintDefinition.featureConstraints[index] = condition;
-  }
-  return Object.assign({}, constraint);
-};
-
-const removeConstraintFromList = (constraint, condition) => {
-  const index = constraint.constraintDefinition.featureConstraints.indexOf(condition);
-  if (index > -1) {
-    constraint.constraintDefinition.featureConstraints.splice(index, 1);
-  }
-  return Object.assign({}, constraint);
-};
-
-const addConstraintIntoList = constraint => {
-  constraint.constraintDefinition.featureConstraints.push({ ...conditionDefaultValue });
-  return Object.assign({}, constraint);
 };
 
 const initialState = {
@@ -165,7 +140,7 @@ export default (state: UserGroupDatasourceConstraintsState = initialState, actio
     case ACTION_TYPES.ADD_CONSTRAINT:
       return {
         ...state,
-        constraint: addConstraintIntoList(state.constraint),
+        constraint: addConstraintIntoList(state.constraint,conditionDefaultValue),
       };
     case ACTION_TYPES.UPDATE_CONDITION:
       return {
