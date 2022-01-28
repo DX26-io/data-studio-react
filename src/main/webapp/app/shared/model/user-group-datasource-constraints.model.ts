@@ -1,5 +1,6 @@
 import { IUserGroupFeatureConstraint, defaultValue as userGroupFeatureConstraintDefaultValue } from './user-group-feature-constraint.model';
 import { IDatasources, defaultDatasourceValue } from './datasources.model';
+import { IUserGroup,defaultValue as defaultUserGroupValue } from './user-group.model';
 
 export interface IUserGroupConstraintDefinition {
   featureConstraints: Array<IUserGroupFeatureConstraint>;
@@ -15,6 +16,7 @@ export interface IUserGroupDatasourceConstraints {
   userGroupName: string;
   datasourceId?: number;
   datasource?: IDatasources;
+  userGroup?:IUserGroup;
 }
 
 export const defaultValue: Readonly<IUserGroupDatasourceConstraints> = {
@@ -23,4 +25,5 @@ export const defaultValue: Readonly<IUserGroupDatasourceConstraints> = {
   userGroupName: '',
   datasourceId: 0,
   datasource: defaultDatasourceValue,
+  userGroup:defaultUserGroupValue
 };

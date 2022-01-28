@@ -9,7 +9,7 @@ import UserGroup from '@spectrum-icons/workflow/UserGroup';
 import { Tabs } from '@react-spectrum/tabs';
 import { translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE, ACTIVE_PAGE } from 'app/shared/util/pagination.constants';
-import { setSearchUrl } from "./permissions.reducer";
+import { setSearchUrl } from './permissions.reducer';
 import { getSearchParam } from './permissions-util';
 export interface IUsersGroupsProps extends StateProps, DispatchProps {
   permissionProps: any;
@@ -58,12 +58,13 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
 
   useEffect(() => {
     fetchUsersGroups();
-    const user = getSearchParam('user', permissionProps.location.search);
-    if(user){
-      setTabId(1);
-    }else{
+    const group = getSearchParam('group', permissionProps.location.search);
+    if (group) {
       setTabId(2);
+    } else {
+      setTabId(1);
     }
+    props.setSearchUrl(permissionProps.location.search);
   }, []);
 
   useEffect(() => {
@@ -138,7 +139,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   searchedGroups: storeState.userGroups.searchedGroups,
 });
 
-const mapDispatchToProps = { getUserGroups, getUsers, searchUsers, searchUserGroups,setSearchUrl };
+const mapDispatchToProps = { getUserGroups, getUsers, searchUsers, searchUserGroups, setSearchUrl };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

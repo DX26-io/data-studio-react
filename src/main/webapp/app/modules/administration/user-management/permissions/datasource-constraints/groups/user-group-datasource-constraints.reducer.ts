@@ -3,6 +3,7 @@ import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util'
 import { ICrudPutAction, ICrudDeleteAction, ICrudGetAction } from 'react-jhipster';
 import { IUserGroupDatasourceConstraints, defaultValue } from 'app/shared/model/user-group-datasource-constraints.model';
 import { defaultValue as conditionDefaultValue, IUserGroupFeatureConstraint } from 'app/shared/model/user-group-feature-constraint.model';
+import { onFetchDatasourceConstraints } from './user-group-datasource-constraints.util';
 export const ACTION_TYPES = {
   FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS: 'user-group-datasource-constraints/FETCH_USER_GROUP_DATASOURCE_CONSTRAINTS',
   FETCH_DATASOURCE_CONSTRAINTS: 'user-group-datasource-constraints/FETCH_DATASOURCE_CONSTRAINTS',
@@ -134,7 +135,7 @@ export default (state: UserGroupDatasourceConstraintsState = initialState, actio
       return {
         ...state,
         loading: false,
-        constraint: action.payload.data,
+        constraint: onFetchDatasourceConstraints(action.payload.data),
       };
     case SUCCESS(ACTION_TYPES.CREATE_DATASOURCE_CONSTRAINTS):
       return {

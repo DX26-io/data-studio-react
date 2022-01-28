@@ -21,3 +21,11 @@ export const generateUserOptions = users => {
     });
   return options;
 };
+
+export const onFetchDatasourceConstraints = constraint => {
+  if (constraint) {
+    constraint['datasourceId'] = constraint.datasource.id;
+    constraint['userGroupName'] = constraint.userGroup.name;
+  }
+  return constraint;
+};

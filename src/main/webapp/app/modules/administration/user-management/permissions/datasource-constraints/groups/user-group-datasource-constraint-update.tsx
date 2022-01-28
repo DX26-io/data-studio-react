@@ -34,7 +34,6 @@ import {
   updateCondition,
 } from './user-group-datasource-constraints.reducer';
 import { getEntitiesByFeatureType as getFeatures } from 'app/entities/feature/feature.reducer';
-import { generateOptions } from 'app/shared/util/entity-utils';
 import AddCircel from '@spectrum-icons/workflow/AddCircle';
 import RemoveCircle from '@spectrum-icons/workflow/RemoveCircle';
 import { isFormValid } from './user-group-datasource-constraints.util';
@@ -42,7 +41,7 @@ import Select from 'react-select';
 import { loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 import { IDatasources } from 'app/shared/model/datasources.model';
 import { IFeature } from 'app/shared/model/feature.model';
-import { generateDatasourcesOptions, generateFeatureNameOptions } from '../../permissions-util';
+import { generateDatasourcesOptions, generateFeatureNameOptions, getSearchParam } from '../../permissions-util';
 
 export interface IUserGroupDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
@@ -52,7 +51,6 @@ export const UserGroupDatasourceConstraintUpdate = (props: IUserGroupDatasourceC
   const { setOpen, updateSuccess, updating } = props;
   const [error, setError] = useState(defaultValue);
   const [datasource, setDatasource] = useState<IDatasources>(null);
-  const [feature, setFeature] = useState<IFeature>(null);
 
   const dialog = useDialogContainer();
 
@@ -70,6 +68,10 @@ export const UserGroupDatasourceConstraintUpdate = (props: IUserGroupDatasourceC
 
   useEffect(() => {
     props.getDatasources(0, ITEMS_PER_PAGE, 'lastUpdated,desc');
+    if (!props.constraint.userGroupName) {
+      const group = getSearchParam('group', props.searchUrl);
+      props.setDatasourceConstraints({ ...props.constraint, userGroupName: group });
+    }
   }, []);
 
   const save = () => {
@@ -86,17 +88,21 @@ export const UserGroupDatasourceConstraintUpdate = (props: IUserGroupDatasourceC
 
   useEffect(() => {
     setError(isFormValid(props.constraint));
-    if (props.constraint?.datasource) {
+    if (props.constraint?.datasource?.id) {
       setDatasource(props.constraint?.datasource);
     }
   }, [props.constraint]);
 
   const getFeature = id => {
     if (id) {
-      const filteredFeatures = props.features.filter(item => {
+      const filteredFeature = props.features.filter(item => {
         return item.id === id;
       })[0];
-      return { label: filteredFeatures.name, value: filteredFeatures.id };
+      if (filteredFeature) {
+        return { label: filteredFeature.name, value: filteredFeature.id };
+      } else {
+        return { label: '', value: '' };
+      }
     } else {
       return { label: '', value: '' };
     }
@@ -245,6 +251,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   features: storeState.feature.entities,
   constraint: storeState.userGroupDatasourceConstraints.constraint,
   filterSelectOptions: generateFilterOptions(storeState.visualisationData.filterData),
+  searchUrl: storeState.permissions.searchUrl,
 });
 
 const mapDispatchToProps = {
