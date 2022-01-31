@@ -39,14 +39,14 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
 
   const setGroupName = event => {
     const group = getParam(event);
-    const endURL = `?page=${ACTIVE_PAGE}&group=${group.value}`;
+    const endURL = `?group=${group.value}`;
     props.setSearchUrl(endURL);
     pushParams(endURL);
   };
 
   const setLogin = event => {
     const user = getParam(event);
-    const endURL = `?page=${ACTIVE_PAGE}&user=${user.value}`;
+    const endURL = `?user=${user.value}`;
     props.setSearchUrl(endURL);
     pushParams(endURL);
   };
@@ -60,10 +60,13 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
     fetchUsersGroups();
     if (permissionProps?.location?.search) {
       const group = getSearchParam('group', permissionProps.location.search);
+      const user = getSearchParam('user', permissionProps.location.search);
       if (group) {
         setTabId(2);
+        setGroupName(new Set([group]));
       } else {
         setTabId(1);
+        setLogin(new Set([user]));
       }
       props.setSearchUrl(permissionProps.location.search);
     }

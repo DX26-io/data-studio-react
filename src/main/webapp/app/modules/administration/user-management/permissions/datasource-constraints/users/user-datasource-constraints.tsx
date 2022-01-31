@@ -16,16 +16,14 @@ import { toast } from 'react-toastify';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import { getEntitiesByFeatureType as getFeatures } from 'app/entities/feature/feature.reducer';
 import { getSearchParam } from '../../permissions-util';
-// TODO : when hit the url,params should be visible
 
 export interface IUserDatasourceConstraintsProps extends StateProps, DispatchProps {
-  routeProps: any;
   setOpen: (isOpen: boolean) => void;
 }
 
 export const UserDatasourceConstraints = (props: IUserDatasourceConstraintsProps) => {
 
-  const { constraints, routeProps, updateSuccess } = props;
+  const { constraints, updateSuccess } = props;
 
   const updateUserIntoConstraint = login => {
     const _user = props.users.filter(f => f.login === login)[0];
@@ -33,26 +31,21 @@ export const UserDatasourceConstraints = (props: IUserDatasourceConstraintsProps
   };
 
   const fetchConstraints = _user => {
-    let endURL = '';
     if (_user) {
-      endURL = `?user=${_user}`;
       props.getUserDatasourceConstraints(_user);
       updateUserIntoConstraint(_user);
-    }
-    if (routeProps.location.search && routeProps.location.search !== endURL) {
-      routeProps.history.push(`${routeProps.location.pathname}${endURL}`);
     }
   };
 
   useEffect(() => {
-    if (routeProps.location.search) {
-      fetchConstraints(getSearchParam('user', routeProps.location.search));
+    if (props.searchUrl) {
+      fetchConstraints(getSearchParam('user', props.searchUrl));
     }
   }, [props.searchUrl]);
 
   useEffect(() => {
     if (updateSuccess) {
-      fetchConstraints(getSearchParam('user', routeProps.location.search));
+      fetchConstraints(getSearchParam('user', props.searchUrl));
     }
   }, [updateSuccess]);
 

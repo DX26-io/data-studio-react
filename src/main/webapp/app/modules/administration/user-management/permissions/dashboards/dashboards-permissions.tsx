@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getUserGroupDashboardPermissions, getUserDashboardPermissions } from '../permissions.reducer';
 import { IRootState } from 'app/shared/reducers';
-import { Flex, Text, SearchField, DialogContainer } from '@adobe/react-spectrum';
+import { Flex, DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import Edit from '@spectrum-icons/workflow/Edit';
 import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/pagination.constants';
@@ -10,8 +10,7 @@ import { Translate, getSortState } from 'react-jhipster';
 import { StatusLight } from '@adobe/react-spectrum';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import ViewsPermissions from './views-permissions';
-
-// TODO : when hit the url,params should be visible
+import { getSearchParam } from '../permissions-util';
 
 export interface IDashboardsPermissionsProps extends StateProps, DispatchProps {
   permissionProps: any;
@@ -31,16 +30,10 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
   );
 
   const fetchPermissions = () => {
-    let endURL = '';
     if (user) {
-      endURL = `?page=${pagination.activePage}&user=${user}`;
       props.getUserDashboardPermissions(pagination.activePage, pagination.itemsPerPage, user);
     } else if (group) {
-      endURL = `?page=${pagination.activePage}&group=${group}`;
       props.getUserGroupDashboardPermissions(pagination.activePage, pagination.itemsPerPage, group);
-    }
-    if (permissionProps.location.search && permissionProps.location.search !== endURL) {
-      permissionProps.history.push(`${permissionProps.location.pathname}${endURL}`);
     }
   };
 
@@ -49,21 +42,13 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
   }, [pagination.activePage, pagination.itemsPerPage, user, group]);
 
   useEffect(() => {
-    if (permissionProps.location.search) {
-      const params = new URLSearchParams(permissionProps.location.search);
-      const page = params.get('page');
-      const groupName = params.get('group');
-      const login = params.get('user');
-      if (page) {
-        setPagination({
-          ...pagination,
-          activePage: +page,
-        });
-      }
+    if (props.searchUrl) {
+      const groupName = getSearchParam('group', props.searchUrl);
+      const login = getSearchParam('user', props.searchUrl);
       setUser(login);
       setGroup(groupName);
     }
-  }, [permissionProps.location.search]);
+  }, [props.searchUrl]);
 
   const handleChangePage = (event, newPage) => {
     setPagination({
@@ -183,6 +168,7 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   dashboardPermissions: storeState.permissions.dashboardPermissions,
   totalDashboardPermissions: storeState.permissions.totalDashboardPermissions,
+  searchUrl: storeState.permissions.searchUrl,
 });
 
 const mapDispatchToProps = { getUserDashboardPermissions, getUserGroupDashboardPermissions };

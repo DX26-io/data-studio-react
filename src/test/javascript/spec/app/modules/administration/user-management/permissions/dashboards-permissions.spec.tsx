@@ -11,8 +11,6 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import promiseMiddleware from 'redux-promise-middleware';
 import { MemoryRouter } from 'react-router';
-import { RouteComponentProps } from 'react-router-dom';
-import { AUTHORITIES } from 'app/config/constants';
 
 export const getInitialState = () => {
   return {
@@ -202,7 +200,8 @@ describe('Dashboards Permissions', () => {
         },
       ],
       totalDashboardPermissions: 1,
-      viewsPermissions:[]
+      viewsPermissions:[],
+      searchUrl:'?page=0&user=flairadmin'
   }
 
   const wrapper = (props: IDashboardsPermissionsProps) => {

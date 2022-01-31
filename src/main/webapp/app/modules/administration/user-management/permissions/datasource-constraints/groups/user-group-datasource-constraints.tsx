@@ -10,42 +10,35 @@ import { IRootState } from 'app/shared/reducers';
 import { Flex } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import Edit from '@spectrum-icons/workflow/Edit';
-import { Translate, translate } from 'react-jhipster';
-import { toast } from 'react-toastify';
+import { Translate } from 'react-jhipster';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import { getEntitiesByFeatureType as getFeatures } from 'app/entities/feature/feature.reducer';
 import { getSearchParam } from '../../permissions-util';
 
 export interface IUserGroupDatasourceConstraintsProps extends StateProps, DispatchProps {
-  routeProps: any;
   setOpen: (isOpen: boolean) => void;
 }
 
 export const UserGroupDatasourceConstraints = (props: IUserGroupDatasourceConstraintsProps) => {
 
-  const { constraints, routeProps, updateSuccess } = props;
+  const { constraints, updateSuccess } = props;
 
   const fetchConstraints = _group => {
-    let endURL = '';
     if (_group) {
-      endURL = `?group=${_group}`;
       props.getUserGroupDatasourceConstraints(_group);
       props.setDatasourceConstraints({ ...props.constraint, userGroupName: _group });
-    }
-    if (routeProps.location.search && routeProps.location.search !== endURL) {
-      routeProps.history.push(`${routeProps.location.pathname}${endURL}`);
     }
   };
 
   useEffect(() => {
-    if (routeProps.location.search) {
-      fetchConstraints(getSearchParam('group', routeProps.location.search));
+    if (props.searchUrl) {
+      fetchConstraints(getSearchParam('group', props.searchUrl));
     }
   }, [props.searchUrl]);
 
   useEffect(() => {
     if (updateSuccess) {
-      fetchConstraints(getSearchParam('group', routeProps.location.search));
+      fetchConstraints(getSearchParam('group', props.searchUrl));
     }
   }, [updateSuccess]);
 
