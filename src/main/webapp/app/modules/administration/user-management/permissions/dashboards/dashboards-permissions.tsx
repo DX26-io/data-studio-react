@@ -26,7 +26,7 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
   const { dashboardPermissions, totalDashboardPermissions, permissionProps } = props;
 
   const [pagination, setPagination] = useState(
-    overridePaginationStateWithQueryParams(getSortState(permissionProps.location, ITEMS_PER_PAGE), props.searchUrl)
+    overridePaginationStateWithQueryParams(getSortState(permissionProps.location, ITEMS_PER_PAGE), permissionProps.location.search)
   );
 
   const fetchPermissions = () => {
