@@ -60,10 +60,13 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
     fetchUsersGroups();
     if (permissionProps?.location?.search) {
       const group = getSearchParam('group', permissionProps.location.search);
+      const user = getSearchParam('user', permissionProps.location.search);
       if (group) {
         setTabId(2);
+        setGroupName(new Set([group]));
       } else {
         setTabId(1);
+        setLogin(new Set([user]));
       }
       props.setSearchUrl(permissionProps.location.search);
     }
