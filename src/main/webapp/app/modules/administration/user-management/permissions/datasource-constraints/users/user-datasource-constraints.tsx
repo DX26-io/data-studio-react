@@ -18,13 +18,12 @@ import { getEntitiesByFeatureType as getFeatures } from 'app/entities/feature/fe
 import { getSearchParam } from '../../permissions-util';
 
 export interface IUserDatasourceConstraintsProps extends StateProps, DispatchProps {
-  routeProps: any;
   setOpen: (isOpen: boolean) => void;
 }
 
 export const UserDatasourceConstraints = (props: IUserDatasourceConstraintsProps) => {
 
-  const { constraints, routeProps, updateSuccess } = props;
+  const { constraints, updateSuccess } = props;
 
   const updateUserIntoConstraint = login => {
     const _user = props.users.filter(f => f.login === login)[0];

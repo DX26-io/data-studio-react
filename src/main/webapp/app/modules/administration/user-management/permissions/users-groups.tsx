@@ -39,14 +39,14 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
 
   const setGroupName = event => {
     const group = getParam(event);
-    const endURL = `?page=${ACTIVE_PAGE}&group=${group.value}`;
+    const endURL = `?group=${group.value}`;
     props.setSearchUrl(endURL);
     pushParams(endURL);
   };
 
   const setLogin = event => {
     const user = getParam(event);
-    const endURL = `?page=${ACTIVE_PAGE}&user=${user.value}`;
+    const endURL = `?user=${user.value}`;
     props.setSearchUrl(endURL);
     pushParams(endURL);
   };

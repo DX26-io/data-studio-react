@@ -16,13 +16,12 @@ import { getEntitiesByFeatureType as getFeatures } from 'app/entities/feature/fe
 import { getSearchParam } from '../../permissions-util';
 
 export interface IUserGroupDatasourceConstraintsProps extends StateProps, DispatchProps {
-  routeProps: any;
   setOpen: (isOpen: boolean) => void;
 }
 
 export const UserGroupDatasourceConstraints = (props: IUserGroupDatasourceConstraintsProps) => {
 
-  const { constraints, routeProps, updateSuccess } = props;
+  const { constraints, updateSuccess } = props;
 
   const fetchConstraints = _group => {
     if (_group) {
@@ -32,14 +31,14 @@ export const UserGroupDatasourceConstraints = (props: IUserGroupDatasourceConstr
   };
 
   useEffect(() => {
-    if (routeProps.location.search) {
-      fetchConstraints(getSearchParam('group', routeProps.location.search));
+    if (props.searchUrl) {
+      fetchConstraints(getSearchParam('group', props.searchUrl));
     }
   }, [props.searchUrl]);
 
   useEffect(() => {
     if (updateSuccess) {
-      fetchConstraints(getSearchParam('group', routeProps.location.search));
+      fetchConstraints(getSearchParam('group', props.searchUrl));
     }
   }, [updateSuccess]);
 

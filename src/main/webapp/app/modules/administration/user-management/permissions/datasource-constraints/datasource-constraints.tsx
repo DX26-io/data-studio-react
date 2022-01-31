@@ -57,9 +57,9 @@ export const DatasourceConstraints = (props: IDatasourceConstraintsProps) => {
         <View gridArea="datasources" borderXWidth="thin" borderColor="default" height="100vh">
           <PermissionsActionTitle handleClick={handleClick} updating={props.updating} translateActionKey="entity.action.create" />
           {props.searchUrl.includes('user') ? (
-            <UserDatasourceConstraints routeProps={props} setOpen={setUserDatasourceConstraintDialogOpen} />
+            <UserDatasourceConstraints setOpen={setUserDatasourceConstraintDialogOpen} />
           ) : (
-            <UserGroupDatasourceConstraints routeProps={props} setOpen={setUserGroupDatasourceConstraintDialogOpen} />
+            <UserGroupDatasourceConstraints setOpen={setUserGroupDatasourceConstraintDialogOpen} />
           )}
         </View>
       </Grid>

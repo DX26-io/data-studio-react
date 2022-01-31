@@ -13,12 +13,9 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import Edit from '@spectrum-icons/workflow/Edit';
 import { ITEMS_PER_PAGE, ACTIVE_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/pagination.constants';
 import { Translate, getSortState, translate } from 'react-jhipster';
-import { StatusLight } from '@adobe/react-spectrum';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { findViewsPermissionsChanges } from '../permissions-util';
+import { findViewsPermissionsChanges, getSearchParam } from '../permissions-util';
 import { toast } from 'react-toastify';
-
-// TODO : when hit the url,params should be visible
 
 export interface IDatasourceProps extends StateProps, DispatchProps {
   permissionProps: any;
@@ -34,17 +31,12 @@ export const DatasourcePermissions = (props: IDatasourceProps) => {
     overridePaginationStateWithQueryParams(getSortState(permissionProps.location, ITEMS_PER_PAGE), permissionProps.location.search)
   );
   const fetchPermissions = () => {
-    let endURL = '';
     if (user) {
-      endURL = `?page=${pagination.activePage}&user=${user}`;
       props.getUserDatasourcePermissions(pagination.activePage, pagination.itemsPerPage, user);
     } else if (group) {
-      endURL = `?page=${pagination.activePage}&group=${group}`;
       props.getUserGroupDatasourcePermissions(pagination.activePage, pagination.itemsPerPage, group);
     }
-    if (permissionProps.location.search && permissionProps.location.search !== endURL) {
-      permissionProps.history.push(`${permissionProps.location.pathname}${endURL}`);
-    }
+
   };
 
   useEffect(() => {
@@ -52,21 +44,13 @@ export const DatasourcePermissions = (props: IDatasourceProps) => {
   }, [pagination.activePage, pagination.itemsPerPage, user, group]);
 
   useEffect(() => {
-    if (permissionProps.location.search) {
-      const params = new URLSearchParams(permissionProps.location.search);
-      const page = params.get('page');
-      const groupName = params.get('group');
-      const login = params.get('user');
-      if (page) {
-        setPagination({
-          ...pagination,
-          activePage: +page,
-        });
-      }
+    if (props.searchUrl) {
+      const groupName = getSearchParam('group', props.searchUrl);
+      const login = getSearchParam('user', props.searchUrl);
       setUser(login);
       setGroup(groupName);
     }
-  }, [permissionProps.location.search]);
+  }, [props.searchUrl]);
 
   const handleChangePage = (event, newPage) => {
     setPagination({
@@ -158,6 +142,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   datasourcePermissions: storeState.permissions.datasourcePermissions,
   totalDatasourcePermissions: storeState.permissions.totalDatasourcePermissions,
   updateSuccess: storeState.permissions.updateSuccess,
+  searchUrl: storeState.permissions.searchUrl,
 });
 
 const mapDispatchToProps = {
