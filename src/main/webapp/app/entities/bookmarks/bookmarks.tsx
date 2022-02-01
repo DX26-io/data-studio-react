@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ReactText } from 'react';
 import { connect } from 'react-redux';
-import { View, ProgressBar, Flex } from '@adobe/react-spectrum';
+import { View, ProgressBar, Flex, SearchField } from '@adobe/react-spectrum';
 import { getRecentlyAccessedBookmarks } from 'app/modules/home/sections/recent.reducer';
 import ViewCardContent from 'app/entities/views/view-card/view-card-content';
 import ViewCardThumbnail from 'app/entities/views/view-card/view-card-thumbnail';
@@ -14,9 +14,23 @@ export interface IBookmarksProps extends StateProps, DispatchProps {}
 const Bookmarks = (props: IBookmarksProps) => {
   const [isRequestReleaseDialogOpen, setRequestReleaseDialogOpen] = useState<boolean>(false);
   const [requestReleaseViewId, setRequestReleaseViewId] = useState();
+  const [searchedText, setSearchedText] = React.useState('');
+  let delayTimer;
+
+  const getBookmarks = text => {
+    clearTimeout(delayTimer);
+    delayTimer = setTimeout(() => {
+      props.getRecentlyAccessedBookmarks(0, 5, 'watchTime,desc', text);
+    }, 2000);
+  };
+
+  const onChangeSearchedText = event => {
+    setSearchedText(event);
+    getBookmarks(event);
+  };
 
   useEffect(() => {
-    props.getRecentlyAccessedBookmarks(0, 5, 'watchTime,desc');
+    getBookmarks('');
   }, []);
 
   const dispatchReleaseRequestProps = viewId => {
@@ -60,15 +74,32 @@ const Bookmarks = (props: IBookmarksProps) => {
         ]}
         title={translate('featureBookmark.home.title')}
       ></SecondaryHeader>
-      {props.loading ? (
-        <ProgressBar label="Loading…" isIndeterminate />
-      ) : (
-        <View marginTop="size-125" marginStart="size-125" marginEnd="size-125">
-          <Flex direction="row" gap="size-500" alignItems="center" justifyContent="start" wrap>
-            {props.recentlyAccessedBookmarks.length > 0 && recentlyAccessedBookmarksListElement}
-          </Flex>
-        </View>
-      )}
+      <View marginTop="size-200" marginStart="size-125" marginEnd="size-125">
+        {props.loading ? (
+          <ProgressBar label="Loading…" isIndeterminate />
+        ) : (
+          <React.Fragment>
+            <Flex justifyContent="center" alignItems="center">
+              <SearchField
+                placeholder={translate('home.header.search')}
+                onClear={() => {
+                  setSearchedText('');
+                }}
+                onChange={onChangeSearchedText}
+                onSubmit={event => {
+                  setSearchedText(event);
+                  getBookmarks(event);
+                }}
+                value={searchedText}
+                width="size-4600"
+              />
+            </Flex>
+            <Flex marginTop="size-200" direction="row" gap="size-500" alignItems="center" justifyContent="start" wrap>
+              {props.recentlyAccessedBookmarks.length > 0 && recentlyAccessedBookmarksListElement}
+            </Flex>
+          </React.Fragment>
+        )}
+      </View>
     </React.Fragment>
   );
 };
