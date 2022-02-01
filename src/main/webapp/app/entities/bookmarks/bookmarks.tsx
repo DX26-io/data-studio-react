@@ -81,7 +81,7 @@ const Bookmarks = (props: IBookmarksProps) => {
           <React.Fragment>
             <Flex justifyContent="center" alignItems="center">
               <SearchField
-                placeholder={translate('home.header.search')}
+                placeholder={translate('featureBookmark.search')}
                 onClear={() => {
                   setSearchedText('');
                 }}
