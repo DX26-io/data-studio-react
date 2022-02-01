@@ -27,7 +27,7 @@ const QuickStart: React.FC = () => {
       icon: <Visibility size="M" />,
     },
     {
-      link: `/`,
+      link: `/bookmarks`,
       title: 'home.top.tabs.quickStart.bookmarks',
       icon: <Visibility size="M" />,
     },
