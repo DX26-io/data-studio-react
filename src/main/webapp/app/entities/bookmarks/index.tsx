@@ -1,11 +1,11 @@
 import React from 'react';
 
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
-import Bookmarks from './bookmarks';
+import BookmarksContainer from './bookmarks-container';
 
 const Routes = ({ match }) => (
   <div>
-    <ErrorBoundaryRoute exact path={match.url} component={Bookmarks} />
+    <ErrorBoundaryRoute exact path={match.url} component={BookmarksContainer} />
   </div>
 );
 
