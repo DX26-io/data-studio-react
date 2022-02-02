@@ -10,8 +10,7 @@ import { Tabs } from '@react-spectrum/tabs';
 import BookmarkCard from './bookmarks-card';
 import BookmarkTable from './bookmarks-table';
 
-
-export const BookmarksContainer = (props) => {
+export const BookmarksContainer = props => {
   const [tabId, setTabId] = useState<ReactText>(1);
 
   const tabs = [
@@ -19,7 +18,7 @@ export const BookmarksContainer = (props) => {
     { id: 2, name: 'featureBookmark.tabs.cards' },
   ];
   return (
-    <View marginTop="size-200" marginStart="size-125" marginEnd="size-125">
+    <View>
       <SecondaryHeader
         breadcrumbItems={[
           { label: translate('home.title'), route: '/' },
@@ -33,7 +32,7 @@ export const BookmarksContainer = (props) => {
             <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
               <BookmarkSearch />
               {props.loading && <ProgressBar label="Loading…" isIndeterminate />}
-              {tabId === 1 ? <BookmarkTable /> : <BookmarkCard />}
+              <View marginTop="size-250">{tabId === 1 ? <BookmarkTable /> : <BookmarkCard />}</View>
             </Content>
           </Item>
         )}

@@ -45,7 +45,7 @@ const BookmarksCard = (props: IBookmarksCardProps) => {
   });
 
   return (
-    <Flex marginTop="size-200" direction="row" gap="size-500" alignItems="center" justifyContent="start" wrap>
+    <Flex direction="row" gap="size-500" alignItems="center" justifyContent="start" wrap>
       {props.recentlyAccessedBookmarks.length > 0 && recentlyAccessedBookmarksListElement}
     </Flex>
   );

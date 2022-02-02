@@ -17,7 +17,6 @@ const BookmarksTable = props => {
   };
 
   return (
-    <View marginTop="size-200" marginStart="size-125" marginEnd="size-125">
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
           <TableContainer>
@@ -65,7 +64,6 @@ const BookmarksTable = props => {
           </TableContainer>
         </Paper>
       </div>
-    </View>
   );
 };
 
