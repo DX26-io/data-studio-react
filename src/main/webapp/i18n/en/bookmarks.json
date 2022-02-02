@@ -21,6 +21,15 @@
     "createdBy": "Created by",
     "createdDate": "Created date",
     "lastModifiedBy": "Modified by",
-    "lastModifiedDate": "Modified date"
+    "lastModifiedDate": "Modified date",
+    "tabs": {
+      "table": "table",
+      "cards": "cards"
+    },
+    "table":{
+      "name":"Bookmark Name",
+      "view":"View",
+      "dashboard":"Dashboard"
+    }
   }
 }
