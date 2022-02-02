@@ -137,10 +137,13 @@ export const getRecentViews = (page: number, size: number, sort: string) => ({
   payload: axios.get(`api/viewWatches?page=${page}&size=${size}&sort=${sort}`),
 });
 
-export const getRecentlyAccessedBookmarks = (page: number, size: number, sort: string) => ({
-  type: ACTION_TYPES.FETCH_RECENTS_ACCESSED_BOOKMARKS,
-  payload: axios.get(`api/bookmark-watches?page=${page}&size=${size}&sort=${sort}`),
-});
+export const getRecentlyAccessedBookmarks = (page: number, size: number, sort: string, name?) => dispatch => {
+  const url = name ? `?page=${page}&size=${size}&sort=${sort}&featureBookmark.name=${name}` : `?page=${page}&size=${size}&sort=${sort}`;
+  dispatch({
+    type: ACTION_TYPES.FETCH_RECENTS_ACCESSED_BOOKMARKS,
+    payload: axios.get(`api/bookmark-watches${url}`),
+  });
+};
 
 export const getRecentlyCreatedBookmarks = (page: number, size: number, sort: string) => ({
   type: ACTION_TYPES.FETCH_RECENTS_CREATED_BOOKMARKS,
