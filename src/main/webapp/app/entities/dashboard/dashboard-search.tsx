@@ -1,42 +1,38 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Flex, SearchField } from '@adobe/react-spectrum';
-import { getRecentlyAccessedBookmarks } from 'app/modules/home/sections/recent.reducer';
 import { translate } from 'react-jhipster';
+import { getDashboardsByName } from './dashboard.reducer';
 
-const BookmarkSearch = props => {
+const DashboardSearch = props => {
   const [searchedText, setSearchedText] = React.useState('');
   let delayTimer;
 
-  const getBookmarks = text => {
+  const getDashboards = text => {
     clearTimeout(delayTimer);
     delayTimer = setTimeout(() => {
-      props.getRecentlyAccessedBookmarks(0, 5, 'watchTime,desc', text);
+      props.getDashboardsByName(text);
     }, 1000);
   };
 
   const onChangeSearchedText = event => {
     setSearchedText(event);
     if (event.length >= 2 || event.length === 0) {
-      getBookmarks(event);
+      getDashboards(event);
     }
   };
-
-  useEffect(() => {
-    getBookmarks('');
-  }, []);
 
   return (
     <Flex justifyContent="center" alignItems="center">
       <SearchField
-        placeholder={translate('featureBookmark.search')}
+        placeholder={translate('dashboard.search')}
         onClear={() => {
           setSearchedText('');
         }}
         onChange={onChangeSearchedText}
         onSubmit={event => {
           setSearchedText(event);
-          props.getRecentlyAccessedBookmarks(0, 5, 'watchTime,desc', event);
+          props.getDashboardsByName(event);
         }}
         value={searchedText}
         width="size-4600"
@@ -45,8 +41,8 @@ const BookmarkSearch = props => {
   );
 };
 
-const mapDispatchToProps = { getRecentlyAccessedBookmarks };
+const mapDispatchToProps = { getDashboardsByName };
 
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(null, mapDispatchToProps)(BookmarkSearch);
+export default connect(null, mapDispatchToProps)(DashboardSearch);

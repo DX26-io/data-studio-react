@@ -1,42 +1,39 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Flex, SearchField } from '@adobe/react-spectrum';
-import { getRecentlyAccessedBookmarks } from 'app/modules/home/sections/recent.reducer';
 import { translate } from 'react-jhipster';
+import { getDashboardViewEntitiesByName } from 'app/entities/views/views.reducer';
+import { IRootState } from 'app/shared/reducers';
 
-const BookmarkSearch = props => {
+const ViewSearch = props => {
   const [searchedText, setSearchedText] = React.useState('');
   let delayTimer;
 
-  const getBookmarks = text => {
+  const getViews = text => {
     clearTimeout(delayTimer);
     delayTimer = setTimeout(() => {
-      props.getRecentlyAccessedBookmarks(0, 5, 'watchTime,desc', text);
+      props.getDashboardViewEntitiesByName(props.dashboardEntity.id,text);
     }, 1000);
   };
 
   const onChangeSearchedText = event => {
     setSearchedText(event);
     if (event.length >= 2 || event.length === 0) {
-      getBookmarks(event);
+      getViews(event);
     }
   };
-
-  useEffect(() => {
-    getBookmarks('');
-  }, []);
 
   return (
     <Flex justifyContent="center" alignItems="center">
       <SearchField
-        placeholder={translate('featureBookmark.search')}
+        placeholder={translate('views.searchView')}
         onClear={() => {
           setSearchedText('');
         }}
         onChange={onChangeSearchedText}
         onSubmit={event => {
           setSearchedText(event);
-          props.getRecentlyAccessedBookmarks(0, 5, 'watchTime,desc', event);
+          props.getDashboardViewEntitiesByName(props.dashboardEntity.id,event);
         }}
         value={searchedText}
         width="size-4600"
@@ -45,8 +42,10 @@ const BookmarkSearch = props => {
   );
 };
 
-const mapDispatchToProps = { getRecentlyAccessedBookmarks };
+const mapStateToProps = (storeState: IRootState) => ({
+  dashboardEntity: storeState.dashboard.entity,
+});
 
-type DispatchProps = typeof mapDispatchToProps;
+const mapDispatchToProps = { getDashboardViewEntitiesByName };
 
-export default connect(null, mapDispatchToProps)(BookmarkSearch);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewSearch);
