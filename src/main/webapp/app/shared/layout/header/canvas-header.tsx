@@ -7,7 +7,7 @@ import BookmarkSingle from '@spectrum-icons/workflow/BookmarkSingle';
 import Search from '@spectrum-icons/workflow/Search';
 import GraphBarVerticalAdd from '@spectrum-icons/workflow/GraphBarVerticalAdd';
 import CollectionEdit from '@spectrum-icons/workflow/CollectionEdit';
-import CloseCircle from '@spectrum-icons/workflow/CloseCircle';
+import Close from '@spectrum-icons/workflow/Close';
 import VisualisationsList from 'app/entities/visualisations/visualisations-list';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
@@ -47,6 +47,7 @@ const CanvasHeader = props => {
   const resetFilter = () => {
     if (!props.visualmetadataEntity.id) {
       props.clearFilter(removeEnabledFilters(props.selectedFilter,props.featuresList), props.visualmetadata, props.view);
+      props.applyBookmark(null);
     } 
   }
   
@@ -75,7 +76,7 @@ const CanvasHeader = props => {
       },
     },
     {
-      icon: <CloseCircle size="M" />,
+      icon: <Close size="M" />,
       title: translate('canvas.menu.resetFilter'),
       onPress:resetFilter,
     },
