@@ -18,6 +18,7 @@ import connections, { ConnectionsState } from 'app/modules/administration/source
 import datasources, { DatasourcesState } from 'app/modules/administration/sources/datasources/datasources.reducer';
 import datasourceSteps, { DatasourceStepsState } from 'app/modules/administration/sources/datasources/steps/datasource-steps.reducer';
 import connectionSteps, { ConnectionStepsState } from 'app/modules/administration/sources/connections/connection-steps.reducer';
+import visulisationColors, { VisualizationColorsState } from 'app/modules/administration/visualization-colors/visualization-colors.reducer';
 import register, { RegisterState } from 'app/modules/account/register/register.reducer';
 import activate, { ActivateState } from 'app/modules/account/activate/activate.reducer';
 import password, { PasswordState } from 'app/modules/account/password/password.reducer';
@@ -102,6 +103,7 @@ export interface IRootState {
   readonly hierarchies: HierarchyState;
   readonly releases: ReleasesState;
   readonly shareLinkVisualisation: shareLinkVisualisationState;
+  readonly visulisationColors: VisualizationColorsState;
 }
 
 const rootReducer = combineReducers<IRootState>({
@@ -144,6 +146,7 @@ const rootReducer = combineReducers<IRootState>({
   hierarchies,
   releases,
   shareLinkVisualisation,
+  visulisationColors
 });
 
 export default rootReducer;

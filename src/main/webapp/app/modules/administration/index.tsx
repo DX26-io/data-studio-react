@@ -11,7 +11,7 @@ import Docs from './docs/docs';
 import Sources from './sources';
 import ReportConfiguration from "./reports-configuration";
 import ReleaseMangement from "./release-management";
-import Visualizationcolors from "./visualization-colors/visualizationcolors";
+import Visualizationcolors from "./visualization-colors/visualization-colors";
 
 
 const Routes = ({ match }) => (

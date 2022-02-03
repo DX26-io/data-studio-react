@@ -5,15 +5,15 @@ import { Col, Row, Table } from 'reactstrap';
 import { Translate, ICrudGetAllAction, translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
-import { getEntities, setVisualizationColor, deleteEntity } from './visualizationcolors.reducer';
+import { getEntities, setVisualizationColor, deleteEntity } from './visualization-colors.reducer';
 import { IVisualizationcolors } from 'app/shared/model/visualizationcolors.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import { DialogContainer, Flex, Button, ActionButton } from '@adobe/react-spectrum';
 import { colors, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import Edit from '@spectrum-icons/workflow/Edit';
-import VisualizationcolorsUpdate from './visualizationcolors-update';
-import VisualizationcolorsDelete from './visualizationcolors-delete'
+import VisualizationcolorsUpdate from './visualization-colors-update';
+import VisualizationcolorsDelete from './visualization-colors-delete'
 import Delete from '@spectrum-icons/workflow/Delete';
 
 
@@ -118,9 +118,9 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
   );
 };
 
-const mapStateToProps = ({ visualizationColors }: any) => ({
-  visualizationColorsList: visualizationColors.entities,
-  loading: visualizationColors.loading,
+const mapStateToProps = (storeState: IRootState) => ({
+  visualizationColorsList: storeState.visulisationColors.entities,
+  loading: storeState.visulisationColors.loading,
 });
 
 const mapDispatchToProps = {

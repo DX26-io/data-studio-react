@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Translate, translate} from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
-import { getEntity, updateEntity, createEntity, reset } from './visualizationcolors.reducer';
+import { getEntity, updateEntity, createEntity, reset } from './visualization-colors.reducer';
 import { IVisualizationcolors } from 'app/shared/model/visualizationcolors.model';
 import { ButtonGroup,  Content, Dialog, Divider,   Form,  Heading, TextField, Button, useDialogContainer } from '@adobe/react-spectrum';
 
