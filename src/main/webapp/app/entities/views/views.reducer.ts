@@ -254,6 +254,14 @@ export const getDashboardViewEntities: ICrudGetDashboardViewsAction<IViews> = (d
   };
 };
 
+export const getDashboardViewEntitiesByName: ICrudGetDashboardViewsAction<IViews> = (dashboardId, viewName) => {
+  const requestUrl = `${apiUrl}?viewDashboard=${dashboardId}&viewName=${viewName}`;
+  return {
+    type: ACTION_TYPES.FETCH_VIEWS_LIST,
+    payload: axios.get<IViews>(`${requestUrl}`),
+  };
+};
+
 export const getEntities: ICrudGetAllAction<IViews> = (page, size, sort) => {
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}&paginate=true`;
   return {

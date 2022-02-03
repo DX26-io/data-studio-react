@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { getSortState, Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
-import {getDashboardViewEntities, importView} from './views.reducer';
+import { getDashboardViewEntities, importView } from './views.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import { Button, Flex, View, DialogContainer } from '@adobe/react-spectrum';
+import { Button, Flex, View, DialogContainer, ProgressBar } from '@adobe/react-spectrum';
 import Card from 'app/shared/components/card/card';
 import ViewCardThumbnail from './view-card/view-card-thumbnail';
 import ViewCardContent from './view-card/view-card-content';
@@ -15,7 +15,8 @@ import Pagination from '@material-ui/lab/Pagination';
 import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import ViewRequestReleaseDialog from './view-request-release-modal';
-import {useFilePicker} from "use-file-picker";
+import { useFilePicker } from 'use-file-picker';
+import ViewSearch from './view-search';
 
 export interface IViewsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -94,10 +95,10 @@ export const Views = (props: IViewsProps) => {
     });
   };
 
-  const dispatchReleaseRequestProps = (viewId)=>{
+  const dispatchReleaseRequestProps = viewId => {
     setRequestReleaseDialogOpen(true);
-    setRequestReleaseViewId(viewId)
-  }
+    setRequestReleaseViewId(viewId);
+  };
 
   const viewsListElement = props.viewsList.map(view => {
     return (
@@ -127,50 +128,57 @@ export const Views = (props: IViewsProps) => {
   });
 
   return (
-    !props.loading && (
-      <>
-        <SecondaryHeader
-          breadcrumbItems={[
-            { label: 'Home', route: '/' },
-            { label: 'Dashboards', route: '/dashboards' },
-            { label: 'Views', route: '/views' },
-          ]}
-          title={dashboardEntity.dashboardName}
-        >
-          {props.account  && (
-            <Button marginX={"size-130"} variant="cta" onPress={() => onImportViewClicked()}>
-              <Translate contentKey="views.home.importLabel">_Import View</Translate>
-            </Button>
-          )}
-          {props.account  && (
-
-            <Button variant="cta" onPress={() => props.history.push(`${props.match.url}/create`)}>
-              <Translate contentKey="views.home.createLabel">Create View</Translate>
-            </Button>
-          )}
-          <></>
-        </SecondaryHeader>
-        {viewsList && viewsList.length > 0 ? (
-          <>
-            <Flex direction="row" gap="size-250" wrap marginX="5%" marginY="size-450" alignItems="center" justifyContent="start">
-              {viewsListElement}
-            </Flex>
-            <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
-              <Pagination
-                defaultPage={paginationState.activePage}
-                onChange={handleChangePage}
-                count={Math.ceil(totalItems / paginationState.itemsPerPage)}
-              />
-            </Flex>
-          </>
-        ) : (
-          <NoItemsFoundPlaceHolder headerTranslationKey="views.home.notFound.heading" contentTranslationKey="views.home.notFound.content" />
+    <>
+      <SecondaryHeader
+        breadcrumbItems={[
+          { label: 'Home', route: '/' },
+          { label: 'Dashboards', route: '/dashboards' },
+          { label: 'Views', route: '/views' },
+        ]}
+        title={dashboardEntity.dashboardName}
+      >
+        {props.account && (
+          <Button marginX={'size-130'} variant="cta" onPress={() => onImportViewClicked()}>
+            <Translate contentKey="views.home.importLabel">_Import View</Translate>
+          </Button>
         )}
-        <DialogContainer onDismiss={() => setRequestReleaseDialogOpen(false)}>
-          {isRequestReleaseDialogOpen && <ViewRequestReleaseDialog setOpen={setRequestReleaseDialogOpen} viewId={requestReleaseViewId}></ViewRequestReleaseDialog>}
-        </DialogContainer>
-      </>
-    )
+        {props.account && (
+          <Button variant="cta" onPress={() => props.history.push(`${props.match.url}/create`)}>
+            <Translate contentKey="views.home.createLabel">Create View</Translate>
+          </Button>
+        )}
+        <></>
+      </SecondaryHeader>
+      <View marginTop="size-250">
+        <ViewSearch />
+        {props.loading && (
+          <Flex marginTop="size-250" alignItems="center" justifyContent="center">
+            <ProgressBar label="Loading…" isIndeterminate />
+          </Flex>
+        )}
+      </View>
+      {viewsList && viewsList.length > 0 ? (
+        <>
+          <Flex direction="row" gap="size-250" wrap marginX="5%" marginY="size-250" alignItems="center" justifyContent="start">
+            {viewsListElement}
+          </Flex>
+          <Flex direction="row" margin="size-175" alignItems="center" justifyContent="center">
+            <Pagination
+              defaultPage={paginationState.activePage}
+              onChange={handleChangePage}
+              count={Math.ceil(totalItems / paginationState.itemsPerPage)}
+            />
+          </Flex>
+        </>
+      ) : (
+        <NoItemsFoundPlaceHolder headerTranslationKey="views.home.notFound.heading" contentTranslationKey="views.home.notFound.content" />
+      )}
+      <DialogContainer onDismiss={() => setRequestReleaseDialogOpen(false)}>
+        {isRequestReleaseDialogOpen && (
+          <ViewRequestReleaseDialog setOpen={setRequestReleaseDialogOpen} viewId={requestReleaseViewId}></ViewRequestReleaseDialog>
+        )}
+      </DialogContainer>
+    </>
   );
 };
 
