@@ -1,0 +1,28 @@
+{
+  "visualisationColors": {
+    "home": {
+      "title": "Visualisation Colors",
+      "description": "Configur your visualisation colors",
+      "createLabel": "Create",
+      "editLabel": "Edit",
+      "notFound": "No Visualisationcolors found"
+    },
+    "created": "A new VisualisationColors is created with identifier {{ param }}",
+    "updated": "A VisualisationColors is updated with identifier {{ param }}",
+    "deleted": "A VisualisationColors is deleted with identifier {{ param }}",
+    "delete": {
+      "question": "Are you sure you want to delete VisualisationColors {{ id }}?"
+    },
+    "detail": {
+      "title": "VisualisationColors"
+    },
+    "field": {
+      "id": "ID",
+      "code": "Code",
+      "color": "Color"
+    },
+    "form":{
+      "error":"code is required"
+    }
+  }
+}

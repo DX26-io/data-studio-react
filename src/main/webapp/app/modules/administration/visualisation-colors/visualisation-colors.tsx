@@ -3,26 +3,21 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Col, Row, Table } from 'reactstrap';
 import { Translate, ICrudGetAllAction, translate } from 'react-jhipster';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
-import { getEntities, setVisualizationColor, deleteEntity } from './visualization-colors.reducer';
-import { IVisualizationcolors } from 'app/shared/model/visualizationcolors.model';
+import { getEntities, setVisualizationColor, deleteEntity,getEntity } from './visualisation-colors.reducer';
+import { IVisualisationColors } from 'app/shared/model/visualization-colors.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import { DialogContainer, Flex, Button, ActionButton } from '@adobe/react-spectrum';
 import { colors, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import Edit from '@spectrum-icons/workflow/Edit';
-import VisualizationcolorsUpdate from './visualization-colors-update';
-import VisualizationcolorsDelete from './visualization-colors-delete'
-import Delete from '@spectrum-icons/workflow/Delete';
+import VisualizationColorsUpdate from './visualisation-colors-update';
 
 
-export interface IVisualizationcolorsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
+export interface IVisualisationColorsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
 
-export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
+export const Visualizationcolors = (props: IVisualisationColorsProps) => {
   const [isOpen, setOpen] = React.useState(false);
-  const [isdeleteAlertDialogOpen, setDeleteAlertDialogOpen] = React.useState(false);
-  const [colorCode, setColorCode] = React.useState<IVisualizationcolors>();
   useEffect(() => {
     props.getEntities();
   }, []);
@@ -31,14 +26,13 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
     <><SecondaryHeader
       breadcrumbItems={[
         { label: 'Home', route: '/' },
-        { label: 'Visualization colors', route: '/administration/visualization-colors' },
+        { label: translate('visualisationColors.home.title'), route: '/administration/visualization-colors' },
       ]}
-      title={translate('visualizationcolors.home.title')}
+      title={translate('visualisationColors.home.title')}
     >
       <Button
         variant="cta"
         onPress={() => {
-          setVisualizationColor({})
           setOpen(true);
         }}
         data-testid="create-color"
@@ -47,10 +41,7 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
       </Button>
     </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && <VisualizationcolorsUpdate visualizationColors={colorCode} />}
-      </DialogContainer>
-      <DialogContainer onDismiss={() => setDeleteAlertDialogOpen(false)}>
-        {isdeleteAlertDialogOpen && <VisualizationcolorsDelete id={colorCode.id} />}
+        {isOpen && <VisualizationColorsUpdate setOpen={setOpen}/>}
       </DialogContainer>
 
       <div className="dx26-container">
@@ -60,13 +51,13 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
               <TableHead>
                 <TableRow>
                   <TableCell align="center">
-                    <Translate contentKey="visualizationcolors.field.id">ID</Translate>
+                    <Translate contentKey="visualisationColors.field.id">ID</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="visualizationcolors.field.code">Code</Translate>
+                    <Translate contentKey="visualisationColors.field.code">Code</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="visualizationcolors.field.color">Color</Translate>
+                    <Translate contentKey="visualisationColors.field.color">Color</Translate>
                   </TableCell>
                   <TableCell align="center">
                     <Translate contentKey="entity.action.manage">Manage</Translate>
@@ -74,7 +65,7 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.visualizationColorsList.map((visualizationColor, i) => (
+                {props.visualisationColors.map((visualizationColor, i) => (
                   <TableRow key={`datasource-${i}`}>
                     <TableCell component="th" scope="row" align="center">
                       {visualizationColor.id}
@@ -88,20 +79,11 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
                       <Flex gap="size-100" justifyContent="center">
                         <a
                           onClick={() => {
-                            setColorCode(visualizationColor)
                             setOpen(true);
+                            props.getEntity(visualizationColor.id);
                           }}
                         >
                           <Edit size="S" />
-                        </a>
-                        <a
-                          onClick={() => {
-                            setColorCode(visualizationColor)
-                            setDeleteAlertDialogOpen(true)
-                          }}
-                        >
-                            <Delete color="negative" size="S"/>
-                          
                         </a>
                       </Flex>
                     </TableCell>
@@ -119,13 +101,14 @@ export const Visualizationcolors = (props: IVisualizationcolorsProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  visualizationColorsList: storeState.visulisationColors.entities,
+  visualisationColors: storeState.visulisationColors.entities,
   loading: storeState.visulisationColors.loading,
 });
 
 const mapDispatchToProps = {
   getEntities,
-  deleteEntity
+  deleteEntity,
+  getEntity
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

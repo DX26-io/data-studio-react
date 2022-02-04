@@ -71,9 +71,9 @@ const Admin: React.FC = () => {
     },
     {
       icon: <ColorPalette size="L" />,
-      link: `/administration/visualization-colors`,
-      title: 'visualizationcolors.home.title',
-      description: 'visualizationcolors.home.description',
+      link: `/administration/visualisation-colors`,
+      title: 'visualisationColors.home.title',
+      description: 'visualisationColors.home.description',
     },
   ];
   return (
