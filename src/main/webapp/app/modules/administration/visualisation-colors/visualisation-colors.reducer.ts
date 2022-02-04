@@ -7,8 +7,8 @@ import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util'
 import { IVisualisationColors, defaultValue } from 'app/shared/model/visualization-colors.model';
 
 export const ACTION_TYPES = {
-  FETCH_VISUALIZATION_COLOR: 'visualisationColors/FETCH_VISUALIZATION_COLOR',
   FETCH_VISUALIZATION_COLORS: 'visualisationColors/FETCH_VISUALIZATION_COLORS',
+  FETCH_VISUALIZATION_COLOR: 'visualisationColors/FETCH_VISUALIZATION_COLOR',
   CREATE_VISUALIZATION_COLORS: 'visualisationColors/CREATE_VISUALIZATION_COLORS',
   UPDATE_VISUALIZATION_COLORS: 'visualisationColors/UPDATE_VISUALIZATION_COLORS',
   DELETE_VISUALIZATION_COLORS: 'visualisationColors/DELETE_VISUALIZATION_COLORS',
@@ -31,8 +31,8 @@ export type VisualisationColorsState = Readonly<typeof initialState>;
 
 export default (state: VisualisationColorsState = initialState, action): VisualisationColorsState => {
   switch (action.type) {
-    case REQUEST(ACTION_TYPES.FETCH_VISUALIZATION_COLOR):
     case REQUEST(ACTION_TYPES.FETCH_VISUALIZATION_COLORS):
+    case REQUEST(ACTION_TYPES.FETCH_VISUALIZATION_COLOR):
       return {
         ...state,
         errorMessage: null,
@@ -48,8 +48,8 @@ export default (state: VisualisationColorsState = initialState, action): Visuali
         updateSuccess: false,
         updating: true,
       };
-    case FAILURE(ACTION_TYPES.FETCH_VISUALIZATION_COLOR):
     case FAILURE(ACTION_TYPES.FETCH_VISUALIZATION_COLORS):
+    case FAILURE(ACTION_TYPES.FETCH_VISUALIZATION_COLOR):
     case FAILURE(ACTION_TYPES.CREATE_VISUALIZATION_COLORS):
     case FAILURE(ACTION_TYPES.UPDATE_VISUALIZATION_COLORS):
     case FAILURE(ACTION_TYPES.DELETE_VISUALIZATION_COLORS):
@@ -60,13 +60,13 @@ export default (state: VisualisationColorsState = initialState, action): Visuali
         updateSuccess: false,
         errorMessage: action.payload,
       };
-    case SUCCESS(ACTION_TYPES.FETCH_VISUALIZATION_COLOR):
+    case SUCCESS(ACTION_TYPES.FETCH_VISUALIZATION_COLORS):
       return {
         ...state,
         loading: false,
         entities: action.payload.data,
       };
-    case SUCCESS(ACTION_TYPES.FETCH_VISUALIZATION_COLORS):
+    case SUCCESS(ACTION_TYPES.FETCH_VISUALIZATION_COLOR):
       return {
         ...state,
         loading: false,
@@ -86,7 +86,7 @@ export default (state: VisualisationColorsState = initialState, action): Visuali
         updating: false,
         updateSuccess: true,
       };
-    case SUCCESS(ACTION_TYPES.SET_VISUALIZATION_COLORS):
+    case ACTION_TYPES.SET_VISUALIZATION_COLORS:
       return {
         ...state,
         entity: action.payload,
@@ -94,8 +94,8 @@ export default (state: VisualisationColorsState = initialState, action): Visuali
     case ACTION_TYPES.RESET:
       return {
         ...state,
-        updateSuccess:false,
-        entity:defaultValue
+        updateSuccess: false,
+        entity: { id: '', code: '' },
       };
     default:
       return state;
@@ -107,14 +107,14 @@ const apiUrl = 'api/visualization-colors';
 // Actions
 
 export const getEntities: ICrudGetAllAction<IVisualisationColors> = (page, size, sort) => ({
-  type: ACTION_TYPES.FETCH_VISUALIZATION_COLOR,
+  type: ACTION_TYPES.FETCH_VISUALIZATION_COLORS,
   payload: axios.get<IVisualisationColors>(`${apiUrl}?cacheBuster=${new Date().getTime()}`),
 });
 
 export const getEntity: ICrudGetAction<IVisualisationColors> = id => {
   const requestUrl = `${apiUrl}/${id}`;
   return {
-    type: ACTION_TYPES.FETCH_VISUALIZATION_COLORS,
+    type: ACTION_TYPES.FETCH_VISUALIZATION_COLOR,
     payload: axios.get<IVisualisationColors>(requestUrl),
   };
 };
@@ -151,9 +151,9 @@ export const reset = () => ({
   type: ACTION_TYPES.RESET,
 });
 
-export const setVisualizationColor = visualizationColor => async dispatch => {
-  await dispatch({
+export const setEntity = visualizationColor => {
+  return {
     type: ACTION_TYPES.SET_VISUALIZATION_COLORS,
     payload: visualizationColor,
-  });
+  };
 };

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Translate, translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
-import { getEntities, updateEntity, createEntity, reset, deleteEntity, setVisualizationColor } from './visualisation-colors.reducer';
+import { getEntities, updateEntity, createEntity, reset, deleteEntity, setEntity } from './visualisation-colors.reducer';
 import { Content, Dialog, Divider, Form, Heading, TextField, Button, useDialogContainer, Flex, Header, Text } from '@adobe/react-spectrum';
 import Alert from '@spectrum-icons/workflow/Alert';
 
@@ -69,13 +69,12 @@ const VisualisationColorsUpdate = (props: IVisualisationColorsUpdateProps) => {
       <Content>
         <Form data-testid="visualisation-colors-form">
           <TextField
-            value={props.entity.code}
+            value={props.entity.code ? props.entity.code : ''}
             onChange={event => {
-              props.setVisualizationColor({ ...props.entity, code: event });
+              props.setEntity({ ...props.entity, code: event });
             }}
             label={translate('visualisationColors.field.code')}
             placeholder={translate('visualisationColors.field.code')}
-            autoFocus
           />
           {props.entity?.id ? (
             <React.Fragment>
@@ -116,7 +115,7 @@ const mapDispatchToProps = {
   createEntity,
   deleteEntity,
   getEntities,
-  setVisualizationColor,
+  setEntity,
   reset,
 };
 
