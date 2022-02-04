@@ -21,8 +21,8 @@
       "code": "Code",
       "color": "Color"
     },
-    "form":{
-      "error":"code is required"
+    "error":{
+      "code":"code is required"
     }
   }
 }

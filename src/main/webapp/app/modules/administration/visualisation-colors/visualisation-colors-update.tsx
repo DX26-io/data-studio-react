@@ -12,7 +12,7 @@ export interface IVisualisationColorsUpdateProps extends StateProps, DispatchPro
 
 const VisualisationColorsUpdate = (props: IVisualisationColorsUpdateProps) => {
   const dialog = useDialogContainer();
-  const [error, setError] = useState(null);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const handleClose = () => {
     dialog.dismiss();
@@ -71,7 +71,12 @@ const VisualisationColorsUpdate = (props: IVisualisationColorsUpdateProps) => {
           <TextField
             value={props.entity.code ? props.entity.code : ''}
             onChange={event => {
-              props.setEntity({ ...props.entity, code: event });
+              if(event){
+                props.setEntity({ ...props.entity, code: event });
+                setIsFormValid(true);
+              }else{
+                setIsFormValid(false);
+              }
             }}
             label={translate('visualisationColors.field.code')}
             placeholder={translate('visualisationColors.field.code')}
@@ -90,12 +95,12 @@ const VisualisationColorsUpdate = (props: IVisualisationColorsUpdateProps) => {
             <Translate contentKey="entity.action.delete">Delete</Translate>
           </Button>
         )}
-        {error && (
+        {!isFormValid && !props.entity?.id && (
           <Flex gap="size-100" data-testid="validation-error" marginTop="static-size-200">
             <Alert color="negative" />
             <Text marginBottom="size-300">
               <span className="spectrum-Body-emphasis error-message">
-                <Translate contentKey={error.translationKey}></Translate>
+                <Translate contentKey="visualisationColors.error.code"></Translate>
               </span>
             </Text>
           </Flex>
