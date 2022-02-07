@@ -12,7 +12,6 @@ export interface IVisualisationColorsUpdateProps extends StateProps, DispatchPro
 
 const VisualisationColorsUpdate = (props: IVisualisationColorsUpdateProps) => {
   const dialog = useDialogContainer();
-  const [isFormValid, setIsFormValid] = useState(false);
 
   const handleClose = () => {
     dialog.dismiss();
@@ -36,8 +35,9 @@ const VisualisationColorsUpdate = (props: IVisualisationColorsUpdateProps) => {
   useEffect(() => {
     if (props.updateSuccess) {
       props.getEntities();
+      handleClose();
     }
-  }, []);
+  }, [props.updateSuccess]);
 
   return (
     <Dialog data-testid="visualisation-colors-form-dialog">
@@ -58,7 +58,7 @@ const VisualisationColorsUpdate = (props: IVisualisationColorsUpdateProps) => {
           <Button
             variant="cta"
             onPress={save}
-            // isDisabled={updating || !error.isValid}
+            isDisabled={props.updating || !props.entity?.code}
             data-testid="visualisation-colors-form-submit"
           >
             <Translate contentKey="entity.action.save">Save</Translate>
@@ -71,12 +71,7 @@ const VisualisationColorsUpdate = (props: IVisualisationColorsUpdateProps) => {
           <TextField
             value={props.entity.code ? props.entity.code : ''}
             onChange={event => {
-              if(event){
-                props.setEntity({ ...props.entity, code: event });
-                setIsFormValid(true);
-              }else{
-                setIsFormValid(false);
-              }
+              props.setEntity({ ...props.entity, code: event });
             }}
             label={translate('visualisationColors.field.code')}
             placeholder={translate('visualisationColors.field.code')}
@@ -95,7 +90,7 @@ const VisualisationColorsUpdate = (props: IVisualisationColorsUpdateProps) => {
             <Translate contentKey="entity.action.delete">Delete</Translate>
           </Button>
         )}
-        {!isFormValid && !props.entity?.id && (
+        {!props.entity?.code && !props.entity?.id && (
           <Flex gap="size-100" data-testid="validation-error" marginTop="static-size-200">
             <Alert color="negative" />
             <Text marginBottom="size-300">
@@ -113,6 +108,7 @@ const VisualisationColorsUpdate = (props: IVisualisationColorsUpdateProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   updateSuccess: storeState.visulisationColors.updateSuccess,
   entity: storeState.visulisationColors.entity,
+  updating: storeState.visulisationColors.updating,
 });
 
 const mapDispatchToProps = {
