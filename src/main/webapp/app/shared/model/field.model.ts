@@ -1,7 +1,8 @@
 import { Constraint } from '../util/visualisation.constants';
-import { IFeature } from './feature.model';
+import { IFeature, defaultValue as featureDefaultValue } from './feature.model';
 import { FieldType } from './field-type.model';
 import { Property } from './property.model';
+import { IHierarchy,defaultValue as hierarchyDefaultValue } from './hierarchy.model';
 export interface Field {
   createdBy?: '';
   createdDate?: Date;
@@ -11,7 +12,21 @@ export interface Field {
   properties?: Property[];
   fieldType?: FieldType;
   feature?: IFeature;
-  hierarchy?: any;
+  hierarchy?: IHierarchy;
   constraint?: Constraint;
   order?: number;
 }
+
+export const defaultValue: Readonly<Field> = {
+  createdBy: '',
+  createdDate: new Date(),
+  lastModifiedBy: '',
+  lastModifiedDate: new Date(),
+  id: 0,
+  properties: [],
+  fieldType: null,
+  feature: featureDefaultValue,
+  hierarchy: hierarchyDefaultValue,
+  constraint: null,
+  order: 0,
+};

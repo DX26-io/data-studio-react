@@ -6,7 +6,7 @@ import { VisualWrap } from 'app/modules/canvas/visualisation/util/visualmetadata
 import LockClosed from '@spectrum-icons/workflow/LockClosed';
 import Delete from '@spectrum-icons/workflow/Delete';
 import Select from 'react-select';
-import { Field } from 'app/shared/model/field.model';
+import { Field, defaultValue } from 'app/shared/model/field.model';
 import { IRootState } from 'app/shared/reducers';
 import { addField, deleteField, updateField } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { connect } from 'react-redux';
@@ -19,12 +19,11 @@ import { addFieldDimension, addFieldMeasure } from 'app/entities/visualmetadata/
 import Label from '@spectrum-icons/workflow/Label';
 import { translate } from 'react-jhipster';
 
-
-export interface IVisualisationDataPropertiesProps extends StateProps, DispatchProps { }
+export interface IVisualisationDataPropertiesProps extends StateProps, DispatchProps {}
 
 const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) => {
   const [activeTabId, setActiveTabId] = useState<ReactText>('DIMENSION');
-  const [selectedField, setSelectedField] = useState<Field>();
+  const [selectedField, setSelectedField] = useState<Field>(defaultValue);
 
   const visualWrap = VisualWrap(props.visual);
 
@@ -32,8 +31,10 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
     const hierarchy = props.hierarchies.find(item => {
       return item.id === selectedOption.value;
     });
-    selectedField.hierarchy = {};
+    // selectedField.hierarchy = {};
     selectedField.hierarchy = hierarchy;
+    setSelectedField(selectedField);
+    props.updateField(props.visual, selectedField);
   };
 
   const selectFeature = feature => {
@@ -93,13 +94,13 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
         items={getDataPropertiesTabTranslations()}
         onSelectionChange={key => {
           setActiveTabId(key);
-          setSelectedField(null);
+          setSelectedField(defaultValue);
         }}
       >
         {item => (
           <Item title={item.name} key={item.id}>
             <Content>
-              {activeTabId === 'DIMENSION' && (
+              { selectedField && activeTabId === 'DIMENSION' && (
                 <View>
                   <Flex justifyContent="end">
                     <ActionButton
@@ -120,43 +121,44 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                     {getSelectedFieldsElements}
                   </View>
                   <Form>
-                 
-                   {   selectedField && (
-                     <>
-                      <span className="spectrum-Body-emphasis--sizeXXS">{translate('views.editConfiguration.properties.dataProperties.dimensions')}</span>
-                      <Select
-                        onChange={selected => {
-                          selectFeature(selected);
-                        }}
-                        className="basic-single"
-                        classNamePrefix="select"
-                        value={{ value: selectedField?.feature?.id, label: selectedField?.feature?.name }}
-                        isSearchable={true}
-                        name="dimensions"
-                        options={getDimensionsList(props.features)}
-                      />
-                    </>
-                    )}
-                    {props.hierarchiesOption && props.hierarchiesOption.length > 0 && (
+                    {selectedField?.feature?.name && (
                       <>
-                     <span className="spectrum-Body-emphasis--sizeXXS">{translate('hierarchies.hierarchy')}</span>
-                      <Select
-                      onChange={selected => {
-                        hierarchyChange(selected);
-                      }}
-                      className="basic-single"
-                      classNamePrefix="select"
-                      value={{ value: selectedField?.hierarchy?.value, label: selectedField?.hierarchy?.label }}
-                      isSearchable={true}
-                      name="hierarchies"
-                      options={props.hierarchiesOption}
-                      />
+                        <span className="spectrum-Body-emphasis--sizeXXS">
+                          {translate('views.editConfiguration.properties.dataProperties.dimensions')}
+                        </span>
+                        <Select
+                          onChange={selected => {
+                            selectFeature(selected);
+                          }}
+                          className="basic-single"
+                          classNamePrefix="select"
+                          value={{ value: selectedField?.feature?.id, label: selectedField?.feature?.name }}
+                          isSearchable={true}
+                          name="dimensions"
+                          options={getDimensionsList(props.features)}
+                        />
                       </>
-                      )}
+                    )}
+                    {selectedField?.feature?.name && props.hierarchiesOption && props.hierarchiesOption.length > 0 && (
+                      <>
+                        <span className="spectrum-Body-emphasis--sizeXXS">{translate('hierarchies.hierarchy')}</span>
+                        <Select
+                          onChange={selected => {
+                            hierarchyChange(selected);
+                          }}
+                          className="basic-single"
+                          classNamePrefix="select"
+                          value={{ value: selectedField?.hierarchy?.id, label: selectedField?.hierarchy?.name }}
+                          isSearchable={true}
+                          name="hierarchies"
+                          options={props.hierarchiesOption}
+                        />
+                      </>
+                    )}
                   </Form>
                 </View>
               )}
-              {activeTabId === 'MEASURE' && (
+              { activeTabId === 'MEASURE' && (
                 <View>
                   <Flex justifyContent="end">
                     <ActionButton
@@ -177,21 +179,24 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                     {getSelectedFieldsElements}
                   </View>
                   <Form>
-                    {selectedField && (
-                       <>
-                     <span className="spectrum-Body-emphasis--sizeXXS">{translate('views.editConfiguration.properties.dataProperties.measures')}</span>
-                      <Select
-                        onChange={selected => {
-                          selectFeature(selected);
-                        }}
-                        className="basic-single"
-                        classNamePrefix="select"
-                        value={{ value: selectedField?.feature?.id, label: selectedField?.feature?.name }}
-                        isSearchable={true}
-                        name="measuresList"
-                        options={getMeasuresList(props.features)}
+                    {selectedField?.feature?.name && (
+                      <>
+                        <span className="spectrum-Body-emphasis--sizeXXS">
+                          {translate('views.editConfiguration.properties.dataProperties.measures')}
+                        </span>
+                        <Select
+                          onChange={selected => {
+                            selectFeature(selected);
+                          }}
+                          className="basic-single"
+                          classNamePrefix="select"
+                          value={{ value: selectedField?.feature?.id, label: selectedField?.feature?.name }}
+                          isSearchable={true}
+                          name="measuresList"
+                          options={getMeasuresList(props.features)}
                         />
-                        </>)}
+                      </>
+                    )}
                   </Form>
                 </View>
               )}
@@ -223,7 +228,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 const mapDispatchToProps = {
   addField,
   deleteField,
-  updateField
+  updateField,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
