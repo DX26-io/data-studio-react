@@ -1,5 +1,6 @@
 import { IViews } from './views.model';
 import { IVisualMetadata } from './visual-meta-data.model';
+import { IFeature } from './feature.model';
 
 export interface IBroadcast {
   selectedFilters: {};
@@ -11,4 +12,6 @@ export interface IBroadcast {
   visualmetadata: IVisualMetadata;
   view: IViews;
   setTableActivePage: {};
+  applyAlternativeDimensionFilter:{}
+  features:Array<IFeature>;
 }

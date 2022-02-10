@@ -45,9 +45,12 @@ export const updateVisualField = (visual: IVisualMetadataSet, field) => {
   return Object.assign({}, visual);
 };
 
-const buildConditionExpression = (visual: IVisualMetadataSet, conditionExpression) => {
-  visual.conditionExpression = conditionExpression;
-  return Object.assign({}, visual);
+const processAlternativeDimensionFilter = (dimension, visual, view, selectedFilter) => {
+  const fieldIndex = visual.fields.findIndex(item => item.feature.featureType === 'DIMENSION');
+  if (fieldIndex > -1) {
+    visual.fields[fieldIndex].feature = dimension;
+  }
+  getVisualisationData(visual, view, selectedFilter);
 };
 
 export const ACTION_TYPES = {
@@ -72,6 +75,7 @@ export const ACTION_TYPES = {
   VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD',
   UPDATE_TABLE_PAGENO: 'UPDATE_TABLE_PAGENO',
+  APPLY_ALTERNATE_DIMENSION: 'APPLY_ALTERNATE_DIMENSION',
 };
 
 const initialState = {
@@ -94,6 +98,7 @@ const initialState = {
   tableActivePage: 0,
   visualisationAction: '',
   conditionExpression: null,
+  isAlternateDimensionApplied: false,
 };
 
 export type VisualmetadataState = Readonly<typeof initialState>;
@@ -293,6 +298,10 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         ...state,
         visualisationAction: action.payload,
       };
+    case ACTION_TYPES.APPLY_ALTERNATE_DIMENSION:
+      return {
+        ...state,
+      };
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
@@ -447,4 +456,8 @@ export const visualisationTablePagination = data => {
   });
 
   getVisualisationData(visual, data.view, data.filter, data.activePageNo);
+};
+
+export const applyAlternativeDimensionFilter = (dimension, visualmetadata, view, selectedFilters) => dispatch => {
+  processAlternativeDimensionFilter(dimension, visualmetadata, view, selectedFilters);
 };
