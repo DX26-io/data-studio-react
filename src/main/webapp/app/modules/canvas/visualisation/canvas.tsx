@@ -24,6 +24,7 @@ import {
   getEntity as getVisualmetadataEntity,
   updateEntity as updateVisualmetadataEntity,
   metadataContainerAdd,
+  applyAlternativeDimensionFilter
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import VisualisationHeader from './visualisation-modal/visualisation-header';
 import 'app/modules/canvas/visualisation/canvas.scss';
@@ -82,6 +83,8 @@ const Canvas = (props: IVisualisationProp) => {
     pagination: props.visualisationTablePagination,
     tableActivePage: props.tableActivePage,
     setTableActivePage: props.setTableActivePage,
+    applyAlternativeDimensionFilter:props.applyAlternativeDimensionFilter,
+    features:props.featuresList
   };
 
   const onLayoutChange = _visualmetaList => {
@@ -444,6 +447,7 @@ const mapDispatchToProps = {
   setVisualisationAction,
   resetVisualisationData,
   metadataContainerUpdate,
+  applyAlternativeDimensionFilter
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

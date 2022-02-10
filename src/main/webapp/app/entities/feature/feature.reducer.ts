@@ -29,7 +29,7 @@ export const ACTION_TYPES = {
 const initialState = {
   loading: false,
   errorMessage: null,
-  entities: [] as ReadonlyArray<IFeature>,
+  entities: [] as Array<IFeature>,
   entity: defaultValue,
   updating: false,
   updateSuccess: false,
