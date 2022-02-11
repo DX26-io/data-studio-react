@@ -23,7 +23,7 @@ export interface IVisualisationDataPropertiesProps extends StateProps, DispatchP
 
 const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) => {
   const [activeTabId, setActiveTabId] = useState<ReactText>('DIMENSION');
-  const [selectedField, setSelectedField] = useState<Field>(defaultValue);
+  const [selectedField, setSelectedField] = useState<Field>(null);
 
   const visualWrap = VisualWrap(props.visual);
 
@@ -94,13 +94,13 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
         items={getDataPropertiesTabTranslations()}
         onSelectionChange={key => {
           setActiveTabId(key);
-          setSelectedField(defaultValue);
+          setSelectedField(null);
         }}
       >
         {item => (
           <Item title={item.name} key={item.id}>
             <Content>
-              { selectedField && activeTabId === 'DIMENSION' && (
+              { activeTabId === 'DIMENSION' && (
                 <View>
                   <Flex justifyContent="end">
                     <ActionButton
@@ -121,7 +121,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                     {getSelectedFieldsElements}
                   </View>
                   <Form>
-                    {selectedField?.feature?.name && (
+                    {selectedField && (
                       <>
                         <span className="spectrum-Body-emphasis--sizeXXS">
                           {translate('views.editConfiguration.properties.dataProperties.dimensions')}
@@ -179,7 +179,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                     {getSelectedFieldsElements}
                   </View>
                   <Form>
-                    {selectedField?.feature?.name && (
+                    {selectedField && (
                       <>
                         <span className="spectrum-Body-emphasis--sizeXXS">
                           {translate('views.editConfiguration.properties.dataProperties.measures')}
