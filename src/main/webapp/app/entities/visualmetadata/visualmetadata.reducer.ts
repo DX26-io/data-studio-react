@@ -45,14 +45,6 @@ export const updateVisualField = (visual: IVisualMetadataSet, field) => {
   return Object.assign({}, visual);
 };
 
-const processAlternativeDimensionFilter = (dimension, visual, view, selectedFilter) => {
-  const fieldIndex = visual.fields.findIndex(item => item.feature.featureType === 'DIMENSION');
-  if (fieldIndex > -1) {
-    visual.fields[fieldIndex].feature = dimension;
-  }
-  getVisualisationData(visual, view, selectedFilter);
-};
-
 export const ACTION_TYPES = {
   FETCH_VISUALMETADATA_LIST: 'visualmetadata/FETCH_VISUALMETADATA_LIST',
   FETCH_VISUALMETADATA: 'visualmetadata/FETCH_VISUALMETADATA',
@@ -458,6 +450,10 @@ export const visualisationTablePagination = data => {
   getVisualisationData(visual, data.view, data.filter, data.activePageNo);
 };
 
-export const applyAlternativeDimensionFilter = (dimension, visualmetadata, view, selectedFilters) => dispatch => {
-  processAlternativeDimensionFilter(dimension, visualmetadata, view, selectedFilters);
+export const applyAlternativeDimensionFilter = (dimension, visual, view, selectedFilters) => dispatch => {
+  const fieldIndex = visual.fields.findIndex(item => item.feature.featureType === 'DIMENSION');
+  if (fieldIndex > -1) {
+    visual.fields[fieldIndex].feature = dimension;
+  }
+  getVisualisationData(visual, view, selectedFilters);
 };
