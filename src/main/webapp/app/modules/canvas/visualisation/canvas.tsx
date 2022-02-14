@@ -324,7 +324,7 @@ const Canvas = (props: IVisualisationProp) => {
                 isEditMode={props.isEditMode}
               ></VisualisationHeader>
             </div>
-            <div style={{ backgroundColor: v.bodyProperties.backgroundColor }} className="visualBody" id={`visualBody-${v.id}`}>
+            <div style={{ backgroundColor: v.bodyProperties.backgroundColor,opacity: v.bodyProperties.opacity}} className="visualBody" id={`visualBody-${v.id}`}>
               <div className="illustrate">
                 {isLoaderDisplay[i]?.noDataFoundVisibility && (
                   <div

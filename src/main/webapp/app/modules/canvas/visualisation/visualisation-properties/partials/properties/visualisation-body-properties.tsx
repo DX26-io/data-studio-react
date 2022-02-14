@@ -48,9 +48,13 @@ const VisualisationBodyProperties = (props: IVisualisationBodyPropertiesProps) =
             maxValue={1}
             step={0.001}
             formatOptions={{ style: 'percent', minimumFractionDigits: 1 }}
+            value={props.visual.bodyProperties?.opacity || 1}
             defaultValue={1}
             label="Opacity"
             isFilled
+            onChange={val=>{
+              handleValueChange(val, 'opacity');
+            }}
           />
         </Form>
       </View>
