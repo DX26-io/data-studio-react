@@ -35,6 +35,7 @@ const initialState = {
   updateSuccess: false,
   feature: (null as unknown) as IFeature,
   isFeaturesReceived: false,
+  isPinnedFeatureListUpdated : false
 };
 
 export type FeatureState = Readonly<typeof initialState>;
@@ -74,7 +75,7 @@ export default (state: FeatureState = initialState, action): FeatureState => {
       return {
         ...state,
         errorMessage: null,
-        updateSuccess: false,
+        isPinnedFeatureListUpdated: false,
         updating: true,
       };
     case FAILURE(ACTION_TYPES.FETCH_FEATURE_LIST):
@@ -110,7 +111,7 @@ export default (state: FeatureState = initialState, action): FeatureState => {
       return {
         ...state,
         errorMessage: action.payload,
-        updateSuccess: false,
+        isPinnedFeatureListUpdated: false,
         updating: false,
       };
     case SUCCESS(ACTION_TYPES.FETCH_FEATURE_LIST):
@@ -150,7 +151,7 @@ export default (state: FeatureState = initialState, action): FeatureState => {
     case SUCCESS(ACTION_TYPES.PIN_FEATURE):
       return {
         ...state,
-        updateSuccess: true,
+        isPinnedFeatureListUpdated: true,
         updating: false,
         entities: updateFeaturesState(state.entities, action.payload.config.url),
       };

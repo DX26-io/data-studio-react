@@ -24,7 +24,9 @@ import {
   getEntity as getVisualmetadataEntity,
   updateEntity as updateVisualmetadataEntity,
   metadataContainerAdd,
-  applyAlternativeDimensionFilter
+  applyAlternativeDimensionFilter,
+  addPinnedFiltersIntoMetadataContainer,
+  removePinnedFiltersIntoMetadataContainer,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import VisualisationHeader from './visualisation-modal/visualisation-header';
 import 'app/modules/canvas/visualisation/canvas.scss';
@@ -83,22 +85,24 @@ const Canvas = (props: IVisualisationProp) => {
     pagination: props.visualisationTablePagination,
     tableActivePage: props.tableActivePage,
     setTableActivePage: props.setTableActivePage,
-    applyAlternativeDimensionFilter:props.applyAlternativeDimensionFilter,
-    features:props.featuresList
+    applyAlternativeDimensionFilter: props.applyAlternativeDimensionFilter,
+    features: props.featuresList,
   };
 
   const onLayoutChange = _visualmetaList => {
     _visualmetaList.map((item, i) => {
       const v = visualMetadataContainerGetOne(item.i);
-      v.x = item.x;
-      v.y = item.y;
-      v.h = item.h;
-      v.w = item.w;
-      v.xPosition = item.x;
-      v.yPosition = item.y;
-      v.height = item.h;
-      v.width = item.w;
-      props.metadataContainerUpdate(v.id, v, 'id');
+      if (v) {
+        v.x = item.x;
+        v.y = item.y;
+        v.h = item.h;
+        v.w = item.w;
+        v.xPosition = item.x;
+        v.yPosition = item.y;
+        v.height = item.h;
+        v.width = item.w;
+        props.metadataContainerUpdate(v.id, v, 'id');
+      }
     });
   };
 
@@ -129,6 +133,17 @@ const Canvas = (props: IVisualisationProp) => {
       });
     }
   };
+
+  useEffect(() => {
+    if (props.isPinnedFeatureListUpdated) {
+      if (props.pinnedFeatures && props.pinnedFeatures.length === 0) {
+        props.removePinnedFiltersIntoMetadataContainer();
+      }
+      if (props.pinnedFeatures && props.pinnedFeatures.length === 1) {
+        props.addPinnedFiltersIntoMetadataContainer(props.pinnedFeatures);
+      }
+    }
+  }, [props.isPinnedFeatureListUpdated]);
 
   const renderVisualisationById = item => {
     if (ValidateFields(item.fields)) {
@@ -250,11 +265,14 @@ const Canvas = (props: IVisualisationProp) => {
   }, [props.updateSuccess]);
 
   useEffect(() => {
-    if (props.pinnedFeatures.length > 0) {
-      addPinFilter();
-      if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
-        renderVisualisationById(props.visualMetadataEntity);
-      }
+    if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
+      renderVisualisationById(props.visualMetadataEntity);
+    }
+    if (props.pinnedFeatures && props.pinnedFeatures.length > 0) {
+      const pinnedFiltersFoound = props.visualMetadataContainerList.find(item => {
+        return item.key === 'pinned-filters-div';
+      });
+      props.addPinnedFiltersIntoMetadataContainer(props.pinnedFeatures);
     }
   }, [props.visualMetadataContainerList]);
 
@@ -273,8 +291,8 @@ const Canvas = (props: IVisualisationProp) => {
         return (
           <div
             className="layout widget"
-            id={`filter-${v.key}`}
-            key={`viz-widget-${v.key}`}
+            id={`pinned-filters-${v.key + i}`}
+            key={`viz-widget-${v.key + i}`}
             data-grid={{
               i: v.key,
               x: 0,
@@ -384,7 +402,7 @@ const Canvas = (props: IVisualisationProp) => {
         type={props.visualisationAction === 'Edit' ? 'fullscreenTakeover' : 'fullscreen'}
         onDismiss={() => props.setVisualisationAction(null)}
       >
-        {props .visualisationAction === 'Edit' && <VisualisationEditModalPopUp />}
+        {props.visualisationAction === 'Edit' && <VisualisationEditModalPopUp />}
         {props.visualisationAction === 'Data' && <VisualisationDataModal />}
         {props.visualisationAction === 'Share' && <VisualisationShareModal />}
       </DialogContainer>
@@ -418,6 +436,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true),
   tableActivePage: storeState.visualmetadata.tableActivePage,
   editAction: storeState.visualmetadata.editAction,
+  isPinnedFeatureListUpdated: storeState.feature.isPinnedFeatureListUpdated,
 });
 
 const mapDispatchToProps = {
@@ -447,7 +466,9 @@ const mapDispatchToProps = {
   setVisualisationAction,
   resetVisualisationData,
   metadataContainerUpdate,
-  applyAlternativeDimensionFilter
+  applyAlternativeDimensionFilter,
+  addPinnedFiltersIntoMetadataContainer,
+  removePinnedFiltersIntoMetadataContainer,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
