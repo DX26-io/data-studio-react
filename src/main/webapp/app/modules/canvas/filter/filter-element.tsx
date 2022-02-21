@@ -84,7 +84,6 @@ const FilterElement = (props: IFilterElementProp) => {
   };
 
   const togglePin = feature => {
-    // setIsPinOn(!isPinOn);
     feature.pin = !feature.pin;
     props.pinFeature(feature.id, feature.pin);
   };

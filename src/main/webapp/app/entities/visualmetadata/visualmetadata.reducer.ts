@@ -12,6 +12,8 @@ import {
   visualMetadataContainerAdd,
   visualMetadataContainerRemove,
   visualMetadataContainerUpdate,
+  addPinnedFilters,
+  removePinnedFilters,
 } from 'app/modules/canvas/visualisation/util/visualmetadata-container.util';
 import { getVisualisationData, ValidateFields } from 'app/modules/canvas/visualisation/util/visualisation-render-utils';
 import { ICrudPutActionVisual } from './visualmetadata-util';
@@ -66,6 +68,8 @@ export const ACTION_TYPES = {
   VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD',
+  ADD_PINNED_FILTERS_INTO_VISUAL_METADATA: 'visualmetadata/ADD_PINNED_FILTERS_INTO_VISUAL_METADATA',
+  REMOVE_PINNED_FILTERS_INTO_VISUAL_METADATA: 'visualmetadata/REMOVE_PINNED_FILTERS_INTO_VISUAL_METADATA',
   UPDATE_TABLE_PAGENO: 'UPDATE_TABLE_PAGENO',
   APPLY_ALTERNATE_DIMENSION: 'APPLY_ALTERNATE_DIMENSION',
 };
@@ -294,6 +298,16 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
       return {
         ...state,
       };
+    case ACTION_TYPES.ADD_PINNED_FILTERS_INTO_VISUAL_METADATA:
+      return {
+        ...state,
+        visualMetadataContainerList: addPinnedFilters(state.visualMetadataContainerList, action.payload),
+      };
+    case ACTION_TYPES.REMOVE_PINNED_FILTERS_INTO_VISUAL_METADATA:
+      return {
+        ...state,
+        visualMetadataContainerList: removePinnedFilters(state.visualMetadataContainerList),
+      };
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
@@ -385,6 +399,15 @@ export const metadataContainerAdd = (widget: any) => ({
 export const metadataContainerRemove = (id: string) => ({
   type: ACTION_TYPES.VISUAL_METADATA_CONTAINER_REMOVE,
   payload: visualMetadataContainerRemove(id),
+});
+
+export const addPinnedFiltersIntoMetadataContainer = pinnedFeatures => ({
+  type: ACTION_TYPES.ADD_PINNED_FILTERS_INTO_VISUAL_METADATA,
+  payload: pinnedFeatures,
+});
+
+export const removePinnedFiltersIntoMetadataContainer = () => ({
+  type: ACTION_TYPES.REMOVE_PINNED_FILTERS_INTO_VISUAL_METADATA,
 });
 
 export const metadataContainerUpdate = (id: string, widget: any, key: string) => ({
