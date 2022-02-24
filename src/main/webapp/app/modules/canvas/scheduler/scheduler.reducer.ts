@@ -160,7 +160,7 @@ export default (state: SchedulerState = initialState, action): SchedulerState =>
             measures: [],
           },
           schedule: {
-            cronExp: '10 4 11 * *',
+           cronExp: '* * * * *',
             timezone: '',
             startDate: new Date(),
             endDate: new Date(),

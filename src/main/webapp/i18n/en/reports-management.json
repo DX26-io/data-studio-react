@@ -70,8 +70,8 @@
       "viewTicket": "View Ticket",
       "reportRecipient": "Report Recipient",
       "uniqueError": "Webhook already exists with this name",
-      "executeNowMessage":"Report is executed successfully",
-      "cancelledMessage":"Report is cancelled",
+      "executeNowMessage": "Report is executed successfully",
+      "cancelledMessage": "Report is cancelled",
       "error": {
         "name": "report name is required",
         "cronExp": "cron expression is required",
@@ -79,7 +79,7 @@
         "comments": "comments are required",
         "email": "select at least one email",
         "teams": "select at least one webhook",
-        "alert":"All thershold fields are required"
+        "alert": "All thershold fields are required"
       },
       "form": {
         "reportName": "Report Name*",
@@ -91,6 +91,18 @@
         "startDate": "Start Date*",
         "endDate": "End Date*"
       }
+    },
+    "cron": {
+      "minutes": "Minutes",
+      "hourly": "Hourly",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly":"Yearly",
+      "hours":"Hours",
+      "months":"Months",
+      "day_of_month":"Day of Month",
+      "day_of_week":"Day of Week"
     }
   }
 }
