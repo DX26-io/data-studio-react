@@ -38,94 +38,6 @@ const CronGenerator = props => {
     return _options;
   };
 
-  const setCronExpression = event => {
-    let cron = '';
-    switch (tabId) {
-      case '1':
-        cron = generateCronExpression(
-          tabId.toString(),
-          convertSelectOptionToValues(event),
-          convertSelectOptionToValues(hours),
-          convertSelectOptionToValues(daysOfMonth),
-          convertSelectOptionToValues(daysOfWeek),
-          convertSelectOptionToValues(months),
-          props.schedulerReport.schedule.cronExp
-        );
-        break;
-      case '2':
-        cron = generateCronExpression(
-          tabId.toString(),
-          convertSelectOptionToValues(minutes),
-          convertSelectOptionToValues(event),
-          convertSelectOptionToValues(daysOfMonth),
-          convertSelectOptionToValues(daysOfWeek),
-          convertSelectOptionToValues(months),
-          props.schedulerReport.schedule.cronExp
-        );
-        break;
-
-      case '3':
-        cron = generateCronExpression(
-          tabId.toString(),
-          convertSelectOptionToValues(minutes),
-          convertSelectOptionToValues(event),
-          convertSelectOptionToValues(daysOfMonth),
-          convertSelectOptionToValues(daysOfWeek),
-          convertSelectOptionToValues(months),
-          props.schedulerReport.schedule.cronExp
-        );
-        break;
-
-      case '4':
-        cron = generateCronExpression(
-          tabId.toString(),
-          convertSelectOptionToValues(minutes),
-          convertSelectOptionToValues(hours),
-          convertSelectOptionToValues(daysOfMonth),
-          convertSelectOptionToValues(event),
-          convertSelectOptionToValues(months),
-          props.schedulerReport.schedule.cronExp
-        );
-        break;
-
-      case '5':
-        cron = generateCronExpression(
-          tabId.toString(),
-          convertSelectOptionToValues(minutes),
-          convertSelectOptionToValues(hours),
-          convertSelectOptionToValues(event),
-          convertSelectOptionToValues(daysOfWeek),
-          convertSelectOptionToValues(months),
-          props.schedulerReport.schedule.cronExp
-        );
-        break;
-
-      case '6':
-        cron = generateCronExpression(
-          tabId.toString(),
-          convertSelectOptionToValues(minutes),
-          convertSelectOptionToValues(hours),
-          convertSelectOptionToValues(daysOfMonth),
-          convertSelectOptionToValues(daysOfWeek),
-          convertSelectOptionToValues(event),
-          props.schedulerReport.schedule.cronExp
-        );
-        break;
-      default:
-        cron = generateCronExpression(
-          tabId.toString(),
-          convertSelectOptionToValues(event),
-          convertSelectOptionToValues(hours),
-          convertSelectOptionToValues(daysOfMonth),
-          convertSelectOptionToValues(daysOfWeek),
-          convertSelectOptionToValues(months),
-          props.schedulerReport.schedule.cronExp
-        );
-    }
-    props.schedulerReport.schedule.cronExp = cron;
-    props.setSchedulerReport(props.schedulerReport);
-  };
-
   return (
     <Tabs aria-label="roles" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
       {item => (
@@ -146,7 +58,17 @@ const CronGenerator = props => {
                     value={minutes}
                     onChange={event => {
                       setMinutes(event);
-                      setCronExpression(event);
+                      const cron = generateCronExpression(
+                        tabId.toString(),
+                        convertSelectOptionToValues(event),
+                        convertSelectOptionToValues(hours),
+                        convertSelectOptionToValues(daysOfMonth),
+                        convertSelectOptionToValues(daysOfWeek),
+                        convertSelectOptionToValues(months),
+                        props.schedulerReport.schedule.cronExp
+                      );
+                      props.schedulerReport.schedule.cronExp = cron;
+                      props.setSchedulerReport(props.schedulerReport);
                     }}
                     options={generateOptions(MINUTES)}
                   />
@@ -166,7 +88,17 @@ const CronGenerator = props => {
                       value={hours}
                       onChange={event => {
                         setHours(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(daysOfWeek),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={generateOptions(HOURS)}
                     />
@@ -183,7 +115,17 @@ const CronGenerator = props => {
                       value={minutes}
                       onChange={event => {
                         setMinutes(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(daysOfWeek),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={generateOptions(MINUTES)}
                     />
@@ -204,7 +146,17 @@ const CronGenerator = props => {
                       value={hours}
                       onChange={event => {
                         setHours(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(daysOfWeek),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={generateOptions(HOURS)}
                     />
@@ -221,7 +173,17 @@ const CronGenerator = props => {
                       value={minutes}
                       onChange={event => {
                         setMinutes(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(daysOfWeek),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={generateOptions(MINUTES)}
                     />
@@ -242,7 +204,17 @@ const CronGenerator = props => {
                       value={days}
                       onChange={event => {
                         setDays(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={DAYS}
                     />
@@ -259,7 +231,17 @@ const CronGenerator = props => {
                       value={hours}
                       onChange={event => {
                         setHours(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(daysOfWeek),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={generateOptions(HOURS)}
                     />
@@ -276,7 +258,17 @@ const CronGenerator = props => {
                       value={minutes}
                       onChange={event => {
                         setMinutes(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(daysOfWeek),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={generateOptions(MINUTES)}
                     />
@@ -297,9 +289,19 @@ const CronGenerator = props => {
                       value={months}
                       onChange={event => {
                         setMonths(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(daysOfWeek),
+                          convertSelectOptionToValues(event),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
-                      options={generateOptions(MONTHS)}
+                      options={MONTHS}
                     />
                   </View>
                 </View>
@@ -314,7 +316,17 @@ const CronGenerator = props => {
                       value={daysOfMonth}
                       onChange={event => {
                         setDaysOfMonth(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(daysOfWeek),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={generateOptions(DAYS_OF_MONTH)}
                     />
@@ -331,7 +343,17 @@ const CronGenerator = props => {
                       value={days}
                       onChange={event => {
                         setDays(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={DAYS}
                     />
@@ -348,7 +370,17 @@ const CronGenerator = props => {
                       value={hours}
                       onChange={event => {
                         setHours(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(daysOfWeek),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={generateOptions(HOURS)}
                     />
@@ -365,7 +397,17 @@ const CronGenerator = props => {
                       value={minutes}
                       onChange={event => {
                         setMinutes(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(daysOfWeek),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={generateOptions(MINUTES)}
                     />
@@ -386,7 +428,17 @@ const CronGenerator = props => {
                       value={daysOfMonth}
                       onChange={event => {
                         setDaysOfMonth(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(daysOfWeek),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={generateOptions(DAYS_OF_MONTH)}
                     />
@@ -403,7 +455,17 @@ const CronGenerator = props => {
                       value={days}
                       onChange={event => {
                         setDays(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={DAYS}
                     />
@@ -420,7 +482,17 @@ const CronGenerator = props => {
                       value={hours}
                       onChange={event => {
                         setHours(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(daysOfWeek),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={generateOptions(HOURS)}
                     />
@@ -437,7 +509,17 @@ const CronGenerator = props => {
                       value={minutes}
                       onChange={event => {
                         setMinutes(event);
-                        setCronExpression(event);
+                        const cron = generateCronExpression(
+                          tabId.toString(),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(daysOfWeek),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
                       }}
                       options={generateOptions(MINUTES)}
                     />

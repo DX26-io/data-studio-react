@@ -302,7 +302,7 @@ const Scheduler = (props: ISchedulerProps) => {
           />
 
           {props.thresholdAlert && <ThresholdAlert visual={props.visual} />}
-
+          <CronGenerator />
           <TextField
             label={translate('reportsManagement.reports.form.cronExp')}
             value={props.schedulerReport.schedule.cronExp}
@@ -313,7 +313,7 @@ const Scheduler = (props: ISchedulerProps) => {
               props.setErrorMessage(errorObj);
             }}
           />
-          <CronGenerator />
+          <br/>
           <DatePicker
             label={translate('reportsManagement.reports.form.startDate')}
             value={stringToDate(props.schedulerReport?.schedule?.startDate || '')}
