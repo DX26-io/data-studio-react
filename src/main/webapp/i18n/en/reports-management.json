@@ -101,8 +101,8 @@
       "yearly":"Yearly",
       "hours":"Hours",
       "months":"Months",
-      "day_of_month":"Day of Month",
-      "day_of_week":"Day of Week"
+      "dayOfMonth":"Days of Month",
+      "daysOfWeek":"Days of Week"
     }
   }
 }

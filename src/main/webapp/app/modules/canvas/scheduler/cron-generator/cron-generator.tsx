@@ -59,7 +59,7 @@ const CronGenerator = props => {
                     onChange={event => {
                       setMinutes(event);
                       const cron = generateCronExpression(
-                        tabId.toString(),
+                        '1',
                         convertSelectOptionToValues(event),
                         convertSelectOptionToValues(hours),
                         convertSelectOptionToValues(daysOfMonth),
@@ -76,7 +76,7 @@ const CronGenerator = props => {
               </View>
             )}
             {tabId === '2' && (
-              <Flex direction="row" gap="size-150">
+              <Flex direction="row" gap="size-100" wrap="wrap">
                 <View width={'25%'}>
                   <span className="spectrum-Body-emphasis--sizeXXS">
                     <Translate contentKey="reportsManagement.cron.hours">Hours*</Translate>
@@ -89,7 +89,7 @@ const CronGenerator = props => {
                       onChange={event => {
                         setHours(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '2',
                           convertSelectOptionToValues(minutes),
                           convertSelectOptionToValues(event),
                           convertSelectOptionToValues(daysOfMonth),
@@ -116,7 +116,7 @@ const CronGenerator = props => {
                       onChange={event => {
                         setMinutes(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '1',
                           convertSelectOptionToValues(event),
                           convertSelectOptionToValues(hours),
                           convertSelectOptionToValues(daysOfMonth),
@@ -134,7 +134,7 @@ const CronGenerator = props => {
               </Flex>
             )}
             {tabId === '3' && (
-              <Flex direction="row" gap="size-150">
+              <Flex direction="row" gap="size-100" wrap="wrap">
                 <View width={'25%'}>
                   <span className="spectrum-Body-emphasis--sizeXXS">
                     <Translate contentKey="reportsManagement.cron.hours">Hours*</Translate>
@@ -147,7 +147,7 @@ const CronGenerator = props => {
                       onChange={event => {
                         setHours(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '2',
                           convertSelectOptionToValues(minutes),
                           convertSelectOptionToValues(event),
                           convertSelectOptionToValues(daysOfMonth),
@@ -174,7 +174,7 @@ const CronGenerator = props => {
                       onChange={event => {
                         setMinutes(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '1',
                           convertSelectOptionToValues(event),
                           convertSelectOptionToValues(hours),
                           convertSelectOptionToValues(daysOfMonth),
@@ -192,20 +192,20 @@ const CronGenerator = props => {
               </Flex>
             )}
             {tabId === '4' && (
-              <Flex direction="row" gap="size-150">
-                <View width={'25%'}>
+              <Flex direction="row" gap="size-100" wrap="wrap">
+                <View width={'50%'}>
                   <span className="spectrum-Body-emphasis--sizeXXS">
-                    <Translate contentKey="reportsManagement.cron.day_of_week">Day of Week*</Translate>
+                    <Translate contentKey="reportsManagement.cron.daysOfWeek">Days of Week*</Translate>
                   </span>
                   <View marginTop="size-100">
                     <Select
                       isMulti
-                      placeholder={translate('reportsManagement.cron.day_of_week')}
+                      placeholder={translate('reportsManagement.cron.daysOfWeek')}
                       value={days}
                       onChange={event => {
                         setDays(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '4',
                           convertSelectOptionToValues(minutes),
                           convertSelectOptionToValues(hours),
                           convertSelectOptionToValues(daysOfMonth),
@@ -232,7 +232,7 @@ const CronGenerator = props => {
                       onChange={event => {
                         setHours(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '2',
                           convertSelectOptionToValues(minutes),
                           convertSelectOptionToValues(event),
                           convertSelectOptionToValues(daysOfMonth),
@@ -259,7 +259,7 @@ const CronGenerator = props => {
                       onChange={event => {
                         setMinutes(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '1',
                           convertSelectOptionToValues(event),
                           convertSelectOptionToValues(hours),
                           convertSelectOptionToValues(daysOfMonth),
@@ -277,8 +277,8 @@ const CronGenerator = props => {
               </Flex>
             )}{' '}
             {tabId === '6' && (
-              <Flex direction="row" gap="size-150">
-                <View width={'25%'}>
+              <Flex direction="row" gap="size-100" wrap="wrap">
+                <View width={'50%'}>
                   <span className="spectrum-Body-emphasis--sizeXXS">
                     <Translate contentKey="reportsManagement.cron.months">Months*</Translate>
                   </span>
@@ -290,7 +290,7 @@ const CronGenerator = props => {
                       onChange={event => {
                         setMonths(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '6',
                           convertSelectOptionToValues(minutes),
                           convertSelectOptionToValues(hours),
                           convertSelectOptionToValues(daysOfMonth),
@@ -307,17 +307,17 @@ const CronGenerator = props => {
                 </View>
                 <View width={'25%'}>
                   <span className="spectrum-Body-emphasis--sizeXXS">
-                    <Translate contentKey="reportsManagement.cron.day_of_month">Day of Month*</Translate>
+                    <Translate contentKey="reportsManagement.cron.dayOfMonth">Days of Month*</Translate>
                   </span>
                   <View marginTop="size-100">
                     <Select
                       isMulti
-                      placeholder={translate('reportsManagement.cron.day_of_month')}
+                      placeholder={translate('reportsManagement.cron.dayOfMonth')}
                       value={daysOfMonth}
                       onChange={event => {
                         setDaysOfMonth(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '5',
                           convertSelectOptionToValues(minutes),
                           convertSelectOptionToValues(hours),
                           convertSelectOptionToValues(event),
@@ -332,19 +332,19 @@ const CronGenerator = props => {
                     />
                   </View>
                 </View>
-                <View width={'25%'}>
+                <View width={'50%'}>
                   <span className="spectrum-Body-emphasis--sizeXXS">
-                    <Translate contentKey="reportsManagement.cron.day_of_week">Day of Week*</Translate>
+                    <Translate contentKey="reportsManagement.cron.daysOfWeek">Days of Week*</Translate>
                   </span>
                   <View marginTop="size-100">
                     <Select
                       isMulti
-                      placeholder={translate('reportsManagement.cron.day_of_week')}
+                      placeholder={translate('reportsManagement.cron.daysOfWeek')}
                       value={days}
                       onChange={event => {
                         setDays(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '4',
                           convertSelectOptionToValues(minutes),
                           convertSelectOptionToValues(hours),
                           convertSelectOptionToValues(daysOfMonth),
@@ -371,7 +371,7 @@ const CronGenerator = props => {
                       onChange={event => {
                         setHours(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '2',
                           convertSelectOptionToValues(minutes),
                           convertSelectOptionToValues(event),
                           convertSelectOptionToValues(daysOfMonth),
@@ -398,7 +398,7 @@ const CronGenerator = props => {
                       onChange={event => {
                         setMinutes(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '1',
                           convertSelectOptionToValues(event),
                           convertSelectOptionToValues(hours),
                           convertSelectOptionToValues(daysOfMonth),
@@ -416,20 +416,20 @@ const CronGenerator = props => {
               </Flex>
             )}
             {tabId === '5' && (
-              <Flex direction="row" gap="size-150">
+              <Flex direction="row" gap="size-100" wrap="wrap">
                 <View width={'25%'}>
                   <span className="spectrum-Body-emphasis--sizeXXS">
-                    <Translate contentKey="reportsManagement.cron.day_of_month">Day of Month*</Translate>
+                    <Translate contentKey="reportsManagement.cron.dayOfMonth">Days of Month*</Translate>
                   </span>
                   <View marginTop="size-100">
                     <Select
                       isMulti
-                      placeholder={translate('reportsManagement.cron.day_of_month')}
+                      placeholder={translate('reportsManagement.cron.dayOfMonth')}
                       value={daysOfMonth}
                       onChange={event => {
                         setDaysOfMonth(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '5',
                           convertSelectOptionToValues(minutes),
                           convertSelectOptionToValues(hours),
                           convertSelectOptionToValues(event),
@@ -444,19 +444,19 @@ const CronGenerator = props => {
                     />
                   </View>
                 </View>
-                <View width={'25%'}>
+                <View width={'50%'}>
                   <span className="spectrum-Body-emphasis--sizeXXS">
-                    <Translate contentKey="reportsManagement.cron.day_of_week">Day of Week*</Translate>
+                    <Translate contentKey="reportsManagement.cron.daysOfWeek">Days of Week*</Translate>
                   </span>
                   <View marginTop="size-100">
                     <Select
                       isMulti
-                      placeholder={translate('reportsManagement.cron.day_of_week')}
+                      placeholder={translate('reportsManagement.cron.daysOfWeek')}
                       value={days}
                       onChange={event => {
                         setDays(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '4',
                           convertSelectOptionToValues(minutes),
                           convertSelectOptionToValues(hours),
                           convertSelectOptionToValues(daysOfMonth),
@@ -483,7 +483,7 @@ const CronGenerator = props => {
                       onChange={event => {
                         setHours(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '2',
                           convertSelectOptionToValues(minutes),
                           convertSelectOptionToValues(event),
                           convertSelectOptionToValues(daysOfMonth),
@@ -510,7 +510,7 @@ const CronGenerator = props => {
                       onChange={event => {
                         setMinutes(event);
                         const cron = generateCronExpression(
-                          tabId.toString(),
+                          '1',
                           convertSelectOptionToValues(event),
                           convertSelectOptionToValues(hours),
                           convertSelectOptionToValues(daysOfMonth),
