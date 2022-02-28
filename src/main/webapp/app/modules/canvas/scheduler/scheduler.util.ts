@@ -217,7 +217,7 @@ export const isFormValid = (scheduler: ISchedulerReport) => {
   } else if (!scheduler.report?.mailBody) {
     error = { translationKey: 'reportsManagement.reports.error.comments', isValid: false };
     return error;
-  } else if (!scheduler.schedule?.cronExp) {
+  } else if (!scheduler.schedule?.cronExp || scheduler.schedule?.cronExp==='* * * * *') {
     error = { translationKey: 'reportsManagement.reports.error.cronExp', isValid: false };
     return error;
   }

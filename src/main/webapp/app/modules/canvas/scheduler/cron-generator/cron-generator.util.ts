@@ -25,6 +25,7 @@ const cronCalculate = (zeroAllowed, max, values) => {
   // if not allowed, remove 0
   if (zeroAllowed === false) values.splice(values.indexOf(0), 1);
   // ranges ("2,8,20,25-35")
+  if(values.length === 0) return '*';
   let output = values[0] + '';
   let range = false;
   for (let i = 1; i < values.length; i++) {
