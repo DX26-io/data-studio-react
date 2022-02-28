@@ -63,8 +63,8 @@ import { buildQueryDTO as buildQueryDTOFromVizRender } from '../visualisation/ut
 import { getUsers } from 'app/modules/administration/user-management/users/user.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { getEntity as getVisualMetadata } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import CronGenerator  from "./cron-generator/cron-generator";
-
+import CronGenerator from './cron-generator/cron-generator';
+import cronstrue from 'cronstrue';
 
 export interface ISchedulerProps extends StateProps, DispatchProps {
   thresholdAlert: boolean;
@@ -303,17 +303,23 @@ const Scheduler = (props: ISchedulerProps) => {
 
           {props.thresholdAlert && <ThresholdAlert visual={props.visual} />}
           <CronGenerator />
-          <TextField
-            label={translate('reportsManagement.reports.form.cronExp')}
-            value={props.schedulerReport.schedule.cronExp}
-            onChange={event => {
-              props.schedulerReport.schedule.cronExp = event;
-              props.setSchedulerReport(props.schedulerReport);
-              const errorObj = isFormValid(props.schedulerReport);
-              props.setErrorMessage(errorObj);
-            }}
-          />
-          <br/>
+          <Flex direction="row" gap="size-150" marginTop="size-150">
+            <TextField
+              width={'30%'}
+              label={translate('reportsManagement.reports.form.cronExp')}
+              value={props.schedulerReport.schedule.cronExp}
+              onChange={event => {
+                props.schedulerReport.schedule.cronExp = event;
+                props.setSchedulerReport(props.schedulerReport);
+                const errorObj = isFormValid(props.schedulerReport);
+                props.setErrorMessage(errorObj);
+              }}
+            />
+            <p style={{ marginTop: '43px' }} className="spectrum-Body-emphasis--sizeS">
+              {cronstrue.toString(props.schedulerReport.schedule.cronExp)}
+            </p>
+          </Flex>
+          <br />
           <DatePicker
             label={translate('reportsManagement.reports.form.startDate')}
             value={stringToDate(props.schedulerReport?.schedule?.startDate || '')}

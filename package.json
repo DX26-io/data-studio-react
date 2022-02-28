@@ -25,6 +25,7 @@
     "availity-reactstrap-validation": "2.6.1",
     "axios": "0.19.2",
     "bootstrap": "4.4.1",
+    "cronstrue": "^1.125.0",
     "file-saver": "^2.0.5",
     "firebase": "^8.2.0",
     "jquery": "^3.5.1",
