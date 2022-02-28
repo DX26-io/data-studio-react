@@ -63,6 +63,8 @@ import { buildQueryDTO as buildQueryDTOFromVizRender } from '../visualisation/ut
 import { getUsers } from 'app/modules/administration/user-management/users/user.reducer';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { getEntity as getVisualMetadata } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import CronGenerator  from "./cron-generator/cron-generator";
+
 
 export interface ISchedulerProps extends StateProps, DispatchProps {
   thresholdAlert: boolean;
@@ -300,7 +302,7 @@ const Scheduler = (props: ISchedulerProps) => {
           />
 
           {props.thresholdAlert && <ThresholdAlert visual={props.visual} />}
-
+          <CronGenerator />
           <TextField
             label={translate('reportsManagement.reports.form.cronExp')}
             value={props.schedulerReport.schedule.cronExp}
@@ -311,6 +313,7 @@ const Scheduler = (props: ISchedulerProps) => {
               props.setErrorMessage(errorObj);
             }}
           />
+          <br/>
           <DatePicker
             label={translate('reportsManagement.reports.form.startDate')}
             value={stringToDate(props.schedulerReport?.schedule?.startDate || '')}
