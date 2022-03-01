@@ -1,4 +1,26 @@
 import { IUserDatasourceConstraints, defaultValue } from 'app/shared/model/user-datasource-constraints.model';
+import { translate } from 'react-jhipster';
+
+export const SEPARATORS = [
+  {
+    label: translate('separators.comma'),
+    value: ',',
+  },
+  {
+    label: translate('separators.space'),
+    value: ' ',
+  },
+  {
+    label: translate('separators.pipe'),
+    value: '|',
+  },
+  {
+    label: translate('separators.colon'),
+    value: ':',
+  },
+];
+
+
 export const addCommaSeparatedValuesIntoConstraint = (
   commaSeparatedValues: string,
   constraint: IUserDatasourceConstraints,
@@ -6,13 +28,7 @@ export const addCommaSeparatedValuesIntoConstraint = (
   separator: string
 ) => {
   if (commaSeparatedValues && commaSeparatedValues.length > 0) {
-    // getList = getList.filter((item, i, ar) => ar.indexOf(item) === i);
-    // getList.forEach(element => {
-    //     added({ text: element },constraint);
-    //     constraint.selected.push({ text: element });
-    // });
-    // vm.commaSeparatedToolTip = VisualDispatchService.setcommaSeparatedToolTip(constraint.isCommaSeparatedInput);
-
+    condition.isCommaSeparatedInputOn = false;
     const index = constraint.constraintDefinition.featureConstraints.indexOf(condition);
     if (index > -1) {
       constraint.constraintDefinition.featureConstraints[index].values = commaSeparatedValues.split(separator);

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Tooltip, TooltipTrigger, ActionButton } from '@adobe/react-spectrum';
 import { Translate } from 'react-jhipster';
-import { SEPARATORS } from 'app/config/constants';
 import Separator from '@spectrum-icons/workflow/Separator';
 
 interface ISeparatorIconProps {

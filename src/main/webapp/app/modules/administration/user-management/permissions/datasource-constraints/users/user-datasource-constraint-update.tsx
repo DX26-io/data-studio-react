@@ -44,11 +44,12 @@ import { generateUserOptions, isFormValid } from './user-datasource-constraints.
 import Separators from 'app/shared/components/separator/separators';
 import SeparatorInput from 'app/shared/components/separator/separator-input';
 import SeparatorIcon from 'app/shared/components/separator/separator-icon';
+import {SEPARATORS} from 'app/shared/components/separator/separator.util';
 import { addCommaSeparatedValuesIntoConstraint } from 'app/shared/components/separator/separator.util';
-import { SEPARATORS } from 'app/config/constants';
 import Select from 'react-select';
 import { loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 import { generateDatasourcesOptions, generateFeatureNameOptions } from '../../permissions-util';
+
 
 export interface IUserDatasourceConstraintUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
@@ -57,7 +58,7 @@ export interface IUserDatasourceConstraintUpdateProps extends StateProps, Dispat
 export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintUpdateProps) => {
   const { setOpen, updateSuccess, updating } = props;
   const [error, setError] = useState(defaultValue);
-  const [separator, setSeparator] = useState(SEPARATORS[0].id);
+  const [separator, setSeparator] = useState(SEPARATORS[0].value);
   const [featureConstraint, setFeatureConstraint] = useState();
 
   const dialog = useDialogContainer();
@@ -91,7 +92,7 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
     props.deleteDatasourceConstraints(props.constraint.id);
   };
 
-  const dispatchCommaSeparatedValues = receivedCommaSeparatedvalues => {
+  const dispatchSeparatedValues = receivedCommaSeparatedvalues => {
     const _constraint = addCommaSeparatedValuesIntoConstraint(receivedCommaSeparatedvalues, props.constraint, featureConstraint, separator);
     props.setDatasourceConstraints(_constraint);
   };
@@ -172,7 +173,7 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
             isSearchable={true}
             name="users"
             options={generateUserOptions(props.users)}
-            value={{ label: props.constraint.user.login, value: props.constraint.user.login }}
+            value={{ label: props.constraint?.user?.login, value: props.constraint?.user?.login }}
           />
 
           {
@@ -249,7 +250,7 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
                 />
               </div>
               {con.isCommaSeparatedInputOn ? (
-                <SeparatorInput values={con.values} dispatchCommaSeparatedValues={dispatchCommaSeparatedValues} separator={separator} />
+                <SeparatorInput values={con.values} dispatchSeparatedValues={dispatchSeparatedValues} separator={separator} />
               ) : (
                 <div style={{ minWidth: '300px' }}>
                   <Select
