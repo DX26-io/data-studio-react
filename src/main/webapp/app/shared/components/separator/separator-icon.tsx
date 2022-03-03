@@ -4,7 +4,7 @@ import { Translate } from 'react-jhipster';
 import Separator from '@spectrum-icons/workflow/Separator';
 
 interface ISeparatorIconProps {
-  toggleCommaSeparator: (condition: any) => void;
+  toggleCommaSeparator: (condition?: any) => void;
   condition: any;
 }
 
@@ -20,7 +20,7 @@ const SeparatorIcon: React.FC<ISeparatorIconProps> = ({ toggleCommaSeparator, co
         <Separator size="S" />
       </ActionButton>
       <Tooltip>
-        {condition.isCommaSeparatedInputOn ? (
+        {condition?.isCommaSeparatedInputOn ? (
           <Translate contentKey="separators.tooltipCommaSeparatedOff"></Translate>
         ) : (
           <Translate contentKey="separators.tooltipCommaSeparatedOn"></Translate>

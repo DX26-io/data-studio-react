@@ -445,10 +445,10 @@ export const loadFilterOptions = (featureName, datasourceId,value?) => {
   });
 };
 
-export const generateFilterOptions = data => {
+export const generateFilterOptions = (data) => {
   const options = [];
   if (data) {
-    const _data = data?.body;
+    const _data = data ? data?.body : [];
     _data.forEach(function (option) {
       const featureName = Object.keys(option)[0];
       options.push({ value: option[featureName], label: option[featureName] });

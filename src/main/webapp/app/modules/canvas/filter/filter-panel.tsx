@@ -6,16 +6,17 @@ import './filter-panel.scss';
 import Search from '@spectrum-icons/workflow/Search';
 import FilterElement from 'app/modules/canvas/filter/filter-element';
 import { Translate } from 'react-jhipster';
-import { applyFilter, applyFilterForShareLink, clearFilter, clearFilterForShareLink } from './filter.reducer';
+import { applyFilter, applyFilterForShareLink, clearFilter, clearFilterForShareLink, setSeparator } from './filter.reducer';
 import PanelHeader from 'app/shared/components/panel-header';
 import { removeEnabledFilters } from './filter-util';
+import Separators from 'app/shared/components/separator/separators';
+import { SEPARATORS } from 'app/shared/components/separator/separator.util';
 
-export interface IFilterPanelProp extends StateProps, DispatchProps { 
-   visualisationId? : string
+export interface IFilterPanelProp extends StateProps, DispatchProps {
+  visualisationId?: string;
 }
 
 const FilterPanel = (props: IFilterPanelProp) => {
-
   // TODO : need to refector this code
   const [isFilterMinimize, setFilterMinimize] = useState(true);
   const [isFilterPanelClose, setFilterPanelClose] = useState(props.isFilterOpen);
@@ -24,12 +25,19 @@ const FilterPanel = (props: IFilterPanelProp) => {
     setFilterPanelClose(props.isFilterOpen);
   }, [props.isFilterOpen]);
 
+  const _setSeparator = separator => {
+    props.setSeparator(separator);
+  };
+
   return (
     <>
       <div className={!isFilterPanelClose ? 'FilterPanel-Main FilterPanel-hide' : 'FilterPanel-Main FilterPanel-show'}>
         <div className={isFilterMinimize ? 'FilterPanel FilterPanel-minimize' : 'FilterPanel FilterPanel-maximize'}>
           <PanelHeader setMinimize={setFilterMinimize} isMinimized={isFilterMinimize} titleKey="entity.action.filter" />
           <Divider size={'S'} />
+          <Flex marginTop="size-150" marginBottom="size-150" direction="row" alignItems="center" justifyContent="center">
+            <Separators setSeparator={_setSeparator} />
+          </Flex>
           <Flex direction="column" gap="size-100" justifySelf="center">
             <View>
               <div className="filter-body">
@@ -61,7 +69,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
                 <Button
                   onPress={() => {
                     if (!props.visualisationId) {
-                      props.clearFilter(removeEnabledFilters(props.selectedFilters,props.featuresList), props.visualmetadata, props.view);
+                      props.clearFilter(removeEnabledFilters(props.selectedFilters, props.featuresList), props.visualmetadata, props.view);
                     } else {
                       props.clearFilterForShareLink({}, props.visualmetadataEntity, props.view);
                     }
@@ -94,7 +102,8 @@ const mapDispatchToProps = {
   applyFilter,
   clearFilter,
   applyFilterForShareLink,
-  clearFilterForShareLink
+  clearFilterForShareLink,
+  setSeparator,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

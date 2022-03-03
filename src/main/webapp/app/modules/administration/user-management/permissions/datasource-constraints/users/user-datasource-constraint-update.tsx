@@ -45,7 +45,7 @@ import Separators from 'app/shared/components/separator/separators';
 import SeparatorInput from 'app/shared/components/separator/separator-input';
 import SeparatorIcon from 'app/shared/components/separator/separator-icon';
 import {SEPARATORS} from 'app/shared/components/separator/separator.util';
-import { addCommaSeparatedValuesIntoConstraint } from 'app/shared/components/separator/separator.util';
+import { addSeparatedValuesIntoConstraint } from 'app/shared/components/separator/separator.util';
 import Select from 'react-select';
 import { loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 import { generateDatasourcesOptions, generateFeatureNameOptions } from '../../permissions-util';
@@ -93,7 +93,7 @@ export const UserDatasourceConstraintUpdate = (props: IUserDatasourceConstraintU
   };
 
   const dispatchSeparatedValues = receivedCommaSeparatedvalues => {
-    const _constraint = addCommaSeparatedValuesIntoConstraint(receivedCommaSeparatedvalues, props.constraint, featureConstraint, separator);
+    const _constraint = addSeparatedValuesIntoConstraint(receivedCommaSeparatedvalues, props.constraint, featureConstraint, separator);
     props.setDatasourceConstraints(_constraint);
   };
 

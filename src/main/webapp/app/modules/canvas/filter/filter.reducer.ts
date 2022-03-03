@@ -2,6 +2,7 @@ import { getVisualisationData, getVisualisationShareData, ValidateFields } from 
 import { IViews } from 'app/shared/model/views.model';
 import { toggleLoader } from 'app/shared/websocket/websocket.reducer';
 import { addOptionIntoFilters, removeOptionFromFilters } from './filter-util';
+import { SEPARATORS } from 'app/shared/components/separator/separator.util';
 
 export const ACTION_TYPES = {
   TOGGLE_FILTER_PANEL: 'filter/TOGGLE_FILTER_PANEL',
@@ -11,6 +12,7 @@ export const ACTION_TYPES = {
   REMOVE_SELECTED_FILTER_OPTIONS: 'filter/REMOVE_SELECTED_FILTER_OPTIONS',
   SAVE_DYNAMIC_DATE_RANGEMETA_DATA: 'filter/SAVE_DYNAMIC_DATE_RANGEMETA_DATA',
   REMOVE_DATE_FILTER: 'filter/REMOVE_DATE_FILTER',
+  SET_SEPARATOR: 'filter/SET_SEPARATOR',
 };
 
 const initialState = {
@@ -18,6 +20,7 @@ const initialState = {
   isFilterOpen: false,
   selectedFilters: {},
   dynamicDateRangeMetaData: {},
+  separator: SEPARATORS[0].value,
 };
 
 const saveDateRangeData = (dynamicDateRangeMetaData: any, dimensionName: string, metaData: any) => {
@@ -72,6 +75,11 @@ export default (state: FilterState = initialState, action): FilterState => {
       return {
         ...state,
         dynamicDateRangeMetaData: saveDateRangeData(state.dynamicDateRangeMetaData, action.payload, action.Meta),
+      };
+    case ACTION_TYPES.SET_SEPARATOR:
+      return {
+        ...state,
+        separator: action.payload,
       };
     default:
       return state;
@@ -157,5 +165,12 @@ export const saveDynamicDateRangeMetaData = (dimensionName: string, metaData: an
     type: ACTION_TYPES.SAVE_DYNAMIC_DATE_RANGEMETA_DATA,
     payload: dimensionName,
     Meta: metaData,
+  });
+};
+
+export const setSeparator = separator => dispatch => {
+  dispatch({
+    type: ACTION_TYPES.SET_SEPARATOR,
+    payload: separator,
   });
 };

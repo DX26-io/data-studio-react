@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextArea } from '@adobe/react-spectrum';
 import { translate } from 'react-jhipster';
-import { SEPARATORS } from "./separator.util";
+import { SEPARATORS } from './separator.util';
 
 interface ISeparatorInputProps {
   values: Array<any>;
@@ -13,11 +13,15 @@ const SeparatorInput: React.FC<ISeparatorInputProps> = ({ separator, dispatchSep
   const [_separatedValues, _setSeparatedValues] = useState('');
 
   const generateSeparatedValues = () => {
-    return values
-      .map(elem => {
-        return elem;
-      })
-      .join(separator ? separator : SEPARATORS[0].value);
+    return (
+      values &&
+      values.length > 0 &&
+      values
+        .map(elem => {
+          return elem;
+        })
+        .join(separator ? separator : SEPARATORS[0].value)
+    );
   };
 
   useEffect(() => {

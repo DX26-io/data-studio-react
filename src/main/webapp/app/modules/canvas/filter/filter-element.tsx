@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { ActionButton, Flex, View, Text, Button, Divider } from '@adobe/react-spectrum';
+import { ActionButton, Flex, View, Text, Button, Divider, Tooltip, TooltipTrigger } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { IFeature } from 'app/shared/model/feature.model';
 import { setFilterData } from 'app/shared/websocket/websocket.reducer';
@@ -15,16 +15,23 @@ import PinOff from '@spectrum-icons/workflow/PinOff';
 import { pinFeature } from 'app/entities/feature/feature.reducer';
 import { addAppliedFilters, removeAppliedFilters } from './filter.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
+import Separators from 'app/shared/components/separator/separators';
+import SeparatorInput from 'app/shared/components/separator/separator-input';
+import SeparatorIcon from 'app/shared/components/separator/separator-icon';
+import { SEPARATORS } from 'app/shared/components/separator/separator.util';
+import Separator from '@spectrum-icons/workflow/Separator';
+import { Translate } from 'react-jhipster';
 
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
 }
 
 const FilterElement = (props: IFilterElementProp) => {
+  const [isSeparatorOn, setSeparatorOn] = useState(false);
 
   const handleInputChange = (newValue: string) => {
     props.setFilterData(null);
-    loadFilterOptions(props.feature.name,props.view?.viewDashboard?.dashboardDatasource.id,newValue);
+    loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id, newValue);
   };
 
   const onFocus = () => {
@@ -88,18 +95,36 @@ const FilterElement = (props: IFilterElementProp) => {
     props.pinFeature(feature.id, feature.pin);
   };
 
+  const dispatchSeparatedValues = receivedSeparatedvalues => {
+    if (receivedSeparatedvalues) {
+      props.selectedFilters[props.feature.name] = receivedSeparatedvalues.split(props.separator);
+      if (props.selectedFilters[props.feature.name]?._meta?.dataType) {
+        props.selectedFilters[props.feature.name]._meta.dataType = props.feature.type;
+      } else {
+        props.selectedFilters[props.feature.name]._meta = { dataType: props.feature.type };
+      }
+      props.saveSelectedFilter(props.selectedFilters);
+    }
+  };
+
   return (
     <>
       <div className="filter-element">
         <View padding={5} margin={5} borderWidth="thin" borderColor="default" backgroundColor="gray-75" borderRadius="regular">
           <span className="spectrum-Body-emphasis--sizeXXS">{props.feature.name}</span>
-          <Flex direction="row" justifyContent={"space-between"} alignItems="center" gap="size-50">
-            {checkIsDateType(props.feature) ? (
-              <View minWidth="size-3400">
+          <Flex direction="row" justifyContent={'space-between'} alignItems="center" gap="size-50">
+            {isSeparatorOn ? (
+              <SeparatorInput
+                values={props.selectedFilters[props.feature.name]}
+                dispatchSeparatedValues={dispatchSeparatedValues}
+                separator={props.separator}
+              />
+            ) : checkIsDateType(props.feature) ? (
+              <View minWidth="size-3200">
                 <DateRangeComponent onDateChange={onDateChange} />
               </View>
             ) : (
-              <View marginTop="size-125" minWidth="size-3400" width="100%">
+              <View marginTop="size-125" minWidth="size-3200" width="100%">
                 <Select
                   isMulti
                   value={generateOptions(props.selectedFilters[props.feature.name])}
@@ -110,21 +135,41 @@ const FilterElement = (props: IFilterElementProp) => {
                   closeMenuOnSelect={false}
                   classNamePrefix="select"
                   onChange={handleChange}
-                  // TODO:  isLoading={props.isFilterLoaderOn} this will be done later
                   placeholder={`Search ${props.feature.name}`}
                   onInputChange={handleInputChange}
                   options={props.filterSelectOptions}
                 />
               </View>
             )}
-            <ActionButton
-              isQuiet
-              onPress={() => {
-                togglePin(props.feature);
-              }}
-            >
-              {props.feature.pin ? <PinOn size="S" /> : <PinOff size="S" />}
-            </ActionButton>
+            <View>
+              <Flex direction="row">
+                <ActionButton
+                  isQuiet
+                  onPress={() => {
+                    togglePin(props.feature);
+                  }}
+                >
+                  {props.feature.pin ? <PinOn size="S" /> : <PinOff size="S" />}
+                </ActionButton>
+                <TooltipTrigger>
+                  <ActionButton
+                    isQuiet
+                    onPress={() => {
+                      setSeparatorOn(!isSeparatorOn);
+                    }}
+                  >
+                    <Separator size="S" />
+                  </ActionButton>
+                  <Tooltip>
+                    {isSeparatorOn ? (
+                      <Translate contentKey="separators.tooltipCommaSeparatedOff"></Translate>
+                    ) : (
+                      <Translate contentKey="separators.tooltipCommaSeparatedOn"></Translate>
+                    )}
+                  </Tooltip>
+                </TooltipTrigger>
+              </Flex>
+            </View>
           </Flex>
         </View>
       </div>
@@ -136,6 +181,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   filterSelectOptions: generateFilterOptions(storeState.visualisationData.filterData),
   selectedFilters: storeState.filter.selectedFilters,
+  separator: storeState.filter.separator,
 });
 const mapDispatchToProps = {
   saveSelectedFilter,
@@ -143,7 +189,7 @@ const mapDispatchToProps = {
   setFilterData,
   addAppliedFilters,
   removeAppliedFilters,
-  saveDynamicDateRangeMetaData
+  saveDynamicDateRangeMetaData,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

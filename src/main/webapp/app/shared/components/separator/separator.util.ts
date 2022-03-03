@@ -1,27 +1,45 @@
 import { IUserDatasourceConstraints, defaultValue } from 'app/shared/model/user-datasource-constraints.model';
 import { translate } from 'react-jhipster';
+// localization is not working with react select
+// export const SEPARATORS = [
+//   {
+//     label: translate('separators.comma'),
+//     value: ',',
+//   },
+//   {
+//     label: translate('separators.space'),
+//     value: ' ',
+//   },
+//   {
+//     label: translate('separators.pipe'),
+//     value: '|',
+//   },
+//   {
+//     label: translate('separators.colon'),
+//     value: ':',
+//   },
+// ];
 
 export const SEPARATORS = [
   {
-    label: translate('separators.comma'),
+    label: 'Data Separator Comma[,]',
     value: ',',
   },
   {
-    label: translate('separators.space'),
+    label: 'Data Separator Comma[]',
     value: ' ',
   },
   {
-    label: translate('separators.pipe'),
+    label: 'Data Separator Comma[|]',
     value: '|',
   },
   {
-    label: translate('separators.colon'),
+    label: 'Data Separator Comma[:]',
     value: ':',
   },
 ];
 
-
-export const addCommaSeparatedValuesIntoConstraint = (
+export const addSeparatedValuesIntoConstraint = (
   commaSeparatedValues: string,
   constraint: IUserDatasourceConstraints,
   condition: any,
