@@ -9,10 +9,16 @@ import { Translate } from 'react-jhipster';
 import Condition from './condition';
 import { VisualWrap } from '../visualisation/util/visualmetadata-wrapper';
 import Alert from '@spectrum-icons/workflow/Alert';
+import Separators from 'app/shared/components/separator/separators';
+import { setSeparator } from '../filter/filter.reducer';
 
 const DataConstraints = props => {
   const [remountComponentKey, setRemountComponentKey] = useState(1);
   const [isSaveCalled, setIsSaveCalled] = useState(false);
+
+  const _setSeparator = separator => {
+    props.setSeparator(separator);
+  };
 
   const addStartingCondition = () => {
     const conditionExpression = {
@@ -65,7 +71,7 @@ const DataConstraints = props => {
       datasourceId: props.view.viewDashboard.dashboardDatasource.id,
       visualMetadataId: props.visualMetaData.id,
       queryDTO: wrap.getQueryParameters(props.visualMetaData, {}, null, null),
-      conditionExpression: props.conditionExpression
+      conditionExpression: props.conditionExpression,
     });
   };
 
@@ -93,6 +99,7 @@ const DataConstraints = props => {
             )}
           </Flex>
           <Flex gap="size-100">
+            <Separators setSeparator={_setSeparator} />
             <Button variant="cta" onPress={clear}>
               <Translate contentKey="entity.action.clear">Clear</Translate>
             </Button>
@@ -117,6 +124,7 @@ const mapDispatchToProps = {
   updateConditionExpression,
   updateEntity,
   validate,
+  setSeparator,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DataConstraints);
