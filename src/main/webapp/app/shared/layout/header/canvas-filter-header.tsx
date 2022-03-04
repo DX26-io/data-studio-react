@@ -31,7 +31,7 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
       return (
         <View minWidth="size-2000" key={`filter-${featureName}`}>
           {
-            isDateFilterType(props.selectedFilters[featureName]?._meta.dataType) ? (
+            isDateFilterType(props.selectedFilters[featureName]?._meta?.dataType) ? (
               <>
                 <Select
                   key={featureName}

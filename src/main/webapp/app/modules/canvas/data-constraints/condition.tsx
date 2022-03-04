@@ -25,6 +25,7 @@ import {
 import AddRemoveAction from './add-remove-action';
 import AndOrCondition from './and-or-condition';
 import { COMPARE_TYPES } from 'app/shared/util/data-constraints.constants';
+import SeparatorInput from 'app/shared/components/separator/separator-input';
 
 interface IConditionProps extends StateProps, DispatchProps {
   condition: any;
@@ -38,7 +39,7 @@ const Condition = (props: IConditionProps) => {
   const [containsValues, setContainsValues] = useState([]);
   const [feature, setFeature] = useState({ value: '', label: '' });
   const [conditionValue, setConditionValue] = useState();
-
+  const [isSeparatorOn, setSeparatorOn] = useState(false);
   const updateCondition = () => {
     const changes = [];
     depthFirstVisit(props.conditionExpression, function (current, previous, previousLeaf, parent) {
@@ -90,12 +91,12 @@ const Condition = (props: IConditionProps) => {
 
   const onContaintsInputFocus = () => {
     props.setFilterData(null);
-    loadFilterOptions(_condition.featureName,props.view?.viewDashboard?.dashboardDatasource.id);
+    loadFilterOptions(_condition.featureName, props.view?.viewDashboard?.dashboardDatasource.id);
   };
 
   const onContaintsHandleInputChange = newValue => {
     props.setFilterData(null);
-    loadFilterOptions(_condition.featureName, props.view?.viewDashboard?.dashboardDatasource.id,newValue);
+    loadFilterOptions(_condition.featureName, props.view?.viewDashboard?.dashboardDatasource.id, newValue);
   };
 
   const onContaintsHandleChange = (value, actionMeta) => {
@@ -124,6 +125,11 @@ const Condition = (props: IConditionProps) => {
     updateCondition();
   };
 
+  const dispatchSeparatedValues = receivedCommaSeparatedvalues => {
+    _condition.values = receivedCommaSeparatedvalues.split(props.separator);
+    setContainsValues(getContainsValues(_condition));
+  };
+
   useEffect(() => {
     if (props.condition['@type'] !== 'Or' && props.condition['@type'] !== 'And' && props.condition?.featureName) {
       _setCondition(props.condition);
@@ -144,6 +150,10 @@ const Condition = (props: IConditionProps) => {
       }
     }
   }, [props.condition]);
+
+  const toggleCommaSeparator = _isSeparatorOn => {
+    setSeparatorOn(_isSeparatorOn);
+  };
 
   return (
     <>
@@ -198,28 +208,35 @@ const Condition = (props: IConditionProps) => {
                   }}
                 />
               )}
-              {(_condition['@type'] === 'Contains' || _condition['@type'] === 'NotContains') && (
-                <div style={{ minWidth: '300px' }}>
-                  <Select
-                    isMulti
-                    value={containsValues}
-                    searchable={true}
-                    onBlurResetsInput={false}
-                    onCloseResetsInput={false}
-                    onFocus={onContaintsInputFocus}
-                    closeMenuOnSelect={false}
-                    classNamePrefix="select"
-                    onChange={onContaintsHandleChange}
-                    placeholder={`Search ${_condition.featureName}`}
-                    onInputChange={onContaintsHandleInputChange}
-                    options={props.filterSelectOptions}
+              {(_condition['@type'] === 'Contains' || _condition['@type'] === 'NotContains') &&
+                (isSeparatorOn ? (
+                  <SeparatorInput
+                    values={_condition.values}
+                    dispatchSeparatedValues={dispatchSeparatedValues}
+                    separator={props.separator}
                   />
-                </div>
-              )}
+                ) : (
+                  <div style={{ minWidth: '300px' }}>
+                    <Select
+                      isMulti
+                      value={containsValues}
+                      searchable={true}
+                      onBlurResetsInput={false}
+                      onCloseResetsInput={false}
+                      onFocus={onContaintsInputFocus}
+                      closeMenuOnSelect={false}
+                      classNamePrefix="select"
+                      onChange={onContaintsHandleChange}
+                      placeholder={`Search ${_condition.featureName}`}
+                      onInputChange={onContaintsHandleInputChange}
+                      options={props.filterSelectOptions}
+                    />
+                  </div>
+                ))}
               {_condition['@type'] === 'Between' && isDateType(_condition.valueType.type) && (
                 <DateRangeComponent condition={_condition} onDateChange={onDateChange} />
               )}
-              <AddRemoveAction _condition={_condition} />
+              <AddRemoveAction isSeparatedOn={isSeparatorOn} _condition={_condition} toggleCommaSeparator={toggleCommaSeparator} />
             </Flex>
           </View>
         )}
@@ -238,6 +255,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   conditionExpression: storeState.visualmetadata.conditionExpression,
   filterSelectOptions: generateFilterOptions(storeState.visualisationData.filterData),
   view: storeState.views.entity,
+  separator: storeState.filter.separator,
 });
 const mapDispatchToProps = {
   updateConditionExpression,

@@ -1,27 +1,26 @@
 import React from 'react';
 import { Tooltip, TooltipTrigger, ActionButton } from '@adobe/react-spectrum';
 import { Translate } from 'react-jhipster';
-import { SEPARATORS } from 'app/config/constants';
 import Separator from '@spectrum-icons/workflow/Separator';
 
 interface ISeparatorIconProps {
-  toggleCommaSeparator: (condition: any) => void;
-  condition: any;
+  toggleCommaSeparator: (isSeparatedOn: boolean) => void;
+  isSeparatedOn: boolean;
 }
 
-const SeparatorIcon: React.FC<ISeparatorIconProps> = ({ toggleCommaSeparator, condition }) => {
+const SeparatorIcon: React.FC<ISeparatorIconProps> = ({ toggleCommaSeparator, isSeparatedOn }) => {
   return (
     <TooltipTrigger>
       <ActionButton
         isQuiet
         onPress={() => {
-          toggleCommaSeparator(condition);
+          toggleCommaSeparator(!isSeparatedOn);
         }}
       >
         <Separator size="S" />
       </ActionButton>
       <Tooltip>
-        {condition.isCommaSeparatedInputOn ? (
+        {isSeparatedOn ? (
           <Translate contentKey="separators.tooltipCommaSeparatedOff"></Translate>
         ) : (
           <Translate contentKey="separators.tooltipCommaSeparatedOn"></Translate>

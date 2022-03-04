@@ -8,9 +8,12 @@ import { Translate } from 'react-jhipster';
 import AddCircle from '@spectrum-icons/workflow/AddCircle';
 import RemoveCircle from '@spectrum-icons/workflow/RemoveCircle';
 import { applyChanges, depthFirstVisit } from './data-constraints.util';
+import SeparatorIcon from 'app/shared/components/separator/separator-icon';
 
 interface IAddRemoveActionProps extends StateProps, DispatchProps {
   _condition: any;
+  toggleCommaSeparator: (isSeparatedOn: boolean) => void;
+  isSeparatedOn:boolean
 }
 
 const AddRemoveAction = (props: IAddRemoveActionProps) => {
@@ -66,9 +69,12 @@ const AddRemoveAction = (props: IAddRemoveActionProps) => {
     }
   };
 
+
+
   return (
     <>
       <Flex direction="row" gap="size-50">
+      <SeparatorIcon toggleCommaSeparator={props.toggleCommaSeparator} isSeparatedOn={props.isSeparatedOn} />
         <ActionButton
           onPress={() => {
             addComposition();

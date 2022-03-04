@@ -1,38 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { TextField } from '@adobe/react-spectrum';
+import { TextArea } from '@adobe/react-spectrum';
 import { translate } from 'react-jhipster';
-import { SEPARATORS } from 'app/config/constants';
 
 interface ISeparatorInputProps {
   values: Array<any>;
-  dispatchCommaSeparatedValues: (commaSeparatedValues: string) => void;
+  dispatchSeparatedValues: (separatedValues: string) => void;
   separator: string;
 }
 
-const SeparatorInput: React.FC<ISeparatorInputProps> = ({ separator, dispatchCommaSeparatedValues, values }) => {
-  const [_commaSeparatedValues, _setCommaSeparatedValues] = useState('');
+const SeparatorInput: React.FC<ISeparatorInputProps> = ({ separator, dispatchSeparatedValues, values }) => {
+  const [_separatedValues, _setSeparatedValues] = useState('');
 
-  const generateCommaSeparatedValues = () => {
-    return values
-      .map(elem => {
-        return elem;
-      })
-      .join(separator ? separator : SEPARATORS[0].id);
+  const generateSeparatedValues = () => {
+    return (
+      values &&
+      values.length > 0 &&
+      values
+        .map(elem => {
+          return elem;
+        })
+        .join(separator)
+    );
   };
 
   useEffect(() => {
-    _setCommaSeparatedValues(generateCommaSeparatedValues());
+    _setSeparatedValues(generateSeparatedValues());
   }, []);
 
   return (
-    <TextField
+    <TextArea
       placeholder={translate('separators.inputPlaceholder')}
       onBlur={() => {
-        dispatchCommaSeparatedValues(_commaSeparatedValues);
+        dispatchSeparatedValues(_separatedValues);
       }}
-      value={_commaSeparatedValues}
+      value={_separatedValues}
       onChange={event => {
-        _setCommaSeparatedValues(event);
+        _setSeparatedValues(event);
       }}
     />
   );

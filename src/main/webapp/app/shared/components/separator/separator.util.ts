@@ -1,18 +1,51 @@
 import { IUserDatasourceConstraints, defaultValue } from 'app/shared/model/user-datasource-constraints.model';
-export const addCommaSeparatedValuesIntoConstraint = (
+import { translate } from 'react-jhipster';
+// localization is not working with react select
+// export const SEPARATORS = [
+//   {
+//     label: translate('separators.comma'),
+//     value: ',',
+//   },
+//   {
+//     label: translate('separators.space'),
+//     value: ' ',
+//   },
+//   {
+//     label: translate('separators.pipe'),
+//     value: '|',
+//   },
+//   {
+//     label: translate('separators.colon'),
+//     value: ':',
+//   },
+// ];
+
+export const SEPARATORS = [
+  {
+    label: 'Data Separator Comma[,]',
+    value: ',',
+  },
+  {
+    label: 'Data Separator Comma[]',
+    value: ' ',
+  },
+  {
+    label: 'Data Separator Comma[|]',
+    value: '|',
+  },
+  {
+    label: 'Data Separator Comma[:]',
+    value: ':',
+  },
+];
+
+export const addSeparatedValuesIntoConstraint = (
   commaSeparatedValues: string,
   constraint: IUserDatasourceConstraints,
   condition: any,
   separator: string
 ) => {
   if (commaSeparatedValues && commaSeparatedValues.length > 0) {
-    // getList = getList.filter((item, i, ar) => ar.indexOf(item) === i);
-    // getList.forEach(element => {
-    //     added({ text: element },constraint);
-    //     constraint.selected.push({ text: element });
-    // });
-    // vm.commaSeparatedToolTip = VisualDispatchService.setcommaSeparatedToolTip(constraint.isCommaSeparatedInput);
-
     const index = constraint.constraintDefinition.featureConstraints.indexOf(condition);
     if (index > -1) {
       constraint.constraintDefinition.featureConstraints[index].values = commaSeparatedValues.split(separator);
