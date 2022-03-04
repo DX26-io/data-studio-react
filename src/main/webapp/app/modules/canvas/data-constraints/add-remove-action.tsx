@@ -12,7 +12,8 @@ import SeparatorIcon from 'app/shared/components/separator/separator-icon';
 
 interface IAddRemoveActionProps extends StateProps, DispatchProps {
   _condition: any;
-  toggleCommaSeparator: (condition?: any) => void;
+  toggleCommaSeparator: (isSeparatedOn: boolean) => void;
+  isSeparatedOn:boolean
 }
 
 const AddRemoveAction = (props: IAddRemoveActionProps) => {
@@ -73,7 +74,7 @@ const AddRemoveAction = (props: IAddRemoveActionProps) => {
   return (
     <>
       <Flex direction="row" gap="size-50">
-      <SeparatorIcon toggleCommaSeparator={props.toggleCommaSeparator} condition={props._condition} />
+      <SeparatorIcon toggleCommaSeparator={props.toggleCommaSeparator} isSeparatedOn={props.isSeparatedOn} />
         <ActionButton
           onPress={() => {
             addComposition();

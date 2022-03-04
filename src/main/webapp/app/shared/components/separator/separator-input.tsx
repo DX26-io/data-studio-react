@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextArea } from '@adobe/react-spectrum';
 import { translate } from 'react-jhipster';
-import { SEPARATORS } from './separator.util';
 
 interface ISeparatorInputProps {
   values: Array<any>;

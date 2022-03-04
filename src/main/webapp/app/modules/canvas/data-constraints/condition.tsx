@@ -151,8 +151,8 @@ const Condition = (props: IConditionProps) => {
     }
   }, [props.condition]);
 
-  const toggleCommaSeparator = _con => {
-    setSeparatorOn(!isSeparatorOn);
+  const toggleCommaSeparator = _isSeparatorOn => {
+    setSeparatorOn(_isSeparatorOn);
   };
 
   return (
@@ -236,7 +236,7 @@ const Condition = (props: IConditionProps) => {
               {_condition['@type'] === 'Between' && isDateType(_condition.valueType.type) && (
                 <DateRangeComponent condition={_condition} onDateChange={onDateChange} />
               )}
-              <AddRemoveAction _condition={_condition} toggleCommaSeparator={toggleCommaSeparator} />
+              <AddRemoveAction isSeparatedOn={isSeparatorOn} _condition={_condition} toggleCommaSeparator={toggleCommaSeparator} />
             </Flex>
           </View>
         )}
