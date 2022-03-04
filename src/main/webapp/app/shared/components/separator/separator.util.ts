@@ -46,7 +46,6 @@ export const addSeparatedValuesIntoConstraint = (
   separator: string
 ) => {
   if (commaSeparatedValues && commaSeparatedValues.length > 0) {
-    condition.isCommaSeparatedInputOn = false;
     const index = constraint.constraintDefinition.featureConstraints.indexOf(condition);
     if (index > -1) {
       constraint.constraintDefinition.featureConstraints[index].values = commaSeparatedValues.split(separator);

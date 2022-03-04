@@ -20,7 +20,7 @@ const SeparatorInput: React.FC<ISeparatorInputProps> = ({ separator, dispatchSep
         .map(elem => {
           return elem;
         })
-        .join(separator ? separator : SEPARATORS[0].value)
+        .join(separator)
     );
   };
 
