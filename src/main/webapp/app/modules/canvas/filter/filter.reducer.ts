@@ -135,7 +135,7 @@ export const addAppliedFilters = (filter, feature, view, visualmetaData, selecte
   });
   loadVisualisation(visualmetaData, view, _selectedFilter);
 };
-export const removeAppliedFilters = (filter, feature, view, visualmetaData, selectedFilter) => dispatch => {
+export const removeAppliedFilters = (filter, feature, view?, visualmetaData?, selectedFilter?) => dispatch => {
   const _selectedFilter = removeOptionFromFilters(filter, selectedFilter, feature);
   dispatch({
     type: ACTION_TYPES.REMOVE_SELECTED_FILTER_OPTIONS,
