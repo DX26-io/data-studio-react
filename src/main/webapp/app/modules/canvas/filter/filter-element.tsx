@@ -41,9 +41,9 @@ const FilterElement = (props: IFilterElementProp) => {
 
   const handleChange = (value, actionMeta) => {
     if (actionMeta.action === 'select-option') {
-      props.addAppliedFilters(actionMeta.option.value, props.feature);
+      props.addAppliedFilters(actionMeta.option.value, props.feature,props.view,props.visualmetadata,props.selectedFilters);
     } else if (actionMeta.action === 'remove-value') {
-      props.removeAppliedFilters(actionMeta.removedValue.value, props.feature);
+      props.removeAppliedFilters(actionMeta.removedValue.value, props.feature,props.view,props.visualmetadata,props.selectedFilters);
     }
   };
 
@@ -182,6 +182,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   filterSelectOptions: generateFilterOptions(storeState.visualisationData.filterData),
   selectedFilters: storeState.filter.selectedFilters,
   separator: storeState.filter.separator,
+  visualmetadata: storeState.views.viewState,
 });
 const mapDispatchToProps = {
   saveSelectedFilter,

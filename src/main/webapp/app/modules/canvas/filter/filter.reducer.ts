@@ -59,12 +59,12 @@ export default (state: FilterState = initialState, action): FilterState => {
     case ACTION_TYPES.ADD_SELECTED_FILTER_OPTIONS:
       return {
         ...state,
-        selectedFilters: addOptionIntoFilters(action.payload, state.selectedFilters, action.Meta),
+        selectedFilters: action.payload,
       };
     case ACTION_TYPES.REMOVE_SELECTED_FILTER_OPTIONS:
       return {
         ...state,
-        selectedFilters: removeOptionFromFilters(action.payload, state.selectedFilters, action.Meta),
+        selectedFilters: action.payload,
       };
     case ACTION_TYPES.REMOVE_DATE_FILTER:
       return {
@@ -127,19 +127,21 @@ export const clearFilter = (filters: any, visualmetadata: any, view: IViews) => 
   loadVisualisation(visualmetadata, view, filters);
 };
 
-export const addAppliedFilters = (filter, feature) => dispatch => {
+export const addAppliedFilters = (filter, feature, view, visualmetaData, selectedFilter) => dispatch => {
+  const _selectedFilter = addOptionIntoFilters(filter, selectedFilter, feature);
   dispatch({
     type: ACTION_TYPES.ADD_SELECTED_FILTER_OPTIONS,
-    payload: filter,
-    Meta: feature,
+    payload: _selectedFilter,
   });
+  loadVisualisation(visualmetaData, view, _selectedFilter);
 };
-export const removeAppliedFilters = (filter, feature) => dispatch => {
+export const removeAppliedFilters = (filter, feature, view?, visualmetaData?, selectedFilter?) => dispatch => {
+  const _selectedFilter = removeOptionFromFilters(filter, selectedFilter, feature);
   dispatch({
     type: ACTION_TYPES.REMOVE_SELECTED_FILTER_OPTIONS,
-    payload: filter,
-    Meta: feature,
+    payload: _selectedFilter,
   });
+  loadVisualisation(visualmetaData, view, _selectedFilter);
 };
 
 export const applyFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {

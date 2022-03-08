@@ -9,7 +9,12 @@ import { resetTimezoneData } from 'app/shared/util/date-utils';
 import { checkIsDateType } from 'app/modules/canvas/visualisation/util/visualisation-utils';
 import { getPin, loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 import Select from 'react-select';
-import { addAppliedFilters, removeAppliedFilters, saveDynamicDateRangeMetaData, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
+import {
+  addAppliedFilters,
+  removeAppliedFilters,
+  saveDynamicDateRangeMetaData,
+  saveSelectedFilter,
+} from 'app/modules/canvas/filter/filter.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
 
 export interface IPinnedFilterElementProp extends StateProps, DispatchProps {
@@ -19,7 +24,7 @@ export interface IPinnedFilterElementProp extends StateProps, DispatchProps {
 const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
   const handleInputChange = (newValue: string) => {
     props.setFilterData(null);
-    loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id,newValue);
+    loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id, newValue);
   };
 
   const onFocus = () => {
@@ -29,9 +34,9 @@ const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
 
   const handleChange = (value, actionMeta) => {
     if (actionMeta.action === 'select-option') {
-      props.addAppliedFilters(actionMeta.option.value, props.feature);
+      props.addAppliedFilters(actionMeta.option.value, props.feature, props.view, props.visualmetadata, props.selectedFilters);
     } else if (actionMeta.action === 'remove-value') {
-      props.removeAppliedFilters(actionMeta.removedValue.value, props.feature);
+      props.removeAppliedFilters(actionMeta.removedValue.value, props.feature, props.view, props.visualmetadata, props.selectedFilters);
     }
   };
 
@@ -113,13 +118,14 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   filterSelectOptions: generateFilterOptions(storeState.visualisationData.filterData),
   selectedFilters: storeState.filter.selectedFilters,
+  visualmetadata: storeState.views.viewState,
 });
 const mapDispatchToProps = {
   saveSelectedFilter,
   setFilterData,
   addAppliedFilters,
   removeAppliedFilters,
-  saveDynamicDateRangeMetaData
+  saveDynamicDateRangeMetaData,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

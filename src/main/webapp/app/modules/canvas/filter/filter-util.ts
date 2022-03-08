@@ -466,7 +466,7 @@ export const generateOptionsForDateRange = (config: any) => {
     }
     options.push({ value: config.currentDynamicDateRangeConfig.title, label: displayValue });
   } else {
-    const date = changeDateFormat(config?.startDateFormatted) + ' To ' + changeDateFormat(config?.endDateFormatted);
+    const date = changeDateFormat(config?.startDateFormatted) + ' ' + changeDateFormat(config?.endDateFormatted);
     options.push({ value: date, label: date });
   }
   return options;
