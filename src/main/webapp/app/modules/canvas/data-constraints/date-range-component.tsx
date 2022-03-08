@@ -19,11 +19,13 @@ import { DYNAMIC_DATE_RANGE_CONFIG, tabList } from 'app/shared/util/data-constra
 interface IDateRangeComponentProps {
   onDateChange: (fromDate, toDate, metadata) => void;
   condition?: any;
+  startDate?: any;
+  endDate?: any;
 }
 
 const DateRangeComponent = (props: IDateRangeComponentProps) => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(props.startDate ? new Date(props.startDate) : new Date());
+  const [endDate, setEndDate] = useState(props.endDate ? new Date(props.endDate) : new Date());
   const [customDynamicDateRange, setCustomDynamicDateRange] = useState('0');
   const [dateRangeTab, setDateRangeTab] = useState<ReactText>('0');
   const [isdynamicDateRangeConfig, setDynamicDateRangeConfig] = useState<ReactText>('');
@@ -35,17 +37,17 @@ const DateRangeComponent = (props: IDateRangeComponentProps) => {
   let currentDynamicDateRangeConfig;
   const dynamicDateRangeConfig = DYNAMIC_DATE_RANGE_CONFIG;
 
-  const onInputChange = () => {
+  const onInputChange = (_startDate, _endDate) => {
     let fromDate;
     let toDate;
     let startDateFormatted = '';
     let endDateFormatted = '';
     if (dateRangeTab === TAB_DAY) {
-      startDateFormatted = fromDate = formatDate(resetTimezone(startOfDay(strToDate(startDate))));
-      endDateFormatted = toDate = formatDate(resetTimezone(endOfDay(strToDate(startDate))));
+      startDateFormatted = fromDate = formatDate(resetTimezone(startOfDay(strToDate(_startDate))));
+      endDateFormatted = toDate = formatDate(resetTimezone(endOfDay(strToDate(_startDate))));
     } else if (dateRangeTab === TAB_RANGE) {
-      startDateFormatted = fromDate = formatDate(resetTimezone(startOfDay(strToDate(startDate))));
-      endDateFormatted = toDate = formatDate(resetTimezone(endOfDay(strToDate(endDate))));
+      startDateFormatted = fromDate = formatDate(resetTimezone(startOfDay(strToDate(_startDate))));
+      endDateFormatted = toDate = formatDate(resetTimezone(endOfDay(strToDate(_endDate))));
     } else if (dateRangeTab === TAB_DYNAMIC) {
       const startDateRange = getStartDateRange(currentDynamicDateRangeConfig);
       if (startDateRange) {
@@ -74,12 +76,12 @@ const DateRangeComponent = (props: IDateRangeComponentProps) => {
   };
 
   const handleStartDateChange = date => {
-    setStartDate(date);
-    onInputChange();
+    setStartDate(new Date(date));
+    onInputChange(new Date(date), new Date());
   };
   const handleEndDateChange = date => {
-    setEndDate(date);
-    onInputChange();
+    setEndDate(new Date(date));
+    onInputChange(new Date(), new Date(date));
   };
 
   useEffect(() => {
@@ -108,7 +110,7 @@ const DateRangeComponent = (props: IDateRangeComponentProps) => {
       } else {
         setCustom(false);
       }
-      onInputChange();
+      onInputChange(startDate, endDate);
     }
   }, [isdynamicDateRangeConfig, customDynamicDateRange]);
 

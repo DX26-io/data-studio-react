@@ -8,9 +8,6 @@ interface IDatePickerProps {
   label?: string;
 }
 const DatePicker: React.FC<IDatePickerProps> = props => {
-  const dateChange = date => {
-    props.onChange(date);
-  };
   return (
     <>
       <TextField
@@ -19,7 +16,7 @@ const DatePicker: React.FC<IDatePickerProps> = props => {
         label={props.label}
         value={props.value}
         onChange={event => {
-          dateChange(event.target.value);
+          props.onChange(event.target.value);
         }}
         InputLabelProps={{
           shrink: true,
