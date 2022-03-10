@@ -1,9 +1,7 @@
 import axios from 'axios';
 import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
-
-import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-import { ICrudGetViewFeaturesAction } from './feature-util';
+import { ICrudGetViewFeaturesAction, onSetDatesInFeature } from './feature-util';
 import { IFeature, defaultValue } from 'app/shared/model/feature.model';
 
 const updateFeaturesState = (features, url) => {
@@ -24,6 +22,7 @@ export const ACTION_TYPES = {
   RESET: 'feature/RESET',
   SET_FEATURE: 'feature/SET_FEATURE',
   PIN_FEATURE: 'feature/PIN_FEATURE',
+  SET_DATES_IN_FEATURE_LIST: 'feature/SET_DATES_IN_FEATURE_LIST',
 };
 
 const initialState = {
@@ -35,7 +34,7 @@ const initialState = {
   updateSuccess: false,
   feature: (null as unknown) as IFeature,
   isFeaturesReceived: false,
-  isPinnedFeatureListUpdated : false
+  isPinnedFeatureListUpdated: false,
 };
 
 export type FeatureState = Readonly<typeof initialState>;
@@ -167,6 +166,11 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         ...state,
         feature: action.payload,
       };
+    case ACTION_TYPES.SET_DATES_IN_FEATURE_LIST:
+      return {
+        ...state,
+        entities: onSetDatesInFeature(state.entities, action.payload),
+      };
     default:
       return state;
   }
@@ -265,3 +269,8 @@ export const getThresholdMeasuresList = features => {
   });
   return measuresList;
 };
+
+export const setDatesInFeature = featureName => ({
+  type: ACTION_TYPES.SET_DATES_IN_FEATURE_LIST,
+  payload: featureName,
+});

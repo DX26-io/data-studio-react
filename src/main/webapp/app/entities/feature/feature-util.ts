@@ -62,3 +62,10 @@ export const generateOptions = features => {
 export const getFeature = (featureList: readonly IFeature[], feature: string) => {
   return featureList.find(item => item.name === feature);
 };
+
+export const onSetDatesInFeature = (featureList, featureName) => {
+  const index = featureList.findIndex(feature => feature.name === featureName);
+  featureList[index].selected = '';
+  featureList[index].selected2 = '';
+  return Object.assign([], featureList);
+};

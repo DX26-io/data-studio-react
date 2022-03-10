@@ -24,8 +24,8 @@ interface IDateRangeComponentProps {
 }
 
 const DateRangeComponent = (props: IDateRangeComponentProps) => {
-  const [startDate, setStartDate] = useState(props.startDate ? new Date(props.startDate) : new Date());
-  const [endDate, setEndDate] = useState(props.endDate ? new Date(props.endDate) : new Date());
+  const [startDate, setStartDate] = useState(props.startDate);
+  const [endDate, setEndDate] = useState(props.endDate);
   const [customDynamicDateRange, setCustomDynamicDateRange] = useState('0');
   const [dateRangeTab, setDateRangeTab] = useState<ReactText>('0');
   const [isdynamicDateRangeConfig, setDynamicDateRangeConfig] = useState<ReactText>('');
@@ -113,6 +113,11 @@ const DateRangeComponent = (props: IDateRangeComponentProps) => {
       onInputChange(startDate, endDate);
     }
   }, [isdynamicDateRangeConfig, customDynamicDateRange]);
+
+  useEffect(() => {
+    setStartDate(props.startDate);
+    setEndDate(props.endDate);
+  }, [props.startDate, props.endDate]);
 
   return (
     <>

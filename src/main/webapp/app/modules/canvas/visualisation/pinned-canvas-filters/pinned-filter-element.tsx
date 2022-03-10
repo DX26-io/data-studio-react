@@ -89,7 +89,7 @@ const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
         {checkIsDateType(props.feature) ? (
           <View minWidth="100%">
             <span className="spectrum-Body-emphasis--sizeXXS">{props.feature.name}</span>
-            <DateRangeComponent onDateChange={onDateChange} />
+            <DateRangeComponent onDateChange={onDateChange} startDate={props.feature.selected} endDate={props.feature.selected2} />
           </View>
         ) : (
           <View minWidth="100%">

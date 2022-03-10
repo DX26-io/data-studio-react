@@ -85,7 +85,7 @@ const FilterElement = (props: IFilterElementProp) => {
       }
     } else {
       props.feature.selected = '';
-      props.feature.selected2 = '';
+      props.feature.selected2 ='';
       props.selectedFilters[props.feature.name] = [];
       props.removeAppliedFilters('', props.feature, props.view, props.visualmetadata, props.selectedFilters);
     }
@@ -123,7 +123,7 @@ const FilterElement = (props: IFilterElementProp) => {
               />
             ) : checkIsDateType(props.feature) ? (
               <View minWidth="size-3200">
-                <DateRangeComponent onDateChange={onDateChange} startDate={props.feature.selected} endDate={props.feature.selected2}  />
+                <DateRangeComponent onDateChange={onDateChange} startDate={props.feature.selected} endDate={props.feature.selected2} />
               </View>
             ) : (
               <View marginTop="size-125" minWidth="size-3200" width="100%">
