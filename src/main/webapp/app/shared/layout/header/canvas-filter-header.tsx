@@ -52,7 +52,7 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
                       props.removeDateFilters(props.selectedFilters, featureName);
                       props.applyFilter(props.selectedFilters, props.visualmetadata, props.view);
                     }
-                    props.setDatesInFeature(featureName);
+                    props.setDatesInFeature(featureName,'','');
                   }
                 }}
                 placeholder={featureName}

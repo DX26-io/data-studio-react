@@ -63,9 +63,9 @@ export const getFeature = (featureList: readonly IFeature[], feature: string) =>
   return featureList.find(item => item.name === feature);
 };
 
-export const onSetDatesInFeature = (featureList, featureName) => {
+export const onSetDatesInFeature = (featureList, featureName,startDate,endDate) => {
   const index = featureList.findIndex(feature => feature.name === featureName);
-  featureList[index].selected = '';
-  featureList[index].selected2 = '';
+  featureList[index].selected = startDate;
+  featureList[index].selected2 = endDate;
   return Object.assign([], featureList);
 };

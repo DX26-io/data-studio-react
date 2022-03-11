@@ -120,20 +120,6 @@ export const changeDateFormat = (date: any) => {
   }
 };
 
-const addDateRangeFilter = (filterParameters, date, feature) => {
-  const name = feature?.name;
-  const type = feature?.type;
-  if (!filterParameters[name]) {
-    filterParameters[name] = [];
-  }
-  filterParameters[name].push(date);
-  filterParameters[name]._meta = {
-    dataType: type,
-    valueType: 'dateRangeValueType',
-  };
-  return filterParameters;
-};
-
 const buildDynamicDateRangeObject = (dimensionName, title, customDynamicDateRange) => {
   const metaData = {
     dimensionName,
@@ -181,6 +167,18 @@ const parseViewFeatureMetadata = (metadata, feature, value, filterName) => {
   };
 };
 
+export const addDateRangeFilter = (feature, startDate, endDate, selectedFilters) => {
+  if (!selectedFilters[feature.name]) {
+    selectedFilters[feature.name] = [];
+  }
+  selectedFilters[feature.name] = [startDate, endDate];
+  selectedFilters[feature.name]._meta = {
+    dataType: feature.type,
+    valueType: 'dateRangeValueType',
+  };
+  return selectedFilters;
+};
+
 const applyViewFeatureCriteria = (viewFeatureCriterias, selectedFilter, featureEntities, saveFilter, saveDynamicDateRangeMetaData) => {
   if (viewFeatureCriterias && viewFeatureCriterias.length > 0) {
     let filters = selectedFilter;
@@ -197,8 +195,7 @@ const applyViewFeatureCriteria = (viewFeatureCriterias, selectedFilter, featureE
       // filterParametersService.saveDynamicDateRangeToolTip(data.tooltipObj);
       // }
       delete filters[feature?.name];
-      filters = addDateRangeFilter(filters, data.values[0], feature);
-      filters = addDateRangeFilter(filters, data.values[1], feature);
+      filters = addDateRangeFilter(feature, data.values[0], data.values[1], filters);
     });
     saveFilter(filters);
     // filterParametersService.save(filterParametersService.getSelectedFilter());
@@ -420,7 +417,7 @@ export const getPin = pin => {
   return pin === null || pin === false ? false : true;
 };
 
-export const loadFilterOptions = (featureName, datasourceId,value?) => {
+export const loadFilterOptions = (featureName, datasourceId, value?) => {
   const query: IQueryDTO = {
     fields: [{ name: featureName }],
     distinct: true,
@@ -445,7 +442,7 @@ export const loadFilterOptions = (featureName, datasourceId,value?) => {
   });
 };
 
-export const generateFilterOptions = (data) => {
+export const generateFilterOptions = data => {
   const options = [];
   if (data) {
     const _data = data ? data?.body : [];

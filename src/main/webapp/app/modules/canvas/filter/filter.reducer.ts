@@ -1,8 +1,9 @@
 import { getVisualisationData, getVisualisationShareData, ValidateFields } from '../visualisation/util/visualisation-render-utils';
 import { IViews } from 'app/shared/model/views.model';
 import { toggleLoader } from 'app/shared/websocket/websocket.reducer';
-import { addOptionIntoFilters, removeOptionFromFilters } from './filter-util';
+import { addOptionIntoFilters, removeOptionFromFilters, addDateRangeFilter } from './filter-util';
 import { SEPARATORS } from 'app/shared/components/separator/separator.util';
+import { resetTimezoneData } from 'app/shared/util/date-utils';
 
 export const ACTION_TYPES = {
   TOGGLE_FILTER_PANEL: 'filter/TOGGLE_FILTER_PANEL',
@@ -175,4 +176,18 @@ export const setSeparator = separator => dispatch => {
     type: ACTION_TYPES.SET_SEPARATOR,
     payload: separator,
   });
+};
+
+export const onDateRangeFilterChange = (selectedFilters, feature, startDate, endDate, metaData, view, visualmetadata) => dispatch => {
+  selectedFilters[feature.name] = [];
+  if (startDate && endDate) {
+    dispatch(saveDynamicDateRangeMetaData(feature.name, metaData));
+    dispatch(saveSelectedFilter(selectedFilters));
+    startDate = resetTimezoneData(startDate);
+    endDate = resetTimezoneData(endDate);
+    dispatch(saveSelectedFilter(addDateRangeFilter(feature, startDate, endDate, selectedFilters)));
+  } else {
+    dispatch(removeDateFilters(selectedFilters, feature.name));
+  }
+  dispatch(applyFilter(selectedFilters, visualmetadata, view));
 };
