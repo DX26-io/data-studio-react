@@ -169,7 +169,7 @@ export default (state: FeatureState = initialState, action): FeatureState => {
     case ACTION_TYPES.SET_DATES_IN_FEATURE_LIST:
       return {
         ...state,
-        entities: onSetDatesInFeature(state.entities, action.payload.featureName,action.payload.startDate,action.payload.endDate),
+        entities: onSetDatesInFeature(state.entities, action.payload.featureName,action.payload.startDate,action.payload.endDate,action.payload.metadata),
       };
     default:
       return state;
@@ -270,7 +270,7 @@ export const getThresholdMeasuresList = features => {
   return measuresList;
 };
 
-export const setDatesInFeature = (featureName,startDate,endDate) => ({
+export const setDatesInFeature = (featureName,startDate,endDate,metadata) => ({
   type: ACTION_TYPES.SET_DATES_IN_FEATURE_LIST,
-  payload: {featureName,startDate,endDate},
+  payload: {featureName,startDate,endDate,metadata},
 });

@@ -45,55 +45,6 @@ const FilterElement = (props: IFilterElementProp) => {
     }
   };
 
-  // TODO : need to refector this code
-
-  // function removeFilter(filter) {
-  //   props.selectedFilters[filter] = [];
-  //   // this is duplicate code
-  //   props.saveSelectedFilter(props.selectedFilters);
-  // }
-
-  // TODO : need to refector this code
-
-  // const addDateRangeFilter = date => {
-  //   if (!props.selectedFilters[props.feature.name]) {
-  //     props.selectedFilters[props.feature.name] = [];
-  //   }
-  //   props.selectedFilters[props.feature.name].push(date);
-  //   props.selectedFilters[props.feature.name]._meta = {
-  //     dataType: props.feature.type,
-  //     valueType: 'dateRangeValueType',
-  //   };
-  //   props.saveSelectedFilter(props.selectedFilters);
-  // };
-
-  // TODO: need to refector this code
-  // const onDateChange = (startDate, endDate, metadata) => {
-  //   if (startDate && endDate) {
-  //     props.feature.metadata = metadata;
-  //     if (metadata.dateRangeTab !== 2) {
-  //       props.feature.selected = startDate;
-  //       props.feature.selected2 = endDate;
-  //     }
-  //     props.saveDynamicDateRangeMetaData(props.feature.name, metadata);
-  //     removeFilter(props.feature.name);
-  //     if (startDate) {
-  //       startDate = resetTimezoneData(startDate);
-  //       addDateRangeFilter(startDate);
-  //     }
-  //     if (endDate) {
-  //       endDate = resetTimezoneData(endDate);
-  //       addDateRangeFilter(endDate);
-  //     }
-  //   } else {
-  //     props.feature.selected = '';
-  //     props.feature.selected2 ='';
-  //     props.selectedFilters[props.feature.name] = [];
-  //     props.removeAppliedFilters('', props.feature, props.view, props.visualmetadata, props.selectedFilters);
-  //   }
-  //   props.applyFilter(props.selectedFilters, props.visualmetadata, props.view);
-  // };
-
   const togglePin = feature => {
     feature.pin = !feature.pin;
     props.pinFeature(feature.id, feature.pin);
@@ -112,8 +63,7 @@ const FilterElement = (props: IFilterElementProp) => {
   };
 
   const onDateChange = (startDate, endDate, metaData) => {
-    // props.selectedFilters[props.feature.name] = [];
-    // props.saveSelectedFilter(props.selectedFilters);
+    props.setDatesInFeature(props.feature.name,startDate,endDate,metaData);
     props.onDateRangeFilterChange(props.selectedFilters, props.feature, startDate, endDate, metaData, props.view, props.visualmetadata);
   };
 
@@ -131,7 +81,7 @@ const FilterElement = (props: IFilterElementProp) => {
               />
             ) : checkIsDateType(props.feature) ? (
               <View minWidth="size-3200">
-                <DateRangeComponent onDateChange={onDateChange} startDate={props.feature.selected} endDate={props.feature.selected2} />
+                <DateRangeComponent onDateChange={onDateChange} startDate={props.feature.selected} endDate={props.feature.selected2} metadata={props.feature.metadata}/>
               </View>
             ) : (
               <View marginTop="size-125" minWidth="size-3200" width="100%">
