@@ -1,0 +1,11 @@
+{
+  "dateRange": {
+    "tabs": {
+      "day": "Day",
+      "range": "Range",
+      "dynamic": "Dynamic"
+    },
+    "startDate":"Start Date",
+    "endDate":"End Date"
+  }
+}

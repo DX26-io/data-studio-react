@@ -15,38 +15,46 @@ import {
 } from 'app/shared/util/date-utils';
 import DatePicker from 'app/shared/components/date-picker/date-picker';
 import { DYNAMIC_DATE_RANGE_CONFIG, tabList } from 'app/shared/util/data-constraints.constants';
+import { translate } from 'react-jhipster';
 
 interface IDateRangeComponentProps {
   onDateChange: (fromDate, toDate, metadata) => void;
   condition?: any;
+  startDate?: any;
+  endDate?: any;
+  metadata?: any;
 }
 
 const DateRangeComponent = (props: IDateRangeComponentProps) => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const tabs = [
+    { id: 0, name: 'dateRange.tabs.day' },
+    { id: 1, name: 'dateRange.tabs.range' },
+    { id: 2, name: 'dateRange.tabs.dynamic' },
+  ];
+  const [tabId, setTabId] = useState<ReactText>('0');
+  const [startDate, setStartDate] = useState(props.startDate);
+  const [endDate, setEndDate] = useState(props.endDate);
   const [customDynamicDateRange, setCustomDynamicDateRange] = useState('0');
-  const [dateRangeTab, setDateRangeTab] = useState<ReactText>('0');
   const [isdynamicDateRangeConfig, setDynamicDateRangeConfig] = useState<ReactText>('');
   const [isCustom, setCustom] = useState(false);
-
   const TAB_DAY = '0';
   const TAB_RANGE = '1';
   const TAB_DYNAMIC = '2';
   let currentDynamicDateRangeConfig;
   const dynamicDateRangeConfig = DYNAMIC_DATE_RANGE_CONFIG;
 
-  const onInputChange = () => {
+  const onInputChange = (_startDate, _endDate) => {
     let fromDate;
     let toDate;
     let startDateFormatted = '';
     let endDateFormatted = '';
-    if (dateRangeTab === TAB_DAY) {
-      startDateFormatted = fromDate = formatDate(resetTimezone(startOfDay(strToDate(startDate))));
-      endDateFormatted = toDate = formatDate(resetTimezone(endOfDay(strToDate(startDate))));
-    } else if (dateRangeTab === TAB_RANGE) {
-      startDateFormatted = fromDate = formatDate(resetTimezone(startOfDay(strToDate(startDate))));
-      endDateFormatted = toDate = formatDate(resetTimezone(endOfDay(strToDate(endDate))));
-    } else if (dateRangeTab === TAB_DYNAMIC) {
+    if (tabId === TAB_DAY) {
+      startDateFormatted = fromDate = formatDate(resetTimezone(startOfDay(strToDate(_startDate))));
+      endDateFormatted = toDate = formatDate(resetTimezone(endOfDay(strToDate(_startDate))));
+    } else if (tabId === TAB_RANGE) {
+      startDateFormatted = fromDate = formatDate(resetTimezone(startOfDay(strToDate(_startDate))));
+      endDateFormatted = toDate = formatDate(resetTimezone(endOfDay(strToDate(_endDate))));
+    } else if (tabId === TAB_DYNAMIC) {
       const startDateRange = getStartDateRange(currentDynamicDateRangeConfig);
       if (startDateRange) {
         fromDate = formatDate(resetTimezone(strToDate(startDateRange)));
@@ -67,25 +75,25 @@ const DateRangeComponent = (props: IDateRangeComponentProps) => {
     props.onDateChange(fromDate, toDate, {
       startDateFormatted,
       endDateFormatted,
-      tab: dateRangeTab,
+      tab: tabId,
       currentDynamicDateRangeConfig,
       customDynamicDateRange,
     });
   };
 
   const handleStartDateChange = date => {
-    setStartDate(date);
-    onInputChange();
+    setStartDate(new Date(date));
+    onInputChange(new Date(date), new Date());
   };
   const handleEndDateChange = date => {
-    setEndDate(date);
-    onInputChange();
+    setEndDate(new Date(date));
+    onInputChange(new Date(), new Date(date));
   };
 
   useEffect(() => {
     if (props.condition) {
       if (props.condition?.metadata?.tab.toString()) {
-        setDateRangeTab(props.condition?.metadata?.tab.toString());
+        setTabId(props.condition?.metadata?.tab.toString());
       }
       if (props.condition?.valueType?.value) {
         setStartDate(new Date(props.condition?.valueType?.value));
@@ -101,52 +109,70 @@ const DateRangeComponent = (props: IDateRangeComponentProps) => {
   }, []);
 
   useEffect(() => {
-    if (dateRangeTab === TAB_DYNAMIC) {
+    if (tabId === TAB_DYNAMIC) {
       currentDynamicDateRangeConfig = dynamicDateRangeConfig.find(d => d.title === isdynamicDateRangeConfig);
       if (currentDynamicDateRangeConfig?.isCustom) {
         setCustom(true);
       } else {
         setCustom(false);
       }
-      onInputChange();
+      onInputChange(startDate, endDate);
     }
   }, [isdynamicDateRangeConfig, customDynamicDateRange]);
+
+  useEffect(() => {
+    setStartDate(props.startDate);
+    setEndDate(props.endDate);
+    if (props.metadata?.tab) setTabId(props.metadata?.tab.toString());
+    if (props.metadata?.tab === TAB_DYNAMIC) {
+      if (props.metadata?.customDynamicDateRange) setCustomDynamicDateRange(props.metadata?.customDynamicDateRange);
+      if (props.metadata?.currentDynamicDateRangeConfig?.title)
+        setDynamicDateRangeConfig(props.metadata?.currentDynamicDateRangeConfig?.title);
+    }
+  }, [props.startDate, props.endDate, props.metadata]);
 
   return (
     <>
       <div className={'date-range-picker-tab'}>
-        <Tabs onSelectionChange={key => setDateRangeTab(key)} isQuiet={true} density={'compact'}>
-          <Item title="Day" key="0">
-            <Content marginStart="size-125">
-              <View marginTop={5}>
-                <DatePicker label="Day" onChange={handleStartDateChange} value={stringToDate(startDate)} />
-              </View>
-            </Content>
-          </Item>
-          <Item title="Range" key="1">
-            <Content marginStart="size-125">
-              <View marginTop={5}>
-                <DatePicker label="Start Date" onChange={handleStartDateChange} value={stringToDate(startDate)} />
-              </View>
-              <View marginTop={5}>
-                <DatePicker label="End Date" onChange={handleEndDateChange} value={stringToDate(endDate)} />
-              </View>
-            </Content>
-          </Item>
-          <Item title="Dynamic" key="2">
-            <Content marginStart="size-125">
-              <View marginTop={5}>
-                <Picker
-                  selectedKey={isdynamicDateRangeConfig}
-                  items={dynamicDateRangeConfig}
-                  onSelectionChange={selected => setDynamicDateRangeConfig(selected)}
-                >
-                  {item => <Item key={item.title}>{item.title}</Item>}
-                </Picker>
-              </View>
-              <View marginTop={5}>{isCustom && <TextField value={customDynamicDateRange} onChange={setCustomDynamicDateRange} />}</View>
-            </Content>
-          </Item>
+        <Tabs aria-label="date-range" items={tabs} selectedKey={tabId} onSelectionChange={setTabId} isQuiet={true} density={'compact'}>
+          {_item => (
+            <Item title={translate(_item.name)} key={_item.id}>
+              <Content marginStart="size-125">
+                {tabId === '0' && (
+                  <View marginTop={5}>
+                    <DatePicker label={translate('dateRange.tabs.day')} onChange={handleStartDateChange} value={stringToDate(startDate)} />
+                  </View>
+                )}
+                {tabId === '1' && (
+                  <React.Fragment>
+                    {' '}
+                    <View marginTop={5}>
+                      <DatePicker label={translate('dateRange.startDate')} onChange={handleStartDateChange} value={stringToDate(startDate)} />
+                    </View>
+                    <View marginTop={5}>
+                      <DatePicker label={translate('dateRange.endDate')} onChange={handleEndDateChange} value={stringToDate(endDate)} />
+                    </View>{' '}
+                  </React.Fragment>
+                )}
+                {tabId === '2' && (
+                  <React.Fragment>
+                    <View marginTop={5}>
+                      <Picker
+                        selectedKey={isdynamicDateRangeConfig}
+                        items={dynamicDateRangeConfig}
+                        onSelectionChange={selected => setDynamicDateRangeConfig(selected)}
+                      >
+                        {item => <Item key={item.title}>{item.title}</Item>}
+                      </Picker>
+                    </View>
+                    <View marginTop={5}>
+                      {isCustom && <TextField value={customDynamicDateRange} onChange={setCustomDynamicDateRange} />}
+                    </View>
+                  </React.Fragment>
+                )}
+              </Content>
+            </Item>
+          )}
         </Tabs>
       </div>
     </>

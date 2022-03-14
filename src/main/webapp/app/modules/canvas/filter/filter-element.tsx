@@ -7,20 +7,18 @@ import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import DateRangeComponent from '../data-constraints/date-range-component';
 import { resetTimezoneData } from 'app/shared/util/date-utils';
 import { checkIsDateType } from '../visualisation/util/visualisation-utils';
-import { saveDynamicDateRangeMetaData, saveSelectedFilter } from './filter.reducer';
-import { getPin, loadFilterOptions, generateFilterOptions } from './filter-util';
+import { saveDynamicDateRangeMetaData, saveSelectedFilter, onDateRangeFilterChange } from './filter.reducer';
+import { loadFilterOptions, generateFilterOptions } from './filter-util';
 import Select from 'react-select';
 import PinOn from '@spectrum-icons/workflow/PinOn';
 import PinOff from '@spectrum-icons/workflow/PinOff';
 import { pinFeature } from 'app/entities/feature/feature.reducer';
-import { addAppliedFilters, removeAppliedFilters } from './filter.reducer';
+import { addAppliedFilters, removeAppliedFilters, applyFilter } from './filter.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
-import Separators from 'app/shared/components/separator/separators';
 import SeparatorInput from 'app/shared/components/separator/separator-input';
-import SeparatorIcon from 'app/shared/components/separator/separator-icon';
-import { SEPARATORS } from 'app/shared/components/separator/separator.util';
 import Separator from '@spectrum-icons/workflow/Separator';
 import { Translate } from 'react-jhipster';
+import { setDatesInFeature } from 'app/entities/feature/feature.reducer';
 
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
@@ -41,52 +39,9 @@ const FilterElement = (props: IFilterElementProp) => {
 
   const handleChange = (value, actionMeta) => {
     if (actionMeta.action === 'select-option') {
-      props.addAppliedFilters(actionMeta.option.value, props.feature,props.view,props.visualmetadata,props.selectedFilters);
+      props.addAppliedFilters(actionMeta.option.value, props.feature, props.view, props.visualmetadata, props.selectedFilters);
     } else if (actionMeta.action === 'remove-value') {
-      props.removeAppliedFilters(actionMeta.removedValue.value, props.feature,props.view,props.visualmetadata,props.selectedFilters);
-    }
-  };
-
-  // TODO : need to refector this code
-
-  function removeFilter(filter) {
-    props.selectedFilters[filter] = [];
-    props.saveSelectedFilter(props.selectedFilters);
-  }
-
-  // TODO : need to refector this code
-
-  const addDateRangeFilter = date => {
-    if (!props.selectedFilters[props.feature.name]) {
-      props.selectedFilters[props.feature.name] = [];
-    }
-    props.selectedFilters[props.feature.name].push(date);
-    props.selectedFilters[props.feature.name]._meta = {
-      dataType: props.feature.type,
-      valueType: 'dateRangeValueType',
-    };
-    props.saveSelectedFilter(props.selectedFilters);
-  };
-
-  // TODO: need to refector this code
-  const onDateChange = (startDate, endDate, metadata) => {
-    if (startDate && endDate) {
-      props.feature.metadata = metadata;
-      if (metadata.dateRangeTab !== 2) {
-        props.feature.selected = startDate;
-        props.feature.selected2 = endDate;
-      }
-      props.saveDynamicDateRangeMetaData(props.feature.name, metadata);
-
-      removeFilter(props.feature.name);
-      if (startDate) {
-        startDate = resetTimezoneData(startDate);
-        addDateRangeFilter(startDate);
-      }
-      if (endDate) {
-        endDate = resetTimezoneData(endDate);
-        addDateRangeFilter(endDate);
-      }
+      props.removeAppliedFilters(actionMeta.removedValue.value, props.feature, props.view, props.visualmetadata, props.selectedFilters);
     }
   };
 
@@ -107,6 +62,11 @@ const FilterElement = (props: IFilterElementProp) => {
     }
   };
 
+  const onDateChange = (startDate, endDate, metaData) => {
+    props.setDatesInFeature(props.feature.name,startDate,endDate,metaData);
+    props.onDateRangeFilterChange(props.selectedFilters, props.feature, startDate, endDate, metaData, props.view, props.visualmetadata);
+  };
+
   return (
     <>
       <div className="filter-element">
@@ -121,7 +81,7 @@ const FilterElement = (props: IFilterElementProp) => {
               />
             ) : checkIsDateType(props.feature) ? (
               <View minWidth="size-3200">
-                <DateRangeComponent onDateChange={onDateChange} />
+                <DateRangeComponent onDateChange={onDateChange} startDate={props.feature.selected} endDate={props.feature.selected2} metadata={props.feature.metadata}/>
               </View>
             ) : (
               <View marginTop="size-125" minWidth="size-3200" width="100%">
@@ -191,6 +151,9 @@ const mapDispatchToProps = {
   addAppliedFilters,
   removeAppliedFilters,
   saveDynamicDateRangeMetaData,
+  applyFilter,
+  onDateRangeFilterChange,
+  setDatesInFeature,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

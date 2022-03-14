@@ -10,7 +10,6 @@ import { applyFilter, applyFilterForShareLink, clearFilter, clearFilterForShareL
 import PanelHeader from 'app/shared/components/panel-header';
 import { removeEnabledFilters } from './filter-util';
 import Separators from 'app/shared/components/separator/separators';
-import { SEPARATORS } from 'app/shared/components/separator/separator.util';
 
 export interface IFilterPanelProp extends StateProps, DispatchProps {
   visualisationId?: string;

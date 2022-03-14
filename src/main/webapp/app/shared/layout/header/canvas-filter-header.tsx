@@ -20,6 +20,7 @@ import Select from 'react-select';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import { generateOptionsForDateRange, isDateFilterType, isDateRange } from 'app/modules/canvas/filter/filter-util';
 import { getFeature } from 'app/entities/feature/feature-util';
+import { setDatesInFeature } from 'app/entities/feature/feature.reducer';
 export interface ICanvasFilterHeaderProps extends StateProps, DispatchProps {}
 
 const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
@@ -35,7 +36,7 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
   const createdSelectedFilterElements = () => {
     const options = Object.keys(props.selectedFilters).map((featureName, i) => {
       return (
-        <React.Fragment  key={`header-filter-${featureName}`}>
+        <React.Fragment key={`header-filter-${featureName}`}>
           {isDateFilterType(props.selectedFilters[featureName]?._meta?.dataType) ? (
             <View minWidth="size-3000">
               <Select
@@ -51,6 +52,7 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
                       props.removeDateFilters(props.selectedFilters, featureName);
                       props.applyFilter(props.selectedFilters, props.visualmetadata, props.view);
                     }
+                    props.setDatesInFeature(featureName,'','',null);
                   }
                 }}
                 placeholder={featureName}
@@ -108,6 +110,7 @@ const mapDispatchToProps = {
   addAppliedFilters,
   removeAppliedFilters,
   removeDateFilters,
+  setDatesInFeature,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
