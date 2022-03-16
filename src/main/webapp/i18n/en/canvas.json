@@ -31,6 +31,7 @@
       "dashboard": "Dashboard",
       "bookmark": "Bookmark"
     },
-    "saveMessage":"Your changes are saved"
+    "saveMessage":"Your changes are saved",
+    "copiedMessage":"Copied!!"
   }
 }
