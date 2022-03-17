@@ -8,8 +8,9 @@ import Filter from '@spectrum-icons/workflow/Filter';
 import { toggleFilterPanel } from 'app/modules/canvas/filter/filter.reducer';
 import { IRootState } from 'app/shared/reducers';
 import Info from '@spectrum-icons/workflow/Info';
+import { Link } from 'react-router-dom';
 
-export interface ISharevisualisationProps extends StateProps, DispatchProps { }
+export interface ISharevisualisationProps extends StateProps, DispatchProps {}
 
 const SharevisualisationHeader = (props: ISharevisualisationProps) => {
   return (
@@ -25,15 +26,15 @@ const SharevisualisationHeader = (props: ISharevisualisationProps) => {
       <header>
         <Flex justifyContent="space-between">
           <Flex alignItems="start">
-            <Logo />
+            <Link to="/" style={{ color: 'black', marginRight: '10px' }}>
+              <Logo />
+            </Link>
           </Flex>
           <Flex justifyContent="center" alignItems="center">
-            <span className="spectrum-Heading spectrum-Heading--sizeXXS" >
-              {props.visualmetadataEntity?.titleProperties?.titleText}
-            </span>
+            <span className="spectrum-Heading spectrum-Heading--sizeXXS">{props.visualmetadataEntity?.titleProperties?.titleText}</span>
             <TooltipTrigger>
               <ActionButton isQuiet={true} aria-label="Edit Name">
-                <Info size={"S"} />
+                <Info size={'S'} />
               </ActionButton>
               <Tooltip variant="info">
                 <p> Dashboard: {props.views?.viewDashboard?.dashboardName}</p>
@@ -55,14 +56,13 @@ const SharevisualisationHeader = (props: ISharevisualisationProps) => {
   );
 };
 
-
 const mapStateToProps = (storeState: IRootState) => ({
   visualmetadataEntity: storeState.visualmetadata.entity,
   views: storeState.views.entity,
 });
 
 const mapDispatchToProps = {
-  toggleFilterPanel
+  toggleFilterPanel,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

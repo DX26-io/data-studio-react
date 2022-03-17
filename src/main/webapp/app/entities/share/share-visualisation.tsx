@@ -77,8 +77,6 @@ const shareLinkfForwardCall = () => {
     }
   }, [props.visualDataById]);
 
-
-
   return (
     <>
       <FilterPanel />
