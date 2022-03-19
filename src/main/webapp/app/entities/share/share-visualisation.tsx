@@ -15,7 +15,7 @@ import { toggleFilterPanel } from 'app/modules/canvas/filter/filter.reducer';
 import FilterPanel from 'app/modules/canvas/filter/filter-panel';
 import { setIsShare } from './share-visualisation.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
-import {  getCurrentViewState } from 'app/entities/views/views.reducer';
+import { getCurrentViewState } from 'app/entities/views/views.reducer';
 export interface ISharevisualisationProps extends StateProps, DispatchProps, RouteComponentProps {}
 
 const Sharevisualisation = (props: ISharevisualisationProps) => {
@@ -38,7 +38,7 @@ const Sharevisualisation = (props: ISharevisualisationProps) => {
     };
   }, []);
 
-const shareLinkfForwardCall = () => {
+  const shareLinkfForwardCall = () => {
     const visualMetadata = VisualWrap(props.visualMetadataEntity);
     const queryDTO = visualMetadata.getQueryParameters(
       props.visualMetadataEntity,
@@ -103,7 +103,7 @@ const mapDispatchToProps = {
   receiveSocketResponse,
   setIsShare,
   getViewFeaturesEntities,
-  getCurrentViewState
+  getCurrentViewState,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

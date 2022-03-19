@@ -10,13 +10,11 @@ import { IRootState } from 'app/shared/reducers';
 import Info from '@spectrum-icons/workflow/Info';
 import { Link } from 'react-router-dom';
 
-export interface ISharevisualisationProps extends StateProps, DispatchProps {}
-
-const SharevisualisationHeader = (props: ISharevisualisationProps) => {
+const SharevisualisationHeader = (props) => {
   return (
     <View
-      paddingX="size-150"
-      paddingY="size-100"
+      paddingX="size-100"
+      paddingY="size-50"
       backgroundColor="gray-75"
       borderBottomWidth={'thin'}
       borderTopWidth={'thin'}
@@ -25,7 +23,7 @@ const SharevisualisationHeader = (props: ISharevisualisationProps) => {
     >
       <header>
         <Flex justifyContent="space-between">
-          <Flex alignItems="start">
+          <Flex alignItems="center" justifyContent="start">
             <Link to="/" style={{ color: 'black', marginRight: '10px' }}>
               <Logo />
             </Link>
