@@ -16,6 +16,7 @@ import FilterPanel from 'app/modules/canvas/filter/filter-panel';
 import { setIsShare } from './share-visualisation.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { getCurrentViewState } from 'app/entities/views/views.reducer';
+import "./share-link.scss";
 export interface ISharevisualisationProps extends StateProps, DispatchProps, RouteComponentProps {}
 
 const Sharevisualisation = (props: ISharevisualisationProps) => {
