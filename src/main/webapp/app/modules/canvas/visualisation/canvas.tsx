@@ -408,8 +408,8 @@ const Canvas = (props: IVisualisationProp) => {
       >
         {props.visualisationAction === 'Edit' && <VisualisationEditModalPopUp />}
         {props.visualisationAction === 'Data' && <VisualisationDataModal />}
-        {props.visualisationAction === 'Share' && <VisualisationShareModal />}
       </DialogContainer>
+      {props.visualisationAction === 'Share' && <VisualisationShareModal />}
       {props.visualisationAction === 'Delete' && <VisualisationsDeleteModal />}
     </>
   );

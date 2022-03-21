@@ -16,7 +16,7 @@ import { getVisualisationData } from '../util/visualisation-render-utils';
 import { CSVLink } from 'react-csv';
 import { IRootState } from 'app/shared/reducers';
 import React, { FC, ReactText, useEffect, useRef, useState } from 'react';
-import { Translate } from 'react-jhipster';
+import { Translate, translate } from 'react-jhipster';
 import { connect } from 'react-redux';
 import { getTransactionData } from '../util/visualisation-utils';
 import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
@@ -50,6 +50,82 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
       setLiveEnable(false);
     }
   };
+
+  const menuList = [
+    {
+      icon: <Edit size="M" />,
+      actionId: '1',
+      title: 'Edit',
+      contentKey: 'canvas.menu.edit',
+      isEditable: true,
+      isVisible: false,
+    },
+    {
+      icon: <Copy size="M" />,
+      actionId: '2',
+      title: 'Copy',
+      contentKey: 'canvas.menu.copy',
+      isEditable: true,
+      isVisible: false,
+    },
+    {
+      icon: <Delete size="M" />,
+      actionId: '6',
+      title: 'Delete',
+      contentKey: 'canvas.menu.delete',
+      isEditable: true,
+      isVisible: false,
+    },
+
+    {
+      icon: <ShareAndroid size="M" />,
+      actionId: '9',
+      title: 'Share',
+      contentKey: 'canvas.menu.share',
+      isVisible: true,
+      isEditable: false,
+    },
+    {
+      icon: <Refresh size="M" />,
+      actionId: '8',
+      title: 'Refresh',
+      contentKey: 'canvas.menu.refresh',
+      isVisible: true,
+      isEditable: false,
+    },
+    {
+      icon: <ViewedMarkAs size="M" />,
+      actionId: '3',
+      title: 'View',
+      contentKey: 'canvas.menu.view',
+      isVisible: true,
+      isEditable: false,
+    },
+    {
+      icon: <Table size="M" />,
+      actionId: '4',
+      title: 'Data',
+      contentKey: 'canvas.menu.data',
+      isVisible: true,
+      isEditable: false,
+    },
+    {
+      icon: <MoreSmallListVert size="M" />,
+      actionId: '5',
+      title: 'Print',
+      contentKey: 'canvas.menu.more',
+      isVisible: true,
+      isEditable: false,
+    },
+    {
+      icon: <Export size="M" />,
+      actionId: '7',
+      title: 'Export',
+      contentKey: 'canvas.menu.export',
+      isVisible: true,
+      isEditable: false,
+    },
+  ];
 
   const setAction = {
     '1': {
@@ -113,6 +189,23 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
     setAction[key].getAction();
     props.setVisual(props.visual);
   };
+
+  const generateMenuElements = menuList.map(action => {
+    if (props.isEditMode === action.isEditable || action.isVisible) {
+      return (
+        // functional component does not work with below code. it throws unknown element, proxy facade exception
+        <Item key={action.actionId} textValue={translate(action.contentKey)}>
+        {action.icon}
+        <Text>
+          <Translate contentKey={action.contentKey}>{action.title}</Translate>
+        </Text>
+      </Item>
+      );
+    } else {
+      return null;
+    }
+  });
+
   return (
     <>
       <View backgroundColor="gray-200">
@@ -142,108 +235,13 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
               <ActionButton isQuiet height="size-300">
                 <Settings size={'XS'} aria-label="Default Alert" />
               </ActionButton>
-
-              {props.isEditMode ? (
-                <Menu
-                  onAction={key => {
-                    onActionMenu(key);
-                  }}
-                >
-                  <Item key="1" textValue="Edit">
-                    <Edit size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.edit">Edit</Translate>
-                    </Text>
-                  </Item>
-
-                  <Item key="2" textValue="Copy">
-                    <Copy size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.copy">Copy</Translate>
-                    </Text>
-                  </Item>
-
-                  <Item key="3" textValue="View">
-                    <ViewedMarkAs size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.view">View</Translate>
-                    </Text>
-                  </Item>
-                  <Item key="4" textValue="Data">
-                    <Table size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.data">Data</Translate>
-                    </Text>
-                  </Item>
-                  <Item key="5" textValue="Print">
-                    <MoreSmallListVert size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.more">Print</Translate>
-                    </Text>
-                  </Item>
-                  <Item key="6" textValue="Delete">
-                    <Delete size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.delete">Delete</Translate>
-                    </Text>
-                  </Item>
-                  <Item key="7" textValue="Export">
-                    <Export size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.export">Export</Translate>
-                    </Text>
-                  </Item>
-                  <Item key="8" textValue="Refresh">
-                    <Refresh size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.refresh">Refresh</Translate>
-                    </Text>
-                  </Item>
-                </Menu>
-              ) : (
-                <Menu
-                  onAction={key => {
-                    onActionMenu(key);
-                  }}
-                >
-                  <Item key="9" textValue="Share">
-                    <ShareAndroid size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.share">Share</Translate>
-                    </Text>
-                  </Item>
-                  <Item key="7" textValue="Export">
-                    <Export size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.export">Export</Translate>
-                    </Text>
-                  </Item>
-                  <Item key="3" textValue="View">
-                    <ViewedMarkAs size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.view">View</Translate>
-                    </Text>
-                  </Item>
-                  <Item key="5" textValue="Print">
-                    <MoreSmallListVert size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.more">Print</Translate>
-                    </Text>
-                  </Item>
-                  <Item key="4" textValue="Data">
-                    <Table size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.data">Data</Translate>
-                    </Text>
-                  </Item>
-                  <Item key="8" textValue="Refresh">
-                    <Refresh size="M" />
-                    <Text>
-                      <Translate contentKey="canvas.menu.refresh">Refresh</Translate>
-                    </Text>
-                  </Item>
-                </Menu>
-              )}
+              <Menu
+                onAction={key => {
+                  onActionMenu(key);
+                }}
+              >
+                {generateMenuElements}
+              </Menu>
             </MenuTrigger>
           </Flex>
         </Flex>

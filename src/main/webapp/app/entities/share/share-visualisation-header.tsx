@@ -8,14 +8,13 @@ import Filter from '@spectrum-icons/workflow/Filter';
 import { toggleFilterPanel } from 'app/modules/canvas/filter/filter.reducer';
 import { IRootState } from 'app/shared/reducers';
 import Info from '@spectrum-icons/workflow/Info';
+import { Link } from 'react-router-dom';
 
-export interface ISharevisualisationProps extends StateProps, DispatchProps { }
-
-const SharevisualisationHeader = (props: ISharevisualisationProps) => {
+const SharevisualisationHeader = (props) => {
   return (
     <View
-      paddingX="size-150"
-      paddingY="size-100"
+      paddingX="size-100"
+      paddingY="size-50"
       backgroundColor="gray-75"
       borderBottomWidth={'thin'}
       borderTopWidth={'thin'}
@@ -24,16 +23,16 @@ const SharevisualisationHeader = (props: ISharevisualisationProps) => {
     >
       <header>
         <Flex justifyContent="space-between">
-          <Flex alignItems="start">
-            <Logo />
+          <Flex alignItems="center" justifyContent="start">
+            <Link to="/" style={{ color: 'black', marginRight: '10px' }}>
+              <Logo />
+            </Link>
           </Flex>
           <Flex justifyContent="center" alignItems="center">
-            <span className="spectrum-Heading spectrum-Heading--sizeXXS" >
-              {props.visualmetadataEntity?.titleProperties?.titleText}
-            </span>
+            <span className="spectrum-Heading spectrum-Heading--sizeXXS">{props.visualmetadataEntity?.titleProperties?.titleText}</span>
             <TooltipTrigger>
               <ActionButton isQuiet={true} aria-label="Edit Name">
-                <Info size={"S"} />
+                <Info size={'S'} />
               </ActionButton>
               <Tooltip variant="info">
                 <p> Dashboard: {props.views?.viewDashboard?.dashboardName}</p>
@@ -55,14 +54,13 @@ const SharevisualisationHeader = (props: ISharevisualisationProps) => {
   );
 };
 
-
 const mapStateToProps = (storeState: IRootState) => ({
   visualmetadataEntity: storeState.visualmetadata.entity,
   views: storeState.views.entity,
 });
 
 const mapDispatchToProps = {
-  toggleFilterPanel
+  toggleFilterPanel,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
