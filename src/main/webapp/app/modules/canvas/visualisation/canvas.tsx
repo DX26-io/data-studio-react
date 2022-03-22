@@ -40,12 +40,11 @@ import 'react-resizable/css/styles.css';
 import FeaturesPanel from 'app/modules/canvas/features/features-panel';
 import { receiveSocketResponse, toggleLoader, reset as resetVisualisationData } from 'app/shared/websocket/websocket.reducer';
 import { visualMetadataContainerGetOne } from './util/visualmetadata-container.util';
-import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
+import { getFeatureCriteria,reset as resetFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
 import { applyFilter, saveDynamicDateRangeMetaData, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
-import { applyBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { VisualisationType } from 'app/shared/util/visualisation.constants';
 import PinnedFiltersHeader from './pinned-canvas-filters/pinned-filters-header';
 import PinnedFilterElement from './pinned-canvas-filters/pinned-filter-element';
@@ -188,6 +187,7 @@ const Canvas = (props: IVisualisationProp) => {
     return () => {
       props.reset();
       props.resetVisualisationData();
+      props.resetFeatureCriteria();
     };
   }, []);
 
@@ -458,7 +458,6 @@ const mapDispatchToProps = {
   getAppliedBookmark,
   saveRecentBookmark,
   applyFilter,
-  applyBookmark,
   toggleLoader,
   saveSelectedFilter,
   getViewFeaturesEntities,
@@ -473,6 +472,7 @@ const mapDispatchToProps = {
   applyAlternativeDimensionFilter,
   addPinnedFiltersIntoMetadataContainer,
   removePinnedFiltersIntoMetadataContainer,
+  resetFeatureCriteria
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

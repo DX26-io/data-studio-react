@@ -91,8 +91,6 @@ const CanvasHeader = props => {
       onPress: setIsBookmarkDialogOpen,
       data: true,
     },
-
-   
     {
       icon: <Filter size="M" />,
       title: translate('canvas.menu.filter'),
@@ -134,6 +132,7 @@ const CanvasHeader = props => {
         filters[item]=bookmarkFilters[item];
       })
       props.saveSelectedFilter(filters);
+      props.applyFilter(filters, props.visualmetadata, props.view);
     }
   }, [props.fetchedFeatureCriteria]);
 
@@ -161,6 +160,8 @@ const CanvasHeader = props => {
                 } else {
                   props.applyFilter({}, props.visualmetadata, props.view);
                   props.applyBookmark(null);
+                  url.searchParams.set('bookmarkId', '');
+                  window.history.pushState({}, '', url.href);
                 }
               }}
             />
