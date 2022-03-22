@@ -30,7 +30,6 @@ import {
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import VisualisationHeader from './visualisation-modal/visualisation-header';
 import 'app/modules/canvas/visualisation/canvas.scss';
-import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
 import { NoDataFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import Loader from 'app/shared/components/card/loader/loader';
 import FilterPanel from 'app/modules/canvas/filter/filter-panel';
@@ -40,10 +39,10 @@ import 'react-resizable/css/styles.css';
 import FeaturesPanel from 'app/modules/canvas/features/features-panel';
 import { receiveSocketResponse, toggleLoader, reset as resetVisualisationData } from 'app/shared/websocket/websocket.reducer';
 import { visualMetadataContainerGetOne } from './util/visualmetadata-container.util';
-import { getFeatureCriteria,reset as resetFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
-import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
+import { getFeatureCriteria, reset as resetFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
+import { getAppliedBookmark, reset as resetBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
-import { applyFilter, saveDynamicDateRangeMetaData, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
+import { applyFilter, saveDynamicDateRangeMetaData, saveSelectedFilter,reset as resetFilters } from 'app/modules/canvas/filter/filter.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { VisualisationType } from 'app/shared/util/visualisation.constants';
 import PinnedFiltersHeader from './pinned-canvas-filters/pinned-filters-header';
@@ -188,6 +187,8 @@ const Canvas = (props: IVisualisationProp) => {
       props.reset();
       props.resetVisualisationData();
       props.resetFeatureCriteria();
+      props.resetBookmark();
+      props.resetFilters();
     };
   }, []);
 
@@ -472,7 +473,9 @@ const mapDispatchToProps = {
   applyAlternativeDimensionFilter,
   addPinnedFiltersIntoMetadataContainer,
   removePinnedFiltersIntoMetadataContainer,
-  resetFeatureCriteria
+  resetFeatureCriteria,
+  resetBookmark,
+  resetFilters
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

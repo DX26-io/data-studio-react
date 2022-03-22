@@ -156,6 +156,10 @@ export default (state: BookmarksState = initialState, action): BookmarksState =>
         ...state,
         appliedBookmark: action.payload,
       };
+    case ACTION_TYPES.RESET:
+      return {
+        ...initialState,
+      };
     default:
       return state;
   }
