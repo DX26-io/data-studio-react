@@ -14,6 +14,7 @@ export const ACTION_TYPES = {
   SAVE_DYNAMIC_DATE_RANGEMETA_DATA: 'filter/SAVE_DYNAMIC_DATE_RANGEMETA_DATA',
   REMOVE_DATE_FILTER: 'filter/REMOVE_DATE_FILTER',
   SET_SEPARATOR: 'filter/SET_SEPARATOR',
+  RESET: 'filter/RESET',
 };
 
 const initialState = {
@@ -81,6 +82,14 @@ export default (state: FilterState = initialState, action): FilterState => {
       return {
         ...state,
         separator: action.payload,
+      };
+    case ACTION_TYPES.RESET:
+      return {
+        ...state,
+        isFeaturesPanelOpen: false,
+        isFilterOpen: false,
+        selectedFilters: {},
+        dynamicDateRangeMetaData: {},
       };
     default:
       return state;
@@ -191,3 +200,7 @@ export const onDateRangeFilterChange = (selectedFilters, feature, startDate, end
   }
   dispatch(applyFilter(selectedFilters, visualmetadata, view));
 };
+
+export const reset = () => ({
+  type: ACTION_TYPES.RESET,
+});

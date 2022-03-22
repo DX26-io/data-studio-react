@@ -42,6 +42,10 @@ export default (state: FeatureCriteriaState = initialState, action): FeatureCrit
         featureCriteria: action.payload.data,
         fetchedFeatureCriteria: true,
       };
+    case ACTION_TYPES.RESET:
+      return {
+        ...initialState,
+      };
     default:
       return state;
   }
