@@ -1,17 +1,8 @@
 import axios from 'axios';
 import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-import { ICrudGetViewFeaturesAction, onSetDatesInFeature } from './feature-util';
+import { ICrudGetViewFeaturesAction, onSetDatesInFeature, updatePinnedFeaturesState, updateFavoriteFeaturesState } from './feature-util';
 import { IFeature, defaultValue } from 'app/shared/model/feature.model';
-
-const updateFeaturesState = (features, url) => {
-  const params = new URLSearchParams(url);
-  const id = url.split('id=')[1].split('&')[0];
-  const pin = params.get('pin');
-  const foundIndex = features.findIndex(f => f.id === Number(id));
-  features[foundIndex].pin = pin === 'true';
-  return Object.assign([], features);
-};
 
 export const ACTION_TYPES = {
   FETCH_FEATURE_LIST: 'feature/FETCH_FEATURE_LIST',
@@ -23,6 +14,7 @@ export const ACTION_TYPES = {
   SET_FEATURE: 'feature/SET_FEATURE',
   PIN_FEATURE: 'feature/PIN_FEATURE',
   SET_DATES_IN_FEATURE_LIST: 'feature/SET_DATES_IN_FEATURE_LIST',
+  MARK_FAVORITE_FILTER: 'feature/MARK_FAVORITE_FILTER',
 };
 
 const initialState = {
@@ -77,6 +69,11 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         isPinnedFeatureListUpdated: false,
         updating: true,
       };
+    case REQUEST(ACTION_TYPES.MARK_FAVORITE_FILTER):
+      return {
+        ...state,
+        updating: true,
+      };
     case FAILURE(ACTION_TYPES.FETCH_FEATURE_LIST):
       return {
         ...state,
@@ -111,6 +108,11 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         ...state,
         errorMessage: action.payload,
         isPinnedFeatureListUpdated: false,
+        updating: false,
+      };
+    case FAILURE(ACTION_TYPES.MARK_FAVORITE_FILTER):
+      return {
+        ...state,
         updating: false,
       };
     case SUCCESS(ACTION_TYPES.FETCH_FEATURE_LIST):
@@ -152,7 +154,13 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         ...state,
         isPinnedFeatureListUpdated: true,
         updating: false,
-        entities: updateFeaturesState(state.entities, action.payload.config.url),
+        entities: updatePinnedFeaturesState(state.entities, action.payload.config.url),
+      };
+    case SUCCESS(ACTION_TYPES.MARK_FAVORITE_FILTER):
+      return {
+        ...state,
+        updating: false,
+        entities: updateFavoriteFeaturesState(state.entities, action.payload.config.url),
       };
     case ACTION_TYPES.RESET:
       return {
@@ -169,7 +177,13 @@ export default (state: FeatureState = initialState, action): FeatureState => {
     case ACTION_TYPES.SET_DATES_IN_FEATURE_LIST:
       return {
         ...state,
-        entities: onSetDatesInFeature(state.entities, action.payload.featureName,action.payload.startDate,action.payload.endDate,action.payload.metadata),
+        entities: onSetDatesInFeature(
+          state.entities,
+          action.payload.featureName,
+          action.payload.startDate,
+          action.payload.endDate,
+          action.payload.metadata
+        ),
       };
     default:
       return state;
@@ -223,6 +237,11 @@ export const getEntity: ICrudGetAction<IFeature> = id => {
   };
 };
 
+export const markFavouriteFilter = (favouriteFilter, id) => ({
+  type: ACTION_TYPES.MARK_FAVORITE_FILTER,
+  payload: axios.put(`${apiUrl}/markFavouriteFilter/?id=${id}&favouriteFilter=${favouriteFilter}`),
+});
+
 export const reset = () => ({
   type: ACTION_TYPES.RESET,
 });
@@ -270,7 +289,7 @@ export const getThresholdMeasuresList = features => {
   return measuresList;
 };
 
-export const setDatesInFeature = (featureName,startDate,endDate,metadata) => ({
+export const setDatesInFeature = (featureName, startDate, endDate, metadata) => ({
   type: ACTION_TYPES.SET_DATES_IN_FEATURE_LIST,
-  payload: {featureName,startDate,endDate,metadata},
+  payload: { featureName, startDate, endDate, metadata },
 });

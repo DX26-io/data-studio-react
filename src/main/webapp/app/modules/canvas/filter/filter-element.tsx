@@ -5,20 +5,21 @@ import { IRootState } from 'app/shared/reducers';
 import { IFeature } from 'app/shared/model/feature.model';
 import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import DateRangeComponent from '../data-constraints/date-range-component';
-import { resetTimezoneData } from 'app/shared/util/date-utils';
 import { checkIsDateType } from '../visualisation/util/visualisation-utils';
 import { saveDynamicDateRangeMetaData, saveSelectedFilter, onDateRangeFilterChange } from './filter.reducer';
 import { loadFilterOptions, generateFilterOptions } from './filter-util';
 import Select from 'react-select';
 import PinOn from '@spectrum-icons/workflow/PinOn';
 import PinOff from '@spectrum-icons/workflow/PinOff';
+import Star from '@spectrum-icons/workflow/Star';
+import StarOutline from '@spectrum-icons/workflow/StarOutline';
 import { pinFeature } from 'app/entities/feature/feature.reducer';
 import { addAppliedFilters, removeAppliedFilters, applyFilter } from './filter.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import SeparatorInput from 'app/shared/components/separator/separator-input';
 import Separator from '@spectrum-icons/workflow/Separator';
 import { Translate } from 'react-jhipster';
-import { setDatesInFeature } from 'app/entities/feature/feature.reducer';
+import { setDatesInFeature,markFavouriteFilter } from 'app/entities/feature/feature.reducer';
 
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
@@ -26,6 +27,7 @@ export interface IFilterElementProp extends StateProps, DispatchProps {
 
 const FilterElement = (props: IFilterElementProp) => {
   const [isSeparatorOn, setSeparatorOn] = useState(false);
+  const minWidth = 'size-3200';
 
   const handleInputChange = (newValue: string) => {
     props.setFilterData(null);
@@ -63,8 +65,13 @@ const FilterElement = (props: IFilterElementProp) => {
   };
 
   const onDateChange = (startDate, endDate, metaData) => {
-    props.setDatesInFeature(props.feature.name,startDate,endDate,metaData);
+    props.setDatesInFeature(props.feature.name, startDate, endDate, metaData);
     props.onDateRangeFilterChange(props.selectedFilters, props.feature, startDate, endDate, metaData, props.view, props.visualmetadata);
+  };
+
+  const toggleFavoriteFilter = feature => {
+    feature.favouriteFilter = !feature.favouriteFilter;
+    props.markFavouriteFilter(feature.favouriteFilter,feature.id);
   };
 
   return (
@@ -80,11 +87,16 @@ const FilterElement = (props: IFilterElementProp) => {
                 separator={props.separator}
               />
             ) : checkIsDateType(props.feature) ? (
-              <View minWidth="size-3200">
-                <DateRangeComponent onDateChange={onDateChange} startDate={props.feature.selected} endDate={props.feature.selected2} metadata={props.feature.metadata}/>
+              <View minWidth={minWidth}>
+                <DateRangeComponent
+                  onDateChange={onDateChange}
+                  startDate={props.feature.selected}
+                  endDate={props.feature.selected2}
+                  metadata={props.feature.metadata}
+                />
               </View>
             ) : (
-              <View marginTop="size-125" minWidth="size-3200" width="100%">
+              <View marginTop="size-125" minWidth={minWidth} width="100%">
                 <Select
                   isMulti
                   value={generateOptions(props.selectedFilters[props.feature.name])}
@@ -95,13 +107,13 @@ const FilterElement = (props: IFilterElementProp) => {
                   closeMenuOnSelect={false}
                   classNamePrefix="select"
                   onChange={handleChange}
-                  placeholder={`Search ${props.feature.name}`}
+                  placeholder={`Search...`}
                   onInputChange={handleInputChange}
                   options={props.filterSelectOptions}
                 />
               </View>
             )}
-            <View>
+            <View marginEnd={'-8px'}>
               <Flex direction="row">
                 <ActionButton
                   isQuiet
@@ -128,6 +140,14 @@ const FilterElement = (props: IFilterElementProp) => {
                     )}
                   </Tooltip>
                 </TooltipTrigger>
+                <ActionButton
+                  isQuiet
+                  onPress={() => {
+                    toggleFavoriteFilter(props.feature);
+                  }}
+                >
+                  {props.feature.favouriteFilter ? <Star size="S" /> : <StarOutline size="S" />}
+                </ActionButton>
               </Flex>
             </View>
           </Flex>
@@ -154,6 +174,7 @@ const mapDispatchToProps = {
   applyFilter,
   onDateRangeFilterChange,
   setDatesInFeature,
+  markFavouriteFilter
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
