@@ -70,3 +70,21 @@ export const onSetDatesInFeature = (featureList, featureName, startDate, endDate
   featureList[index].metadata = metadata;
   return Object.assign([], featureList);
 };
+
+export const updatePinnedFeaturesState = (features, url) => {
+  const params = new URLSearchParams(url);
+  const id = url.split('id=')[1].split('&')[0];
+  const pin = params.get('pin');
+  const foundIndex = features.findIndex(f => f.id === Number(id));
+  features[foundIndex].pin = pin === 'true';
+  return Object.assign([], features);
+};
+
+export const updateFavoriteFeaturesState = (features, url) => {
+  const params = new URLSearchParams(url);
+  const id = url.split('id=')[1].split('&')[0];
+  const favouriteFilter = params.get('favouriteFilter');
+  const foundIndex = features.findIndex(f => f.id === Number(id));
+  features[foundIndex].favouriteFilter = favouriteFilter==='true';
+  return Object.assign([], features);
+};

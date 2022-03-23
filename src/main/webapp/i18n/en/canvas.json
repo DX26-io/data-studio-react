@@ -32,6 +32,12 @@
       "bookmark": "Bookmark"
     },
     "saveMessage":"Your changes are saved",
-    "copiedMessage":"Copied!!"
+    "copiedMessage":"Copied!!",
+    "filters":{
+      "tabs":{
+        "filters":"Filters",
+        "favFilters":"Favorite Filters"
+      }
+    }
   }
 }
