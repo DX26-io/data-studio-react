@@ -169,7 +169,6 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
       getAction() {
         props.setVisualisationAction('Export');
         getTransactionData(props.visual.data, csvLink, setTransactionData);
-        window.open(`export-visualisation?viewId=${props.view.id}&visualizationId=${props.visual.id}`);
       },
     },
     '8': {
