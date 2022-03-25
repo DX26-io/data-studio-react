@@ -11,7 +11,7 @@ import { receiveSocketResponse, receiveSocketResponseByVisualId } from 'app/shar
 import { renderVisualisation, ValidateFields } from 'app/modules/canvas/visualisation/util/visualisation-render-utils';
 import { VisualWrap } from 'app/modules/canvas/visualisation/util/visualmetadata-wrapper';
 import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
-import { toggleFilterPanel } from 'app/modules/canvas/filter/filter.reducer';
+import { toggleFilterPanel, saveSelectedFilter, applyFilter } from 'app/modules/canvas/filter/filter.reducer';
 import FilterPanel from 'app/modules/canvas/filter/filter-panel';
 import { setIsShare } from './share-visualisation.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
@@ -94,6 +94,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualDataById: storeState.visualisationData.visualDataById,
   isvisualMetaDataFetched: storeState.visualmetadata.isvisualMetaDataFetched,
   selectedFilters: storeState.filter.selectedFilters,
+  visualmetadata: storeState.views.viewState,
 });
 
 const mapDispatchToProps = {
@@ -105,6 +106,8 @@ const mapDispatchToProps = {
   setIsShare,
   getViewFeaturesEntities,
   getCurrentViewState,
+  saveSelectedFilter,
+  applyFilter,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
