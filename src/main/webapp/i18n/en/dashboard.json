@@ -8,7 +8,8 @@
         "content": "To create a new dashboard click on create"
       },
       "deleteDashboard": "Delete Dashboard",
-      "createNewDashboard": "Create new dashboard"
+      "createNewDashboard": "Create new dashboard",
+      "dashboard":"Dashboard"
     },
     "createdDailog": {
       "header": "Success",

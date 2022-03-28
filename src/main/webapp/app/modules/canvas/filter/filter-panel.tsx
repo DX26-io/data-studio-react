@@ -14,6 +14,7 @@ import { Tabs } from '@react-spectrum/tabs';
 
 export interface IFilterPanelProp extends StateProps, DispatchProps {
   visualisationId?: string;
+  isShareLink?: boolean;
 }
 
 const FilterPanel = (props: IFilterPanelProp) => {
@@ -35,10 +36,17 @@ const FilterPanel = (props: IFilterPanelProp) => {
     props.setSeparator(separator);
   };
 
+  const getPanelClasses = () => {
+    let panelClass = '';
+    panelClass = isFilterMinimize ? 'filter-panel filter-panel-minimize ' : 'filter-panel filter-panel-maximize';
+    panelClass = panelClass.concat(props.isShareLink ? ' share-link-filter-panel' : '');
+    return panelClass;
+  };
+
   return (
     <>
-      <div className={!isFilterPanelClose ? 'FilterPanel-Main FilterPanel-hide' : 'FilterPanel-Main FilterPanel-show'}>
-        <div className={isFilterMinimize ? 'FilterPanel FilterPanel-minimize' : 'FilterPanel FilterPanel-maximize'}>
+      <div className={!isFilterPanelClose ? 'filter-panel-main filter-panel-hide' : 'filter-panel-main filter-panel-show'}>
+        <div className={getPanelClasses()}>
           <PanelHeader setMinimize={setFilterMinimize} isMinimized={isFilterMinimize} titleKey="entity.action.filters" />
           <Divider size={'S'} />
           <Tabs aria-label="filters" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
@@ -48,25 +56,23 @@ const FilterPanel = (props: IFilterPanelProp) => {
                   <Separators setSeparator={_setSeparator} />
                 </Flex>
                 <Flex direction="column" gap="size-100" justifySelf="center">
-                  <View>
-                    <div className="filter-body">
-                      {tabId === 1
-                        ? props.featuresList &&
-                          props.featuresList.length > 0 &&
-                          props.featuresList.map((item, i) => {
-                            if (item.featureType === 'DIMENSION') {
-                              return <FilterElement key={item.id} feature={item} />;
-                            }
-                          })
-                        : props.favoriteFeaturesList &&
-                          props.favoriteFeaturesList.length > 0 &&
-                          props.favoriteFeaturesList.map((item, i) => {
-                            if (item.featureType === 'DIMENSION') {
-                              return <FilterElement key={item.id} feature={item} />;
-                            }
-                          })}
-                    </div>
-                    <Flex direction="row" justifyContent="end" marginTop="size-125" marginBottom="size-125">
+                  <div className="filter-body">
+                    {tabId === 1
+                      ? props.featuresList &&
+                        props.featuresList.length > 0 &&
+                        props.featuresList.map((item, i) => {
+                          if (item.featureType === 'DIMENSION') {
+                            return <FilterElement key={item.id} feature={item} />;
+                          }
+                        })
+                      : props.favoriteFeaturesList &&
+                        props.favoriteFeaturesList.length > 0 &&
+                        props.favoriteFeaturesList.map((item, i) => {
+                          if (item.featureType === 'DIMENSION') {
+                            return <FilterElement key={item.id} feature={item} />;
+                          }
+                        })}
+                    <Flex direction="row" justifyContent="end" marginTop="size-125">
                       <Button
                         onPress={() => {
                           if (!props.visualisationId) {
@@ -103,7 +109,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
                         </Text>
                       </Button>
                     </Flex>
-                  </View>
+                  </div>
                 </Flex>
               </Item>
             )}
