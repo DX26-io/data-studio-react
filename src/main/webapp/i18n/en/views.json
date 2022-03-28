@@ -14,7 +14,8 @@
       "deleteView": "Delete View",
       "delete": "Delete",
       "save": "Save",
-      "createNewView": "Create new view"
+      "createNewView": "Create new view",
+      "view":"View"
     },
     "created": {
       "header": "Success",

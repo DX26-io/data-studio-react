@@ -1,7 +1,7 @@
-.FilterPanel-Main {
-  .FilterPanel {
+.filter-panel-main {
+  .filter-panel {
     z-index: 9999;
-    right: 0;
+    right: -14px;
     position: absolute;
     margin: 15px;
     box-shadow: 3px 3px 3px 3px #a8a8a8;
@@ -20,10 +20,10 @@
       justify-content: center;
     }
   }
-  .FilterPanel-minimize {
+  .filter-panel-minimize {
     width: 25%;
   }
-  .FilterPanel-maximize {
+  .filter-panel-maximize {
     width: 98%;
     .filter-body {
       display: flex;
@@ -38,14 +38,16 @@
     }
   }
 }
-.FilterPanel-hide {
+.filter-panel-hide {
   display: none;
 }
-.FilterPanel-show {
+.filter-panel-show {
   display: block;
 }
-
 .filter-element > div {
   border: 0 !important;
   box-shadow: rgb(0 0 0 / 12%) 0px 1px 3px, rgb(0 0 0 / 24%) 0px 1px 2px !important;
+}
+.share-link-filter-panel {
+  top: 35px;
 }

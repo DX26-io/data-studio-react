@@ -15,7 +15,7 @@ import ViewPropertiesModal from '../views/view-properties-modal';
 import Canvas from 'app/modules/canvas/visualisation/canvas';
 import VisualisationsDeleteModal from 'app/modules/canvas/visualisation/visualisation-modal/visualisation-delete-modal/visualisations-delete-modal';
 import SearchModal from "app/entities/search/search-modal";
-import ShareVisualisation from "app/entities/share/share-visualisation";
+import ShareVisualisation from "app/entities/share/share-link-visualisation";
 
 const Routes = ({ match }) => (
   <>

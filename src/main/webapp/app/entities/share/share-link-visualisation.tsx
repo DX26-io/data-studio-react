@@ -13,13 +13,13 @@ import { VisualWrap } from 'app/modules/canvas/visualisation/util/visualmetadata
 import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
 import { toggleFilterPanel, saveSelectedFilter, applyFilter } from 'app/modules/canvas/filter/filter.reducer';
 import FilterPanel from 'app/modules/canvas/filter/filter-panel';
-import { setIsShare } from './share-visualisation.reducer';
+import { setIsShare } from './share-link-visualisation.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { getCurrentViewState } from 'app/entities/views/views.reducer';
 
-export interface ISharevisualisationProps extends StateProps, DispatchProps, RouteComponentProps {}
+export interface IShareLinkVisualisationProps extends StateProps, DispatchProps, RouteComponentProps {}
 
-const Sharevisualisation = (props: ISharevisualisationProps) => {
+const ShareLinkVisualisation = (props: IShareLinkVisualisationProps) => {
   const params = new URLSearchParams(props.location.search);
   const visualisationId = params.get('visualisationId');
   const viewId = params.get('viewId');
@@ -80,7 +80,7 @@ const Sharevisualisation = (props: ISharevisualisationProps) => {
 
   return (
     <>
-      <FilterPanel />
+      <FilterPanel isShareLink={true}/>
       <Flex direction="column" flex gap="size-75">
         <View id={`visualisation-edit-${props.visualMetadataEntity.id}`} height="90vh"></View>
       </Flex>
@@ -113,4 +113,4 @@ const mapDispatchToProps = {
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sharevisualisation);
+export default connect(mapStateToProps, mapDispatchToProps)(ShareLinkVisualisation);

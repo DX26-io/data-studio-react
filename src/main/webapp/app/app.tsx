@@ -19,7 +19,7 @@ import ErrorBoundary from 'app/shared/error/error-boundary';
 import { AUTHORITIES } from 'app/config/constants';
 import AppRoutes from 'app/routes';
 import { isCanvas } from './shared/util/common-utils';
-import  ShareVisualisationHeader  from 'app/entities/share/share-visualisation-header';
+import  ShareVisualisationHeader  from 'app/entities/share/share-link-visualisation-header';
 
 const baseHref = document.querySelector('base').getAttribute('href').replace(/\/$/, '');
 
