@@ -3,6 +3,7 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { ICrudGetViewFeaturesAction, onSetDatesInFeature, updatePinnedFeaturesState, updateFavoriteFeaturesState } from './feature-util';
 import { IFeature, defaultValue } from 'app/shared/model/feature.model';
+import { loadFilters } from 'app/modules/canvas/filter/filter-util';
 
 export const ACTION_TYPES = {
   FETCH_FEATURE_LIST: 'feature/FETCH_FEATURE_LIST',
@@ -15,6 +16,7 @@ export const ACTION_TYPES = {
   PIN_FEATURE: 'feature/PIN_FEATURE',
   SET_DATES_IN_FEATURE_LIST: 'feature/SET_DATES_IN_FEATURE_LIST',
   MARK_FAVORITE_FILTER: 'feature/MARK_FAVORITE_FILTER',
+  LOAD_FILTERS: 'feature/LOAD_FILTERS',
 };
 
 const initialState = {
@@ -185,6 +187,12 @@ export default (state: FeatureState = initialState, action): FeatureState => {
           action.payload.metadata
         ),
       };
+    case ACTION_TYPES.LOAD_FILTERS:
+      loadFilters(state.entities, action.payload.featureName, action.payload.datasourceId, action.payload.value);
+      return {
+        ...state,
+      };
+      break;
     default:
       return state;
   }
@@ -292,4 +300,9 @@ export const getThresholdMeasuresList = features => {
 export const setDatesInFeature = (featureName, startDate, endDate, metadata) => ({
   type: ACTION_TYPES.SET_DATES_IN_FEATURE_LIST,
   payload: { featureName, startDate, endDate, metadata },
+});
+
+export const loadFilterOptions = (featureName, datasourceId, value?) => ({
+  type: ACTION_TYPES.LOAD_FILTERS,
+  payload: { featureName, datasourceId, value },
 });

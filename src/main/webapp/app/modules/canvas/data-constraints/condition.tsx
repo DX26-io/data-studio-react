@@ -8,7 +8,8 @@ import DateRangeComponent from './date-range-component';
 import { updateConditionExpression } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { generateFilterOptions, loadFilterOptions } from '../filter/filter-util';
+import { generateFilterOptions } from '../filter/filter-util';
+import { loadFilterOptions } from 'app/entities/feature/feature.reducer';
 import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import { generateOptions } from 'app/entities/feature/feature-util';
 import { translate } from 'react-jhipster';
@@ -91,12 +92,12 @@ const Condition = (props: IConditionProps) => {
 
   const onContaintsInputFocus = () => {
     props.setFilterData(null);
-    loadFilterOptions(_condition.featureName, props.view?.viewDashboard?.dashboardDatasource.id);
+    props.loadFilterOptions(_condition.featureName, props.view?.viewDashboard?.dashboardDatasource.id);
   };
 
   const onContaintsHandleInputChange = newValue => {
     props.setFilterData(null);
-    loadFilterOptions(_condition.featureName, props.view?.viewDashboard?.dashboardDatasource.id, newValue);
+    props.loadFilterOptions(_condition.featureName, props.view?.viewDashboard?.dashboardDatasource.id, newValue);
   };
 
   const onContaintsHandleChange = (value, actionMeta) => {
@@ -145,7 +146,7 @@ const Condition = (props: IConditionProps) => {
       if ((props.condition['@type'] === 'Compare' || props.condition['@type'] === 'Like') && props.condition?.value) {
         setConditionValue(props.condition.value);
       }
-      if ((props.condition['@type'] === 'Contains' || props.condition['@type'] === 'NotContains') && props.condition?.values.length > 0) {
+      if ((props.condition['@type'] === 'Contains' || props.condition['@type'] === 'NotContains') && props.condition?.values && props.condition?.values?.length > 0) {
         setContainsValues(getContainsValues(props.condition));
       }
     }
@@ -260,6 +261,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 const mapDispatchToProps = {
   updateConditionExpression,
   setFilterData,
+  loadFilterOptions
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

@@ -7,7 +7,7 @@ import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import DateRangeComponent from '../data-constraints/date-range-component';
 import { checkIsDateType } from '../visualisation/util/visualisation-utils';
 import { saveDynamicDateRangeMetaData, saveSelectedFilter, onDateRangeFilterChange } from './filter.reducer';
-import { loadFilterOptions, generateFilterOptions } from './filter-util';
+import { generateFilterOptions } from './filter-util';
 import Select from 'react-select';
 import PinOn from '@spectrum-icons/workflow/PinOn';
 import PinOff from '@spectrum-icons/workflow/PinOff';
@@ -20,6 +20,7 @@ import SeparatorInput from 'app/shared/components/separator/separator-input';
 import Separator from '@spectrum-icons/workflow/Separator';
 import { Translate } from 'react-jhipster';
 import { setDatesInFeature,markFavouriteFilter } from 'app/entities/feature/feature.reducer';
+import { loadFilterOptions } from 'app/entities/feature/feature.reducer';
 
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
@@ -31,12 +32,12 @@ const FilterElement = (props: IFilterElementProp) => {
 
   const handleInputChange = (newValue: string) => {
     props.setFilterData(null);
-    loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id, newValue);
+    props.loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id, newValue);
   };
 
   const onFocus = () => {
     props.setFilterData(null);
-    loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id);
+    props.loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id);
   };
 
   const handleChange = (value, actionMeta) => {
@@ -174,7 +175,8 @@ const mapDispatchToProps = {
   applyFilter,
   onDateRangeFilterChange,
   setDatesInFeature,
-  markFavouriteFilter
+  markFavouriteFilter,
+  loadFilterOptions
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

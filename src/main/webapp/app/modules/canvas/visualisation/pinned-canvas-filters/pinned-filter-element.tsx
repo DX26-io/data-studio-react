@@ -5,19 +5,19 @@ import { IRootState } from 'app/shared/reducers';
 import { IFeature } from 'app/shared/model/feature.model';
 import { setFilterData } from 'app/shared/websocket/websocket.reducer';
 import DateRangeComponent from 'app/modules/canvas/data-constraints/date-range-component';
-import { resetTimezoneData } from 'app/shared/util/date-utils';
 import { checkIsDateType } from 'app/modules/canvas/visualisation/util/visualisation-utils';
-import { getPin, loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
+import { generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 import Select from 'react-select';
 import {
   addAppliedFilters,
   removeAppliedFilters,
   saveDynamicDateRangeMetaData,
   saveSelectedFilter,
-  onDateRangeFilterChange
+  onDateRangeFilterChange,
 } from 'app/modules/canvas/filter/filter.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import { setDatesInFeature } from 'app/entities/feature/feature.reducer';
+import { loadFilterOptions } from 'app/entities/feature/feature.reducer';
 
 export interface IPinnedFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
@@ -26,12 +26,12 @@ export interface IPinnedFilterElementProp extends StateProps, DispatchProps {
 const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
   const handleInputChange = (newValue: string) => {
     props.setFilterData(null);
-    loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id, newValue);
+    props.loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id, newValue);
   };
 
   const onFocus = () => {
     props.setFilterData(null);
-    loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id);
+    props.loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id);
   };
 
   const handleChange = (value, actionMeta) => {
@@ -43,7 +43,7 @@ const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
   };
 
   const onDateChange = (startDate, endDate, metaData) => {
-    props.setDatesInFeature(props.feature.name,startDate,endDate,metaData);
+    props.setDatesInFeature(props.feature.name, startDate, endDate, metaData);
     props.onDateRangeFilterChange(props.selectedFilters, props.feature, startDate, endDate, metaData, props.view, props.visualmetadata);
   };
 
@@ -53,7 +53,12 @@ const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
         {checkIsDateType(props.feature) ? (
           <View minWidth="100%">
             <span className="spectrum-Body-emphasis--sizeXXS">{props.feature.name}</span>
-            <DateRangeComponent onDateChange={onDateChange} startDate={props.feature.selected} endDate={props.feature.selected2} metadata={props.feature.metadata} />
+            <DateRangeComponent
+              onDateChange={onDateChange}
+              startDate={props.feature.selected}
+              endDate={props.feature.selected2}
+              metadata={props.feature.metadata}
+            />
           </View>
         ) : (
           <View minWidth="100%">
@@ -91,7 +96,8 @@ const mapDispatchToProps = {
   removeAppliedFilters,
   saveDynamicDateRangeMetaData,
   onDateRangeFilterChange,
-  setDatesInFeature
+  setDatesInFeature,
+  loadFilterOptions,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

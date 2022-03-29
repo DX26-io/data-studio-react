@@ -38,7 +38,8 @@ import AddCircel from '@spectrum-icons/workflow/AddCircle';
 import RemoveCircle from '@spectrum-icons/workflow/RemoveCircle';
 import { isFormValid } from './user-group-datasource-constraints.util';
 import Select from 'react-select';
-import { loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
+import {  generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
+import { loadFilterOptions } from 'app/entities/feature/feature.reducer';
 import { IDatasources } from 'app/shared/model/datasources.model';
 import { IFeature } from 'app/shared/model/feature.model';
 import { generateDatasourcesOptions, generateFeatureNameOptions, getSearchParam } from '../../permissions-util';
@@ -266,6 +267,7 @@ const mapDispatchToProps = {
   addConstraint,
   removeConstraint,
   updateCondition,
+  loadFilterOptions
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

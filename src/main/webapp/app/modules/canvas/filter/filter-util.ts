@@ -417,9 +417,12 @@ export const getPin = pin => {
   return pin === null || pin === false ? false : true;
 };
 
-export const loadFilterOptions = (featureName, datasourceId, value?) => {
+export const loadFilters = (features, featureName, datasourceId, value?) => {
+  const feature = features.filter(item => {
+    return item.name === featureName;
+  })[0];
   const query: IQueryDTO = {
-    fields: [{ name: featureName }],
+    fields: [{ name: feature.name }],
     distinct: true,
     limit: 20,
   };
@@ -429,7 +432,7 @@ export const loadFilterOptions = (featureName, datasourceId, value?) => {
         sourceType: 'FILTER',
         conditionExpression: {
           '@type': 'Like',
-          featureName,
+          featureType: { featureName: feature.name, type: feature.type },
           caseInsensitive: true,
           value,
         },
