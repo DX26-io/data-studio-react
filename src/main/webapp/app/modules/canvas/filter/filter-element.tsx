@@ -14,7 +14,7 @@ import PinOff from '@spectrum-icons/workflow/PinOff';
 import Star from '@spectrum-icons/workflow/Star';
 import StarOutline from '@spectrum-icons/workflow/StarOutline';
 import { pinFeature } from 'app/entities/feature/feature.reducer';
-import { addAppliedFilters, removeAppliedFilters, applyFilter } from './filter.reducer';
+import { addAppliedFilters, removeAppliedFilters, applyFilter,removeAllSelectedOptionsAppliedFilters } from './filter.reducer';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import SeparatorInput from 'app/shared/components/separator/separator-input';
 import Separator from '@spectrum-icons/workflow/Separator';
@@ -45,6 +45,9 @@ const FilterElement = (props: IFilterElementProp) => {
       props.addAppliedFilters(actionMeta.option.value, props.feature, props.view, props.visualmetadata, props.selectedFilters);
     } else if (actionMeta.action === 'remove-value') {
       props.removeAppliedFilters(actionMeta.removedValue.value, props.feature, props.view, props.visualmetadata, props.selectedFilters);
+    }else if(actionMeta.action === 'clear'){
+      props.selectedFilters[props.feature.name]=[];
+      props.removeAllSelectedOptionsAppliedFilters(props.feature.name,props.view,props.visualmetadata,props.selectedFilters);
     }
   };
 
@@ -176,7 +179,8 @@ const mapDispatchToProps = {
   onDateRangeFilterChange,
   setDatesInFeature,
   markFavouriteFilter,
-  loadFilterOptions
+  loadFilterOptions,
+  removeAllSelectedOptionsAppliedFilters
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

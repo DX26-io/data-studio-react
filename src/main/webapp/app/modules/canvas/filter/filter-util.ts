@@ -509,3 +509,11 @@ export const removeOptionFromFilters = (filter, filters, feature) => {
   }
   return Object.assign({}, filters);
 };
+
+export const removeOptionsFromFilters = (filters, featureName) => {
+  if (filters[featureName] && filters[featureName].length === 0) {
+    delete filters[featureName];
+    return Object.assign({}, filters);
+  }
+  return Object.assign({}, filters);
+};
