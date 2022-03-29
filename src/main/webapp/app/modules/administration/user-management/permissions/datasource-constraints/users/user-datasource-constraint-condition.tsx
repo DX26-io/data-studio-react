@@ -25,8 +25,9 @@ import SeparatorInput from 'app/shared/components/separator/separator-input';
 import SeparatorIcon from 'app/shared/components/separator/separator-icon';
 import { addSeparatedValuesIntoConstraint } from 'app/shared/components/separator/separator.util';
 import Select from 'react-select';
-import { loadFilterOptions, generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
+import { generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 import { generateFeatureNameOptions } from '../../permissions-util';
+import { loadFilterOptions } from 'app/entities/feature/feature.reducer';
 
 export interface IUserDatasourceConstraintConditionProps extends StateProps, DispatchProps {
   condition: any;
@@ -52,12 +53,12 @@ export const UserDatasourceConstraintCondition = (props: IUserDatasourceConstrai
 
   const handleInputChange = (constraint: any, newValue: string) => {
     props.setFilterData(null);
-    loadFilterOptions(constraint.featureName, props.constraint.datasource.id, newValue);
+    props.loadFilterOptions(constraint.featureName, props.constraint.datasource.id, newValue);
   };
 
   const onFocus = constraint => {
     props.setFilterData(null);
-    loadFilterOptions(constraint.featureName, props.constraint.datasource.id);
+    props.loadFilterOptions(constraint.featureName, props.constraint.datasource.id);
   };
 
   const handleChange = (selectedOption, actionMeta, con) => {
@@ -183,6 +184,7 @@ const mapDispatchToProps = {
   removeConstraint,
   setFilterData,
   updateConditionValues,
+  loadFilterOptions
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
