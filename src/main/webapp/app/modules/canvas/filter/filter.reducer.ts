@@ -1,7 +1,7 @@
 import { getVisualisationData, getVisualisationShareData, ValidateFields } from '../visualisation/util/visualisation-render-utils';
 import { IViews } from 'app/shared/model/views.model';
 import { toggleLoader } from 'app/shared/websocket/websocket.reducer';
-import { addOptionIntoFilters, removeOptionFromFilters, addDateRangeFilter } from './filter-util';
+import { addOptionIntoFilters, removeOptionFromFilters, addDateRangeFilter, removeOptionsFromFilters } from './filter-util';
 import { SEPARATORS } from 'app/shared/components/separator/separator.util';
 import { resetTimezoneData } from 'app/shared/util/date-utils';
 
@@ -15,6 +15,7 @@ export const ACTION_TYPES = {
   REMOVE_DATE_FILTER: 'filter/REMOVE_DATE_FILTER',
   SET_SEPARATOR: 'filter/SET_SEPARATOR',
   RESET: 'filter/RESET',
+  REMOVE_ALL_SELECTED_FILTER_OPTIONS: 'filter/REMOVE_ALL_SELECTED_FILTER_OPTIONS',
 };
 
 const initialState = {
@@ -64,6 +65,11 @@ export default (state: FilterState = initialState, action): FilterState => {
         selectedFilters: action.payload,
       };
     case ACTION_TYPES.REMOVE_SELECTED_FILTER_OPTIONS:
+      return {
+        ...state,
+        selectedFilters: action.payload,
+      };
+    case ACTION_TYPES.REMOVE_ALL_SELECTED_FILTER_OPTIONS:
       return {
         ...state,
         selectedFilters: action.payload,
@@ -149,6 +155,15 @@ export const removeAppliedFilters = (filter, feature, view?, visualmetaData?, se
   const _selectedFilter = removeOptionFromFilters(filter, selectedFilter, feature);
   dispatch({
     type: ACTION_TYPES.REMOVE_SELECTED_FILTER_OPTIONS,
+    payload: _selectedFilter,
+  });
+  loadVisualisation(visualmetaData, view, _selectedFilter);
+};
+
+export const removeAllSelectedOptionsAppliedFilters = (featureName, view?, visualmetaData?, selectedFilter?) => dispatch => {
+  const _selectedFilter = removeOptionsFromFilters(selectedFilter, featureName);
+  dispatch({
+    type: ACTION_TYPES.REMOVE_ALL_SELECTED_FILTER_OPTIONS,
     payload: _selectedFilter,
   });
   loadVisualisation(visualmetaData, view, _selectedFilter);

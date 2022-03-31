@@ -61,7 +61,7 @@ const CanvasHeader = props => {
     },
     {
       icon: <GraphBarVerticalAdd size="M" />,
-      title: translate('canvas.menu.addvisualisation'),
+      title: translate('canvas.menu.addVisualisation'),
       onPress: setVisualisationsModelOpen,
       data: true,
     },
