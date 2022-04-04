@@ -42,7 +42,12 @@ import { visualMetadataContainerGetOne } from './util/visualmetadata-container.u
 import { getFeatureCriteria, reset as resetFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark, reset as resetBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
-import { applyFilter, saveDynamicDateRangeMetaData, saveSelectedFilter,reset as resetFilters } from 'app/modules/canvas/filter/filter.reducer';
+import {
+  applyFilter,
+  saveDynamicDateRangeMetaData,
+  saveSelectedFilter,
+  reset as resetFilters,
+} from 'app/modules/canvas/filter/filter.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { VisualisationType } from 'app/shared/util/visualisation.constants';
 import PinnedFiltersHeader from './pinned-canvas-filters/pinned-filters-header';
@@ -201,9 +206,11 @@ const Canvas = (props: IVisualisationProp) => {
         hideDataNotFound(v.id);
         renderVisualisation(v, props.visualData?.body, 'widget', broadcast);
       } else {
-        showDataNotFound(v.id);
-        if (document.getElementById('chart-widget-' + v.id)) {
-          document.getElementById('chart-widget-' + v.id).remove();
+        if (v?.id) {
+          showDataNotFound(v.id);
+          if (document.getElementById('chart-widget-' + v.id)) {
+            document.getElementById('chart-widget-' + v.id).remove();
+          }
         }
         props.toggleLoader(false);
       }
@@ -475,7 +482,7 @@ const mapDispatchToProps = {
   removePinnedFiltersIntoMetadataContainer,
   resetFeatureCriteria,
   resetBookmark,
-  resetFilters
+  resetFilters,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
