@@ -324,9 +324,8 @@ const drawVisualisation = {
 
 export const renderIframe = (item, height, widget) => {
   const iframeLink = item.properties[0].value;
-
-  document.getElementById(`iframe-${item.id}`).setAttribute('width', (widget - 30).toString());
-  document.getElementById(`iframe-${item.id}`).setAttribute('height', (height - 30).toString());
+  document.getElementById(`iframe-${item.id}`).setAttribute('width', widget);
+  document.getElementById(`iframe-${item.id}`).setAttribute('height', (height-30).toString());
   document.getElementById(`iframe-${item.id}`).setAttribute('src', iframeLink);
 };
 
