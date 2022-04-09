@@ -327,7 +327,7 @@ const Canvas = (props: IVisualisationProp) => {
       } else {
         return (
           <div
-            className="item widget"
+            className={v.metadataVisual.name === VisualisationType.Iframe ? 'iframe-widget item widget': 'item widget'} 
             id={`widget-${v.id}`}
             key={`${v.id}`}
             data-grid={{
@@ -366,7 +366,9 @@ const Canvas = (props: IVisualisationProp) => {
                 )}
               </div>
               <div id={`visualisation-${v.id}`} className="visualisation">
-                {v.metadataVisual.name === VisualisationType.Iframe && <iframe id={`iframe-${v.id}`} />}
+                {v.metadataVisual.name === VisualisationType.Iframe && (
+                  <iframe style={{ textAlign: 'center', position: 'relative', border: 0, overflow: 'hidden' }} id={`iframe-${v.id}`} />
+                )}
               </div>
             </div>
           </div>

@@ -303,7 +303,7 @@ export const getConditionExpression = (paramObject: any, additionalFeaturesArray
 };
 
 export const isDateRange = (name, selectedFilters) => {
-  if (selectedFilters[name]._meta.dataType) {
+  if (selectedFilters[name]?._meta?.dataType) {
     if (selectedFilters[name]._meta.valueType === 'castValueType' || selectedFilters[name]._meta.valueType === 'valueType') {
       return false;
     }
@@ -343,7 +343,7 @@ export const getFilterCriterias = (selectedFilters, features, _dynamicDateRangeM
       filterCriterias.push({
         value: selectedFilters[key].join('||'),
         metaData: isItemDateRange ? buildFilterCriteriasForDynamicDateRange(key) : null,
-        dateRange: param._meta.valueType === 'dateRangeValueType' ? true : false,
+        dateRange: param?._meta?.valueType === 'dateRangeValueType' ? true : false,
         key,
         feature: features.filter(item => {
           return item.name.toLowerCase() === key;

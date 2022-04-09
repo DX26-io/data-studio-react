@@ -271,6 +271,21 @@ const drawVisualisation = {
       treemapChartObj(div);
     },
   },
+  'Map': {
+    drawChart(visual, metaData, div, broadcast) {
+      const config = configuration.GenerateMap(visual);
+      const mapChartObj = flairVisualizations
+        .map()
+        .config(config)
+        .tooltip(true)
+        .print(false)
+        .notification(false)
+        .broadcast(broadcast)
+        .data(metaData)
+        // .dimensionType('varchar');
+        mapChartObj(div);
+    },
+  },
   'Scatter plot': {
     drawChart(visual, metaData, div, broadcast) {
       const config = configuration.GetScatterPlotConfig(visual);
@@ -324,9 +339,8 @@ const drawVisualisation = {
 
 export const renderIframe = (item, height, widget) => {
   const iframeLink = item.properties[0].value;
-
-  document.getElementById(`iframe-${item.id}`).setAttribute('width', (widget - 30).toString());
-  document.getElementById(`iframe-${item.id}`).setAttribute('height', (height - 30).toString());
+  document.getElementById(`iframe-${item.id}`).setAttribute('width', widget);
+  document.getElementById(`iframe-${item.id}`).setAttribute('height', (height-30).toString());
   document.getElementById(`iframe-${item.id}`).setAttribute('src', iframeLink);
 };
 
