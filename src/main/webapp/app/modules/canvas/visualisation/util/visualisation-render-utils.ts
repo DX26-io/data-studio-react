@@ -271,6 +271,21 @@ const drawVisualisation = {
       treemapChartObj(div);
     },
   },
+  'Map': {
+    drawChart(visual, metaData, div, broadcast) {
+      const config = configuration.GenerateMap(visual);
+      const mapChartObj = flairVisualizations
+        .map()
+        .config(config)
+        .tooltip(true)
+        .print(false)
+        .notification(false)
+        .broadcast(broadcast)
+        .data(metaData)
+        // .dimensionType('varchar');
+        mapChartObj(div);
+    },
+  },
   'Scatter plot': {
     drawChart(visual, metaData, div, broadcast) {
       const config = configuration.GetScatterPlotConfig(visual);
