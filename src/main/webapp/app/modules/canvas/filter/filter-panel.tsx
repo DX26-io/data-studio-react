@@ -46,8 +46,8 @@ const FilterPanel = (props: IFilterPanelProp) => {
 
   const getPanelClasses = () => {
     let panelClass = '';
-    panelClass = isFilterMinimize ? 'filter-panel filter-panel-minimize ' : 'filter-panel filter-panel-maximize';
-    panelClass = panelClass.concat(props.isShareLink ? ' share-link-filter-panel' : '');
+    panelClass = isFilterMinimize ? 'panel-body panel-minimize ' : 'panel-body panel-maximize';
+    panelClass = panelClass.concat(props.isShareLink ? ' share-link-panel' : '');
     return panelClass;
   };
 
@@ -60,7 +60,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
   return (
     <>
       <ClickAwayListener onClickAway={handleClickAway}>
-        <div className="filter-panel-main">
+        <div className="panel-main">
           <div className={getPanelClasses()}>
             <PanelHeader setMinimize={setFilterMinimize} isMinimized={isFilterMinimize} titleKey="entity.action.filters" />
             <Divider size={'S'} />

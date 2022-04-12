@@ -66,8 +66,8 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
   return (
     <>
       <ClickAwayListener onClickAway={handleClickAway}>
-        <div className="filter-panel-main">
-          <div className={isFeaturesMinimize ? 'filter-panel filter-panel-minimize ' : 'filter-panel filter-panel-maximize'}>
+        <div className="panel-main">
+          <div className={isFeaturesMinimize ? 'panel-body panel-minimize ' : 'panel-body panel-maximize'}>
             <PanelHeader
               setMinimize={setFeaturesMinimize}
               isMinimized={isFeaturesMinimize}

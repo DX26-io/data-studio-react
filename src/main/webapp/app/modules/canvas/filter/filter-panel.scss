@@ -1,5 +1,5 @@
-.filter-panel-main {
-  .filter-panel {
+.panel-main {
+  .panel-body {
     z-index: 9999;
     right: -14px;
     position: absolute;
@@ -10,38 +10,32 @@
       --spectrum-alias-background-color-default,
       var(--spectrum-global-color-default, var(--spectrum-semantic-default-color-background))
     );
-    .filter-body {
-      max-height: calc(100vh - 186px);
-      overflow: auto;
-    }
-    .filter-header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
   }
-  .filter-panel-minimize {
+  .panel-minimize {
     width: 25%;
   }
-  .filter-panel-maximize {
+  .panel-maximize {
     width: 98%;
-    .filter-body {
-      display: flex;
-      flex-wrap: wrap;
-      .filter-element {
-        max-width: 400px !important;
-        width: 100%;
-        height: auto !important;
-        min-height: auto !important;
-        max-height: auto !important;
-      }
-    }
   }
 }
+
+.share-link-panel {
+  top: 35px;
+}
+
+.filter-body {
+  max-height: calc(100vh - 186px);
+  overflow: auto;
+  .filter-element {
+    max-width: 400px !important;
+    width: 100%;
+    height: auto !important;
+    min-height: auto !important;
+    max-height: auto !important;
+  }
+}
+
 .filter-element > div {
   border: 0 !important;
   box-shadow: rgb(0 0 0 / 12%) 0px 1px 3px, rgb(0 0 0 / 24%) 0px 1px 2px !important;
-}
-.share-link-filter-panel {
-  top: 35px;
 }
