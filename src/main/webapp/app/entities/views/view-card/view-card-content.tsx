@@ -55,7 +55,7 @@ const ViewCardContent = (props: IViewCardContentProps) => {
                 <Section title={<Translate contentKey="entity.options.more_options">More options</Translate>}>
                   <Item key="properties">
                     <Text>
-                      <Translate contentKey="entity.options.properties">Properties</Translate>
+                      <Translate contentKey="entity.action.edit">Edit</Translate>
                     </Text>
                   </Item>
                   {account && hasAuthority(props.account, 'REQUEST-PUBLISH_' + viewId + '_VIEW') && (
