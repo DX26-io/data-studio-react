@@ -19,7 +19,6 @@ export const ACTION_TYPES = {
 };
 
 const initialState = {
-  isFeaturesPanelOpen: false,
   isFilterOpen: false,
   selectedFilters: {},
   dynamicDateRangeMetaData: {},
@@ -51,13 +50,6 @@ export default (state: FilterState = initialState, action): FilterState => {
       return {
         ...state,
         isFilterOpen: !state.isFilterOpen,
-        isFeaturesPanelOpen: state.isFeaturesPanelOpen && !state.isFilterOpen,
-      };
-    case ACTION_TYPES.TOGGLE_FEATURES_PANEL:
-      return {
-        ...state,
-        isFeaturesPanelOpen: !state.isFeaturesPanelOpen,
-        isFilterOpen: state.isFilterOpen && !state.isFeaturesPanelOpen,
       };
     case ACTION_TYPES.ADD_SELECTED_FILTER_OPTIONS:
       return {
@@ -92,7 +84,6 @@ export default (state: FilterState = initialState, action): FilterState => {
     case ACTION_TYPES.RESET:
       return {
         ...state,
-        isFeaturesPanelOpen: false,
         isFilterOpen: false,
         selectedFilters: {},
         dynamicDateRangeMetaData: {},
@@ -112,12 +103,6 @@ export const saveSelectedFilter = (selectedFilter: any) => dispatch => {
 export const toggleFilterPanel = () => ({
   type: ACTION_TYPES.TOGGLE_FILTER_PANEL,
 });
-
-export const toggleFeaturesPanel: () => void = () => (dispatch, getState) => {
-  dispatch({
-    type: ACTION_TYPES.TOGGLE_FEATURES_PANEL,
-  });
-};
 
 const renderVisualisationById = (item, view, filters) => {
   if (ValidateFields(item.fields)) {

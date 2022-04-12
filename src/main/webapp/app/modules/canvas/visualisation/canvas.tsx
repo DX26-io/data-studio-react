@@ -378,8 +378,8 @@ const Canvas = (props: IVisualisationProp) => {
 
   return (
     <>
-      {props.isSocketConnected && <FilterPanel />}
-      {props.isSocketConnected && <FeaturesPanel />}
+      {props.isSocketConnected && props.isFilterOpen && <FilterPanel />}
+      {props.isSocketConnected && props.isFeaturesPanelOpen && <FeaturesPanel />}
       <View>
         <CanvasFilterHeader />
       </View>
@@ -447,6 +447,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isSearchOpen: storeState.search.isSearchOpen,
   selectedFilters: storeState.filter.selectedFilters,
   isFilterOpen: storeState.filter.isFilterOpen,
+  isFeaturesPanelOpen: storeState.feature.isFeaturesPanelOpen,
   pinnedFeatures: storeState.feature.entities.filter(feature => feature.pin === true),
   tableActivePage: storeState.visualmetadata.tableActivePage,
   editAction: storeState.visualmetadata.editAction,

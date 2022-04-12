@@ -80,7 +80,7 @@ const ShareLinkVisualisation = (props: IShareLinkVisualisationProps) => {
 
   return (
     <>
-      <FilterPanel isShareLink={true}/>
+      {props.isFilterOpen && <FilterPanel isShareLink={true} />}
       <Flex direction="column" flex gap="size-75">
         <View id={`visualisation-edit-${props.visualMetadataEntity.id}`} height="90vh"></View>
       </Flex>
@@ -95,6 +95,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isvisualMetaDataFetched: storeState.visualmetadata.isvisualMetaDataFetched,
   selectedFilters: storeState.filter.selectedFilters,
   visualmetadata: storeState.views.viewState,
+  isFilterOpen: storeState.filter.isFilterOpen,
 });
 
 const mapDispatchToProps = {

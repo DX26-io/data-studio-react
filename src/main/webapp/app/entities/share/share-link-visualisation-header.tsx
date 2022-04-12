@@ -54,7 +54,7 @@ const ShareLinkVisualisationHeader = props => {
             </MenuTrigger>
             <HeaderIcon
               key={translate('entity.action.filter')}
-              icon={<Filter size="M" />}
+              icon={<Filter size="M" id="filter-button"/>}
               title={translate('entity.action.filter')}
               onPress={props.toggleFilterPanel}
             />
