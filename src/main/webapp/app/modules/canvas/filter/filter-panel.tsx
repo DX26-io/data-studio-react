@@ -26,19 +26,14 @@ export interface IFilterPanelProp extends StateProps, DispatchProps {
 }
 
 const FilterPanel = (props: IFilterPanelProp) => {
-  // TODO : need to refector this code
+
   const [isFilterMinimize, setFilterMinimize] = useState(true);
-  // const [isFilterPanelClose, setFilterPanelClose] = useState(props.isFilterOpen);
   const [tabId, setTabId] = useState<ReactText>(1);
 
   const tabs = [
     { id: 1, name: 'canvas.filters.tabs.filters' },
     { id: 2, name: 'canvas.filters.tabs.favFilters' },
   ];
-
-  // useEffect(() => {
-  //   setFilterPanelClose(props.isFilterOpen);
-  // }, [props.isFilterOpen]);
 
   const _setSeparator = separator => {
     props.setSeparator(separator);
