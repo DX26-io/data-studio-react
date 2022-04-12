@@ -58,3 +58,28 @@ a {
     var(--spectrum-global-color-gray-700, var(--spectrum-semantic-gray-700-color-background))
   );
 }
+
+.panel-main {
+  .panel-body {
+    z-index: 9999;
+    right: -14px;
+    position: absolute;
+    margin: 15px;
+    box-shadow: 3px 3px 3px 3px #a8a8a8;
+    height: calc(100% - 19px);
+    background-color: var(
+      --spectrum-alias-background-color-default,
+      var(--spectrum-global-color-default, var(--spectrum-semantic-default-color-background))
+    );
+  }
+  .panel-minimize {
+    width: 25%;
+  }
+  .panel-maximize {
+    width: 98%;
+  }
+}
+
+.share-link-panel {
+  top: 35px;
+}
