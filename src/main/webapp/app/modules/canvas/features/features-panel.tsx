@@ -79,7 +79,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
               }
             />
             <Divider size={'S'} />
-            <View backgroundColor="gray-75" width="91%" margin="0px auto">
+            <View backgroundColor="gray-75" margin="size-150">
               <Tabs
                 aria-label="Features"
                 isQuiet={true}
