@@ -47,7 +47,7 @@ const DashboardCardContent: React.FC<IDashboardCardContentProps> = props => {
                 <Section title={<Translate contentKey="entity.options.more_options">More options</Translate>}>
                   <Item key="properties">
                     <Text>
-                      <Translate contentKey="entity.options.properties">Properties</Translate>
+                      <Translate contentKey="entity.action.edit">Edit</Translate>
                     </Text>
                   </Item>
                   {account && hasAuthority(account, 'REQUEST-PUBLISH_' + dashboardId + '_DASHBOARD') && (
