@@ -16,7 +16,7 @@ import {
   deleteEntity as deleteVisualmetadataEntity,
   toggleEditMode,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { toggleFeaturesPanel, toggleFilterPanel,clearFilter,clearFilterForShareLink } from 'app/modules/canvas/filter/filter.reducer';
+import { toggleFilterPanel,clearFilter,clearFilterForShareLink } from 'app/modules/canvas/filter/filter.reducer';
 import { saveViewState } from 'app/entities/views/views.reducer';
 import Filter from '@spectrum-icons/workflow/Filter';
 import { translate } from 'react-jhipster';
@@ -33,7 +33,7 @@ import CanvasHeaderIcon from 'app/shared/components/canvas-header-icon/canvas-he
 import ShareAndroid from '@spectrum-icons/workflow/ShareAndroid';
 import CanvasShareModal from 'app/modules/canvas/visualisation/visualisation-modal/visualisation-share-modal/canvas-share-modal';
 import SearchModal from '../../../entities/search/search-modal';
-import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
+import { getViewFeaturesEntities,toggleFeaturesPanel } from 'app/entities/feature/feature.reducer';
 
 
 
@@ -81,7 +81,7 @@ const CanvasHeader = props => {
       onPress:resetFilter,
     },
     {
-      icon: <Asset size="M" />,
+      icon: <Asset size="M" id="toggle-feature-button" />,
       title: translate('canvas.menu.toggleFeatures'),
       onPress: props.toggleFeaturesPanel,
     },
@@ -92,7 +92,7 @@ const CanvasHeader = props => {
       data: true,
     },
     {
-      icon: <Filter size="M" />,
+      icon: <Filter size="M" id="filter-button" />,
       title: translate('canvas.menu.filter'),
       onPress: props.toggleFilterPanel,
     },

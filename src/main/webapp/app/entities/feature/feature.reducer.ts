@@ -17,6 +17,7 @@ export const ACTION_TYPES = {
   SET_DATES_IN_FEATURE_LIST: 'feature/SET_DATES_IN_FEATURE_LIST',
   MARK_FAVORITE_FILTER: 'feature/MARK_FAVORITE_FILTER',
   LOAD_FILTERS: 'feature/LOAD_FILTERS',
+  TOGGLE_FEATURES_PANEL: 'feature/TOGGLE_FEATURES_PANEL',
 };
 
 const initialState = {
@@ -29,6 +30,7 @@ const initialState = {
   feature: (null as unknown) as IFeature,
   isFeaturesReceived: false,
   isPinnedFeatureListUpdated: false,
+  isFeaturesPanelOpen: false,
 };
 
 export type FeatureState = Readonly<typeof initialState>;
@@ -176,6 +178,11 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         ...state,
         feature: action.payload,
       };
+    case ACTION_TYPES.TOGGLE_FEATURES_PANEL:
+      return {
+        ...state,
+        isFeaturesPanelOpen: !state.isFeaturesPanelOpen,
+      };
     case ACTION_TYPES.SET_DATES_IN_FEATURE_LIST:
       return {
         ...state,
@@ -306,3 +313,9 @@ export const loadFilterOptions = (featureName, datasourceId, value?) => ({
   type: ACTION_TYPES.LOAD_FILTERS,
   payload: { featureName, datasourceId, value },
 });
+
+export const toggleFeaturesPanel: () => void = () => (dispatch, getState) => {
+  dispatch({
+    type: ACTION_TYPES.TOGGLE_FEATURES_PANEL,
+  });
+};

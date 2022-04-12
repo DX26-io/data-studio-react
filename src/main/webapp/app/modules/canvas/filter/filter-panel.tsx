@@ -6,11 +6,19 @@ import './filter-panel.scss';
 import Search from '@spectrum-icons/workflow/Search';
 import FilterElement from 'app/modules/canvas/filter/filter-element';
 import { Translate, translate } from 'react-jhipster';
-import { applyFilter, applyFilterForShareLink, clearFilter, clearFilterForShareLink, setSeparator } from './filter.reducer';
+import {
+  applyFilter,
+  applyFilterForShareLink,
+  clearFilter,
+  clearFilterForShareLink,
+  setSeparator,
+  toggleFilterPanel,
+} from './filter.reducer';
 import PanelHeader from 'app/shared/components/panel-header';
 import { removeEnabledFilters } from './filter-util';
 import Separators from 'app/shared/components/separator/separators';
 import { Tabs } from '@react-spectrum/tabs';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 export interface IFilterPanelProp extends StateProps, DispatchProps {
   visualisationId?: string;
@@ -20,7 +28,7 @@ export interface IFilterPanelProp extends StateProps, DispatchProps {
 const FilterPanel = (props: IFilterPanelProp) => {
   // TODO : need to refector this code
   const [isFilterMinimize, setFilterMinimize] = useState(true);
-  const [isFilterPanelClose, setFilterPanelClose] = useState(props.isFilterOpen);
+  // const [isFilterPanelClose, setFilterPanelClose] = useState(props.isFilterOpen);
   const [tabId, setTabId] = useState<ReactText>(1);
 
   const tabs = [
@@ -28,9 +36,9 @@ const FilterPanel = (props: IFilterPanelProp) => {
     { id: 2, name: 'canvas.filters.tabs.favFilters' },
   ];
 
-  useEffect(() => {
-    setFilterPanelClose(props.isFilterOpen);
-  }, [props.isFilterOpen]);
+  // useEffect(() => {
+  //   setFilterPanelClose(props.isFilterOpen);
+  // }, [props.isFilterOpen]);
 
   const _setSeparator = separator => {
     props.setSeparator(separator);
@@ -43,79 +51,87 @@ const FilterPanel = (props: IFilterPanelProp) => {
     return panelClass;
   };
 
+  const handleClickAway = event => {
+    if (event.target.firstChild.id !== 'filter-button') {
+      props.toggleFilterPanel();
+    }
+  };
+
   return (
     <>
-      <div className={!isFilterPanelClose ? 'filter-panel-main filter-panel-hide' : 'filter-panel-main filter-panel-show'}>
-        <div className={getPanelClasses()}>
-          <PanelHeader setMinimize={setFilterMinimize} isMinimized={isFilterMinimize} titleKey="entity.action.filters" />
-          <Divider size={'S'} />
-          <Tabs aria-label="filters" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
-            {item_ => (
-              <Item title={translate(item_.name)}>
-                <Flex marginTop="size-150" marginBottom="size-150" direction="row" alignItems="center" justifyContent="center">
-                  <Separators setSeparator={_setSeparator} />
-                </Flex>
-                <Flex direction="column" gap="size-100" justifySelf="center">
-                  <div className="filter-body">
-                    {tabId === 1
-                      ? props.featuresList &&
-                        props.featuresList.length > 0 &&
-                        props.featuresList.map((item, i) => {
-                          if (item.featureType === 'DIMENSION') {
-                            return <FilterElement key={item.id} feature={item} />;
-                          }
-                        })
-                      : props.favoriteFeaturesList &&
-                        props.favoriteFeaturesList.length > 0 &&
-                        props.favoriteFeaturesList.map((item, i) => {
-                          if (item.featureType === 'DIMENSION') {
-                            return <FilterElement key={item.id} feature={item} />;
-                          }
-                        })}
-                    <Flex direction="row" justifyContent="end" marginTop="size-125">
-                      <Button
-                        onPress={() => {
-                          if (!props.visualisationId) {
-                            props.applyFilter(props.selectedFilters, props.visualmetadata, props.view);
-                          } else {
-                            props.applyFilterForShareLink(props.selectedFilters, props.visualmetadataEntity, props.view);
-                          }
-                        }}
-                        marginX={5}
-                        variant="cta"
-                      >
-                        <Text>
-                          <Translate contentKey="entity.action.filter">Filter</Translate>
-                        </Text>
-                        <Search />
-                      </Button>
-                      <Button
-                        onPress={() => {
-                          if (!props.visualisationId) {
-                            props.clearFilter(
-                              removeEnabledFilters(props.selectedFilters, props.featuresList),
-                              props.visualmetadata,
-                              props.view
-                            );
-                          } else {
-                            props.clearFilterForShareLink({}, props.visualmetadataEntity, props.view);
-                          }
-                        }}
-                        marginX={9}
-                        variant="primary"
-                      >
-                        <Text>
-                          <Translate contentKey="entity.action.clear">Clear</Translate>
-                        </Text>
-                      </Button>
-                    </Flex>
-                  </div>
-                </Flex>
-              </Item>
-            )}
-          </Tabs>
+      <ClickAwayListener onClickAway={handleClickAway}>
+        <div className="filter-panel-main">
+          <div className={getPanelClasses()}>
+            <PanelHeader setMinimize={setFilterMinimize} isMinimized={isFilterMinimize} titleKey="entity.action.filters" />
+            <Divider size={'S'} />
+            <Tabs aria-label="filters" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
+              {item_ => (
+                <Item title={translate(item_.name)}>
+                  <Flex marginTop="size-150" marginBottom="size-150" direction="row" alignItems="center" justifyContent="center">
+                    <Separators setSeparator={_setSeparator} />
+                  </Flex>
+                  <Flex direction="column" gap="size-100" justifySelf="center">
+                    <div className="filter-body">
+                      {tabId === 1
+                        ? props.featuresList &&
+                          props.featuresList.length > 0 &&
+                          props.featuresList.map((item, i) => {
+                            if (item.featureType === 'DIMENSION') {
+                              return <FilterElement key={item.id} feature={item} />;
+                            }
+                          })
+                        : props.favoriteFeaturesList &&
+                          props.favoriteFeaturesList.length > 0 &&
+                          props.favoriteFeaturesList.map((item, i) => {
+                            if (item.featureType === 'DIMENSION') {
+                              return <FilterElement key={item.id} feature={item} />;
+                            }
+                          })}
+                      <Flex direction="row" justifyContent="end" marginTop="size-125">
+                        <Button
+                          onPress={() => {
+                            if (!props.visualisationId) {
+                              props.applyFilter(props.selectedFilters, props.visualmetadata, props.view);
+                            } else {
+                              props.applyFilterForShareLink(props.selectedFilters, props.visualmetadataEntity, props.view);
+                            }
+                          }}
+                          marginX={5}
+                          variant="cta"
+                        >
+                          <Text>
+                            <Translate contentKey="entity.action.filter">Filter</Translate>
+                          </Text>
+                          <Search />
+                        </Button>
+                        <Button
+                          onPress={() => {
+                            if (!props.visualisationId) {
+                              props.clearFilter(
+                                removeEnabledFilters(props.selectedFilters, props.featuresList),
+                                props.visualmetadata,
+                                props.view
+                              );
+                            } else {
+                              props.clearFilterForShareLink({}, props.visualmetadataEntity, props.view);
+                            }
+                          }}
+                          marginX={9}
+                          variant="primary"
+                        >
+                          <Text>
+                            <Translate contentKey="entity.action.clear">Clear</Translate>
+                          </Text>
+                        </Button>
+                      </Flex>
+                    </div>
+                  </Flex>
+                </Item>
+              )}
+            </Tabs>
+          </div>
         </div>
-      </div>
+      </ClickAwayListener>
     </>
   );
 };
@@ -135,6 +151,7 @@ const mapDispatchToProps = {
   applyFilterForShareLink,
   clearFilterForShareLink,
   setSeparator,
+  toggleFilterPanel,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
