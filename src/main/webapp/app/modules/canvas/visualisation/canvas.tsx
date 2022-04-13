@@ -62,6 +62,7 @@ import VisualisationEditModalPopUp from './visualisation-modal/visualisation-edi
 import VisualisationDataModal from './visualisation-modal/visualisation-data-modal/visualisations-data-modal';
 import VisualisationShareModal from './visualisation-modal/visualisation-share-modal/visualisation-share-modal';
 import VisualisationsDeleteModal from './visualisation-modal/visualisation-delete-modal/visualisations-delete-modal';
+import { getEntities as getDefaultVisualisationColors } from "app/modules/administration/visualisation-colors/visualisation-colors.reducer";
 
 const ReactGridLayout = WidthProvider(ResponsiveGridLayout);
 
@@ -90,6 +91,7 @@ const Canvas = (props: IVisualisationProp) => {
     setTableActivePage: props.setTableActivePage,
     applyAlternativeDimensionFilter: props.applyAlternativeDimensionFilter,
     features: props.featuresList,
+    defaultColorSet:props.defaultColorSet
   };
 
   const onLayoutChange = _visualmetaList => {
@@ -187,6 +189,7 @@ const Canvas = (props: IVisualisationProp) => {
       props.getVisualisationsEntities();
       props.getViewEntity(viewId);
       props.getCurrentViewState(viewId);
+      props.getDefaultVisualisationColors();
     }
     return () => {
       props.reset();
@@ -452,6 +455,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   tableActivePage: storeState.visualmetadata.tableActivePage,
   editAction: storeState.visualmetadata.editAction,
   isPinnedFeatureListUpdated: storeState.feature.isPinnedFeatureListUpdated,
+  defaultColorSet: storeState.visulisationColors.defaultColorSet,
 });
 
 const mapDispatchToProps = {
@@ -486,6 +490,7 @@ const mapDispatchToProps = {
   resetFeatureCriteria,
   resetBookmark,
   resetFilters,
+  getDefaultVisualisationColors
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

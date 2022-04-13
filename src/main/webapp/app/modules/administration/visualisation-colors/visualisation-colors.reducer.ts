@@ -6,6 +6,15 @@ import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util'
 
 import { IVisualisationColors, defaultValue } from 'app/shared/model/visualization-colors.model';
 
+
+const getDefaultColorSet = (entities=[]) =>{
+  const colorSet = [];
+  for (let index = 0; index < entities.length; index++) {
+    colorSet.push(entities[index].code);
+  }
+  return colorSet;
+}
+
 export const ACTION_TYPES = {
   FETCH_VISUALIZATION_COLORS: 'visualisationColors/FETCH_VISUALIZATION_COLORS',
   FETCH_VISUALIZATION_COLOR: 'visualisationColors/FETCH_VISUALIZATION_COLOR',
@@ -25,6 +34,7 @@ const initialState = {
   updating: false,
   updateSuccess: false,
   totalItems: 0,
+  defaultColorSet: [],
 };
 
 export type VisualisationColorsState = Readonly<typeof initialState>;
@@ -69,6 +79,7 @@ export default (state: VisualisationColorsState = initialState, action): Visuali
         ...state,
         loading: false,
         entities: action.payload.data,
+        defaultColorSet : getDefaultColorSet(action.payload.data)
       };
     case SUCCESS(ACTION_TYPES.FETCH_VISUALIZATION_COLORS_PAGES):
       return {

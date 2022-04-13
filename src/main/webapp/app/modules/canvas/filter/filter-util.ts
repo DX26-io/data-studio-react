@@ -457,7 +457,7 @@ export const generateFilterOptions = data => {
   return options;
 };
 
-export const generateOptionsForDateRange = (config: any) => {
+export const generateOptionsForDateRange = (config: any, dates: Array<string>) => {
   const options = [];
   if (config && (config.tab === '2' || config.dateRangeTab === 2)) {
     let displayValue = config.currentDynamicDateRangeConfig.title;
@@ -465,11 +465,16 @@ export const generateOptionsForDateRange = (config: any) => {
       displayValue = config.currentDynamicDateRangeConfig.title.replace('X', config.customDynamicDateRange);
     }
     options.push({ value: config.currentDynamicDateRangeConfig.title, label: displayValue });
-  } else {
+    return options;
+  } else if (config?.startDateFormatted && config?.endDateFormatted) {
     const date = changeDateFormat(config?.startDateFormatted) + ' ' + changeDateFormat(config?.endDateFormatted);
     options.push({ value: date, label: date });
+    return options;
+  } else {
+    const date = changeDateFormat(dates[0]) + ' ' + changeDateFormat(dates[1]);
+    options.push({ value: date, label: date });
+    return options;
   }
-  return options;
 };
 
 export const removeEnabledFilters = (filters: any, features: readonly IFeature[]) => {
