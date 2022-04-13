@@ -14,4 +14,5 @@ export interface IBroadcast {
   setTableActivePage: {};
   applyAlternativeDimensionFilter:{}
   features:Array<IFeature>;
+  defaultColorSet:Array<any>;
 }

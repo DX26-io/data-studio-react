@@ -271,7 +271,7 @@ const drawVisualisation = {
       treemapChartObj(div);
     },
   },
-  'Map': {
+  Map: {
     drawChart(visual, metaData, div, broadcast) {
       const config = configuration.GenerateMap(visual);
       const mapChartObj = flairVisualizations
@@ -281,9 +281,8 @@ const drawVisualisation = {
         .print(false)
         .notification(false)
         .broadcast(broadcast)
-        .data(metaData)
-        // .dimensionType('varchar');
-        mapChartObj(div);
+        .data(metaData);
+      mapChartObj(div);
     },
   },
   'Scatter plot': {
@@ -335,12 +334,27 @@ const drawVisualisation = {
       infographicChartObj(div);
     },
   },
+  'Date Range': {
+    drawChart(visual, metaData, div, broadcast) {
+      const config = configuration.GenerateDateRange(visual);
+      const rangeFilterChartObj = flairVisualizations
+        .rangefilter()
+        .tooltip(true)
+        .config(config)
+        .print(false)
+        .notification(false)
+        .broadcast(broadcast)
+        .data(metaData)
+        .colorSet(broadcast.defaultColorSet);
+      rangeFilterChartObj(div);
+    },
+  },
 };
 
 export const renderIframe = (item, height, widget) => {
   const iframeLink = item.properties[0].value;
   document.getElementById(`iframe-${item.id}`).setAttribute('width', widget);
-  document.getElementById(`iframe-${item.id}`).setAttribute('height', (height-30).toString());
+  document.getElementById(`iframe-${item.id}`).setAttribute('height', (height - 30).toString());
   document.getElementById(`iframe-${item.id}`).setAttribute('src', iframeLink);
 };
 

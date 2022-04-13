@@ -56,7 +56,7 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
                   }
                 }}
                 placeholder={featureName}
-                options={generateOptionsForDateRange(props.dynamicDateRangeMetaData[featureName])}
+                options={generateOptionsForDateRange(props.dynamicDateRangeMetaData[featureName],props.selectedFilters[featureName])}
               />
             </View>
           ) : (
