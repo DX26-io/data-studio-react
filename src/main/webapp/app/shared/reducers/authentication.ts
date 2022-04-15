@@ -211,7 +211,7 @@ export const getSession: () => void = () => async (dispatch, getState) => {
 };
 
 export const getSessionWithPath: (pathname: string) => void = (pathname: string) => async (dispatch, getState) => {
-  const noSessionPathNames = ['/realm', '/signin', '/signup'];
+  const noSessionPathNames = ['/realm', '/signin', '/signup','/reset'];
   if (noSessionPathNames.includes(pathname)) {
     return;
   }
