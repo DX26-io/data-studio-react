@@ -49,7 +49,7 @@ export default (state: PasswordResetState = initialState, action): PasswordReset
   }
 };
 
-const apiUrl = 'api/account/reset-password';
+const apiUrl = 'api/account/reset_password';
 
 // Actions
 export const handlePasswordResetInit = mail => ({
