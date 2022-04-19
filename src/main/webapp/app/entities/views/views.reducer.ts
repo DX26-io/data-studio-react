@@ -165,7 +165,6 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         uploadSucceeded: true,
       };
     case SUCCESS(ACTION_TYPES.SAVE_VIEWS_STATE):
-      toast.success(translate('canvas.saveMessage'));
       return {
         ...state,
         updating: false,
@@ -232,9 +231,11 @@ export const saveViewState: ICrudPutAction<IViewStateDTO> = entity => async disp
         _id: entity._id,
       })
     ),
+    meta: {
+      successMessage: translate('canvas.saveMessage'),
+    },
   });
   dispatch(saveViewFeatureCriteria(entity.viewFeatureCriterias));
-  // getCurrentViewState(entity._id)
   return result;
 };
 
