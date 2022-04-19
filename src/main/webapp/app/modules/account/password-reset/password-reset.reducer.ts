@@ -2,7 +2,7 @@ import axios from 'axios';
 import { translate } from 'react-jhipster';
 
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-
+import { toast } from "react-toastify";
 export const ACTION_TYPES = {
   RESET_PASSWORD_INIT: 'passwordReset/RESET_PASSWORD_INIT',
   RESET_PASSWORD_FINISH: 'passwordReset/RESET_PASSWORD_FINISH',
@@ -13,6 +13,7 @@ const initialState = {
   loading: false,
   resetPasswordSuccess: false,
   resetPasswordFailure: false,
+  resetPasswordFinishSuccess:false
 };
 
 export type PasswordResetState = Readonly<typeof initialState>;
@@ -20,13 +21,20 @@ export type PasswordResetState = Readonly<typeof initialState>;
 // Reducer
 export default (state: PasswordResetState = initialState, action): PasswordResetState => {
   switch (action.type) {
-    case REQUEST(ACTION_TYPES.RESET_PASSWORD_FINISH):
+    case REQUEST(ACTION_TYPES.RESET_PASSWORD_FINISH):      return {
+      ...state,
+      resetPasswordFinishSuccess:false
+    };
     case REQUEST(ACTION_TYPES.RESET_PASSWORD_INIT):
       return {
         ...state,
         loading: true,
       };
     case FAILURE(ACTION_TYPES.RESET_PASSWORD_FINISH):
+        return {
+          ...state,
+          resetPasswordFinishSuccess:false
+        };
     case FAILURE(ACTION_TYPES.RESET_PASSWORD_INIT):
       return {
         ...initialState,
@@ -34,6 +42,10 @@ export default (state: PasswordResetState = initialState, action): PasswordReset
         resetPasswordFailure: true,
       };
     case SUCCESS(ACTION_TYPES.RESET_PASSWORD_FINISH):
+      return {
+        ...state,
+        resetPasswordFinishSuccess:true
+      };
     case SUCCESS(ACTION_TYPES.RESET_PASSWORD_INIT):
       return {
         ...initialState,
@@ -65,7 +77,7 @@ export const handlePasswordResetFinish = (key, newPassword) => ({
   type: ACTION_TYPES.RESET_PASSWORD_FINISH,
   payload: axios.post(`${apiUrl}/finish`, { key, newPassword }),
   meta: {
-    successMessage: translate('reset.finish.messages.success'),
+    errorMessage: translate('global.messages.error.resetError'),
   },
 });
 

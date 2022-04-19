@@ -50,7 +50,8 @@
       "confirmpassword.label": "New password confirmation",
       "confirmpassword.placeholder": "Confirm the new password",
       "email.label": "Email",
-      "email.placeholder": "Your email"
+      "email.placeholder": "Your email",
+      "changePassword":"Change Password"
     },
     "messages": {
       "info": {
@@ -65,8 +66,10 @@
         }
       },
       "error": {
-        "dontmatch": "The password and its confirmation do not match!"
+        "dontmatch": "The password and its confirmation do not match!",
+        "resetError":"Your password couldn't be reset. Remember a password request is only valid for 24 hours."
       },
+      "success":"Your password has been reset. Please ",
       "validate": {
         "newpassword": {
           "required": "Your password is required.",

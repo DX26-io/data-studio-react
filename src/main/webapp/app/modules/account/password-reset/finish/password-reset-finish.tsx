@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Col, Row, Button } from 'reactstrap';
-import { AvForm, AvField } from 'availity-reactstrap-validation';
 import { Translate, translate, getUrlParameter } from 'react-jhipster';
 import { RouteComponentProps } from 'react-router-dom';
-
 import { handlePasswordResetFinish, reset } from '../password-reset.reducer';
 import PasswordStrengthBar from 'app/shared/layout/password/password-strength-bar';
+import { TextField, Form, Button, Flex, View } from '@adobe/react-spectrum';
+import { isPasswordNull, isPasswordMaxLengthValid, isPasswordMinLengthValid, isPasswordEqual } from './password-reset.util';
+import ValidationError from 'app/shared/components/validation-error';
+import PasswordResetSuccess from './password-reset-success';
 
-export interface IPasswordResetFinishProps extends DispatchProps, RouteComponentProps<{ key: string }> {}
+export interface IPasswordResetFinishProps extends StateProps, DispatchProps, RouteComponentProps<{ key: string }> {}
 
 export const PasswordResetFinishPage = (props: IPasswordResetFinishProps) => {
-  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [key] = useState(getUrlParameter('key', props.location.search));
 
   useEffect(
@@ -21,61 +23,95 @@ export const PasswordResetFinishPage = (props: IPasswordResetFinishProps) => {
     []
   );
 
-  const handleValidSubmit = (event, values) => props.handlePasswordResetFinish(key, values.newPassword);
+  const isFormValid = () => {
+    return (
+      newPassword &&
+      confirmPassword &&
+      !isPasswordMinLengthValid(newPassword) &&
+      !isPasswordMaxLengthValid(newPassword) &&
+      !isPasswordMinLengthValid(confirmPassword) &&
+      !isPasswordMaxLengthValid(confirmPassword) &&
+      !isPasswordEqual(newPassword, confirmPassword)
+    );
+  };
 
-  const updatePassword = event => setPassword(event.target.value);
+  const handleValidSubmit = event => {
+    if (isFormValid()) {
+      props.handlePasswordResetFinish(key, newPassword);
+    }
+  };
+
+  // useEffect(() => {
+  //   if (props.resetPasswordFinishSuccess) {
+  //   }
+  // }, [props.resetPasswordFinishSuccess]);
 
   const getResetForm = () => {
     return (
-      <AvForm onValidSubmit={handleValidSubmit}>
-        <AvField
-          name="newPassword"
+      <Form data-testid="password-reset-form" width={'60%'} marginStart={'20%'} marginEnd={'20%'}>
+        <TextField
+          type="password"
+          value={newPassword}
           label={translate('global.form.newpassword.label')}
           placeholder={translate('global.form.newpassword.placeholder')}
-          type="password"
-          validate={{
-            required: { value: true, errorMessage: translate('global.messages.validate.newpassword.required') },
-            minLength: { value: 4, errorMessage: translate('global.messages.validate.newpassword.minlength') },
-            maxLength: { value: 50, errorMessage: translate('global.messages.validate.newpassword.maxlength') },
-          }}
-          onChange={updatePassword}
+          onChange={setNewPassword}
+          autoFocus
+          isRequired
+          isQuiet
         />
-        <PasswordStrengthBar password={password} />
-        <AvField
-          name="confirmPassword"
+        {isPasswordNull(newPassword) && <ValidationError contentKey="global.messages.validate.newpassword.required" />}
+        {isPasswordMinLengthValid(newPassword) && <ValidationError contentKey="global.messages.validate.newpassword.minlength" />}
+        {isPasswordMaxLengthValid(newPassword) && <ValidationError contentKey="global.messages.validate.newpassword.maxlength" />}
+        <PasswordStrengthBar password={newPassword} />
+        <TextField
+          type="password"
+          value={confirmPassword}
           label={translate('global.form.confirmpassword.label')}
           placeholder={translate('global.form.confirmpassword.placeholder')}
-          type="password"
-          validate={{
-            required: { value: true, errorMessage: translate('global.messages.validate.confirmpassword.required') },
-            minLength: { value: 4, errorMessage: translate('global.messages.validate.confirmpassword.minlength') },
-            maxLength: { value: 50, errorMessage: translate('global.messages.validate.confirmpassword.maxlength') },
-            match: { value: 'newPassword', errorMessage: translate('global.messages.error.dontmatch') },
+          onChange={event => {
+            setConfirmPassword(event);
           }}
+          autoFocus
+          isRequired
+          isQuiet
         />
-        <Button color="success" type="submit">
-          <Translate contentKey="reset.finish.form.button">Validate new password</Translate>
-        </Button>
-      </AvForm>
+        {newPassword && isPasswordNull(confirmPassword) && (
+          <ValidationError contentKey="global.messages.validate.confirmpassword.required" />
+        )}
+        {newPassword && isPasswordMinLengthValid(confirmPassword) && (
+          <ValidationError contentKey="global.messages.validate.confirmpassword.minlength" />
+        )}
+        {newPassword && isPasswordMaxLengthValid(confirmPassword) && (
+          <ValidationError contentKey="global.messages.validate.confirmpassword.maxlength" />
+        )}
+        {isPasswordEqual(newPassword, confirmPassword) && <ValidationError contentKey="global.messages.error.dontmatch" />}
+        <Flex direction="row" alignItems="center" justifyContent="center">
+          <Button variant="cta" onPress={handleValidSubmit} marginTop="size-200" width={'20%'}>
+            <Translate contentKey="global.form.changePassword">Change Password</Translate>
+          </Button>
+        </Flex>
+      </Form>
     );
   };
 
   return (
-    <div>
-      <Row className="justify-content-center">
-        <Col md="4">
-          <h1>
-            <Translate contentKey="reset.finish.title">Reset password</Translate>
-          </h1>
-          <div>{key ? getResetForm() : null}</div>
-        </Col>
-      </Row>
-    </div>
+    <View backgroundColor="default" height={'100vh'}>
+      <Flex direction="row" alignItems="center" justifyContent="center">
+        <span className="spectrum-Heading spectrum-Heading--sizeXXL">
+          <Translate contentKey="reset.finish.title">Reset password</Translate>
+        </span>
+      </Flex>
+      {props.resetPasswordFinishSuccess ? <PasswordResetSuccess /> : <div>{key ? getResetForm() : null}</div>}
+    </View>
   );
 };
 
-const mapDispatchToProps = { handlePasswordResetFinish, reset };
+const mapStateToProps = storeState => ({
+  resetPasswordFinishSuccess: storeState.passwordReset.resetPasswordFinishSuccess,
+});
 
+const mapDispatchToProps = { handlePasswordResetFinish, reset };
+type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(null, mapDispatchToProps)(PasswordResetFinishPage);
+export default connect(mapStateToProps, mapDispatchToProps)(PasswordResetFinishPage);
