@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { ActionButton, Flex, View, Text, Button, Divider, ListBox, Item, DialogContainer } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import Add from '@spectrum-icons/workflow/Add';
-import { getViewFeaturesEntities, setFeature, toggleFeaturesPanel } from 'app/entities/feature/feature.reducer';
+import { getViewFeaturesEntities, setFeature, toggleFeaturesPanel,getEntity } from 'app/entities/feature/feature.reducer';
 import { Tabs } from '@react-spectrum/tabs';
 import { featureTypeToActiveTabs, getFeaturesTabTranslations } from 'app/modules/canvas/features/features-panel-util';
 import { getHierarchies, setHierarchy } from 'app/entities/hierarchy/hierarchy.reducer';
@@ -46,8 +46,9 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
   };
 
   const onFeatureSelected = selectedSet => {
-    const feature = props.featuresList.find(ft => selectedSet.has(ft.id));
-    props.setFeature(feature);
+    const it = selectedSet.values();
+    const featureId= it.next();
+    props.getEntity(featureId.value);
     setFeatureDialogOpen(true);
   };
 
@@ -135,7 +136,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   isFeaturesPanelOpen: storeState.feature.isFeaturesPanelOpen,
   featuresList: storeState.feature.entities,
-  feature: storeState.feature.feature,
+  feature: storeState.feature.entity,
   datasourceId: storeState.views.entity?.viewDashboard?.dashboardDatasource?.id,
   hierarchies: storeState.hierarchies.hierarchies,
 });
@@ -145,6 +146,7 @@ const mapDispatchToProps = {
   getHierarchies,
   setHierarchy,
   toggleFeaturesPanel,
+  getEntity
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

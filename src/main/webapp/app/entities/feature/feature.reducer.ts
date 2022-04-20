@@ -24,10 +24,9 @@ const initialState = {
   loading: false,
   errorMessage: null,
   entities: [] as Array<IFeature>,
-  entity: defaultValue,
+  entity: defaultValue as IFeature,
   updating: false,
   updateSuccess: false,
-  feature: (null as unknown) as IFeature,
   isFeaturesReceived: false,
   isPinnedFeatureListUpdated: false,
   isFeaturesPanelOpen: false,
@@ -144,14 +143,14 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         ...state,
         updating: false,
         updateSuccess: true,
-        feature: action.payload.data,
+        entity: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.DELETE_FEATURE):
       return {
         ...state,
         updating: false,
         updateSuccess: true,
-        feature: defaultValue,
+        entity: defaultValue,
       };
     case SUCCESS(ACTION_TYPES.PIN_FEATURE):
       return {
@@ -169,14 +168,14 @@ export default (state: FeatureState = initialState, action): FeatureState => {
     case ACTION_TYPES.RESET:
       return {
         ...state,
-        feature: null,
+        entity: null,
         errorMessage: null,
         updateSuccess: false,
       };
     case ACTION_TYPES.SET_FEATURE:
       return {
         ...state,
-        feature: action.payload,
+        entity: action.payload,
       };
     case ACTION_TYPES.TOGGLE_FEATURES_PANEL:
       return {

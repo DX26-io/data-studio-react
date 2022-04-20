@@ -206,7 +206,7 @@ const FeatureUpdate = (props: IFeatureUpdateProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   functions: storeState.functions.entities,
-  feature: storeState.feature.feature,
+  feature: storeState.feature.entity,
   updateSuccess: storeState.feature.updateSuccess,
   updating: storeState.feature.updating,
   viewId: storeState.views.entity.id,
