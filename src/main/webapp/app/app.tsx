@@ -35,7 +35,7 @@ export const App = (props: IAppProps) => {
 
   return props.isAuthenticated ? (
     <Router basename={baseHref}>
-      <ToastContainer position={toast.POSITION.BOTTOM_CENTER} className="toastify-container" toastClassName="toastify-toast" />
+      <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} className="toastify-container" toastClassName="toastify-toast" />
       <Grid
         areas={['header', 'content', 'footer']}
         columns={['1fr']}

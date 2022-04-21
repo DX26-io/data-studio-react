@@ -37,7 +37,8 @@
       "nameLength": "Name cannot be longer than 40 characters",
       "type": "Type is required",
       "typeLength": "Type cannot be longer than 40 characters",
-      "definition": "Definition is required"
+      "definition": "Definition is required",
+      "validationError":"Feature validation did not pass, please check the function format and description for more information"
     }
   }
 }

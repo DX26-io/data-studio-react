@@ -54,7 +54,7 @@ const FeatureUpdate = (props: IFeatureUpdateProps) => {
   useEffect(() => {
     if (props.updateSuccess) {
       handleClose();
-      if(props && props.viewId){
+      if (props && props.viewId) {
         props.getViewFeaturesEntities(props.viewId);
       }
     }
@@ -182,6 +182,15 @@ const FeatureUpdate = (props: IFeatureUpdateProps) => {
                 </Text>
               </Flex>
             )}
+            {props.errorMessage && (
+              <Flex gap="size-100" marginTop="static-size-200">
+                <Text marginBottom="size-300">
+                  <span className="spectrum-Body-emphasis error-message">
+                    <Translate contentKey="features.error.validationError"></Translate>
+                  </span>
+                </Text>
+              </Flex>
+            )}
           </View>
           <View width="100%">
             <ListBox
@@ -207,6 +216,7 @@ const FeatureUpdate = (props: IFeatureUpdateProps) => {
 const mapStateToProps = (storeState: IRootState) => ({
   functions: storeState.functions.entities,
   feature: storeState.feature.entity,
+  errorMessage: storeState.feature.errorMessage,
   updateSuccess: storeState.feature.updateSuccess,
   updating: storeState.feature.updating,
   viewId: storeState.views.entity.id,
