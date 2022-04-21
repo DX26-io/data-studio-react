@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
+import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction, translate } from 'react-jhipster';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { ICrudGetViewFeaturesAction, onSetDatesInFeature, updatePinnedFeaturesState, updateFavoriteFeaturesState } from './feature-util';
 import { IFeature, defaultValue } from 'app/shared/model/feature.model';
@@ -24,10 +24,9 @@ const initialState = {
   loading: false,
   errorMessage: null,
   entities: [] as Array<IFeature>,
-  entity: defaultValue,
+  entity: defaultValue as IFeature,
   updating: false,
   updateSuccess: false,
-  feature: (null as unknown) as IFeature,
   isFeaturesReceived: false,
   isPinnedFeatureListUpdated: false,
   isFeaturesPanelOpen: false,
@@ -59,6 +58,12 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         updating: true,
       };
     case REQUEST(ACTION_TYPES.UPDATE_FEATURE):
+      return {
+        ...state,
+        errorMessage: null,
+        updateSuccess: false,
+        updating: true,
+      };
     case REQUEST(ACTION_TYPES.DELETE_FEATURE):
       return {
         ...state,
@@ -94,11 +99,15 @@ export default (state: FeatureState = initialState, action): FeatureState => {
     case FAILURE(ACTION_TYPES.CREATE_FEATURE):
       return {
         ...state,
-        errorMessage: action.payload,
+        errorMessage: action.payload.response.data,
         updateSuccess: false,
         updating: false,
       };
     case FAILURE(ACTION_TYPES.UPDATE_FEATURE):
+      return {
+        ...state,
+        errorMessage: action.payload.response.data,
+      };
     case FAILURE(ACTION_TYPES.DELETE_FEATURE):
       return {
         ...state,
@@ -144,14 +153,14 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         ...state,
         updating: false,
         updateSuccess: true,
-        feature: action.payload.data,
+        entity: action.payload.data,
       };
     case SUCCESS(ACTION_TYPES.DELETE_FEATURE):
       return {
         ...state,
         updating: false,
         updateSuccess: true,
-        feature: defaultValue,
+        entity: defaultValue,
       };
     case SUCCESS(ACTION_TYPES.PIN_FEATURE):
       return {
@@ -169,14 +178,14 @@ export default (state: FeatureState = initialState, action): FeatureState => {
     case ACTION_TYPES.RESET:
       return {
         ...state,
-        feature: null,
+        entity: null,
         errorMessage: null,
         updateSuccess: false,
       };
     case ACTION_TYPES.SET_FEATURE:
       return {
         ...state,
-        feature: action.payload,
+        entity: action.payload,
       };
     case ACTION_TYPES.TOGGLE_FEATURES_PANEL:
       return {
@@ -232,11 +241,17 @@ export const getEntitiesByFeatureType = (datasourceId: number, featureType: stri
 export const createEntity: ICrudPutAction<IFeature> = entity => ({
   type: ACTION_TYPES.CREATE_FEATURE,
   payload: axios.post<IFeature>(`${apiUrl}`, entity),
+  meta: {
+    errorMessage: translate('features.error.validationError'),
+  },
 });
 
 export const updateEntity: ICrudPutAction<IFeature> = entity => ({
   type: ACTION_TYPES.UPDATE_FEATURE,
   payload: axios.put<IFeature>(`${apiUrl}`, entity),
+  meta: {
+    errorMessage: translate('features.error.validationError'),
+  },
 });
 
 export const deleteEntity: ICrudDeleteAction<IFeature> = id => ({
