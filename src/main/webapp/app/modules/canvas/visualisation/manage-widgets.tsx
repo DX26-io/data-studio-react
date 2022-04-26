@@ -5,7 +5,6 @@ import { getEntities as getVisualisationsEntities } from 'app/entities/visualisa
 import { IRootState } from 'app/shared/reducers';
 import {
   alternateDimension,
-  createEntity as addVisualmetadataEntity,
   deleteEntity as deleteVisualmetadataEntity,
   reset,
   visualisationTablePagination,
@@ -24,22 +23,21 @@ import {
   addPinnedFiltersIntoMetadataContainer,
   removePinnedFiltersIntoMetadataContainer,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import VisualisationHeader from './visualisation-modal/visualisation-header';
 import { receiveSocketResponse, toggleLoader, reset as resetVisualisationData } from 'app/shared/websocket/websocket.reducer';
-import { visualMetadataContainerGetOne } from './util/visualmetadata-container.util';
+import { visualMetadataContainerGetOne, pinnedFiltersKey } from './util/visualmetadata-container.util';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
 import { applyFilter, saveDynamicDateRangeMetaData, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
-import { VisualisationType } from 'app/shared/util/visualisation.constants';
-// import PinnedFiltersHeader from './pinned-canvas-filters/pinned-filters-header';
 import PinnedFiltersWidget from './pinned-canvas-filters/pinned-filters-widget';
 import { IBroadcast } from '../../../shared/model/broadcast.model';
 import { WidthProvider, Responsive as ResponsiveGridLayout } from 'react-grid-layout';
 import { applyDateFilters } from '../filter/filter-util';
 import { setVisualisationAction, metadataContainerUpdate } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { NoDataFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
+import Widgets from './widgets';
+import { VisualisationType } from 'app/shared/util/visualisation.constants';
+
 const ReactGridLayout = WidthProvider(ResponsiveGridLayout);
 
 export interface IIllustrate {
@@ -223,51 +221,34 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
     }
     if (props.pinnedFeatures && props.pinnedFeatures.length > 0) {
       const pinnedFiltersFoound = props.visualMetadataContainerList.find(item => {
-        return item.key === 'pinned-filters-div';
+        return item.key === pinnedFiltersKey;
       });
       props.addPinnedFiltersIntoMetadataContainer(props.pinnedFeatures);
     }
   }, [props.visualMetadataContainerList]);
 
-  const handlevisualisationClick = v => {
-    props.addVisualmetadataEntity({
-      viewId: props.view.id,
-      visualMetadata: v,
-    });
-  };
-
   const generateWidge =
     props.visualMetadataContainerList &&
     props.visualMetadataContainerList.map((v, i) => {
-      if (v && v.key) {
+      if (v && v?.key === pinnedFiltersKey) {
         return (
-          // <div
-          //   className="layout widget"
-          //   id={`pinned-filters-${v.key + i}`}
-          //   key={`viz-widget-${v.key + i}`}
-          //   data-grid={{
-          //     i: v.key,
-          //     x: 0,
-          //     y: 0,
-          //     w: 1,
-          //     h: 5 + props.pinnedFeatures.length,
-          //     maxW: Infinity,
-          //     maxH: Infinity,
-          //     isBounded: true,
-          //   }}
-          // >
-          //   <div className="header">
-          //     <PinnedFiltersHeader />
-          //   </div>
-          //   <div className="visualBody" id={`visualBody-${v.key}`}>
-          //     {props.pinnedFeatures &&
-          //       props.pinnedFeatures.length > 0 &&
-          //       props.pinnedFeatures.map(feature => (
-          //         <PinnedFilterElement key={`pinned-filter-element - ${feature.id}`} feature={feature} />
-          //       ))}
-          //   </div>
-          // </div>
-          <PinnedFiltersWidget visualisation={v} pinnedFeatures={props.pinnedFeatures} index={i} key={`pinned-filters-widget-${i}`}  />
+          <div
+            className="layout widget"
+            id={`pinned-filters-${v.key + i}`}
+            key={`viz-widget-${v.key + i}`}
+            data-grid={{
+              i: v.key,
+              x: 0,
+              y: 0,
+              w: 1,
+              h: props.pinnedFeatures.length,
+              maxW: Infinity,
+              maxH: Infinity,
+              isBounded: true,
+            }}
+          >
+            <PinnedFiltersWidget pinnedWidgetKey={v.key} pinnedFeatures={props.pinnedFeatures} key={`pinned-filters-widget-${i}`} />
+          </div>
         );
       } else {
         return (
@@ -286,36 +267,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
               isBounded: true,
             }}
           >
-            <div className="header">
-              <VisualisationHeader
-                key={`viz-header-${v.id}`}
-                visual={v}
-                handleVisualisationClick={handlevisualisationClick}
-                totalItem={props.visualMetadataContainerList?.length || 0}
-                isEditMode={props.isEditMode}
-              ></VisualisationHeader>
-            </div>
-            <div
-              style={{ backgroundColor: v.bodyProperties.backgroundColor, opacity: v.bodyProperties.opacity }}
-              className="visualBody"
-              id={`visualBody-${v.id}`}
-            >
-              <div className="illustrate">
-                {isLoaderDisplay[i]?.noDataFoundVisibility && (
-                  <div
-                    style={{ display: isLoaderDisplay[i]?.noDataFoundVisibility ? 'block' : 'none' }}
-                    className={`dataNotFound dataNotFound-${v.id}`}
-                  >
-                    <NoDataFoundPlaceHolder />
-                  </div>
-                )}
-              </div>
-              <div id={`visualisation-${v.id}`} className="visualisation">
-                {v.metadataVisual.name === VisualisationType.Iframe && (
-                  <iframe style={{ textAlign: 'center', position: 'relative', border: 0, overflow: 'hidden' }} id={`iframe-${v.id}`} />
-                )}
-              </div>
-            </div>
+            <Widgets v={v} isLoaderDisplay={isLoaderDisplay} i={i} key={`viz-widget-${i}`} />
           </div>
         );
       }
@@ -379,7 +331,7 @@ const mapDispatchToProps = {
   getViewEntity,
   getCurrentViewState,
   getVisualisationsEntities,
-  addVisualmetadataEntity,
+
   deleteVisualmetadataEntity,
   saveViewState,
   getVisualmetadataEntity,
