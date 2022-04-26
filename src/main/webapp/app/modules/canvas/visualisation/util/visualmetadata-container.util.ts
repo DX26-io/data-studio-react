@@ -1,5 +1,7 @@
 let visualMetadataContainerList = [];
 
+export const pinnedFiltersKey = 'pinned-filters-div';
+
 export const visualMetadataContainerGetOne = (id: string) => {
   return visualMetadataContainerList.filter(function (item) {
     return item.id === id;
@@ -32,7 +34,7 @@ export const visualMetadataContainerRemove = (widget: string) => {
 
 export const addPinnedFilters = (containerList,pinnedFeatures)=>{
   containerList.push({
-    key: 'pinned-filters-div',
+    key: pinnedFiltersKey,
     x: 0,
     y: 0,
     w: 1,
@@ -42,7 +44,7 @@ export const addPinnedFilters = (containerList,pinnedFeatures)=>{
 }
 
 export const removePinnedFilters = (containerList)=>{
-  const index = containerList.findIndex(x => x.key === 'pinned-filters-div');
+  const index = containerList.findIndex(x => x.key === pinnedFiltersKey);
   if (index > -1) {
     containerList.splice(index, 1);
   }

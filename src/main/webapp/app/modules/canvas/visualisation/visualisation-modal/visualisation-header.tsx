@@ -19,7 +19,7 @@ import React, { FC, ReactText, useEffect, useRef, useState } from 'react';
 import { Translate, translate } from 'react-jhipster';
 import { connect } from 'react-redux';
 import { getTransactionData } from '../util/visualisation-utils';
-import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
+import { IVisualMetadataSet } from 'app/shared/model/visualmetadata.model';
 import { setVisualisationAction, setVisual } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { createVisualMetadata } from './visualisation-edit-modal/visualisation-edit-modal-util';
 

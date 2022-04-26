@@ -11,7 +11,7 @@ import {
 } from 'app/modules/canvas/visualisation/visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-util';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IViews } from 'app/shared/model/views.model';
-import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
+import { IVisualMetadataSet } from 'app/shared/model/visualmetadata.model';
 import { Tabs } from '@react-spectrum/tabs';
 import { IHierarchy } from 'app/shared/model/hierarchy.model';
 

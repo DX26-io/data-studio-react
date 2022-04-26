@@ -14,7 +14,7 @@ import { ValidateFields } from '../../modules/canvas/visualisation/util/visualis
 import { VisualWrap } from '../../modules/canvas/visualisation/util/visualmetadata-wrapper';
 import { IFeature } from 'app/shared/model/feature.model';
 import { IViews } from 'app/shared/model/views.model';
-import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
+import { IVisualMetadataSet } from 'app/shared/model/visualmetadata.model';
 import { IVisualisations } from 'app/shared/model/visualisations.model';
 import { COMPARE_TYPES, DYNAMIC_DATE_RANGE_CONFIG } from 'app/shared/util/data-constraints.constants';
 import { BETWEEN } from 'app/shared/util/visualisation.constants';

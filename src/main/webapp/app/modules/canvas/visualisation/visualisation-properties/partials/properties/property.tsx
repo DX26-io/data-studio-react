@@ -3,7 +3,7 @@ import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 
 import { IFeature } from 'app/shared/model/feature.model';
-import { IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
+import { IVisualMetadataSet } from 'app/shared/model/visualmetadata.model';
 import { Checkbox, Switch, Item, Picker, TextField } from '@adobe/react-spectrum';
 import { parseBool, parseString } from 'app/shared/util/common-utils';
 import { ColorSlider } from '@react-spectrum/color';
