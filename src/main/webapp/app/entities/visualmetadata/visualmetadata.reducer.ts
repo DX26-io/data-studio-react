@@ -4,7 +4,7 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 
-import { IVisualMetadata, defaultValue, IVisualMetadataSet } from 'app/shared/model/visual-meta-data.model';
+import { IVisualMetadata, defaultValue, IVisualMetadataSet } from 'app/shared/model/visualmetadata.model';
 import { IVisualMetaDataDTO } from 'app/shared/model/visualmeta-data-dto.model';
 import { IValidateDTO } from 'app/shared/model/validate.model';
 import { IQueryValidationResponse, defaultValue as queryValidationResponse } from 'app/shared/model/query-validation-response.model';

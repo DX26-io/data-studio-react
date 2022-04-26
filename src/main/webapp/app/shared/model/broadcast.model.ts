@@ -1,5 +1,5 @@
 import { IViews } from './views.model';
-import { IVisualMetadata } from './visual-meta-data.model';
+import { IVisualMetadata } from './visualmetadata.model';
 import { IFeature } from './feature.model';
 
 export interface IBroadcast {

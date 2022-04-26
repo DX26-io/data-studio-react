@@ -1,4 +1,4 @@
-import { IVisualMetadataSet } from './visual-meta-data.model';
+import { IVisualMetadataSet } from './visualmetadata.model';
 
 export interface IVisualMetaDataDTO {
   visualMetadata?: IVisualMetadataSet;

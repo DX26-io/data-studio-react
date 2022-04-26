@@ -5,7 +5,7 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
 
 import { defaultValue, IViews } from 'app/shared/model/views.model';
-import { IVisualMetadataSet, IVisualMetadata } from 'app/shared/model/visual-meta-data.model';
+import { IVisualMetadataSet, IVisualMetadata } from 'app/shared/model/visualmetadata.model';
 
 import { ICrudGetDashboardViewsAction, ICrudViewDeleteAction, ISaveViewState, IViewStateDTO } from './view-util';
 import FileSaver from 'file-saver';

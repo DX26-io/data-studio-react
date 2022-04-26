@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { IRootState } from 'app/shared/reducers';
 import { getEntities } from './visualisations.reducer';
-import { IVisualMetadata } from 'app/shared/model/visual-meta-data.model';
+import { IVisualMetadata } from 'app/shared/model/visualmetadata.model';
 import { Button, ButtonGroup, Content, Dialog, DialogContainer, Divider, Form, Heading, TextField } from '@adobe/react-spectrum';
 
 export interface IVisualisationsProps extends StateProps, DispatchProps {}
