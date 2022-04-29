@@ -32,24 +32,29 @@ export const visualMetadataContainerRemove = (widget: string) => {
   return visualMetadataContainerList;
 };
 
-export const addPinnedFilters = (containerList,pinnedFeatures)=>{
-  containerList.push({
-    key: pinnedFiltersKey,
-    x: 0,
-    y: 0,
-    w: 1,
-    h: pinnedFeatures.length,
-  });
+export const addPinnedFilters = (containerList, pinnedFeatures) => {
+  const index = containerList.findIndex(item => item.key === pinnedFiltersKey);
+  if (index > -1) {
+    containerList[index].h = pinnedFeatures.length;
+  } else {
+    containerList.push({
+      key: pinnedFiltersKey,
+      x: 0,
+      y: 0,
+      w: 1,
+      h: pinnedFeatures.length,
+    });
+  }
   return containerList;
-}
+};
 
-export const removePinnedFilters = (containerList)=>{
+export const removePinnedFilters = containerList => {
   const index = containerList.findIndex(x => x.key === pinnedFiltersKey);
   if (index > -1) {
     containerList.splice(index, 1);
   }
   return containerList;
-}
+};
 
 const addConfigs = (widgetNew: any, widgetOld: any) => {
   Object.keys(widgetNew).forEach(function (key, index) {

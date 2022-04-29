@@ -83,6 +83,9 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
         props.metadataContainerUpdate(v.id, v, 'id');
       }
     });
+    if (props.pinnedFeatures && props.pinnedFeatures.length > 0) {
+      props.addPinnedFiltersIntoMetadataContainer(props.pinnedFeatures);
+    }
   };
 
   const onResizeStop = (layout, oldItem, newItem, placeholder, e, element) => {
@@ -102,7 +105,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
       if (props.pinnedFeatures && props.pinnedFeatures.length === 0) {
         props.removePinnedFiltersIntoMetadataContainer();
       }
-      if (props.pinnedFeatures && props.pinnedFeatures.length === 1) {
+      if (props.pinnedFeatures && props.pinnedFeatures.length >= 1) {
         props.addPinnedFiltersIntoMetadataContainer(props.pinnedFeatures);
       }
     }
@@ -215,22 +218,24 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
     }
   }, [props.updateSuccess]);
 
-  useEffect(() => {
-    if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
-      renderVisualisationById(props.visualMetadataEntity);
-    }
-    if (props.pinnedFeatures && props.pinnedFeatures.length > 0) {
-      const pinnedFiltersFoound = props.visualMetadataContainerList.find(item => {
-        return item.key === pinnedFiltersKey;
-      });
-      props.addPinnedFiltersIntoMetadataContainer(props.pinnedFeatures);
-    }
-  }, [props.visualMetadataContainerList]);
 
-  const generateWidge =
+  // keeping below code commented for time being as it is causing a rerendring
+  // useEffect(() => {
+  //   if (props.visualMetadataContainerList.length > 0 && (props.updateSuccess || props.isCreated)) {
+  //     renderVisualisationById(props.visualMetadataEntity);
+  //   }
+  //   if (props.pinnedFeatures && props.pinnedFeatures.length > 0) {
+  //     const pinnedFiltersFoound = props.visualMetadataContainerList.find(item => {
+  //       return item.key === pinnedFiltersKey;
+  //     });
+  //     props.addPinnedFiltersIntoMetadataContainer(props.pinnedFeatures);
+  //   }
+  // }, [props.visualMetadataContainerList]);
+
+  const generateWidgets =
     props.visualMetadataContainerList &&
     props.visualMetadataContainerList.map((v, i) => {
-      if (v && v?.key === pinnedFiltersKey) {
+      if (v && v.key === pinnedFiltersKey) {
         return (
           <div
             className="layout widget"
@@ -241,7 +246,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
               x: 0,
               y: 0,
               w: 1,
-              h: props.pinnedFeatures.length,
+              h: props.pinnedFeatures.length+5,
               maxW: Infinity,
               maxH: Infinity,
               isBounded: true,
@@ -294,7 +299,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
           isResizable={props.isEditMode}
           key={'viz-grid-layout'}
         >
-          {generateWidge}
+          {generateWidgets}
         </ReactGridLayout>
       )}
     </div>
