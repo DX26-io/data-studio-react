@@ -25,7 +25,7 @@ import VisualisationEditModalPopUp from './visualisation-modal/visualisation-edi
 import VisualisationDataModal from './visualisation-modal/visualisation-data-modal/visualisations-data-modal';
 import VisualisationShareModal from './visualisation-modal/visualisation-share-modal/visualisation-share-modal';
 import VisualisationsDeleteModal from './visualisation-modal/visualisation-delete-modal/visualisations-delete-modal';
-import ManageWidgets from './manage-widgets';
+import ManageWidgets from './widgets/manage-widgets';
 import { getEntities as getDefaultVisualisationColors } from 'app/modules/administration/visualisation-colors/visualisation-colors.reducer';
 
 export interface ICanvasProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}

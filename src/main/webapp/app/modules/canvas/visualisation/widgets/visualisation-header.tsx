@@ -21,13 +21,16 @@ import { connect } from 'react-redux';
 import { getTransactionData } from '../util/visualisation-utils';
 import { IVisualMetadataSet } from 'app/shared/model/visualmetadata.model';
 import { setVisualisationAction, setVisual } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { createVisualMetadata } from './visualisation-edit-modal/visualisation-edit-modal-util';
+import { createVisualMetadata } from '../visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-util';
+import Switch from '@spectrum-icons/workflow/Switch';
 
 interface IVisualisationHeaderProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
   totalItem: number;
   handleVisualisationClick: (visualisation) => void;
   isEditMode: boolean;
+  handleFlipClick: (isFlipped) => void;
+  isFlipped:boolean;
 }
 
 const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
@@ -35,7 +38,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
   const [intervalRegistry, setIntervalRegistry] = useState({});
   const [isLiveEnable, setLiveEnable] = useState(false);
   const csvLink = useRef(null);
-  const { handleVisualisationClick } = props;
+  const { handleVisualisationClick,handleFlipClick } = props;
 
   const setLiveEnabled = () => {
     if (!isLiveEnable) {
@@ -242,6 +245,15 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
                 {generateMenuElements}
               </Menu>
             </MenuTrigger>
+            <ActionButton
+              height="size-300"
+              isQuiet={true}
+              onPress={()=>{
+                handleFlipClick(!props.isFlipped);
+              }}
+            >
+              <Switch id={'switch'} size={'XS'} aria-label="Flip" />
+            </ActionButton>
           </Flex>
         </Flex>
       </View>

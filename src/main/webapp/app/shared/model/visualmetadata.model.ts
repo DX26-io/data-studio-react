@@ -20,14 +20,11 @@ export interface IVisualMetadataSet {
   width?: number;
   xPosition?: number;
   yPosition?: number;
-
   w?: number;
   x?: number;
   h?: number;
   y?: number;
-
   data?: any;
-
   conditionExpression?: any;
   query?: any;
   queryJson?: any;
