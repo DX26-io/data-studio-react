@@ -144,7 +144,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         loading: false,
         loginError: false,
         realms: action.payload?.data?.realms,
-        loginSuccess: processLogin(action.payload?.data.id_token, action.payload?.config?.data?.rememberMe),
+        loginSuccess: processLogin(action.payload?.data.idToken, action.payload?.config?.data?.rememberMe),
       };
     case SUCCESS(ACTION_TYPES.LOGIN_WITH_PROVIDER):
       return {

@@ -51,7 +51,7 @@ describe('Authentication reducer tests', () => {
 
   describe('Success', () => {
     it('should detect a success on login', () => {
-      const payload = { data: { id_token: 'test token', realms: null } };
+      const payload = { data: { idToken: 'test token', realms: null } };
       const toTest = authentication(undefined, { type: SUCCESS(ACTION_TYPES.LOGIN), payload });
       expect(toTest).toMatchObject({
         loading: false,
@@ -202,7 +202,7 @@ describe('Authentication reducer tests', () => {
     });
 
     it('dispatches LOGIN, GET_SESSION and SET_LOCALE success and request actions', async () => {
-      const loginResponse = { data: { id_token: 'test token', realms: null } };
+      const loginResponse = { data: { idToken: 'test token', realms: null } };
       axios.post = sinon.stub().returns(Promise.resolve(loginResponse));
       const expectedActions = [
         {
