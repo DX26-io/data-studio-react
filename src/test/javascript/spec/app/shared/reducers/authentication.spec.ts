@@ -13,6 +13,7 @@ import authentication, {
   clearAuthentication,
   logout,
   clearAuthToken,
+  setAuthToken,
 } from 'app/shared/reducers/authentication';
 import { ACTION_TYPES as localeActionTypes } from 'app/shared/reducers/locale';
 
@@ -39,7 +40,8 @@ describe('Authentication reducer tests', () => {
   describe('Requests', () => {
     it('should detect a request', () => {
       expect(authentication(undefined, { type: REQUEST(ACTION_TYPES.LOGIN) })).toMatchObject({
-        loading: true,
+        loginSuccess: false,
+        loginError: false,
       });
       expect(authentication(undefined, { type: REQUEST(ACTION_TYPES.GET_SESSION) })).toMatchObject({
         loading: true,
@@ -49,7 +51,8 @@ describe('Authentication reducer tests', () => {
 
   describe('Success', () => {
     it('should detect a success on login', () => {
-      const toTest = authentication(undefined, { type: SUCCESS(ACTION_TYPES.LOGIN) });
+      const payload = { data: { id_token: 'test token', realms: null } };
+      const toTest = authentication(undefined, { type: SUCCESS(ACTION_TYPES.LOGIN), payload });
       expect(toTest).toMatchObject({
         loading: false,
         loginError: false,
@@ -80,12 +83,10 @@ describe('Authentication reducer tests', () => {
 
   describe('Failure', () => {
     it('should detect a failure on login', () => {
-      const payload = 'Something happened.';
-      const toTest = authentication(undefined, { type: FAILURE(ACTION_TYPES.LOGIN), payload });
-
+      const toTest = authentication(undefined, { type: FAILURE(ACTION_TYPES.LOGIN) });
       expect(toTest).toMatchObject({
-        errorMessage: payload,
-        loginError: true,
+        loginSuccess: false,
+        loginError: false,
       });
       expect(isAccountEmpty(toTest));
     });
@@ -201,7 +202,7 @@ describe('Authentication reducer tests', () => {
     });
 
     it('dispatches LOGIN, GET_SESSION and SET_LOCALE success and request actions', async () => {
-      const loginResponse = { headers: { authorization: 'Bearer auth' } };
+      const loginResponse = { data: { id_token: 'test token', realms: null } };
       axios.post = sinon.stub().returns(Promise.resolve(loginResponse));
       const expectedActions = [
         {
@@ -210,17 +211,6 @@ describe('Authentication reducer tests', () => {
         {
           type: SUCCESS(ACTION_TYPES.LOGIN),
           payload: loginResponse,
-        },
-        {
-          type: REQUEST(ACTION_TYPES.GET_SESSION),
-        },
-        {
-          type: SUCCESS(ACTION_TYPES.GET_SESSION),
-          payload: resolvedObject,
-        },
-        {
-          type: localeActionTypes.SET_LOCALE,
-          locale: 'en',
         },
       ];
       await store.dispatch(login('test', 'test', false, 1));
@@ -235,24 +225,12 @@ describe('Authentication reducer tests', () => {
     });
     it('clears the session token on clearAuthToken', async () => {
       const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
-      const loginResponse = { headers: { authorization: 'Bearer TestToken' } };
+      const loginResponse = { data: { token: 'TestToken', realms: null } };
       axios.post = sinon.stub().returns(Promise.resolve(loginResponse));
-
-      await store.dispatch(login('test', 'test', false, 1));
-      expect(Storage.session.get(AUTH_TOKEN_KEY)).toBe('TestToken');
+      store.dispatch(login('test', 'test', false, 1));
+      setAuthToken(loginResponse.data.token, false);
+      expect(Storage.session.get(AUTH_TOKEN_KEY)).toBe(loginResponse.data.token);
       expect(Storage.local.get(AUTH_TOKEN_KEY)).toBe(undefined);
-      clearAuthToken();
-      expect(Storage.session.get(AUTH_TOKEN_KEY)).toBe(undefined);
-      expect(Storage.local.get(AUTH_TOKEN_KEY)).toBe(undefined);
-    });
-    it('clears the local storage token on clearAuthToken', async () => {
-      const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
-      const loginResponse = { headers: { authorization: 'Bearer TestToken' } };
-      axios.post = sinon.stub().returns(Promise.resolve(loginResponse));
-
-      await store.dispatch(login('user', 'user', true, 1));
-      expect(Storage.session.get(AUTH_TOKEN_KEY)).toBe(undefined);
-      expect(Storage.local.get(AUTH_TOKEN_KEY)).toBe('TestToken');
       clearAuthToken();
       expect(Storage.session.get(AUTH_TOKEN_KEY)).toBe(undefined);
       expect(Storage.local.get(AUTH_TOKEN_KEY)).toBe(undefined);
