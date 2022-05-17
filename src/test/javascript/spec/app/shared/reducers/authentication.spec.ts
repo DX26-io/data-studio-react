@@ -201,7 +201,7 @@ describe('Authentication reducer tests', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
 
-    it('dispatches LOGIN, GET_SESSION and SET_LOCALE success and request actions', async () => {
+    it('dispatches LOGIN, GET_SESSION and SET_LOCALE success and request actions', () => {
       const loginResponse = { data: { idToken: 'test token', realms: null } };
       axios.post = sinon.stub().returns(Promise.resolve(loginResponse));
       const expectedActions = [
@@ -223,7 +223,7 @@ describe('Authentication reducer tests', () => {
       const mockStore = configureStore([thunk, promiseMiddleware]);
       store = mockStore({ authentication: { account: { langKey: 'en' } } });
     });
-    it('clears the session token on clearAuthToken', async () => {
+    it('clears the session token on clearAuthToken', () => {
       const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
       const loginResponse = { data: { token: 'TestToken', realms: null } };
       axios.post = sinon.stub().returns(Promise.resolve(loginResponse));
