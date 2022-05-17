@@ -213,7 +213,7 @@ describe('Authentication reducer tests', () => {
           payload: loginResponse,
         },
       ];
-      await store.dispatch(login('test', 'test', false, 1));
+      store.dispatch(login('test', 'test', false, 1));
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
