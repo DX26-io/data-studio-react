@@ -47,19 +47,20 @@ module.exports = options =>
         {
           context: ['/login', '/api', '/services', '/management', '/swagger-resources', '/v2/api-docs', '/h2-console', '/auth','/flair-ws'],
           target: `http${options.tls ? 's' : ''}://localhost:8002`,
-          bypass: function(req, res, proxyOptions) {
-            console.log("req.url=="+req.url);
-            let isWebsocket = req.url.indexOf('flair-ws') != -1;
-            proxyOptions.target = isWebsocket ? 'ws://localhost:8002' : proxyOptions.target;
-          },
-          secure: false,
+          // keep below code commented for the time being
+          // bypass: function(req, res, proxyOptions) {
+          //   console.log("req.url=="+req.url);
+          //   let isWebsocket = req.url.indexOf('flair-ws') != -1;
+          //   proxyOptions.target = isWebsocket ? 'ws://localhost:8002' : proxyOptions.target;
+          // },
+          // secure: false,
           changeOrigin: options.tls,
-          ws: true,
+          // ws: true,
         },
       ],
       watchOptions: {
         // comment below line of code when you are working on flair-visualisation
-        ignored: /node_modules/,
+        // ignored: /node_modules/,
       },
       https: options.tls,
       historyApiFallback: true,
