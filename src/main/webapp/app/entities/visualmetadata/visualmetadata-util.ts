@@ -46,3 +46,10 @@ export const addFieldDimension = (visualWrap, visual) => {
   }
   return field;
 };
+
+export const isFeatureExist = (fields, draggedFeature) => {
+  const features = fields.filter(function (item) {
+    return item.feature != null && item.feature.definition === draggedFeature.definition;
+  });
+  return features.length > 0 ? false : true;
+};

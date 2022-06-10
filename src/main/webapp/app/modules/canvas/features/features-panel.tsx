@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { ActionButton, Flex, View, Text, Button, Divider, ListBox, Item, DialogContainer } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import Add from '@spectrum-icons/workflow/Add';
-import { getViewFeaturesEntities, setFeature, toggleFeaturesPanel,getEntity } from 'app/entities/feature/feature.reducer';
+import { getViewFeaturesEntities, setFeature, toggleFeaturesPanel, getEntity } from 'app/entities/feature/feature.reducer';
 import { Tabs } from '@react-spectrum/tabs';
 import { featureTypeToActiveTabs, getFeaturesTabTranslations } from 'app/modules/canvas/features/features-panel-util';
 import { getHierarchies, setHierarchy } from 'app/entities/hierarchy/hierarchy.reducer';
@@ -12,7 +12,7 @@ import FeatureUpdate from 'app/entities/feature/feature-update';
 import { IFeature, defaultValue as featureDefaultValue } from 'app/shared/model/feature.model';
 import PanelHeader from 'app/shared/components/panel-header';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-
+import { setDraggedFeature } from 'app/entities/visualmetadata/visualmetadata.reducer';
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
 const FeaturesPanel = (props: IFeaturesPanelProp) => {
@@ -45,10 +45,10 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
     }
   };
 
-  const onFeatureSelected = selectedSet => {
-    const it = selectedSet.values();
-    const featureId= it.next();
-    props.getEntity(featureId.value);
+  const onFeatureSelected = id => {
+    // const it = selectedSet.values();
+    // const featureId = it.next();
+    props.getEntity(id);
     setFeatureDialogOpen(true);
   };
 
@@ -63,6 +63,34 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
       props.toggleFeaturesPanel();
     }
   };
+
+  const onDragStart = (e, feature) => {
+    props.setDraggedFeature(feature);
+    // console.log(e);
+  };
+
+  const onDragEnd = (e, feature) => {
+    // console.log(e);
+  };
+
+
+  const features = props.featuresList.filter(featureFilter).map(feature => (
+    <ol
+      draggable
+      onDragStart={e => {
+        onDragStart(e, feature);
+      }}
+      onDragEnd={e => {
+        onDragEnd(e, feature);
+      }}
+      onClick={e => {
+        onFeatureSelected(feature.id);
+      }}
+      key={feature.id}
+    >
+      {feature.name}
+    </ol>
+  ));
 
   return (
     <>
@@ -104,15 +132,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
                           {hiararchy => <Item>{hiararchy.name}</Item>}
                         </ListBox>
                       ) : (
-                        <ListBox
-                          width="size-2400"
-                          aria-label="Features"
-                          selectionMode="single"
-                          onSelectionChange={onFeatureSelected}
-                          items={props.featuresList.filter(featureFilter)}
-                        >
-                          {feature => <Item>{feature.name}</Item>}
-                        </ListBox>
+                        <ul>{features}</ul>
                       )}
                     </View>
                   </Item>
@@ -146,7 +166,8 @@ const mapDispatchToProps = {
   getHierarchies,
   setHierarchy,
   toggleFeaturesPanel,
-  getEntity
+  getEntity,
+  setDraggedFeature
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
