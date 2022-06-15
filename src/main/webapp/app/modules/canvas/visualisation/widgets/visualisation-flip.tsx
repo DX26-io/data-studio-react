@@ -11,9 +11,8 @@ import { VisualWrap } from '../util/visualmetadata-wrapper';
 import { addField, deleteField, updateField } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import LockClosed from '@spectrum-icons/workflow/LockClosed';
 import Measure from '@spectrum-icons/workflow/Measure';
-import Dimension from '@spectrum-icons/workflow/OutlinePath';
 import Close from '@spectrum-icons/workflow/Close';
-import OutlinePath from '@spectrum-icons/workflow/OutlinePath';
+import Dimension from '@spectrum-icons/workflow/OutlinePath';
 import { DIMENSION, MEASURE } from 'app/shared/util/visualisation.constants';
 
 interface IVisualisationBackProps extends StateProps, DispatchProps {
@@ -37,7 +36,7 @@ const VisualisationBack = (props: IVisualisationBackProps) => {
     let field = null;
     if (tagName === 'input') {
       if (isFeatureExist(props.v.fields, props.draggedFeature)) {
-        if (e.target.name === 'dimension-item' && props.draggedFeature.featureType === 'DIMENSION') {
+        if (e.target.name === 'dimension-item' && props.draggedFeature.featureType === DIMENSION) {
           if (e.target.id === '-1') {
             field = addFieldDimension(visualWrap, props.v);
             if (field) {
@@ -125,12 +124,12 @@ const VisualisationBack = (props: IVisualisationBackProps) => {
               <Text>Dimensions</Text>
               <div style={{ marginLeft: 'auto' }}>
                 {' '}
-                <OutlinePath size="S" />
+                <Dimension size="S" />
               </div>
             </Flex>
           </li>
           {props.v.fields
-            .filter(f => f.fieldType.featureType === 'DIMENSION')
+            .filter(f => f.fieldType.featureType === DIMENSION)
             .map((field, i) => (
               <React.Fragment key={i + 'drop-box'}>
                 <li onDragOver={onDragOver} onDrop={onDrop} style={styles.controlledDropBox}>
