@@ -53,3 +53,10 @@ export const isFeatureExist = (fields, draggedFeature) => {
   });
   return features.length > 0 ? false : true;
 };
+
+export const isDefaultFeatureEmpty = (fields, type) => {
+  const features = fields.filter(function (item) {
+    return item.fieldType.featureType === type && item.feature === null;
+  });
+  return features.length === 0 ? true : false;
+};

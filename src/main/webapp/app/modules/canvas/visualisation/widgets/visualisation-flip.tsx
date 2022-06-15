@@ -1,17 +1,20 @@
 import React from 'react';
 import VisualisationHeader from './visualisation-header';
-import { NoDataFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
-import { IIllustrate } from './manage-widgets';
-import { VisualisationType } from 'app/shared/util/visualisation.constants';
 import { createEntity as addVisualmetadataEntity } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { IVisualMetadataSet } from 'app/shared/model/visualmetadata.model';
-import { TextField } from '@adobe/react-spectrum';
-import { isFeatureExist } from 'app/entities/visualmetadata/visualmetadata-util';
+import { TextField, Flex, Text, ActionButton } from '@adobe/react-spectrum';
+import { isFeatureExist, isDefaultFeatureEmpty } from 'app/entities/visualmetadata/visualmetadata-util';
 import { addFieldDimension, addFieldMeasure } from 'app/entities/visualmetadata/visualmetadata-util';
 import { VisualWrap } from '../util/visualmetadata-wrapper';
 import { addField, deleteField, updateField } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import LockClosed from '@spectrum-icons/workflow/LockClosed';
+import Measure from '@spectrum-icons/workflow/Measure';
+import Dimension from '@spectrum-icons/workflow/OutlinePath';
+import Close from '@spectrum-icons/workflow/Close';
+import OutlinePath from '@spectrum-icons/workflow/OutlinePath';
+import { DIMENSION, MEASURE } from 'app/shared/util/visualisation.constants';
 
 interface IVisualisationBackProps extends StateProps, DispatchProps {
   v: IVisualMetadataSet;
@@ -58,14 +61,44 @@ const VisualisationBack = (props: IVisualisationBackProps) => {
             props.updateField(props.v, field);
           }
         }
-        // const cl = e.target.className;
-        // const id = e.target.id;
       }
     }
   };
 
   const onDragOver = e => {
     event.preventDefault();
+  };
+
+  const styles = {
+    dropZoneHeading: {
+      paddingInlineStart: '0px',
+      paddingInlineEnd: '0px',
+      borderWidth: 'var(--spectrum-alias-border-size-thin)',
+      borderColor: 'var(--spectrum-alias-border-color)',
+      borderRadius: 'var(--spectrum-alias-border-radius-regular)',
+      margin: '5px',
+      padding: '5px',
+    },
+    featureHeading: {
+      listStyle: 'none',
+      marginTop: '5px',
+      marginBottom: '10px',
+      padding: '10px',
+      backgroundColor: `var(
+        --spectrum-alias-background-color-gray-75,
+        var(--spectrum-global-color-gray-75, var(--spectrum-semantic-gray-75-color-background))
+      )`,
+    },
+    uncontrolledDropBox: {
+      listStyle: 'none',
+      marginTop: '5px',
+      marginBottom: '5px',
+    },
+    controlledDropBox: {
+      listStyle: 'none',
+      marginTop: '10px',
+      marginBottom: '10px',
+    },
   };
 
   return (
@@ -86,24 +119,54 @@ const VisualisationBack = (props: IVisualisationBackProps) => {
         className="visualBody"
         id={`visualBody-${props.v.id}`}
       >
-        <ol>
-          {props.v.fields.map(field => (
-            <li
-              // className={field.feature.featureType === 'DIMENSION' ? 'dimension-item' : 'measure-item'}
-              key={field.feature.name}
-              onDragOver={onDragOver}
-              onDrop={onDrop}
-            >
-              <TextField
-                id={props.v.fields.indexOf(field).toString()}
-                placeholder="Drop here"
-                type="text"
-                isReadOnly
-                name={field.feature.featureType === 'DIMENSION' ? 'dimension-item' : 'measure-item'}
-                value={field.feature.definition}
-              />
-            </li>
-          ))}
+        <ol style={styles.dropZoneHeading}>
+          <li style={styles.featureHeading}>
+            <Flex direction="row">
+              <Text>Dimensions</Text>
+              <div style={{ marginLeft: 'auto' }}>
+                {' '}
+                <OutlinePath size="S" />
+              </div>
+            </Flex>
+          </li>
+          {props.v.fields
+            .filter(f => f.fieldType.featureType === 'DIMENSION')
+            .map((field, i) => (
+              <React.Fragment key={i + 'drop-box'}>
+                <li onDragOver={onDragOver} onDrop={onDrop} style={styles.controlledDropBox}>
+                  <Flex direction="row">
+                    <TextField
+                      icon={field.fieldType.constraint === 'REQUIRED' ? <LockClosed size="S" /> : null}
+                      id={props.v.fields.indexOf(field).toString()}
+                      placeholder="Drop here"
+                      type="text"
+                      isReadOnly
+                      name="dimension-item"
+                      value={field?.feature?.definition}
+                      width={'100%'}
+                    />
+                    {field.fieldType.constraint === 'OPTIONAL' && field.feature != null && (
+                      <ActionButton
+                        isQuiet
+                        marginStart={'auto'}
+                        onPress={() => {
+                          props.deleteField(props.v, field);
+                        }}
+                      >
+                        {' '}
+                        <Close size="S" />
+                      </ActionButton>
+                    )}
+                  </Flex>
+                </li>
+              </React.Fragment>
+            ))}
+          {props.v?.nextFieldDimension(props.v.fields, props.v.metadataVisual) !== undefined &&
+            isDefaultFeatureEmpty(props.v.fields, DIMENSION) && (
+              <li style={styles.uncontrolledDropBox} onDragOver={onDragOver} onDrop={onDrop}>
+                <TextField width={'100%'} name="dimension-item" id="-1" placeholder="Drop here" type="text" isReadOnly />
+              </li>
+            )}
         </ol>
       </div>
     </React.Fragment>
@@ -121,6 +184,7 @@ const mapDispatchToProps = {
   addVisualmetadataEntity,
   addField,
   updateField,
+  deleteField,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
