@@ -6,7 +6,7 @@ import { createEntity as addVisualmetadataEntity } from 'app/entities/visualmeta
 import { IVisualMetadataSet } from 'app/shared/model/visualmetadata.model';
 import { TextField, Flex, Text, ActionButton } from '@adobe/react-spectrum';
 import { isFeatureExist, isDefaultFeatureEmpty } from 'app/entities/visualmetadata/visualmetadata-util';
-import { addFieldDimension, addFieldMeasure } from 'app/entities/visualmetadata/visualmetadata-util';
+import { addFieldDimension, addFieldMeasure,isRequiredFeatureEmpty } from 'app/entities/visualmetadata/visualmetadata-util';
 import { VisualWrap } from '../util/visualmetadata-wrapper';
 import { addField, deleteField, updateField } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import LockClosed from '@spectrum-icons/workflow/LockClosed';

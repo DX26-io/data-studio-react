@@ -1,5 +1,6 @@
 import { IViews } from 'app/shared/model/views.model';
 import { IPayload, IPayloadResult } from 'react-jhipster';
+import {  REQUIRED } from 'app/shared/util/visualisation.constants';
 
 export declare type ICrudPutActionVisual<T> = (data?: T, view?: IViews, filter?: any) => IPayload<T> | IPayloadResult<T>;
 
@@ -59,4 +60,11 @@ export const isDefaultFeatureEmpty = (fields, type) => {
     return item.fieldType.featureType === type && item.feature === null;
   });
   return features.length === 0 ? true : false;
+};
+
+export const isRequiredFeatureEmpty = fields => {
+  const features = fields.filter(function (item) {
+    return item.fieldType.constraint === REQUIRED && item.feature === null;
+  });
+  return features.length == 0 ? true : false;
 };

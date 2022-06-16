@@ -20,17 +20,28 @@ import { Translate, translate } from 'react-jhipster';
 import { connect } from 'react-redux';
 import { getTransactionData } from '../util/visualisation-utils';
 import { IVisualMetadataSet } from 'app/shared/model/visualmetadata.model';
-import { setVisualisationAction, setVisual } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import {
+  setVisualisationAction,
+  setVisual,
+  getEntity as getVisualMetadataEntity,
+  updateEntity as updateVisualmetadataEntity,
+  metadataContainerUpdate,
+} from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { isRequiredFeatureEmpty } from 'app/entities/visualmetadata/visualmetadata-util';
 import { createVisualMetadata } from '../visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-util';
 import Switch from '@spectrum-icons/workflow/Switch';
-
+import SaveFloppy from '@spectrum-icons/workflow/SaveFloppy';
+import Hammer from '@spectrum-icons/workflow/Hammer';
+import { getVisualisationShareData } from '../util/visualisation-render-utils';
+import { VisualWrap } from '../util/visualmetadata-wrapper';
+import { validate as validateQuery } from 'app/entities/visualmetadata/visualmetadata.reducer';
 interface IVisualisationHeaderProps extends StateProps, DispatchProps {
   visual: IVisualMetadataSet;
   totalItem: number;
   handleVisualisationClick: (visualisation) => void;
   isEditMode: boolean;
   handleFlipClick: (isFlipped) => void;
-  isFlipped:boolean;
+  isFlipped: boolean;
 }
 
 const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
@@ -38,7 +49,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
   const [intervalRegistry, setIntervalRegistry] = useState({});
   const [isLiveEnable, setLiveEnable] = useState(false);
   const csvLink = useRef(null);
-  const { handleVisualisationClick,handleFlipClick } = props;
+  const { handleVisualisationClick, handleFlipClick } = props;
 
   const setLiveEnabled = () => {
     if (!isLiveEnable) {
@@ -192,16 +203,40 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
     props.setVisual(props.visual);
   };
 
+  const _validateQuery = () => {
+    const wrap = VisualWrap(props.visual);
+    props.validateQuery({
+      datasourceId: props.view.viewDashboard.dashboardDatasource.id,
+      visualMetadataId: props.visual.id,
+      queryDTO: wrap.getQueryParameters(props.visual, {}, null, null),
+    });
+  };
+
+  const handleApply = () => {
+    _validateQuery();
+    getVisualisationShareData(props.visual, props.view, props.selectedFilters);
+    handleFlipClick(!props.isFlipped);
+  };
+
+  const handleSave = () => {
+    props.updateVisualmetadataEntity({
+      viewId: props.view.id,
+      visualMetadata: props.visual,
+    });
+    props.metadataContainerUpdate(props.visual.id, props.visual, 'id');
+    handleFlipClick(!props.isFlipped);
+  };
+
   const generateMenuElements = menuList.map(action => {
     if (props.isEditMode === action.isEditable || action.isVisible) {
       return (
         // functional component does not work with below code. it throws unknown element, proxy facade exception
         <Item key={action.actionId} textValue={translate(action.contentKey)}>
-        {action.icon}
-        <Text>
-          <Translate contentKey={action.contentKey}>{action.title}</Translate>
-        </Text>
-      </Item>
+          {action.icon}
+          <Text>
+            <Translate contentKey={action.contentKey}>{action.title}</Translate>
+          </Text>
+        </Item>
       );
     } else {
       return null;
@@ -248,12 +283,22 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
             <ActionButton
               height="size-300"
               isQuiet={true}
-              onPress={()=>{
+              onPress={() => {
                 handleFlipClick(!props.isFlipped);
               }}
             >
               <Switch id={'switch'} size={'XS'} aria-label="Flip" />
             </ActionButton>
+            {isRequiredFeatureEmpty(props.visual.fields) && props.isEditMode && props.isFlipped && (
+              <React.Fragment>
+                <ActionButton height="size-300" isQuiet={true} onPress={handleSave}>
+                  <SaveFloppy id={'save'} size={'XS'} aria-label="Save" />
+                </ActionButton>
+                <ActionButton height="size-300" isQuiet={true} onPress={handleApply}>
+                  <Hammer id={'hammer'} size={'XS'} aria-label="Hammer" />
+                </ActionButton>
+              </React.Fragment>
+            )}
           </Flex>
         </Flex>
       </View>
@@ -266,12 +311,16 @@ const mapStateToProps = (storeState: IRootState) => ({
   featuresList: storeState.feature.entities,
   selectedFilters: storeState.filter.selectedFilters,
   view: storeState.views.entity,
-  filterData: storeState.visualisationData.filterData,
+  filterData: storeState.visualisationData.filterData
 });
 
 const mapDispatchToProps = {
   setVisualisationAction,
   setVisual,
+  metadataContainerUpdate,
+  updateVisualmetadataEntity,
+  getVisualMetadataEntity,
+  validateQuery,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
