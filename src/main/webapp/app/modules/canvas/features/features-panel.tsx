@@ -13,6 +13,7 @@ import { IFeature, defaultValue as featureDefaultValue } from 'app/shared/model/
 import PanelHeader from 'app/shared/components/panel-header';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { setDraggedFeature } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import './features-panel.scss';
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
 const FeaturesPanel = (props: IFeaturesPanelProp) => {
@@ -46,8 +47,6 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
   };
 
   const onFeatureSelected = id => {
-    // const it = selectedSet.values();
-    // const featureId = it.next();
     props.getEntity(id);
     setFeatureDialogOpen(true);
   };
@@ -66,16 +65,24 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
 
   const onDragStart = (e, feature) => {
     props.setDraggedFeature(feature);
-    // console.log(e);
   };
 
-  const onDragEnd = (e, feature) => {
-    // console.log(e);
-  };
-
+  const onDragEnd = (e, feature) => {};
 
   const features = props.featuresList.filter(featureFilter).map(feature => (
-    <ol
+    <li
+      className="feature-list"
+      style={{
+        backgroundColor: `var(
+      --spectrum-alias-background-color-gray-100,
+      var(--spectrum-global-color-gray-100, var(--spectrum-semantic-gray-100-color-background))
+    )`,
+        listStyle: 'none',
+        padding: '5px',
+        margin: '5px',
+        width: '15vw',
+        marginLeft: '-38px',
+      }}
       draggable
       onDragStart={e => {
         onDragStart(e, feature);
@@ -89,7 +96,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
       key={feature.id}
     >
       {feature.name}
-    </ol>
+    </li>
   ));
 
   return (
@@ -120,7 +127,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
               >
                 {item => (
                   <Item title={item.name} key={item.id}>
-                    <View marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+                    <Flex justifyContent="safe center" alignItems="center" marginTop="size-250">
                       {activeTabId === '2' ? (
                         <ListBox
                           width="size-2400"
@@ -132,9 +139,9 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
                           {hiararchy => <Item>{hiararchy.name}</Item>}
                         </ListBox>
                       ) : (
-                        <ul>{features}</ul>
+                        <ol>{features}</ol>
                       )}
-                    </View>
+                    </Flex>
                   </Item>
                 )}
               </Tabs>
@@ -167,7 +174,7 @@ const mapDispatchToProps = {
   setHierarchy,
   toggleFeaturesPanel,
   getEntity,
-  setDraggedFeature
+  setDraggedFeature,
 };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
