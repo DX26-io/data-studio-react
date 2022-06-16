@@ -13,7 +13,8 @@ import LockClosed from '@spectrum-icons/workflow/LockClosed';
 import Measure from '@spectrum-icons/workflow/Measure';
 import Close from '@spectrum-icons/workflow/Close';
 import Dimension from '@spectrum-icons/workflow/OutlinePath';
-import { DIMENSION, MEASURE } from 'app/shared/util/visualisation.constants';
+import { DIMENSION, MEASURE, OPTIONAL, REQUIRED } from 'app/shared/util/visualisation.constants';
+import { Translate } from 'react-jhipster';
 
 interface IVisualisationBackProps extends StateProps, DispatchProps {
   v: IVisualMetadataSet;
@@ -100,8 +101,99 @@ const VisualisationBack = (props: IVisualisationBackProps) => {
     },
   };
 
+  const isValidField = featureType => {
+    if (featureType === DIMENSION) {
+      return (
+        props.v?.nextFieldDimension(props.v.fields, props.v.metadataVisual) !== undefined &&
+        isDefaultFeatureEmpty(props.v.fields, featureType)
+      );
+    } else {
+      return (
+        props.v?.nextFieldMeasure(props.v.fields, props.v.metadataVisual) !== undefined &&
+        isDefaultFeatureEmpty(props.v.fields, featureType)
+      );
+    }
+  };
+
+  const generateDropBox = featureType => {
+    return (
+      <ol style={styles.dropZoneHeading}>
+        <li style={styles.featureHeading}>
+          <Flex direction="row">
+            {featureType === DIMENSION ? (
+              <React.Fragment>
+                <Text>
+                  {' '}
+                  <Translate contentKey="features.dimensions">Dimensions </Translate>
+                </Text>
+                <div style={{ marginLeft: 'auto' }}>
+                  {' '}
+                  <Dimension size="S" />
+                </div>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <Text>
+                  <Translate contentKey="features.measures">Measures</Translate>
+                </Text>
+                <div style={{ marginLeft: 'auto' }}>
+                  {' '}
+                  <Measure size="S" />
+                </div>
+              </React.Fragment>
+            )}
+          </Flex>
+        </li>
+        {props.v.fields
+          .filter(f => f.fieldType.featureType === featureType)
+          .map((field, i) => (
+            <React.Fragment key={i + 'drop-box'}>
+              <li onDragOver={onDragOver} onDrop={onDrop} style={styles.controlledDropBox}>
+                <Flex direction="row">
+                  <TextField
+                    icon={field.fieldType.constraint === REQUIRED ? <LockClosed size="S" /> : null}
+                    id={props.v.fields.indexOf(field).toString()}
+                    placeholder="Drop here"
+                    type="text"
+                    isReadOnly
+                    name={featureType === DIMENSION ? 'dimension-item' : 'measure-item'}
+                    value={field?.feature?.definition}
+                    width={'100%'}
+                  />
+                  {field.fieldType.constraint === OPTIONAL && field.feature != null && (
+                    <ActionButton
+                      isQuiet
+                      marginStart={'auto'}
+                      onPress={() => {
+                        props.deleteField(props.v, field);
+                      }}
+                    >
+                      {' '}
+                      <Close size="S" />
+                    </ActionButton>
+                  )}
+                </Flex>
+              </li>
+            </React.Fragment>
+          ))}
+        {isValidField(featureType) && (
+          <li style={styles.uncontrolledDropBox} onDragOver={onDragOver} onDrop={onDrop}>
+            <TextField
+              width={'100%'}
+              name={featureType === DIMENSION ? 'dimension-item' : 'measure-item'}
+              id="-1"
+              placeholder="Drop here"
+              type="text"
+              isReadOnly
+            />
+          </li>
+        )}
+      </ol>
+    );
+  };
+
   return (
-    <React.Fragment>
+    <div>
       <div className="header">
         <VisualisationHeader
           key={`viz-header-${props.v.id}`}
@@ -114,61 +206,14 @@ const VisualisationBack = (props: IVisualisationBackProps) => {
         ></VisualisationHeader>
       </div>
       <div
-        style={{ backgroundColor: props.v.bodyProperties.backgroundColor, opacity: props.v.bodyProperties.opacity }}
+        style={{ backgroundColor: props.v.bodyProperties.backgroundColor, opacity: props.v.bodyProperties.opacity,maxHeight: '350px', overflowY: 'auto', overflowX: 'hidden' }}
         className="visualBody"
         id={`visualBody-${props.v.id}`}
       >
-        <ol style={styles.dropZoneHeading}>
-          <li style={styles.featureHeading}>
-            <Flex direction="row">
-              <Text>Dimensions</Text>
-              <div style={{ marginLeft: 'auto' }}>
-                {' '}
-                <Dimension size="S" />
-              </div>
-            </Flex>
-          </li>
-          {props.v.fields
-            .filter(f => f.fieldType.featureType === DIMENSION)
-            .map((field, i) => (
-              <React.Fragment key={i + 'drop-box'}>
-                <li onDragOver={onDragOver} onDrop={onDrop} style={styles.controlledDropBox}>
-                  <Flex direction="row">
-                    <TextField
-                      icon={field.fieldType.constraint === 'REQUIRED' ? <LockClosed size="S" /> : null}
-                      id={props.v.fields.indexOf(field).toString()}
-                      placeholder="Drop here"
-                      type="text"
-                      isReadOnly
-                      name="dimension-item"
-                      value={field?.feature?.definition}
-                      width={'100%'}
-                    />
-                    {field.fieldType.constraint === 'OPTIONAL' && field.feature != null && (
-                      <ActionButton
-                        isQuiet
-                        marginStart={'auto'}
-                        onPress={() => {
-                          props.deleteField(props.v, field);
-                        }}
-                      >
-                        {' '}
-                        <Close size="S" />
-                      </ActionButton>
-                    )}
-                  </Flex>
-                </li>
-              </React.Fragment>
-            ))}
-          {props.v?.nextFieldDimension(props.v.fields, props.v.metadataVisual) !== undefined &&
-            isDefaultFeatureEmpty(props.v.fields, DIMENSION) && (
-              <li style={styles.uncontrolledDropBox} onDragOver={onDragOver} onDrop={onDrop}>
-                <TextField width={'100%'} name="dimension-item" id="-1" placeholder="Drop here" type="text" isReadOnly />
-              </li>
-            )}
-        </ol>
+        {generateDropBox(DIMENSION)}
+        {generateDropBox(MEASURE)}
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 
