@@ -14,6 +14,7 @@ import PanelHeader from 'app/shared/components/panel-header';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { setDraggedFeature } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import './features-panel.scss';
+import Dropdown from '@spectrum-icons/workflow/Dropdown';
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
 const FeaturesPanel = (props: IFeaturesPanelProp) => {
@@ -95,7 +96,12 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
       }}
       key={feature.id}
     >
-      {feature.name}
+      <Flex direction="row">
+        <Text> {feature.name}</Text>{' '}
+        <div style={{ marginLeft: 'auto' }}>
+          <Dropdown size="S" />
+        </div>
+      </Flex>
     </li>
   ));
 
