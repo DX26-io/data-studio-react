@@ -59,7 +59,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
   };
 
   const handleClickAway = event => {
-    if (event.target.firstChild.id !== 'toggle-feature-button' && event.target.firstChild.id !== undefined) {
+    if (event.target.firstChild.id !== 'toggle-feature-button' && event.target.firstChild.id !== undefined && event.target.firstChild.id!=='switch') {
       props.toggleFeaturesPanel();
     }
   };

@@ -3,7 +3,7 @@ import { IIllustrate } from './manage-widgets';
 import { IVisualMetadataSet } from 'app/shared/model/visualmetadata.model';
 import ReactCardFlip from 'react-card-flip';
 import VisualisationFront from './visulisation-front';
-import VisualisationBack from './visualisation-flip';
+import VisualisationBack from './visualisation-back';
 
 interface IWidgetProps {
   isLoaderDisplay: IIllustrate[];
