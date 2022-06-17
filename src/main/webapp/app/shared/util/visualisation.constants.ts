@@ -8,6 +8,8 @@ export const AggregationType = 'Aggregation type';
 export const Limit = 'Limit';
 export const Sort = 'Sort';
 export const BETWEEN = 'Between';
+export const REQUIRED = 'REQUIRED';
+export const OPTIONAL = 'OPTIONAL';
 
 export const VisualisationType = {
   ClusteredVerticalBarChart: 'Clustered Vertical Bar Chart',

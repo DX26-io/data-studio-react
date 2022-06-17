@@ -1,0 +1,6 @@
+li.feature-list:hover {
+  background-color: var(
+    --spectrum-alias-background-color-gray-200,
+    var(--spectrum-global-color-gray-200, var(--spectrum-semantic-gray-200-color-background))
+  ) !important;
+}

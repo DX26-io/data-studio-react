@@ -106,7 +106,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                     <ActionButton
                       isQuiet
                       onPress={() => {
-                        const field = addFieldDimension(visualWrap, props.visual);
+                        const field = addFieldDimension(visualWrap, props.visual,null);
                         if (field) {
                           props.addField(props.visual, field);
                           setSelectedField(field);
@@ -164,7 +164,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                     <ActionButton
                       isQuiet
                       onPress={() => {
-                        const field = addFieldMeasure(visualWrap, props.visual);
+                        const field = addFieldMeasure(visualWrap, props.visual,null);
                         if (field) {
                           props.addField(props.visual, field);
                           setSelectedField(field);

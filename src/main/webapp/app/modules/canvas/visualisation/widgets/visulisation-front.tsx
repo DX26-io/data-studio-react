@@ -1,5 +1,5 @@
 import React from 'react';
-import VisualisationHeader from './visualisation-modal/visualisation-header';
+import VisualisationHeader from './visualisation-header';
 import { NoDataFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
@@ -8,18 +8,21 @@ import { VisualisationType } from 'app/shared/util/visualisation.constants';
 import { createEntity as addVisualmetadataEntity } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { IVisualMetadataSet } from 'app/shared/model/visualmetadata.model';
 
-interface IWidgetsProps extends StateProps, DispatchProps {
+interface IVisualisationFrontProps extends StateProps, DispatchProps {
   isLoaderDisplay: IIllustrate[];
   v: IVisualMetadataSet;
-  i:number;
+  i: number;
+  handleFlipClick: (isFlipped) => void;
+  isFlipped:boolean
 }
-const Widgets = (props: IWidgetsProps) => {
+const VisualisationFront = (props: IVisualisationFrontProps) => {
   const handlevisualisationClick = v => {
     props.addVisualmetadataEntity({
       viewId: props.view.id,
       visualMetadata: props.v,
     });
   };
+
   return (
     <React.Fragment>
       <div className="header">
@@ -29,6 +32,8 @@ const Widgets = (props: IWidgetsProps) => {
           handleVisualisationClick={handlevisualisationClick}
           totalItem={props.visualMetadataContainerList?.length || 0}
           isEditMode={props.isEditMode}
+          handleFlipClick={props.handleFlipClick}
+          isFlipped={props.isFlipped}
         ></VisualisationHeader>
       </div>
       <div
@@ -69,4 +74,4 @@ const mapDispatchToProps = {
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Widgets);
+export default connect(mapStateToProps, mapDispatchToProps)(VisualisationFront);

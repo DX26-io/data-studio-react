@@ -24,18 +24,18 @@ import {
   removePinnedFiltersIntoMetadataContainer,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { receiveSocketResponse, toggleLoader, reset as resetVisualisationData } from 'app/shared/websocket/websocket.reducer';
-import { visualMetadataContainerGetOne, pinnedFiltersKey } from './util/visualmetadata-container.util';
+import { visualMetadataContainerGetOne, pinnedFiltersKey } from '../util/visualmetadata-container.util';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
 import { applyFilter, saveDynamicDateRangeMetaData, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import PinnedFiltersWidget from './pinned-canvas-filters/pinned-filters-widget';
-import { IBroadcast } from '../../../shared/model/broadcast.model';
+import { IBroadcast } from '../../../../shared/model/broadcast.model';
 import { WidthProvider, Responsive as ResponsiveGridLayout } from 'react-grid-layout';
-import { applyDateFilters } from '../filter/filter-util';
+import { applyDateFilters } from '../../filter/filter-util';
 import { setVisualisationAction, metadataContainerUpdate } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criteria.reducer';
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
-import Widgets from './widgets';
+import Widgets from './widget';
 import { VisualisationType } from 'app/shared/util/visualisation.constants';
 
 const ReactGridLayout = WidthProvider(ResponsiveGridLayout);
