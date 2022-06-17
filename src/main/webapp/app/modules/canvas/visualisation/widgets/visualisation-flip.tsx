@@ -6,7 +6,7 @@ import { createEntity as addVisualmetadataEntity } from 'app/entities/visualmeta
 import { IVisualMetadataSet } from 'app/shared/model/visualmetadata.model';
 import { TextField, Flex, Text, ActionButton } from '@adobe/react-spectrum';
 import { isFeatureExist, isDefaultFeatureEmpty } from 'app/entities/visualmetadata/visualmetadata-util';
-import { addFieldDimension, addFieldMeasure,isRequiredFeatureEmpty } from 'app/entities/visualmetadata/visualmetadata-util';
+import { addFieldDimension, addFieldMeasure, isRequiredFeatureEmpty } from 'app/entities/visualmetadata/visualmetadata-util';
 import { VisualWrap } from '../util/visualmetadata-wrapper';
 import { addField, deleteField, updateField } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import LockClosed from '@spectrum-icons/workflow/LockClosed';
@@ -37,9 +37,9 @@ const VisualisationBack = (props: IVisualisationBackProps) => {
     let field = null;
     if (tagName === 'input') {
       if (isFeatureExist(props.v.fields, props.draggedFeature)) {
-        if (e.target.name === 'dimension-item' && props.draggedFeature.featureType === DIMENSION) {
+        if (e.target.name.includes('dimension-item') && props.draggedFeature.featureType === DIMENSION) {
           if (e.target.id === '-1') {
-            field = addFieldDimension(visualWrap, props.v);
+            field = addFieldDimension(visualWrap, props.v,props.draggedFeature);
             if (field) {
               props.addField(props.v, field);
             }
@@ -49,9 +49,9 @@ const VisualisationBack = (props: IVisualisationBackProps) => {
             props.updateField(props.v, field);
           }
         }
-        if (e.target.name === 'measure-item' && props.draggedFeature.featureType === 'MEASURE') {
+        if (e.target.name.includes('measure-item') && props.draggedFeature.featureType === MEASURE) {
           if (e.target.id === '-1') {
-            field = addFieldMeasure(visualWrap, props.v);
+            field = addFieldMeasure(visualWrap, props.v,props.draggedFeature);
             if (field) {
               props.addField(props.v, field);
             }
@@ -146,6 +146,7 @@ const VisualisationBack = (props: IVisualisationBackProps) => {
         </li>
         {props.v.fields
           .filter(f => f.fieldType.featureType === featureType)
+          .sort((a, b) => (a.order > b.order ? 1 : -1))
           .map((field, i) => (
             <React.Fragment key={i + 'drop-box'}>
               <li onDragOver={onDragOver} onDrop={onDrop} style={styles.controlledDropBox}>
@@ -156,7 +157,7 @@ const VisualisationBack = (props: IVisualisationBackProps) => {
                     placeholder="Drop here"
                     type="text"
                     isReadOnly
-                    name={featureType === DIMENSION ? 'dimension-item' : 'measure-item'}
+                    name={featureType === DIMENSION ? `dimension-item-${i}` : `measure-item--${i}`}
                     value={field?.feature?.definition}
                     width={'100%'}
                   />
@@ -206,7 +207,13 @@ const VisualisationBack = (props: IVisualisationBackProps) => {
         ></VisualisationHeader>
       </div>
       <div
-        style={{ backgroundColor: props.v.bodyProperties.backgroundColor, opacity: props.v.bodyProperties.opacity,maxHeight: '350px', overflowY: 'auto', overflowX: 'hidden' }}
+        style={{
+          backgroundColor: props.v.bodyProperties.backgroundColor,
+          opacity: props.v.bodyProperties.opacity,
+          maxHeight: '350px',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+        }}
         className="visualBody"
         id={`visualBody-${props.v.id}`}
       >

@@ -37,6 +37,8 @@ export interface IVisualMetadataSet {
   isSaved?: boolean;
   id?: string;
   key?: string;
+  nextFieldDimension?: Function;
+  nextFieldMeasure?: Function;
 }
 
 export const defaultValue: Readonly<IVisualMetadataSet> = {};

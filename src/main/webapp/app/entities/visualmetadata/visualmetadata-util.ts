@@ -4,13 +4,13 @@ import {  REQUIRED } from 'app/shared/util/visualisation.constants';
 
 export declare type ICrudPutActionVisual<T> = (data?: T, view?: IViews, filter?: any) => IPayload<T> | IPayloadResult<T>;
 
-export const addFieldMeasure = (visualWrap, visual) => {
+export const addFieldMeasure = (visualWrap, visual,feature) => {
   const fieldType = visualWrap.nextFieldMeasure(visual.fields, visual.metadataVisual);
   let field = null;
   if (fieldType) {
     field = {
       fieldType,
-      feature: null,
+      feature,
       constraint: fieldType.constraint,
       properties: fieldType.propertyTypes.map(function (item) {
         return {
@@ -26,13 +26,13 @@ export const addFieldMeasure = (visualWrap, visual) => {
   return field;
 };
 
-export const addFieldDimension = (visualWrap, visual) => {
+export const addFieldDimension = (visualWrap, visual,feature) => {
   const fieldType = visualWrap.nextFieldDimension(visual.fields, visual.metadataVisual);
   let field = null;
   if (fieldType) {
     field = {
       fieldType,
-      feature: null,
+      feature,
       constraint: fieldType.constraint,
       properties: fieldType.propertyTypes.map(function (item) {
         return {
@@ -66,5 +66,5 @@ export const isRequiredFeatureEmpty = fields => {
   const features = fields.filter(function (item) {
     return item.fieldType.constraint === REQUIRED && item.feature === null;
   });
-  return features.length == 0 ? true : false;
+  return features.length === 0 ? true : false;
 };

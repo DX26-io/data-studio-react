@@ -97,7 +97,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
       key={feature.id}
     >
       <Flex direction="row">
-        <Text> {feature.name}</Text>{' '}
+        <Text> {feature.name}</Text>
         <div style={{ marginLeft: 'auto' }}>
           <Dropdown size="S" />
         </div>
