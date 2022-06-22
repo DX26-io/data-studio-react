@@ -20,12 +20,12 @@ ENV API_URL $API_URL
 
 RUN npm run webpack:prod --prod
 
-FROM nginx:1.19.0-alpine
+FROM nginx:1.22.0-alpine
 
 ## Remove default nginx index page
 RUN rm -rf /usr/share/nginx/html/*
 
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /data-studio/build/resources/main/static /usr/share/nginx/html
 
