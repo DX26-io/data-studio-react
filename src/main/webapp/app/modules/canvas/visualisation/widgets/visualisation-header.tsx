@@ -280,15 +280,18 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
                 {generateMenuElements}
               </Menu>
             </MenuTrigger>
-            <ActionButton
-              height="size-300"
-              isQuiet={true}
-              onPress={() => {
-                handleFlipClick(!props.isFlipped);
-              }}
-            >
-              <Switch id={'switch'} size={'XS'} aria-label="Flip" />
-            </ActionButton>
+            {props.isEditMode && (
+              <ActionButton
+                height="size-300"
+                isQuiet={true}
+                onPress={() => {
+                  handleFlipClick(!props.isFlipped);
+                }}
+              >
+                <Switch id={'switch'} size={'XS'} aria-label="Flip" />
+              </ActionButton>
+            )}
+
             {isRequiredFeatureEmpty(props.visual.fields) && props.isEditMode && props.isFlipped && (
               <React.Fragment>
                 <ActionButton height="size-300" isQuiet={true} onPress={handleSave}>
@@ -311,7 +314,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   featuresList: storeState.feature.entities,
   selectedFilters: storeState.filter.selectedFilters,
   view: storeState.views.entity,
-  filterData: storeState.visualisationData.filterData
+  filterData: storeState.visualisationData.filterData,
 });
 
 const mapDispatchToProps = {

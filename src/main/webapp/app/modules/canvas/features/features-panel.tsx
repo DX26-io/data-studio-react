@@ -68,7 +68,10 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
     props.setDraggedFeature(feature);
   };
 
-  const onDragEnd = (e, feature) => {};
+  // do not remove this code as it will be required in future
+  const onDragEnd = (e, feature) => {
+
+  };
 
   const features = props.featuresList.filter(featureFilter).map(feature => (
     <li
@@ -98,9 +101,6 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
     >
       <Flex direction="row">
         <Text> {feature.name}</Text>
-        <div style={{ marginLeft: 'auto' }}>
-          <Dropdown size="S" />
-        </div>
       </Flex>
     </li>
   ));
