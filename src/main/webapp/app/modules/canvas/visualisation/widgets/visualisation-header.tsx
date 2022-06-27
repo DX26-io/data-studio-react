@@ -65,6 +65,8 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
     }
   };
 
+  // keep few icon hidden for time being
+
   const menuList = [
     {
       icon: <Edit size="M" />,
@@ -107,14 +109,14 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
       isVisible: true,
       isEditable: false,
     },
-    {
-      icon: <ViewedMarkAs size="M" />,
-      actionId: '3',
-      title: 'View',
-      contentKey: 'canvas.menu.view',
-      isVisible: true,
-      isEditable: false,
-    },
+    // {
+    //   icon: <ViewedMarkAs size="M" />,
+    //   actionId: '3',
+    //   title: 'View',
+    //   contentKey: 'canvas.menu.view',
+    //   isVisible: true,
+    //   isEditable: false,
+    // },
     {
       icon: <Table size="M" />,
       actionId: '4',
@@ -123,14 +125,14 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
       isVisible: true,
       isEditable: false,
     },
-    {
-      icon: <MoreSmallListVert size="M" />,
-      actionId: '5',
-      title: 'Print',
-      contentKey: 'canvas.menu.more',
-      isVisible: true,
-      isEditable: false,
-    },
+    // {
+    //   icon: <MoreSmallListVert size="M" />,
+    //   actionId: '5',
+    //   title: 'Print',
+    //   contentKey: 'canvas.menu.more',
+    //   isVisible: true,
+    //   isEditable: false,
+    // },
     {
       icon: <Export size="M" />,
       actionId: '7',
