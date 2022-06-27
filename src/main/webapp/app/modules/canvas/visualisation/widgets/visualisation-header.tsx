@@ -233,7 +233,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
         // functional component does not work with below code. it throws unknown element, proxy facade exception
         <Item key={action.actionId} textValue={translate(action.contentKey)}>
           {action.icon}
-          <Text>
+          <Text marginTop="size-25">
             <Translate contentKey={action.contentKey}>{action.title}</Translate>
           </Text>
         </Item>
@@ -268,18 +268,20 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
             >
               <Circle id={'live-icon'} size={'XS'} aria-label="Default Alert" />
             </ActionButton>
-            <MenuTrigger>
-              <ActionButton isQuiet height="size-300">
-                <Settings size={'XS'} aria-label="Default Alert" />
-              </ActionButton>
-              <Menu
-                onAction={key => {
-                  onActionMenu(key);
-                }}
-              >
-                {generateMenuElements}
-              </Menu>
-            </MenuTrigger>
+            {props.isEditMode && (
+              <MenuTrigger>
+                <ActionButton isQuiet height="size-300">
+                  <Settings size={'XS'} aria-label="Default Alert" />
+                </ActionButton>
+                <Menu
+                  onAction={key => {
+                    onActionMenu(key);
+                  }}
+                >
+                  {generateMenuElements}
+                </Menu>
+              </MenuTrigger>
+            )}
             {props.isEditMode && (
               <ActionButton
                 height="size-300"
