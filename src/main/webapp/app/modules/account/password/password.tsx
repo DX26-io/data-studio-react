@@ -93,7 +93,7 @@ export const PasswordPage = (props: IUserPasswordProps) => {
               setPassword(event);
             }}
             validationState={
-              !isPasswordNull(confirmPassword) && !isPasswordMinLengthValid(confirmPassword) && !isPasswordMaxLengthValid(confirmPassword) && isPasswordEqual(newPassword, confirmPassword) 
+              !isPasswordNull(confirmPassword) && !isPasswordMinLengthValid(confirmPassword) && !isPasswordMaxLengthValid(confirmPassword) && !isPasswordEqual(newPassword, confirmPassword) 
                 ? 'valid'
                 : 'invalid'
             }
