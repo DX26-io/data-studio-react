@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { handlePasswordResetFinish, reset } from '../password-reset.reducer';
 import PasswordStrengthBar from 'app/shared/layout/password/password-strength-bar';
 import { TextField, Form, Button, Flex, View } from '@adobe/react-spectrum';
-import { isPasswordNull, isPasswordMaxLengthValid, isPasswordMinLengthValid, isPasswordEqual } from './password-reset.util';
+import { isValid, isPasswordNull, isPasswordMinLengthValid, isPasswordMaxLengthValid, isPasswordEqual } from '../../password.util';
 import ValidationError from 'app/shared/components/validation-error';
 import PasswordResetSuccess from './password-reset-success';
 
@@ -23,20 +23,8 @@ export const PasswordResetFinishPage = (props: IPasswordResetFinishProps) => {
     []
   );
 
-  const isFormValid = () => {
-    return (
-      newPassword &&
-      confirmPassword &&
-      !isPasswordMinLengthValid(newPassword) &&
-      !isPasswordMaxLengthValid(newPassword) &&
-      !isPasswordMinLengthValid(confirmPassword) &&
-      !isPasswordMaxLengthValid(confirmPassword) &&
-      !isPasswordEqual(newPassword, confirmPassword)
-    );
-  };
-
   const handleValidSubmit = event => {
-    if (isFormValid()) {
+    if (isValid(newPassword, confirmPassword)) {
       props.handlePasswordResetFinish(key, newPassword);
     }
   };

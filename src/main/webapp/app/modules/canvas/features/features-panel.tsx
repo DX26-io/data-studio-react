@@ -13,8 +13,6 @@ import { IFeature, defaultValue as featureDefaultValue } from 'app/shared/model/
 import PanelHeader from 'app/shared/components/panel-header';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { setDraggedFeature } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import './features-panel.scss';
-import Dropdown from '@spectrum-icons/workflow/Dropdown';
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
 const FeaturesPanel = (props: IFeaturesPanelProp) => {
@@ -75,7 +73,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
 
   const features = props.featuresList.filter(featureFilter).map(feature => (
     <li
-      className="feature-list"
+      className="dx26-list"
       style={{
         backgroundColor: `var(
       --spectrum-alias-background-color-gray-100,

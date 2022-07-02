@@ -1,0 +1,13 @@
+{
+  "account": {
+    "title": "Account",
+    "accountSettings": {
+      "title": "Account Settings",
+      "description": "Manage account settings"
+    },
+    "password": {
+      "title": "Password",
+      "description": "Change password"
+    }
+  }
+}
