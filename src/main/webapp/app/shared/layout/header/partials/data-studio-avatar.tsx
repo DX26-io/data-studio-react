@@ -27,20 +27,23 @@ const DataStudioAvatar: React.FC = () => {
       link: `/administration/account`,
       title: 'header.avatar.account',
       routeUrl:"/account",
-      icon:<Settings size="S" marginStart={'auto'} />
+      icon:<Settings size="S" marginStart={'auto'} />,
+      dataTestid:"preferencesButton"
     },
     {
       key: '1',
       link: `/logout`,
       title: 'header.avatar.signOut',
       routeUrl:"/logout",
-      icon:<LogOut size="S" marginStart={'auto'}  />
+      icon:<LogOut size="S" marginStart={'auto'}  />,
+      dataTestid:"logoutButton"
     },
   ];
 
   const menuElements = menus.map(menu => (
     <li
       className="dx26-list"
+      data-testid={menu.dataTestid}
       style={{
         backgroundColor: `var(
       --spectrum-alias-background-color-gray-100,
