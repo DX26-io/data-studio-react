@@ -13,3 +13,15 @@ export const isPasswordMaxLengthValid = (password: string) => {
 export const isPasswordEqual = (newPassword: string, confirmPassword: string) => {
   return newPassword && confirmPassword && newPassword !== confirmPassword;
 };
+
+export const isValid = (newPassword, confirmPassword) => {
+  return (
+    newPassword &&
+    confirmPassword &&
+    !isPasswordMinLengthValid(newPassword) &&
+    !isPasswordMaxLengthValid(newPassword) &&
+    !isPasswordMinLengthValid(confirmPassword) &&
+    !isPasswordMaxLengthValid(confirmPassword) &&
+    !isPasswordEqual(newPassword, confirmPassword)
+  );
+};

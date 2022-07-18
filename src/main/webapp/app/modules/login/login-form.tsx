@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Button, Checkbox, Flex, Text, TextField, View, Link, Form } from '@adobe/react-spectrum';
-import { ComboBox, Item } from '@react-spectrum/combobox';
 import Alert from '@spectrum-icons/workflow/Alert';
 import { Translate } from 'react-jhipster';
 import config from 'app/config/constants';
