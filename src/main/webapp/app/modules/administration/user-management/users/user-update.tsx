@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Translate } from 'react-jhipster';
-import { getUser, getRoles, updateUser, createUser, reset, deleteUser } from './user.reducer';
+import { getUser, getRoles, updateUser, createUser, reset, deleteUser, setUser } from './user.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { isFormValid } from './user.util';
 import Alert from '@spectrum-icons/workflow/Alert';
@@ -21,32 +21,20 @@ import {
 } from '@adobe/react-spectrum';
 import Select from 'react-select';
 import { IError, defaultValue } from 'app/shared/model/error.model';
+import { generateOptions } from 'app/shared/util/entity-utils';
 
 export interface IUserUpdateProps extends StateProps, DispatchProps {
   setUpdateSuccess: () => void;
-  isNew: boolean;
   setOpen: (isOpen: boolean) => void;
-  loginID: string;
 }
 
 export const UserUpdate = (props: IUserUpdateProps) => {
-  const { isNew, setOpen, setUpdateSuccess, loginID, user, loading, updating, roles, fetchSuccess, updateSuccess } = props;
-  const [login, setLogin] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [activated, setActivated] = useState(true);
+  const { setOpen, setUpdateSuccess, user, updating, roles, updateSuccess } = props;
   const [error, setError] = useState(defaultValue);
-  let userGroups = [];
 
   const dialog = useDialogContainer();
 
   useEffect(() => {
-    if (isNew) {
-      props.reset();
-    } else {
-      props.getUser(loginID);
-    }
     props.getRoles();
     return () => {
       props.reset();
@@ -59,37 +47,17 @@ export const UserUpdate = (props: IUserUpdateProps) => {
   };
 
   useEffect(() => {
-    if (isNew) {
-      setLogin('');
-      setFirstName('');
-      setLastName('');
-      setEmail('');
-      setActivated(true);
-      userGroups = [];
-    } else {
-      setLogin(user.login);
-      setFirstName(user.firstName);
-      setLastName(user.lastName);
-      setEmail(user.email);
-      setActivated(user.activated);
-    }
     if (updateSuccess) {
       handleClose();
       setUpdateSuccess();
     }
-  }, [fetchSuccess, isNew, updateSuccess]);
-
-  useEffect(() => {
-    const errorObj = isFormValid({ ...user, login, firstName, lastName, email });
-    setError(errorObj);
-  }, [login, firstName, lastName, email]);
+  }, [updateSuccess]);
 
   const saveUser = () => {
-    const values = { ...user, login, firstName, lastName, email, activated, userGroups };
-    if (isNew) {
-      props.createUser(values);
+    if (!user.id) {
+      props.createUser(user);
     } else {
-      props.updateUser(values);
+      props.updateUser(user);
     }
   };
 
@@ -98,19 +66,20 @@ export const UserUpdate = (props: IUserUpdateProps) => {
   };
 
   const selectRole = selectedOption => {
-    userGroups = [];
+    const userGroups = [];
     if (selectedOption) {
       selectedOption.forEach(function (option) {
         userGroups.push(option.value);
       });
     }
+    props.setUser({ ...user, userGroups });
   };
 
   return (
     <Dialog data-testid="user-form-dialog">
       <Heading>
         <Flex alignItems="center" gap="size-100" data-testid="user-form-heading">
-          {!isNew ? (
+          {user.id ? (
             <Translate contentKey="userManagement.home.editLabel">Edit User</Translate>
           ) : (
             <Translate contentKey="userManagement.home.createLabel">Create User</Translate>
@@ -122,7 +91,7 @@ export const UserUpdate = (props: IUserUpdateProps) => {
           <Button variant="secondary" onPress={handleClose} data-testid="user-form-cancel">
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
-          <Button variant="cta" onPress={saveUser} isDisabled={updating || !error.isValid} data-testid="user-form-submit">
+          <Button variant="cta" onPress={saveUser} isDisabled={updating || !isFormValid(user).isValid} data-testid="user-form-submit">
             <Translate contentKey="entity.action.save">Save</Translate>
           </Button>
         </Flex>
@@ -134,10 +103,14 @@ export const UserUpdate = (props: IUserUpdateProps) => {
             label="Login ID"
             placeholder="John"
             minLength={1}
-            validationState={login.length < 50 ? 'valid' : 'invalid'}
+            validationState={user.login.length < 50 ? 'valid' : 'invalid'}
             type="text"
-            value={login}
-            onChange={setLogin}
+            value={user.login}
+            onChange={event => {
+              props.setUser({ ...user, login: event });
+              const errorObj = isFormValid({ ...user, login: event });
+              setError(errorObj);
+            }}
             autoFocus
             isRequired
             data-testid="login"
@@ -146,9 +119,13 @@ export const UserUpdate = (props: IUserUpdateProps) => {
             label="First Name"
             placeholder="John"
             type="text"
-            value={firstName}
-            onChange={setFirstName}
-            validationState={firstName.length < 50 ? 'valid' : 'invalid'}
+            value={user.firstName}
+            onChange={event => {
+              props.setUser({ ...user, firstName: event });
+              const errorObj = isFormValid({ ...user, firstName: event });
+              setError(errorObj);
+            }}
+            validationState={user.firstName.length < 50 ? 'valid' : 'invalid'}
             autoFocus
             data-testid="first-name"
           />
@@ -156,9 +133,13 @@ export const UserUpdate = (props: IUserUpdateProps) => {
             label="Last Name"
             placeholder="Deo"
             type="text"
-            value={lastName}
-            onChange={setLastName}
-            validationState={lastName.length < 50 ? 'valid' : 'invalid'}
+            value={user.lastName}
+            onChange={event => {
+              props.setUser({ ...user, lastName: event });
+              const errorObj = isFormValid({ ...user, lastName: event });
+              setError(errorObj);
+            }}
+            validationState={user.lastName.length < 50 ? 'valid' : 'invalid'}
             autoFocus
             data-testid="last-name"
           />
@@ -167,13 +148,27 @@ export const UserUpdate = (props: IUserUpdateProps) => {
             placeholder="John@dx26.com"
             isRequired
             type="email"
-            value={email}
-            onChange={setEmail}
+            value={user.email}
+            onChange={event => {
+              props.setUser({ ...user, email: event });
+              const errorObj = isFormValid({ ...user, email: event });
+              setError(errorObj);
+            }}
             data-testid="email"
-            validationState={email.length < 100 ? 'valid' : 'invalid'}
+            validationState={user.email.length < 100 ? 'valid' : 'invalid'}
             autoFocus
           />
-          <Checkbox isSelected={activated} onChange={setActivated} isEmphasized defaultSelected data-testid="activated">
+          <Checkbox
+            isSelected={user.activated}
+            onChange={event => {
+              props.setUser({ ...user, activated: event });
+              const errorObj = isFormValid({ ...user, activated: event });
+              setError(errorObj);
+            }}
+            isEmphasized
+            defaultSelected
+            data-testid="activated"
+          >
             <Translate contentKey="userManagement.activate">Activate</Translate>
           </Checkbox>
           <Text>
@@ -183,12 +178,12 @@ export const UserUpdate = (props: IUserUpdateProps) => {
           <Select
             isMulti
             onChange={selectRole}
-            defaultValue={isNew ? userGroups : user.userGroups}
+            value={generateOptions(user.userGroups)}
             options={roles}
             className="basic-multi-select"
             classNamePrefix="select"
           />
-          {!isNew ? (
+          {user.id ? (
             <React.Fragment>
               <span className="spectrum-Heading spectrum-Heading--sizeXXS">
                 <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
@@ -197,7 +192,7 @@ export const UserUpdate = (props: IUserUpdateProps) => {
             </React.Fragment>
           ) : null}
         </Form>
-        {!isNew ? (
+        {user.id ? (
           <Button data-testid="delete" variant="negative" onPress={removeUser} marginTop="size-175">
             <Translate contentKey="entity.action.delete">Delete</Translate>
           </Button>
@@ -226,7 +221,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updateSuccess: storeState.userManagement.updateSuccess,
 });
 
-const mapDispatchToProps = { getUser, getRoles, updateUser, createUser, reset, deleteUser };
+const mapDispatchToProps = { getUser, getRoles, updateUser, createUser, reset, deleteUser, setUser };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

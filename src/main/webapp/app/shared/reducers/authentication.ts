@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Storage } from 'react-jhipster';
+import { Storage, translate } from 'react-jhipster';
 import firebase from 'firebase/app';
 
 import { FAILURE, REQUEST, SUCCESS } from 'app/shared/reducers/action-type.util';
@@ -305,6 +305,9 @@ export const login: (username: string, password: string, rememberMe: boolean, re
   dispatch({
     type: ACTION_TYPES.LOGIN,
     payload: axios.post('api/authenticate', { username, password, rememberMe, realmId }),
+    meta: {
+      errorMessage: translate('login.messages.error.authentication'),
+    },
   });
 };
 
