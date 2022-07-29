@@ -13,6 +13,7 @@ export const ACTION_TYPES = {
   UPDATE_USER: 'userManagement/UPDATE_USER',
   DELETE_USER: 'userManagement/DELETE_USER',
   RESET: 'userManagement/RESET',
+  SET_USER: 'userManagement/SET_USER',
 };
 
 const initialState = {
@@ -94,7 +95,7 @@ export default (state: UserManagementState = initialState, action): UserManageme
       return {
         ...state,
         loading: false,
-        user: { ...action.payload.data, userGroups: generateOptions(action.payload.data.userGroups) },
+        user: action.payload.data,
         fetchSuccess: true,
       };
     case SUCCESS(ACTION_TYPES.CREATE_USER):
@@ -123,6 +124,11 @@ export default (state: UserManagementState = initialState, action): UserManageme
         fetchSuccess: false,
         updateSuccess: false,
         updating: false,
+      };
+    case ACTION_TYPES.SET_USER:
+      return {
+        ...state,
+        user: action.payload,
       };
     default:
       return state;
@@ -189,4 +195,9 @@ export const deleteUser: ICrudDeleteAction<IUser> = id => async dispatch => {
 
 export const reset = () => ({
   type: ACTION_TYPES.RESET,
+});
+
+export const setUser = (user: IUser) => ({
+  type: ACTION_TYPES.SET_USER,
+  payload: user,
 });
