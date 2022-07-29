@@ -15,6 +15,15 @@ export const getInitialState = () => {
     userManagement: {
       users: [],
       totalItems: 0,
+      user: {
+        id: '123',
+        login: 'test123',
+        firstName: 'test',
+        lastName: 'test',
+        email: 'test@dx26.com',
+        activated: true,
+        userGroups: [AUTHORITIES.ADMIN],
+      },
     },
   };
 };
@@ -50,6 +59,15 @@ describe('User Management Users', () => {
     ],
     totalItems: 2,
     getUsers: jest.fn(),
+    user: {
+      id: '123',
+      login: 'test123',
+      firstName: 'test',
+      lastName: 'test',
+      email: 'test@dx26.com',
+      activated: true,
+      userGroups: [AUTHORITIES.ADMIN],
+    },
   };
 
   const wrapper = (props: IUsersProps) => {
@@ -86,5 +104,4 @@ describe('User Management Users', () => {
     const dialog = tree.getByTestId('user-form-dialog');
     expect(dialog).toBeDefined();
   });
-
 });
