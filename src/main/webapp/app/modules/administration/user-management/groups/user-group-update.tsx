@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Translate } from 'react-jhipster';
-import { getUserGroup, updateUserGroup, createUserGroup, reset, deleteUserGroup } from './user-group.reducer';
+import { getUserGroup, updateUserGroup, createUserGroup, reset, deleteUserGroup,setUserGroup } from './user-group.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { isFormValid } from './user-group.util';
 import Alert from '@spectrum-icons/workflow/Alert';
@@ -11,25 +11,17 @@ import { defaultValue } from 'app/shared/model/error.model';
 
 export interface IUserGroupUpdateProps extends StateProps, DispatchProps {
   setUpdateSuccess: () => void;
-  isNew: boolean;
   setOpen: (isOpen: boolean) => void;
-  groupName: string;
   history: any;
 }
 
 export const UserUpdate = (props: IUserGroupUpdateProps) => {
-  const { isNew, setOpen, setUpdateSuccess, groupName, group, loading, updating, fetchSuccess, updateSuccess, history } = props;
-  const [name, setName] = useState('');
+  const { setOpen, setUpdateSuccess, group, updating, updateSuccess,history } = props;
   const [error, setError] = useState(defaultValue);
 
   const dialog = useDialogContainer();
 
   useEffect(() => {
-    if (isNew) {
-      props.reset();
-    } else {
-      props.getUserGroup(groupName);
-    }
     return () => {
       props.reset();
     };
@@ -41,28 +33,17 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
   };
 
   useEffect(() => {
-    if (isNew) {
-      setName('');
-    } else {
-      setName(group.name);
-    }
     if (updateSuccess) {
       handleClose();
       setUpdateSuccess();
     }
-  }, [fetchSuccess, isNew, updateSuccess]);
-
-  useEffect(() => {
-    const errorObj = isFormValid({ ...group, name });
-    setError(errorObj);
-  }, [name]);
+  }, [updateSuccess]);
 
   const saveUser = () => {
-    const values = { ...group, name };
-    if (isNew) {
-      props.createUserGroup(values);
+    if (group.id) {
+      props.updateUserGroup(group);
     } else {
-      props.updateUserGroup(values);
+      props.createUserGroup(group);
     }
   };
 
@@ -72,14 +53,14 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
 
   const redirectToPermissionPage = () => {
     handleClose();
-    props.history.push('/administration/user-management/dashboard-permission');
+    history.push('/administration/user-management/dashboard-permission');
   };
 
   return (
     <Dialog data-testid="group-form-dialog">
       <Heading>
         <Flex alignItems="center" gap="size-100" data-testid="group-form-heading">
-          {!isNew ? (
+          {group.id ? (
             <Translate contentKey="userGroups.home.editLabel">Edit Group</Translate>
           ) : (
             <Translate contentKey="userGroups.home.createLabel">Create Group</Translate>
@@ -91,7 +72,7 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
           <Button variant="secondary" onPress={handleClose} data-testid="group-form-cancel">
             <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </Button>
-          <Button variant="cta" onPress={saveUser} isDisabled={updating || !error.isValid} data-testid="group-form-submit">
+          <Button variant="cta" onPress={saveUser} isDisabled={updating || !isFormValid(group).isValid} data-testid="group-form-submit">
             <Translate contentKey="entity.action.save">Save</Translate>
           </Button>
         </Flex>
@@ -103,8 +84,12 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
             label="Name"
             placeholder="ROLE_ACCOUNT"
             type="text"
-            value={name}
-            onChange={setName}
+            value={group.name}
+            onChange={event => {
+              props.setUserGroup({ ...group, name: event });
+              const errorObj = isFormValid({ ...group, name: event });
+              setError(errorObj);
+            }}
             autoFocus
             isRequired
             data-testid="name"
@@ -116,7 +101,7 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
               </p>
               <AlertCircle size="S" />
             </Flex>
-            {!isNew ? (
+            {group.id ? (
               <p>
                 <span className="spectrum-Body-emphasis">
                   <Translate contentKey="userGroups.updateTipMessage"></Translate>
@@ -142,7 +127,7 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
               </p>
             )}
           </div>
-          {!isNew ? (
+          {group.id ? (
             <React.Fragment>
               <span className="spectrum-Heading spectrum-Heading--sizeXXS">
                 <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
@@ -151,7 +136,7 @@ export const UserUpdate = (props: IUserGroupUpdateProps) => {
             </React.Fragment>
           ) : null}
         </Form>
-        {!isNew ? (
+        {group.id ? (
           <Button data-testid="delete" variant="negative" onPress={removeGroup} marginTop="size-175">
             <Translate contentKey="entity.action.delete">Delete</Translate>
           </Button>
@@ -179,7 +164,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updateSuccess: storeState.userGroups.updateSuccess,
 });
 
-const mapDispatchToProps = { getUserGroup, updateUserGroup, createUserGroup, reset, deleteUserGroup };
+const mapDispatchToProps = { getUserGroup, updateUserGroup, createUserGroup, reset, deleteUserGroup,setUserGroup };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

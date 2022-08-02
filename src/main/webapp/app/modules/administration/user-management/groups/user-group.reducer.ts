@@ -12,6 +12,7 @@ export const ACTION_TYPES = {
   UPDATE_USER_GROUP: 'userGroups/UPDATE_USER_GROUP',
   DELETE_USER_GROUP: 'userGroups/DELETE_USER_GROUP',
   SEARCH_USER_GROUPS: 'userGroups/SEARCH_USER_GROUPS',
+  SET_USER_GROUP: 'userGroups/SET_USER_GROUP',
   RESET: 'userGroups/RESET',
 };
 
@@ -122,6 +123,11 @@ export default (state: UserGroupsState = initialState, action): UserGroupsState 
         updateSuccess: false,
         updating: false,
       };
+    case ACTION_TYPES.SET_USER_GROUP:
+      return {
+        ...state,
+        group: action.payload,
+      };
     default:
       return state;
   }
@@ -188,3 +194,8 @@ export const searchUserGroups = (page, size, sort, name) => {
     payload: axios.get<IUserGroup>(requestUrl),
   };
 };
+
+export const setUserGroup = (group: IUserGroup) => ({
+  type: ACTION_TYPES.SET_USER_GROUP,
+  payload: group,
+});
