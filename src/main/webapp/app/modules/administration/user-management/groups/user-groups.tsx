@@ -4,7 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getUserGroups } from './user-group.reducer';
+import { getUserGroups,setUserGroup } from './user-group.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
@@ -19,8 +19,6 @@ export const UserGroups = (props: IUserGroupsProps) => {
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
   const [isOpen, setOpen] = React.useState(false);
-  const [isNew, setNew] = React.useState(false);
-  const [groupName, setGroupName] = React.useState('');
 
   const fetchUsersGroups = () => {
     props.getUserGroups(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
@@ -83,8 +81,6 @@ export const UserGroups = (props: IUserGroupsProps) => {
           variant="cta"
           onPress={() => {
             setOpen(true);
-            setNew(true);
-            setGroupName('');
           }}
           data-testid="create-group"
         >
@@ -95,9 +91,7 @@ export const UserGroups = (props: IUserGroupsProps) => {
         {isOpen && (
           <UserGroupUpdate
             setUpdateSuccess={setUpdateSuccess}
-            isNew={isNew}
             setOpen={setOpen}
-            groupName={groupName}
             {...props}
           ></UserGroupUpdate>
         )}
@@ -131,8 +125,7 @@ export const UserGroups = (props: IUserGroupsProps) => {
                         <a
                           onClick={() => {
                             setOpen(true);
-                            setNew(false);
-                            setGroupName(userGroup.name);
+                            props.setUserGroup(userGroup);
                           }}
                         >
                           <Edit size="S" />
@@ -164,7 +157,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   totalItems: storeState.userGroups.totalItems,
 });
 
-const mapDispatchToProps = { getUserGroups };
+const mapDispatchToProps = { getUserGroups,setUserGroup };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

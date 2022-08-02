@@ -9,10 +9,17 @@ import thunk from 'redux-thunk';
 import promiseMiddleware from 'redux-promise-middleware';
 
 export const getUserGroup = (isNew: boolean) => {
-  return {
-    id: isNew ? '' : '123',
-    name: 'test123',
-  };
+  if (isNew) {
+    return {
+      id: '',
+      name: '',
+    };
+  } else {
+    return {
+      id: '123',
+      name: 'test',
+    };
+  }
 };
 
 export const getInitialState = (isNew: boolean) => {
@@ -21,7 +28,6 @@ export const getInitialState = (isNew: boolean) => {
       group: getUserGroup(isNew),
       loading: false,
       updating: false,
-      fetchSuccess: true,
       updateSuccess: true,
     },
   };
@@ -67,9 +73,7 @@ describe('User Management dialog', () => {
 
   it('should render group dialog', () => {
     const defaultProps = {
-      isNew: true,
       setOpen: jest.fn(),
-      groupName: 'test',
       setUpdateSuccess: jest.fn(),
     };
     const tree = wrapper(true, defaultProps);
@@ -81,9 +85,7 @@ describe('User Management dialog', () => {
 
   it('on group create', () => {
     const defaultProps = {
-      isNew: true,
       setOpen: jest.fn(),
-      groupName: '',
       setUpdateSuccess: jest.fn(),
     };
     const tree = wrapper(true, defaultProps);
@@ -93,9 +95,7 @@ describe('User Management dialog', () => {
 
   it('on group update', () => {
     const defaultProps = {
-      isNew: false,
       setOpen: jest.fn(),
-      groupName: 'test123',
       setUpdateSuccess: jest.fn(),
     };
     const tree = wrapper(false, defaultProps);
@@ -105,9 +105,7 @@ describe('User Management dialog', () => {
 
   it('on group delete', () => {
     const defaultProps = {
-      isNew: false,
       setOpen: jest.fn(),
-      groupName: 'test123',
       setUpdateSuccess: jest.fn(),
     };
     const tree = wrapper(false, defaultProps);
@@ -116,24 +114,19 @@ describe('User Management dialog', () => {
     expect(defaultProps.setUpdateSuccess.mock.calls.length).toEqual(1);
   });
 
-  it('should show error when submitted without group name', () => {
+  it('submit button should be disabled when group name is not passed', () => {
     const defaultProps = {
-      isNew: true,
       setOpen: jest.fn(),
-      groupName: '',
       setUpdateSuccess: jest.fn(),
     };
     const tree = wrapper(true, defaultProps);
     const submitButton = tree.getByTestId('group-form-submit');
-    userEvent.click(submitButton);
-    expect(tree.getByTestId('validation-error')).toBeDefined();
+    expect(submitButton.disabled).toEqual(true);
   });
 
   it('on group dialog close', () => {
     const defaultProps = {
-      isNew: true,
       setOpen: jest.fn(),
-      groupName: '',
       setUpdateSuccess: jest.fn(),
     };
     const tree = wrapper(true, defaultProps);
@@ -144,9 +137,7 @@ describe('User Management dialog', () => {
 
   it('on redirect to permission page', () => {
     const defaultProps = {
-      isNew: true,
       setOpen: jest.fn(),
-      groupName: '',
       setUpdateSuccess: jest.fn(),
     };
     const tree = wrapper(true, defaultProps);

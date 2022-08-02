@@ -14,6 +14,7 @@ export const getInitialState = () => {
     userGroups: {
       groups: [],
       totalItems: 0,
+      group: { name: 'test', id: 123 },
     },
   };
 };
