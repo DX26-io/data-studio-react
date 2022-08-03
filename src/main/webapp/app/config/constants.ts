@@ -10,6 +10,7 @@ export const SERVER_API_URL = process.env.SERVER_API_URL;
 export const AUTHORITIES = {
   ADMIN: 'ROLE_ADMIN',
   USER: 'ROLE_USER',
+  ROLE_SUPER_ADMIN: 'ROLE_SUPER_ADMIN',
 };
 
 export const messages = {
