@@ -1,0 +1,14 @@
+{
+  "realms": {
+    "title": "Realms",
+    "name": "Name",
+    "confirmMessage": "Are you sure you want to {{status}} this realm : {{name}} ?",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "status":"Status",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "update":"Update Realm",
+    "realm":"Realm"
+  }
+}
