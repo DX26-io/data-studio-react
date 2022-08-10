@@ -102,7 +102,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         redirectTo: null,
       };
     case FAILURE(ACTION_TYPES.LOGIN):
-      toast.error(translate(action.payload.response.data.AuthenticationException));
+      toast.error(translate(action.payload?.response?.data?.AuthenticationException));
       return { ...state, loginSuccess: false, loginError: false };
     case FAILURE(ACTION_TYPES.LOGIN_WITH_PROVIDER):
       return {
