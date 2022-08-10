@@ -102,6 +102,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         redirectTo: null,
       };
     case FAILURE(ACTION_TYPES.LOGIN):
+      toast.error(translate(action.payload.response.data.AuthenticationException));
       return { ...state, loginSuccess: false, loginError: false };
     case FAILURE(ACTION_TYPES.LOGIN_WITH_PROVIDER):
       return {
@@ -272,7 +273,7 @@ export const createRealm: (realmName: string, emailVerificationToken: string) =>
     type: ACTION_TYPES.CREATE_REALM,
     payload: axios.post('api/realms-anonym', {
       name: realmName,
-      isActive:true
+      isActive: true,
     }),
   });
 
@@ -306,9 +307,6 @@ export const login: (username: string, password: string, rememberMe: boolean, re
   dispatch({
     type: ACTION_TYPES.LOGIN,
     payload: axios.post('api/authenticate', { username, password, rememberMe, realmId }),
-    meta: {
-      errorMessage: translate('login.messages.error.authentication'),
-    },
   });
 };
 

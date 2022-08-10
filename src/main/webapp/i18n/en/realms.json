@@ -9,6 +9,7 @@
     "enabled": "Enabled",
     "disabled": "Disabled",
     "update":"Update Realm",
-    "realm":"Realm"
+    "realm":"Realm",
+    "deactivatedMessage":"Your realm account has been deactivated.Please check with the dx26io support team!"
   }
 }
