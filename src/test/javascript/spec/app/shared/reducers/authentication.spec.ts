@@ -201,23 +201,21 @@ describe('Authentication reducer tests', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
 
-    // commented test case for time being
-
-    // it('dispatches LOGIN request actions', async () =>  {
-    //   const loginResponse = { data: { idToken: 'test-token', realms: null } };
-    //   axios.post = sinon.stub().returns(Promise.resolve(loginResponse));
-    //   const expectedActions = [
-    //     {
-    //       type: REQUEST(ACTION_TYPES.LOGIN),
-    //     },
-    //     {
-    //       type: SUCCESS(ACTION_TYPES.LOGIN),
-    //       payload: loginResponse,
-    //     },
-    //   ];
-    //   await store.dispatch(login('test', 'test', false, 1));
-    //   expect(store.getActions()).toEqual(expectedActions);
-    // });
+    it('dispatches LOGIN request actions', async () =>  {
+      const loginResponse = { data: { idToken: 'test-token', realms: null } };
+      axios.post = sinon.stub().returns(Promise.resolve(loginResponse));
+      const expectedActions = [
+        {
+          type: REQUEST(ACTION_TYPES.LOGIN),
+        },
+        {
+          type: SUCCESS(ACTION_TYPES.LOGIN),
+          payload: loginResponse,
+        },
+      ];
+      await store.dispatch(login('test', 'test', false, 1));
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
 
   describe('clearAuthToken', () => {

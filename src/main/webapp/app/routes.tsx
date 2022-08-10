@@ -26,6 +26,12 @@ const Admin = Loadable({
   loading: () => <div>loading ...</div>,
 });
 
+const RealmManagement = Loadable({
+  loader: () => import(/* webpackChunkName: "realmManagement" */ 'app/modules/realm-management'),
+  loading: () => <div>loading ...</div>,
+});
+
+
 const Canvas = Loadable({
   loader: () => import(/* webpackChunkName: "Dx26" */ 'app/modules/canvas/visualisation'),
   loading: () => <div>loading ...</div>,
@@ -43,6 +49,7 @@ const Routes = () => (
       <ErrorBoundaryRoute path="/reset/request" component={PasswordResetInit} />
       <ErrorBoundaryRoute path="/reset/finish/:key?" component={PasswordResetFinish} />
       <ErrorBoundaryRoute path="/canvas" component={Canvas} />
+      <PrivateRoute path="/realm-management" component={RealmManagement} hasAnyAuthorities={[AUTHORITIES.ROLE_SUPER_ADMIN]} />
       <PrivateRoute path="/administration" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN,AUTHORITIES.ROLE_SUPER_ADMIN]} />
       <PrivateRoute path="/account" component={Account} hasAnyAuthorities={[AUTHORITIES.ADMIN, AUTHORITIES.USER,AUTHORITIES.ROLE_SUPER_ADMIN]} />
       <PrivateRoute path="/" exact component={Home} hasAnyAuthorities={[AUTHORITIES.USER,AUTHORITIES.ROLE_SUPER_ADMIN]} />
