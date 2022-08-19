@@ -49,11 +49,11 @@ const Routes = () => (
       <ErrorBoundaryRoute path="/reset/request" component={PasswordResetInit} />
       <ErrorBoundaryRoute path="/reset/finish/:key?" component={PasswordResetFinish} />
       <ErrorBoundaryRoute path="/canvas" component={Canvas} />
-      <PrivateRoute path="/realm-management" component={RealmManagement} hasAnyAuthorities={[AUTHORITIES.ROLE_SUPER_ADMIN]} />
-      <PrivateRoute path="/administration" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN,AUTHORITIES.ROLE_SUPER_ADMIN]} />
-      <PrivateRoute path="/account" component={Account} hasAnyAuthorities={[AUTHORITIES.ADMIN, AUTHORITIES.USER,AUTHORITIES.ROLE_SUPER_ADMIN]} />
-      <PrivateRoute path="/" exact component={Home} hasAnyAuthorities={[AUTHORITIES.USER,AUTHORITIES.ROLE_SUPER_ADMIN]} />
-      <PrivateRoute path="/" component={Entities} hasAnyAuthorities={[AUTHORITIES.USER,AUTHORITIES.ROLE_SUPER_ADMIN]} />
+      <PrivateRoute path="/realm-management" component={RealmManagement} hasAnyAuthorities={[AUTHORITIES.SUPER_ADMIN]} />
+      <PrivateRoute path="/administration" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN,AUTHORITIES.SUPER_ADMIN]} />
+      <PrivateRoute path="/account" component={Account} hasAnyAuthorities={[AUTHORITIES.ADMIN, AUTHORITIES.USER,AUTHORITIES.SUPER_ADMIN]} />
+      <PrivateRoute path="/" exact component={Home} hasAnyAuthorities={[AUTHORITIES.USER,AUTHORITIES.SUPER_ADMIN,AUTHORITIES.ADMIN]} />
+      <PrivateRoute path="/" component={Entities} hasAnyAuthorities={[AUTHORITIES.USER,AUTHORITIES.SUPER_ADMIN,AUTHORITIES.ADMIN]} />
       <ErrorBoundaryRoute component={PageNotFound} />
     </Switch>
   </div>

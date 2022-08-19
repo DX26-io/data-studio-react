@@ -4,9 +4,9 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState, translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getRealms, updateStatus, setRealm } from './realm.reducer';
+import { getRealms, updateStatus, setRealm, searchRealms } from './realm.reducer';
 import { IRootState } from 'app/shared/reducers';
-import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
+import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
@@ -20,6 +20,7 @@ export const Realms = (props: IRealmsProps) => {
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
   const [isOpen, setOpen] = React.useState(false);
+  const [searchValue, setSearchValue] = React.useState('');
 
   const fetchUsersRealms = () => {
     props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
@@ -81,8 +82,19 @@ export const Realms = (props: IRealmsProps) => {
           { label: translate('realms.title'), route: '/administration/realm-management/realms' },
         ]}
         title={translate('realms.title')}
-      >
-      </SecondaryHeader>
+      ></SecondaryHeader>
+      <View margin="size-150">
+        <SearchField
+          value={searchValue}
+          onChange={event => {
+            setSearchValue(event);
+            props.searchRealms(event, pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
+          }}
+          placeholder={translate('realms.searchRealm')}
+          label={translate('entity.action.search')}
+          data-testid="search"
+        />
+      </View>
       <DialogContainer onDismiss={() => setOpen(false)}>
         {isOpen && <ConfirmationDialog setOpen={setOpen} setUpdateSuccess={setUpdateSuccess} />}
       </DialogContainer>
@@ -100,6 +112,9 @@ export const Realms = (props: IRealmsProps) => {
                   </TableCell>
                   <TableCell align="center">
                     <Translate contentKey="realms.name">Status</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="realms.createdBy">Created By</Translate>
                   </TableCell>
                   <TableCell align="center">
                     <Translate contentKey="entity.action.manage">Manage</Translate>
@@ -120,6 +135,7 @@ export const Realms = (props: IRealmsProps) => {
                         <Translate contentKey="realms.disabled">Disabled</Translate>
                       )}
                     </TableCell>
+                    <TableCell align="center">{realm.createdBy}</TableCell>
                     <TableCell align="center">
                       <Flex gap="size-100" justifyContent="center" alignItems="center">
                         {realm.isActive ? (
@@ -159,7 +175,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.realms.updating,
 });
 
-const mapDispatchToProps = { getRealms, updateStatus, setRealm };
+const mapDispatchToProps = { getRealms, updateStatus, setRealm, searchRealms };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

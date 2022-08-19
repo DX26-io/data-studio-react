@@ -2,6 +2,7 @@ import axios from 'axios';
 import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IRealm } from 'app/shared/model/realm.model';
+import { ICrudSearchAction } from 'react-jhipster/src/type/redux-action.type';
 
 export const ACTION_TYPES = {
   FETCH_ROLES: 'realms/FETCH_ROLES',
@@ -133,6 +134,14 @@ const apiUrl = 'api/realms';
 // Actions
 export const getRealms: ICrudGetAllAction<IRealm> = (page, size, sort) => {
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  return {
+    type: ACTION_TYPES.FETCH_REALMS,
+    payload: axios.get<IRealm>(requestUrl),
+  };
+};
+
+export const searchRealms: ICrudSearchAction<IRealm> = (name:string,page, size, sort) => {
+  const requestUrl = `${apiUrl}${sort ? `?name=${name}&page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_REALMS,
     payload: axios.get<IRealm>(requestUrl),
