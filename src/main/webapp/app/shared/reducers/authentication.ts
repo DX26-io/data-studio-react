@@ -274,6 +274,7 @@ export const createRealm: (realmName: string, emailVerificationToken: string) =>
     payload: axios.post('api/realms-anonym', {
       name: realmName,
       isActive: true,
+      emailVerificationToken
     }),
   });
 
