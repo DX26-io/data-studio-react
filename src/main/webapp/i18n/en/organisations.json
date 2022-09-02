@@ -1,0 +1,19 @@
+{
+  "organisations": {
+    "title": "Organisation",
+    "name": "Name",
+    "confirmMessage": "Are you sure you want to {{status}} this organisation : {{name}} ?",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "status":"Status",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "create":"Create Organisation",
+    "update":"Update Organisation",
+    "organisation":"Realm",
+    "deactivatedMessage":"Your organisation account has been deactivated.Please check with the dx26io support team!",
+    "createdBy": "Created By",
+    "createdDate": "Created Date",
+    "searchRealm":"Search organisation"
+  }
+}
