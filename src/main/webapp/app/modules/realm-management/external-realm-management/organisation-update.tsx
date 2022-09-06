@@ -12,9 +12,13 @@ import {
   Text,
   DialogContainer,
   useDialogContainer,
+  Form,
+  TextField,
 } from '@adobe/react-spectrum';
 import { translate, Translate } from 'react-jhipster';
 import { updateStatus, updateRealm } from './realm.reducer';
+import { updateName } from '../organisation.reducer';
+import { toast } from 'react-toastify';
 
 export interface IConfirmationDialogProps extends StateProps, DispatchProps {
   setUpdateSuccess: () => void;
@@ -23,6 +27,7 @@ export interface IConfirmationDialogProps extends StateProps, DispatchProps {
 
 const ConfirmationDialog = (props: IConfirmationDialogProps) => {
   const dialog = useDialogContainer();
+  const [orgName, setOrgName] = useState('');
 
   const handleClose = () => {
     props.setOpen(false);
@@ -33,46 +38,44 @@ const ConfirmationDialog = (props: IConfirmationDialogProps) => {
     if (props.updateSuccess) {
       handleClose();
       props.setUpdateSuccess();
+      toast.success(translate('organisations.createSuccessMessages'));
     }
   }, [props.updateSuccess]);
 
-  const handleConfirm = () => {
-    props.updateStatus(!props.realm.isActive, props.realm.id);
+  const save = () => {
+    props.updateName(orgName);
   };
 
   return (
     <Dialog>
       <Heading>
         {' '}
-        <Translate contentKey="realms.update">Update Realm</Translate>
+        <Translate contentKey="organisations.create">Create Organisation</Translate>
       </Heading>
-      <Header>
-        {' '}
-        <Translate contentKey="realms.realm">Realm</Translate>{' : '}
-        {props.realm?.name}
-      </Header>
       <Divider />
       <Content>
-        <Text>
-          <Translate
-            contentKey="realms.confirmMessage"
-            interpolate={{
-              name: props.realm?.name,
-              status: props.realm?.isActive ? (
-                <Translate contentKey="realms.deactivate">Deactivate</Translate>
-              ) : (
-                <Translate contentKey="realms.activate">Activate</Translate>
-              ),
+        <Form>
+          <TextField
+            label={translate('organisations.name')}
+            placeholder={translate('organisations.title')}
+            minLength={3}
+            validationState={orgName.length > 3 ? 'valid' : 'invalid'}
+            type="text"
+            value={orgName}
+            onChange={event => {
+              setOrgName(event);
             }}
-          ></Translate>
-        </Text>
+            autoFocus
+            isRequired
+          />
+        </Form>
       </Content>
       <ButtonGroup>
         <Button variant="secondary" onPress={handleClose}>
           <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
-        <Button variant="cta" onPress={handleConfirm} isDisabled={props.updating}>
-          <Translate contentKey="entity.action.confirm">Confirm</Translate>
+        <Button variant="cta" onPress={save} isDisabled={props.updating || orgName.length < 3}>
+          <Translate contentKey="entity.action.save">save</Translate>
         </Button>
       </ButtonGroup>
     </Dialog>
@@ -80,12 +83,12 @@ const ConfirmationDialog = (props: IConfirmationDialogProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  updateSuccess: storeState.realms.updateSuccess,
-  realm: storeState.realms.realm,
-  updating: storeState.realms.updating,
+  updateSuccess: storeState.organisations.updateSuccess,
+  realm: storeState.organisations.organisation,
+  updating: storeState.organisations.updating,
 });
 
-const mapDispatchToProps = { updateStatus, updateRealm };
+const mapDispatchToProps = { updateStatus, updateRealm, updateName };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

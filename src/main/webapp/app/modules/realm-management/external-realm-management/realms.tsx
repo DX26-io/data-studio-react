@@ -11,8 +11,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 import ConfirmationDialog from './confirmation-dialog';
-import Account from 'app/modules/account/account';
-// import UserGroupUpdate from './realm-group-update';
+import OrganisationUpdate  from "./organisation-update";
+import { getSession } from 'app/shared/reducers/authentication';
 
 export interface IRealmsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -22,6 +22,7 @@ export const Realms = (props: IRealmsProps) => {
   );
   const [isOpen, setOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
+  const [isOrganisationUpdateOpen, setOrganisationUpdateOpen] = React.useState(false);
 
   const fetchUsersRealms = () => {
     props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
@@ -52,6 +53,7 @@ export const Realms = (props: IRealmsProps) => {
 
   const setUpdateSuccess = () => {
     fetchUsersRealms();
+    props.getSession();
   };
 
   const handleChangePage = (event, newPage) => {
@@ -85,7 +87,12 @@ export const Realms = (props: IRealmsProps) => {
         title={translate('realms.title')}
       >
         {props.account.currentRealm.name === props.account.organisation.name ? (
-          <Button variant="cta" onPress={() => {}}>
+          <Button
+            variant="cta"
+            onPress={() => {
+              setOrganisationUpdateOpen(true);
+            }}
+          >
             <Translate contentKey="organisations.create">Create Organisation</Translate>
           </Button>
         ) : (
@@ -106,8 +113,14 @@ export const Realms = (props: IRealmsProps) => {
           data-testid="search"
         />
       </View>
-      <DialogContainer onDismiss={() => setOpen(false)}>
+      <DialogContainer
+        onDismiss={() => {
+          if (isOpen) setOpen(false);
+          if (isOrganisationUpdateOpen) setOrganisationUpdateOpen(false);
+        }}
+      >
         {isOpen && <ConfirmationDialog setOpen={setOpen} setUpdateSuccess={setUpdateSuccess} />}
+        {isOrganisationUpdateOpen && <OrganisationUpdate setOpen={setOrganisationUpdateOpen} setUpdateSuccess={setUpdateSuccess} />}
       </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
@@ -187,7 +200,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
 });
 
-const mapDispatchToProps = { getRealms, updateStatus, setRealm, searchRealms };
+const mapDispatchToProps = { getRealms, updateStatus, setRealm, searchRealms,getSession };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
