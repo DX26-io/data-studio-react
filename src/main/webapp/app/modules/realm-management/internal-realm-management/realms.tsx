@@ -11,7 +11,6 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 import ConfirmationDialog from './confirmation-dialog';
-// import UserGroupUpdate from './realm-group-update';
 
 export interface IRealmsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 

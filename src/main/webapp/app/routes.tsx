@@ -9,12 +9,13 @@ import Logout from 'app/modules/login/logout';
 import Home from 'app/modules/home/home';
 import Entities from 'app/entities';
 import PrivateRoute from 'app/shared/auth/private-route';
+import RealmPrivateRoute from 'app/shared/auth/realm-private-route';
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 import PageNotFound from 'app/shared/error/page-not-found';
 import { AUTHORITIES } from 'app/config/constants';
 import Login from 'app/modules/login/login';
 import Signup from "app/modules/signup/signup";
-import Realm from "app/modules/realm/realm";
+import Realm from "app/modules/realm-management/realm-signup/realm";
 
 const Account = Loadable({
   loader: () => import(/* webpackChunkName: "account" */ 'app/modules/account'),
@@ -27,7 +28,12 @@ const Admin = Loadable({
 });
 
 const RealmManagement = Loadable({
-  loader: () => import(/* webpackChunkName: "realmManagement" */ 'app/modules/realm-management'),
+  loader: () => import(/* webpackChunkName: "realmManagement" */ 'app/modules/realm-management/external-realm-management'),
+  loading: () => <div>loading ...</div>,
+});
+
+const InternalRealmManagement = Loadable({
+  loader: () => import(/* webpackChunkName: "realmManagement" */ 'app/modules/realm-management/internal-realm-management'),
   loading: () => <div>loading ...</div>,
 });
 
@@ -49,7 +55,8 @@ const Routes = () => (
       <ErrorBoundaryRoute path="/reset/request" component={PasswordResetInit} />
       <ErrorBoundaryRoute path="/reset/finish/:key?" component={PasswordResetFinish} />
       <ErrorBoundaryRoute path="/canvas" component={Canvas} />
-      <PrivateRoute path="/realm-management" component={RealmManagement} hasAnyAuthorities={[AUTHORITIES.SUPER_ADMIN]} />
+      <PrivateRoute path="/internal-realm-management" component={InternalRealmManagement} hasAnyAuthorities={[AUTHORITIES.SUPER_ADMIN]} />
+      <RealmPrivateRoute path="/realm-management" component={RealmManagement} hasAnyAuthorities={[AUTHORITIES.SUPER_ADMIN]} />
       <PrivateRoute path="/administration" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN,AUTHORITIES.SUPER_ADMIN]} />
       <PrivateRoute path="/account" component={Account} hasAnyAuthorities={[AUTHORITIES.ADMIN, AUTHORITIES.USER,AUTHORITIES.SUPER_ADMIN]} />
       <PrivateRoute path="/" exact component={Home} hasAnyAuthorities={[AUTHORITIES.USER,AUTHORITIES.SUPER_ADMIN,AUTHORITIES.ADMIN]} />

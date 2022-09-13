@@ -1,0 +1,16 @@
+{
+  "organisations": {
+    "title": "Organisation",
+    "name": "Organisation Name",
+    "status":"Status",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "create":"Create Organisation",
+    "update":"Update Organisation",
+    "organisation":"Realm",
+    "createSuccessMessages":"Organisation is created successfully!",
+    "createdBy": "Created By",
+    "createdDate": "Created Date",
+    "searchRealm":"Search organisation"
+  }
+}
