@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-import { IRealm } from 'app/shared/model/realm.model';
+import { IRealm, defaultValue } from 'app/shared/model/realm.model';
 import { ICrudSearchAction } from 'react-jhipster/src/type/redux-action.type';
 
 export const ACTION_TYPES = {
@@ -25,7 +25,7 @@ const initialState = {
   fetchSuccess: false,
   totalItems: 0,
   searchedGroups: [] as ReadonlyArray<IRealm>,
-  realm: null,
+  realm: defaultValue,
 };
 
 export type RealmsState = Readonly<typeof initialState>;
@@ -46,6 +46,11 @@ export default (state: RealmsState = initialState, action): RealmsState => {
         loading: true,
       };
     case REQUEST(ACTION_TYPES.CREATE_REALM):
+      return {
+        ...state,
+        updating: true,
+        updateSuccess: false,
+      };
     case REQUEST(ACTION_TYPES.UPDATE_REALM):
       return {
         ...state,
@@ -68,6 +73,11 @@ export default (state: RealmsState = initialState, action): RealmsState => {
     case FAILURE(ACTION_TYPES.FETCH_REALMS):
     case FAILURE(ACTION_TYPES.FETCH_REALM):
     case FAILURE(ACTION_TYPES.CREATE_REALM):
+      return {
+        ...state,
+        updating: false,
+        updateSuccess: false,
+      };
     case FAILURE(ACTION_TYPES.UPDATE_REALM):
       return {
         ...state,
@@ -99,6 +109,7 @@ export default (state: RealmsState = initialState, action): RealmsState => {
       return {
         ...state,
         updateSuccess: true,
+        updating: false,
       };
     case SUCCESS(ACTION_TYPES.UPDATE_REALM):
       return {
@@ -123,6 +134,7 @@ export default (state: RealmsState = initialState, action): RealmsState => {
         fetchSuccess: false,
         updateSuccess: false,
         updating: false,
+        realm: defaultValue,
       };
     default:
       return state;
@@ -140,7 +152,7 @@ export const getRealms: ICrudGetAllAction<IRealm> = (page, size, sort) => {
   };
 };
 
-export const searchRealms: ICrudSearchAction<IRealm> = (name:string,page, size, sort) => {
+export const searchRealms: ICrudSearchAction<IRealm> = (name: string, page, size, sort) => {
   const requestUrl = `${apiUrl}${sort ? `?name=${name}&page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
     type: ACTION_TYPES.FETCH_REALMS,

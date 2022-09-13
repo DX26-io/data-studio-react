@@ -4,15 +4,16 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState, translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getRealms, updateStatus, setRealm, searchRealms } from './realm.reducer';
+import { getRealms, updateStatus, setRealm, searchRealms, createRealm } from './realm.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 import ConfirmationDialog from './confirmation-dialog';
-import OrganisationUpdate  from "./organisation-update";
+import OrganisationUpdate from './organisation-update';
 import { getSession } from 'app/shared/reducers/authentication';
+import RealmUpdate from './realm-update';
 
 export interface IRealmsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -23,6 +24,7 @@ export const Realms = (props: IRealmsProps) => {
   const [isOpen, setOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
   const [isOrganisationUpdateOpen, setOrganisationUpdateOpen] = React.useState(false);
+  const [isRealmUpdateOpen, setRealmUpdateOpen] = React.useState(false);
 
   const fetchUsersRealms = () => {
     props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
@@ -96,8 +98,13 @@ export const Realms = (props: IRealmsProps) => {
             <Translate contentKey="organisations.create">Create Organisation</Translate>
           </Button>
         ) : (
-          <Button variant="cta" onPress={() => {}}>
-            <Translate contentKey="entity.action.create">Create</Translate>
+          <Button
+            variant="cta"
+            onPress={() => {
+              setRealmUpdateOpen(true);
+            }}
+          >
+            <Translate contentKey="realms.create">Create</Translate>
           </Button>
         )}
       </SecondaryHeader>
@@ -117,10 +124,12 @@ export const Realms = (props: IRealmsProps) => {
         onDismiss={() => {
           if (isOpen) setOpen(false);
           if (isOrganisationUpdateOpen) setOrganisationUpdateOpen(false);
+          if (isRealmUpdateOpen) setRealmUpdateOpen(false);
         }}
       >
         {isOpen && <ConfirmationDialog setOpen={setOpen} setUpdateSuccess={setUpdateSuccess} />}
         {isOrganisationUpdateOpen && <OrganisationUpdate setOpen={setOrganisationUpdateOpen} setUpdateSuccess={setUpdateSuccess} />}
+        {isRealmUpdateOpen && <RealmUpdate setOpen={setRealmUpdateOpen} setUpdateSuccess={setUpdateSuccess} />}
       </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
@@ -200,7 +209,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
 });
 
-const mapDispatchToProps = { getRealms, updateStatus, setRealm, searchRealms,getSession };
+const mapDispatchToProps = { getRealms, updateStatus, setRealm, searchRealms, getSession, createRealm };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
