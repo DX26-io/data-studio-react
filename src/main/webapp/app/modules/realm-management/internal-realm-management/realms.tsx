@@ -110,7 +110,10 @@ export const Realms = (props: IRealmsProps) => {
                     <Translate contentKey="realms.name">Name</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="realms.name">Status</Translate>
+                    <Translate contentKey="realms.status">Status</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="organisations.name">Organisation Name</Translate>
                   </TableCell>
                   <TableCell align="center">
                     <Translate contentKey="realms.createdBy">Created By</Translate>
@@ -134,6 +137,7 @@ export const Realms = (props: IRealmsProps) => {
                         <Translate contentKey="realms.disabled">Disabled</Translate>
                       )}
                     </TableCell>
+                    <TableCell align="center">{realm.realmOrganisation.name}</TableCell>
                     <TableCell align="center">{realm.createdBy}</TableCell>
                     <TableCell align="center">
                       <Flex gap="size-100" justifyContent="center" alignItems="center">

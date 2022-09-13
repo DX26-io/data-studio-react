@@ -6,6 +6,7 @@ export interface IRealm {
   readonly isActive: boolean;
   readonly createdBy: string;
   readonly organisation : IOrganisation
+  readonly realmOrganisation? : IOrganisation
 }
 
 export const defaultValue: Readonly<IRealm> = {
@@ -13,5 +14,6 @@ export const defaultValue: Readonly<IRealm> = {
   id: 0,
   isActive: false,
   createdBy: '',
-  organisation:null
+  organisation:null,
+  realmOrganisation:null
 };
