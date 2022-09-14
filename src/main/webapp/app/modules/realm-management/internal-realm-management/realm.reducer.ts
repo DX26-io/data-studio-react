@@ -148,6 +148,14 @@ export const searchRealms: ICrudSearchAction<IRealm> = (name:string,page, size, 
   };
 };
 
+export const searchOrganisations: ICrudSearchAction<IRealm> = (name:string,page, size, sort) => {
+  const requestUrl = `${apiUrl}${sort ? `?realmOrganisation.name=${name}&page=${page}&size=${size}&sort=${sort}` : ''}`;
+  return {
+    type: ACTION_TYPES.FETCH_REALMS,
+    payload: axios.get<IRealm>(requestUrl),
+  };
+};
+
 export const getRealm: ICrudGetAction<IRealm> = name => {
   const requestUrl = `${apiUrl}/${name}`;
   return {

@@ -4,7 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState, translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getRealms, updateStatus, setRealm, searchRealms } from './realm.reducer';
+import { getRealms, updateStatus, setRealm, searchRealms,searchOrganisations } from './realm.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
@@ -83,16 +83,26 @@ export const Realms = (props: IRealmsProps) => {
         title={translate('realms.title')}
       ></SecondaryHeader>
       <View margin="size-150">
+        <Flex direction="row" gap="size-150">
         <SearchField
           value={searchValue}
+          minWidth={'200px'}
           onChange={event => {
             setSearchValue(event);
             props.searchRealms(event, pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
           }}
-          placeholder={translate('realms.searchRealm')}
-          label={translate('entity.action.search')}
-          data-testid="search"
+          placeholder={translate('realms.search')}
         />
+                <SearchField
+          value={searchValue}
+          minWidth={'200px'}
+          onChange={event => {
+            setSearchValue(event);
+            props.searchOrganisations(event, pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
+          }}
+          placeholder={translate('organisations.search')}
+        />
+        </Flex>
       </View>
       <DialogContainer onDismiss={() => setOpen(false)}>
         {isOpen && <ConfirmationDialog setOpen={setOpen} setUpdateSuccess={setUpdateSuccess} />}
@@ -110,7 +120,10 @@ export const Realms = (props: IRealmsProps) => {
                     <Translate contentKey="realms.name">Name</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="realms.name">Status</Translate>
+                    <Translate contentKey="realms.status">Status</Translate>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Translate contentKey="organisations.name">Organisation Name</Translate>
                   </TableCell>
                   <TableCell align="center">
                     <Translate contentKey="realms.createdBy">Created By</Translate>
@@ -134,6 +147,7 @@ export const Realms = (props: IRealmsProps) => {
                         <Translate contentKey="realms.disabled">Disabled</Translate>
                       )}
                     </TableCell>
+                    <TableCell align="center">{realm.realmOrganisation.name}</TableCell>
                     <TableCell align="center">{realm.createdBy}</TableCell>
                     <TableCell align="center">
                       <Flex gap="size-100" justifyContent="center" alignItems="center">
@@ -174,7 +188,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.realms.updating,
 });
 
-const mapDispatchToProps = { getRealms, updateStatus, setRealm, searchRealms };
+const mapDispatchToProps = { getRealms, updateStatus, setRealm, searchRealms,searchOrganisations };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
