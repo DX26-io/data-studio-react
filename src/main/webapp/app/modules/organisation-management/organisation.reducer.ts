@@ -124,9 +124,25 @@ export default (state: OrganisationState = initialState, action): OrganisationSt
   }
 };
 
-const apiUrl = 'api/organisation';
+const apiUrl = 'api/organisations';
 
 export const updateName = orgName => ({
   type: ACTION_TYPES.UPDATE_ORGANISATION_NAME,
   payload: axios.put(`${apiUrl}?name=${orgName}`),
 });
+
+export const getOrganisations: ICrudGetAllAction<IOrganisation> = (page, size, sort) => {
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  return {
+    type: ACTION_TYPES.FETCH_ORGANISATIONS,
+    payload: axios.get<IOrganisation>(requestUrl),
+  };
+};
+
+export const searchOrganisations: ICrudSearchAction<IOrganisation> = (name: string, page, size, sort) => {
+  const requestUrl = `${apiUrl}${sort ? `?name=${name}&page=${page}&size=${size}&sort=${sort}` : ''}`;
+  return {
+    type: ACTION_TYPES.FETCH_ORGANISATIONS,
+    payload: axios.get<IOrganisation>(requestUrl),
+  };
+};

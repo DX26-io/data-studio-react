@@ -4,6 +4,7 @@ import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
 import ErrorBoundary from 'app/shared/error/error-boundary';
+import { ORGANISATION_TYPE_ENTERPRISE, ORGANISATION_TYPE_FULL } from 'app/config/constants';
 
 interface IOwnProps extends RouteProps {
   hasAnyAuthorities?: string[];
@@ -55,12 +56,20 @@ export const PrivateRouteComponent = ({
   return <Route {...rest} render={renderRedirect} />;
 };
 
-export const hasAnyAuthority = (authorities: string[], hasAnyAuthorities: string[]) => {
-  if (authorities && authorities.length !== 0) {
+export const hasAnyAuthority = (account: any, hasAnyAuthorities: string[]) => {
+  if (account && account.userGroups && account.userGroups.length !== 0) {
     if (hasAnyAuthorities.length === 0) {
       return true;
     }
-    return hasAnyAuthorities.some(auth => authorities.includes(auth));
+    if (window.location.href.includes('/realm-management')) {
+      return (
+        hasAnyAuthorities.some(auth => account.userGroups.includes(auth)) &&
+        (account.organisation.type === ORGANISATION_TYPE_ENTERPRISE || account.organisation.type === ORGANISATION_TYPE_ENTERPRISE)
+      );
+    } else if (window.location.href.includes('/internal-realm-management') || window.location.href.includes('/organisation-management')) {
+      return hasAnyAuthorities.some(auth => account.userGroups.includes(auth)) && account.organisation.type === ORGANISATION_TYPE_FULL;
+    }
+    return hasAnyAuthorities.some(auth => account.userGroups.includes(auth));
   }
   return false;
 };
@@ -70,7 +79,7 @@ const mapStateToProps = (
   { hasAnyAuthorities = [] }: IOwnProps
 ) => ({
   isAuthenticated,
-  isAuthorized: hasAnyAuthority(account.userGroups, hasAnyAuthorities),
+  isAuthorized: hasAnyAuthority(account, hasAnyAuthorities),
   sessionHasBeenFetched,
 });
 
