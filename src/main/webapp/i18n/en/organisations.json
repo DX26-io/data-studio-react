@@ -11,6 +11,8 @@
     "createSuccessMessages":"Organisation is created successfully!",
     "createdBy": "Created By",
     "createdDate": "Created Date",
-    "search":"Search organisation"
+    "search":"Search organisation",
+    "activate": "Activate",
+    "deactivate": "Deactivate"
   }
 }

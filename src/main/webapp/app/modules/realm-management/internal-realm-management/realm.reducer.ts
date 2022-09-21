@@ -132,29 +132,44 @@ export default (state: RealmsState = initialState, action): RealmsState => {
 const apiUrl = 'api/internal-realms';
 
 // Actions
-export const getRealms: ICrudGetAllAction<IRealm> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+export const getRealms: ICrudGetAllAction<IRealm> = (page, size, sort, realmName?, organisationName?, organisationId?) => {
+  let requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  if (realmName) {
+    requestUrl = `${apiUrl}${sort ? `?name=${realmName}&page=${page}&size=${size}&sort=${sort}` : ''}`;
+  } else if (organisationName) {
+    requestUrl = `${apiUrl}${sort ? `?realmOrganisation.name=${organisationName}&page=${page}&size=${size}&sort=${sort}` : ''}`;
+  } else if (organisationId) {
+    requestUrl = `${apiUrl}${sort ? `?realmOrganisation.id=${organisationId}&page=${page}&size=${size}&sort=${sort}` : ''}`;
+  }
   return {
     type: ACTION_TYPES.FETCH_REALMS,
     payload: axios.get<IRealm>(requestUrl),
   };
 };
 
-export const searchRealms: ICrudSearchAction<IRealm> = (name:string,page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?name=${name}&page=${page}&size=${size}&sort=${sort}` : ''}`;
-  return {
-    type: ACTION_TYPES.FETCH_REALMS,
-    payload: axios.get<IRealm>(requestUrl),
-  };
-};
+// export const getRealmsByOrganisationId: ICrudGetAllAction<IRealm> = (organisationId) => {
+//   const requestUrl = `${apiUrl}/organisation-id/${organisationId}`;
+//   return {
+//     type: ACTION_TYPES.FETCH_REALMS,
+//     payload: axios.get<IRealm>(requestUrl),
+//   };
+// };
 
-export const searchOrganisations: ICrudSearchAction<IRealm> = (name:string,page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?realmOrganisation.name=${name}&page=${page}&size=${size}&sort=${sort}` : ''}`;
-  return {
-    type: ACTION_TYPES.FETCH_REALMS,
-    payload: axios.get<IRealm>(requestUrl),
-  };
-};
+// export const searchRealms: ICrudSearchAction<IRealm> = (name: string, page, size, sort) => {
+//   const requestUrl = `${apiUrl}${sort ? `?name=${name}&page=${page}&size=${size}&sort=${sort}` : ''}`;
+//   return {
+//     type: ACTION_TYPES.FETCH_REALMS,
+//     payload: axios.get<IRealm>(requestUrl),
+//   };
+// };
+
+// export const searchOrganisations: ICrudSearchAction<IRealm> = (name: string, page, size, sort, organisationId?) => {
+//   const requestUrl = `${apiUrl}${sort ? `?realmOrganisation.name=${name}&page=${page}&size=${size}&sort=${sort}` : ''}`;
+//   return {
+//     type: ACTION_TYPES.FETCH_REALMS,
+//     payload: axios.get<IRealm>(requestUrl),
+//   };
+// };
 
 export const getRealm: ICrudGetAction<IRealm> = name => {
   const requestUrl = `${apiUrl}/${name}`;

@@ -9,7 +9,6 @@ import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import Edit from '@spectrum-icons/workflow/Edit';
 import ConfirmationDialog from './confirmation-dialog';
 import OrganisationUpdate from './organisation-update';
 import { getSession } from 'app/shared/reducers/authentication';

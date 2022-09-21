@@ -124,7 +124,7 @@ export default (state: OrganisationState = initialState, action): OrganisationSt
   }
 };
 
-const apiUrl = 'api/organisations';
+const apiUrl = 'api/organisation';
 
 export const updateName = orgName => ({
   type: ACTION_TYPES.UPDATE_ORGANISATION_NAME,

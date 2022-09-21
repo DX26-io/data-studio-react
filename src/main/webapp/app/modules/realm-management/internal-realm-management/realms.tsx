@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { Translate, getSortState, translate } from 'react-jhipster';
-import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
-import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getRealms, updateStatus, setRealm, searchRealms,searchOrganisations } from './realm.reducer';
+import { RouteComponentProps } from 'react-router-dom';
+import { Translate, getSortState, translate, IPaginationBaseState } from 'react-jhipster';
+import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE, ACTIVE_PAGE } from 'app/shared/util/pagination.constants';
+import { getRealms, updateStatus, setRealm } from './realm.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import Edit from '@spectrum-icons/workflow/Edit';
 import ConfirmationDialog from './confirmation-dialog';
+import { overridePaginationStateWithQueryParams } from './realm.utils';
 
 export interface IRealmsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -19,11 +18,19 @@ export const Realms = (props: IRealmsProps) => {
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
   const [isOpen, setOpen] = React.useState(false);
-  const [searchValue, setSearchValue] = React.useState('');
+  const [searchedRealmValue, setSearchedRealmValue] = React.useState('');
+  const [searchedOrgValue, setSearchedOrgValue] = React.useState('');
+  const [organisationId, setOrganisationId] = React.useState(null);
+
 
   const fetchUsersRealms = () => {
-    props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
-    const endURL = `?page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
+    const params = new URLSearchParams(props.location.search);
+    const orgId = params.get('organisationId');
+    if (orgId) {
+      setOrganisationId(orgId);
+    }
+    props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, null, null, Number(orgId));
+    const endURL = `?organisationId=${pagination.organisationId}&page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
     if (props.location.search !== endURL) {
       props.history.push(`${props.location.pathname}${endURL}`);
     }
@@ -44,6 +51,7 @@ export const Realms = (props: IRealmsProps) => {
         activePage: +page,
         sort: sortSplit[0],
         order: sortSplit[1],
+        organisationId
       });
     }
   }, [props.location.search]);
@@ -84,24 +92,24 @@ export const Realms = (props: IRealmsProps) => {
       ></SecondaryHeader>
       <View margin="size-150">
         <Flex direction="row" gap="size-150">
-        <SearchField
-          value={searchValue}
-          minWidth={'200px'}
-          onChange={event => {
-            setSearchValue(event);
-            props.searchRealms(event, pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
-          }}
-          placeholder={translate('realms.search')}
-        />
-                <SearchField
-          value={searchValue}
-          minWidth={'200px'}
-          onChange={event => {
-            setSearchValue(event);
-            props.searchOrganisations(event, pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
-          }}
-          placeholder={translate('organisations.search')}
-        />
+          <SearchField
+            value={searchedRealmValue}
+            minWidth={'200px'}
+            onChange={event => {
+              setSearchedRealmValue(event);
+              props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, event);
+            }}
+            placeholder={translate('realms.search')}
+          />
+          <SearchField
+            value={searchedOrgValue}
+            minWidth={'200px'}
+            onChange={event => {
+              setSearchedOrgValue(event);
+              props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, null, event);
+            }}
+            placeholder={translate('organisations.search')}
+          />
         </Flex>
       </View>
       <DialogContainer onDismiss={() => setOpen(false)}>
@@ -188,7 +196,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.realms.updating,
 });
 
-const mapDispatchToProps = { getRealms, updateStatus, setRealm, searchRealms,searchOrganisations };
+const mapDispatchToProps = { getRealms, updateStatus, setRealm };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
