@@ -14,7 +14,7 @@ import {
   useDialogContainer,
 } from '@adobe/react-spectrum';
 import { translate, Translate } from 'react-jhipster';
-// import { updateStatus, updateRealm } from './organisation.reducer';
+import { updateStatus } from './organisation.reducer';
 
 export interface IConfirmationDialogProps extends StateProps, DispatchProps {
   setUpdateSuccess: () => void;
@@ -37,31 +37,31 @@ const ConfirmationDialog = (props: IConfirmationDialogProps) => {
   }, [props.updateSuccess]);
 
   const handleConfirm = () => {
-    // props.updateStatus(!props.organisation.isActive, props.organisation.id);
+    props.updateStatus(!props.organisation.isActive, props.organisation.id);
   };
 
   return (
     <Dialog>
       <Heading>
         {' '}
-        <Translate contentKey="realms.update">Update Realm</Translate>
+        <Translate contentKey="organisations.update">Update Organisation</Translate>
       </Heading>
       <Header>
         {' '}
-        <Translate contentKey="realms.realm">Realm</Translate>{' : '}
+        <Translate contentKey="organisations.title">Organisation</Translate>{' : '}
         {props.organisation?.name}
       </Header>
       <Divider />
       <Content>
         <Text>
           <Translate
-            contentKey="realms.confirmMessage"
+            contentKey="organisations.confirmMessage"
             interpolate={{
               name: props.organisation?.name,
               status: props.organisation?.isActive ? (
-                <Translate contentKey="realms.deactivate">Deactivate</Translate>
+                <Translate contentKey="organisations.deactivate">Deactivate</Translate>
               ) : (
-                <Translate contentKey="realms.activate">Activate</Translate>
+                <Translate contentKey="organisations.activate">Activate</Translate>
               ),
             }}
           ></Translate>
@@ -85,7 +85,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.organisations.updating,
 });
 
-const mapDispatchToProps = {  };
+const mapDispatchToProps = { updateStatus };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

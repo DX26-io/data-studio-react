@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState, translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getOrganisations, searchOrganisations } from './organisation.reducer';
+import { getOrganisations, searchOrganisations,setOrganisation } from './organisation.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
@@ -71,6 +71,7 @@ export const Organisations = (props: IOrganisationsProps) => {
 
   const onToggleStatus = organisation => {
     setOpen(true);
+    props.setOrganisation(organisation);
   };
 
   const onClickRealms = organisationId => {
@@ -185,7 +186,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
 });
 
-const mapDispatchToProps = { getOrganisations, getSession, searchOrganisations };
+const mapDispatchToProps = { getOrganisations, getSession, searchOrganisations,setOrganisation };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

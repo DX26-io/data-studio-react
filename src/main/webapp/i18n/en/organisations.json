@@ -13,6 +13,7 @@
     "createdDate": "Created Date",
     "search":"Search organisation",
     "activate": "Activate",
-    "deactivate": "Deactivate"
+    "deactivate": "Deactivate",
+    "confirmMessage": "Are you sure you want to {{status}} this organisation : {{name}} ?"
   }
 }

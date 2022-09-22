@@ -22,15 +22,18 @@ export const Realms = (props: IRealmsProps) => {
   const [searchedOrgValue, setSearchedOrgValue] = React.useState('');
   const [organisationId, setOrganisationId] = React.useState(null);
 
-
   const fetchUsersRealms = () => {
     const params = new URLSearchParams(props.location.search);
     const orgId = params.get('organisationId');
+    let endURL = '';
     if (orgId) {
       setOrganisationId(orgId);
+      props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, null, null, Number(orgId));
+      endURL = `?organisationId=${orgId}&page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
+    } else {
+      props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, null, null, null);
+      endURL = `?page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
     }
-    props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, null, null, Number(orgId));
-    const endURL = `?organisationId=${pagination.organisationId}&page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
     if (props.location.search !== endURL) {
       props.history.push(`${props.location.pathname}${endURL}`);
     }
@@ -38,7 +41,7 @@ export const Realms = (props: IRealmsProps) => {
 
   useEffect(() => {
     fetchUsersRealms();
-  }, [pagination.activePage, pagination.order, pagination.sort, pagination.itemsPerPage]);
+  }, [pagination.activePage, pagination.order, pagination.sort, pagination.itemsPerPage, organisationId]);
 
   useEffect(() => {
     const params = new URLSearchParams(props.location.search);
@@ -51,7 +54,7 @@ export const Realms = (props: IRealmsProps) => {
         activePage: +page,
         sort: sortSplit[0],
         order: sortSplit[1],
-        organisationId
+        organisationId,
       });
     }
   }, [props.location.search]);
@@ -97,7 +100,7 @@ export const Realms = (props: IRealmsProps) => {
             minWidth={'200px'}
             onChange={event => {
               setSearchedRealmValue(event);
-              props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, event);
+              props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, event, null, null);
             }}
             placeholder={translate('realms.search')}
           />
@@ -106,7 +109,7 @@ export const Realms = (props: IRealmsProps) => {
             minWidth={'200px'}
             onChange={event => {
               setSearchedOrgValue(event);
-              props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, null, event);
+              props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, null, event, null);
             }}
             placeholder={translate('organisations.search')}
           />
