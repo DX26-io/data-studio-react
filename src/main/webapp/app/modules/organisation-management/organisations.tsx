@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState, translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getOrganisations, searchOrganisations } from './organisation.reducer';
+import { getOrganisations, searchOrganisations,setOrganisation } from './organisation.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
@@ -69,8 +69,14 @@ export const Organisations = (props: IOrganisationsProps) => {
 
   const { organisations, match, totalItems } = props;
 
-  const onClickButton = realm => {
+  const onToggleStatus = organisation => {
     setOpen(true);
+    props.setOrganisation(organisation);
+  };
+
+  const onClickRealms = organisationId => {
+    const url = window.location.origin+`/internal-realm-management?organisationId=${organisationId}&page=0&sort=id,asc`;
+    window.open(url, "_blank");
   };
 
   return (
@@ -89,9 +95,7 @@ export const Organisations = (props: IOrganisationsProps) => {
             setSearchValue(event);
             props.searchOrganisations(event, pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
           }}
-          placeholder={translate('organisations.searchOrganisation')}
-          label={translate('entity.action.search')}
-          data-testid="search"
+          placeholder={translate('organisations.search')}
         />
       </View>
       <DialogContainer
@@ -125,31 +129,34 @@ export const Organisations = (props: IOrganisationsProps) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {organisations.map((realm, i) => (
-                  <TableRow key={`realm-${i}`}>
+                {organisations.map((organisation, i) => (
+                  <TableRow key={`organisation-${i}`}>
                     <TableCell component="th" scope="row" align="center">
-                      {realm.id}
+                      {organisation.id}
                     </TableCell>
-                    <TableCell align="center">{realm.name}</TableCell>
+                    <TableCell align="center">{organisation.name}</TableCell>
                     <TableCell align="center">
-                      {realm.isActive ? (
+                      {organisation.isActive ? (
                         <Translate contentKey="organisations.enabled">Enabled</Translate>
                       ) : (
                         <Translate contentKey="organisations.disabled">Disabled</Translate>
                       )}
                     </TableCell>
-                    <TableCell align="center">{realm.createdBy}</TableCell>
+                    <TableCell align="center">{organisation.createdBy}</TableCell>
                     <TableCell align="center">
                       <Flex gap="size-100" justifyContent="center" alignItems="center">
-                        {realm.isActive ? (
-                          <Button variant="cta" type="submit" onPress={() => onClickButton(realm)}>
+                        {organisation.isActive ? (
+                          <Button variant="cta" type="submit" onPress={() => onToggleStatus(organisation)}>
                             <Translate contentKey="organisations.deactivate">Deactivate</Translate>
                           </Button>
                         ) : (
-                          <Button variant="primary" type="submit" onPress={() => onClickButton(realm)}>
+                          <Button variant="primary" type="submit" onPress={() => onToggleStatus(organisation)}>
                             <Translate contentKey="organisations.activate">Activate</Translate>
                           </Button>
                         )}
+                        <Button variant="cta" type="submit" onPress={() => onClickRealms(organisation.id)}>
+                          <Translate contentKey="realms.title">Realms</Translate>
+                        </Button>
                       </Flex>
                     </TableCell>
                   </TableRow>
@@ -179,7 +186,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
 });
 
-const mapDispatchToProps = { getOrganisations, getSession, searchOrganisations };
+const mapDispatchToProps = { getOrganisations, getSession, searchOrganisations,setOrganisation };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

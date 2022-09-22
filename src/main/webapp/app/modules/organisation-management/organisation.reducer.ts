@@ -3,7 +3,7 @@ import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } 
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IOrganisation } from 'app/shared/model/organisation.model';
 import { ICrudSearchAction } from 'react-jhipster/src/type/redux-action.type';
-import { translate } from "react-jhipster";
+import { translate } from 'react-jhipster';
 
 export const ACTION_TYPES = {
   FETCH_ORGANISATIONS: 'organisation/FETCH_ORGANISATIONS',
@@ -14,6 +14,7 @@ export const ACTION_TYPES = {
   SET_ORGANISATION: 'organisation/SET_ORGANISATION',
   UPDATE_ORGANISATION_NAME: 'organisation/UPDATE_ORGANISATION_NAME',
   RESET: 'organisation/RESET',
+  UPDATE_ORGANISATION_STATUS: 'realms/UPDATE_ORGANISATION_STATUS',
 };
 
 const initialState = {
@@ -60,6 +61,12 @@ export default (state: OrganisationState = initialState, action): OrganisationSt
         updateSuccess: false,
         updating: true,
       };
+    case REQUEST(ACTION_TYPES.UPDATE_ORGANISATION_STATUS):
+      return {
+        ...state,
+        updating: true,
+        updateSuccess: false,
+      };
     case FAILURE(ACTION_TYPES.FETCH_ORGANISATIONS):
     case FAILURE(ACTION_TYPES.FETCH_ORGANISATION):
     case FAILURE(ACTION_TYPES.CREATE_ORGANISATION):
@@ -83,6 +90,12 @@ export default (state: OrganisationState = initialState, action): OrganisationSt
         updateSuccess: false,
         errorMessage: action.payload,
       };
+    case FAILURE(ACTION_TYPES.UPDATE_ORGANISATION_STATUS):
+      return {
+        ...state,
+        updating: false,
+        updateSuccess: false,
+      };
     case SUCCESS(ACTION_TYPES.FETCH_ORGANISATIONS):
       return {
         ...state,
@@ -100,6 +113,12 @@ export default (state: OrganisationState = initialState, action): OrganisationSt
         ...state,
         updating: false,
         updateSuccess: false,
+      };
+    case SUCCESS(ACTION_TYPES.UPDATE_ORGANISATION_STATUS):
+      return {
+        ...state,
+        updating: false,
+        updateSuccess: true,
       };
     case SUCCESS(ACTION_TYPES.UPDATE_ORGANISATION_NAME):
       return {
@@ -124,7 +143,7 @@ export default (state: OrganisationState = initialState, action): OrganisationSt
   }
 };
 
-const apiUrl = 'api/organisations';
+const apiUrl = 'api/organisation';
 
 export const updateName = orgName => ({
   type: ACTION_TYPES.UPDATE_ORGANISATION_NAME,
@@ -146,3 +165,13 @@ export const searchOrganisations: ICrudSearchAction<IOrganisation> = (name: stri
     payload: axios.get<IOrganisation>(requestUrl),
   };
 };
+
+export const updateStatus = (isActive, id) => ({
+  type: ACTION_TYPES.UPDATE_ORGANISATION_STATUS,
+  payload: axios.put(`${apiUrl}/update-status?isActive=${isActive}&id=${id}`),
+});
+
+export const setOrganisation = (organisation: IOrganisation) => ({
+  type: ACTION_TYPES.SET_ORGANISATION,
+  payload: organisation,
+});
