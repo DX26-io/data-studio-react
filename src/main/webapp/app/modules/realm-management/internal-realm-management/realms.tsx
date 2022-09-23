@@ -8,8 +8,8 @@ import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import ConfirmationDialog from './confirmation-dialog';
 import { overridePaginationStateWithQueryParams } from './realm.utils';
+import ConfirmationDialog from 'app/shared/components/confirmation-dialog';
 
 export interface IRealmsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -84,6 +84,10 @@ export const Realms = (props: IRealmsProps) => {
     props.setRealm(realm);
   };
 
+  const _updateStatus = (isActive, id) => {
+    props.updateStatus(isActive, id);
+  };
+
   return (
     <div>
       <SecondaryHeader
@@ -116,7 +120,19 @@ export const Realms = (props: IRealmsProps) => {
         </Flex>
       </View>
       <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && <ConfirmationDialog setOpen={setOpen} setUpdateSuccess={setUpdateSuccess} />}
+        {isOpen && (
+          <ConfirmationDialog
+            updateSuccess={props.updateSuccess}
+            entity={props.realm}
+            updateStatus={_updateStatus}
+            setOpen={setOpen}
+            setUpdateSuccess={setUpdateSuccess}
+            updateContentKey="realms.update"
+            titleContentKey="realms.realm"
+            confirmMessageContentKey="realms.confirmMessage"
+            updating={props.updating}
+          />
+        )}
       </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
@@ -195,8 +211,10 @@ export const Realms = (props: IRealmsProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   realms: storeState.realms.realms,
+  realm: storeState.realms.realm,
   totalItems: storeState.realms.totalItems,
   updating: storeState.realms.updating,
+  updateSuccess: storeState.realms.updateSuccess,
 });
 
 const mapDispatchToProps = { getRealms, updateStatus, setRealm };

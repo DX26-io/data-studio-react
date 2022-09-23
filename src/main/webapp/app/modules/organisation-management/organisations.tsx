@@ -4,13 +4,13 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState, translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getOrganisations, searchOrganisations,setOrganisation } from './organisation.reducer';
+import { getOrganisations, searchOrganisations, setOrganisation,updateStatus } from './organisation.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import ConfirmationDialog from './confirmation-dialog';
 import { getSession } from 'app/shared/reducers/authentication';
+import ConfirmationDialog from 'app/shared/components/confirmation-dialog';
 
 export interface IOrganisationsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -75,8 +75,12 @@ export const Organisations = (props: IOrganisationsProps) => {
   };
 
   const onClickRealms = organisationId => {
-    const url = window.location.origin+`/internal-realm-management?organisationId=${organisationId}&page=0&sort=id,asc`;
-    window.open(url, "_blank");
+    const url = window.location.origin + `/internal-realm-management?organisationId=${organisationId}&page=0&sort=id,asc`;
+    window.open(url, '_blank');
+  };
+
+  const _updateStatus = (isActive,id)=>{
+    props.updateStatus(isActive,id);
   };
 
   return (
@@ -103,7 +107,19 @@ export const Organisations = (props: IOrganisationsProps) => {
           setOpen(false);
         }}
       >
-        {isOpen && <ConfirmationDialog setOpen={setOpen} setUpdateSuccess={setUpdateSuccess} />}
+        {isOpen && (
+          <ConfirmationDialog
+            updateSuccess={props.updateSuccess}
+            entity={props.organisation}
+            updateStatus={_updateStatus}
+            setOpen={setOpen}
+            setUpdateSuccess={setUpdateSuccess}
+            updateContentKey="organisations.update"
+            titleContentKey="organisations.title"
+            confirmMessageContentKey="organisations.confirmMessage"
+            updating={props.updating}
+          />
+        )}
       </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
@@ -118,7 +134,7 @@ export const Organisations = (props: IOrganisationsProps) => {
                     <Translate contentKey="organisations.name">Name</Translate>
                   </TableCell>
                   <TableCell align="center">
-                    <Translate contentKey="organisations.name">Status</Translate>
+                    <Translate contentKey="organisations.status">Status</Translate>
                   </TableCell>
                   <TableCell align="center">
                     <Translate contentKey="organisations.createdBy">Created By</Translate>
@@ -181,12 +197,14 @@ export const Organisations = (props: IOrganisationsProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   organisations: storeState.organisations.organisations,
+  organisation: storeState.organisations.organisation,
   totalItems: storeState.organisations.totalItems,
   updating: storeState.organisations.updating,
   account: storeState.authentication.account,
+  updateSuccess: storeState.organisations.updateSuccess,
 });
 
-const mapDispatchToProps = { getOrganisations, getSession, searchOrganisations,setOrganisation };
+const mapDispatchToProps = { getOrganisations, getSession, searchOrganisations, setOrganisation,updateStatus };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

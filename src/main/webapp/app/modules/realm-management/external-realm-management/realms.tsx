@@ -9,10 +9,10 @@ import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import ConfirmationDialog from './confirmation-dialog';
 import OrganisationUpdate from './organisation-update';
 import { getSession } from 'app/shared/reducers/authentication';
 import RealmUpdate from './realm-update';
+import ConfirmationDialog from 'app/shared/components/confirmation-dialog';
 
 export interface IRealmsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -78,6 +78,11 @@ export const Realms = (props: IRealmsProps) => {
     props.setRealm(realm);
   };
 
+  const _updateStatus = (isActive,id)=>{
+    props.updateStatus(isActive,id);
+
+  };
+
   return (
     <div>
       <SecondaryHeader
@@ -126,7 +131,7 @@ export const Realms = (props: IRealmsProps) => {
           if (isRealmUpdateOpen) setRealmUpdateOpen(false);
         }}
       >
-        {isOpen && <ConfirmationDialog setOpen={setOpen} setUpdateSuccess={setUpdateSuccess} />}
+        {isOpen && <ConfirmationDialog updateSuccess={props.updateSuccess} entity={props.realm} updateStatus={_updateStatus} setOpen={setOpen} setUpdateSuccess={setUpdateSuccess} updateContentKey="realms.update" titleContentKey="realms.realm" confirmMessageContentKey="realms.confirmMessage" updating={props.updating}  />}
         {isOrganisationUpdateOpen && <OrganisationUpdate setOpen={setOrganisationUpdateOpen} setUpdateSuccess={setUpdateSuccess} />}
         {isRealmUpdateOpen && <RealmUpdate setOpen={setRealmUpdateOpen} setUpdateSuccess={setUpdateSuccess} />}
       </DialogContainer>
@@ -206,6 +211,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   totalItems: storeState.realms.totalItems,
   updating: storeState.realms.updating,
   account: storeState.authentication.account,
+  updateSuccess: storeState.realms.updateSuccess,
+  realm: storeState.realms.realm,
 });
 
 const mapDispatchToProps = { getRealms, updateStatus, setRealm, searchRealms, getSession, createRealm };

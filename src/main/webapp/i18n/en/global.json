@@ -135,7 +135,10 @@
       "clear": "Clear",
       "search": "Search",
       "reset": "Reset",
-      "confirm":"Confirm"
+      "confirm":"Confirm",
+      "activate":"Activate",
+      "deactivate":"Deactivate"
+
     },
     "options": {
       "more_options": "More options",
