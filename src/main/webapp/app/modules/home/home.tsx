@@ -2,20 +2,19 @@ import './home.scss';
 
 import React, { useEffect, useState, ReactText } from 'react';
 import { connect } from 'react-redux';
-import { ActionButton, Flex, Heading, Text, View, Content, Item } from '@adobe/react-spectrum';
-import ViewGrid from '@spectrum-icons/workflow/ViewGrid';
-
-import { useHistory } from 'react-router-dom';
-import User from '@spectrum-icons/workflow/User';
-import { setIsHome,updateSearchedText } from 'app/modules/home/home.reducer';
+import { View, Content, Item } from '@adobe/react-spectrum';
+import { setIsHome, updateSearchedText } from 'app/modules/home/home.reducer';
 import { Tabs } from '@react-spectrum/tabs';
 import { translate } from 'react-jhipster';
 import { RouteComponentProps } from 'react-router-dom';
 import QuickStart from './sections/quick-start';
 import Admin from './sections/admin';
+import SuperAdmin from './sections/super-admin';
+import Root from './sections/root';
 import RecentlyAccessed from './sections/recently-accessed';
 import RecentlyCreated from './sections/recently-created';
 import SearchResult from './sections/search-results';
+import { getTabs } from './home.util';
 
 export interface IHomeProp extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -32,11 +31,6 @@ export const Home = (props: IHomeProp) => {
     };
   }, []);
 
-  const topTabs = [
-    { id: 1, name: 'home.top.tabs.quickStart.title' },
-    { id: 2, name: 'home.top.tabs.admin' },
-  ];
-
   const bottomTabs = [
     { id: 1, name: 'home.bottom.tabs.accessed.title' },
     { id: 2, name: 'home.bottom.tabs.created.title' },
@@ -49,17 +43,28 @@ export const Home = (props: IHomeProp) => {
       ) : (
         <React.Fragment>
           {' '}
-          <Tabs aria-label="top-tabs" items={topTabs} selectedKey={topTabId} onSelectionChange={setTopTabId}>
+          <Tabs aria-label="top-tabs" items={getTabs(account)} selectedKey={topTabId} onSelectionChange={setTopTabId}>
             {item => (
               <Item title={translate(item.name)}>
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-                  {topTabId === 1 ? (
+                  {topTabId === 1 && (
                     <View>
                       <QuickStart />
                     </View>
-                  ) : (
+                  )}
+                  {topTabId === 2 && (
                     <View>
                       <Admin />
+                    </View>
+                  )}
+                  {topTabId === 3 && (
+                    <View>
+                      <SuperAdmin />
+                    </View>
+                  )}
+                  {topTabId === 4 && (
+                    <View>
+                      <Root />
                     </View>
                   )}
                 </Content>
@@ -96,7 +101,7 @@ const mapStateToProps = storeState => ({
   searchedText: storeState.home.searchedText,
 });
 
-const mapDispatchToProps = { setIsHome,updateSearchedText };
+const mapDispatchToProps = { setIsHome, updateSearchedText };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

@@ -63,10 +63,9 @@ export const hasAnyAuthority = (account: any, hasAnyAuthorities: string[]) => {
     }
     if (window.location.href.includes('/realm-management')) {
       return (
-        hasAnyAuthorities.some(auth => account.userGroups.includes(auth)) &&
-        (account.organisation.type === ORGANISATION_TYPE_ENTERPRISE || account.organisation.type === ORGANISATION_TYPE_ENTERPRISE)
+        hasAnyAuthorities.some(auth => account.userGroups.includes(auth)) && account.organisation.type === ORGANISATION_TYPE_ENTERPRISE
       );
-    } else if (window.location.href.includes('/internal-realm-management') || window.location.href.includes('/organisation-management')) {
+    } else if (window.location.href.includes('/internal-realm-management')) {
       return hasAnyAuthorities.some(auth => account.userGroups.includes(auth)) && account.organisation.type === ORGANISATION_TYPE_FULL;
     }
     return hasAnyAuthorities.some(auth => account.userGroups.includes(auth));

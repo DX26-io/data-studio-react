@@ -1,6 +1,7 @@
 {
   "realms": {
     "title": "Realms",
+    "description": "Manage your realms",
     "name": "Name",
     "confirmMessage": "Are you sure you want to {{status}} this realm : {{name}} ?",
     "activate": "Activate",

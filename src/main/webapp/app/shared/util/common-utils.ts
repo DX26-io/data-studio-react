@@ -1,3 +1,5 @@
+import { ORGANISATION_TYPE_ENTERPRISE, ORGANISATION_TYPE_FULL, AUTHORITIES } from 'app/config/constants';
+
 /**
  * Extracts the first letters of two words in a text
  * @param stringText
@@ -36,4 +38,24 @@ export const isCanvas = () => {
   } else {
     return false;
   }
+};
+
+export const isRootUser = account => {
+  return account.organisation.type === ORGANISATION_TYPE_FULL;
+};
+
+export const isSuperAdminUser = account => {
+  return account.userGroups.includes(AUTHORITIES.SUPER_ADMIN);
+};
+
+export const isAdminUser = account => {
+  return account.userGroups.includes(AUTHORITIES.ADMIN);
+};
+
+export const isUser = account => {
+  return account.userGroups.includes(AUTHORITIES.USER);
+};
+
+export const isEnterpriseAndSuperadminUser = account => {
+  return account.organisation.type === ORGANISATION_TYPE_ENTERPRISE && isSuperAdminUser(account);
 };

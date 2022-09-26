@@ -88,7 +88,7 @@ export const Realms = (props: IRealmsProps) => {
       <SecondaryHeader
         breadcrumbItems={[
           { label: 'Home', route: '/' },
-          { label: translate('realms.title'), route: '/administration/realm-management/realms' },
+          { label: translate('realms.title'), route: '/administration/realm-management' },
         ]}
         title={translate('realms.title')}
       >
@@ -119,7 +119,7 @@ export const Realms = (props: IRealmsProps) => {
             setSearchValue(event);
             props.searchRealms(event, pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
           }}
-          placeholder={translate('realms.searchRealm')}
+          placeholder={translate('realms.search')}
           label={translate('entity.action.search')}
           data-testid="search"
         />
