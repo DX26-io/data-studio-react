@@ -6,7 +6,7 @@ export const getTabs = account => {
     tabs = [
       { id: 1, name: 'home.top.tabs.quickStart.title' },
       { id: 2, name: 'home.top.tabs.admin' },
-      { id: 3, name: 'home.top.tabs.superAdmin' },
+      // this is commented for time being { id: 3, name: 'home.top.tabs.superAdmin' },
       { id: 4, name: 'home.top.tabs.root' },
     ];
   } else if (isEnterpriseAndSuperadminUser(account)) {
