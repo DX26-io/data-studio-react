@@ -106,7 +106,6 @@ export const Realms = (props: IRealmsProps) => {
             variant="cta"
             onPress={() => {
               setRealmUpdateOpen(true);
-              // props.setRealm({...props.realm, name: '', id: 0, isActive: false, createdBy: '', organisation: null, realmOrganisation: null });
             }}
           >
             <Translate contentKey="realms.create">Create</Translate>
@@ -121,8 +120,6 @@ export const Realms = (props: IRealmsProps) => {
             props.searchRealms(event, pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
           }}
           placeholder={translate('realms.search')}
-          label={translate('entity.action.search')}
-          data-testid="search"
         />
       </View>
       <DialogContainer
