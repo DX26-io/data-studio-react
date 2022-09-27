@@ -210,11 +210,11 @@ export const Realms = (props: IRealmsProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  realms: storeState.realms.realms,
-  realm: storeState.realms.realm,
-  totalItems: storeState.realms.totalItems,
-  updating: storeState.realms.updating,
-  updateSuccess: storeState.realms.updateSuccess,
+  realms: storeState.internalRealms.realms,
+  realm: storeState.internalRealms.realm,
+  totalItems: storeState.internalRealms.totalItems,
+  updating: storeState.internalRealms.updating,
+  updateSuccess: storeState.internalRealms.updateSuccess,
 });
 
 const mapDispatchToProps = { getRealms, updateStatus, setRealm };

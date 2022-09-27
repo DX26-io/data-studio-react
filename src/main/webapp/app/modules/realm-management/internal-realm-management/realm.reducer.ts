@@ -28,10 +28,10 @@ const initialState = {
   realm: null,
 };
 
-export type RealmsState = Readonly<typeof initialState>;
+export type InternalRealmsState = Readonly<typeof initialState>;
 
 // Reducer
-export default (state: RealmsState = initialState, action): RealmsState => {
+export default (state: InternalRealmsState = initialState, action): InternalRealmsState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_ROLES):
       return {
