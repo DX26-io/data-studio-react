@@ -1,4 +1,5 @@
 import { ORGANISATION_TYPE_ENTERPRISE, ORGANISATION_TYPE_FULL, AUTHORITIES } from 'app/config/constants';
+import { debounce } from 'lodash';
 
 /**
  * Extracts the first letters of two words in a text
@@ -59,3 +60,7 @@ export const isUser = account => {
 export const isEnterpriseAndSuperadminUser = account => {
   return account.organisation.type === ORGANISATION_TYPE_ENTERPRISE && isSuperAdminUser(account);
 };
+
+export const debouncedSearch = debounce((callback, args) => {
+  callback.apply(this, args);
+}, 2000);

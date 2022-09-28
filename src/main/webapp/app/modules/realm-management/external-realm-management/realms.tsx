@@ -13,6 +13,7 @@ import OrganisationUpdate from './organisation-update';
 import { getSession } from 'app/shared/reducers/authentication';
 import RealmUpdate from './realm-update';
 import ConfirmationDialog from 'app/shared/components/confirmation-dialog';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 
 export interface IRealmsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -117,7 +118,7 @@ export const Realms = (props: IRealmsProps) => {
           value={searchValue}
           onChange={event => {
             setSearchValue(event);
-            props.searchRealms(event, pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
+            debouncedSearch(props.searchRealms,[event, pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`]);
           }}
           placeholder={translate('realms.search')}
         />

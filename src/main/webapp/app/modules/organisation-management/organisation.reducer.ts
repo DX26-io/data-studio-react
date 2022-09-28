@@ -150,16 +150,13 @@ export const updateName = orgName => ({
   payload: axios.put(`${apiUrl}?name=${orgName}`),
 });
 
-export const getOrganisations: ICrudGetAllAction<IOrganisation> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
-  return {
-    type: ACTION_TYPES.FETCH_ORGANISATIONS,
-    payload: axios.get<IOrganisation>(requestUrl),
-  };
-};
-
-export const searchOrganisations: ICrudSearchAction<IOrganisation> = (name: string, page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?name=${name}&page=${page}&size=${size}&sort=${sort}` : ''}`;
+export const getOrganisations = (page, size, sort, name: string) => {
+  let requestUrl = '';
+  if (name) {
+    requestUrl = `${apiUrl}${sort ? `?name=${name}&page=${page}&size=${size}&sort=${sort}` : ''}`;
+  } else {
+    requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  }
   return {
     type: ACTION_TYPES.FETCH_ORGANISATIONS,
     payload: axios.get<IOrganisation>(requestUrl),

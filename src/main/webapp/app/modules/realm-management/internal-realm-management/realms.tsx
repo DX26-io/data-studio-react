@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import { overridePaginationStateWithQueryParams } from './realm.utils';
 import ConfirmationDialog from 'app/shared/components/confirmation-dialog';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 
 export interface IRealmsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -104,7 +105,7 @@ export const Realms = (props: IRealmsProps) => {
             minWidth={'200px'}
             onChange={event => {
               setSearchedRealmValue(event);
-              props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, event, null, null);
+              debouncedSearch(props.getRealms,[pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, event, null, null]);
             }}
             placeholder={translate('realms.search')}
           />
@@ -113,7 +114,7 @@ export const Realms = (props: IRealmsProps) => {
             minWidth={'200px'}
             onChange={event => {
               setSearchedOrgValue(event);
-              props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, null, event, null);
+              debouncedSearch(props.getRealms,[pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, null, event, null]);
             }}
             placeholder={translate('organisations.search')}
           />
