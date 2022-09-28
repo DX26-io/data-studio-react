@@ -63,4 +63,4 @@ export const isEnterpriseAndSuperadminUser = account => {
 
 export const debouncedSearch = debounce((callback, args) => {
   callback.apply(this, args);
-}, 2000);
+}, 1000);
