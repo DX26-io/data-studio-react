@@ -1,13 +1,14 @@
 {
   "organisations": {
-    "title": "Organisation",
+    "title": "Organisations",
     "name": "Organisation Name",
+    "description": "Manage your organisations",
     "status":"Status",
     "enabled": "Enabled",
     "disabled": "Disabled",
     "create":"Create Organisation",
     "update":"Update Organisation",
-    "organisation":"Realm",
+    "organisation":"Organisation",
     "createSuccessMessages":"Organisation is created successfully!",
     "createdBy": "Created By",
     "createdDate": "Created Date",

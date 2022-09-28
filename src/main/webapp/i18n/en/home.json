@@ -18,7 +18,9 @@
           "reportManagement": "Report Management",
           "bookmarks": "Bookmarks"
         },
-        "admin": "Admin"
+        "admin": "Admin",
+        "superAdmin":"Super Admin",
+        "root":"Root"
       }
     },
     "bottom": {

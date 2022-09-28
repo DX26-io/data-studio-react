@@ -82,9 +82,9 @@ const RealmUpdate = (props: IRealmUpdateProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  updateSuccess: storeState.realms.updateSuccess,
-  realm: storeState.realms.realm,
-  updating: storeState.realms.updating,
+  updateSuccess: storeState.externalRealms.updateSuccess,
+  realm: storeState.externalRealms.realm,
+  updating: storeState.externalRealms.updating,
   account: storeState.authentication.account,
 });
 

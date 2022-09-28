@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-import { IRealm, defaultValue } from 'app/shared/model/realm.model';
+import { IRealm, getDefaultValues } from 'app/shared/model/realm.model';
 import { ICrudSearchAction } from 'react-jhipster/src/type/redux-action.type';
 
 export const ACTION_TYPES = {
@@ -25,13 +25,13 @@ const initialState = {
   fetchSuccess: false,
   totalItems: 0,
   searchedGroups: [] as ReadonlyArray<IRealm>,
-  realm: defaultValue,
+  realm: getDefaultValues(),
 };
 
-export type RealmsState = Readonly<typeof initialState>;
+export type ExternalRealmsState = Readonly<typeof initialState>;
 
 // Reducer
-export default (state: RealmsState = initialState, action): RealmsState => {
+export default (state: ExternalRealmsState = initialState, action): ExternalRealmsState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_ROLES):
       return {
@@ -134,7 +134,7 @@ export default (state: RealmsState = initialState, action): RealmsState => {
         fetchSuccess: false,
         updateSuccess: false,
         updating: false,
-        realm: defaultValue,
+        realm: getDefaultValues(),
       };
     default:
       return state;

@@ -61,7 +61,8 @@ import featureCriteria, { FeatureCriteriaState } from 'app/entities/feature-crit
 import hierarchies, { HierarchyState } from 'app/entities/hierarchy/hierarchy.reducer';
 import releases, { ReleasesState } from 'app/modules/administration/release-management/releases.reducer';
 import shareLinkVisualisation, { shareLinkVisualisationState } from 'app/entities/share/share-link-visualisation.reducer';
-import realms, { RealmsState } from 'app/modules/realm-management/internal-realm-management/realm.reducer';
+import internalRealms, { InternalRealmsState } from 'app/modules/realm-management/internal-realm-management/realm.reducer';
+import externalRealms, { ExternalRealmsState } from 'app/modules/realm-management/external-realm-management/realm.reducer';
 import organisations, { OrganisationState } from 'app/modules/organisation-management/organisation.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
@@ -106,7 +107,8 @@ export interface IRootState {
   readonly releases: ReleasesState;
   readonly shareLinkVisualisation: shareLinkVisualisationState;
   readonly visulisationColors: VisualisationColorsState;
-  readonly realms: RealmsState;
+  readonly internalRealms: InternalRealmsState;
+  readonly externalRealms  :  ExternalRealmsState
   readonly organisations : OrganisationState;
 }
 
@@ -151,8 +153,9 @@ const rootReducer = combineReducers<IRootState>({
   releases,
   shareLinkVisualisation,
   visulisationColors,
-  realms,
-  organisations
+  internalRealms,
+  organisations,
+  externalRealms
 });
 
 export default rootReducer;

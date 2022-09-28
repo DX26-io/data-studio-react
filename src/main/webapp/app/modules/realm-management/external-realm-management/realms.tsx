@@ -4,15 +4,16 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState, translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getRealms, updateStatus, setRealm, searchRealms, createRealm } from './realm.reducer';
+import { getRealms, updateStatus, setRealm, searchRealms, createRealm, reset } from './realm.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import ConfirmationDialog from './confirmation-dialog';
 import OrganisationUpdate from './organisation-update';
 import { getSession } from 'app/shared/reducers/authentication';
 import RealmUpdate from './realm-update';
+import ConfirmationDialog from 'app/shared/components/confirmation-dialog';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 
 export interface IRealmsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -78,12 +79,17 @@ export const Realms = (props: IRealmsProps) => {
     props.setRealm(realm);
   };
 
+  const _updateStatus = (isActive, id) => {
+    props.updateStatus(isActive, id);
+    props.reset();
+  };
+
   return (
     <div>
       <SecondaryHeader
         breadcrumbItems={[
           { label: 'Home', route: '/' },
-          { label: translate('realms.title'), route: '/administration/realm-management/realms' },
+          { label: translate('realms.title'), route: '/administration/realm-management' },
         ]}
         title={translate('realms.title')}
       >
@@ -112,21 +118,34 @@ export const Realms = (props: IRealmsProps) => {
           value={searchValue}
           onChange={event => {
             setSearchValue(event);
-            props.searchRealms(event, pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
+            debouncedSearch(props.searchRealms,[event, pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`]);
           }}
-          placeholder={translate('realms.searchRealm')}
-          label={translate('entity.action.search')}
-          data-testid="search"
+          placeholder={translate('realms.search')}
         />
       </View>
       <DialogContainer
         onDismiss={() => {
-          if (isOpen) setOpen(false);
+          if (isOpen) {
+            setOpen(false);
+            props.reset();
+          }
           if (isOrganisationUpdateOpen) setOrganisationUpdateOpen(false);
           if (isRealmUpdateOpen) setRealmUpdateOpen(false);
         }}
       >
-        {isOpen && <ConfirmationDialog setOpen={setOpen} setUpdateSuccess={setUpdateSuccess} />}
+        {isOpen && (
+          <ConfirmationDialog
+            updateSuccess={props.updateSuccess}
+            entity={props.realm}
+            updateStatus={_updateStatus}
+            setOpen={setOpen}
+            setUpdateSuccess={setUpdateSuccess}
+            updateContentKey="realms.update"
+            titleContentKey="realms.realm"
+            confirmMessageContentKey="realms.confirmMessage"
+            updating={props.updating}
+          />
+        )}
         {isOrganisationUpdateOpen && <OrganisationUpdate setOpen={setOrganisationUpdateOpen} setUpdateSuccess={setUpdateSuccess} />}
         {isRealmUpdateOpen && <RealmUpdate setOpen={setRealmUpdateOpen} setUpdateSuccess={setUpdateSuccess} />}
       </DialogContainer>
@@ -202,13 +221,15 @@ export const Realms = (props: IRealmsProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  realms: storeState.realms.realms,
-  totalItems: storeState.realms.totalItems,
-  updating: storeState.realms.updating,
+  realms: storeState.externalRealms.realms,
+  totalItems: storeState.externalRealms.totalItems,
+  updating: storeState.externalRealms.updating,
   account: storeState.authentication.account,
+  updateSuccess: storeState.externalRealms.updateSuccess,
+  realm: storeState.externalRealms.realm,
 });
 
-const mapDispatchToProps = { getRealms, updateStatus, setRealm, searchRealms, getSession, createRealm };
+const mapDispatchToProps = { getRealms, updateStatus, setRealm, searchRealms, getSession, createRealm, reset };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

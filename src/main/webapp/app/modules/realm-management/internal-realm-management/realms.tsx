@@ -8,8 +8,9 @@ import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import ConfirmationDialog from './confirmation-dialog';
 import { overridePaginationStateWithQueryParams } from './realm.utils';
+import ConfirmationDialog from 'app/shared/components/confirmation-dialog';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 
 export interface IRealmsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -84,12 +85,16 @@ export const Realms = (props: IRealmsProps) => {
     props.setRealm(realm);
   };
 
+  const _updateStatus = (isActive, id) => {
+    props.updateStatus(isActive, id);
+  };
+
   return (
     <div>
       <SecondaryHeader
         breadcrumbItems={[
           { label: 'Home', route: '/' },
-          { label: translate('realms.title'), route: '/administration/realm-management/realms' },
+          { label: translate('realms.title'), route: '/administration/realm-management' },
         ]}
         title={translate('realms.title')}
       ></SecondaryHeader>
@@ -100,7 +105,7 @@ export const Realms = (props: IRealmsProps) => {
             minWidth={'200px'}
             onChange={event => {
               setSearchedRealmValue(event);
-              props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, event, null, null);
+              debouncedSearch(props.getRealms,[pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, event, null, null]);
             }}
             placeholder={translate('realms.search')}
           />
@@ -109,14 +114,26 @@ export const Realms = (props: IRealmsProps) => {
             minWidth={'200px'}
             onChange={event => {
               setSearchedOrgValue(event);
-              props.getRealms(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, null, event, null);
+              debouncedSearch(props.getRealms,[pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, null, event, null]);
             }}
             placeholder={translate('organisations.search')}
           />
         </Flex>
       </View>
       <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && <ConfirmationDialog setOpen={setOpen} setUpdateSuccess={setUpdateSuccess} />}
+        {isOpen && (
+          <ConfirmationDialog
+            updateSuccess={props.updateSuccess}
+            entity={props.realm}
+            updateStatus={_updateStatus}
+            setOpen={setOpen}
+            setUpdateSuccess={setUpdateSuccess}
+            updateContentKey="realms.update"
+            titleContentKey="realms.realm"
+            confirmMessageContentKey="realms.confirmMessage"
+            updating={props.updating}
+          />
+        )}
       </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
@@ -194,9 +211,11 @@ export const Realms = (props: IRealmsProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  realms: storeState.realms.realms,
-  totalItems: storeState.realms.totalItems,
-  updating: storeState.realms.updating,
+  realms: storeState.internalRealms.realms,
+  realm: storeState.internalRealms.realm,
+  totalItems: storeState.internalRealms.totalItems,
+  updating: storeState.internalRealms.updating,
+  updateSuccess: storeState.internalRealms.updateSuccess,
 });
 
 const mapDispatchToProps = { getRealms, updateStatus, setRealm };
