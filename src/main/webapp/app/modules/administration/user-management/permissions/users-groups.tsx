@@ -11,6 +11,7 @@ import { translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE, ACTIVE_PAGE } from 'app/shared/util/pagination.constants';
 import { setSearchUrl } from './permissions.reducer';
 import { getSearchParam } from './permissions-util';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 export interface IUsersGroupsProps extends StateProps, DispatchProps {
   permissionProps: any;
 }
@@ -75,9 +76,9 @@ export const UsersGroups = (props: IUsersGroupsProps) => {
   useEffect(() => {
     if (searchValue.length > 1) {
       if (tabId === 1) {
-        props.searchUsers(ACTIVE_PAGE, ITEMS_PER_PAGE, 'login,asc', searchValue);
+        debouncedSearch(props.searchUsers,[ACTIVE_PAGE, ITEMS_PER_PAGE, 'login,asc', searchValue]);
       } else {
-        props.searchUserGroups(ACTIVE_PAGE, ITEMS_PER_PAGE, 'name,asc', searchValue);
+        debouncedSearch(props.searchUserGroups,[ACTIVE_PAGE, ITEMS_PER_PAGE, 'name,asc', searchValue]);
       }
     }
   }, [searchValue]);
