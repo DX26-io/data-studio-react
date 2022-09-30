@@ -28,6 +28,7 @@ import Select from 'react-select';
 import { generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 import { generateFeatureNameOptions } from '../../permissions-util';
 import { loadFilterOptions } from 'app/entities/feature/feature.reducer';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 
 export interface IUserDatasourceConstraintConditionProps extends StateProps, DispatchProps {
   condition: any;
@@ -53,7 +54,7 @@ export const UserDatasourceConstraintCondition = (props: IUserDatasourceConstrai
 
   const handleInputChange = (constraint: any, newValue: string) => {
     props.setFilterData(null);
-    props.loadFilterOptions(constraint.featureName, props.constraint.datasource.id, newValue);
+    debouncedSearch(props.loadFilterOptions,[constraint.featureName, props.constraint.datasource.id, newValue]);
   };
 
   const onFocus = constraint => {
