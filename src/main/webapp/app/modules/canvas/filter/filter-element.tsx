@@ -21,6 +21,7 @@ import Separator from '@spectrum-icons/workflow/Separator';
 import { Translate } from 'react-jhipster';
 import { setDatesInFeature,markFavouriteFilter } from 'app/entities/feature/feature.reducer';
 import { loadFilterOptions } from 'app/entities/feature/feature.reducer';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 
 export interface IFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
@@ -32,7 +33,7 @@ const FilterElement = (props: IFilterElementProp) => {
 
   const handleInputChange = (newValue: string) => {
     props.setFilterData(null);
-    props.loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id, newValue);
+    debouncedSearch(props.loadFilterOptions,[props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id, newValue]);
   };
 
   const onFocus = () => {

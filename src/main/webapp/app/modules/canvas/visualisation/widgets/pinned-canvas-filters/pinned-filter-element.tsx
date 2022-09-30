@@ -18,6 +18,7 @@ import {
 import { generateOptions } from 'app/shared/util/entity-utils';
 import { setDatesInFeature } from 'app/entities/feature/feature.reducer';
 import { loadFilterOptions } from 'app/entities/feature/feature.reducer';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 
 export interface IPinnedFilterElementProp extends StateProps, DispatchProps {
   feature: IFeature;
@@ -26,7 +27,7 @@ export interface IPinnedFilterElementProp extends StateProps, DispatchProps {
 const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
   const handleInputChange = (newValue: string) => {
     props.setFilterData(null);
-    props.loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id, newValue);
+    debouncedSearch(props.loadFilterOptions,[props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id, newValue]);
   };
 
   const onFocus = () => {

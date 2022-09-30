@@ -3,27 +3,18 @@ import { connect } from 'react-redux';
 import { Flex, SearchField } from '@adobe/react-spectrum';
 import { getRecentlyAccessedBookmarks } from 'app/modules/home/sections/recent.reducer';
 import { translate } from 'react-jhipster';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 
 const BookmarkSearch = props => {
   const [searchedText, setSearchedText] = React.useState('');
-  let delayTimer;
-
-  const getBookmarks = text => {
-    clearTimeout(delayTimer);
-    delayTimer = setTimeout(() => {
-      props.getRecentlyAccessedBookmarks(0, 5, 'watchTime,desc', text);
-    }, 1000);
-  };
 
   const onChangeSearchedText = event => {
     setSearchedText(event);
-    if (event.length >= 2 || event.length === 0) {
-      getBookmarks(event);
-    }
+    debouncedSearch(props.getRecentlyAccessedBookmarks,[0, 5, 'watchTime,desc', event]);
   };
 
   useEffect(() => {
-    getBookmarks('');
+    props.getRecentlyAccessedBookmarks(0, 5, 'watchTime,desc', '');
   }, []);
 
   return (

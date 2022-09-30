@@ -4,23 +4,14 @@ import { Flex, SearchField } from '@adobe/react-spectrum';
 import { translate } from 'react-jhipster';
 import { getDashboardViewEntitiesByName } from 'app/entities/views/views.reducer';
 import { IRootState } from 'app/shared/reducers';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 
 const ViewSearch = props => {
   const [searchedText, setSearchedText] = React.useState('');
-  let delayTimer;
-
-  const getViews = text => {
-    clearTimeout(delayTimer);
-    delayTimer = setTimeout(() => {
-      props.getDashboardViewEntitiesByName(props.dashboardEntity.id,text);
-    }, 1000);
-  };
 
   const onChangeSearchedText = event => {
     setSearchedText(event);
-    if (event.length >= 2 || event.length === 0) {
-      getViews(event);
-    }
+    debouncedSearch(props.getDashboardViewEntitiesByName, [props.dashboardEntity.id, event]);
   };
 
   return (
@@ -33,7 +24,7 @@ const ViewSearch = props => {
         onChange={onChangeSearchedText}
         onSubmit={event => {
           setSearchedText(event);
-          props.getDashboardViewEntitiesByName(props.dashboardEntity.id,event);
+          props.getDashboardViewEntitiesByName(props.dashboardEntity.id, event);
         }}
         value={searchedText}
         width="size-4600"

@@ -27,6 +27,7 @@ import AddRemoveAction from './add-remove-action';
 import AndOrCondition from './and-or-condition';
 import { COMPARE_TYPES } from 'app/shared/util/data-constraints.constants';
 import SeparatorInput from 'app/shared/components/separator/separator-input';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 
 interface IConditionProps extends StateProps, DispatchProps {
   condition: any;
@@ -97,7 +98,7 @@ const Condition = (props: IConditionProps) => {
 
   const onContaintsHandleInputChange = newValue => {
     props.setFilterData(null);
-    props.loadFilterOptions(_condition.featureName, props.view?.viewDashboard?.dashboardDatasource.id, newValue);
+    debouncedSearch(props.loadFilterOptions, [_condition.featureName, props.view?.viewDashboard?.dashboardDatasource.id, newValue]);
   };
 
   const onContaintsHandleChange = (value, actionMeta) => {
@@ -146,7 +147,11 @@ const Condition = (props: IConditionProps) => {
       if ((props.condition['@type'] === 'Compare' || props.condition['@type'] === 'Like') && props.condition?.value) {
         setConditionValue(props.condition.value);
       }
-      if ((props.condition['@type'] === 'Contains' || props.condition['@type'] === 'NotContains') && props.condition?.values && props.condition?.values?.length > 0) {
+      if (
+        (props.condition['@type'] === 'Contains' || props.condition['@type'] === 'NotContains') &&
+        props.condition?.values &&
+        props.condition?.values?.length > 0
+      ) {
         setContainsValues(getContainsValues(props.condition));
       }
     }
@@ -261,7 +266,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 const mapDispatchToProps = {
   updateConditionExpression,
   setFilterData,
-  loadFilterOptions
+  loadFilterOptions,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

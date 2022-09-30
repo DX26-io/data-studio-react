@@ -23,6 +23,7 @@ import { connectionDefaultValue } from 'app/shared/model/connection.model';
 import { defaultDatasourceValue } from 'app/shared/model/datasources.model';
 import { defaultConnectionTypeValue } from 'app/shared/model/connection-type.model';
 import { isShowDataButtonDisabled } from '../datasource-util';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 
 export interface IExploreDataModelProps extends StateProps, DispatchProps {}
 
@@ -58,7 +59,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
         filter: exploreModelTabId === 1 ? 'TABLE' : 'SQL',
       };
       body['connection'] = prepareConnection(connection, connectionType);
-      props.listTables(body);
+      debouncedSearch(props.listTables,[body]);
     }
   };
 
