@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState, translate } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getOrganisations, setOrganisation,updateStatus } from './organisation.reducer';
+import { getOrganisations, setOrganisation, updateStatus } from './organisation.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
@@ -12,7 +12,6 @@ import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header
 import { getSession } from 'app/shared/reducers/authentication';
 import ConfirmationDialog from 'app/shared/components/confirmation-dialog';
 import { debouncedSearch } from 'app/shared/util/common-utils';
-
 
 export interface IOrganisationsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
@@ -24,7 +23,7 @@ export const Organisations = (props: IOrganisationsProps) => {
   const [searchValue, setSearchValue] = React.useState('');
 
   const fetchUsersOrganisations = () => {
-    props.getOrganisations(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`,null);
+    props.getOrganisations(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, null);
     const endURL = `?page=${pagination.activePage}&sort=${pagination.sort},${pagination.order}`;
     if (props.location.search !== endURL) {
       props.history.push(`${props.location.pathname}${endURL}`);
@@ -81,9 +80,11 @@ export const Organisations = (props: IOrganisationsProps) => {
     window.open(url, '_blank');
   };
 
-  const _updateStatus = (isActive,id)=>{
-    props.updateStatus(isActive,id);
+  const _updateStatus = (isActive, id) => {
+    props.updateStatus(isActive, id);
   };
+
+  const onPageChange = (event, page) => {};
 
   return (
     <div>
@@ -99,7 +100,12 @@ export const Organisations = (props: IOrganisationsProps) => {
           value={searchValue}
           onChange={event => {
             setSearchValue(event);
-            debouncedSearch(props.getOrganisations,[pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`,event]);
+            debouncedSearch(props.getOrganisations, [
+              pagination.activePage,
+              pagination.itemsPerPage,
+              `${pagination.sort},${pagination.order}`,
+              event,
+            ]);
           }}
           placeholder={translate('organisations.search')}
         />
@@ -184,6 +190,7 @@ export const Organisations = (props: IOrganisationsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
+            onPageChange={onPageChange}
             component="div"
             count={totalItems}
             rowsPerPage={pagination.itemsPerPage}
@@ -206,7 +213,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updateSuccess: storeState.organisations.updateSuccess,
 });
 
-const mapDispatchToProps = { getOrganisations, getSession, setOrganisation,updateStatus };
+const mapDispatchToProps = { getOrganisations, getSession, setOrganisation, updateStatus };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

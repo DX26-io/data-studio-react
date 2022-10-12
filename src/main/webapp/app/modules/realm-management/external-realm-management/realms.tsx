@@ -84,6 +84,11 @@ export const Realms = (props: IRealmsProps) => {
     props.reset();
   };
 
+  const onPageChange = (event,page)=>{
+
+  }
+
+
   return (
     <div>
       <SecondaryHeader
@@ -207,12 +212,14 @@ export const Realms = (props: IRealmsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
+onPageChange={onPageChange}
             component="div"
             count={totalItems}
             rowsPerPage={pagination.itemsPerPage}
             page={pagination.activePage}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
+            onPageChange={onPageChange}
           />
         </Paper>
       </div>

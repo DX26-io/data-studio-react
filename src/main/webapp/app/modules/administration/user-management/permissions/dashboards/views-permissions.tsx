@@ -5,7 +5,7 @@ import {
   getUserGroupViewsPermissions,
   updateUserGroupPermissions,
   updateUserPermissions,
-  resetViewsPermissions
+  resetViewsPermissions,
 } from '../permissions.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
@@ -104,6 +104,8 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
     }
   };
 
+  const onPageChange = (event, page) => {};
+
   return (
     <Dialog data-testid="views-permissions-dialog" width="90vw" top="3vh">
       <Heading>
@@ -161,13 +163,11 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
             <TableBody>
               {viewsPermissions.map((view, i) => (
                 <TableRow key={`view-${view.info.viewName}`}>
-                  <TableCell align="center">
-                    {view.info.viewName}
-                  </TableCell>
+                  <TableCell align="center">{view.info.viewName}</TableCell>
                   {view.info.permissionMetadata.map((p, j) => (
                     <TableCell align="center" key={`permission-${p.permission.key.action}`}>
                       <Checkbox
-                        data-testid = {`checkbox-${p.permission.key.action}`}
+                        data-testid={`checkbox-${p.permission.key.action}`}
                         defaultSelected={p.hasIt}
                         isEmphasized
                         onChange={() => {
@@ -183,6 +183,7 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
           </Table>
         </TableContainer>
         <TablePagination
+          onPageChange={onPageChange}
           component="div"
           count={totalViewsPermissions}
           rowsPerPage={pagination.itemsPerPage}
@@ -206,7 +207,7 @@ const mapDispatchToProps = {
   getUserGroupViewsPermissions,
   updateUserGroupPermissions,
   updateUserPermissions,
-  resetViewsPermissions
+  resetViewsPermissions,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

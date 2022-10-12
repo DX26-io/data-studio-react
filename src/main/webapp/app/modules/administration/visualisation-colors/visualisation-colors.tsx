@@ -4,7 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Col, Row, Table } from 'reactstrap';
 import { Translate, ICrudGetAllAction, translate, getSortState } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
-import { getEntitiesWithPages, deleteEntity,getEntity } from './visualisation-colors.reducer';
+import { getEntitiesWithPages, deleteEntity, getEntity } from './visualisation-colors.reducer';
 import { IVisualisationColors } from 'app/shared/model/visualization-colors.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
@@ -15,7 +15,7 @@ import VisualizationColorsUpdate from './visualisation-colors-update';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 
-export interface IVisualisationColorsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
+export interface IVisualisationColorsProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Visualizationcolors = (props: IVisualisationColorsProps) => {
   const [isOpen, setOpen] = React.useState(false);
@@ -60,27 +60,28 @@ export const Visualizationcolors = (props: IVisualisationColorsProps) => {
     });
   };
 
+  const onPageChange = (event, page) => {};
+
   return (
-    <><SecondaryHeader
-      breadcrumbItems={[
-        { label: 'Home', route: '/' },
-        { label: translate('visualisationColors.home.title'), route: '/administration/visualization-colors' },
-      ]}
-      title={translate('visualisationColors.home.title')}
-    >
-      <Button
-        variant="cta"
-        onPress={() => {
-          setOpen(true);
-        }}
-        data-testid="create-color"
+    <>
+      <SecondaryHeader
+        breadcrumbItems={[
+          { label: 'Home', route: '/' },
+          { label: translate('visualisationColors.home.title'), route: '/administration/visualization-colors' },
+        ]}
+        title={translate('visualisationColors.home.title')}
       >
-        <Translate contentKey="entity.action.create">Create</Translate>
-      </Button>
-    </SecondaryHeader>
-      <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && <VisualizationColorsUpdate setOpen={setOpen}/>}
-      </DialogContainer>
+        <Button
+          variant="cta"
+          onPress={() => {
+            setOpen(true);
+          }}
+          data-testid="create-color"
+        >
+          <Translate contentKey="entity.action.create">Create</Translate>
+        </Button>
+      </SecondaryHeader>
+      <DialogContainer onDismiss={() => setOpen(false)}>{isOpen && <VisualizationColorsUpdate setOpen={setOpen} />}</DialogContainer>
 
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
@@ -110,8 +111,7 @@ export const Visualizationcolors = (props: IVisualisationColorsProps) => {
                     </TableCell>
                     <TableCell align="center">{visualizationColor.code}</TableCell>
                     <TableCell align="center">
-                      <div style={{ backgroundColor: visualizationColor.code,height: '25px',width: '25px',margin: 'auto'}}>
-                      </div>
+                      <div style={{ backgroundColor: visualizationColor.code, height: '25px', width: '25px', margin: 'auto' }}></div>
                     </TableCell>
                     <TableCell align="center">
                       <Flex gap="size-100" justifyContent="center">
@@ -132,6 +132,7 @@ export const Visualizationcolors = (props: IVisualisationColorsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
+            onPageChange={onPageChange}
             component="div"
             count={props.totalItems}
             rowsPerPage={pagination.itemsPerPage}
@@ -139,7 +140,6 @@ export const Visualizationcolors = (props: IVisualisationColorsProps) => {
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
           />
-
         </Paper>
       </div>
     </>
@@ -155,7 +155,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 const mapDispatchToProps = {
   getEntitiesWithPages,
   deleteEntity,
-  getEntity
+  getEntity,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

@@ -71,6 +71,10 @@ export const Reports = (props: IReportsProps) => {
     });
   };
 
+  const onPageChange = (event,page)=>{
+
+  }
+
   return (
     <div>
       <SecondaryHeader
@@ -164,6 +168,7 @@ export const Reports = (props: IReportsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
+            onPageChange={onPageChange}
             component="div"
             count={props.totalReports}
             rowsPerPage={pagination.itemsPerPage}
@@ -183,7 +188,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
 });
 
-const mapDispatchToProps = { fetchReports,getViewFeaturesEntities,getViewEntity };
+const mapDispatchToProps = { fetchReports, getViewFeaturesEntities, getViewEntity };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

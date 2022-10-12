@@ -36,7 +36,6 @@ export const DatasourcePermissions = (props: IDatasourceProps) => {
     } else if (group) {
       props.getUserGroupDatasourcePermissions(pagination.activePage, pagination.itemsPerPage, group);
     }
-
   };
 
   useEffect(() => {
@@ -80,6 +79,8 @@ export const DatasourcePermissions = (props: IDatasourceProps) => {
       toast.success(translate('permissions.messages'));
     }
   }, [props.updateSuccess]);
+
+  const onPageChange = (event, page) => {};
 
   return (
     <div className="dx26-container">
@@ -125,6 +126,7 @@ export const DatasourcePermissions = (props: IDatasourceProps) => {
           </Table>
         </TableContainer>
         <TablePagination
+          onPageChange={onPageChange}
           rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
           component="div"
           count={totalDatasourcePermissions}

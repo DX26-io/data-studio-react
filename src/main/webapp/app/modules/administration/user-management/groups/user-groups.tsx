@@ -4,7 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getUserGroups,setUserGroup } from './user-group.reducer';
+import { getUserGroups, setUserGroup } from './user-group.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
@@ -67,6 +67,8 @@ export const UserGroups = (props: IUserGroupsProps) => {
 
   const { groups, match, totalItems } = props;
 
+  const onPageChange = (event, page) => {};
+
   return (
     <div>
       <SecondaryHeader
@@ -88,13 +90,7 @@ export const UserGroups = (props: IUserGroupsProps) => {
         </Button>
       </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && (
-          <UserGroupUpdate
-            setUpdateSuccess={setUpdateSuccess}
-            setOpen={setOpen}
-            {...props}
-          ></UserGroupUpdate>
-        )}
+        {isOpen && <UserGroupUpdate setUpdateSuccess={setUpdateSuccess} setOpen={setOpen} {...props}></UserGroupUpdate>}
       </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
@@ -139,6 +135,7 @@ export const UserGroups = (props: IUserGroupsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
+            onPageChange={onPageChange}
             component="div"
             count={totalItems}
             rowsPerPage={pagination.itemsPerPage}
@@ -157,7 +154,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   totalItems: storeState.userGroups.totalItems,
 });
 
-const mapDispatchToProps = { getUserGroups,setUserGroup };
+const mapDispatchToProps = { getUserGroups, setUserGroup };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

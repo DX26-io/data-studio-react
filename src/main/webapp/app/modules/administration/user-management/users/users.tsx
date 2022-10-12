@@ -4,7 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getUsers, updateUser,getUser } from './user.reducer';
+import { getUsers, updateUser, getUser } from './user.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
@@ -65,6 +65,8 @@ export const Users = (props: IUsersProps) => {
     });
   };
 
+  const onPageChange = (event, page) => {};
+
   const { users, match, totalItems } = props;
 
   return (
@@ -89,7 +91,7 @@ export const Users = (props: IUsersProps) => {
         </Button>
       </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && <UserUpdate setUpdateSuccess={setUpdateSuccess}  setOpen={setOpen}/>}
+        {isOpen && <UserUpdate setUpdateSuccess={setUpdateSuccess} setOpen={setOpen} />}
       </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
@@ -152,6 +154,7 @@ export const Users = (props: IUsersProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
+            onPageChange={onPageChange}
             component="div"
             count={totalItems}
             rowsPerPage={pagination.itemsPerPage}
@@ -170,7 +173,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   totalItems: storeState.userManagement.totalItems,
 });
 
-const mapDispatchToProps = { getUsers, updateUser,getUser };
+const mapDispatchToProps = { getUsers, updateUser, getUser };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

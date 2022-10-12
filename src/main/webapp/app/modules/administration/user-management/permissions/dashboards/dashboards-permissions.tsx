@@ -67,6 +67,8 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
   const setUpdateSuccess = () => {
     fetchPermissions();
   };
+  
+  const onPageChange = (event, page) => {};
 
   return (
     <div className="dx26-container">
@@ -152,6 +154,7 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
           </Table>
         </TableContainer>
         <TablePagination
+           onPageChange={onPageChange}
           rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
           component="div"
           count={totalDashboardPermissions}
