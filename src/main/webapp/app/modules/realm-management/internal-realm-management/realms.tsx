@@ -89,9 +89,7 @@ export const Realms = (props: IRealmsProps) => {
     props.updateStatus(isActive, id);
   };
 
-  const onPageChange = (event,page)=>{
-
-  }
+  const onPageChange = (event, page) => {};
 
   return (
     <div>
@@ -109,7 +107,14 @@ export const Realms = (props: IRealmsProps) => {
             minWidth={'200px'}
             onChange={event => {
               setSearchedRealmValue(event);
-              debouncedSearch(props.getRealms,[pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, event, null, null]);
+              debouncedSearch(props.getRealms, [
+                pagination.activePage,
+                pagination.itemsPerPage,
+                `${pagination.sort},${pagination.order}`,
+                event,
+                null,
+                null,
+              ]);
             }}
             placeholder={translate('realms.search')}
           />
@@ -118,7 +123,14 @@ export const Realms = (props: IRealmsProps) => {
             minWidth={'200px'}
             onChange={event => {
               setSearchedOrgValue(event);
-              debouncedSearch(props.getRealms,[pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`, null, event, null]);
+              debouncedSearch(props.getRealms, [
+                pagination.activePage,
+                pagination.itemsPerPage,
+                `${pagination.sort},${pagination.order}`,
+                null,
+                event,
+                null,
+              ]);
             }}
             placeholder={translate('organisations.search')}
           />
@@ -201,13 +213,12 @@ export const Realms = (props: IRealmsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
-onPageChange={onPageChange}
+            onPageChange={onPageChange}
             component="div"
             count={totalItems}
             rowsPerPage={pagination.itemsPerPage}
             page={pagination.activePage}
             onChangePage={handleChangePage}
-            onPageChange={onPageChange}
             onChangeRowsPerPage={handleChangeRowsPerPage}
           />
         </Paper>

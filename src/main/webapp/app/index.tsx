@@ -34,7 +34,7 @@ async function init() {
   await loadConfig();
 
   const container = document.getElementById('root');
-  const root = createRoot(container);
+  const root = createRoot(container!);
 
   const render = Component =>
     // eslint-disable-next-line react/no-render-return-value
@@ -42,6 +42,7 @@ async function init() {
       <ErrorBoundary>
         <SpectrumProvider theme={defaultTheme}>
           <Provider store={store}>
+             {/* eslint-disable  */}
             <FirebaseAuthProvider {...firebaseConfig} firebase={firebase}>
               <div>
                 {/* If this slows down the app in dev disable it and enable when required  */}
@@ -51,8 +52,7 @@ async function init() {
             </FirebaseAuthProvider>
           </Provider>
         </SpectrumProvider>
-      </ErrorBoundary>,
-      // root
+      </ErrorBoundary>
     );
 
   render(AppComponent);

@@ -84,10 +84,7 @@ export const Realms = (props: IRealmsProps) => {
     props.reset();
   };
 
-  const onPageChange = (event,page)=>{
-
-  }
-
+  const onPageChange = (event, page) => {};
 
   return (
     <div>
@@ -123,7 +120,12 @@ export const Realms = (props: IRealmsProps) => {
           value={searchValue}
           onChange={event => {
             setSearchValue(event);
-            debouncedSearch(props.searchRealms,[event, pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`]);
+            debouncedSearch(props.searchRealms, [
+              event,
+              pagination.activePage,
+              pagination.itemsPerPage,
+              `${pagination.sort},${pagination.order}`,
+            ]);
           }}
           placeholder={translate('realms.search')}
         />
@@ -212,14 +214,13 @@ export const Realms = (props: IRealmsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
-onPageChange={onPageChange}
+            onPageChange={onPageChange}
             component="div"
             count={totalItems}
             rowsPerPage={pagination.itemsPerPage}
             page={pagination.activePage}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
-            onPageChange={onPageChange}
           />
         </Paper>
       </div>
