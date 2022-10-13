@@ -89,6 +89,6 @@ type StateProps = ReturnType<typeof mapStateToProps>;
  * Accepts same props as React router Route.
  * The route also checks for authorization if hasAnyAuthorities is specified.
  */
-export const PrivateRoute = connect(mapStateToProps, null, null, { pure: false })(PrivateRouteComponent);
+export const PrivateRoute = connect(mapStateToProps, null, null)(PrivateRouteComponent);
 
 export default PrivateRoute;
