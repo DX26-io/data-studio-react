@@ -1,10 +1,9 @@
 const webpack = require('webpack');
-const webpackMerge = require('webpack-merge');
+const webpackMerge = require('webpack-merge').merge;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const sass = require('sass');
 
 const utils = require('./utils.js');
@@ -12,98 +11,99 @@ const commonConfig = require('./webpack.common.js');
 
 const ENV = 'production';
 
-module.exports = webpackMerge(commonConfig({ env: ENV }), {
-  // devtool: 'source-map', // Enable source maps. Please note that this will slow down the build
-  mode: ENV,
-  entry: {
-    main: './src/main/webapp/app/index'
-  },
-  output: {
-    path: utils.root('build/resources/main/static/'),
-    filename: 'app/[name].[hash].bundle.js',
-    chunkFilename: 'app/[name].[hash].chunk.js'
-  },
-  module: {
-    rules: [
-      {
-        enforce: 'pre',
-        test: /\.s?css$/,
-        loader: 'stripcomment-loader'
-      },
-      {
-        test: /\.(sa|sc|c)ss$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: '../'
-            }
-          },
-          'css-loader',
-          'postcss-loader',
-          {
-            loader: 'sass-loader',
-            options: { implementation: sass }
-          }
-        ]
-      }
-    ]
-  },
-  optimization: {
-    runtimeChunk: false,
-    minimizer: [
-      new TerserPlugin({
-        cache: true,
-        parallel: true,
-        // sourceMap: true, // Enable source maps. Please note that this will slow down the build
-        terserOptions: {
-          ecma: 6,
-          toplevel: true,
-          module: true,
-          beautify: false,
-          comments: false,
-          compress: {
-            warnings: false,
-            ecma: 6,
-            module: true,
-            toplevel: true
-          },
-          output: {
+module.exports = async () =>
+  webpackMerge(await commonConfig({ env: ENV }), {
+    // devtool: 'source-map', // Enable source maps. Please note that this will slow down the build
+    mode: ENV,
+    entry: {
+      main: './src/main/webapp/app/index',
+    },
+    output: {
+      path: utils.root('target/classes/static/'),
+      filename: '[name].[contenthash:8].js',
+      chunkFilename: '[name].[chunkhash:8].chunk.js',
+    },
+    module: {
+      rules: [
+        {
+          test: /\.(sa|sc|c)ss$/,
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                publicPath: '../',
+              },
+            },
+            'css-loader',
+            {
+              loader: 'postcss-loader',
+            },
+            {
+              loader: 'sass-loader',
+              options: { implementation: sass },
+            },
+          ],
+        },
+      ],
+    },
+    optimization: {
+      runtimeChunk: false,
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            parse: {
+              // We want terser to parse ecma 8 code. However, we don't want it
+              // to apply any minification steps that turns valid ecma 5 code
+              // into invalid ecma 5 code. This is why the 'compress' and 'output'
+              // sections only apply transformations that are ecma 5 safe
+              // https://github.com/facebook/create-react-app/pull/4234
+              ecma: 8,
+            },
+            compress: {
+              ecma: 5,
+              warnings: false,
+              // Disabled because of an issue with Uglify breaking seemingly valid code:
+              // https://github.com/facebook/create-react-app/issues/2376
+              // Pending further investigation:
+              // https://github.com/mishoo/UglifyJS2/issues/2011
+              comparisons: false,
+              // Disabled because of an issue with Terser breaking valid code:
+              // https://github.com/facebook/create-react-app/issues/5250
+              // Pending further investigation:
+              // https://github.com/terser-js/terser/issues/120
+              inline: 2,
+            },
+            mangle: {
+              safari10: true,
+            },
+            output: {
+              ecma: 5,
               comments: false,
-              beautify: false,
-              indent_level: 2,
-              ecma: 6
+              // Turned on because emoji and regex is not minified properly using default
+              // https://github.com/facebook/create-react-app/issues/2488
+              ascii_only: true,
+            },
           },
-          mangle: {
-            keep_fnames: true,
-            module: true,
-            toplevel: true
-          }
-        }
+        }),
+        new CssMinimizerPlugin({
+          parallel: true,
+        }),
+      ],
+    },
+    plugins: [
+      new MiniCssExtractPlugin({
+        // Options similar to the same options in webpackOptions.output
+        filename: 'content/[name].[contenthash].css',
+        chunkFilename: 'content/[name].[chunkhash].css',
       }),
-      new OptimizeCSSAssetsPlugin({})
-    ]
-  },
-  plugins: [
-    new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      filename: 'content/[name].[hash].css',
-      chunkFilename: 'content/[name].[hash].css'
-    }),
-    new MomentLocalesPlugin({
-      localesToKeep: [
-        'en'
-        // jhipster-needle-i18n-language-moment-webpack - JHipster will add/remove languages in this array
-      ]
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      debug: false
-    }),
-    new WorkboxPlugin.GenerateSW({
-      clientsClaim: true,
-      skipWaiting: true,
-      exclude: [/swagger-ui/]
-    })
-  ]
-});
+      new webpack.LoaderOptionsPlugin({
+        minimize: true,
+        debug: false,
+      }),
+      new WorkboxPlugin.GenerateSW({
+        clientsClaim: true,
+        skipWaiting: true,
+        exclude: [/swagger-ui/],
+      }),
+    ],
+  });

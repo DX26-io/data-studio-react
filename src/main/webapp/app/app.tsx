@@ -5,7 +5,6 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Redirect } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
-import { hot } from 'react-hot-loader';
 import { Grid, View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { getSessionWithPath } from 'app/shared/reducers/authentication';
@@ -111,4 +110,4 @@ const mapDispatchToProps = { setLocale, getSessionWithPath, getProfile };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(hot(module)(App));
+export default connect(mapStateToProps, mapDispatchToProps)(App);
