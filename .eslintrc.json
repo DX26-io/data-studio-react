@@ -35,6 +35,7 @@
     "@typescript-eslint/unbound-method": "off",
     "@typescript-eslint/array-type": "off",
     "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
     "no-shadow": "off",
     "spaced-comment": ["warn", "always"],
     "guard-for-in": "error",
