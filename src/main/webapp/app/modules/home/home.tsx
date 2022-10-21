@@ -44,6 +44,8 @@ export const Home = (props: IHomeProp) => {
         <React.Fragment>
           {' '}
           <Tabs aria-label="top-tabs" items={getTabs(account)} selectedKey={topTabId} onSelectionChange={setTopTabId}>
+            {/* 
+// @ts-ignore */}
             {item => (
               <Item title={translate(item.name)}>
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
@@ -73,6 +75,8 @@ export const Home = (props: IHomeProp) => {
           </Tabs>
           <br />
           <Tabs aria-label="bottom-tabs" items={bottomTabs} selectedKey={bottomTabId} onSelectionChange={setBottomTabId}>
+            {/* 
+// @ts-ignore */}
             {item => (
               <Item title={translate(item.name)}>
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">

@@ -21,6 +21,8 @@ const VisualisationProperties = () => {
   return (
     <>
       <div className="properties-tabs">
+            {/* 
+// @ts-ignore */}
         <Tabs
           isQuiet={true}
           density={'compact'}
