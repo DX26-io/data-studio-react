@@ -97,6 +97,8 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
           setSelectedField(null);
         }}
       >
+            {/* 
+// @ts-ignore */}
         {item => (
           <Item title={item.name} key={item.id}>
             <Content>

@@ -21,8 +21,6 @@ const VisualisationProperties = () => {
   return (
     <>
       <div className="properties-tabs">
-            {/* 
-// @ts-ignore */}
         <Tabs
           isQuiet={true}
           density={'compact'}
@@ -30,6 +28,8 @@ const VisualisationProperties = () => {
           items={getPropertiesTabTranslations()}
           onSelectionChange={key => setActiveTabId(key)}
         >
+            {/* 
+// @ts-ignore */}
           {item => (
             <Item title={item.name} key={item.id}>
               <Content margin="size-100">

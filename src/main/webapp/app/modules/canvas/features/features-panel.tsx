@@ -129,6 +129,8 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
                 selectedKey={activeTabId}
                 onSelectionChange={key => setActiveTabId(key)}
               >
+                      {/* 
+// @ts-ignore */}
                 {item => (
                   <Item title={item.name} key={item.id}>
                     <Flex justifyContent="safe center" alignItems="center" marginTop="size-250">
