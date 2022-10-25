@@ -1,21 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Footer Renders Footer with default Props 1`] = `
-<ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)
+<ForwardRef($6c848be8e8bffe98$var$View)
   height="size-400"
   paddingX="size-150"
   paddingY="size-75"
 >
-  <ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
+  <ForwardRef($a2ef5497697e8437$var$Flex)
     alignItems="center"
     justifyContent="end"
   >
-    <ForwardRef($fe1955053990ab873941970c7463$var$Text)>
+    <ForwardRef($1efae25dd196d679$var$Text)>
       Dx26
        
       ©
        2021
-    </ForwardRef($fe1955053990ab873941970c7463$var$Text)>
-  </ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
-</ForwardRef($cb4e2cb36ae5e3ab01f62ab7d1672c67$var$View)>
+    </ForwardRef($1efae25dd196d679$var$Text)>
+  </ForwardRef($a2ef5497697e8437$var$Flex)>
+</ForwardRef($6c848be8e8bffe98$var$View)>
 `;

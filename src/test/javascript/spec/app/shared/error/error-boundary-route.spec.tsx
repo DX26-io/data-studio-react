@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 
@@ -28,7 +28,7 @@ describe('error-boundary-route component', () => {
     expect(props.path).toEqual('/');
     expect(props.render).toBeDefined();
     const renderFn: Function = props.render;
-    const comp = mount(
+    const comp = shallow(
       renderFn({
         location: '/',
       })
