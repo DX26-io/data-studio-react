@@ -27,8 +27,7 @@ export const BookmarksContainer = props => {
         title={translate('featureBookmark.home.title')}
       ></SecondaryHeader>
       <Tabs aria-label="roles" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
-                    {/* 
-// @ts-ignore */}
+        
         {item => (
           <Item title={translate(item.name)}>
             <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">

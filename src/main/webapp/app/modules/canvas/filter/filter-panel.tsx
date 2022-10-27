@@ -60,8 +60,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
             <PanelHeader setMinimize={setFilterMinimize} isMinimized={isFilterMinimize} titleKey="entity.action.filters" />
             <Divider size={'S'} />
             <Tabs aria-label="filters" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
-                          {/* 
-// @ts-ignore */}
+              
               {item_ => (
                 <Item title={translate(item_.name)}>
                   <Flex marginTop="size-150" marginBottom="size-150" direction="row" alignItems="center" justifyContent="center">

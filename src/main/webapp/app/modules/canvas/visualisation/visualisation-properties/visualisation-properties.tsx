@@ -28,8 +28,7 @@ const VisualisationProperties = () => {
           items={getPropertiesTabTranslations()}
           onSelectionChange={key => setActiveTabId(key)}
         >
-            {/* 
-// @ts-ignore */}
+
           {item => (
             <Item title={item.name} key={item.id}>
               <Content margin="size-100">

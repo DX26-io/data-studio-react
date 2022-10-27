@@ -135,8 +135,7 @@ const DateRangeComponent = (props: IDateRangeComponentProps) => {
     <>
       <div className={'date-range-picker-tab'}>
         <Tabs aria-label="date-range" items={tabs} selectedKey={tabId} onSelectionChange={setTabId} isQuiet={true} density={'compact'}>
-                      {/* 
-// @ts-ignore */}
+          
           {_item => (
             <Item title={translate(_item.name)} key={_item.id}>
               <Content marginStart="size-125">

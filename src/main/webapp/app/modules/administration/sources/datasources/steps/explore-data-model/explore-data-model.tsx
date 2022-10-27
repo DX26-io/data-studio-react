@@ -147,8 +147,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
               props.setExploreModelId(id);
             }}
           >
-            {/* 
-// @ts-ignore */}
+
             {item => (
               <Item title={translate(item.name)}>
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">

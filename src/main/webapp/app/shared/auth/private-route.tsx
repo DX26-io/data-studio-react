@@ -6,24 +6,20 @@ import { IRootState } from 'app/shared/reducers';
 import ErrorBoundary from 'app/shared/error/error-boundary';
 import { ORGANISATION_TYPE_ENTERPRISE, ORGANISATION_TYPE_FULL } from 'app/config/constants';
 
-interface IOwnProps extends RouteProps {
+export interface IPrivateRouteProps extends RouteProps, StateProps {
   hasAnyAuthorities?: string[];
+  component: any;
 }
 
-export interface IPrivateRouteProps extends IOwnProps, StateProps {}
+export const PrivateRoute = (
+props: IPrivateRouteProps) => {
 
-export const PrivateRouteComponent = ({
-  component: Component,
-  isAuthenticated,
-  sessionHasBeenFetched,
-  isAuthorized,
-  hasAnyAuthorities = [],
-  ...rest
-}: IPrivateRouteProps) => {
+const isAuthorized = hasAnyAuthority(props.account, props.hasAnyAuthorities)
+
   const checkAuthorities = props =>
     isAuthorized ? (
       <ErrorBoundary>
-        <Component {...props} />
+        <props.component {...props} />
       </ErrorBoundary>
     ) : (
       <div className="insufficient-authority">
@@ -34,10 +30,10 @@ export const PrivateRouteComponent = ({
     );
 
   const renderRedirect = props => {
-    if (!sessionHasBeenFetched) {
+    if (!props.sessionHasBeenFetched) {
       return <div></div>;
     } else {
-      return isAuthenticated ? (
+      return props.isAuthenticated ? (
         checkAuthorities(props)
       ) : (
         <Redirect
@@ -51,9 +47,9 @@ export const PrivateRouteComponent = ({
     }
   };
 
-  if (!Component) throw new Error(`A component needs to be specified for private route for path ${(rest as any).path}`);
+  if (!props.component) throw new Error(`A component needs to be specified for private route for path ${(props as any).path}`);
 
-  return <Route {...rest} render={renderRedirect} />;
+  return <Route {...props}  render={renderRedirect} />;
 };
 
 export const hasAnyAuthority = (account: any, hasAnyAuthorities: string[]) => {
@@ -73,14 +69,12 @@ export const hasAnyAuthority = (account: any, hasAnyAuthorities: string[]) => {
   return false;
 };
 
-const mapStateToProps = (
-  { authentication: { isAuthenticated, account, sessionHasBeenFetched } }: IRootState,
-  { hasAnyAuthorities = [] }: IOwnProps
-) => ({
-  isAuthenticated,
-  isAuthorized: hasAnyAuthority(account, hasAnyAuthorities),
-  sessionHasBeenFetched,
+const mapStateToProps = (storeState: IRootState) => ({
+  isAuthenticated: storeState.authentication.isAuthenticated,
+  account: storeState.authentication.account,
+  sessionHasBeenFetched: storeState.authentication.sessionHasBeenFetched,
 });
+
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 
@@ -89,6 +83,4 @@ type StateProps = ReturnType<typeof mapStateToProps>;
  * Accepts same props as React router Route.
  * The route also checks for authorization if hasAnyAuthorities is specified.
  */
-export const PrivateRoute = connect(mapStateToProps, null, null)(PrivateRouteComponent);
-
-export default PrivateRoute;
+export default connect(mapStateToProps, null)(PrivateRoute);

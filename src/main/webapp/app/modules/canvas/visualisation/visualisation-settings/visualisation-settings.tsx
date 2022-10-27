@@ -14,8 +14,7 @@ const VisualisationSettings = props => {
   return (
     <>
       <Tabs isQuiet={true} density={'compact'} items={getSettingsTabTranslations()} onSelectionChange={key => setActiveTabId(key)}>
-            {/* 
-// @ts-ignore */}
+
         {item => (
           <Item title={item.name}>
             <Content margin="size-250">

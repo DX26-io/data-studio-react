@@ -42,15 +42,15 @@ export const isCanvas = () => {
 };
 
 export const isRootUser = account => {
-  return account.organisation.type === ORGANISATION_TYPE_FULL;
+  return account?.organisation?.type === ORGANISATION_TYPE_FULL;
 };
 
 export const isSuperAdminUser = account => {
-  return account.userGroups.includes(AUTHORITIES.SUPER_ADMIN);
+  return account?.userGroups.includes(AUTHORITIES.SUPER_ADMIN);
 };
 
 export const isAdminUser = account => {
-  return account.userGroups.includes(AUTHORITIES.ADMIN);
+  return account?.userGroups.includes(AUTHORITIES.ADMIN);
 };
 
 export const isUser = account => {
@@ -58,7 +58,7 @@ export const isUser = account => {
 };
 
 export const isEnterpriseAndSuperadminUser = account => {
-  return account.organisation.type === ORGANISATION_TYPE_ENTERPRISE && isSuperAdminUser(account);
+  return account?.organisation?.type === ORGANISATION_TYPE_ENTERPRISE && isSuperAdminUser(account);
 };
 
 export const debouncedSearch = debounce((callback, args) => {
