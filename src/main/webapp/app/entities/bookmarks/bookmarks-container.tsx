@@ -1,12 +1,11 @@
 import React, { useState, ReactText } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Grid, View, DialogContainer, Content, Item, ProgressBar } from '@adobe/react-spectrum';
+import { Grid, View, DialogContainer, Content, Item, ProgressBar, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
-import { translate } from 'react-jhipster';
+import { translate, Translate } from 'react-jhipster';
 import BookmarkSearch from './bookmark-search';
-import { Tabs } from '@react-spectrum/tabs';
 import BookmarkCard from './bookmarks-card';
 import BookmarkTable from './bookmarks-table';
 
@@ -26,17 +25,38 @@ export const BookmarksContainer = props => {
         ]}
         title={translate('featureBookmark.home.title')}
       ></SecondaryHeader>
-      <Tabs aria-label="roles" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
-        
-        {item => (
-          <Item title={translate(item.name)}>
-            <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-              <BookmarkSearch />
-              {props.loading && <ProgressBar label="Loading…" isIndeterminate />}
-              <View marginTop="size-250">{tabId === 1 ? <BookmarkTable /> : <BookmarkCard />}</View>
-            </Content>
+      <Tabs aria-label="bookmarks" marginStart="size-200">
+        <TabList>
+          <Item key="1">
+            <Translate contentKey="featureBookmark.tabs.table"></Translate>
           </Item>
-        )}
+          <Item key="2">
+            <Translate contentKey="featureBookmark.tabs.cards"></Translate>
+          </Item>
+        </TabList>
+        <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+          <BookmarkSearch />
+          {props.loading ? (
+            <ProgressBar label="Loading…" isIndeterminate />
+          ) : (
+            <TabPanels>
+              <Item key="1">
+                <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+                  <View marginTop="size-250">
+                    <BookmarkTable />
+                  </View>
+                </Content>
+              </Item>
+              <Item key="2">
+                <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+                  <View marginTop="size-250">
+                    <BookmarkCard />
+                  </View>
+                </Content>
+              </Item>
+            </TabPanels>
+          )}
+        </Content>
       </Tabs>
     </View>
   );

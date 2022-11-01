@@ -1,5 +1,4 @@
-import { Content, Picker, Section, Text, TextField, View } from '@adobe/react-spectrum';
-import { Item, Tabs } from '@react-spectrum/tabs';
+import { Content, Picker, Section, Text, TextField, View, TabList, Item, TabPanels, Tabs } from '@adobe/react-spectrum';
 import React, { FC, ReactText, useEffect, useRef, useState } from 'react';
 import {
   formatDate,
@@ -15,7 +14,7 @@ import {
 } from 'app/shared/util/date-utils';
 import DatePicker from 'app/shared/components/date-picker/date-picker';
 import { DYNAMIC_DATE_RANGE_CONFIG, tabList } from 'app/shared/util/data-constraints.constants';
-import { translate } from 'react-jhipster';
+import { translate, Translate } from 'react-jhipster';
 
 interface IDateRangeComponentProps {
   onDateChange: (fromDate, toDate, metadata) => void;
@@ -26,20 +25,20 @@ interface IDateRangeComponentProps {
 }
 
 const DateRangeComponent = (props: IDateRangeComponentProps) => {
-  const tabs = [
-    { id: 0, name: 'dateRange.tabs.day' },
-    { id: 1, name: 'dateRange.tabs.range' },
-    { id: 2, name: 'dateRange.tabs.dynamic' },
-  ];
+  // const tabs = [
+  //   { id: 0, name: 'dateRange.tabs.day' },
+  //   { id: 1, name: 'dateRange.tabs.range' },
+  //   { id: 2, name: 'dateRange.tabs.dynamic' },
+  // ];
   const [tabId, setTabId] = useState<ReactText>('0');
   const [startDate, setStartDate] = useState(props.startDate);
   const [endDate, setEndDate] = useState(props.endDate);
   const [customDynamicDateRange, setCustomDynamicDateRange] = useState('0');
   const [isdynamicDateRangeConfig, setDynamicDateRangeConfig] = useState<ReactText>('');
   const [isCustom, setCustom] = useState(false);
-  const TAB_DAY = '0';
-  const TAB_RANGE = '1';
-  const TAB_DYNAMIC = '2';
+  const TAB_DAY = 0;
+  const TAB_RANGE = 1;
+  const TAB_DYNAMIC = 2;
   let currentDynamicDateRangeConfig;
   const dynamicDateRangeConfig = DYNAMIC_DATE_RANGE_CONFIG;
 
@@ -134,46 +133,56 @@ const DateRangeComponent = (props: IDateRangeComponentProps) => {
   return (
     <>
       <div className={'date-range-picker-tab'}>
-        <Tabs aria-label="date-range" items={tabs} selectedKey={tabId} onSelectionChange={setTabId} isQuiet={true} density={'compact'}>
-          
-          {_item => (
-            <Item title={translate(_item.name)} key={_item.id}>
+        <Tabs aria-label="date-range" selectedKey={tabId} onSelectionChange={setTabId} isQuiet={true} density={'compact'}>
+          <TabList>
+            <Item key={0}>
+              <Translate contentKey="dateRange.tabs.day"></Translate>
+            </Item>
+            <Item key={1}>
+              <Translate contentKey="dateRange.tabs.range"></Translate>
+            </Item>
+            <Item key={2}>
+              <Translate contentKey="dateRange.tabs.dynamic"></Translate>
+            </Item>
+          </TabList>
+          <TabPanels>
+            <Item key={0}>
               <Content marginStart="size-125">
-                {tabId === '0' && (
-                  <View marginTop={5}>
-                    <DatePicker label={translate('dateRange.tabs.day')} onChange={handleStartDateChange} value={stringToDate(startDate)} />
-                  </View>
-                )}
-                {tabId === '1' && (
-                  <React.Fragment>
-                    {' '}
-                    <View marginTop={5}>
-                      <DatePicker label={translate('dateRange.startDate')} onChange={handleStartDateChange} value={stringToDate(startDate)} />
-                    </View>
-                    <View marginTop={5}>
-                      <DatePicker label={translate('dateRange.endDate')} onChange={handleEndDateChange} value={stringToDate(endDate)} />
-                    </View>{' '}
-                  </React.Fragment>
-                )}
-                {tabId === '2' && (
-                  <React.Fragment>
-                    <View marginTop={5}>
-                      <Picker
-                        selectedKey={isdynamicDateRangeConfig}
-                        items={dynamicDateRangeConfig}
-                        onSelectionChange={selected => setDynamicDateRangeConfig(selected)}
-                      >
-                        {item => <Item key={item.title}>{item.title}</Item>}
-                      </Picker>
-                    </View>
-                    <View marginTop={5}>
-                      {isCustom && <TextField value={customDynamicDateRange} onChange={setCustomDynamicDateRange} />}
-                    </View>
-                  </React.Fragment>
-                )}
+                <View marginTop={5}>
+                  <DatePicker label={translate('dateRange.tabs.day')} onChange={handleStartDateChange} value={stringToDate(startDate)} />
+                </View>
               </Content>
             </Item>
-          )}
+            <Item key={1}>
+              <Content marginStart="size-125">
+                <React.Fragment>
+                  {' '}
+                  <View marginTop={5}>
+                    <DatePicker label={translate('dateRange.startDate')} onChange={handleStartDateChange} value={stringToDate(startDate)} />
+                  </View>
+                  <View marginTop={5}>
+                    <DatePicker label={translate('dateRange.endDate')} onChange={handleEndDateChange} value={stringToDate(endDate)} />
+                  </View>{' '}
+                </React.Fragment>
+              </Content>
+            </Item>
+            <Item key={2}>
+              <Content marginStart="size-125">
+                <React.Fragment>
+                  <View marginTop={5}>
+                    <Picker
+                      selectedKey={isdynamicDateRangeConfig}
+                      items={dynamicDateRangeConfig}
+                      onSelectionChange={selected => setDynamicDateRangeConfig(selected)}
+                    >
+                      {item => <Item key={item.title}>{item.title}</Item>}
+                    </Picker>
+                  </View>
+                  <View marginTop={5}>{isCustom && <TextField value={customDynamicDateRange} onChange={setCustomDynamicDateRange} />}</View>
+                </React.Fragment>
+              </Content>
+            </Item>
+          </TabPanels>
         </Tabs>
       </div>
     </>

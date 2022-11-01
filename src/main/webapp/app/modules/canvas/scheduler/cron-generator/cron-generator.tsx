@@ -2,15 +2,13 @@ import React, { useState, ReactText } from 'react';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
-import { Tabs } from '@react-spectrum/tabs';
-import { Content, Item, View, Flex } from '@adobe/react-spectrum';
+import { Content, Item, View, Flex, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
 import { translate, Translate } from 'react-jhipster';
 import { MINUTES, HOURS, MONTHS, DAYS, DAYS_OF_MONTH } from './cron-generator.const';
 import { generateOptions } from 'app/shared/util/entity-utils';
 import { generateCronExpression } from './cron-generator.util';
-import { setSchedulerReport,setErrorMessage } from 'app/modules/canvas/scheduler/scheduler.reducer';
-import { isFormValid } from "../scheduler.util";
-
+import { setSchedulerReport, setErrorMessage } from 'app/modules/canvas/scheduler/scheduler.reducer';
+import { isFormValid } from '../scheduler.util';
 
 const CronGenerator = props => {
   const [tabId, setTabId] = useState<ReactText>('1');
@@ -39,8 +37,560 @@ const CronGenerator = props => {
 
   return (
     <Tabs aria-label="roles" items={tabs} selectedKey={tabId} onSelectionChange={setTabId}>
+      <TabList>
+        <Item key="1">
+          <Translate contentKey="reportsManagement.cron.minutes"></Translate>
+        </Item>
+        <Item key="2">
+          <Translate contentKey="reportsManagement.cron.hourly"></Translate>
+        </Item>
+        <Item key="3">
+          <Translate contentKey="reportsManagement.cron.daily"></Translate>
+        </Item>
+        <Item key="4">
+          <Translate contentKey="reportsManagement.cron.monthly"></Translate>
+        </Item>
+        <Item key="5">
+          <Translate contentKey="reportsManagement.cron.minutes"></Translate>
+        </Item>
+        <Item key="6">
+          <Translate contentKey="reportsManagement.cron.yearly"></Translate>
+        </Item>
+      </TabList>
+      <TabPanels>
+        <Item key="1">
+          <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+            <View width={'25%'}>
+              <span className="spectrum-Body-emphasis--sizeXXS">
+                <Translate contentKey="reportsManagement.cron.minutes">Minutes*</Translate>
+              </span>
+              <View marginTop="size-100">
+                <Select
+                  isMulti
+                  searchable={true}
+                  onBlurResetsInput={false}
+                  onCloseResetsInput={false}
+                  placeholder={translate('reportsManagement.cron.minutes')}
+                  value={minutes}
+                  onChange={event => {
+                    setMinutes(event);
+                    const cron = generateCronExpression(
+                      '1',
+                      convertSelectOptionToValues(event),
+                      convertSelectOptionToValues(hours),
+                      convertSelectOptionToValues(daysOfMonth),
+                      convertSelectOptionToValues(days),
+                      convertSelectOptionToValues(months),
+                      props.schedulerReport.schedule.cronExp
+                    );
+                    props.schedulerReport.schedule.cronExp = cron;
+                    props.setSchedulerReport(props.schedulerReport);
+                    const errorObj = isFormValid(props.schedulerReport);
+                    props.setErrorMessage(errorObj);
+                  }}
+                  options={generateOptions(MINUTES)}
+                />
+              </View>
+            </View>
+          </Content>
+        </Item>
+        <Item key="2">
+        <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+        <Flex direction="row" gap="size-100" wrap="wrap">
+                <View width={'25%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.hours">Hours*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.hours')}
+                      value={hours}
+                      onChange={event => {
+                        setHours(event);
+                        const cron = generateCronExpression(
+                          '2',
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(days),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={generateOptions(HOURS)}
+                    />
+                  </View>
+                </View>
+                <View width={'25%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.minutes">Minutes*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.minutes')}
+                      value={minutes}
+                      onChange={event => {
+                        setMinutes(event);
+                        const cron = generateCronExpression(
+                          '1',
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(days),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={generateOptions(MINUTES)}
+                    />
+                  </View>
+                </View>
+              </Flex>
+        </Content>
+        </Item>
+        <Item key="3">
+        <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+        <Flex direction="row" gap="size-100" wrap="wrap">
+                <View width={'25%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.hours">Hours*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.hours')}
+                      value={hours}
+                      onChange={event => {
+                        setHours(event);
+                        const cron = generateCronExpression(
+                          '2',
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(days),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={generateOptions(HOURS)}
+                    />
+                  </View>
+                </View>
+                <View width={'25%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.minutes">Minutes*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.minutes')}
+                      value={minutes}
+                      onChange={event => {
+                        setMinutes(event);
+                        const cron = generateCronExpression(
+                          '1',
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(days),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={generateOptions(MINUTES)}
+                    />
+                  </View>
+                </View>
+              </Flex>
+        </Content>
+        </Item>
+        <Item key="4">
+        <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+        <Flex direction="row" gap="size-100" wrap="wrap">
+                <View width={'50%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.daysOfWeek">Days of Week*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.daysOfWeek')}
+                      value={days}
+                      onChange={event => {
+                        setDays(event);
+                        const cron = generateCronExpression(
+                          '4',
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={DAYS}
+                    />
+                  </View>
+                </View>
+                <View width={'25%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.hours">Hours*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.hours')}
+                      value={hours}
+                      onChange={event => {
+                        setHours(event);
+                        const cron = generateCronExpression(
+                          '2',
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(days),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={generateOptions(HOURS)}
+                    />
+                  </View>
+                </View>
+                <View width={'25%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.minutes">Minutes*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.minutes')}
+                      value={minutes}
+                      onChange={event => {
+                        setMinutes(event);
+                        const cron = generateCronExpression(
+                          '1',
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(days),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={generateOptions(MINUTES)}
+                    />
+                  </View>
+                </View>
+              </Flex>
 
-      {item => (
+        </Content>
+        </Item>
+        <Item key="5">
+        <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+        <Flex direction="row" gap="size-100" wrap="wrap">
+                <View width={'25%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.dayOfMonth">Days of Month*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.dayOfMonth')}
+                      value={daysOfMonth}
+                      onChange={event => {
+                        setDaysOfMonth(event);
+                        const cron = generateCronExpression(
+                          '5',
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(days),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={generateOptions(DAYS_OF_MONTH)}
+                    />
+                  </View>
+                </View>
+                <View width={'50%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.daysOfWeek">Days of Week*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.daysOfWeek')}
+                      value={days}
+                      onChange={event => {
+                        setDays(event);
+                        const cron = generateCronExpression(
+                          '4',
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={DAYS}
+                    />
+                  </View>
+                </View>
+                <View width={'25%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.hours">Hours*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.hours')}
+                      value={hours}
+                      onChange={event => {
+                        setHours(event);
+                        const cron = generateCronExpression(
+                          '2',
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(days),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={generateOptions(HOURS)}
+                    />
+                  </View>
+                </View>
+                <View width={'25%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.minutes">Minutes*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.minutes')}
+                      value={minutes}
+                      onChange={event => {
+                        setMinutes(event);
+                        const cron = generateCronExpression(
+                          '1',
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(days),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={generateOptions(MINUTES)}
+                    />
+                  </View>
+                </View>
+              </Flex>
+        </Content>
+        </Item>
+        <Item key="6">
+        <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+        <Flex direction="row" gap="size-100" wrap="wrap">
+                <View width={'50%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.months">Months*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.months')}
+                      value={months}
+                      onChange={event => {
+                        setMonths(event);
+                        const cron = generateCronExpression(
+                          '6',
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(days),
+                          convertSelectOptionToValues(event),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={MONTHS}
+                    />
+                  </View>
+                </View>
+                <View width={'25%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.dayOfMonth">Days of Month*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.dayOfMonth')}
+                      value={daysOfMonth}
+                      onChange={event => {
+                        setDaysOfMonth(event);
+                        const cron = generateCronExpression(
+                          '5',
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(days),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={generateOptions(DAYS_OF_MONTH)}
+                    />
+                  </View>
+                </View>
+                <View width={'50%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.daysOfWeek">Days of Week*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.daysOfWeek')}
+                      value={days}
+                      onChange={event => {
+                        setDays(event);
+                        const cron = generateCronExpression(
+                          '4',
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={DAYS}
+                    />
+                  </View>
+                </View>
+                <View width={'25%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.hours">Hours*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.hours')}
+                      value={hours}
+                      onChange={event => {
+                        setHours(event);
+                        const cron = generateCronExpression(
+                          '2',
+                          convertSelectOptionToValues(minutes),
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(days),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={generateOptions(HOURS)}
+                    />
+                  </View>
+                </View>
+                <View width={'25%'}>
+                  <span className="spectrum-Body-emphasis--sizeXXS">
+                    <Translate contentKey="reportsManagement.cron.minutes">Minutes*</Translate>
+                  </span>
+                  <View marginTop="size-100">
+                    <Select
+                      isMulti
+                      placeholder={translate('reportsManagement.cron.minutes')}
+                      value={minutes}
+                      onChange={event => {
+                        setMinutes(event);
+                        const cron = generateCronExpression(
+                          '1',
+                          convertSelectOptionToValues(event),
+                          convertSelectOptionToValues(hours),
+                          convertSelectOptionToValues(daysOfMonth),
+                          convertSelectOptionToValues(days),
+                          convertSelectOptionToValues(months),
+                          props.schedulerReport.schedule.cronExp
+                        );
+                        props.schedulerReport.schedule.cronExp = cron;
+                        props.setSchedulerReport(props.schedulerReport);
+                        const errorObj = isFormValid(props.schedulerReport);
+                        props.setErrorMessage(errorObj);
+                      }}
+                      options={generateOptions(MINUTES)}
+                    />
+                  </View>
+                </View>
+              </Flex>
+        </Content>
+        </Item>
+      </TabPanels>
+      {/* {item => (
         <Item title={translate(item.name)}>
           <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
             {tabId === '1' && (
@@ -563,7 +1113,7 @@ const CronGenerator = props => {
             )}
           </Content>
         </Item>
-      )}
+      )} */}
     </Tabs>
   );
 };
@@ -574,7 +1124,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 
 const mapDispatchToProps = {
   setSchedulerReport,
-  setErrorMessage
+  setErrorMessage,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

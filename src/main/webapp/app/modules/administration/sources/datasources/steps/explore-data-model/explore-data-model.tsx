@@ -1,11 +1,24 @@
-import React, { useState, useEffect, ReactText } from 'react';
+import React, { useState, useEffect, ReactText, Key } from 'react';
 import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
-import { DialogContainer, View, Button, Flex, Item, Form, ProgressBar, Content, Text, Divider } from '@adobe/react-spectrum';
+import {
+  DialogContainer,
+  View,
+  Button,
+  Flex,
+  Item,
+  Form,
+  ProgressBar,
+  Content,
+  Text,
+  Divider,
+  Tabs,
+  TabList,
+  TabPanels,
+} from '@adobe/react-spectrum';
 import { setConnection, setDatasource, setExploreModelId, selectConnectionType } from '../datasource-steps.reducer';
 import { listTables, createDatasource, resetUpdateError, getDatasource, createDatasourceWithAction } from '../../datasources.reducer';
 import { Translate, translate } from 'react-jhipster';
-import { Tabs } from '@react-spectrum/tabs';
 import Select from 'react-select';
 import SqlQueryContainer from '../sql-query-container/sql-query-container';
 import Alert from '@spectrum-icons/workflow/Alert';
@@ -46,10 +59,11 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
 
   const [isSampleTableOpen, setSampleTableOpen] = React.useState(false);
 
-  const tabs = [
-    { id: 1, name: 'datasources.exploreDataModel.regular.name' },
-    { id: 2, name: 'datasources.exploreDataModel.sqlmode.name' },
-  ];
+  // const tabs = [
+  //   { id: 1, name: 'datasources.exploreDataModel.regular.name' },
+  //   { id: 2, name: 'datasources.exploreDataModel.sqlmode.name' },
+  // ];
+  // const [activeTabId, setActiveTabId] = useState<Key>(1);
 
   const search = (inputValue, { action }) => {
     setSearchedText(inputValue);
@@ -59,7 +73,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
         filter: exploreModelTabId === 1 ? 'TABLE' : 'SQL',
       };
       body['connection'] = prepareConnection(connection, connectionType);
-      debouncedSearch(props.listTables,[body]);
+      debouncedSearch(props.listTables, [body]);
     }
   };
 
@@ -141,14 +155,105 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
           </div>
           <Tabs
             aria-label="datasources"
-            items={tabs}
-            selectedKey={exploreModelTabId}
-            onSelectionChange={id => {
-              props.setExploreModelId(id);
-            }}
+            // below code is causing an issue to render content hence commenting it for time being
+            // selectedKey={exploreModelTabId}
+            // onSelectionChange={id => {
+            //   props.setExploreModelId(id);
+            // }}
           >
-
-            {item => (
+            <TabList>
+              <Item key={1}>
+                <Translate contentKey="datasources.exploreDataModel.regular.name"></Translate>
+              </Item>
+              <Item key={2}>
+                <Translate contentKey="datasources.exploreDataModel.sqlmode.name"></Translate>
+              </Item>
+            </TabList>
+            <TabPanels>
+              <Item key={1}>
+                <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+                  <View>
+                    <Flex direction="row" gap="size-300" alignItems="center">
+                      <Select
+                        isClearable
+                        isSearchable
+                        options={tables}
+                        onInputChange={search}
+                        onChange={selectDatasource}
+                        styles={selectStyles}
+                        defaultValue={{ value: datasource.name, label: datasource.name }}
+                        value={{ value: datasource.name, label: datasource.name }}
+                      />
+                      <Button variant="cta" isDisabled={isShowDataButtonDisabled(datasource)} onPress={() => setSampleTableOpen(true)}>
+                        <Translate contentKey="datasources.exploreDataModel.showData">Show Data</Translate>
+                      </Button>
+                    </Flex>
+                  </View>
+                </Content>
+              </Item>
+              <Item key={2}>
+                <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+                  <View>
+                    <Flex direction="row" gap="size-300" alignItems="center">
+                      <Select
+                        isClearable
+                        isSearchable
+                        options={sqlOptions}
+                        onInputChange={search}
+                        onChange={selectDatasource}
+                        styles={selectStyles}
+                        defaultValue={{ value: datasource.sql, label: datasource.name }}
+                        value={{ value: datasource.sql, label: datasource.name }}
+                      />
+                      <Button
+                        variant="cta"
+                        isDisabled={isShowDataButtonDisabled(datasource) || datasource.sql === null || datasource.sql === ''}
+                        onPress={() => setSampleTableOpen(true)}
+                      >
+                        <Translate contentKey="datasources.exploreDataModel.showData">Show Data</Translate>
+                      </Button>
+                    </Flex>
+                    <br />
+                    <SqlQueryContainer />
+                  </View>
+                </Content>
+              </Item>
+            </TabPanels>
+            {props.datasource.id && (
+              <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+                <React.Fragment>
+                  <br />
+                  <p className="spectrum-Heading spectrum-Heading--sizeXXS" style={{ marginBottom: '10px' }}>
+                    <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
+                  </p>
+                  <Divider size="M" />{' '}
+                  <Button
+                    data-testid="delete"
+                    variant="negative"
+                    marginTop="size-175"
+                    onPress={() => {
+                      props.createDatasourceWithAction({ ...datasource, id: null }, 'DELETE');
+                    }}
+                  >
+                    <Translate contentKey="entity.action.delete">Delete</Translate>
+                  </Button>
+                </React.Fragment>
+              </Content>
+            )}
+            <DialogContainer onDismiss={() => props.resetUpdateError()}>
+              {updateError === 'SAME_NAME_EXISTS' && <DuplicateDatasourceDialog datasource={datasource} />}
+            </DialogContainer>
+            {datasourceError ? (
+              <React.Fragment>
+                <br />
+                <Alert color="notice" />
+                <span className="spectrum-Body-emphasis" style={{ verticalAlign: '6px', marginLeft: '5px' }}>
+                  {datasourceError}
+                </span>
+                <br />
+              </React.Fragment>
+            ) : null}
+            {/* {item => (
               <Item title={translate(item.name)}>
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
                   {exploreModelTabId === 1 ? (
@@ -194,41 +299,9 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
                       <SqlQueryContainer />
                     </View>
                   )}
-                  {props.datasource.id && (
-                    <React.Fragment>
-                      <br />
-                      <p className="spectrum-Heading spectrum-Heading--sizeXXS" style={{ marginBottom: '10px' }}>
-                        <Translate contentKey="entity.action.dangerZone">Danger Zone</Translate>
-                      </p>
-                      <Divider size="M" />{' '}
-                      <Button
-                        data-testid="delete"
-                        variant="negative"
-                        marginTop="size-175"
-                        onPress={() => {
-                          props.createDatasourceWithAction({ ...datasource, id: null }, 'DELETE');
-                        }}
-                      >
-                        <Translate contentKey="entity.action.delete">Delete</Translate>
-                      </Button>
-                    </React.Fragment>
-                  )}
-                  <DialogContainer onDismiss={() => props.resetUpdateError()}>
-                    {updateError === 'SAME_NAME_EXISTS' && <DuplicateDatasourceDialog datasource={datasource} />}
-                  </DialogContainer>
-                  {datasourceError ? (
-                    <React.Fragment>
-                      <br />
-                      <Alert color="notice" />
-                      <span className="spectrum-Body-emphasis" style={{ verticalAlign: '6px', marginLeft: '5px' }}>
-                        {datasourceError}
-                      </span>
-                      <br />
-                    </React.Fragment>
-                  ) : null}
                 </Content>
               </Item>
-            )}
+            )} */}
           </Tabs>
         </Form>
       </Flex>
