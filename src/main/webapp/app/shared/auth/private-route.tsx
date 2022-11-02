@@ -11,52 +11,47 @@ export interface IPrivateRouteProps extends RouteProps, StateProps {
   component: any;
 }
 
-export const PrivateRoute = (
-props: IPrivateRouteProps) => {
+export const PrivateRoute = (props: IPrivateRouteProps) => {
+  const isAuthorized = hasAnyAuthority(props.account, props.hasAnyAuthorities);
 
-const isAuthorized = hasAnyAuthority(props.account, props.hasAnyAuthorities)
+  if (!props.component) throw new Error(`A component needs to be specified for private route for path ${(props as any).path}`);
 
-  const checkAuthorities = props =>
-    isAuthorized ? (
-      <ErrorBoundary>
-        <props.component {...props} />
-      </ErrorBoundary>
-    ) : (
+  if (!props.sessionHasBeenFetched) {
+    return <div></div>;
+  }
+
+  const renderComponent = () => (
+    <ErrorBoundary>
+      <props.component {...props} />
+    </ErrorBoundary>
+  );
+
+  if (props.isAuthenticated) {
+    if (isAuthorized) {
+      return <Route {...props} render={renderComponent} />;
+    }
+    return (
       <div className="insufficient-authority">
         <div className="alert alert-danger">
           <Translate contentKey="error.http.403">You are not authorized to access this page.</Translate>
         </div>
       </div>
     );
-
-  const renderRedirect = props => {
-    if (!props.sessionHasBeenFetched) {
-      return <div></div>;
-    } else {
-      return props.isAuthenticated ? (
-        checkAuthorities(props)
-      ) : (
-        <Redirect
-          to={{
-            pathname: '/signin',
-            search: props.location.search,
-            state: { from: props.location },
-          }}
-        />
-      );
-    }
-  };
-
-  if (!props.component) throw new Error(`A component needs to be specified for private route for path ${(props as any).path}`);
-
-  return <Route {...props}  render={renderRedirect} />;
+  } else {
+    return (
+      <Redirect
+        to={{
+          pathname: '/signin',
+          search: props.location.search,
+          state: { from: props.location },
+        }}
+      />
+    );
+  }
 };
 
 export const hasAnyAuthority = (account: any, hasAnyAuthorities: string[]) => {
-  if (account && account.userGroups && account.userGroups.length !== 0) {
-    if (hasAnyAuthorities.length === 0) {
-      return true;
-    }
+  if (account?.userGroups && account?.userGroups.length !== 0) {
     if (window.location.href.includes('/realm-management')) {
       return (
         hasAnyAuthorities.some(auth => account.userGroups.includes(auth)) && account.organisation.type === ORGANISATION_TYPE_ENTERPRISE
@@ -74,7 +69,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
   sessionHasBeenFetched: storeState.authentication.sessionHasBeenFetched,
 });
-
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 
