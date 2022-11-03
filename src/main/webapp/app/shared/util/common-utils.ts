@@ -42,7 +42,7 @@ export const isCanvas = () => {
 };
 
 export const isRootUser = account => {
-  return account?.organisation?.type === ORGANISATION_TYPE_FULL;
+  return account?.organisation?.type === ORGANISATION_TYPE_FULL && account?.userGroups.includes(AUTHORITIES.SUPER_ADMIN);
 };
 
 export const isSuperAdminUser = account => {
