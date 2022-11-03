@@ -5,22 +5,18 @@ import { TranslatorContext } from 'react-jhipster';
 import { defaultTheme, Provider as SpectrumProvider } from '@adobe/react-spectrum';
 import { AUTHORITIES } from 'app/config/constants';
 import { PrivateRoute, hasAnyAuthority, IPrivateRouteProps } from 'app/shared/auth/private-route';
-import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
-import { render } from '@testing-library/react';
-
 
 // some of the test cases are commented for time being
 
 const TestComp = () => <div>Test</div>;
 
 describe('private-route component', () => {
-
-  const privateProps = {
+  const defaultPrivateProps = {
     authentication: {
       isAuthenticated: false,
       sessionHasBeenFetched: false,
-      isAuthorized: false,
+      // isAuthorized: false,
       account: {
         userGroups: ['ROLE_USER', 'ROLE_ADMIN'],
       },
@@ -33,7 +29,7 @@ describe('private-route component', () => {
 
   const mockStore = configureMockStore();
   const getStore = () => {
-    return mockStore(privateProps);
+    return mockStore(defaultPrivateProps);
   };
 
   beforeAll(() => {
@@ -41,30 +37,37 @@ describe('private-route component', () => {
   });
 
   // All tests will go here
-  // it('Should throw error when no component is provided', () => {
-  //   const tree = wrapper(null,null,'/');
-  //   expect(() => tree.toThrow(Error));
-  // });
 
-  it('Should render an error message when the user has no authorities', () => {
-    const route = shallow(   
-        <PrivateRoute {...privateProps} {...getProps(null)} component={TestComp} path="/" />
-    );
-    const renderedRoute = route.find(Route);
-    const props = renderedRoute.props() as any;
-    const renderFn: Function = props.render;
-    const comp = shallow(
-      renderFn({
-        location: '/',
-      })
-    );
-    expect(comp.length).toEqual(1);
-    // const error = comp.find('div.insufficient-authority');
-    // expect(error.length).toEqual(1);
-    // expect(error.find('.alert-danger').html()).toEqual(
-    //   '<div class="alert alert-danger"><span>You are not authorized to access this page.</span></div>'
-    // );
+  it('Should throw error when no component is provided', () => {
+    expect(() => shallow(<PrivateRoute component={null} {...defaultPrivateProps} {...getProps(null)} />)).toThrow(Error);
   });
+
+  // it('Should render an error message when the user has no authorities', () => {
+  //   const route = shallow(
+  //     <PrivateRoute
+  //       {...getPrivateProps(true, [AUTHORITIES.USER, AUTHORITIES.ADMIN])}
+  //       {...getProps(null)}
+  //       component={TestComp}
+  //       path="/"
+  //       hasAnyAuthorities={[AUTHORITIES.USER]}
+  //     />
+      
+  //   );
+  //   const renderedRoute = route.find(Route);
+  //   const props = renderedRoute.props() as any;
+  //   const renderFn: Function = props.render;
+  //   const comp = shallow(
+  //     renderFn({
+  //       location: '/',
+  //     })
+  //   );
+  //   expect(comp.length).toEqual(1);
+  //   const error = comp.find('div.insufficient-authority');
+  //   expect(error.length).toEqual(1);
+  //   expect(error.find('.alert-danger').html()).toEqual(
+  //     '<div class="alert alert-danger"><span>You are not authorized to access this page.</span></div>'
+  //   );
+  // });
 
   // it('Should render a route for the component provided when authenticated', () => {
   //   const route = shallow(<PrivateRoute component={TestComp} isAuthenticated sessionHasBeenFetched isAuthorized path="/" />);
@@ -111,8 +114,8 @@ describe('hasAnyAuthority', () => {
     expect(hasAnyAuthority({ userGroups: [] }, [AUTHORITIES.USER])).toEqual(false);
   });
 
-  it('Should return true when authorities is valid and hasAnyAuthorities is empty', () => {
-    expect(hasAnyAuthority({ userGroups: [AUTHORITIES.USER] }, [])).toEqual(true);
+  it('Should return false when authorities is valid and hasAnyAuthorities is empty', () => {
+    expect(hasAnyAuthority({ userGroups: [AUTHORITIES.USER] }, [])).toEqual(false);
   });
 
   it('Should return true when authorities is valid and hasAnyAuthorities contains an authority', () => {
