@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Translate, translate } from 'react-jhipster';
 import { getFeatureTypes, onFeaturesFetched } from './datasource-util';
 import { IRootState } from 'app/shared/reducers';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import { getFeatures } from '../../connections/connection.reducer';
 import { Flex, Picker, Item, Checkbox, Text, ProgressBar } from '@adobe/react-spectrum';
 import { COMPARABLE_DATA_TYPES } from 'app/config/constants';

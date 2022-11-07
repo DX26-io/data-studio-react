@@ -7,7 +7,7 @@ import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-u
 import { getRealms, updateStatus, setRealm, searchRealms, createRealm, reset } from './realm.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import OrganisationUpdate from './organisation-update';
 import { getSession } from 'app/shared/reducers/authentication';
@@ -84,7 +84,7 @@ export const Realms = (props: IRealmsProps) => {
     props.reset();
   };
 
-  const onPageChange = (event, page) => {};
+  
 
   return (
     <div>
@@ -214,13 +214,12 @@ export const Realms = (props: IRealmsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
-            onPageChange={onPageChange}
+            onPageChange={handleChangePage}
             component="div"
-            count={totalItems}
+            count={props.totalItems}
             rowsPerPage={pagination.itemsPerPage}
             page={pagination.activePage}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
       </div>

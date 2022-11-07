@@ -7,7 +7,7 @@ import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-u
 import { getUserGroups, setUserGroup } from './user-group.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 import UserGroupUpdate from './user-group-update';
@@ -66,8 +66,6 @@ export const UserGroups = (props: IUserGroupsProps) => {
   };
 
   const { groups, match, totalItems } = props;
-
-  const onPageChange = (event, page) => {};
 
   return (
     <div>
@@ -135,13 +133,12 @@ export const UserGroups = (props: IUserGroupsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
-            onPageChange={onPageChange}
+            onPageChange={handleChangePage}
             component="div"
             count={totalItems}
             rowsPerPage={pagination.itemsPerPage}
             page={pagination.activePage}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
       </div>

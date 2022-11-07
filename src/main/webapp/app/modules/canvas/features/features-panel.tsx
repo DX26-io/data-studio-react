@@ -23,7 +23,7 @@ import HierarchyUpdate from 'app/entities/hierarchy/hierarchy-update';
 import FeatureUpdate from 'app/entities/feature/feature-update';
 import { IFeature, defaultValue as featureDefaultValue } from 'app/shared/model/feature.model';
 import PanelHeader from 'app/shared/components/panel-header';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { setDraggedFeature } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { Translate } from 'react-jhipster';
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}

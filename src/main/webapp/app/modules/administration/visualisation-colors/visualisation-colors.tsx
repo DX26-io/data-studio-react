@@ -9,7 +9,7 @@ import { IVisualisationColors } from 'app/shared/model/visualization-colors.mode
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import { DialogContainer, Flex, Button, ActionButton } from '@adobe/react-spectrum';
-import { colors, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@material-ui/core';
+import { colors, Paper, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from '@mui/material';
 import Edit from '@spectrum-icons/workflow/Edit';
 import VisualizationColorsUpdate from './visualisation-colors-update';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
@@ -59,8 +59,6 @@ export const Visualizationcolors = (props: IVisualisationColorsProps) => {
       itemsPerPage: +event.target.value,
     });
   };
-
-  const onPageChange = (event, page) => {};
 
   return (
     <>
@@ -132,13 +130,12 @@ export const Visualizationcolors = (props: IVisualisationColorsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
-            onPageChange={onPageChange}
+            onPageChange={handleChangePage}
             component="div"
             count={props.totalItems}
             rowsPerPage={pagination.itemsPerPage}
             page={pagination.activePage}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
       </div>

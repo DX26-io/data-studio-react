@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@mui/styles';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Typography from '@mui/material/Typography';
 import { translate, Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
@@ -14,17 +14,18 @@ import { resetSteps, setIsAddFeaturesCalled } from './datasource-steps.reducer';
 import { reset, createDatasource, updateDatasource, addFeatures, createDatasourceWithAction } from '../datasources.reducer';
 import ExploreDataModel from './explore-data-model/explore-data-model';
 import DimensionMeasures from './dimensions-measures';
+import { useTheme } from '@mui/material/styles';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     width: '100%',
   },
   backButton: {
-    marginRight: theme.spacing(1),
+    marginRight: useTheme().spacing(1),
   },
   instructions: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+    marginTop: useTheme().spacing(1),
+    marginBottom: useTheme().spacing(1),
   },
 }));
 

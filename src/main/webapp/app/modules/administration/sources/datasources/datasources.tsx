@@ -9,7 +9,7 @@ import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/paginati
 
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, ActionButton } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 import DatasourceStepper from './steps/datasource-stepper';

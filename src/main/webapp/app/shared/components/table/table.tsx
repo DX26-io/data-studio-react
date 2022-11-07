@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Flex, Heading, ProgressCircle, Text, View } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, makeStyles } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination, makeStyles } from '@mui/material';
 import { Translate, getSortState } from 'react-jhipster';
 import uuid from 'react-uuid';
 

@@ -7,7 +7,7 @@ import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-u
 import { getUsers, updateUser, getUser } from './user.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 import UserUpdate from './user-update';
@@ -154,13 +154,12 @@ export const Users = (props: IUsersProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
-            onPageChange={onPageChange}
+            onPageChange={handleChangePage}
             component="div"
             count={totalItems}
             rowsPerPage={pagination.itemsPerPage}
             page={pagination.activePage}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
       </div>

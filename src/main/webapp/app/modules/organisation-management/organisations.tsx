@@ -7,7 +7,7 @@ import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-u
 import { getOrganisations, setOrganisation, updateStatus } from './organisation.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import { getSession } from 'app/shared/reducers/authentication';
 import ConfirmationDialog from 'app/shared/components/confirmation-dialog';
@@ -83,8 +83,6 @@ export const Organisations = (props: IOrganisationsProps) => {
   const _updateStatus = (isActive, id) => {
     props.updateStatus(isActive, id);
   };
-
-  const onPageChange = (event, page) => {};
 
   return (
     <div>
@@ -190,13 +188,12 @@ export const Organisations = (props: IOrganisationsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
-            onPageChange={onPageChange}
+            onPageChange={handleChangePage}
             component="div"
             count={totalItems}
             rowsPerPage={pagination.itemsPerPage}
             page={pagination.activePage}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
       </div>

@@ -6,7 +6,7 @@ import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE, ACTIVE_PAGE } from 'app/shared/
 import { getRealms, updateStatus, setRealm } from './realm.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, SearchField, View } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import { overridePaginationStateWithQueryParams } from './realm.utils';
 import ConfirmationDialog from 'app/shared/components/confirmation-dialog';
@@ -88,8 +88,6 @@ export const Realms = (props: IRealmsProps) => {
   const _updateStatus = (isActive, id) => {
     props.updateStatus(isActive, id);
   };
-
-  const onPageChange = (event, page) => {};
 
   return (
     <div>
@@ -213,13 +211,12 @@ export const Realms = (props: IRealmsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
-            onPageChange={onPageChange}
+            onPageChange={handleChangePage}
             component="div"
-            count={totalItems}
+            count={props.totalItems}
             rowsPerPage={pagination.itemsPerPage}
             page={pagination.activePage}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
       </div>

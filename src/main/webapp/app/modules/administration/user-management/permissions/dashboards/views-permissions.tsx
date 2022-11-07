@@ -21,7 +21,7 @@ import {
   Content,
   Checkbox,
 } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import { ITEMS_PER_PAGE, ACTIVE_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/pagination.constants';
 import { Translate, getSortState } from 'react-jhipster';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
@@ -104,7 +104,7 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
     }
   };
 
-  const onPageChange = (event, page) => {};
+  
 
   return (
     <Dialog data-testid="views-permissions-dialog" width="90vw" top="3vh">
@@ -183,12 +183,11 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
           </Table>
         </TableContainer>
         <TablePagination
-          onPageChange={onPageChange}
+          onPageChange={handleChangePage}
           component="div"
           count={totalViewsPermissions}
           rowsPerPage={pagination.itemsPerPage}
           page={pagination.activePage}
-          onChangePage={handleChangePage}
         />
       </Content>
     </Dialog>

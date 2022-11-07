@@ -17,7 +17,7 @@ import {
 import PanelHeader from 'app/shared/components/panel-header';
 import { removeEnabledFilters } from './filter-util';
 import Separators from 'app/shared/components/separator/separators';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 
 export interface IFilterPanelProp extends StateProps, DispatchProps {
   visualisationId?: string;
