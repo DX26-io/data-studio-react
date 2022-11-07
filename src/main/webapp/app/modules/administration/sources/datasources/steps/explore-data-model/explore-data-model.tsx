@@ -63,14 +63,14 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
   //   { id: 1, name: 'datasources.exploreDataModel.regular.name' },
   //   { id: 2, name: 'datasources.exploreDataModel.sqlmode.name' },
   // ];
-  // const [activeTabId, setActiveTabId] = useState<Key>(1);
+  const [activeTabId, setActiveTabId] = useState<Key>(exploreModelTabId);
 
   const search = (inputValue, { action }) => {
     setSearchedText(inputValue);
     if (inputValue) {
       const body = {
         searchTerm: inputValue,
-        filter: exploreModelTabId === 1 ? 'TABLE' : 'SQL',
+        filter: activeTabId === "1" ? 'TABLE' : 'SQL',
       };
       body['connection'] = prepareConnection(connection, connectionType);
       debouncedSearch(props.listTables, [body]);
@@ -78,7 +78,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
   };
 
   useEffect(() => {
-    if (exploreModelTabId === 2 && tables.length === 0) {
+    if (activeTabId === "2" && tables.length === 0) {
       setSqlOptions([
         {
           value: props.datasource.sql,
@@ -95,7 +95,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
     let datasourceSql = '';
     let datasourceName = '';
     if (selectedOption) {
-      if (exploreModelTabId === 2) {
+      if (activeTabId === "2") {
         datasourceSql = selectedOption.value ? selectedOption.value : props.datasource.sql;
       }
       datasourceName = selectedOption.label;
@@ -156,21 +156,19 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
           <Tabs
             aria-label="datasources"
             // below code is causing an issue to render content hence commenting it for time being
-            // selectedKey={exploreModelTabId}
-            // onSelectionChange={id => {
-            //   props.setExploreModelId(id);
-            // }}
+            selectedKey={activeTabId}
+            onSelectionChange={setActiveTabId}
           >
             <TabList>
-              <Item key={1}>
+              <Item key={"1"}>
                 <Translate contentKey="datasources.exploreDataModel.regular.name"></Translate>
               </Item>
-              <Item key={2}>
+              <Item key={"2"}>
                 <Translate contentKey="datasources.exploreDataModel.sqlmode.name"></Translate>
               </Item>
             </TabList>
             <TabPanels>
-              <Item key={1}>
+              <Item key={"1"}>
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
                   <View>
                     <Flex direction="row" gap="size-300" alignItems="center">
@@ -191,7 +189,7 @@ export const ExploreDataModel = (props: IExploreDataModelProps) => {
                   </View>
                 </Content>
               </Item>
-              <Item key={2}>
+              <Item key={"2"}>
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
                   <View>
                     <Flex direction="row" gap="size-300" alignItems="center">

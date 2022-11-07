@@ -154,7 +154,7 @@ export const Datasources = (props: IDatasourcesProps) => {
                             )[0];
                             props.setConnection(_connection);
                             props.selectConnectionType(_connectionType);
-                            const exploreModelTabId = datasource.sql ? 2 : 1;
+                            const exploreModelTabId = datasource.sql ? '2' : '1';
                             props.setExploreModelId(exploreModelTabId);
                           }}
                           isQuiet
