@@ -15,17 +15,8 @@ const VisualisationProperties = () => {
         density={'compact'}
         position={'sticky'}
         // items={getPropertiesTabTranslations()}
-        // onSelectionChange={key => setActiveTabId(key)}
+        onSelectionChange={setActiveTabId}
       >
-        {/* 
-          {item => (
-            <Item title={item.name} key={item.id}>
-              <Content margin="size-100">
-                {activeTabId === 'chartProperties' && <VisualisationChartProperties />}
-                {activeTabId === 'dataProperties' && <VisualisationDataProperties />}
-              </Content>
-            </Item>
-          )} */}
         <TabList>
           <Item key="chartProperties">
             <Content margin="size-100">

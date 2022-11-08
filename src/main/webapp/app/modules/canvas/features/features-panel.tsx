@@ -141,7 +141,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
                 density={'compact'}
                 position={'sticky'}
                 selectedKey={activeTabId}
-                onSelectionChange={key => setActiveTabId(key)}
+                onSelectionChange={setActiveTabId}
               >
                 <TabList>
                   <Item key={0}>

@@ -14,7 +14,7 @@ const VisualisationSettings = props => {
   const [activeTabId, setActiveTabId] = useState<ReactText>('query');
   return (
     <>
-      <Tabs isQuiet={true} density={'compact'} items={getSettingsTabTranslations()} onSelectionChange={key => setActiveTabId(key)}>
+      <Tabs isQuiet={true} density={'compact'} items={getSettingsTabTranslations()} onSelectionChange={setActiveTabId}>
         <TabList>
           <Item key="query">
             <Content margin="size-100">
