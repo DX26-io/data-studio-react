@@ -17,19 +17,20 @@ const VisualisationChartProperties = () => {
         position={'sticky'}
         // items={getChartPropertiesTranslations()}
         onSelectionChange={setActiveTabId}
+        selectedKey={activeTabId}
       >
         <TabList>
-          <Item key="titleProperties">
+          <Item key='titleProperties'>
             <Content margin="size-100">
               <Translate contentKey="views.editConfiguration.properties.chartProperties.titleProperties"></Translate>
             </Content>
           </Item>
-          <Item key="bodyProperties">
+          <Item key='bodyProperties'>
             <Content margin="size-100">
               <Translate contentKey="views.editConfiguration.properties.chartProperties.bodyProperties"></Translate>
             </Content>
           </Item>
-          <Item key="chartCongifuration">
+          <Item key='chartCongifuration'>
             <Content margin="size-100">
               <Translate contentKey="views.editConfiguration.properties.chartProperties.chartConfiguration"></Translate>
             </Content>
@@ -45,17 +46,17 @@ const VisualisationChartProperties = () => {
           </Item>
         )} */}
         <TabPanels>
-          <Item key="titleProperties">
+          <Item key='titleProperties'>
             <Content margin="size-100">
               <VisualisationTitleProperties />
             </Content>
           </Item>
-          <Item key="bodyProperties">
+          <Item key='bodyProperties'>
             <Content margin="size-100">
               <VisualisationBodyProperties />
             </Content>
           </Item>
-          <Item key="chartCongifuration">
+          <Item key='chartCongifuration'>
             <Content margin="size-100">
               <VisualisationChartConfigProperties />
             </Content>

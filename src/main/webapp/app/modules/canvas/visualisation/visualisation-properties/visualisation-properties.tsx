@@ -1,6 +1,5 @@
 import React, { ReactText, useState } from 'react';
 import { Content, Item, View, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
-('');
 import VisualisationChartProperties from 'app/modules/canvas/visualisation/visualisation-properties/partials/visualisation-chart-properties';
 import VisualisationDataProperties from 'app/modules/canvas/visualisation/visualisation-properties/partials/visualisation-data-properties';
 import { Translate } from 'react-jhipster';

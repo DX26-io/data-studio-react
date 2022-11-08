@@ -145,35 +145,50 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
             <Translate contentKey="home.bottom.tabs.accessed.tabs.overallMostPopularBookmarks"></Translate>
           </Item>
         </TabList>
-        <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+        <Content marginTop="size-125"  marginEnd="size-125">
           {props.loading ? (
             <ProgressBar label="Loading…" isIndeterminate />
           ) : (
             <View>
-              <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
-                <TabPanels>
-                  <Item key="1">
-                    <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-                      <View>{props.recentlyAccessedViews.length > 0 ? recentlyAccessedViewsListElement : null}</View>
-                    </Content>
-                  </Item>
-                  <Item key="2">
-                    <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-                      <View>{props.popularViews.length > 0 ? popularViewsListElement : null}</View>
-                    </Content>
-                  </Item>
-                  <Item key="3">
-                    <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-                      <View>{props.recentlyAccessedBookmarks.length > 0 ? recentlyAccessedBookmarksListElement : null}</View>
-                    </Content>
-                  </Item>
-                  <Item key="4">
-                    <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-                      <View>{props.recentlyAccessedBookmarks.length > 0 ? recentlyAccessedBookmarksListElement : null}</View>
-                    </Content>
-                  </Item>
-                </TabPanels>
-              </Flex>
+              <TabPanels>
+                <Item key="1">
+                  <Content marginTop="size-125"  marginEnd="size-125">
+                    <View>
+                      <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
+                        {props.recentlyAccessedViews.length > 0 ? recentlyAccessedViewsListElement : null}
+                      </Flex>
+                    </View>
+                  </Content>
+                </Item>
+                <Item key="2">
+                  <Content marginTop="size-125"  marginEnd="size-125">
+                    <View>
+                      <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
+                        {props.popularViews.length > 0 ? popularViewsListElement : null}
+                      </Flex>
+                    </View>
+                  </Content>
+                </Item>
+                <Item key="3">
+                  <Content marginTop="size-125"  marginEnd="size-125">
+                    <View>
+                      <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
+                        {props.recentlyAccessedBookmarks.length > 0 ? recentlyAccessedBookmarksListElement : null}
+                      </Flex>
+                    </View>
+                  </Content>
+                </Item>
+                <Item key="4">
+                  <Content marginTop="size-125"  marginEnd="size-125">
+                    <View>
+                      {' '}
+                      <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
+                        {props.recentlyAccessedBookmarks.length > 0 ? recentlyAccessedBookmarksListElement : null}{' '}
+                      </Flex>{' '}
+                    </View>
+                  </Content>
+                </Item>
+              </TabPanels>
             </View>
           )}
         </Content>

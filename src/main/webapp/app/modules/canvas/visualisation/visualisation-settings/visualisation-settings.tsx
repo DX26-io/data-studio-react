@@ -44,21 +44,31 @@ const VisualisationSettings = props => {
         </TabList>
         <TabPanels>
           <Item key="query">
-            <VisualisationQuerySetting />
+            <Content margin="size-250">
+              <VisualisationQuerySetting />
+            </Content>
           </Item>
           <Item key="dataConstraints">
-            <DataConstraints />
+            <Content margin="size-250">
+              <DataConstraints />
+            </Content>
           </Item>
           <Item key="scheduler">
-            <Scheduler thresholdAlert={false} />
+            <Content margin="size-250">
+              <Scheduler thresholdAlert={false} />
+            </Content>
           </Item>
           <Item key="thresholdAlert">
-            <Scheduler thresholdAlert={true} />
+            <Content margin="size-250">
+              <Scheduler thresholdAlert={true} />
+            </Content>
           </Item>
           {props.visualDataById && props.visualDataById?.data.length > 0 && (
             <Item key="data">
-              {' '}
-              <TableView data={props.visualDataById?.data} />{' '}
+              <Content margin="size-250">
+                {' '}
+                <TableView data={props.visualDataById?.data} />{' '}
+              </Content>
             </Item>
           )}
         </TabPanels>

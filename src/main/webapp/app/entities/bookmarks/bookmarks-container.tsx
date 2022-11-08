@@ -34,21 +34,21 @@ export const BookmarksContainer = props => {
             <Translate contentKey="featureBookmark.tabs.cards"></Translate>
           </Item>
         </TabList>
-        <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+        <Content marginTop="size-250" marginEnd="size-125">
           <BookmarkSearch />
           {props.loading ? (
             <ProgressBar label="Loading…" isIndeterminate />
           ) : (
             <TabPanels>
               <Item key="1">
-                <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+                <Content marginTop="size-250" marginEnd="size-125">
                   <View marginTop="size-250">
                     <BookmarkTable />
                   </View>
                 </Content>
               </Item>
               <Item key="2">
-                <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+                <Content marginTop="size-250" marginEnd="size-125">
                   <View marginTop="size-250">
                     <BookmarkCard />
                   </View>

@@ -102,20 +102,28 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
             <Translate contentKey="home.bottom.tabs.created.tabs.recentlyCreatedBookmarks"></Translate>
           </Item>
         </TabList>
-        <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
+        <Content marginTop="size-125" marginEnd="size-125">
           {props.loading ? (
             <ProgressBar label="Loading…" isIndeterminate />
           ) : (
             <View>
               <TabPanels>
                 <Item key="1">
-                  <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-                    <View>{props.recentlyCreatedViews.length > 0 ? recentlyCreatedViewsListElement : null}</View>
+                  <Content marginTop="size-125" marginEnd="size-125">
+                    <View>
+                      <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
+                        {props.recentlyCreatedViews.length > 0 ? recentlyCreatedViewsListElement : null}{' '}
+                      </Flex>
+                    </View>
                   </Content>
                 </Item>
                 <Item key="2">
-                  <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-                    <View>{props.recentlyCreatedBookmarks.length > 0 ? recentlyCreatedBookmarksListElement : null}</View>
+                  <Content marginTop="size-125" marginEnd="size-125">
+                    <View>
+                      <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
+                        {props.recentlyCreatedBookmarks.length > 0 ? recentlyCreatedBookmarksListElement : null}
+                      </Flex>
+                    </View>
                   </Content>
                 </Item>
               </TabPanels>
