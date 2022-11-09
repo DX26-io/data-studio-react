@@ -5,8 +5,13 @@ const isValidLogin = (login: string) => {
   return login !== '' && login.length > 1 && login.length < 50;
 };
 
-const isValidEmail = (email: string) => {
+const isEmailLengthValid = (email: string) => {
   return email !== '' && email.length < 100;
+};
+
+const isValidEmail = (email: string) => {
+  // eslint-disable-next-line
+  return email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/);
 };
 
 const isValidFirstName = (firstName: string) => {
@@ -21,6 +26,9 @@ export const isFormValid = (user: IUser): IError => {
   let error = defaultValue;
   if (!isValidLogin(user.login)) {
     error = { translationKey: 'userManagement.error.login', isValid: false };
+    return error;
+  } else if (!isEmailLengthValid(user.email)) {
+    error = { translationKey: 'userManagement.error.emailLength', isValid: false };
     return error;
   } else if (!isValidEmail(user.email)) {
     error = { translationKey: 'userManagement.error.email', isValid: false };

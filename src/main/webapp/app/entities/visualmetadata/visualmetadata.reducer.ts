@@ -18,6 +18,7 @@ import {
 import { getVisualisationData, ValidateFields } from 'app/modules/canvas/visualisation/util/visualisation-render-utils';
 import { ICrudPutActionVisual } from './visualmetadata-util';
 import { DIMENSION } from 'app/shared/util/visualisation.constants';
+import { any } from 'prop-types';
 
 const addVisualField = (visual: IVisualMetadataSet, field) => {
   visual.fields.push(field);
@@ -72,6 +73,7 @@ export const ACTION_TYPES = {
   REMOVE_PINNED_FILTERS_INTO_VISUAL_METADATA: 'visualmetadata/REMOVE_PINNED_FILTERS_INTO_VISUAL_METADATA',
   UPDATE_TABLE_PAGENO: 'UPDATE_TABLE_PAGENO',
   APPLY_ALTERNATE_DIMENSION: 'APPLY_ALTERNATE_DIMENSION',
+  SET_DRAGGED_FEATURE: 'SET_DRAGGED_FEATURE',
 };
 
 const initialState = {
@@ -95,6 +97,7 @@ const initialState = {
   visualisationAction: '',
   conditionExpression: null,
   isAlternateDimensionApplied: false,
+  draggedFeature: null,
 };
 
 export type VisualmetadataState = Readonly<typeof initialState>;
@@ -308,6 +311,11 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         ...state,
         visualMetadataContainerList: removePinnedFilters(state.visualMetadataContainerList),
       };
+    case ACTION_TYPES.SET_DRAGGED_FEATURE:
+      return {
+        ...state,
+        draggedFeature: action.payload,
+      };
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
@@ -480,3 +488,8 @@ export const applyAlternativeDimensionFilter = (dimension, visual, view, selecte
   }
   getVisualisationData(visual, view, selectedFilters);
 };
+
+export const setDraggedFeature = feature => ({
+  type: ACTION_TYPES.SET_DRAGGED_FEATURE,
+  payload: feature,
+});

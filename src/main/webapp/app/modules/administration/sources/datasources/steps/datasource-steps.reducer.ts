@@ -17,7 +17,7 @@ const initialState = {
   connectionType: defaultConnectionTypeValue,
   connection: connectionDefaultValue,
   datasource: defaultDatasourceValue,
-  exploreModelTabId: 1,
+  exploreModelTabId: '1',
   features: [] as IFeature[],
   isAddFeaturesCalled: false,
   isSaveConnectionCalled: false,

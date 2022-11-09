@@ -9,7 +9,7 @@ import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/paginati
 
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, ActionButton } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 import DatasourceStepper from './steps/datasource-stepper';
@@ -154,7 +154,7 @@ export const Datasources = (props: IDatasourcesProps) => {
                             )[0];
                             props.setConnection(_connection);
                             props.selectConnectionType(_connectionType);
-                            const exploreModelTabId = datasource.sql ? 2 : 1;
+                            const exploreModelTabId = datasource.sql ? '2' : '1';
                             props.setExploreModelId(exploreModelTabId);
                           }}
                           isQuiet

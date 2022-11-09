@@ -1,25 +1,18 @@
 import React, { useEffect, useState, ReactText } from 'react';
 import { connect } from 'react-redux';
-import { Item, Content, View, Flex, ProgressBar, DialogContainer } from '@adobe/react-spectrum';
-import { Tabs } from '@react-spectrum/tabs';
-import { translate } from 'react-jhipster';
+import { Item, Content, View, Flex, ProgressBar, DialogContainer, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
+import { translate, Translate } from 'react-jhipster';
 import { getRecentlyCreatedViews, getRecentlyCreatedBookmarks } from './recent.reducer';
 import ViewCardContent from 'app/entities/views/view-card/view-card-content';
 import ViewCardThumbnail from 'app/entities/views/view-card/view-card-thumbnail';
 import Card from 'app/shared/components/card/card';
-import ViewRequestReleaseDialog  from 'app/entities/views/view-request-release-modal';
+import ViewRequestReleaseDialog from 'app/entities/views/view-request-release-modal';
 
 export interface IRecentlyCreatedProps extends StateProps, DispatchProps {}
 
 const RecentlyCreated = (props: IRecentlyCreatedProps) => {
-  const [tabId, setTabId] = useState<ReactText>('1');
   const [isRequestReleaseDialogOpen, setRequestReleaseDialogOpen] = useState<boolean>(false);
   const [requestReleaseViewId, setRequestReleaseViewId] = useState();
-
-  const tabs = [
-    { id: 1, name: 'home.bottom.tabs.created.tabs.recentlyCreatedViews' },
-    { id: 2, name: 'home.bottom.tabs.created.tabs.recentlyCreatedBookmarks' },
-  ];
 
   const recentlyCreated = {
     '1': {
@@ -34,10 +27,10 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
     },
   };
 
-  const dispatchReleaseRequestProps = (viewId)=>{
+  const dispatchReleaseRequestProps = viewId => {
     setRequestReleaseDialogOpen(true);
-    setRequestReleaseViewId(viewId)
-  }
+    setRequestReleaseViewId(viewId);
+  };
 
   const recentlyCreatedViewsListElement = props.recentlyCreatedViews.map(view => {
     return (
@@ -48,8 +41,7 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
             <ViewCardThumbnail
               thumbnailImagePath={view.imageLocation}
               viewName={view.viewName}
-              url={`/dashboards/build?dashboardId=${view.view.viewDashboard.id}&viewId=${view.view.id}`}
-
+              url={`/dashboards/build?dashboardId=${view.viewDashboard.id}&viewId=${view.id}`}
             />
           </View>
         }
@@ -77,7 +69,6 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
               thumbnailImagePath={recent.view.imageLocation}
               viewName={recent.view.viewName}
               url={`/dashboards/build?dashboardId=${recent.view.viewDashboard.id}&viewId=${recent.view.id}&bookmarkId${recent.featureBookmark.id}`}
-
             />
           </View>
         }
@@ -99,29 +90,46 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
     <React.Fragment>
       <Tabs
         aria-label="recent-tabs"
-        items={tabs}
-        selectedKey={tabId}
         onSelectionChange={id => {
-          setTabId(id);
           recentlyCreated[id].getData();
         }}
       >
-        {item => (
-          <Item title={translate(item.name)}>
-            <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-              {props.loading ? (
-                <ProgressBar label="Loading…" isIndeterminate />
-              ) : (
-                <View>
-                  <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
-                    {tabId === 1 && props.recentlyCreatedViews.length > 0 ? recentlyCreatedViewsListElement : null}
-                    {tabId === 2 && props.recentlyCreatedBookmarks.length > 0 ? recentlyCreatedBookmarksListElement : null}
-                  </Flex>
-                </View>
-              )}
-            </Content>
+        <TabList>
+          <Item key="1">
+            <Translate contentKey="home.bottom.tabs.created.tabs.recentlyCreatedViews"></Translate>
           </Item>
-        )}
+          <Item key="2">
+            <Translate contentKey="home.bottom.tabs.created.tabs.recentlyCreatedBookmarks"></Translate>
+          </Item>
+        </TabList>
+        <Content marginTop="size-125" marginEnd="size-125">
+          {props.loading ? (
+            <ProgressBar label="Loading…" isIndeterminate />
+          ) : (
+            <View>
+              <TabPanels>
+                <Item key="1">
+                  <Content marginTop="size-125" marginEnd="size-125">
+                    <View>
+                      <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
+                        {props.recentlyCreatedViews.length > 0 ? recentlyCreatedViewsListElement : null}{' '}
+                      </Flex>
+                    </View>
+                  </Content>
+                </Item>
+                <Item key="2">
+                  <Content marginTop="size-125" marginEnd="size-125">
+                    <View>
+                      <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
+                        {props.recentlyCreatedBookmarks.length > 0 ? recentlyCreatedBookmarksListElement : null}
+                      </Flex>
+                    </View>
+                  </Content>
+                </Item>
+              </TabPanels>
+            </View>
+          )}
+        </Content>
       </Tabs>
       <DialogContainer onDismiss={() => setRequestReleaseDialogOpen(false)}>
         {isRequestReleaseDialogOpen && (

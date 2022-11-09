@@ -71,6 +71,9 @@
       },
       "success":"Your password has been reset. Please ",
       "validate": {
+        "currentPassword": {
+          "required": "Your password is required."
+        },
         "newpassword": {
           "required": "Your password is required.",
           "minlength": "Your password is required to be at least 4 characters.",
@@ -131,7 +134,11 @@
       "filters": "Filters",
       "clear": "Clear",
       "search": "Search",
-      "reset": "Reset"
+      "reset": "Reset",
+      "confirm":"Confirm",
+      "activate":"Activate",
+      "deactivate":"Deactivate"
+
     },
     "options": {
       "more_options": "More options",

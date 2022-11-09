@@ -3,23 +3,14 @@ import { connect } from 'react-redux';
 import { Flex, SearchField } from '@adobe/react-spectrum';
 import { translate } from 'react-jhipster';
 import { getDashboardsByName } from './dashboard.reducer';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 
 const DashboardSearch = props => {
   const [searchedText, setSearchedText] = React.useState('');
-  let delayTimer;
-
-  const getDashboards = text => {
-    clearTimeout(delayTimer);
-    delayTimer = setTimeout(() => {
-      props.getDashboardsByName(text);
-    }, 1000);
-  };
 
   const onChangeSearchedText = event => {
     setSearchedText(event);
-    if (event.length >= 2 || event.length === 0) {
-      getDashboards(event);
-    }
+    debouncedSearch(props.getDashboardsByName,[event]);
   };
 
   return (

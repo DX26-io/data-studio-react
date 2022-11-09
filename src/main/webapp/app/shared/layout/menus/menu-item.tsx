@@ -8,6 +8,7 @@ export interface IMenuItem {
   icon: IconProp;
   to: string;
   id?: string;
+  children:any
 }
 
 export default class MenuItem extends React.Component<IMenuItem> {

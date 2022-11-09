@@ -1,5 +1,6 @@
 {
   "userManagement": {
+    "title":"User Management",
     "home": {
       "title": "Users",
       "createLabel": "Create User",
@@ -17,7 +18,8 @@
     },
     "error": {
       "login": "Login can be minimum 1 and maximum 50 characters long.",
-      "email": "Email can be maximum 100 characters long.",
+      "email":"Email is not valid",
+      "emailLength": "Email can be maximum 100 characters long.",
       "firstName": "First Name can be maximum 100 characters long.",
       "lastName": "Last Name can be maximum 100 characters long."
     },

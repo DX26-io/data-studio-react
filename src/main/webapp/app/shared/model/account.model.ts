@@ -1,5 +1,5 @@
 import { IRealm } from './realm.model';
-import { IUserGroup } from './user-group.model';
+import { IOrganisation } from './organisation.model';
 export interface IAccount {
   id: number;
   userGroups: Array<string>;
@@ -9,4 +9,5 @@ export interface IAccount {
   email: string;
   langKey: string;
   currentRealm: IRealm;
+  organisation: IOrganisation;
 }

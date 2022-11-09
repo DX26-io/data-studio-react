@@ -1,0 +1,20 @@
+{
+  "organisations": {
+    "title": "Organisations",
+    "name": "Organisation Name",
+    "description": "Manage your organisations",
+    "status":"Status",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "create":"Create Organisation",
+    "update":"Update Organisation",
+    "organisation":"Organisation",
+    "createSuccessMessages":"Organisation is created successfully!",
+    "createdBy": "Created By",
+    "createdDate": "Created Date",
+    "search":"Search organisation",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "confirmMessage": "Are you sure you want to {{status}} this organisation : {{name}} ?"
+  }
+}

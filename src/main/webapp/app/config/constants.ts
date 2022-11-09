@@ -10,6 +10,7 @@ export const SERVER_API_URL = process.env.SERVER_API_URL;
 export const AUTHORITIES = {
   ADMIN: 'ROLE_ADMIN',
   USER: 'ROLE_USER',
+  SUPER_ADMIN: 'ROLE_SUPER_ADMIN',
 };
 
 export const messages = {
@@ -27,4 +28,5 @@ export const APP_WHOLE_NUMBER_FORMAT = '0,0';
 export const APP_TWO_DIGITS_AFTER_POINT_NUMBER_FORMAT = '0,0.[00]';
 
 export const CONSTRAINT_TYPES = ['Inclusion', 'Exclusion'];
-
+export const ORGANISATION_TYPE_ENTERPRISE = 'enterprise';
+export const ORGANISATION_TYPE_FULL = 'full';

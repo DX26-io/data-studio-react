@@ -11,7 +11,7 @@ import { Button, Flex, View, DialogContainer, ProgressBar } from '@adobe/react-s
 import Card from 'app/shared/components/card/card';
 import ViewCardThumbnail from './view-card/view-card-thumbnail';
 import ViewCardContent from './view-card/view-card-content';
-import Pagination from '@material-ui/lab/Pagination';
+import Pagination from '@mui/lab/Pagination';
 import { getEntity as getDashboardEntity } from '../dashboard/dashboard.reducer';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';
 import ViewRequestReleaseDialog from './view-request-release-modal';

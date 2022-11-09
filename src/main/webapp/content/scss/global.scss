@@ -66,7 +66,7 @@ a {
     position: absolute;
     margin: 15px;
     box-shadow: 3px 3px 3px 3px #a8a8a8;
-    height: calc(100% - 19px);
+    height: calc(100% - -29px);
     background-color: var(
       --spectrum-alias-background-color-default,
       var(--spectrum-global-color-default, var(--spectrum-semantic-default-color-background))
@@ -82,4 +82,10 @@ a {
 
 .share-link-panel {
   top: 35px;
+}
+li.dx26-list:hover {
+  background-color: var(
+    --spectrum-alias-background-color-gray-200,
+    var(--spectrum-global-color-gray-200, var(--spectrum-semantic-gray-200-color-background))
+  ) !important;
 }

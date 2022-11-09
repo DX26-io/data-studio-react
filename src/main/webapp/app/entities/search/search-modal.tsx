@@ -25,7 +25,7 @@ import { getEntity as getFeatureEntity } from 'app/entities/feature/feature.redu
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 import { convertSearchStructToQueryDTO, convertSearchStructToFilters } from './search.util';
 import { getConditionExpression } from './search.util';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { toggleLoading,setFilterData } from 'app/shared/websocket/websocket.reducer';
 
 // TODO: let the code commented as it will be used in future

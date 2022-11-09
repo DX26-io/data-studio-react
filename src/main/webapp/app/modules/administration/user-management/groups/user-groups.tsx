@@ -4,10 +4,10 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Translate, getSortState } from 'react-jhipster';
 import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
-import { getUserGroups } from './user-group.reducer';
+import { getUserGroups, setUserGroup } from './user-group.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 import UserGroupUpdate from './user-group-update';
@@ -19,8 +19,6 @@ export const UserGroups = (props: IUserGroupsProps) => {
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
   const [isOpen, setOpen] = React.useState(false);
-  const [isNew, setNew] = React.useState(false);
-  const [groupName, setGroupName] = React.useState('');
 
   const fetchUsersGroups = () => {
     props.getUserGroups(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
@@ -83,8 +81,6 @@ export const UserGroups = (props: IUserGroupsProps) => {
           variant="cta"
           onPress={() => {
             setOpen(true);
-            setNew(true);
-            setGroupName('');
           }}
           data-testid="create-group"
         >
@@ -92,15 +88,7 @@ export const UserGroups = (props: IUserGroupsProps) => {
         </Button>
       </SecondaryHeader>
       <DialogContainer onDismiss={() => setOpen(false)}>
-        {isOpen && (
-          <UserGroupUpdate
-            setUpdateSuccess={setUpdateSuccess}
-            isNew={isNew}
-            setOpen={setOpen}
-            groupName={groupName}
-            {...props}
-          ></UserGroupUpdate>
-        )}
+        {isOpen && <UserGroupUpdate setUpdateSuccess={setUpdateSuccess} setOpen={setOpen} {...props}></UserGroupUpdate>}
       </DialogContainer>
       <div className="dx26-container">
         <Paper className="dx26-table-pager">
@@ -131,8 +119,7 @@ export const UserGroups = (props: IUserGroupsProps) => {
                         <a
                           onClick={() => {
                             setOpen(true);
-                            setNew(false);
-                            setGroupName(userGroup.name);
+                            props.setUserGroup(userGroup);
                           }}
                         >
                           <Edit size="S" />
@@ -146,12 +133,12 @@ export const UserGroups = (props: IUserGroupsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
+            onPageChange={handleChangePage}
             component="div"
             count={totalItems}
             rowsPerPage={pagination.itemsPerPage}
             page={pagination.activePage}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
       </div>
@@ -164,7 +151,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   totalItems: storeState.userGroups.totalItems,
 });
 
-const mapDispatchToProps = { getUserGroups };
+const mapDispatchToProps = { getUserGroups, setUserGroup };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

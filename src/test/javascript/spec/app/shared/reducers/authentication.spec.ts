@@ -217,6 +217,7 @@ describe('Authentication reducer tests', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   describe('clearAuthToken', () => {
     let store;
     beforeEach(() => {

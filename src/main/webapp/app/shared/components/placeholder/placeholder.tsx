@@ -1,6 +1,6 @@
 import React from 'react';
 import { Content, Flex, Heading, IllustratedMessage, Text, View } from '@adobe/react-spectrum';
-import { getFirstLettersFromString } from 'app/shared/util/common-utils.ts';
+import { getFirstLettersFromString } from 'app/shared/util/common-utils';
 import NotFound from '@spectrum-icons/illustrations/NotFound';
 import { Translate } from 'react-jhipster';
 import NoSearchResults from '@spectrum-icons/illustrations/NoSearchResults';

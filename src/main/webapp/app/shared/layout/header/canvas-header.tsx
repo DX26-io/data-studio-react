@@ -2,7 +2,7 @@ import './header.scss';
 import React, { useState, useEffect, ReactText } from 'react';
 import { Flex, View, DialogContainer } from '@adobe/react-spectrum';
 import SaveFloppy from '@spectrum-icons/workflow/SaveFloppy';
-import Asset from '@spectrum-icons/workflow/Asset';
+import DataSettings from '@spectrum-icons/workflow/DataSettings';
 import BookmarkSingle from '@spectrum-icons/workflow/BookmarkSingle';
 import Search from '@spectrum-icons/workflow/Search';
 import GraphBarVerticalAdd from '@spectrum-icons/workflow/GraphBarVerticalAdd';
@@ -81,7 +81,7 @@ const CanvasHeader = props => {
       onPress:resetFilter,
     },
     {
-      icon: <Asset size="M" id="toggle-feature-button" />,
+      icon: <DataSettings size="M" id="toggle-feature-button" />,
       title: translate('canvas.menu.toggleFeatures'),
       onPress: props.toggleFeaturesPanel,
     },

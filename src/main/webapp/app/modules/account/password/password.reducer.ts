@@ -55,7 +55,7 @@ const apiUrl = 'api/account';
 
 export const savePassword = (currentPassword, newPassword) => ({
   type: ACTION_TYPES.UPDATE_PASSWORD,
-  payload: axios.post(`${apiUrl}/change-password`, { currentPassword, newPassword }),
+  payload: axios.post(`${apiUrl}/change_password`, { currentPassword, newPassword }),
   meta: {
     successMessage: translate('password.messages.success'),
     errorMessage: translate('password.messages.error'),

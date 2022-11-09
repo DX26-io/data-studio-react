@@ -9,7 +9,7 @@ import {
 } from './user-datasource-constraints.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Flex } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import Edit from '@spectrum-icons/workflow/Edit';
 import { Translate, translate } from 'react-jhipster';
 import { toast } from 'react-toastify';

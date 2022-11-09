@@ -8,7 +8,7 @@ import {
 } from './user-group-datasource-constraints.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Flex } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import Edit from '@spectrum-icons/workflow/Edit';
 import { Translate } from 'react-jhipster';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';

@@ -5,7 +5,7 @@ import {
   getUserGroupViewsPermissions,
   updateUserGroupPermissions,
   updateUserPermissions,
-  resetViewsPermissions
+  resetViewsPermissions,
 } from '../permissions.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
@@ -21,7 +21,7 @@ import {
   Content,
   Checkbox,
 } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import { ITEMS_PER_PAGE, ACTIVE_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/pagination.constants';
 import { Translate, getSortState } from 'react-jhipster';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
@@ -104,6 +104,8 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
     }
   };
 
+  
+
   return (
     <Dialog data-testid="views-permissions-dialog" width="90vw" top="3vh">
       <Heading>
@@ -161,13 +163,11 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
             <TableBody>
               {viewsPermissions.map((view, i) => (
                 <TableRow key={`view-${view.info.viewName}`}>
-                  <TableCell align="center">
-                    {view.info.viewName}
-                  </TableCell>
+                  <TableCell align="center">{view.info.viewName}</TableCell>
                   {view.info.permissionMetadata.map((p, j) => (
                     <TableCell align="center" key={`permission-${p.permission.key.action}`}>
                       <Checkbox
-                        data-testid = {`checkbox-${p.permission.key.action}`}
+                        data-testid={`checkbox-${p.permission.key.action}`}
                         defaultSelected={p.hasIt}
                         isEmphasized
                         onChange={() => {
@@ -183,11 +183,11 @@ export const ViewsPermissions = (props: IViewsPermissionsProps) => {
           </Table>
         </TableContainer>
         <TablePagination
+          onPageChange={handleChangePage}
           component="div"
           count={totalViewsPermissions}
           rowsPerPage={pagination.itemsPerPage}
           page={pagination.activePage}
-          onChangePage={handleChangePage}
         />
       </Content>
     </Dialog>
@@ -206,7 +206,7 @@ const mapDispatchToProps = {
   getUserGroupViewsPermissions,
   updateUserGroupPermissions,
   updateUserPermissions,
-  resetViewsPermissions
+  resetViewsPermissions,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

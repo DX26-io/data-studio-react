@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { Translate, getSortState, translate } from 'react-jhipster';
 import TreeExpand from '@spectrum-icons/workflow/TreeExpand';
 import {} from '../reports-management.reducer';
-import Accordion from '@material-ui/core/Accordion';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import Select from 'react-select';
 import { Button, Flex, TextField, Checkbox, Text, View } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
@@ -20,6 +20,7 @@ import { generateDashboardNameOptions } from 'app/entities/dashboard/dashboard-u
 import { generateViewNameOptions } from 'app/entities/views/view-util';
 import DatePicker from 'app/shared/components/date-picker/date-picker';
 import { stringToDate, strToDate } from 'app/shared/util/date-utils';
+import { debouncedSearch } from 'app/shared/util/common-utils';
 
 // TODO : check the notification API is working fine with start and end date filters 
 
@@ -140,7 +141,7 @@ export const Filters = (props: IFiltersProps) => {
                 onInputChange={event => {
                   if (event) {
                     setSearchedDahboard(event);
-                    props.getDashboardsByName(event);
+                    debouncedSearch(props.getDashboardsByName,[event]);
                   }
                 }}
                 options={generateDashboardNameOptions(props.dashboards)}
@@ -156,7 +157,7 @@ export const Filters = (props: IFiltersProps) => {
                 onChange={selectView}
                 onInputChange={event => {
                   if (event) {
-                    props.getViewsByName(event);
+                    debouncedSearch(props.getViewsByName,[event]);
                   }
                 }}
                 options={generateViewNameOptions(props.views)}
@@ -172,7 +173,7 @@ export const Filters = (props: IFiltersProps) => {
                 onChange={selectUser}
                 onInputChange={event => {
                   if (event) {
-                    props.searchUsers(0, ITEMS_PER_PAGE, 'login,asc', event);
+                    debouncedSearch(props.searchUsers,[0, ITEMS_PER_PAGE, 'login,asc', event]);
                   }
                 }}
                 options={generateUsersOptions(props.searchedUsers)}

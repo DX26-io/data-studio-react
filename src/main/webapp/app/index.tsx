@@ -17,6 +17,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import {FirebaseAuthProvider} from "@react-firebase/auth";
 import {loadConfig} from "app/config/config-loader";
+import { createRoot } from 'react-dom/client';
 
 const devTools = process.env.NODE_ENV === 'development' ? <DevTools /> : null;
 
@@ -32,25 +33,25 @@ async function init() {
   // loadIcons();
   await loadConfig();
 
-  const rootEl = document.getElementById('root');
+  const container = document.getElementById('root');
+  const root = createRoot(container);
 
   const render = Component =>
     // eslint-disable-next-line react/no-render-return-value
-    ReactDOM.render(
+    root.render(
       <ErrorBoundary>
         <SpectrumProvider theme={defaultTheme}>
           <Provider store={store}>
-            <FirebaseAuthProvider {...firebaseConfig} firebase={firebase}>
+            {/* <FirebaseAuthProvider {...firebaseConfig} firebase={firebase}> */}
               <div>
                 {/* If this slows down the app in dev disable it and enable when required  */}
                 {devTools}
                 <Component/>
               </div>
-            </FirebaseAuthProvider>
+            {/* </FirebaseAuthProvider> */}
           </Provider>
         </SpectrumProvider>
-      </ErrorBoundary>,
-      rootEl
+      </ErrorBoundary>
     );
 
   render(AppComponent);

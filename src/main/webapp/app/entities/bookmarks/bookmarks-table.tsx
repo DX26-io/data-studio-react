@@ -2,7 +2,7 @@ import React, { useEffect, useState, ReactText } from 'react';
 import { connect } from 'react-redux';
 import { View, Flex } from '@adobe/react-spectrum';
 import { getRecentlyAccessedBookmarks } from 'app/modules/home/sections/recent.reducer';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import { Translate } from 'react-jhipster';
 import Hammer from '@spectrum-icons/workflow/Hammer';
 import { useHistory } from 'react-router-dom';
