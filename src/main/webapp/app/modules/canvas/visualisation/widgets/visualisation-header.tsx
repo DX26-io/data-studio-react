@@ -1,6 +1,6 @@
 import './visualisation-header.scss';
 import { ActionButton, Button, DialogContainer, Flex, Item, Menu, MenuTrigger, Text, View } from '@adobe/react-spectrum';
-import Circle from '@spectrum-icons/workflow/Circle';
+import PlayCircle from '@spectrum-icons/workflow/PlayCircle';
 import Copy from '@spectrum-icons/workflow/Copy';
 import Delete from '@spectrum-icons/workflow/Delete';
 import Edit from '@spectrum-icons/workflow/Edit';
@@ -268,7 +268,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
               onPress={setLiveEnabled}
               UNSAFE_className={isLiveEnable ? 'enable-live' : 'disable-live'}
             >
-              <Circle id={'live-icon'} size={'XS'} aria-label="Default Alert" />
+              <PlayCircle id={'live-icon'} size={'XS'} aria-label="Default Alert" />
             </ActionButton>
             {props.isEditMode && (
               <MenuTrigger>

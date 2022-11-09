@@ -19,8 +19,11 @@ export const prepareConnection = (connection, connectionType) => {
   return con;
 };
 
-export const isNextDisabled = (datasource: IDatasources, exploreModelTabId: number, step: number) => {
-  if (((exploreModelTabId === 1 && !datasource.name) || (exploreModelTabId === 2 && (!datasource.name || !datasource.sql))) && step === 0) {
+export const isNextDisabled = (datasource: IDatasources, exploreModelTabId: string, step: number) => {
+  if (
+    ((exploreModelTabId === '1' && !datasource.name) || (exploreModelTabId === '2' && (!datasource.name || !datasource.sql))) &&
+    step === 0
+  ) {
     return true;
   } else {
     return false;

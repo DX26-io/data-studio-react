@@ -1,8 +1,7 @@
 import React, { useEffect, useState, ReactText } from 'react';
 import { connect } from 'react-redux';
-import { Item, Content, View, Flex, ProgressBar, DialogContainer } from '@adobe/react-spectrum';
-import { Tabs } from '@react-spectrum/tabs';
-import { translate } from 'react-jhipster';
+import { Item, Content, View, Flex, ProgressBar, DialogContainer, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
+import { translate, Translate } from 'react-jhipster';
 import { getMostPopularViews, getRecentlyAccessedBookmarks, getRecentViews } from './recent.reducer';
 import ViewCardContent from 'app/entities/views/view-card/view-card-content';
 import ViewCardThumbnail from 'app/entities/views/view-card/view-card-thumbnail';
@@ -12,16 +11,8 @@ import ViewRequestReleaseDialog from 'app/entities/views/view-request-release-mo
 export interface IRecentlyAccessedProps extends StateProps, DispatchProps {}
 
 const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
-  const [tabId, setTabId] = useState<ReactText>('1');
   const [isRequestReleaseDialogOpen, setRequestReleaseDialogOpen] = useState<boolean>(false);
   const [requestReleaseViewId, setRequestReleaseViewId] = useState();
-
-  const tabs = [
-    { id: 1, name: 'home.bottom.tabs.accessed.tabs.recentlyAccessedViews' },
-    { id: 2, name: 'home.bottom.tabs.accessed.tabs.overallMostPopularViews' },
-    { id: 3, name: 'home.bottom.tabs.accessed.tabs.recentlyAccessedBookmarks' },
-    { id: 4, name: 'home.bottom.tabs.accessed.tabs.overallMostPopularBookmarks' },
-  ];
 
   const recentlyAccessed = {
     '1': {
@@ -46,10 +37,10 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
     },
   };
 
-  const dispatchReleaseRequestProps = (viewId)=>{
+  const dispatchReleaseRequestProps = viewId => {
     setRequestReleaseDialogOpen(true);
-    setRequestReleaseViewId(viewId)
-  }
+    setRequestReleaseViewId(viewId);
+  };
 
   const recentlyAccessedViewsListElement = props.recentlyAccessedViews.map(recent => {
     return (
@@ -134,39 +125,80 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
 
   return (
     <React.Fragment>
-    <Tabs
-      aria-label="recent-tabs"
-      items={tabs}
-      selectedKey={tabId}
-      onSelectionChange={id => {
-        setTabId(id);
-        recentlyAccessed[id].getData();
-      }}
-    >
-      {item => (
-        <Item title={translate(item.name)}>
-          <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
-            {props.loading ? (
-              <ProgressBar label="Loading…" isIndeterminate />
-            ) : (
-              <View>
-                <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
-                  {tabId === 1 && props.recentlyAccessedViews.length > 0 ? recentlyAccessedViewsListElement : null}
-                  {tabId === 2 && props.popularViews.length > 0 ? popularViewsListElement : null}
-                  {tabId === 3 || (tabId === 4 && props.recentlyAccessedBookmarks.length > 0) ? recentlyAccessedBookmarksListElement : null}
-                </Flex>
-              </View>
-            )}
-          </Content>
-        </Item>
-      )}
-    </Tabs>
-          <DialogContainer onDismiss={() => setRequestReleaseDialogOpen(false)}>
-          {isRequestReleaseDialogOpen && (
-            <ViewRequestReleaseDialog setOpen={setRequestReleaseDialogOpen} viewId={requestReleaseViewId}></ViewRequestReleaseDialog>
+      <Tabs
+        aria-label="recent-tabs"
+        onSelectionChange={id => {
+          recentlyAccessed[id].getData();
+        }}
+      >
+        <TabList>
+          <Item key="1">
+            <Translate contentKey="home.bottom.tabs.accessed.tabs.recentlyAccessedViews"></Translate>
+          </Item>
+          <Item key="2">
+            <Translate contentKey="home.bottom.tabs.accessed.tabs.overallMostPopularViews"></Translate>
+          </Item>
+          <Item key="3">
+            <Translate contentKey="home.bottom.tabs.accessed.tabs.recentlyAccessedBookmarks"></Translate>
+          </Item>
+          <Item key="4">
+            <Translate contentKey="home.bottom.tabs.accessed.tabs.overallMostPopularBookmarks"></Translate>
+          </Item>
+        </TabList>
+        <Content marginTop="size-125"  marginEnd="size-125">
+          {props.loading ? (
+            <ProgressBar label="Loading…" isIndeterminate />
+          ) : (
+            <View>
+              <TabPanels>
+                <Item key="1">
+                  <Content marginTop="size-125"  marginEnd="size-125">
+                    <View>
+                      <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
+                        {props.recentlyAccessedViews.length > 0 ? recentlyAccessedViewsListElement : null}
+                      </Flex>
+                    </View>
+                  </Content>
+                </Item>
+                <Item key="2">
+                  <Content marginTop="size-125"  marginEnd="size-125">
+                    <View>
+                      <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
+                        {props.popularViews.length > 0 ? popularViewsListElement : null}
+                      </Flex>
+                    </View>
+                  </Content>
+                </Item>
+                <Item key="3">
+                  <Content marginTop="size-125"  marginEnd="size-125">
+                    <View>
+                      <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
+                        {props.recentlyAccessedBookmarks.length > 0 ? recentlyAccessedBookmarksListElement : null}
+                      </Flex>
+                    </View>
+                  </Content>
+                </Item>
+                <Item key="4">
+                  <Content marginTop="size-125"  marginEnd="size-125">
+                    <View>
+                      {' '}
+                      <Flex direction="row" gap="size-500" alignItems="start" justifyContent="start" wrap>
+                        {props.recentlyAccessedBookmarks.length > 0 ? recentlyAccessedBookmarksListElement : null}{' '}
+                      </Flex>{' '}
+                    </View>
+                  </Content>
+                </Item>
+              </TabPanels>
+            </View>
           )}
-        </DialogContainer>
-      </React.Fragment>
+        </Content>
+      </Tabs>
+      <DialogContainer onDismiss={() => setRequestReleaseDialogOpen(false)}>
+        {isRequestReleaseDialogOpen && (
+          <ViewRequestReleaseDialog setOpen={setRequestReleaseDialogOpen} viewId={requestReleaseViewId}></ViewRequestReleaseDialog>
+        )}
+      </DialogContainer>
+    </React.Fragment>
   );
 };
 

@@ -6,7 +6,7 @@ import { ITEMS_PER_PAGE_OPTIONS, ITEMS_PER_PAGE } from 'app/shared/util/paginati
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex, DialogContainer, Dialog } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 import { fetchReports } from '../reports-management.reducer';
@@ -164,12 +164,12 @@ export const Reports = (props: IReportsProps) => {
           </TableContainer>
           <TablePagination
             rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
+            onPageChange={handleChangePage}
             component="div"
             count={props.totalReports}
             rowsPerPage={pagination.itemsPerPage}
             page={pagination.activePage}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
       </div>
@@ -183,7 +183,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
 });
 
-const mapDispatchToProps = { fetchReports,getViewFeaturesEntities,getViewEntity };
+const mapDispatchToProps = { fetchReports, getViewFeaturesEntities, getViewEntity };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

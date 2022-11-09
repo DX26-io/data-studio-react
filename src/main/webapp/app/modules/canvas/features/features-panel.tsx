@@ -1,18 +1,31 @@
 import React, { Key, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { ActionButton, Flex, View, Text, Button, Divider, ListBox, Item, DialogContainer } from '@adobe/react-spectrum';
+import {
+  ActionButton,
+  Flex,
+  View,
+  Text,
+  Button,
+  Divider,
+  ListBox,
+  Item,
+  DialogContainer,
+  Tabs,
+  TabList,
+  TabPanels,
+} from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import Add from '@spectrum-icons/workflow/Add';
 import { getViewFeaturesEntities, setFeature, toggleFeaturesPanel, getEntity } from 'app/entities/feature/feature.reducer';
-import { Tabs } from '@react-spectrum/tabs';
-import { featureTypeToActiveTabs, getFeaturesTabTranslations } from 'app/modules/canvas/features/features-panel-util';
+import { featureTypeToActiveTabs } from 'app/modules/canvas/features/features-panel-util';
 import { getHierarchies, setHierarchy } from 'app/entities/hierarchy/hierarchy.reducer';
 import HierarchyUpdate from 'app/entities/hierarchy/hierarchy-update';
 import FeatureUpdate from 'app/entities/feature/feature-update';
 import { IFeature, defaultValue as featureDefaultValue } from 'app/shared/model/feature.model';
 import PanelHeader from 'app/shared/components/panel-header';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 import { setDraggedFeature } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { Translate } from 'react-jhipster';
 export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
 const FeaturesPanel = (props: IFeaturesPanelProp) => {
@@ -34,10 +47,10 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
   };
 
   const create = () => {
-    if (activeTabId === '0') {
+    if (activeTabId === 0) {
       props.setFeature({ ...featureDefaultValue, featureType: 'DIMENSION' });
       setFeatureDialogOpen(true);
-    } else if (activeTabId === '1') {
+    } else if (activeTabId === 1) {
       props.setFeature({ ...featureDefaultValue, featureType: 'MEASURE' });
       setFeatureDialogOpen(true);
     } else {
@@ -57,7 +70,11 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
   };
 
   const handleClickAway = event => {
-    if (event.target.firstChild.id !== 'toggle-feature-button' && event.target.firstChild.id !== undefined && event.target.firstChild.id!=='switch') {
+    if (
+      event.target.firstChild.id !== 'toggle-feature-button' &&
+      event.target.firstChild.id !== undefined &&
+      event.target.firstChild.id !== 'switch'
+    ) {
       props.toggleFeaturesPanel();
     }
   };
@@ -67,9 +84,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
   };
 
   // do not remove this code as it will be required in future
-  const onDragEnd = (e, feature) => {
-
-  };
+  const onDragEnd = (e, feature) => {};
 
   const features = props.featuresList.filter(featureFilter).map(feature => (
     <li
@@ -125,11 +140,39 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
                 isQuiet={true}
                 density={'compact'}
                 position={'sticky'}
-                items={getFeaturesTabTranslations()}
                 selectedKey={activeTabId}
-                onSelectionChange={key => setActiveTabId(key)}
+                onSelectionChange={setActiveTabId}
               >
-                {item => (
+                <TabList>
+                  <Item key={0}>
+                    <Translate contentKey="features.tabs.dimensions"></Translate>
+                  </Item>
+                  <Item key={1}>
+                    <Translate contentKey="features.tabs.measures"></Translate>
+                  </Item>
+                  <Item key={2}>
+                    <Translate contentKey="features.tabs.hierarchy"></Translate>
+                  </Item>
+                </TabList>
+                <TabPanels>
+                  <Item key={0}><ol>{features}</ol></Item>
+                  <Item key={1}><ol>{features}</ol></Item>
+                  <Item key={2}>
+                    {' '}
+                    <Flex justifyContent="safe center" alignItems="center" marginTop="size-250">
+                      <ListBox
+                        width="size-2400"
+                        aria-label="Hierarchy"
+                        selectionMode="single"
+                        onSelectionChange={onHierarchySelected}
+                        items={props.hierarchies}
+                      >
+                        {hiararchy => <Item>{hiararchy.name}</Item>}
+                      </ListBox>
+                    </Flex>
+                  </Item>
+                </TabPanels>
+                {/* {item => (
                   <Item title={item.name} key={item.id}>
                     <Flex justifyContent="safe center" alignItems="center" marginTop="size-250">
                       {activeTabId === '2' ? (
@@ -147,7 +190,7 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
                       )}
                     </Flex>
                   </Item>
-                )}
+                )} */}
               </Tabs>
             </View>
             <DialogContainer onDismiss={() => setHierarchyDialogOpen(false)}>

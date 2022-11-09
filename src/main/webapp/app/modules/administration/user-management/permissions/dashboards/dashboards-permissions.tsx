@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getUserGroupDashboardPermissions, getUserDashboardPermissions } from '../permissions.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Flex, DialogContainer } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import Edit from '@spectrum-icons/workflow/Edit';
 import { ITEMS_PER_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/pagination.constants';
 import { Translate, getSortState } from 'react-jhipster';
@@ -67,6 +67,8 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
   const setUpdateSuccess = () => {
     fetchPermissions();
   };
+  
+  
 
   return (
     <div className="dx26-container">
@@ -152,13 +154,13 @@ export const DashboardsPermissions = (props: IDashboardsPermissionsProps) => {
           </Table>
         </TableContainer>
         <TablePagination
+           onPageChange={handleChangePage}
           rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
           component="div"
           count={totalDashboardPermissions}
           rowsPerPage={pagination.itemsPerPage}
           page={pagination.activePage}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>

@@ -6,12 +6,12 @@ const isValidLogin = (login: string) => {
 };
 
 const isEmailLengthValid = (email: string) => {
-  return email !== '' && email.length < 100
+  return email !== '' && email.length < 100;
 };
 
 const isValidEmail = (email: string) => {
   // eslint-disable-next-line
-return email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/)
+  return email.match(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/);
 };
 
 const isValidFirstName = (firstName: string) => {

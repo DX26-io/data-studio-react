@@ -1,12 +1,12 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import Logo from 'app/shared/components/logo/logo';
 
 describe('Logo tests', () => {
   let mountedWrapper;
   const wrapper = () => {
     if (!mountedWrapper) {
-      mountedWrapper = mount(<Logo />);
+      mountedWrapper = shallow(<Logo />);
     }
     return mountedWrapper;
   };

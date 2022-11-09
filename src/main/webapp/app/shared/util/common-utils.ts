@@ -42,23 +42,23 @@ export const isCanvas = () => {
 };
 
 export const isRootUser = account => {
-  return account.organisation.type === ORGANISATION_TYPE_FULL;
+  return account?.organisation?.type === ORGANISATION_TYPE_FULL && account?.userGroups.includes(AUTHORITIES.SUPER_ADMIN);
 };
 
 export const isSuperAdminUser = account => {
-  return account.userGroups.includes(AUTHORITIES.SUPER_ADMIN);
+  return account?.userGroups.includes(AUTHORITIES.SUPER_ADMIN);
 };
 
 export const isAdminUser = account => {
-  return account.userGroups.includes(AUTHORITIES.ADMIN);
+  return account?.userGroups && account?.userGroups.includes(AUTHORITIES.ADMIN);
 };
 
 export const isUser = account => {
-  return account.userGroups.includes(AUTHORITIES.USER);
+  return account?.userGroups && account?.userGroups.includes(AUTHORITIES.USER);
 };
 
 export const isEnterpriseAndSuperadminUser = account => {
-  return account.organisation.type === ORGANISATION_TYPE_ENTERPRISE && isSuperAdminUser(account);
+  return account?.organisation?.type === ORGANISATION_TYPE_ENTERPRISE && isSuperAdminUser(account);
 };
 
 export const debouncedSearch = debounce((callback, args) => {

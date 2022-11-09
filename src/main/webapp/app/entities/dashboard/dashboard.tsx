@@ -9,7 +9,7 @@ import Card from 'app/shared/components/card/card';
 import { Button, DialogContainer, Flex, View, ProgressBar } from '@adobe/react-spectrum';
 import DashboardCardThumbnail from 'app/entities/dashboard/dashboard-card/dashboard-card-thumbnail';
 import DashboardCardContent from 'app/entities/dashboard/dashboard-card/dashboard-card-content';
-import Pagination from '@material-ui/lab/Pagination';
+import Pagination from '@mui/lab/Pagination';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import DashboardCreateModal from './dashboard-create-modal';
 import { NoItemsFoundPlaceHolder } from 'app/shared/components/placeholder/placeholder';

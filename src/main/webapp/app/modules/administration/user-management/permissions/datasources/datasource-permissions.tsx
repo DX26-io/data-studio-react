@@ -9,7 +9,7 @@ import {
 } from '../permissions.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Flex, Text, SearchField, Checkbox } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import Edit from '@spectrum-icons/workflow/Edit';
 import { ITEMS_PER_PAGE, ACTIVE_PAGE, ITEMS_PER_PAGE_OPTIONS } from 'app/shared/util/pagination.constants';
 import { Translate, getSortState, translate } from 'react-jhipster';
@@ -36,7 +36,6 @@ export const DatasourcePermissions = (props: IDatasourceProps) => {
     } else if (group) {
       props.getUserGroupDatasourcePermissions(pagination.activePage, pagination.itemsPerPage, group);
     }
-
   };
 
   useEffect(() => {
@@ -125,13 +124,13 @@ export const DatasourcePermissions = (props: IDatasourceProps) => {
           </Table>
         </TableContainer>
         <TablePagination
+          onPageChange={handleChangePage}
           rowsPerPageOptions={ITEMS_PER_PAGE_OPTIONS}
           component="div"
           count={totalDatasourcePermissions}
           rowsPerPage={pagination.itemsPerPage}
           page={pagination.activePage}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, ReactText } from 'react';
-import { ActionButton, Flex, Form, View, Content, Item, Button, TextField, Heading } from '@adobe/react-spectrum';
+import { ActionButton, Flex, Form, View, Content, Item, Button, TextField, Heading, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
 import uuid from 'react-uuid';
 import Properties from 'app/modules/canvas/visualisation/visualisation-properties/partials/properties/property';
 import { VisualWrap } from 'app/modules/canvas/visualisation/util/visualmetadata-wrapper';
@@ -11,13 +11,11 @@ import { IRootState } from 'app/shared/reducers';
 import { addField, deleteField, updateField } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { connect } from 'react-redux';
 import { getDataPropertiesTabTranslations } from 'app/modules/canvas/visualisation/visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-util';
-import { Tabs } from '@react-spectrum/tabs';
 import Add from '@spectrum-icons/workflow/Add';
 import { generateHierarchiesOptions } from 'app/entities/hierarchy/hierarchy.reducer';
 import { getDimensionsList, getMeasuresList } from 'app/entities/feature/feature.reducer';
 import { addFieldDimension, addFieldMeasure } from 'app/entities/visualmetadata/visualmetadata-util';
-import Label from '@spectrum-icons/workflow/Label';
-import { translate } from 'react-jhipster';
+import { translate, Translate } from 'react-jhipster';
 
 export interface IVisualisationDataPropertiesProps extends StateProps, DispatchProps {}
 
@@ -97,16 +95,152 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
           setSelectedField(null);
         }}
       >
-        {item => (
+        <TabList>
+          <Item key="DIMENSION">
+            <Translate contentKey="views.editConfiguration.properties.dataProperties.dimensions"></Translate>
+          </Item>
+          <Item key="MEASURE">
+            <Translate contentKey="views.editConfiguration.properties.dataProperties.measures"></Translate>
+          </Item>
+        </TabList>
+        <TabPanels>
+          <Item key="DIMENSION">
+            <Content>
+              {' '}
+              <View>
+                <Flex justifyContent="end">
+                  <ActionButton
+                    isQuiet
+                    onPress={() => {
+                      const field = addFieldDimension(visualWrap, props.visual, null);
+                      if (field) {
+                        props.addField(props.visual, field);
+                        setSelectedField(field);
+                      }
+                    }}
+                    marginEnd={'10px'}
+                  >
+                    <Add size="S" />
+                  </ActionButton>
+                </Flex>
+                <View marginBottom="size-100" marginTop="size-100">
+                  {getSelectedFieldsElements}
+                </View>
+                <Form>
+                  {selectedField && (
+                    <>
+                      <span className="spectrum-Body-emphasis--sizeXXS">
+                        {translate('views.editConfiguration.properties.dataProperties.dimensions')}
+                      </span>
+                      <Select
+                        onChange={selected => {
+                          selectFeature(selected);
+                        }}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        value={{ value: selectedField?.feature?.id, label: selectedField?.feature?.name }}
+                        isSearchable={true}
+                        name="dimensions"
+                        options={getDimensionsList(props.features)}
+                      />
+                    </>
+                  )}
+                  {selectedField?.feature?.name && props.hierarchiesOption && props.hierarchiesOption.length > 0 && (
+                    <>
+                      <span className="spectrum-Body-emphasis--sizeXXS">{translate('hierarchies.hierarchy')}</span>
+                      <Select
+                        onChange={selected => {
+                          hierarchyChange(selected);
+                        }}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        value={{ value: selectedField?.hierarchy?.id, label: selectedField?.hierarchy?.name }}
+                        isSearchable={true}
+                        name="hierarchies"
+                        options={props.hierarchiesOption}
+                      />
+                    </>
+                  )}
+                </Form>
+              </View>
+              <Form>
+                {selectedField &&
+                  selectedField.properties &&
+                  selectedField.properties.length > 0 &&
+                  selectedField.properties
+                    .sort((a, b) => (a.order > b.order ? 1 : -1))
+                    .map((property, i) => (
+                      <Properties key={uuid()} property={property} propstyle={'data'} visual={props.visual} features={props.features} />
+                    ))}
+              </Form>
+            </Content>
+          </Item>
+          <Item key="MEASURE">
+            <Content>
+              {' '}
+              <View>
+                <Flex justifyContent="end">
+                  <ActionButton
+                    isQuiet
+                    onPress={() => {
+                      const field = addFieldMeasure(visualWrap, props.visual, null);
+                      if (field) {
+                        props.addField(props.visual, field);
+                        setSelectedField(field);
+                      }
+                    }}
+                    marginEnd={'10px'}
+                  >
+                    <Add size="S" />
+                  </ActionButton>
+                </Flex>
+                <View marginBottom="size-100" marginTop="size-100">
+                  {getSelectedFieldsElements}
+                </View>
+                <Form>
+                  {selectedField && (
+                    <>
+                      <span className="spectrum-Body-emphasis--sizeXXS">
+                        {translate('views.editConfiguration.properties.dataProperties.measures')}
+                      </span>
+                      <Select
+                        onChange={selected => {
+                          selectFeature(selected);
+                        }}
+                        className="basic-single"
+                        classNamePrefix="select"
+                        value={{ value: selectedField?.feature?.id, label: selectedField?.feature?.name }}
+                        isSearchable={true}
+                        name="measuresList"
+                        options={getMeasuresList(props.features)}
+                      />
+                    </>
+                  )}
+                </Form>
+              </View>
+              <Form>
+                {selectedField &&
+                  selectedField.properties &&
+                  selectedField.properties.length > 0 &&
+                  selectedField.properties
+                    .sort((a, b) => (a.order > b.order ? 1 : -1))
+                    .map((property, i) => (
+                      <Properties key={uuid()} property={property} propstyle={'data'} visual={props.visual} features={props.features} />
+                    ))}
+              </Form>
+            </Content>
+          </Item>
+        </TabPanels>
+        {/* {item => (
           <Item title={item.name} key={item.id}>
             <Content>
-              { activeTabId === 'DIMENSION' && (
+              {activeTabId === 'DIMENSION' && (
                 <View>
                   <Flex justifyContent="end">
                     <ActionButton
                       isQuiet
                       onPress={() => {
-                        const field = addFieldDimension(visualWrap, props.visual,null);
+                        const field = addFieldDimension(visualWrap, props.visual, null);
                         if (field) {
                           props.addField(props.visual, field);
                           setSelectedField(field);
@@ -158,13 +292,13 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                   </Form>
                 </View>
               )}
-              { activeTabId === 'MEASURE' && (
+              {activeTabId === 'MEASURE' && (
                 <View>
                   <Flex justifyContent="end">
                     <ActionButton
                       isQuiet
                       onPress={() => {
-                        const field = addFieldMeasure(visualWrap, props.visual,null);
+                        const field = addFieldMeasure(visualWrap, props.visual, null);
                         if (field) {
                           props.addField(props.visual, field);
                           setSelectedField(field);
@@ -212,7 +346,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
               </Form>
             </Content>
           </Item>
-        )}
+        )} */}
       </Tabs>
     </View>
   );

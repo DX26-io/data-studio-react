@@ -2,7 +2,7 @@ import React from 'react';
 import { Translate } from 'react-jhipster';
 import { View } from '@react-spectrum/view';
 import { Link } from 'react-router-dom';
-import Alert from '@material-ui/lab/Alert';
+import Alert from '@mui/lab/Alert';
 import { Flex } from '@adobe/react-spectrum';
 
 const PasswordResetSuccess = () => (

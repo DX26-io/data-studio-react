@@ -169,7 +169,7 @@ const Scheduler = (props: ISchedulerProps) => {
         <Flex alignItems="center" gap="size-100" data-testid="scheduler-form-heading">
           {(!props.errorMessage?.isValid || props.scheduleReportresponse?.message) && (
             <React.Fragment>
-              <Alert color="Informative" />
+              <Alert color="informative" />
               <Text>
                 <span className="spectrum-Body-emphasis">
                   {props.errorMessage?.isValid ? (

@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Login Top Text Renders Login Top Text 1`] = `
-<ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)
+<ForwardRef($a2ef5497697e8437$var$Flex)
   direction="row-reverse"
   margin="size-600"
 >
-  <ForwardRef($fe1955053990ab873941970c7463$var$Text)>
+  <ForwardRef($1efae25dd196d679$var$Text)>
     <span
       className="spectrum-Heading spectrum-Heading--sizeL"
     >
       Dx26
     </span>
-  </ForwardRef($fe1955053990ab873941970c7463$var$Text)>
-</ForwardRef($e9098d18abf2a118bc3bc95f0d402bb5$var$Flex)>
+  </ForwardRef($1efae25dd196d679$var$Text)>
+</ForwardRef($a2ef5497697e8437$var$Flex)>
 `;

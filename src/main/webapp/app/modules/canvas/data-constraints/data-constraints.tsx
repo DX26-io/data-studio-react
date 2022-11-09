@@ -93,7 +93,7 @@ const DataConstraints = props => {
           <Flex gap="size-100">
             {props.validateQueryResponse?.error && (
               <React.Fragment>
-                <Alert color="Informative" />
+                <Alert color="informative"  />
                 <span className="spectrum-Body-emphasis">{props.validateQueryResponse?.error}</span>
               </React.Fragment>
             )}

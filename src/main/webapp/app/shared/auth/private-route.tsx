@@ -6,61 +6,52 @@ import { IRootState } from 'app/shared/reducers';
 import ErrorBoundary from 'app/shared/error/error-boundary';
 import { ORGANISATION_TYPE_ENTERPRISE, ORGANISATION_TYPE_FULL } from 'app/config/constants';
 
-interface IOwnProps extends RouteProps {
+export interface IPrivateRouteProps extends RouteProps, StateProps {
   hasAnyAuthorities?: string[];
+  component: any;
 }
 
-export interface IPrivateRouteProps extends IOwnProps, StateProps {}
+export const PrivateRoute = (props: IPrivateRouteProps) => {
+  const isAuthorized = hasAnyAuthority(props.account, props.hasAnyAuthorities);
 
-export const PrivateRouteComponent = ({
-  component: Component,
-  isAuthenticated,
-  sessionHasBeenFetched,
-  isAuthorized,
-  hasAnyAuthorities = [],
-  ...rest
-}: IPrivateRouteProps) => {
-  const checkAuthorities = props =>
-    isAuthorized ? (
-      <ErrorBoundary>
-        <Component {...props} />
-      </ErrorBoundary>
-    ) : (
+  if (!props.component) throw new Error(`A component needs to be specified for private route for path ${(props as any).path}`);
+
+  if (!props.sessionHasBeenFetched) {
+    return <div></div>;
+  }
+
+  const renderComponent = () => (
+    <ErrorBoundary>
+      <props.component {...props} />
+    </ErrorBoundary>
+  );
+
+  if (props.isAuthenticated) {
+    if (isAuthorized) {
+      return <Route {...props} render={renderComponent} />;
+    }
+    return (
       <div className="insufficient-authority">
         <div className="alert alert-danger">
           <Translate contentKey="error.http.403">You are not authorized to access this page.</Translate>
         </div>
       </div>
     );
-
-  const renderRedirect = props => {
-    if (!sessionHasBeenFetched) {
-      return <div></div>;
-    } else {
-      return isAuthenticated ? (
-        checkAuthorities(props)
-      ) : (
-        <Redirect
-          to={{
-            pathname: '/signin',
-            search: props.location.search,
-            state: { from: props.location },
-          }}
-        />
-      );
-    }
-  };
-
-  if (!Component) throw new Error(`A component needs to be specified for private route for path ${(rest as any).path}`);
-
-  return <Route {...rest} render={renderRedirect} />;
+  } else {
+    return (
+      <Redirect
+        to={{
+          pathname: '/signin',
+          search: props.location.search,
+          state: { from: props.location },
+        }}
+      />
+    );
+  }
 };
 
 export const hasAnyAuthority = (account: any, hasAnyAuthorities: string[]) => {
-  if (account && account.userGroups && account.userGroups.length !== 0) {
-    if (hasAnyAuthorities.length === 0) {
-      return true;
-    }
+  if (account?.userGroups && account?.userGroups.length !== 0) {
     if (window.location.href.includes('/realm-management')) {
       return (
         hasAnyAuthorities.some(auth => account.userGroups.includes(auth)) && account.organisation.type === ORGANISATION_TYPE_ENTERPRISE
@@ -73,13 +64,10 @@ export const hasAnyAuthority = (account: any, hasAnyAuthorities: string[]) => {
   return false;
 };
 
-const mapStateToProps = (
-  { authentication: { isAuthenticated, account, sessionHasBeenFetched } }: IRootState,
-  { hasAnyAuthorities = [] }: IOwnProps
-) => ({
-  isAuthenticated,
-  isAuthorized: hasAnyAuthority(account, hasAnyAuthorities),
-  sessionHasBeenFetched,
+const mapStateToProps = (storeState: IRootState) => ({
+  isAuthenticated: storeState.authentication.isAuthenticated,
+  account: storeState.authentication.account,
+  sessionHasBeenFetched: storeState.authentication.sessionHasBeenFetched,
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;
@@ -89,6 +77,4 @@ type StateProps = ReturnType<typeof mapStateToProps>;
  * Accepts same props as React router Route.
  * The route also checks for authorization if hasAnyAuthorities is specified.
  */
-export const PrivateRoute = connect(mapStateToProps, null, null, { pure: false })(PrivateRouteComponent);
-
-export default PrivateRoute;
+export default connect(mapStateToProps, null)(PrivateRoute);

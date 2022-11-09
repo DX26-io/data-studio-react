@@ -5,7 +5,7 @@ import { Translate, translate } from 'react-jhipster';
 import { getReleases, approveRelease, disApproveRelease } from './releases.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { Button, Flex } from '@adobe/react-spectrum';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 
