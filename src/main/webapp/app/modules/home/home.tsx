@@ -39,13 +39,11 @@ export const Home = (props: IHomeProp) => {
               <Item key="1">
                 <Translate contentKey="home.top.tabs.quickStart.title"></Translate>
               </Item>
-              {(isRootUser(account) ||
-                isAdminUser(account) ||
-                isEnterpriseAndSuperadminUser(account) )&& (
-                  <Item key="2">
-                    <Translate contentKey="home.top.tabs.admin"></Translate>
-                  </Item>
-                )}
+              {(isRootUser(account) || isAdminUser(account) || isEnterpriseAndSuperadminUser(account)) && (
+                <Item key="2">
+                  <Translate contentKey="home.top.tabs.admin"></Translate>
+                </Item>
+              )}
               {isRootUser(account) && (
                 <Item key="3">
                   <Translate contentKey="home.top.tabs.root"></Translate>
@@ -61,29 +59,29 @@ export const Home = (props: IHomeProp) => {
               <Item key="1">
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
                   <View>
-                      <QuickStart />
-                  </View>   
+                    <QuickStart />
+                  </View>
                 </Content>
               </Item>
               <Item key="2">
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
                   <View>
-                      <Admin />
-                  </View>   
+                    <Admin />
+                  </View>
                 </Content>
               </Item>
               <Item key="3">
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
                   <View>
-                      <SuperAdmin />
-                  </View>   
+                    <Root />
+                  </View>
                 </Content>
               </Item>
               <Item key="4">
                 <Content marginTop="size-250" marginStart="size-125" marginEnd="size-125">
                   <View>
-                      <Root />
-                  </View>   
+                    <SuperAdmin />
+                  </View>
                 </Content>
               </Item>
             </TabPanels>
