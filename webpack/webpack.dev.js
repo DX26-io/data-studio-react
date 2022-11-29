@@ -45,17 +45,17 @@ module.exports = options =>
       contentBase: './build/resources/main/static/',
       proxy: [
         {
-          context: ['/login', '/api', '/services', '/management', '/swagger-resources', '/v2/api-docs', '/h2-console', '/auth','/flair-ws'],
+          context: ['/login', '/api', '/services', '/management', '/swagger-resources', '/v2/api-docs', '/h2-console', '/auth','/flair-ws','/chat','/socket.io','/dx26io-ws'],
           target: `http${options.tls ? 's' : ''}://localhost:8002`,
           // keep below code commented for the time being
-          // bypass: function(req, res, proxyOptions) {
-          //   console.log("req.url=="+req.url);
-          //   let isWebsocket = req.url.indexOf('flair-ws') != -1;
-          //   proxyOptions.target = isWebsocket ? 'ws://localhost:8002' : proxyOptions.target;
-          // },
-          // secure: false,
+          bypass: function(req, res, proxyOptions) {
+            console.log("req.url=="+req.url);
+            let isWebsocket = req.url.indexOf('chat') != -1 || req.url.indexOf('socket.io') != -1;
+            proxyOptions.target = isWebsocket ? 'http://localhost:9092' : proxyOptions.target;
+          },
+          secure: false,
           changeOrigin: options.tls,
-          // ws: true,
+          ws: true,
         },
       ],
       watchOptions: {
