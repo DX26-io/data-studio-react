@@ -9,7 +9,6 @@ export const useSocket = (userName, message) => {
     message: '',
   });
   const [isConnected, setConnected] = useState(false);
-  const jsonObject = { userName: 'jk', message: 'hiiii', actionTime: new Date() };
   const sendData = useCallback(
     payload => {
       socket.emit('chat', {
@@ -21,13 +20,13 @@ export const useSocket = (userName, message) => {
     [socket]
   );
   useEffect(() => {
-    const s = io('http://localhost:8085/chat?token=abc123', {
+    const s = io('http://localhost:8085/chat', {
       reconnection: false,
       transports: ['polling', 'websocket'],
       path: '/dx26io-ws',
-      // query: {
-      //   token: getToken(),
-      // },
+      query: {
+        token: getToken(),
+      },
       // extraHeaders: {
       //   Authorization: 'Bearer ' + getToken(),
       // },
