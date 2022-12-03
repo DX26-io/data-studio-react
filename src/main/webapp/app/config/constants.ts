@@ -6,6 +6,7 @@ const config = {
 export default config;
 
 export const SERVER_API_URL = process.env.SERVER_API_URL;
+export const NETTY_SOCKET_IO_URL = process.env.NETTY_SOCKET_IO_URL;
 
 export const AUTHORITIES = {
   ADMIN: 'ROLE_ADMIN',

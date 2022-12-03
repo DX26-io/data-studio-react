@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { getToken } from 'app/shared/reducers/authentication';
+import { NETTY_SOCKET_IO_URL } from 'app/config/constants';
 
 export const useSocket = (userName, message) => {
   const [socket, setSocket] = useState({ connected: false, disconnected: true, emit: null });
@@ -20,7 +21,7 @@ export const useSocket = (userName, message) => {
     [socket]
   );
   useEffect(() => {
-    const s = io('http://localhost:8085/chat', {
+    const s = io(`${NETTY_SOCKET_IO_URL}/chat`, {
       reconnection: false,
       transports: ['polling', 'websocket'],
       path: '/dx26io-ws',
