@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { disconnectWebSocket } from 'app/shared/websocket/stomp-client.service';
 import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { connect } from 'react-redux';
 import { receiveSocketResponse } from 'app/shared/websocket/websocket.reducer';
@@ -11,7 +10,7 @@ import { useSocket } from 'app/shared/websocket/socket-io-factory';
 export interface ITestWebSocketProps extends StateProps, DispatchProps {}
 
 export const TestWebSocketIO = (props: ITestWebSocketProps) => {
-  const { isConnected, socketResponse, sendData } = useSocket('','');
+  const { isConnected, socketResponse, sendData } = useSocket();
 
   const sendQueryDTO = () => {
     const query = {
@@ -26,7 +25,7 @@ export const TestWebSocketIO = (props: ITestWebSocketProps) => {
       message: 'hiiiii',
     });
   };
-  
+
   return (
     <div>
       testing websocket

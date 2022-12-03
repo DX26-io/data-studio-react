@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import { getToken } from 'app/shared/reducers/authentication';
 import { NETTY_SOCKET_IO_URL } from 'app/config/constants';
 
-export const useSocket = (userName, message) => {
+export const useSocket = () => {
   const [socket, setSocket] = useState({ connected: false, disconnected: true, emit: null });
   const [socketResponse, setSocketResponse] = useState({
     userName: '',
@@ -23,7 +23,7 @@ export const useSocket = (userName, message) => {
   useEffect(() => {
     const s = io(`${NETTY_SOCKET_IO_URL}/chat`, {
       reconnection: false,
-      transports: ['polling', 'websocket'],
+      transports: ['websocket'],
       path: '/dx26io-ws',
       query: {
         token: getToken(),
@@ -39,7 +39,6 @@ export const useSocket = (userName, message) => {
       setSocketResponse({
         userName: res.userName,
         message: res.message,
-        // createdDateTime: res.createdDateTime,
       });
     });
     return () => {
