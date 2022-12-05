@@ -11,24 +11,14 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import SecondaryHeader from 'app/shared/layout/secondary-header/secondary-header';
 import Edit from '@spectrum-icons/workflow/Edit';
 import UserGroupUpdate from './user-group-update';
-import { useSocket } from 'app/shared/websocket/socket-io-factory';
 
 export interface IUserGroupsProps extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export const UserGroups = (props: IUserGroupsProps) => {
-  const { isConnected, socketResponse, sendData } = useSocket('', '');
-
   const [pagination, setPagination] = useState(
     overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
   );
   const [isOpen, setOpen] = React.useState(false);
-
-  const sendMessage = () => {
-    sendData({
-      userName: 'jk',
-      message: 'hiiiii',
-    });
-  };
 
   const fetchUsersGroups = () => {
     props.getUserGroups(pagination.activePage, pagination.itemsPerPage, `${pagination.sort},${pagination.order}`);
@@ -130,7 +120,6 @@ export const UserGroups = (props: IUserGroupsProps) => {
                           onClick={() => {
                             setOpen(true);
                             props.setUserGroup(userGroup);
-                            sendMessage();
                           }}
                         >
                           <Edit size="S" />

@@ -5,10 +5,6 @@ import { NETTY_SOCKET_IO_URL } from 'app/config/constants';
 
 export const useSocket = () => {
   const [socket, setSocket] = useState({ connected: false, disconnected: true, emit: null });
-  const [socketResponse, setSocketResponse] = useState({
-    userName: '',
-    message: '',
-  });
   const [isConnected, setConnected] = useState(false);
   const sendData = useCallback(
     payload => {
@@ -28,23 +24,17 @@ export const useSocket = () => {
       query: {
         token: getToken(),
       },
-      // extraHeaders: {
-      //   Authorization: 'Bearer ' + getToken(),
-      // },
     });
     setSocket(s);
     s.on('connect', () => setConnected(true));
     s.on('chat', res => {
       console.log(res);
-      setSocketResponse({
-        userName: res.userName,
-        message: res.message,
-      });
     });
     return () => {
       s.disconnect();
+      console.log('disconnected===' + s.disconnected);
     };
   }, []);
 
-  return { socketResponse, isConnected, sendData };
+  return { isConnected, sendData };
 };

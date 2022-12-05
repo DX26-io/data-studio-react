@@ -10,7 +10,7 @@ import { useSocket } from 'app/shared/websocket/socket-io-factory';
 export interface ITestWebSocketProps extends StateProps, DispatchProps {}
 
 export const TestWebSocketIO = (props: ITestWebSocketProps) => {
-  const { isConnected, socketResponse, sendData } = useSocket();
+  const { sendData } = useSocket();
 
   const sendQueryDTO = () => {
     const query = {
