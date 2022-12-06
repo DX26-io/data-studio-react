@@ -6,18 +6,18 @@ import { NETTY_SOCKET_IO_URL } from 'app/config/constants';
 export const useSocket = () => {
   const [socket, setSocket] = useState({ connected: false, disconnected: true, emit: null });
   const [isConnected, setConnected] = useState(false);
-  const sendData = useCallback(
-    payload => {
-      socket.emit('chat', {
-        message: payload.message,
-        userName: payload.userName,
-        actionTime: new Date(),
+  const send = useCallback(
+    (fbiEngineDTO, datasourceId, viewId) => {
+      socket.emit('query', {
+        fbiEngineDTO,
+        datasourceId,
+        viewId,
       });
     },
     [socket]
   );
   useEffect(() => {
-    const s = io(`${NETTY_SOCKET_IO_URL}/chat`, {
+    const s = io(`${NETTY_SOCKET_IO_URL}/query`, {
       reconnection: false,
       transports: ['websocket'],
       path: '/dx26io-ws',
@@ -27,14 +27,14 @@ export const useSocket = () => {
     });
     setSocket(s);
     s.on('connect', () => setConnected(true));
-    s.on('chat', res => {
-      console.log(res);
+    s.on('query', res => {
+      // console.log(res);
     });
     return () => {
       s.disconnect();
-      console.log('disconnected===' + s.disconnected);
+      // console.log('disconnected===' + s.disconnected);
     };
   }, []);
 
-  return { isConnected, sendData };
+  return { isConnected, send };
 };
