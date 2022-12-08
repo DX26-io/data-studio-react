@@ -18,7 +18,7 @@ export const TestWebSocketIO = (props: ITestWebSocketProps) => {
       vId: '1020',
       type: 'filters',
     };
-    send(query,50100,1035);
+    send(query, 50100, 1035);
   };
 
   return (
