@@ -40,7 +40,7 @@ const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
     if (actionMeta.action === 'select-option') {
       props.addAppliedFilters(actionMeta.option.value, props.feature, props.view, props.visualmetadata, props.selectedFilters,props.sendEvent);
     } else if (actionMeta.action === 'remove-value') {
-      props.removeAppliedFilters(actionMeta.removedValue.value, props.feature, props.view, props.visualmetadata, props.selectedFilters);
+      props.removeAppliedFilters(props.sendEvent,actionMeta.removedValue.value, props.feature, props.view, props.visualmetadata, props.selectedFilters);
     }
   };
 

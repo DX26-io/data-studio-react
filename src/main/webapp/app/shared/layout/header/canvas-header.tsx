@@ -132,7 +132,7 @@ const CanvasHeader = props => {
         filters[item]=bookmarkFilters[item];
       })
       props.saveSelectedFilter(filters);
-      props.applyFilter(filters, props.visualmetadata, props.view);
+      props.applyFilter(filters, props.visualmetadata, props.view,props.sendEvent);
     }
   }, [props.fetchedFeatureCriteria]);
 
@@ -158,7 +158,7 @@ const CanvasHeader = props => {
                   url.searchParams.set('bookmarkId', selectedOption.value.toString());
                   window.history.pushState({}, '', url.href);
                 } else {
-                  props.applyFilter({}, props.visualmetadata, props.view);
+                  props.applyFilter({}, props.visualmetadata, props.view,props.sendEvent);
                   props.applyBookmark(null);
                   url.searchParams.set('bookmarkId', '');
                   window.history.pushState({}, '', url.href);
@@ -221,7 +221,8 @@ const mapStateToProps = (storeState: IRootState) => ({
   featuresList: storeState.feature.entities,
   bookmark: storeState.bookmarks.appliedBookmark,
   features: storeState.feature.entities,
-  dynamicDateRangeMetaData: storeState.filter.dynamicDateRangeMetaData
+  dynamicDateRangeMetaData: storeState.filter.dynamicDateRangeMetaData,
+  sendEvent: storeState.visualisationData.sendEvent,
 });
 
 const mapDispatchToProps = {

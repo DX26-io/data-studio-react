@@ -114,7 +114,7 @@ const renderVisualisationById = (item, view, filters, sendEvent) => {
 
 export const loadVisualisation = (visualmetadata, view, filters, sendEvent) => {
   visualmetadata.visualMetadataSet.map((item, i) => {
-    renderVisualisationById(sendEvent, item, view, filters);
+    renderVisualisationById(item, view, filters, sendEvent);
   });
 };
 
@@ -142,7 +142,7 @@ export const removeAppliedFilters = (sendEvent, filter, feature, view?, visualme
     type: ACTION_TYPES.REMOVE_SELECTED_FILTER_OPTIONS,
     payload: _selectedFilter,
   });
-  loadVisualisation(sendEvent, visualmetaData, view, _selectedFilter);
+  loadVisualisation(visualmetaData, view, _selectedFilter, sendEvent);
 };
 
 export const removeAllSelectedOptionsAppliedFilters = (sendEvent, featureName, view?, visualmetaData?, selectedFilter?) => dispatch => {
@@ -151,7 +151,7 @@ export const removeAllSelectedOptionsAppliedFilters = (sendEvent, featureName, v
     type: ACTION_TYPES.REMOVE_ALL_SELECTED_FILTER_OPTIONS,
     payload: _selectedFilter,
   });
-  loadVisualisation(sendEvent, visualmetaData, view, _selectedFilter);
+  loadVisualisation(visualmetaData, view, _selectedFilter, sendEvent);
 };
 
 export const applyFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {

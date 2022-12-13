@@ -45,10 +45,10 @@ const FilterElement = (props: IFilterElementProp) => {
     if (actionMeta.action === 'select-option') {
       props.addAppliedFilters(actionMeta.option.value, props.feature, props.view, props.visualmetadata, props.selectedFilters,props.sendEvent);
     } else if (actionMeta.action === 'remove-value') {
-      props.removeAppliedFilters(actionMeta.removedValue.value, props.feature, props.view, props.visualmetadata, props.selectedFilters);
+      props.removeAppliedFilters(props.sendEvent,actionMeta.removedValue.value, props.feature, props.view, props.visualmetadata, props.selectedFilters);
     } else if (actionMeta.action === 'clear') {
       props.selectedFilters[props.feature.name] = [];
-      props.removeAllSelectedOptionsAppliedFilters(props.feature.name, props.view, props.visualmetadata, props.selectedFilters);
+      props.removeAllSelectedOptionsAppliedFilters(props.sendEvent,props.feature.name, props.view, props.visualmetadata, props.selectedFilters);
     }
   };
 
