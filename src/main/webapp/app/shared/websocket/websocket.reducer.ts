@@ -10,16 +10,18 @@ export const ACTION_TYPES = {
   TOGGLE_LOADER: 'visualData/TOGGLE_LOADER',
   TOGGLE_LOADING: 'visualData/TOGGLE_LOADING',
   RESET: 'visualData/RESET',
+  DISPATCH_SEND_SOCKET: 'visualData/DISPATCH_SEND_SOCKET',
 };
 
 const initialState = {
   loading: false,
   errorMessage: null,
-  visualData: null,
+  visualData: { data: [], queryId: '' },
   isLoaderOn: false,
   visualDataById: null,
   filterData: null,
   isSocketConnected: false,
+  sendEvent: Function,
 };
 
 export type VisualDataState = Readonly<typeof initialState>;
@@ -62,6 +64,11 @@ export default (state: VisualDataState = initialState, action): VisualDataState 
         ...state,
         isLoaderOn: action.payload,
         loading: action.payload,
+      };
+    case ACTION_TYPES.DISPATCH_SEND_SOCKET:
+      return {
+        ...state,
+        sendEvent: action.fun,
       };
     case ACTION_TYPES.TOGGLE_LOADING:
       return {
@@ -110,6 +117,11 @@ export const toggleLoader = (isLoaderOn: boolean) => ({
 export const toggleLoading = (loading: boolean) => ({
   type: ACTION_TYPES.TOGGLE_LOADING,
   payload: loading,
+});
+
+export const dispatchSendEvent = (sendEvent: Function) => ({
+  type: ACTION_TYPES.DISPATCH_SEND_SOCKET,
+  fun: sendEvent,
 });
 
 export const reset = () => ({

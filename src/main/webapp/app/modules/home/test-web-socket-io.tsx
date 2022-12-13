@@ -9,22 +9,22 @@ import { useSocket } from 'app/shared/websocket/socket-io-factory';
 export interface ITestWebSocketProps extends StateProps, DispatchProps {}
 
 export const TestWebSocketIO = (props: ITestWebSocketProps) => {
-  const { send } = useSocket();
+  const { sendEvent } = useSocket();
 
-  const sendQueryDTO = () => {
+  const sendEventQueryDTO = () => {
     const query = {
       queryDTO: { distinct: true, fields: [{ name: 'country' }] },
       limit: 100,
       vId: '1020',
       type: 'filters',
     };
-    send(query, 50100, 1035);
+    sendEvent(query, 50100, 1035);
   };
 
   return (
     <div>
       testing websocket
-      <button onClick={sendQueryDTO}>send Data</button>
+      <button onClick={sendEventQueryDTO}>send Data</button>
     </div>
   );
 };

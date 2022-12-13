@@ -97,7 +97,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
                 <Button
                   onPress={() => {
                     if (!props.visualisationId) {
-                      props.applyFilter(props.selectedFilters, props.visualmetadata, props.view);
+                      props.applyFilter(props.selectedFilters, props.visualmetadata, props.view,props.sendEvent);
                     } else {
                       props.applyFilterForShareLink(props.selectedFilters, props.visualmetadataEntity, props.view);
                     }
@@ -113,7 +113,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
                 <Button
                   onPress={() => {
                     if (!props.visualisationId) {
-                      props.clearFilter(removeEnabledFilters(props.selectedFilters, props.featuresList), props.visualmetadata, props.view);
+                      props.clearFilter(removeEnabledFilters(props.selectedFilters, props.featuresList), props.visualmetadata, props.view,props.sendEvent);
                     } else {
                       props.clearFilterForShareLink({}, props.visualmetadataEntity, props.view);
                     }
@@ -205,6 +205,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualmetadata: storeState.views.viewState,
   selectedFilters: storeState.filter.selectedFilters,
   visualmetadataEntity: storeState.visualmetadata.entity,
+  sendEvent: storeState.visualisationData.sendEvent,
 });
 const mapDispatchToProps = {
   applyFilter,

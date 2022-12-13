@@ -28,6 +28,7 @@ import AndOrCondition from './and-or-condition';
 import { COMPARE_TYPES } from 'app/shared/util/data-constraints.constants';
 import SeparatorInput from 'app/shared/components/separator/separator-input';
 import { debouncedSearch } from 'app/shared/util/common-utils';
+import { useSocket } from 'app/shared/websocket/socket-io-factory';
 
 interface IConditionProps extends StateProps, DispatchProps {
   condition: any;
@@ -42,6 +43,7 @@ const Condition = (props: IConditionProps) => {
   const [feature, setFeature] = useState({ value: '', label: '' });
   const [conditionValue, setConditionValue] = useState();
   const [isSeparatorOn, setSeparatorOn] = useState(false);
+  const {sendEvent} = useSocket();
   const updateCondition = () => {
     const changes = [];
     depthFirstVisit(props.conditionExpression, function (current, previous, previousLeaf, parent) {
@@ -93,7 +95,7 @@ const Condition = (props: IConditionProps) => {
 
   const onContaintsInputFocus = () => {
     props.setFilterData(null);
-    props.loadFilterOptions(_condition.featureName, props.view?.viewDashboard?.dashboardDatasource.id);
+    props.loadFilterOptions(sendEvent,_condition.featureName, props.view?.viewDashboard?.dashboardDatasource.id);
   };
 
   const onContaintsHandleInputChange = newValue => {

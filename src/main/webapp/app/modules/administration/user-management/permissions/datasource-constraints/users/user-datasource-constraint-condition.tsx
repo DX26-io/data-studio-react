@@ -29,6 +29,7 @@ import { generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 import { generateFeatureNameOptions } from '../../permissions-util';
 import { loadFilterOptions } from 'app/entities/feature/feature.reducer';
 import { debouncedSearch } from 'app/shared/util/common-utils';
+import { useSocket } from 'app/shared/websocket/socket-io-factory';
 
 export interface IUserDatasourceConstraintConditionProps extends StateProps, DispatchProps {
   condition: any;
@@ -37,7 +38,7 @@ export interface IUserDatasourceConstraintConditionProps extends StateProps, Dis
 
 export const UserDatasourceConstraintCondition = (props: IUserDatasourceConstraintConditionProps) => {
   const [isSeparatorOn,setSeparatorOn] = useState(false);
-
+  const {sendEvent} =useSocket();
   const dispatchSeparatedValues = receivedCommaSeparatedvalues => {
     const _constraint = addSeparatedValuesIntoConstraint(
       receivedCommaSeparatedvalues,
@@ -59,7 +60,7 @@ export const UserDatasourceConstraintCondition = (props: IUserDatasourceConstrai
 
   const onFocus = constraint => {
     props.setFilterData(null);
-    props.loadFilterOptions(constraint.featureName, props.constraint.datasource.id);
+    props.loadFilterOptions(sendEvent,constraint.featureName, props.constraint.datasource.id);
   };
 
   const handleChange = (selectedOption, actionMeta, con) => {

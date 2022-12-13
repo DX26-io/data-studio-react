@@ -37,6 +37,8 @@ import { getFeatureCriteria } from 'app/entities/feature-criteria/feature-criter
 import { getAppliedBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import Widgets from './widget';
 import { VisualisationType } from 'app/shared/util/visualisation.constants';
+import { useSocket } from 'app/shared/websocket/socket-io-factory';
+import { dispatchSendEvent } from 'app/shared/websocket/websocket.reducer';
 
 const ReactGridLayout = WidthProvider(ResponsiveGridLayout);
 
@@ -52,6 +54,7 @@ export interface IManageWidgetsProps extends StateProps, DispatchProps {
 
 const ManageWidgets = (props: IManageWidgetsProps) => {
   const [isLoaderDisplay, setIsLoaderDisplay] = useState<IIllustrate[]>([]);
+  const { sendEvent, isConnected } = useSocket();
 
   const broadcast: IBroadcast = {
     selectedFilters: props.selectedFilters,
@@ -66,6 +69,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
     applyAlternativeDimensionFilter: props.applyAlternativeDimensionFilter,
     features: props.featuresList,
     defaultColorSet: props.defaultColorSet,
+    sendEvent,
   };
 
   const onLayoutChange = _visualmetaList => {
@@ -113,7 +117,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
 
   const renderVisualisationById = item => {
     if (ValidateFields(item.fields)) {
-      getVisualisationData(item, props.view, props.selectedFilters);
+      getVisualisationData(sendEvent, item, props.view, props.selectedFilters);
     } else {
       props.toggleLoader(false);
     }
@@ -144,13 +148,13 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
   };
 
   useEffect(() => {
-    if (props.visualData) {
-      const v = visualMetadataContainerGetOne(props.visualData.headers.queryId);
-      if (v && props.visualData?.body?.length > 0) {
-        v.data = props.visualData?.body;
+    if (props.visualData.data.length > 0) {
+      const v = visualMetadataContainerGetOne(props.visualData.queryId);
+      if (v && props.visualData?.data?.length > 0) {
+        v.data = props.visualData?.data;
         props.toggleLoader(false);
         hideDataNotFound(v.id);
-        renderVisualisation(v, props.visualData?.body, 'widget', broadcast);
+        renderVisualisation(v, props.visualData?.data, 'widget', broadcast);
       } else {
         if (v?.id) {
           showDataNotFound(v.id);
@@ -200,24 +204,25 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
   }, [props.visualmetadata]);
 
   useEffect(() => {
-    if (props.isSocketConnected) {
+    if (isConnected && props.visualmetadata?.visualMetadataSet) {
+      props.dispatchSendEvent(sendEvent);
       props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
       if (props.visualmetadata?.visualMetadataSet.length > 0) {
         loadvisualisation();
       } else {
         props.toggleLoader(false);
       }
-    } else {
-      props.receiveSocketResponse();
     }
-  }, [props.isSocketConnected]);
+    // else {
+    //   props.receiveSocketResponse();
+    // }
+  }, [isConnected]);
 
   useEffect(() => {
     if (props.updateSuccess) {
       renderVisualisationById(props.visualMetadataEntity);
     }
   }, [props.updateSuccess]);
-
 
   // keeping below code commented for time being as it is causing a rerendring
   // useEffect(() => {
@@ -246,7 +251,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
               x: 0,
               y: 0,
               w: 1,
-              h: props.pinnedFeatures.length+5,
+              h: props.pinnedFeatures.length + 5,
               maxW: Infinity,
               maxH: Infinity,
               isBounded: true,
@@ -361,6 +366,7 @@ const mapDispatchToProps = {
   applyAlternativeDimensionFilter,
   addPinnedFiltersIntoMetadataContainer,
   removePinnedFiltersIntoMetadataContainer,
+  dispatchSendEvent
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

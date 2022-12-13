@@ -12,7 +12,8 @@ export interface IBroadcast {
   visualmetadata: IVisualMetadata;
   view: IViews;
   setTableActivePage: {};
-  applyAlternativeDimensionFilter:{}
-  features:Array<IFeature>;
-  defaultColorSet:Array<any>;
+  applyAlternativeDimensionFilter: {};
+  features: Array<IFeature>;
+  defaultColorSet: Array<any>;
+  sendEvent: Function;
 }

@@ -460,7 +460,7 @@ export const setTableActivePage = (action: number) => dispatch => {
   });
 };
 
-export const alternateDimension = (data: any) => {
+export const alternateDimension = (data: any, sendEvent) => {
   const visual = data.visualmetadata.visualMetadataSet.find(item => {
     return item.id === data.id;
   });
@@ -470,23 +470,23 @@ export const alternateDimension = (data: any) => {
       item.feature.name = data.featureName;
     }
   });
-  getVisualisationData(visual, data.view, data.filter);
+  getVisualisationData(sendEvent, visual, data.view, data.filter);
 };
 
-export const visualisationTablePagination = data => {
+export const visualisationTablePagination = (data, sendEvent) => {
   const visual = data.visualmetadata.visualMetadataSet.find(item => {
     return item.id === data.visualizationId;
   });
 
-  getVisualisationData(visual, data.view, data.filter, data.activePageNo);
+  getVisualisationData(sendEvent, visual, data.view, data.filter, data.activePageNo);
 };
 
-export const applyAlternativeDimensionFilter = (dimension, visual, view, selectedFilters) => dispatch => {
+export const applyAlternativeDimensionFilter = (dimension, visual, view, selectedFilters, sendEvent) => dispatch => {
   const fieldIndex = visual.fields.findIndex(item => item.feature.featureType === 'DIMENSION');
   if (fieldIndex > -1) {
     visual.fields[fieldIndex].feature = dimension;
   }
-  getVisualisationData(visual, view, selectedFilters);
+  getVisualisationData(sendEvent, visual, view, selectedFilters);
 };
 
 export const setDraggedFeature = feature => ({

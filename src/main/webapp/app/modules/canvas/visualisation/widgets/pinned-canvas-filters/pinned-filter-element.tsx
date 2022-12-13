@@ -25,19 +25,20 @@ export interface IPinnedFilterElementProp extends StateProps, DispatchProps {
 }
 
 const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
+
   const handleInputChange = (newValue: string) => {
     props.setFilterData(null);
-    debouncedSearch(props.loadFilterOptions,[props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id, newValue]);
+    debouncedSearch(props.loadFilterOptions,[props.sendEvent,props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id, newValue]);
   };
 
   const onFocus = () => {
     props.setFilterData(null);
-    props.loadFilterOptions(props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id);
+    props.loadFilterOptions(props.sendEvent,props.feature.name, props.view?.viewDashboard?.dashboardDatasource.id);
   };
 
   const handleChange = (value, actionMeta) => {
     if (actionMeta.action === 'select-option') {
-      props.addAppliedFilters(actionMeta.option.value, props.feature, props.view, props.visualmetadata, props.selectedFilters);
+      props.addAppliedFilters(actionMeta.option.value, props.feature, props.view, props.visualmetadata, props.selectedFilters,props.sendEvent);
     } else if (actionMeta.action === 'remove-value') {
       props.removeAppliedFilters(actionMeta.removedValue.value, props.feature, props.view, props.visualmetadata, props.selectedFilters);
     }
@@ -45,7 +46,7 @@ const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
 
   const onDateChange = (startDate, endDate, metaData) => {
     props.setDatesInFeature(props.feature.name, startDate, endDate, metaData);
-    props.onDateRangeFilterChange(props.selectedFilters, props.feature, startDate, endDate, metaData, props.view, props.visualmetadata);
+    props.onDateRangeFilterChange(props.sendEvent,props.selectedFilters, props.feature, startDate, endDate, metaData, props.view, props.visualmetadata);
   };
 
   return (
@@ -89,6 +90,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   filterSelectOptions: generateFilterOptions(storeState.visualisationData.filterData),
   selectedFilters: storeState.filter.selectedFilters,
   visualmetadata: storeState.views.viewState,
+  sendEvent: storeState.visualisationData.sendEvent,
 });
 const mapDispatchToProps = {
   saveSelectedFilter,

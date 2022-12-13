@@ -19,7 +19,7 @@ export const ValidateFields = fields => {
     });
   return isValid;
 };
-export const getVisualisationData = (visual, view, filter, offset = 0) => {
+export const getVisualisationData = (sendEvent: Function, visual, view, filter, offset = 0) => {
   if (visual.fields && ValidateFields(visual.fields)) {
     const visualMetadata = VisualWrap(visual);
     const queryDTO = visualMetadata.getQueryParameters(visual, filter, getConditionExpression(filter), offset);
@@ -30,7 +30,7 @@ export const getVisualisationData = (visual, view, filter, offset = 0) => {
       actionType: null,
       type: null,
     };
-    forwardCall(view?.viewDashboard?.dashboardDatasource?.id, body, view.id);
+    sendEvent(body, view?.viewDashboard?.dashboardDatasource?.id, view.id);
   }
 };
 

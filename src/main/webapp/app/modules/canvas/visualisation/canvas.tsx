@@ -53,8 +53,8 @@ const Canvas = (props: ICanvasProps) => {
 
   return (
     <>
-      {props.isSocketConnected && props.isFilterOpen && <FilterPanel />}
-      {props.isSocketConnected && props.isFeaturesPanelOpen && <FeaturesPanel />}
+      {props.isFilterOpen && <FilterPanel />}
+      {props.isFeaturesPanelOpen && <FeaturesPanel />}
       <View>
         <CanvasFilterHeader />
         <ManageWidgets params={params} />
