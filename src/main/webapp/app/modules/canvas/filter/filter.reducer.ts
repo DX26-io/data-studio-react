@@ -188,14 +188,14 @@ export const setSeparator = separator => dispatch => {
 };
 
 export const onDateRangeFilterChange = (
-  sendEvent,
   selectedFilters,
   feature,
   startDate,
   endDate,
   metaData,
   view,
-  visualmetadata
+  visualmetadata,
+  sendEvent
 ) => dispatch => {
   selectedFilters[feature.name] = [];
   if (startDate && endDate) {

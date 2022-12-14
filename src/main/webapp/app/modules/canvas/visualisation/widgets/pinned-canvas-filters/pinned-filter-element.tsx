@@ -46,7 +46,7 @@ const PinnedFilterElement = (props: IPinnedFilterElementProp) => {
 
   const onDateChange = (startDate, endDate, metaData) => {
     props.setDatesInFeature(props.feature.name, startDate, endDate, metaData);
-    props.onDateRangeFilterChange(props.sendEvent,props.selectedFilters, props.feature, startDate, endDate, metaData, props.view, props.visualmetadata);
+    props.onDateRangeFilterChange(props.selectedFilters, props.feature, startDate, endDate, metaData, props.view, props.visualmetadata,props.sendEvent);
   };
 
   return (
