@@ -28,11 +28,6 @@ const FilterPanel = (props: IFilterPanelProp) => {
   const [isFilterMinimize, setFilterMinimize] = useState(true);
   const [tabId, setTabId] = useState<ReactText>('1');
 
-  // const tabs = [
-  //   { id: 1, name: 'canvas.filters.tabs.filters' },
-  //   { id: 2, name: 'canvas.filters.tabs.favFilters' },
-  // ];
-
   const _setSeparator = separator => {
     props.setSeparator(separator);
   };

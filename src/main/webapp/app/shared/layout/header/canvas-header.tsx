@@ -46,7 +46,7 @@ const CanvasHeader = props => {
 
   const resetFilter = () => {
     if (!props.visualmetadataEntity.id) {
-      props.clearFilter(removeEnabledFilters(props.selectedFilter,props.featuresList), props.visualmetadata, props.view);
+      props.clearFilter(removeEnabledFilters(props.selectedFilter,props.featuresList), props.visualmetadata, props.view,props.sendEvent);
       props.applyBookmark(null);
     } 
   }
