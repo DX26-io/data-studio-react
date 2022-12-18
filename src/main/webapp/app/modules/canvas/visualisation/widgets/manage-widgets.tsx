@@ -23,7 +23,7 @@ import {
   addPinnedFiltersIntoMetadataContainer,
   removePinnedFiltersIntoMetadataContainer,
 } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { receiveSocketResponse, toggleLoader, reset as resetVisualisationData } from 'app/shared/websocket/websocket.reducer';
+import { toggleLoader, reset as resetVisualisationData } from 'app/shared/websocket/websocket.reducer';
 import { visualMetadataContainerGetOne, pinnedFiltersKey } from '../util/visualmetadata-container.util';
 import { saveRecentBookmark } from 'app/modules/home/sections/recent.reducer';
 import { applyFilter, saveDynamicDateRangeMetaData, saveSelectedFilter } from 'app/modules/canvas/filter/filter.reducer';
@@ -213,9 +213,6 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
         props.toggleLoader(false);
       }
     }
-    // else {
-    //   props.receiveSocketResponse();
-    // }
   }, [isConnected]);
 
   useEffect(() => {
@@ -346,7 +343,6 @@ const mapDispatchToProps = {
   saveViewState,
   getVisualmetadataEntity,
   updateVisualmetadataEntity,
-  receiveSocketResponse,
   metadataContainerAdd,
   getFeatureCriteria,
   getAppliedBookmark,

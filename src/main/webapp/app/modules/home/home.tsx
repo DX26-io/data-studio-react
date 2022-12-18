@@ -13,7 +13,6 @@ import RecentlyAccessed from './sections/recently-accessed';
 import RecentlyCreated from './sections/recently-created';
 import SearchResult from './sections/search-results';
 import { isAdminUser, isEnterpriseAndSuperadminUser, isRootUser } from 'app/shared/util/common-utils';
-import  TestWebSocketIO  from "./test-web-socket-io";
 
 
 export interface IHomeProp extends StateProps, DispatchProps, RouteComponentProps<{}> {}
@@ -31,7 +30,6 @@ export const Home = (props: IHomeProp) => {
 
   return (
     <View padding={'size-150'}>
-      <TestWebSocketIO />
       {props.searchedText ? (
         <SearchResult match={props.match} />
       ) : (

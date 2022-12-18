@@ -154,14 +154,14 @@ export const removeAllSelectedOptionsAppliedFilters = (sendEvent, featureName, v
   loadVisualisation(visualmetaData, view, _selectedFilter, sendEvent);
 };
 
-export const applyFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
+export const applyFilterForShareLink = (sendEvent, filters: any, visualmetadata: any, view: IViews) => dispatch => {
   dispatch(saveSelectedFilter({}));
-  getVisualisationShareData(visualmetadata, view, filters);
+  getVisualisationShareData(sendEvent, visualmetadata, view, filters);
 };
 
-export const clearFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
+export const clearFilterForShareLink = (sendEvent: Function, filters: any, visualmetadata: any, view: IViews) => dispatch => {
   dispatch(saveSelectedFilter({}));
-  getVisualisationShareData(visualmetadata, view, filters);
+  getVisualisationShareData(sendEvent, visualmetadata, view, filters);
 };
 
 export const removeDateFilters = (filters, feature) => dispatch => {

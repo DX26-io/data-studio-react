@@ -94,7 +94,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
                     if (!props.visualisationId) {
                       props.applyFilter(props.selectedFilters, props.visualmetadata, props.view,props.sendEvent);
                     } else {
-                      props.applyFilterForShareLink(props.selectedFilters, props.visualmetadataEntity, props.view);
+                      props.applyFilterForShareLink(props.sendEvent,props.selectedFilters, props.visualmetadataEntity, props.view);
                     }
                   }}
                   marginX={5}
@@ -110,7 +110,7 @@ const FilterPanel = (props: IFilterPanelProp) => {
                     if (!props.visualisationId) {
                       props.clearFilter(removeEnabledFilters(props.selectedFilters, props.featuresList), props.visualmetadata, props.view,props.sendEvent);
                     } else {
-                      props.clearFilterForShareLink({}, props.visualmetadataEntity, props.view);
+                      props.clearFilterForShareLink(props.sendEvent,{}, props.visualmetadataEntity, props.view);
                     }
                   }}
                   marginX={9}

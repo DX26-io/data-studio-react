@@ -56,7 +56,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
       setLiveEnable(true);
       const intervalData = intervalRegistry;
       intervalData[props.visual.id] = setInterval(() => {
-        getVisualisationData(props.sendEvent,props.visual, props.view, props.selectedFilters);
+        getVisualisationData(props.sendEvent, props.visual, props.view, props.selectedFilters);
       }, 5000);
       setIntervalRegistry(intervalData);
     } else {
@@ -163,7 +163,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
     '3': {
       getAction() {
         props.setVisualisationAction('View');
-        getVisualisationData(props.sendEvent,props.visual, props.view, props.selectedFilters);
+        getVisualisationData(props.sendEvent, props.visual, props.view, props.selectedFilters);
       },
     },
     '4': {
@@ -190,7 +190,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
     '8': {
       getAction() {
         props.setVisualisationAction('Refresh');
-        getVisualisationData(props.sendEvent,props.visual, props.view, props.selectedFilters);
+        getVisualisationData(props.sendEvent, props.visual, props.view, props.selectedFilters);
       },
     },
     '9': {
@@ -216,7 +216,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
 
   const handleApply = () => {
     _validateQuery();
-    getVisualisationShareData(props.visual, props.view, props.selectedFilters);
+    getVisualisationShareData(props.sendEvent, props.visual, props.view, props.selectedFilters);
     handleFlipClick(!props.isFlipped);
   };
 

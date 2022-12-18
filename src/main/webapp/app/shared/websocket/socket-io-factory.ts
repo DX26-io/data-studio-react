@@ -11,7 +11,7 @@ export const useSocket = () => {
   const [socket, setSocket] = useState({ connected: false, disconnected: true, emit: null });
   const [isConnected, setConnected] = useState(false);
   const sendEvent = useCallback(
-    (fbiEngineDTO, datasourceId, viewId?) => {
+    (fbiEngineDTO: any, datasourceId: number, viewId?) => {
       socket.emit('query', {
         fbiEngineDTO,
         datasourceId,

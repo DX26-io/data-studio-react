@@ -26,7 +26,6 @@ import { COMPARABLE_DATA_TYPES, FILTER_TYPES, CONDITION_TYPES } from 'app/shared
 import { addNewExpression, ConditionExpression } from 'app/modules/canvas/filter/condition-expression';
 import { IBookmark } from 'app/shared/model/bookmark.model';
 import { IQueryDTO } from 'app/shared/model/query-dto.model';
-import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { dateToString } from 'app/shared/util/date-utils';
 import uuid from 'react-uuid';
 import { isString } from 'util';
@@ -443,7 +442,7 @@ export const getPin = pin => {
   return pin === null || pin === false ? false : true;
 };
 
-export const load = (q, dimension, viewId, datasourceId) => {
+export const load = (q, dimension, viewId, datasourceId, sendEvent) => {
   const query: IQueryDTO = {
     fields: [{ name: dimension }],
     distinct: true,
@@ -462,13 +461,13 @@ export const load = (q, dimension, viewId, datasourceId) => {
       },
     ];
   }
-  forwardCall(
-    datasourceId,
+  sendEvent(
     {
       queryDTO: query,
       viewId,
       type: 'filters',
     },
+    datasourceId,
     viewId
   );
 };

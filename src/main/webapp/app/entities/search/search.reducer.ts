@@ -1,7 +1,6 @@
-import { connectWebSocket, disconnectWebSocket, subscribeWebSocket } from 'app/shared/websocket/stomp-client.service';
 import { getToken } from 'app/shared/reducers/authentication';
 import { SearchAutoSuggestion, SearchResult } from 'app/entities/search/search.model';
-import { searchCall } from 'app/shared/websocket/proxy-websocket.service';
+// import { searchCall } from 'app/shared/websocket/proxy-websocket.service';
 
 export const ACTION_TYPES = {
   RESET: 'search/RESET',
@@ -92,35 +91,35 @@ export const setSearchItemSelectedResponse = (data: any) => ({
   payload: data,
 });
 
-export const doSearch: (viewId: string, text: any) => void = (viewId, text) => dispatch => {
-  searchCall(viewId, { text });
-  dispatch({
-    type: ACTION_TYPES.DO_SEARCH,
-    payload: { text },
-  });
-};
+// export const doSearch: (viewId: string, text: any) => void = (viewId, text) => dispatch => {
+//   searchCall(viewId, { text });
+//   dispatch({
+//     type: ACTION_TYPES.DO_SEARCH,
+//     payload: { text },
+//   });
+// };
 
 export const setError = (error: string) => ({
   type: ACTION_TYPES.SET_SEARCH_ERROR,
   payload: error,
 });
 
-export const receiveSocketResponse = () => dispatch => {
-  connectWebSocket({ token: getToken() }, () => {
-    subscribeWebSocket('/user/exchange/search', data => {
-      const body = JSON.parse(data.body);
-      dispatch(setSearchResponse(body));
-    });
-    subscribeWebSocket('/user/exchange/search-item-selected', data => {
-      const body = JSON.parse(data.body);
-      dispatch(setSearchItemSelectedResponse(body));
-    });
-    subscribeWebSocket('/user/exchange/errors', error => {
-      dispatch(setError(error));
-    });
-  });
-};
+// export const receiveSocketResponse = () => dispatch => {
+//   connectWebSocket({ token: getToken() }, () => {
+//     subscribeWebSocket('/user/exchange/search', data => {
+//       const body = JSON.parse(data.body);
+//       dispatch(setSearchResponse(body));
+//     });
+//     subscribeWebSocket('/user/exchange/search-item-selected', data => {
+//       const body = JSON.parse(data.body);
+//       dispatch(setSearchItemSelectedResponse(body));
+//     });
+//     subscribeWebSocket('/user/exchange/errors', error => {
+//       dispatch(setError(error));
+//     });
+//   });
+// };
 
-export const disconnectSocket = () => {
-  disconnectWebSocket();
-};
+// export const disconnectSocket = () => {
+//   disconnectWebSocket();
+// };

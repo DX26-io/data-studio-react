@@ -1,4 +1,3 @@
-import { connectWebSocket, subscribeWebSocket } from 'app/shared/websocket/stomp-client.service';
 import { getToken } from 'app/shared/reducers/authentication';
 
 export const ACTION_TYPES = {
@@ -127,34 +126,3 @@ export const dispatchSendEvent = (sendEvent: Function) => ({
 export const reset = () => ({
   type: ACTION_TYPES.RESET,
 });
-
-export const receiveSocketResponse = () => dispatch => {
-  connectWebSocket({ token: getToken() }, function (frame) {
-    dispatch(setSocketConnection(true));
-    subscribeWebSocket('/user/exchange/metaData', data => {
-      const body = data.body === '' ? { data: [] } : JSON.parse(data.body);
-      data.body = body.data;
-      if (data.headers?.request === 'filters') {
-        dispatch(setFilterData(data));
-      } else {
-        dispatch(setVisualData(data));
-      }
-    });
-    subscribeWebSocket('/user/exchange/metaDataError', error => {
-      const body = JSON.parse(error.body || '{}');
-      dispatch(setError(body));
-    });
-  });
-};
-
-export const receiveSocketResponseByVisualId = (id: string) => dispatch => {
-  connectWebSocket({ token: getToken() }, () => {
-    subscribeWebSocket('/user/exchange/metaData/' + id, data => {
-      const body = JSON.parse(data.body);
-      dispatch(setVisualDataById(body));
-    });
-    subscribeWebSocket('/user/exchange/errors', error => {
-      dispatch(setError(error));
-    });
-  });
-};

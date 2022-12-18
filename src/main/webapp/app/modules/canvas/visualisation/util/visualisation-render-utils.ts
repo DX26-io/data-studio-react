@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import flairVisualizations from 'flair-visualizations/js/main';
 import Configuration from 'flair-visualizations/js/extras/configs/configuration';
-import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { VisualWrap } from './visualmetadata-wrapper';
 import { REQUIRED_FIELDS, VisualisationType } from 'app/shared/util/visualisation.constants';
 import { getConditionExpression } from '../../filter/filter-util';
@@ -34,7 +33,7 @@ export const getVisualisationData = (sendEvent: Function, visual, view, filter, 
   }
 };
 
-export const getVisualisationShareData = (visual, view, filter) => {
+export const getVisualisationShareData = (sendEvent: Function, visual, view, filter) => {
   if (visual.fields && ValidateFields(visual.fields)) {
     const visualMetadata = VisualWrap(visual);
     const queryDTO = visualMetadata.getQueryParameters(visual, filter, getConditionExpression(filter), 0);
@@ -45,7 +44,7 @@ export const getVisualisationShareData = (visual, view, filter) => {
       actionType: null,
       type: 'share-link',
     };
-    forwardCall(view?.viewDashboard?.dashboardDatasource?.id, body, view.id);
+    sendEvent(body, view?.viewDashboard?.dashboardDatasource?.id, view.id);
   }
 };
 

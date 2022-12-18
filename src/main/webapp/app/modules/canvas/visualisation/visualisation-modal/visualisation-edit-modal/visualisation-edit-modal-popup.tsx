@@ -33,19 +33,18 @@ import {
   ValidateFields,
 } from '../../util/visualisation-render-utils';
 import { VisualWrap } from '../../util/visualmetadata-wrapper';
-import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
-import { receiveSocketResponseByVisualId } from 'app/shared/websocket/websocket.reducer';
 import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
 import TreeCollapse from '@spectrum-icons/workflow/TreeCollapse';
 import TreeExpand from '@spectrum-icons/workflow/TreeExpand';
 import { validate as validateQuery } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { useSocket } from 'app/shared/websocket/socket-io-factory';
 
-export interface IVisualisationEditModalPopUpProps extends StateProps, DispatchProps {
-}
+export interface IVisualisationEditModalPopUpProps extends StateProps, DispatchProps {}
 
 export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpProps) => {
   const [toggleVisualisation, setToggleVisualisation] = useState(true);
   const dialog = useDialogContainer();
+  const { sendEvent } = useSocket();
 
   const _validateQuery = () => {
     const wrap = VisualWrap(props.visualMetadataEntity);
@@ -65,7 +64,7 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
 
   const handleApply = () => {
     _validateQuery();
-    getVisualisationShareData(props.visualMetadataEntity, props.view, props.selectedFilters);
+    getVisualisationShareData(sendEvent, props.visualMetadataEntity, props.view, props.selectedFilters);
   };
 
   const handleSave = () => {
@@ -92,14 +91,8 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
       actionType: null,
       type: 'share-link',
     };
-    forwardCall(props.view?.viewDashboard?.dashboardDatasource?.id, body, props.view.id);
+    sendEvent(body, props.view?.viewDashboard?.dashboardDatasource?.id, props.view.id);
   };
-
-  useEffect(() => {
-    if (props.visualMetadataEntity.id) {
-      props.receiveSocketResponseByVisualId(props.visualMetadataEntity.id);
-    }
-  }, []);
 
   useEffect(() => {
     if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
@@ -110,8 +103,8 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
 
   useEffect(() => {
     if (props.visualDataById && toggleVisualisation) {
-      if (props.visualDataById?.data.length > 0) {
-        renderVisualisation(props.visualMetadataEntity, props.visualDataById?.data, 'visualisation-edit', props);
+      if (props.visualDataById.length > 0) {
+        renderVisualisation(props.visualMetadataEntity, props.visualDataById, 'visualisation-edit', props);
       }
     }
   }, [props.visualDataById, toggleVisualisation]);
@@ -200,7 +193,6 @@ const mapDispatchToProps = {
   getViewEntity,
   updateVisualmetadataEntity,
   metadataContainerUpdate,
-  receiveSocketResponseByVisualId,
   validateQuery,
   setVisualisationAction,
 };
