@@ -15,6 +15,7 @@ import { setIsShare } from './share-link-visualisation.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { getCurrentViewState } from 'app/entities/views/views.reducer';
 import { useSocket } from 'app/shared/websocket/socket-io-factory';
+import { dispatchSendEvent } from 'app/shared/websocket/websocket.reducer';
 
 export interface IShareLinkVisualisationProps extends StateProps, DispatchProps, RouteComponentProps {}
 
@@ -23,7 +24,14 @@ const ShareLinkVisualisation = (props: IShareLinkVisualisationProps) => {
   const visualisationId = params.get('visualisationId');
   const viewId = params.get('viewId');
   const datasourceId = Number(params.get('datasourceId'));
-  const { sendEvent } = useSocket();
+  const { sendEvent,isConnected } = useSocket();
+
+  useEffect(() => {
+    if (isConnected) {
+      props.dispatchSendEvent(sendEvent);
+    }
+  }, [isConnected]);
+
 
   useEffect(() => {
     props.setIsShare(true);
@@ -105,6 +113,7 @@ const mapDispatchToProps = {
   getCurrentViewState,
   saveSelectedFilter,
   applyFilter,
+  dispatchSendEvent
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
