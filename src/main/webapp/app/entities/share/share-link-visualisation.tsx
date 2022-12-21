@@ -65,16 +65,16 @@ const ShareLinkVisualisation = (props: IShareLinkVisualisationProps) => {
   };
 
   useEffect(() => {
-    if (props.isvisualMetaDataFetched && props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
+    if (props.view.id && isConnected && props.isvisualMetaDataFetched && props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
       shareLinkfForwardCall();
     }
-  }, [props.isvisualMetaDataFetched]);
+  }, [props.isvisualMetaDataFetched,isConnected,props.view]);
 
   useEffect(() => {
-    if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
+    if (isConnected && props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
       shareLinkfForwardCall();
     }
-  }, [props.selectedFilters]);
+  }, [props.selectedFilters,isConnected]);
 
   useEffect(() => {
     if (props.visualDataById) {

@@ -3,8 +3,7 @@ import io from 'socket.io-client';
 import { getToken } from 'app/shared/reducers/authentication';
 import { NETTY_SOCKET_IO_URL, FILTERS, VISUALISATION, SHARED_LINK_FILTER } from 'app/config/constants';
 import { setFilterData, setVisualData, setVisualDataById } from './websocket.reducer';
-import { useDispatch, useSelector } from 'react-redux';
-import { IRootState } from '../reducers';
+import { useDispatch } from 'react-redux';
 
 export const useSocket = () => {
   const dispatch = useDispatch();
@@ -30,7 +29,10 @@ export const useSocket = () => {
       },
     });
     setSocket(s);
-    s.on('connect', () => setConnected(true));
+    s.on('connect', () => {
+      setConnected(true);
+      // console.log('connected to socket');
+    });
     s.on(FILTERS, response => {
       // console.log(response);
       const res = response === '' ? { data: [] } : JSON.parse(response.data);

@@ -204,7 +204,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
   }, [props.visualmetadata]);
 
   useEffect(() => {
-    if (isConnected && props.visualmetadata?.visualMetadataSet) {
+    if (isConnected && props.fetchedViewState && props.view?.id) {
       props.dispatchSendEvent(sendEvent);
       props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
       if (props.visualmetadata?.visualMetadataSet.length > 0) {
@@ -213,7 +213,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
         props.toggleLoader(false);
       }
     }
-  }, [isConnected]);
+  }, [isConnected,props.fetchedViewState,props.view]);
 
   useEffect(() => {
     if (props.updateSuccess) {
@@ -313,6 +313,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
   isAuthenticated: storeState.authentication.isAuthenticated,
   visualmetadata: storeState.views.viewState,
+  fetchedViewState: storeState.views.fetchedViewState,
   isCreated: storeState.visualmetadata.newCreated,
   updateSuccess: storeState.visualmetadata.updateSuccess,
   deleteSuccess: storeState.visualmetadata.deleteSuccess,
@@ -323,7 +324,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   isEditMode: storeState.visualmetadata.isEditMode,
   visualData: storeState.visualisationData.visualData,
   filterData: storeState.visualisationData.filterData,
-  isSocketConnected: storeState.visualisationData.isSocketConnected,
   visualMetadataContainerList: storeState.visualmetadata.visualMetadataContainerList,
   isSearchOpen: storeState.search.isSearchOpen,
   selectedFilters: storeState.filter.selectedFilters,

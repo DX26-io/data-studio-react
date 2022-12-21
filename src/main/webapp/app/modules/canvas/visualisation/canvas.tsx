@@ -79,7 +79,6 @@ const Canvas = (props: ICanvasProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   visualisationAction: storeState.visualmetadata.visualisationAction,
-  isSocketConnected: storeState.visualisationData.isSocketConnected,
   isLoaderOn: storeState.visualisationData.isLoaderOn,
   isFilterOpen: storeState.filter.isFilterOpen,
   isFeaturesPanelOpen: storeState.feature.isFeaturesPanelOpen,

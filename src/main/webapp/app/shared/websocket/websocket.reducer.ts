@@ -5,7 +5,6 @@ export const ACTION_TYPES = {
   SET_FILTER_DATA: 'visualData/SET_FILTER_DATA',
   SET_VISUAL_DATA_BY_ID: 'visualData/SET_VISUAL_DATA_BY_ID',
   SET_VISUAL_ERROR: 'visualData/SET_VISUAL_ERROR',
-  SET_CONNECTION_STATUS: 'visualData/SET_CONNECTION_STATUS',
   TOGGLE_LOADER: 'visualData/TOGGLE_LOADER',
   TOGGLE_LOADING: 'visualData/TOGGLE_LOADING',
   RESET: 'visualData/RESET',
@@ -19,7 +18,6 @@ const initialState = {
   isLoaderOn: false,
   visualDataById: null,
   filterData: null,
-  isSocketConnected: false,
   sendEvent: Function,
 };
 
@@ -46,12 +44,6 @@ export default (state: VisualDataState = initialState, action): VisualDataState 
         loading: false,
         filterData: action.payload,
       };
-    case ACTION_TYPES.SET_CONNECTION_STATUS:
-      return {
-        ...state,
-        isSocketConnected: action.payload,
-      };
-
     case ACTION_TYPES.SET_VISUAL_ERROR:
       return {
         ...state,
@@ -101,11 +93,6 @@ export const setFilterData = (filterData: any) => ({
 export const setError = (error: string) => ({
   type: ACTION_TYPES.SET_VISUAL_ERROR,
   payload: error,
-});
-
-export const setSocketConnection = (status: boolean) => ({
-  type: ACTION_TYPES.SET_CONNECTION_STATUS,
-  payload: status,
 });
 
 export const toggleLoader = (isLoaderOn: boolean) => ({
