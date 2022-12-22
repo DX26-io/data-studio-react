@@ -38,6 +38,7 @@ describe('Entities reducer tests', () => {
     updateSuccess: false,
     uploadSucceeded: false,
     viewState: {} as IVisualMetadata,
+    fetchedViewState: false,
   };
 
   function testInitialState(state) {
@@ -46,6 +47,7 @@ describe('Entities reducer tests', () => {
       errorMessage: null,
       updating: false,
       updateSuccess: false,
+      fetchedViewState: false,
     });
     expect(isEmpty(state.entities));
     expect(isEmpty(state.entity));

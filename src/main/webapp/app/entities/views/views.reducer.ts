@@ -93,7 +93,7 @@ export default (state: ViewsState = initialState, action): ViewsState => {
     case FAILURE(ACTION_TYPES.FETCH_VIEWS_STATE):
       return {
         ...state,
-        errorMessage: null,
+        errorMessage: action.payload,
         updateSuccess: false,
         loading: false,
         fetchedViewState: false,
