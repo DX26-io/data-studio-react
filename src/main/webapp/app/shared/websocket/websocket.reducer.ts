@@ -18,7 +18,7 @@ const initialState = {
   isLoaderOn: false,
   visualDataById: null,
   filterData: null,
-  sendEvent: Function,
+  sendEvent: (fbiEngineDTO: any, datasourceId: number, viewId?) => void {},
 };
 
 export type VisualDataState = Readonly<typeof initialState>;
