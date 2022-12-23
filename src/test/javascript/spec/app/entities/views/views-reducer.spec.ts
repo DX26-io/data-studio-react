@@ -38,7 +38,6 @@ describe('Entities reducer tests', () => {
     updateSuccess: false,
     uploadSucceeded: false,
     viewState: {} as IVisualMetadata,
-    fetchedViewState: false,
   };
 
   function testInitialState(state) {
@@ -47,7 +46,6 @@ describe('Entities reducer tests', () => {
       errorMessage: null,
       updating: false,
       updateSuccess: false,
-      fetchedViewState: false,
     });
     expect(isEmpty(state.entities));
     expect(isEmpty(state.entity));
@@ -93,7 +91,7 @@ describe('Entities reducer tests', () => {
     it('should reset the state', () => {
       expect(
         reducer(
-          { ...initialState, updateSuccess: false, errorMessage: null, entity: defaultValue, fetchedViewState: false },
+          { ...initialState, updateSuccess: false, errorMessage: null, entity: defaultValue },
           {
             type: ACTION_TYPES.RESET,
           }

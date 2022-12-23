@@ -204,16 +204,14 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
   }, [props.visualmetadata]);
 
   useEffect(() => {
-    if (isConnected && props.fetchedViewState && props.view?.id) {
+    if (isConnected && props.visualmetadata?.visualMetadataSet.length > 0 && props.view?.id) {
       props.dispatchSendEvent(sendEvent);
       props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
-      if (props.visualmetadata?.visualMetadataSet.length > 0) {
-        loadvisualisation();
-      } else {
-        props.toggleLoader(false);
-      }
+      loadvisualisation();
+    } else {
+      props.toggleLoader(false);
     }
-  }, [isConnected,props.fetchedViewState,props.view]);
+  }, [isConnected, props.visualmetadata, props.view]);
 
   useEffect(() => {
     if (props.updateSuccess) {
@@ -313,7 +311,6 @@ const mapStateToProps = (storeState: IRootState) => ({
   account: storeState.authentication.account,
   isAuthenticated: storeState.authentication.isAuthenticated,
   visualmetadata: storeState.views.viewState,
-  fetchedViewState: storeState.views.fetchedViewState,
   isCreated: storeState.visualmetadata.newCreated,
   updateSuccess: storeState.visualmetadata.updateSuccess,
   deleteSuccess: storeState.visualmetadata.deleteSuccess,
@@ -362,7 +359,7 @@ const mapDispatchToProps = {
   applyAlternativeDimensionFilter,
   addPinnedFiltersIntoMetadataContainer,
   removePinnedFiltersIntoMetadataContainer,
-  dispatchSendEvent
+  dispatchSendEvent,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

@@ -40,7 +40,6 @@ const initialState = {
   exportViewId: 0,
   updateSuccess: false,
   viewState: {} as IVisualMetadata,
-  fetchedViewState: false,
 };
 
 export type ViewsState = Readonly<typeof initialState>;
@@ -64,7 +63,6 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         errorMessage: null,
         updateSuccess: false,
         loading: true,
-        fetchedViewState: false,
       };
     case REQUEST(ACTION_TYPES.CREATE_VIEWS):
     case REQUEST(ACTION_TYPES.UPDATE_VIEWS):
@@ -96,7 +94,6 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         errorMessage: action.payload,
         updateSuccess: false,
         loading: false,
-        fetchedViewState: false,
       };
     case FAILURE(ACTION_TYPES.CREATE_VIEWS):
     case FAILURE(ACTION_TYPES.UPDATE_VIEWS):
@@ -134,7 +131,6 @@ export default (state: ViewsState = initialState, action): ViewsState => {
         ...state,
         loading: false,
         viewState: action.payload.data,
-        fetchedViewState: true,
       };
     case SUCCESS(ACTION_TYPES.FETCH_VIEWS):
       return {
