@@ -3,12 +3,14 @@ import io from 'socket.io-client';
 import { getToken } from 'app/shared/reducers/authentication';
 import { NETTY_SOCKET_IO_URL, FILTERS, VISUALISATION, SHARED_LINK_FILTER } from 'app/config/constants';
 import { setFilterData, setVisualData, setVisualDataById } from './websocket.reducer';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { IRootState } from '../reducers';
 
 export const useSocket = () => {
   const dispatch = useDispatch();
   const [socket, setSocket] = useState({ connected: false, disconnected: true, emit: null });
   const [isConnected, setConnected] = useState(false);
+  const account = useSelector((storeState: IRootState) => storeState.authentication.account);
   const sendEvent = useCallback(
     (fbiEngineDTO: any, datasourceId: number, viewId?) => {
       socket.emit('query', {
@@ -33,17 +35,17 @@ export const useSocket = () => {
       setConnected(true);
       // console.log('connected to socket');
     });
-    s.on(FILTERS, response => {
+    s.on(FILTERS.concat(account.login), response => {
       // console.log(response);
       const res = response === '' ? { data: [] } : JSON.parse(response.data);
       dispatch(setFilterData(res.data));
     });
-    s.on(SHARED_LINK_FILTER, response => {
+    s.on(SHARED_LINK_FILTER.concat(account.login), response => {
       // console.log(response);
       const res = response === '' ? { data: [] } : JSON.parse(response.data);
       dispatch(setVisualDataById(res.data));
     });
-    s.on(VISUALISATION, response => {
+    s.on(VISUALISATION.concat(account.login), response => {
       // console.log(response);
       const visualData = { data: [], queryId: '' };
       const res = response === '' ? { data: [] } : JSON.parse(response.data);
