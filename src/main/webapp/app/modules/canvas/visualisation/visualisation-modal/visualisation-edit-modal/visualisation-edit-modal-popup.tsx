@@ -37,14 +37,12 @@ import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
 import TreeCollapse from '@spectrum-icons/workflow/TreeCollapse';
 import TreeExpand from '@spectrum-icons/workflow/TreeExpand';
 import { validate as validateQuery } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { useSocket } from 'app/shared/websocket/socket-io-factory';
 
 export interface IVisualisationEditModalPopUpProps extends StateProps, DispatchProps {}
 
 export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpProps) => {
   const [toggleVisualisation, setToggleVisualisation] = useState(true);
   const dialog = useDialogContainer();
-  const { sendEvent } = useSocket();
 
   const _validateQuery = () => {
     const wrap = VisualWrap(props.visualMetadataEntity);
@@ -64,7 +62,7 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
 
   const handleApply = () => {
     _validateQuery();
-    getVisualisationShareData(sendEvent, props.visualMetadataEntity, props.view, props.selectedFilters);
+    getVisualisationShareData(props.sendEvent, props.visualMetadataEntity, props.view, props.selectedFilters);
   };
 
   const handleSave = () => {
@@ -91,7 +89,7 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
       actionType: null,
       type: 'share-link',
     };
-    sendEvent(body, props.view?.viewDashboard?.dashboardDatasource?.id, props.view.id);
+    props.sendEvent(body, props.view?.viewDashboard?.dashboardDatasource?.id, props.view.id);
   };
 
   useEffect(() => {
@@ -181,6 +179,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   featuresList: storeState.feature.entities,
   view: storeState.views.entity,
   visualDataById: storeState.visualisationData.visualDataById,
+  sendEvent: storeState.visualisationData.sendEvent,
   hierarchies: storeState.hierarchies.hierarchies,
   selectedFilters: storeState.filter.selectedFilters,
   filterData: storeState.visualisationData.filterData,
