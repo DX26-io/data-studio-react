@@ -35,17 +35,17 @@ export const useSocket = () => {
       setConnected(true);
       // console.log('connected to socket');
     });
-    s.on(FILTERS.concat(account.login), response => {
+    s.on(FILTERS, response => {
       // console.log(response);
       const res = response === '' ? { data: [] } : JSON.parse(response.data);
       dispatch(setFilterData(res.data));
     });
-    s.on(SHARED_LINK_FILTER.concat(account.login), response => {
+    s.on(SHARED_LINK_FILTER, response => {
       // console.log(response);
       const res = response === '' ? { data: [] } : JSON.parse(response.data);
       dispatch(setVisualDataById(res.data));
     });
-    s.on(VISUALISATION.concat(account.login), response => {
+    s.on(VISUALISATION, response => {
       // console.log(response);
       const visualData = { data: [], queryId: '' };
       const res = response === '' ? { data: [] } : JSON.parse(response.data);

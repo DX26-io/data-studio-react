@@ -204,7 +204,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
   }, [props.visualmetadata]);
 
   useEffect(() => {
-    if (isConnected && props.visualmetadata?.visualMetadataSet.length > 0 && props.view?.id) {
+    if (isConnected && props.visualmetadata?.visualMetadataSet?.length > 0 && props.view?.id) {
       props.dispatchSendEvent(sendEvent);
       props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
       loadvisualisation();
