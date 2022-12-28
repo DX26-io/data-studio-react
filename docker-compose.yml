@@ -5,7 +5,9 @@ services:
     container_name: data-studio
     restart: always
     volumes:
-      - ./nginx:/etc/nginx/templates
+    # add your local path of nginx conf file
+      # - /home/johib/DX26-io/data-studio-react/nginx.conf:/etc/nginx/nginx.conf
+      - /home/johib/DX26-io/data-studio-react/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     # below code is commented for now.
     # environment:
     #   - NGINX_PROXY=http://localhost:8002

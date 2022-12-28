@@ -17,8 +17,6 @@ import {
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { translate, Translate } from 'react-jhipster';
-import { disconnectSocket, receiveSocketResponse, resetSearch, doSearch } from 'app/entities/search/search.reducer';
-import { forwardCall, searchItemSelected } from 'app/shared/websocket/proxy-websocket.service';
 import Search from '@spectrum-icons/workflow/Search';
 import { getEntity as getVisualmetadataEntity, setVisual } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getEntity as getFeatureEntity } from 'app/entities/feature/feature.reducer';
@@ -26,7 +24,7 @@ import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
 import { convertSearchStructToQueryDTO, convertSearchStructToFilters } from './search.util';
 import { getConditionExpression } from './search.util';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { toggleLoading,setFilterData } from 'app/shared/websocket/websocket.reducer';
+import { toggleLoading, setFilterData } from 'app/shared/websocket/websocket.reducer';
 
 // TODO: let the code commented as it will be used in future
 
@@ -38,32 +36,19 @@ export interface ISearchModalProps extends StateProps, DispatchProps {
 const SearchModal = (props: ISearchModalProps) => {
   const [searchText, setSearchText] = useState<string>('');
 
-  // const onSearchSelect = event => {
-  //   setSearchCursorPos(event.target.selectionStart);
-  // };
-
-  // const onAutoSuggestionItemChange = selectedSet => {
-  //   const item = props.autoSuggestion.find(ft => selectedSet.has(ft.text));
-  //   if (item) {
-  //     searchItemSelected(props.viewId, { text: props.searchText, item: item.text, cursor: searchCursorPos });
-  //   }
-  // };
-
   const handleSearchClick = () => {};
 
   useEffect(() => {
-    props.receiveSocketResponse();
-    props.disconnectSocket;
     props.setFilterData(null);
   }, []);
 
   const handleClose = () => {
-    props.resetSearch();
+    // props.resetSearch();
     props.setOpen(false);
   };
 
   const onSearchPressed = () => {
-    props.doSearch(props.viewId, searchText);
+    // props.doSearch(props.viewId, searchText);
   };
 
   const onSearchTextChange = value => {
@@ -77,15 +62,16 @@ const SearchModal = (props: ISearchModalProps) => {
       queryDTO['conditionExpressions'] = [getConditionExpression(filters)];
       queryDTO['limit'] = 20;
       props.toggleLoading(true);
-      forwardCall(
-        props.datasourceId,
-        {
-          queryDTO,
-          type: 'filters',
-          viewId: props.viewId,
-        },
-        props.viewId
-      );
+      // commented below code for time being
+      // props.sendEvent(
+      //   {
+      //     queryDTO,
+      //     type: 'filters',
+      //     viewId: props.viewId,
+      //   },
+      //   props.datasourceId,
+      //   props.viewId
+      // );
     }
   }, [props.searchStructRequest]);
 
@@ -139,15 +125,6 @@ const SearchModal = (props: ISearchModalProps) => {
                   <Search size="M" />
                 </ActionButton>
               </Flex>
-              {/* {rendering} */}
-              {/* <ListBox
-                aria-label="Auto-suggestions"
-                selectionMode="single"
-                onSelectionChange={onAutoSuggestionItemChange}
-                items={props.autoSuggestion}
-              >
-                {item => <Item key={item.text}>{item.text}</Item>}
-              </ListBox> */}
             </Flex>
           </Form>
           {props.loading ? (
@@ -218,19 +195,16 @@ const mapStateToProps = (storeState: IRootState) => ({
   datasourceId: storeState.views.entity?.viewDashboard?.dashboardDatasource?.id,
   filterData: storeState.visualisationData.filterData?.body,
   loading: storeState.visualisationData.loading,
+  sendEvent: storeState.visualisationData.sendEvent,
 });
 
 const mapDispatchToProps = {
-  resetSearch,
-  receiveSocketResponse,
-  disconnectSocket,
-  doSearch,
   setVisual,
   getVisualmetadataEntity,
   getViewEntity,
   getFeatureEntity,
   toggleLoading,
-  setFilterData
+  setFilterData,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

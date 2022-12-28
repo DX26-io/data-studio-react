@@ -127,7 +127,7 @@ const CanvasSearchHeader = props => {
                       url.searchParams.set('bookmarkId', selectedOption.value.toString());
                       window.history.pushState({}, '', url.href);
                     } else {
-                      props.applyFilter({}, props.visualmetadata, props.view);
+                      props.applyFilter({}, props.visualmetadata, props.view,props.sendEvent);
                       props.applyBookmark(null);
                     }
                   }}
@@ -175,6 +175,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   bookmarks: storeState.bookmarks.bookmarks,
   bookmark: storeState.bookmarks.appliedBookmark,
   visualmetadata: storeState.views.viewState,
+  sendEvent: storeState.visualisationData.sendEvent,
 });
 
 const mapDispatchToProps = {

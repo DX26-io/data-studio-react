@@ -3,7 +3,6 @@ import { addNewExpression, ConditionExpression } from './condition-expression';
 import { IBookmark } from 'app/shared/model/bookmark.model';
 import { DYNAMIC_DATE_RANGE_CONFIG, tabList } from 'app/shared/util/data-constraints.constants';
 import { IQueryDTO } from 'app/shared/model/query-dto.model';
-import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
 import { dateToString } from 'app/shared/util/date-utils';
 import { IFeature } from 'app/shared/model/feature.model';
 
@@ -417,7 +416,7 @@ export const getPin = pin => {
   return pin === null || pin === false ? false : true;
 };
 
-export const loadFilters = (features, featureName, datasourceId, value?) => {
+export const loadFilters = (sendEvent, features, featureName, datasourceId, value?) => {
   const feature = features.filter(item => {
     return item.name === featureName;
   })[0];
@@ -439,17 +438,19 @@ export const loadFilters = (features, featureName, datasourceId, value?) => {
       },
     ];
   }
-  forwardCall(datasourceId, {
-    queryDTO: query,
-    type: 'filters',
-  });
+  sendEvent(
+    {
+      queryDTO: query,
+      type: 'filters',
+    },
+    datasourceId
+  );
 };
 
-export const generateFilterOptions = data => {
+export const generateFilterOptions = (data = []) => {
   const options = [];
-  if (data) {
-    const _data = data ? data?.body : [];
-    _data.forEach(function (option) {
+  if (data && data.length > 0) {
+    data.forEach(function (option) {
       const featureName = Object.keys(option)[0];
       options.push({ value: option[featureName], label: option[featureName] });
     });

@@ -8,14 +8,15 @@ const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 const packageJson = require('./../package.json');
 const utils = require('./utils.js');
 var API_URL = process.env.API_URL ? process.env.API_URL : '';
+var NETTY_SOCKET_IO_URL = process.env.NETTY_SOCKET_IO_URL ? process.env.NETTY_SOCKET_IO_URL : 'http://localhost:8085';
 
 const getTsLoaderRule = env => {
   const rules = [
     {
       loader: 'cache-loader',
       options: {
-        cacheDirectory: path.resolve('build/cache-loader')
-      }
+        cacheDirectory: path.resolve('build/cache-loader'),
+      },
     },
     {
       loader: 'thread-loader',
@@ -23,20 +24,20 @@ const getTsLoaderRule = env => {
         // There should be 1 cpu for the fork-ts-checker-webpack-plugin.
         // The value may need to be adjusted (e.g. to 1) in some CI environments,
         // as cpus() may report more cores than what are available to the build.
-        workers: require('os').cpus().length - 1
-      }
+        workers: require('os').cpus().length - 1,
+      },
     },
     {
       loader: 'ts-loader',
       options: {
         transpileOnly: true,
-        happyPackMode: true
-      }
-    }
+        happyPackMode: true,
+      },
+    },
   ];
   if (env === 'development') {
     rules.unshift({
-      loader: 'react-hot-loader/webpack'
+      loader: 'react-hot-loader/webpack',
     });
   }
   return rules;
@@ -45,11 +46,9 @@ const getTsLoaderRule = env => {
 module.exports = options => ({
   cache: options.env !== 'production',
   resolve: {
-    extensions: [
-      '.js', '.jsx', '.ts', '.tsx', '.json'
-    ],
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     modules: ['node_modules'],
-    alias: utils.mapTypescriptAliasToWebpackAlias()
+    alias: utils.mapTypescriptAliasToWebpackAlias(),
   },
   module: {
     rules: [
@@ -57,7 +56,7 @@ module.exports = options => ({
         test: /\.tsx?$/,
         use: getTsLoaderRule(options.env),
         include: [utils.root('./src/main/webapp/app')],
-        exclude: [utils.root('node_modules')]
+        exclude: [utils.root('node_modules')],
       },
       {
         test: /\.(jpe?g|png|gif|svg|woff2?|ttf|eot)$/i,
@@ -65,24 +64,24 @@ module.exports = options => ({
         options: {
           digest: 'hex',
           hash: 'sha512',
-          name: 'content/[hash].[ext]'
-        }
+          name: 'content/[hash].[ext]',
+        },
       },
       {
         enforce: 'pre',
         test: /\.jsx?$/,
-        loader: 'source-map-loader'
+        loader: 'source-map-loader',
       },
       {
         test: /\.(j|t)sx?$/,
         enforce: 'pre',
         loader: 'eslint-loader',
-        exclude: [utils.root('node_modules')]
-      }
-    ]
+        exclude: [utils.root('node_modules')],
+      },
+    ],
   },
   stats: {
-    children: false
+    children: false,
   },
   optimization: {
     splitChunks: {
@@ -90,10 +89,10 @@ module.exports = options => ({
         commons: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          chunks: 'all'
-        }
-      }
-    }
+          chunks: 'all',
+        },
+      },
+    },
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -106,19 +105,20 @@ module.exports = options => ({
         // If this URL is left empty (""), then it will be relative to the current context.
         // If you use an API server, in `prod` mode, you will need to enable CORS
         // (see the `jhipster.cors` common JHipster property in the `application-*.yml` configurations)
-        SERVER_API_URL: `'${API_URL}'`
-      }
+        SERVER_API_URL: `'${API_URL}'`,
+        NETTY_SOCKET_IO_URL: `'${NETTY_SOCKET_IO_URL}'`,
+      },
     }),
     new ForkTsCheckerWebpackPlugin({ eslint: true }),
     new CopyWebpackPlugin([
-      { from: './node_modules/swagger-ui-dist/*.{js,css,html,png}', to: 'swagger-ui', flatten: true, ignore: ['index.html']},
-      { from: './node_modules/axios/dist/axios.min.js', to: 'swagger-ui'},
+      { from: './node_modules/swagger-ui-dist/*.{js,css,html,png}', to: 'swagger-ui', flatten: true, ignore: ['index.html'] },
+      { from: './node_modules/axios/dist/axios.min.js', to: 'swagger-ui' },
       { from: './src/main/webapp//swagger-ui/', to: 'swagger-ui' },
       { from: './src/main/webapp/content/', to: 'content' },
       { from: './src/main/webapp/favicon.ico', to: 'favicon.ico' },
       { from: './src/main/webapp/manifest.webapp', to: 'manifest.webapp' },
       // jhipster-needle-add-assets-to-webpack - JHipster will add/remove third-party resources in this array
-      { from: './src/main/webapp/robots.txt', to: 'robots.txt' }
+      { from: './src/main/webapp/robots.txt', to: 'robots.txt' },
     ]),
     new HtmlWebpackPlugin({
       template: './src/main/webapp/index.html',
@@ -129,10 +129,10 @@ module.exports = options => ({
     new MergeJsonWebpackPlugin({
       output: {
         groupBy: [
-                    { pattern: "./src/main/webapp/i18n/en/*.json", fileName: "./i18n/en.json" }
-                    // jhipster-needle-i18n-language-webpack - JHipster will add/remove languages in this array
-                ]
-      }
+          { pattern: './src/main/webapp/i18n/en/*.json', fileName: './i18n/en.json' },
+          // jhipster-needle-i18n-language-webpack - JHipster will add/remove languages in this array
+        ],
+      },
     }),
-  ]
+  ],
 });

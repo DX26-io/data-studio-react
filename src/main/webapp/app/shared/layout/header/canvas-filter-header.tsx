@@ -21,6 +21,7 @@ import { generateOptions } from 'app/shared/util/entity-utils';
 import { generateOptionsForDateRange, isDateFilterType, isDateRange } from 'app/modules/canvas/filter/filter-util';
 import { getFeature } from 'app/entities/feature/feature-util';
 import { setDatesInFeature } from 'app/entities/feature/feature.reducer';
+
 export interface ICanvasFilterHeaderProps extends StateProps, DispatchProps {}
 
 const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
@@ -50,7 +51,7 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
                     const feature = getFeature(props.featureList, featureName);
                     if (feature && feature.dateFilter !== 'ENABLED') {
                       props.removeDateFilters(props.selectedFilters, featureName);
-                      props.applyFilter(props.selectedFilters, props.visualmetadata, props.view);
+                      props.applyFilter(props.selectedFilters, props.visualmetadata, props.view,props.sendEvent);
                     }
                     props.setDatesInFeature(featureName,'','',null);
                   }
@@ -70,8 +71,8 @@ const CanvasFilterHeader = (props: ICanvasFilterHeaderProps) => {
                 onChange={(value, actionMeta) => {
                   if (actionMeta.action === 'select-option') {
                     const filters = removeOptionFromFilters(value.value, props.selectedFilters, { name: featureName });
-                    props.applyFilter(filters, props.visualmetadata, props.view);
-                    props.removeAppliedFilters(value.value, { name: featureName });
+                    props.applyFilter(filters, props.visualmetadata, props.view,props.sendEvent);
+                    props.removeAppliedFilters(props.sendEvent,value.value, { name: featureName });
                   }
                 }}
                 placeholder={featureName}
@@ -98,6 +99,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   featureList: storeState.feature.entities,
   view: storeState.views.entity,
   visualmetadata: storeState.views.viewState,
+  sendEvent: storeState.visualisationData.sendEvent,
 });
 
 const mapDispatchToProps = {

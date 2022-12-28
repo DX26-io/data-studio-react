@@ -11,7 +11,6 @@ import UserGroupDatasourceConstraints from './groups/user-group-datasource-const
 import PermissionsActionTitle from '../permissions-action-title';
 import UserDatasourceConstraintUpdate from './users/user-datasource-constraint-update';
 import UserGroupDatasourceConstraintUpdate from './groups/user-group-datasource-constraint-update';
-import { receiveSocketResponse } from 'app/shared/websocket/websocket.reducer';
 
 export interface IDatasourceConstraintsProps extends StateProps, DispatchProps, RouteComponentProps {}
 
@@ -19,9 +18,6 @@ export const DatasourceConstraints = (props: IDatasourceConstraintsProps) => {
   const [isUserDatasourceConstraintDialogOpen, setUserDatasourceConstraintDialogOpen] = React.useState(false);
   const [isUserGroupDatasourceConstraintDialogOpen, setUserGroupDatasourceConstraintDialogOpen] = React.useState(false);
 
-  useEffect(() => {
-    props.receiveSocketResponse();
-  }, []);
 
   const handleClick = () => {
     if (props.searchUrl.includes('user')) {
@@ -70,7 +66,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   updating: storeState.userDatasourceConstraints.updating,
   searchUrl: storeState.permissions.searchUrl,
 });
-const mapDispatchToProps = { receiveSocketResponse };
+const mapDispatchToProps = {  };
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 

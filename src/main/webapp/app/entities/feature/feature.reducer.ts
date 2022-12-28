@@ -204,7 +204,7 @@ export default (state: FeatureState = initialState, action): FeatureState => {
         ),
       };
     case ACTION_TYPES.LOAD_FILTERS:
-      loadFilters(state.entities, action.payload.featureName, action.payload.datasourceId, action.payload.value);
+      loadFilters(action.payload.sendEvent, state.entities, action.payload.featureName, action.payload.datasourceId, action.payload.value);
       return {
         ...state,
       };
@@ -324,9 +324,9 @@ export const setDatesInFeature = (featureName, startDate, endDate, metadata) => 
   payload: { featureName, startDate, endDate, metadata },
 });
 
-export const loadFilterOptions = (featureName, datasourceId, value?) => ({
+export const loadFilterOptions = (sendEvent, featureName, datasourceId, value?) => ({
   type: ACTION_TYPES.LOAD_FILTERS,
-  payload: { featureName, datasourceId, value },
+  payload: { sendEvent, featureName, datasourceId, value },
 });
 
 export const toggleFeaturesPanel: () => void = () => (dispatch, getState) => {

@@ -25,11 +25,7 @@ interface IDateRangeComponentProps {
 }
 
 const DateRangeComponent = (props: IDateRangeComponentProps) => {
-  // const tabs = [
-  //   { id: 0, name: 'dateRange.tabs.day' },
-  //   { id: 1, name: 'dateRange.tabs.range' },
-  //   { id: 2, name: 'dateRange.tabs.dynamic' },
-  // ];
+
   const [tabId, setTabId] = useState<ReactText>('0');
   const [startDate, setStartDate] = useState(props.startDate);
   const [endDate, setEndDate] = useState(props.endDate);

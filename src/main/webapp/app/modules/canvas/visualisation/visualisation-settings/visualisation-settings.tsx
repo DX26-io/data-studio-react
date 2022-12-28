@@ -63,28 +63,15 @@ const VisualisationSettings = props => {
               <Scheduler thresholdAlert={true} />
             </Content>
           </Item>
-          {props.visualDataById && props.visualDataById?.data.length > 0 && (
+          {props.visualDataById && props.visualDataById.length > 0 && (
             <Item key="data">
               <Content margin="size-250">
                 {' '}
-                <TableView data={props.visualDataById?.data} />{' '}
+                <TableView data={props.visualDataById} />{' '}
               </Content>
             </Item>
           )}
         </TabPanels>
-        {/* {item => (
-          <Item title={item.name}>
-            <Content margin="size-250">
-              {activeTabId === 'query' && <VisualisationQuerySetting />}
-              {activeTabId === 'dataConstraints' && <DataConstraints />}
-              {activeTabId === 'scheduler' && <Scheduler thresholdAlert={false} />}
-              {activeTabId === 'thresholdAlert' && <Scheduler thresholdAlert={true} />}
-              {activeTabId === 'data' && props.visualDataById && props.visualDataById?.data.length > 0 && (
-                <TableView data={props.visualDataById?.data} />
-              )}
-            </Content>
-          </Item>
-        )} */}
       </Tabs>
     </>
   );

@@ -1,4 +1,3 @@
-import { connectWebSocket, subscribeWebSocket } from 'app/shared/websocket/stomp-client.service';
 import { getToken } from 'app/shared/reducers/authentication';
 
 export const ACTION_TYPES = {
@@ -6,20 +5,20 @@ export const ACTION_TYPES = {
   SET_FILTER_DATA: 'visualData/SET_FILTER_DATA',
   SET_VISUAL_DATA_BY_ID: 'visualData/SET_VISUAL_DATA_BY_ID',
   SET_VISUAL_ERROR: 'visualData/SET_VISUAL_ERROR',
-  SET_CONNECTION_STATUS: 'visualData/SET_CONNECTION_STATUS',
   TOGGLE_LOADER: 'visualData/TOGGLE_LOADER',
   TOGGLE_LOADING: 'visualData/TOGGLE_LOADING',
   RESET: 'visualData/RESET',
+  DISPATCH_SEND_SOCKET: 'visualData/DISPATCH_SEND_SOCKET',
 };
 
 const initialState = {
   loading: false,
   errorMessage: null,
-  visualData: null,
+  visualData: { data: [], queryId: '' },
   isLoaderOn: false,
   visualDataById: null,
   filterData: null,
-  isSocketConnected: false,
+  sendEvent: (fbiEngineDTO: any, datasourceId: number, viewId?) => void {},
 };
 
 export type VisualDataState = Readonly<typeof initialState>;
@@ -45,12 +44,6 @@ export default (state: VisualDataState = initialState, action): VisualDataState 
         loading: false,
         filterData: action.payload,
       };
-    case ACTION_TYPES.SET_CONNECTION_STATUS:
-      return {
-        ...state,
-        isSocketConnected: action.payload,
-      };
-
     case ACTION_TYPES.SET_VISUAL_ERROR:
       return {
         ...state,
@@ -62,6 +55,11 @@ export default (state: VisualDataState = initialState, action): VisualDataState 
         ...state,
         isLoaderOn: action.payload,
         loading: action.payload,
+      };
+    case ACTION_TYPES.DISPATCH_SEND_SOCKET:
+      return {
+        ...state,
+        sendEvent: action.fun,
       };
     case ACTION_TYPES.TOGGLE_LOADING:
       return {
@@ -97,11 +95,6 @@ export const setError = (error: string) => ({
   payload: error,
 });
 
-export const setSocketConnection = (status: boolean) => ({
-  type: ACTION_TYPES.SET_CONNECTION_STATUS,
-  payload: status,
-});
-
 export const toggleLoader = (isLoaderOn: boolean) => ({
   type: ACTION_TYPES.TOGGLE_LOADER,
   payload: isLoaderOn,
@@ -112,37 +105,11 @@ export const toggleLoading = (loading: boolean) => ({
   payload: loading,
 });
 
+export const dispatchSendEvent = (sendEvent: Function) => ({
+  type: ACTION_TYPES.DISPATCH_SEND_SOCKET,
+  fun: sendEvent,
+});
+
 export const reset = () => ({
   type: ACTION_TYPES.RESET,
 });
-
-export const receiveSocketResponse = () => dispatch => {
-  connectWebSocket({ token: getToken() }, function (frame) {
-    dispatch(setSocketConnection(true));
-    subscribeWebSocket('/user/exchange/metaData', data => {
-      const body = data.body === '' ? { data: [] } : JSON.parse(data.body);
-      data.body = body.data;
-      if (data.headers?.request === 'filters') {
-        dispatch(setFilterData(data));
-      } else {
-        dispatch(setVisualData(data));
-      }
-    });
-    subscribeWebSocket('/user/exchange/metaDataError', error => {
-      const body = JSON.parse(error.body || '{}');
-      dispatch(setError(body));
-    });
-  });
-};
-
-export const receiveSocketResponseByVisualId = (id: string) => dispatch => {
-  connectWebSocket({ token: getToken() }, () => {
-    subscribeWebSocket('/user/exchange/metaData/' + id, data => {
-      const body = JSON.parse(data.body);
-      dispatch(setVisualDataById(body));
-    });
-    subscribeWebSocket('/user/exchange/errors', error => {
-      dispatch(setError(error));
-    });
-  });
-};

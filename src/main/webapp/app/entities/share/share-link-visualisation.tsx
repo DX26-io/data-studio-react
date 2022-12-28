@@ -6,8 +6,6 @@ import { connect } from 'react-redux';
 
 import { getEntity as getVisualmetadataEntity } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getEntity as getViewEntity } from 'app/entities/views/views.reducer';
-import { forwardCall } from 'app/shared/websocket/proxy-websocket.service';
-import { receiveSocketResponse, receiveSocketResponseByVisualId } from 'app/shared/websocket/websocket.reducer';
 import { renderVisualisation, ValidateFields } from 'app/modules/canvas/visualisation/util/visualisation-render-utils';
 import { VisualWrap } from 'app/modules/canvas/visualisation/util/visualmetadata-wrapper';
 import { getConditionExpression } from 'app/modules/canvas/filter/filter-util';
@@ -16,6 +14,8 @@ import FilterPanel from 'app/modules/canvas/filter/filter-panel';
 import { setIsShare } from './share-link-visualisation.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
 import { getCurrentViewState } from 'app/entities/views/views.reducer';
+import { useSocket } from 'app/shared/websocket/socket-io-factory';
+import { dispatchSendEvent } from 'app/shared/websocket/websocket.reducer';
 
 export interface IShareLinkVisualisationProps extends StateProps, DispatchProps, RouteComponentProps {}
 
@@ -24,11 +24,18 @@ const ShareLinkVisualisation = (props: IShareLinkVisualisationProps) => {
   const visualisationId = params.get('visualisationId');
   const viewId = params.get('viewId');
   const datasourceId = Number(params.get('datasourceId'));
+  const { sendEvent,isConnected } = useSocket();
+
+  useEffect(() => {
+    if (isConnected) {
+      props.dispatchSendEvent(sendEvent);
+    }
+  }, [isConnected]);
+
 
   useEffect(() => {
     props.setIsShare(true);
     if (visualisationId) {
-      props.receiveSocketResponse();
       props.getVisualmetadataEntity(visualisationId);
       props.getViewEntity(viewId);
       props.getViewFeaturesEntities(viewId);
@@ -54,26 +61,25 @@ const ShareLinkVisualisation = (props: IShareLinkVisualisationProps) => {
       actionType: null,
       type: 'share-link',
     };
-    forwardCall(datasourceId, body, viewId);
+    sendEvent(body, datasourceId, viewId);
   };
 
   useEffect(() => {
-    if (props.isvisualMetaDataFetched && props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
-      props.receiveSocketResponseByVisualId(props.visualMetadataEntity.id);
+    if (props.view.id && isConnected && props.isvisualMetaDataFetched && props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
       shareLinkfForwardCall();
     }
-  }, [props.isvisualMetaDataFetched]);
+  }, [props.isvisualMetaDataFetched,isConnected,props.view]);
 
   useEffect(() => {
-    if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
+    if (isConnected && props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
       shareLinkfForwardCall();
     }
-  }, [props.selectedFilters]);
+  }, [props.selectedFilters,isConnected]);
 
   useEffect(() => {
     if (props.visualDataById) {
-      if (props.visualDataById?.data.length > 0) {
-        renderVisualisation(props.visualMetadataEntity, props.visualDataById?.data, 'visualisation-edit', props);
+      if (props.visualDataById.length > 0) {
+        renderVisualisation(props.visualMetadataEntity, props.visualDataById, 'visualisation-edit', props);
       }
     }
   }, [props.visualDataById]);
@@ -101,14 +107,13 @@ const mapStateToProps = (storeState: IRootState) => ({
 const mapDispatchToProps = {
   getVisualmetadataEntity,
   getViewEntity,
-  receiveSocketResponseByVisualId,
   toggleFilterPanel,
-  receiveSocketResponse,
   setIsShare,
   getViewFeaturesEntities,
   getCurrentViewState,
   saveSelectedFilter,
   applyFilter,
+  dispatchSendEvent
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

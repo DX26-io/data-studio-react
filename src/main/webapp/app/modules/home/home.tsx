@@ -14,6 +14,7 @@ import RecentlyCreated from './sections/recently-created';
 import SearchResult from './sections/search-results';
 import { isAdminUser, isEnterpriseAndSuperadminUser, isRootUser } from 'app/shared/util/common-utils';
 
+
 export interface IHomeProp extends StateProps, DispatchProps, RouteComponentProps<{}> {}
 
 export const Home = (props: IHomeProp) => {

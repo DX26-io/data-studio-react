@@ -28,11 +28,6 @@ const FilterPanel = (props: IFilterPanelProp) => {
   const [isFilterMinimize, setFilterMinimize] = useState(true);
   const [tabId, setTabId] = useState<ReactText>('1');
 
-  // const tabs = [
-  //   { id: 1, name: 'canvas.filters.tabs.filters' },
-  //   { id: 2, name: 'canvas.filters.tabs.favFilters' },
-  // ];
-
   const _setSeparator = separator => {
     props.setSeparator(separator);
   };
@@ -97,9 +92,9 @@ const FilterPanel = (props: IFilterPanelProp) => {
                 <Button
                   onPress={() => {
                     if (!props.visualisationId) {
-                      props.applyFilter(props.selectedFilters, props.visualmetadata, props.view);
+                      props.applyFilter(props.selectedFilters, props.visualmetadata, props.view,props.sendEvent);
                     } else {
-                      props.applyFilterForShareLink(props.selectedFilters, props.visualmetadataEntity, props.view);
+                      props.applyFilterForShareLink(props.sendEvent,props.selectedFilters, props.visualmetadataEntity, props.view);
                     }
                   }}
                   marginX={5}
@@ -113,9 +108,9 @@ const FilterPanel = (props: IFilterPanelProp) => {
                 <Button
                   onPress={() => {
                     if (!props.visualisationId) {
-                      props.clearFilter(removeEnabledFilters(props.selectedFilters, props.featuresList), props.visualmetadata, props.view);
+                      props.clearFilter(removeEnabledFilters(props.selectedFilters, props.featuresList), props.visualmetadata, props.view,props.sendEvent);
                     } else {
-                      props.clearFilterForShareLink({}, props.visualmetadataEntity, props.view);
+                      props.clearFilterForShareLink(props.sendEvent,{}, props.visualmetadataEntity, props.view);
                     }
                   }}
                   marginX={9}
@@ -205,6 +200,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   visualmetadata: storeState.views.viewState,
   selectedFilters: storeState.filter.selectedFilters,
   visualmetadataEntity: storeState.visualmetadata.entity,
+  sendEvent: storeState.visualisationData.sendEvent,
 });
 const mapDispatchToProps = {
   applyFilter,

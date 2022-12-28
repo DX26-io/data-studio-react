@@ -53,8 +53,8 @@ const Canvas = (props: ICanvasProps) => {
 
   return (
     <>
-      {props.isSocketConnected && props.isFilterOpen && <FilterPanel />}
-      {props.isSocketConnected && props.isFeaturesPanelOpen && <FeaturesPanel />}
+      {props.isFilterOpen && <FilterPanel />}
+      {props.isFeaturesPanelOpen && <FeaturesPanel />}
       <View>
         <CanvasFilterHeader />
         <ManageWidgets params={params} />
@@ -79,7 +79,6 @@ const Canvas = (props: ICanvasProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   visualisationAction: storeState.visualmetadata.visualisationAction,
-  isSocketConnected: storeState.visualisationData.isSocketConnected,
   isLoaderOn: storeState.visualisationData.isLoaderOn,
   isFilterOpen: storeState.filter.isFilterOpen,
   isFeaturesPanelOpen: storeState.feature.isFeaturesPanelOpen,

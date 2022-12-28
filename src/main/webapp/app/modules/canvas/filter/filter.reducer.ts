@@ -104,64 +104,64 @@ export const toggleFilterPanel = () => ({
   type: ACTION_TYPES.TOGGLE_FILTER_PANEL,
 });
 
-const renderVisualisationById = (item, view, filters) => {
+const renderVisualisationById = (item, view, filters, sendEvent) => {
   if (ValidateFields(item.fields)) {
-    getVisualisationData(item, view, filters);
+    getVisualisationData(sendEvent, item, view, filters);
   } else {
     toggleLoader(false);
   }
 };
 
-export const loadVisualisation = (visualmetadata, view, filters) => {
+export const loadVisualisation = (visualmetadata, view, filters, sendEvent) => {
   visualmetadata.visualMetadataSet.map((item, i) => {
-    renderVisualisationById(item, view, filters);
+    renderVisualisationById(item, view, filters, sendEvent);
   });
 };
 
-export const applyFilter = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
+export const applyFilter = (filters: any, visualmetadata: any, view: IViews, sendEvent: Function) => dispatch => {
   dispatch(saveSelectedFilter(filters));
-  loadVisualisation(visualmetadata, view, filters);
+  loadVisualisation(visualmetadata, view, filters, sendEvent);
 };
 
-export const clearFilter = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
+export const clearFilter = (filters: any, visualmetadata: any, view: IViews, sendEvent: Function) => dispatch => {
   dispatch(saveSelectedFilter(filters));
-  loadVisualisation(visualmetadata, view, filters);
+  loadVisualisation(visualmetadata, view, filters, sendEvent);
 };
 
-export const addAppliedFilters = (filter, feature, view, visualmetaData, selectedFilter) => dispatch => {
+export const addAppliedFilters = (filter, feature, view, visualmetaData, selectedFilter, sendEvent) => dispatch => {
   const _selectedFilter = addOptionIntoFilters(filter, selectedFilter, feature);
   dispatch({
     type: ACTION_TYPES.ADD_SELECTED_FILTER_OPTIONS,
     payload: _selectedFilter,
   });
-  loadVisualisation(visualmetaData, view, _selectedFilter);
+  loadVisualisation(visualmetaData, view, _selectedFilter, sendEvent);
 };
-export const removeAppliedFilters = (filter, feature, view?, visualmetaData?, selectedFilter?) => dispatch => {
+export const removeAppliedFilters = (sendEvent, filter, feature, view?, visualmetaData?, selectedFilter?) => dispatch => {
   const _selectedFilter = removeOptionFromFilters(filter, selectedFilter, feature);
   dispatch({
     type: ACTION_TYPES.REMOVE_SELECTED_FILTER_OPTIONS,
     payload: _selectedFilter,
   });
-  loadVisualisation(visualmetaData, view, _selectedFilter);
+  loadVisualisation(visualmetaData, view, _selectedFilter, sendEvent);
 };
 
-export const removeAllSelectedOptionsAppliedFilters = (featureName, view?, visualmetaData?, selectedFilter?) => dispatch => {
+export const removeAllSelectedOptionsAppliedFilters = (sendEvent, featureName, view?, visualmetaData?, selectedFilter?) => dispatch => {
   const _selectedFilter = removeOptionsFromFilters(selectedFilter, featureName);
   dispatch({
     type: ACTION_TYPES.REMOVE_ALL_SELECTED_FILTER_OPTIONS,
     payload: _selectedFilter,
   });
-  loadVisualisation(visualmetaData, view, _selectedFilter);
+  loadVisualisation(visualmetaData, view, _selectedFilter, sendEvent);
 };
 
-export const applyFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
+export const applyFilterForShareLink = (sendEvent, filters: any, visualmetadata: any, view: IViews) => dispatch => {
   dispatch(saveSelectedFilter({}));
-  getVisualisationShareData(visualmetadata, view, filters);
+  getVisualisationShareData(sendEvent, visualmetadata, view, filters);
 };
 
-export const clearFilterForShareLink = (filters: any, visualmetadata: any, view: IViews) => dispatch => {
+export const clearFilterForShareLink = (sendEvent: Function, filters: any, visualmetadata: any, view: IViews) => dispatch => {
   dispatch(saveSelectedFilter({}));
-  getVisualisationShareData(visualmetadata, view, filters);
+  getVisualisationShareData(sendEvent, visualmetadata, view, filters);
 };
 
 export const removeDateFilters = (filters, feature) => dispatch => {
@@ -187,7 +187,16 @@ export const setSeparator = separator => dispatch => {
   });
 };
 
-export const onDateRangeFilterChange = (selectedFilters, feature, startDate, endDate, metaData, view, visualmetadata) => dispatch => {
+export const onDateRangeFilterChange = (
+  selectedFilters,
+  feature,
+  startDate,
+  endDate,
+  metaData,
+  view,
+  visualmetadata,
+  sendEvent
+) => dispatch => {
   selectedFilters[feature.name] = [];
   if (startDate && endDate) {
     dispatch(saveDynamicDateRangeMetaData(feature.name, metaData));
@@ -198,7 +207,7 @@ export const onDateRangeFilterChange = (selectedFilters, feature, startDate, end
   } else {
     dispatch(removeDateFilters(selectedFilters, feature.name));
   }
-  dispatch(applyFilter(selectedFilters, visualmetadata, view));
+  dispatch(applyFilter(selectedFilters, visualmetadata, view, sendEvent));
 };
 
 export const reset = () => ({

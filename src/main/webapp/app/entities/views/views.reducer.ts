@@ -89,6 +89,12 @@ export default (state: ViewsState = initialState, action): ViewsState => {
     case FAILURE(ACTION_TYPES.IMPORT_VIEW):
     case FAILURE(ACTION_TYPES.FETCH_VIEWS):
     case FAILURE(ACTION_TYPES.FETCH_VIEWS_STATE):
+      return {
+        ...state,
+        errorMessage: action.payload,
+        updateSuccess: false,
+        loading: false,
+      };
     case FAILURE(ACTION_TYPES.CREATE_VIEWS):
     case FAILURE(ACTION_TYPES.UPDATE_VIEWS):
     case FAILURE(ACTION_TYPES.DELETE_VIEWS):
