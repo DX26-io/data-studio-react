@@ -18,6 +18,8 @@ ARG API_URL
 
 ENV API_URL $API_URL
 
+ENV NETTY_SOCKET_IO_URL $NETTY_SOCKET_IO_URL
+
 RUN npm run webpack:prod --prod
 
 FROM nginx:1.22.0-alpine

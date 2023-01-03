@@ -51,7 +51,7 @@ module.exports = options =>
           // bypass: function(req, res, proxyOptions) {
           //   console.log("req.url=="+req.url);
           //   let isWebsocket = req.url.indexOf('chat') != -1 || req.url.indexOf('socket.io') != -1;
-          //   proxyOptions.target = isWebsocket ? 'http://localhost:9092' : proxyOptions.target;
+          //   proxyOptions.target = isWebsocket ? 'http://localhost:8085' : proxyOptions.target;
           // },
           secure: false,
           changeOrigin: options.tls,

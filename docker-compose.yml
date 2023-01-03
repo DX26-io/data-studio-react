@@ -17,6 +17,7 @@ services:
       context: '.'
       args:
         - API_URL=http://localhost:8002/
+        - NETTY_SOCKET_IO_URL=http://localhost:8085
     ports:
       - 80:80
       - 443:443
