@@ -32,9 +32,9 @@ const DateRangeComponent = (props: IDateRangeComponentProps) => {
   const [customDynamicDateRange, setCustomDynamicDateRange] = useState('0');
   const [isdynamicDateRangeConfig, setDynamicDateRangeConfig] = useState<ReactText>('');
   const [isCustom, setCustom] = useState(false);
-  const TAB_DAY = 0;
-  const TAB_RANGE = 1;
-  const TAB_DYNAMIC = 2;
+  const TAB_DAY = '0';
+  const TAB_RANGE = '1';
+  const TAB_DYNAMIC = '2';
   let currentDynamicDateRangeConfig;
   const dynamicDateRangeConfig = DYNAMIC_DATE_RANGE_CONFIG;
 
@@ -131,13 +131,13 @@ const DateRangeComponent = (props: IDateRangeComponentProps) => {
       <div className={'date-range-picker-tab'}>
         <Tabs aria-label="date-range" selectedKey={tabId} onSelectionChange={setTabId} isQuiet={true} density={'compact'}>
           <TabList>
-            <Item key={0}>
+            <Item key={'0'}>
               <Translate contentKey="dateRange.tabs.day"></Translate>
             </Item>
-            <Item key={1}>
+            <Item key={'1'}>
               <Translate contentKey="dateRange.tabs.range"></Translate>
             </Item>
-            <Item key={2}>
+            <Item key={'2'}>
               <Translate contentKey="dateRange.tabs.dynamic"></Translate>
             </Item>
           </TabList>
