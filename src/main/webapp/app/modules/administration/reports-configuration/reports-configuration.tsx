@@ -72,7 +72,7 @@ const ReportsConfiguration = (props: IReportsConfigurationProps) => {
         title={translate('reportsManagement.reportConfiguration.title')}
       />
       <DialogContainer onDismiss={() => setEmailConfigOpen(false)}>
-        {isEmailConfigOpen && <EmailConfigUpdate match={match} setOpen={setEmailConfigOpen} properties={emailChannelConfig.connectionProperties ? emailChannelConfig.connectionProperties : []} history={props.history}></EmailConfigUpdate>}
+        {isEmailConfigOpen && <EmailConfigUpdate match={match} setOpen={setEmailConfigOpen} properties={emailChannelConfig.connectionProperties ? emailChannelConfig.connectionProperties : []} history={props.history}/>}
       </DialogContainer>
       <Flex direction="row" gap="size-700" justifyContent="center" height="100%" marginTop="10%">
         {reportsConfigurationList.map(card => (

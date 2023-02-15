@@ -29,6 +29,7 @@ const initialState = {
   teams: [],
   updating: false,
   teamConfig: teamConfigDefaultValue,
+  fetchedEmailConfig: false,
 };
 
 export type ReportConfigurationState = Readonly<typeof initialState>;
@@ -61,12 +62,14 @@ export default (state: ReportConfigurationState = initialState, action): ReportC
         ...state,
         errorMessage: null,
         loading: true,
+        fetchedEmailConfig: false,
       };
     case FAILURE(ACTION_TYPES.FETCH_EMAIL_CONFIG):
       return {
         ...state,
         loading: false,
         errorMessage: action.payload,
+        fetchedEmailConfig: false,
       };
     case SUCCESS(ACTION_TYPES.FETCH_EMAIL_CONFIG):
       return {
@@ -74,6 +77,7 @@ export default (state: ReportConfigurationState = initialState, action): ReportC
         loading: false,
         emailConfig: action.payload.data,
         updateSuccess: false,
+        fetchedEmailConfig: true,
       };
 
     case REQUEST(ACTION_TYPES.FETCH_TEAM_CONFIG):
