@@ -13,10 +13,12 @@ interface ChannelPropertyProps extends DispatchProps {
 
 const ChannelProperty = (props: ChannelPropertyProps) => {
   const { property, config } = props;
+  const [val,setVal] =  React.useState(props.config[property.fieldName]);
 
   const setPropertyValue = value => {
     config[property.fieldName] = value;
     props.setConfig(config);
+    setVal(value);
   };
 
   return (
@@ -27,7 +29,7 @@ const ChannelProperty = (props: ChannelPropertyProps) => {
           label={property.displayName}
           isRequired={property.required}
           onChange={setPropertyValue}
-          value={config[property.fieldName] ? config[property.fieldName] : ''}
+          value={val}
         />
       ) : null}
       {property.fieldType === 'Password' ? (
@@ -36,7 +38,7 @@ const ChannelProperty = (props: ChannelPropertyProps) => {
           label={property.displayName}
           isRequired={property.required}
           onChange={setPropertyValue}
-          value={config[property.fieldName] ? config[property.fieldName] : ''}
+          value={val}
         />
       ) : null}
       {property.fieldType === 'Integer' ? (
@@ -46,14 +48,14 @@ const ChannelProperty = (props: ChannelPropertyProps) => {
           label={property.displayName}
           isRequired={property.required}
           onChange={setPropertyValue}
-          value={config[property.fieldName] ? config[property.fieldName] : 0}
+          value={val}
         />
       ) : null}
       {property.fieldType === 'Boolean' ? (
         <Checkbox
           isRequired={property.required}
           onChange={setPropertyValue}
-          isSelected={config[property.displayName] ? config[property.displayName] : false}
+          isSelected={val}
           isEmphasized
         ></Checkbox>
       ) : null}
