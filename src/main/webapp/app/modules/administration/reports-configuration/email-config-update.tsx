@@ -4,7 +4,7 @@ import { Translate } from 'react-jhipster';
 import { IRootState } from 'app/shared/reducers';
 import Alert from '@spectrum-icons/workflow/Alert';
 import { Flex, useDialogContainer, Dialog, Heading, Divider, Content, Form, Button, TextField, Header, Text } from '@adobe/react-spectrum';
-import { fetchEmailConfig, createEmailConfig, deleteChannelConfig,reset } from './reports-configuration.reducer';
+import { fetchEmailConfig, createEmailConfig, deleteChannelConfig, reset } from './reports-configuration.reducer';
 import ChannelProperty from './channel-property';
 import { isFormValid } from './reports-configuration.util';
 
@@ -12,11 +12,11 @@ export interface IEmailConfigUpdateProps extends StateProps, DispatchProps {
   setOpen: (isOpen: boolean) => void;
   properties: any;
   history: any;
-  match: any
+  match: any;
 }
 
 export const EmailConfigUpdate = (props: IEmailConfigUpdateProps) => {
-  const { setOpen, properties, emailConfig, updating, updateSuccess,history,match } = props;
+  const { setOpen, properties, emailConfig, updating, updateSuccess, history, match } = props;
   const [error, setError] = React.useState({ message: '', isValid: false });
 
   const dialog = useDialogContainer();
@@ -74,9 +74,8 @@ export const EmailConfigUpdate = (props: IEmailConfigUpdateProps) => {
       <Divider />
       <Content>
         <Form data-testid="email-config-form">
-          {properties.map(property => (
-            <ChannelProperty key={property.fieldName} property={property} config={emailConfig} />
-          ))}
+          {props.fetchedEmailConfig &&
+            properties.map(property => <ChannelProperty key={property.fieldName} property={property} config={emailConfig} />)}
           {emailConfig.id ? (
             <React.Fragment>
               <span className="spectrum-Heading spectrum-Heading--sizeXXS">
@@ -109,9 +108,10 @@ const mapStateToProps = (storeState: IRootState) => ({
   loading: storeState.reportConfiguration.loading,
   updating: storeState.reportConfiguration.updating,
   updateSuccess: storeState.reportConfiguration.updateSuccess,
+  fetchedEmailConfig: storeState.reportConfiguration.fetchedEmailConfig,
 });
 
-const mapDispatchToProps = { fetchEmailConfig, createEmailConfig, deleteChannelConfig,reset };
+const mapDispatchToProps = { fetchEmailConfig, createEmailConfig, deleteChannelConfig, reset };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
