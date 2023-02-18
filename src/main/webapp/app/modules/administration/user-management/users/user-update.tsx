@@ -155,7 +155,8 @@ export const UserUpdate = (props: IUserUpdateProps) => {
               setError(errorObj);
             }}
             data-testid="email"
-            validationState={user.email.length < 100 ? 'valid' : 'invalid'}
+            // eslint-disable-next-line
+            validationState={user.email.length > 5 && user.email.length < 100 && /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(user.email) ? 'valid' : 'invalid'}
             autoFocus
           />
           <Checkbox
