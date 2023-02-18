@@ -1,11 +1,12 @@
 import { IUser } from 'app/shared/model/user.model';
 import { IError, defaultValue } from 'app/shared/model/error.model';
+import { AUTHORITIES } from 'app/config/constants';
 
 const isValidLogin = (login: string) => {
   return login !== '' && login.length > 1 && login.length < 50;
 };
 
-const isValidEmail = (email: string) => {
+export const isValidEmail = (email: string) => {
   // eslint-disable-next-line
   return email && email.length > 5 && email.length < 100 && /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
 };
@@ -47,4 +48,8 @@ export const generateUsersOptions = users => {
       options.push({ value: item.login, label: getUserFullName(item) });
     });
   return options;
+};
+
+export const filterRoles = roles => {
+  return roles.filter(role => role.value !== AUTHORITIES.SUPER_ADMIN);
 };
