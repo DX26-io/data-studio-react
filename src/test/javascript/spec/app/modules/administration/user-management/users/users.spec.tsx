@@ -24,6 +24,8 @@ export const getInitialState = () => {
         activated: true,
         userGroups: [AUTHORITIES.ADMIN],
       },
+      authorities:[AUTHORITIES.ADMIN,AUTHORITIES.SUPER_ADMIN],
+      roles:[AUTHORITIES.ADMIN,AUTHORITIES.SUPER_ADMIN],
     },
   };
 };
