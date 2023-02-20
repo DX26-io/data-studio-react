@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Translate } from 'react-jhipster';
 import { getUser, getRoles, updateUser, createUser, reset, deleteUser, setUser } from './user.reducer';
 import { IRootState } from 'app/shared/reducers';
-import { isFormValid } from './user.util';
+import { isFormValid, isValidEmail, filterRoles } from './user.util';
 import Alert from '@spectrum-icons/workflow/Alert';
 import {
   Flex,
@@ -155,8 +155,7 @@ export const UserUpdate = (props: IUserUpdateProps) => {
               setError(errorObj);
             }}
             data-testid="email"
-            // eslint-disable-next-line
-            validationState={user.email.length > 5 && user.email.length < 100 && /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(user.email) ? 'valid' : 'invalid'}
+            validationState={isValidEmail(user.email) ? 'valid' : 'invalid'}
             autoFocus
           />
           <Checkbox
@@ -173,7 +172,7 @@ export const UserUpdate = (props: IUserUpdateProps) => {
             <Translate contentKey="userManagement.activate">Activate</Translate>
           </Checkbox>
           <Text>
-            <Translate contentKey="userManagement.profiles">Activate</Translate>
+            <Translate contentKey="userManagement.profiles">Profiles</Translate>
           </Text>
           {/* TODO : need to find a better approach to set defaultValue. it does not reset  */}
           <Select
@@ -215,7 +214,7 @@ export const UserUpdate = (props: IUserUpdateProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   user: storeState.userManagement.user,
-  roles: storeState.userManagement.authorities,
+  roles: filterRoles(storeState.userManagement.authorities),
   loading: storeState.userManagement.loading,
   updating: storeState.userManagement.updating,
   fetchSuccess: storeState.userManagement.fetchSuccess,
