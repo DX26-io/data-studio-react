@@ -172,7 +172,7 @@ export const UserUpdate = (props: IUserUpdateProps) => {
             <Translate contentKey="userManagement.activate">Activate</Translate>
           </Checkbox>
           <Text>
-            <Translate contentKey="userManagement.profiles">Activate</Translate>
+            <Translate contentKey="userManagement.profiles">Profiles</Translate>
           </Text>
           {/* TODO : need to find a better approach to set defaultValue. it does not reset  */}
           <Select
