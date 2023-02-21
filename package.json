@@ -24,7 +24,7 @@
     "@spectrum-icons/illustrations": "^3.2.1",
     "@spectrum-icons/workflow": "^4.0.3",
     "availity-reactstrap-validation": "2.6.1",
-    "axios": "0.19.2",
+    "axios": "0.21.2",
     "bootstrap": "4.4.1",
     "cronstrue": "^1.125.0",
     "file-saver": "^2.0.5",
