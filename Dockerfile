@@ -31,6 +31,8 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /data-studio/build/resources/main/static /usr/share/nginx/html
 
+ADD VERSION .
+
 VOLUME ["/usr/share/nginx/html","/etc/nginx"]
 
 EXPOSE 443 80
