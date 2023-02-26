@@ -15,10 +15,10 @@ echo "version: $version"
 # tag it
 git add VERSION
 git commit -m "version $version"
-git tag -a "$version" -m "version $version"
+git tag -a "v$version" -m "version $version"
 git push
 git push --tags
-sudo docker tag $USERNAME/$IMAGE:latest $USERNAME/$IMAGE:$version
+sudo docker tag $USERNAME/$IMAGE:latest $USERNAME/$IMAGE:"v$version"
 # push it
 sudo docker push $USERNAME/$IMAGE:latest
-sudo docker push $USERNAME/$IMAGE:$version
+sudo docker push $USERNAME/$IMAGE:"v$version"
