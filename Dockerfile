@@ -27,7 +27,7 @@ FROM nginx:1.22.0-alpine
 ## Remove default nginx index page
 RUN rm -rf /usr/share/nginx/html/*
 
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /data-studio/build/resources/main/static /usr/share/nginx/html
 
