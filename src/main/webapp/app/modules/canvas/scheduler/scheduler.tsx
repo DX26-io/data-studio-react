@@ -330,6 +330,7 @@ const Scheduler = (props: ISchedulerProps) => {
               props.setErrorMessage(errorObj);
             }}
           />
+          <br/>
           <DatePicker
             label={translate('reportsManagement.reports.form.endDate')}
             value={stringToDate(props.schedulerReport?.schedule?.endDate || '')}
