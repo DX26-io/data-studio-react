@@ -26,6 +26,11 @@ export const DataConnection = (props: IDataConnectionProps) => {
     props.queryToConnection(payload);
   };
 
+  const onChange = (value,fieldName) =>{
+    props.connection.details[fieldName] = value;
+    props.setConnection(props.connection);
+  }
+
   useEffect(() => {
     props.getConnectionsByConnectionTypeId(connectionType.id);
   }, []);
@@ -72,7 +77,7 @@ export const DataConnection = (props: IDataConnectionProps) => {
           isRequired={!props.isConnectionSelected}
         />
         {connectionType.connectionPropertiesSchema.connectionProperties.map((p, i) => (
-          <ConnectionProperty connection={props.connection} key={p.fieldName} property={p} disabled={props.isConnectionSelected} />
+          <ConnectionProperty onChange={onChange}  key={p.fieldName} property={p} disabled={props.isConnectionSelected} />
         ))}
         {connectionType.connectionPropertiesSchema.config['disableUsername'] !== 'true' ? (
           <TextField
