@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, TextArea, Checkbox } from '@adobe/react-spectrum';
 import { connect } from 'react-redux';
-import { setConnection } from '../connection-steps.reducer';
+import { setConnection } from '../connection.reducer';
 import { IRootState } from 'app/shared/reducers';
 
 interface ConnectionPropertyProps extends StateProps,DispatchProps {
@@ -66,7 +66,7 @@ const ConnectionProperty = (props: ConnectionPropertyProps) => {
 const mapDispatchToProps = { setConnection };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  connection: storeState.connectionSteps.connection,
+  connection: storeState.connections.connection,
 });
 
 type StateProps = ReturnType<typeof mapStateToProps>;
