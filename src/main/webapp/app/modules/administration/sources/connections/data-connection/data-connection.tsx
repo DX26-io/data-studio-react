@@ -5,7 +5,7 @@ import { Button, Flex, Picker, Item, TextField, Form, ProgressBar, Text } from '
 import { getConnectionsByConnectionTypeId } from '../connection.reducer';
 import { prepareConnection, generateConnectionsOptions } from '../connections.util';
 import ConnectionProperty from './connection-property';
-import { selectConnection, setConnection, setIsConnectionSelected } from '../connection-steps.reducer';
+import { selectConnection, setConnection, setIsConnectionSelected } from '../connection.reducer';
 import { queryToConnection, setIsConnected } from '../../datasources/datasources.reducer';
 import { Translate, translate } from 'react-jhipster';
 import Checkmark from '@spectrum-icons/workflow/Checkmark';
@@ -25,6 +25,11 @@ export const DataConnection = (props: IDataConnectionProps) => {
     payload['connection'] = prepareConnection(props.connection, connectionType);
     props.queryToConnection(payload);
   };
+
+  const onChange = (value,fieldName) =>{
+    props.connection.details[fieldName] = value;
+    props.setConnection(props.connection);
+  }
 
   useEffect(() => {
     props.getConnectionsByConnectionTypeId(connectionType.id);
@@ -72,7 +77,7 @@ export const DataConnection = (props: IDataConnectionProps) => {
           isRequired={!props.isConnectionSelected}
         />
         {connectionType.connectionPropertiesSchema.connectionProperties.map((p, i) => (
-          <ConnectionProperty connection={props.connection} key={p.fieldName} property={p} disabled={props.isConnectionSelected} />
+          <ConnectionProperty onChange={onChange}  key={p.fieldName} property={p} disabled={props.isConnectionSelected} />
         ))}
         {connectionType.connectionPropertiesSchema.config['disableUsername'] !== 'true' ? (
           <TextField
@@ -136,8 +141,8 @@ export const DataConnection = (props: IDataConnectionProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   connections: storeState.connections.connections,
-  connection: storeState.connectionSteps.connection,
-  isConnectionSelected: storeState.connectionSteps.isConnectionSelected,
+  connection: storeState.connections.connection,
+  isConnectionSelected: storeState.connections.isConnectionSelected,
   isConnected: storeState.datasources.isConnected,
   errorMessage: storeState.datasources.errorMessage,
   loading: storeState.datasources.loading,

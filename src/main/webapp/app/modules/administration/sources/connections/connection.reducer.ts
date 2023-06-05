@@ -21,13 +21,15 @@ export const ACTION_TYPES = {
   FETCH_META_DATA: 'connections/FETCH_META_DATA',
   RESET: 'connections/RESET',
   SET_CONNECTION: 'connections/SET_CONNECTION',
+  IS_CONNECTION_SELECTED: 'connectionSteps/IS_CONNECTION_SELECTED',
+  SELECT_CONNECTION: 'connectionSteps/SELECT_CONNECTION',
 };
 
 const initialState = {
   loading: false,
   errorMessage: null,
   connections: [] as IConnection[],
-  connection: connectionDefaultValue,
+  connection: { ...connectionDefaultValue },
   connectionsTypes: [] as IConnectionType[],
   totalItems: 0,
   updateSuccess: false,
@@ -35,6 +37,7 @@ const initialState = {
   updateError: null,
   updating: false,
   isMetaDataReceived: false,
+  isConnectionSelected: false,
 };
 
 export type ConnectionsState = Readonly<typeof initialState>;
@@ -185,7 +188,7 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
         ...state,
         loading: false,
         errorMessage: null,
-        connection: connectionDefaultValue,
+        connection: { ...connectionDefaultValue, details: {} },
         updateSuccess: false,
         updating: false,
         updateError: null,
@@ -194,6 +197,17 @@ export default (state: ConnectionsState = initialState, action): ConnectionsStat
       return {
         ...state,
         connection: action.payload,
+      };
+    case ACTION_TYPES.SELECT_CONNECTION:
+      return {
+        ...state,
+        connection: action.payload,
+        isConnectionSelected: true,
+      };
+    case ACTION_TYPES.IS_CONNECTION_SELECTED:
+      return {
+        ...state,
+        isConnectionSelected: action.payload,
       };
 
     default:
@@ -251,5 +265,19 @@ export const setConnection = (connection: IConnection) => {
   return {
     type: ACTION_TYPES.SET_CONNECTION,
     payload: connection,
+  };
+};
+
+export const selectConnection = (connection: IConnection) => {
+  return {
+    type: ACTION_TYPES.SELECT_CONNECTION,
+    payload: connection,
+  };
+};
+
+export const setIsConnectionSelected = isConnectionSelected => {
+  return {
+    type: ACTION_TYPES.IS_CONNECTION_SELECTED,
+    payload: isConnectionSelected,
   };
 };
