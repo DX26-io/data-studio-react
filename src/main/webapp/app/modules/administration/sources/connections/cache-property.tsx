@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { TextField, TextArea, Checkbox, Flex, Form } from '@adobe/react-spectrum';
 import { connect } from 'react-redux';
-import { setConnection } from './connection-steps.reducer';
+import { setConnection } from './connection.reducer';
 import { Translate, translate } from 'react-jhipster';
 
 interface CachePropertyProps extends DispatchProps {
