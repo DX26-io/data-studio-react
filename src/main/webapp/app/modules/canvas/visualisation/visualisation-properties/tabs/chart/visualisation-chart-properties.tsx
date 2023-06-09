@@ -2,7 +2,7 @@ import React from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { View, Heading, Form } from '@adobe/react-spectrum';
-import Properties from 'app/modules/canvas/visualisation/visualisation-properties/partials/properties/property';
+import Properties from 'app/modules/canvas/visualisation/visualisation-properties/tabs/property';
 
 export interface IVisualisationChartConfigPropertiesProps extends StateProps, DispatchProps {}
 

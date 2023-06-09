@@ -90,7 +90,6 @@ const initialState = {
   filterData: {},
   selectedFilter: {},
   isEditMode: false,
-  visual: {} as IVisualMetadataSet,
   editAction: '',
   visualMetadataContainerList: [],
   tableActivePage: 0,
@@ -260,12 +259,12 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
     case ACTION_TYPES.VISUAL_METADATA_ADD_FIELD:
       return {
         ...state,
-        visual: action.payload,
+        entity: action.payload,
       };
     case ACTION_TYPES.VISUAL_METADATA_DELETE_FIELD:
       return {
         ...state,
-        visual: action.payload,
+        entity: action.payload,
       };
     case ACTION_TYPES.VISUAL_METADATA_SET_CONDITION_EXPRESSION:
       return {
@@ -275,17 +274,17 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
     case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES:
       return {
         ...state,
-        visual: updateVisualFieldBodyProperties(state.entity, action.payload),
+        entity: updateVisualFieldBodyProperties(state.entity, action.payload),
       };
     case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES:
       return {
         ...state,
-        visual: updateVisualFieldTitleProperties(state.entity, action.payload),
+        entity: updateVisualFieldTitleProperties(state.entity, action.payload),
       };
     case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD:
       return {
         ...state,
-        visual: action.payload,
+        entity: action.payload,
       };
     case ACTION_TYPES.UPDATE_TABLE_PAGENO:
       return {

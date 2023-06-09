@@ -15,7 +15,7 @@
       "delete": "Delete",
       "save": "Save",
       "createNewView": "Create new view",
-      "view":"View"
+      "view": "View"
     },
     "created": {
       "header": "Success",
@@ -46,29 +46,6 @@
     "error": {
       "header": "Error",
       "content": "Error saving view"
-    },
-    "editConfiguration": {
-      "properties": {
-        "chartProperties": {
-          "title": "Chart Properties",
-          "titleProperties": "Title Properties",
-          "bodyProperties": "Body Properties",
-          "chartConfiguration": "Chart configuration"
-        },
-        "dataProperties": {
-          "title": "Data Properties",
-          "dimensions": "Dimensions",
-          "measures": "Measures"
-        },
-        "hierarchy": "Hierarchy"
-      },
-      "settings": {
-        "query": "Query",
-        "dataConstraints": "Data Constraints",
-        "scheduler": "Scheduler",
-        "thresholdAlert": "Threshold Alert",
-        "data": "Data"
-      }
     },
     "search": {
       "title": "Search",

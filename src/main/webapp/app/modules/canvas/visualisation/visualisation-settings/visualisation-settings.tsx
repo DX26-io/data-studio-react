@@ -18,27 +18,27 @@ const VisualisationSettings = props => {
         <TabList>
           <Item key="query">
             <Content margin="size-100">
-              <Translate contentKey="views.editConfiguration.settings.query"></Translate>
+              <Translate contentKey="datastudioApp.visualmetadata.editConfiguration.settings.query"></Translate>
             </Content>
           </Item>
           <Item key="dataConstraints">
             <Content margin="size-100">
-              <Translate contentKey="views.editConfiguration.settings.dataConstraints"></Translate>
+              <Translate contentKey="datastudioApp.visualmetadata.editConfiguration.settings.dataConstraints"></Translate>
             </Content>
           </Item>
           <Item key="scheduler">
             <Content margin="size-100">
-              <Translate contentKey="views.editConfiguration.settings.scheduler"></Translate>
+              <Translate contentKey="datastudioApp.visualmetadata.editConfiguration.settings.scheduler"></Translate>
             </Content>
           </Item>
           <Item key="thresholdAlert">
             <Content margin="size-100">
-              <Translate contentKey="views.editConfiguration.settings.thresholdAlert"></Translate>
+              <Translate contentKey="datastudioApp.visualmetadata.editConfiguration.settings.thresholdAlert"></Translate>
             </Content>
           </Item>
           <Item key="data">
             <Content margin="size-100">
-              <Translate contentKey="views.editConfiguration.settings.data"></Translate>
+              <Translate contentKey="datastudioApp.visualmetadata.editConfiguration.settings.data"></Translate>
             </Content>
           </Item>
         </TabList>

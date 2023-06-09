@@ -21,7 +21,30 @@
       "width": "Width",
       "visualBuildId": "Visual Build Id",
       "SelectMeasure": "Select measure",
-      "SelectDimension": "Select dimension"
+      "SelectDimension": "Select dimension",
+      "editConfiguration": {
+        "properties": {
+          "chartProperties": {
+            "title": "Chart Properties",
+            "titleProperties": "Title",
+            "bodyProperties": "Body",
+            "chartConfiguration": "Chart"
+          },
+          "dataProperties": {
+            "title": "Data Properties",
+            "dimensions": "Dimensions",
+            "measures": "Measures"
+          },
+          "hierarchy": "Hierarchy"
+        },
+        "settings": {
+          "query": "Query",
+          "dataConstraints": "Data Constraints",
+          "scheduler": "Scheduler",
+          "thresholdAlert": "Threshold Alert",
+          "data": "Data"
+        }
+      }
     }
   }
 }

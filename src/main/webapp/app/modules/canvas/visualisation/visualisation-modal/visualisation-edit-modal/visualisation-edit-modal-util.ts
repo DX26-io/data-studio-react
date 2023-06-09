@@ -19,15 +19,15 @@ export const getPropertiesTabTranslations = (): ITabData[] => {
   return [
     {
       id: 'chartProperties',
-      name: translate('views.editConfiguration.properties.chartProperties.title'),
+      name: translate('datastudioApp.visualmetadata.editConfiguration.properties.chartProperties.title'),
     },
     {
       id: 'dataProperties',
-      name: translate('views.editConfiguration.properties.dataProperties.title'),
+      name: translate('datastudioApp.visualmetadata.editConfiguration.properties.dataProperties.title'),
     },
     // {
     //   id: 'hierarchy',
-    //   name: translate('views.editConfiguration.properties.hierarchy'),
+    //   name: translate('datastudioApp.visualmetadata.editConfiguration.properties.hierarchy'),
     // },
   ];
 };
@@ -39,15 +39,15 @@ export const getChartPropertiesTranslations = (): ITabData[] => {
   return [
     {
       id: 'titleProperties',
-      name: translate('views.editConfiguration.properties.chartProperties.titleProperties'),
+      name: translate('datastudioApp.visualmetadata.editConfiguration.properties.chartProperties.titleProperties'),
     },
     {
       id: 'bodyProperties',
-      name: translate('views.editConfiguration.properties.chartProperties.bodyProperties'),
+      name: translate('datastudioApp.visualmetadata.editConfiguration.properties.chartProperties.bodyProperties'),
     },
     {
       id: 'chartCongifuration',
-      name: translate('views.editConfiguration.properties.chartProperties.chartConfiguration'),
+      name: translate('datastudioApp.visualmetadata.editConfiguration.properties.chartProperties.chartConfiguration'),
     },
   ];
 };
@@ -59,11 +59,11 @@ export const getDataPropertiesTabTranslations = (): ITabData[] => {
   return [
     {
       id: 'DIMENSION',
-      name: translate('views.editConfiguration.properties.dataProperties.dimensions'),
+      name: translate('datastudioApp.visualmetadata.editConfiguration.properties.dataProperties.dimensions'),
     },
     {
       id: 'MEASURE',
-      name: translate('views.editConfiguration.properties.dataProperties.measures'),
+      name: translate('datastudioApp.visualmetadata.editConfiguration.properties.dataProperties.measures'),
     },
   ];
 };
@@ -75,23 +75,23 @@ export const getSettingsTabTranslations = (): ITabData[] => {
   return [
     {
       id: 'query',
-      name: translate('views.editConfiguration.settings.query'),
+      name: translate('datastudioApp.visualmetadata.editConfiguration.settings.query'),
     },
     {
       id: 'dataConstraints',
-      name: translate('views.editConfiguration.settings.dataConstraints'),
+      name: translate('datastudioApp.visualmetadata.editConfiguration.settings.dataConstraints'),
     },
     {
       id: 'scheduler',
-      name: translate('views.editConfiguration.settings.scheduler'),
+      name: translate('datastudioApp.visualmetadata.editConfiguration.settings.scheduler'),
     },
     {
       id: 'thresholdAlert',
-      name: translate('views.editConfiguration.settings.thresholdAlert'),
+      name: translate('datastudioApp.visualmetadata.editConfiguration.settings.thresholdAlert'),
     },
     {
       id: 'data',
-      name: translate('views.editConfiguration.settings.data'),
+      name: translate('datastudioApp.visualmetadata.editConfiguration.settings.data'),
     },
   ];
 };
@@ -180,7 +180,7 @@ export const createProperties = newVM => {
   return newVM;
 };
 
-export const createVisualMetadata = (visualisation,view,totalItem) => {
+export const createVisualMetadata = (visualisation, view, totalItem) => {
   let newVM = {
     isCardRevealed: true,
     isSaved: false,

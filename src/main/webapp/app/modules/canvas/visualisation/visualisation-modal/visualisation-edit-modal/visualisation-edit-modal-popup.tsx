@@ -96,6 +96,7 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
     if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
       _validateQuery();
       shareLinkfForwardCall();
+      renderVisualisation(props.visualMetadataEntity, props.visualMetadataEntity.data, 'visualisation-edit', props);
     }
   }, [props.visualMetadataEntity]);
 
@@ -150,7 +151,11 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
               {toggleVisualisation && (
                 <View borderWidth="thin" borderColor="default" borderRadius="regular" minHeight="50%">
                   <div
-                    style={{ height: '100%' }}
+                    style={{
+                      height: '100%',
+                      backgroundColor: props.visualMetadataEntity.bodyProperties.backgroundColor,
+                      opacity: props.visualMetadataEntity.bodyProperties.opacity,
+                    }}
                     id={`visualisation-edit-${props.visualMetadataEntity.id}`}
                     className="visualisation"
                   ></div>

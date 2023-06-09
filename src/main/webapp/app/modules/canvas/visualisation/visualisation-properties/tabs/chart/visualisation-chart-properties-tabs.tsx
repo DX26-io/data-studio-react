@@ -1,9 +1,9 @@
 import React, { ReactText, useState } from 'react';
 import { Content, Item, View, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
-import VisualisationChartConfigProperties from 'app/modules/canvas/visualisation/visualisation-properties/partials/properties/visualisation-chart-config-properties';
-import VisualisationTitleProperties from 'app/modules/canvas/visualisation/visualisation-properties/partials/properties/visualisation-title-properties';
-import VisualisationBodyProperties from 'app/modules/canvas/visualisation/visualisation-properties/partials/properties/visualisation-body-properties';
-import { getChartPropertiesTranslations } from '../../visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-util';
+import VisualisationChartConfigProperties from './visualisation-chart-properties';
+import VisualisationTitleProperties from './visualisation-title-properties';
+import VisualisationBodyProperties from './visualisation-body-properties';
+import { getChartPropertiesTranslations } from '../../../visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-util';
 import { Translate } from 'react-jhipster';
 
 const VisualisationChartProperties = () => {
@@ -22,17 +22,17 @@ const VisualisationChartProperties = () => {
         <TabList>
           <Item key='titleProperties'>
             <Content margin="size-100">
-              <Translate contentKey="views.editConfiguration.properties.chartProperties.titleProperties"></Translate>
+              <Translate contentKey="datastudioApp.visualmetadata.editConfiguration.properties.chartProperties.titleProperties"></Translate>
             </Content>
           </Item>
           <Item key='bodyProperties'>
             <Content margin="size-100">
-              <Translate contentKey="views.editConfiguration.properties.chartProperties.bodyProperties"></Translate>
+              <Translate contentKey="datastudioApp.visualmetadata.editConfiguration.properties.chartProperties.bodyProperties"></Translate>
             </Content>
           </Item>
           <Item key='chartCongifuration'>
             <Content margin="size-100">
-              <Translate contentKey="views.editConfiguration.properties.chartProperties.chartConfiguration"></Translate>
+              <Translate contentKey="datastudioApp.visualmetadata.editConfiguration.properties.chartProperties.chartConfiguration"></Translate>
             </Content>
           </Item>
         </TabList>
