@@ -1,37 +1,31 @@
 import React, { useState } from 'react';
-import { IRootState } from 'app/shared/reducers';
-import { connect } from 'react-redux';
-
 import { IFeature } from 'app/shared/model/feature.model';
 import { IVisualMetadataSet } from 'app/shared/model/visualmetadata.model';
-import { Checkbox, Switch, Item, Picker, TextField } from '@adobe/react-spectrum';
+import { Switch, Item, Picker, TextField } from '@adobe/react-spectrum';
 import { parseBool, parseString } from 'app/shared/util/common-utils';
-import { ColorSlider } from '@react-spectrum/color';
 import { Property } from 'app/shared/model/property.model';
 import Select from 'react-select';
-import { generateDatasourcesOptions } from 'app/entities/dashboard/dashboard-util';
-import { setDatasource } from 'app/modules/administration/sources/datasources/steps/datasource-steps.reducer';
-import { translate } from 'react-jhipster';
-import { generateFilterOptions } from 'app/modules/canvas/filter/filter-util';
 import { generateAlternativeDimensionsOptions, generateFeaturesOptions } from 'app/entities/feature/feature-util';
+import { updateChartProperties } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { connect } from 'react-redux';
 
-
-export interface IPropertiesProps {
+export interface IPropertiesProps extends DispatchProps {
   features: readonly IFeature[];
   visual: IVisualMetadataSet;
-  propstyle: string;
+  propStyle: string;
   property: Property;
 }
 
-const Properties = (props: IPropertiesProps) => {
+const Property = (props: IPropertiesProps) => {
   const [property, setProperty] = useState([]);
 
-  const handleCheckboxChange = e => {
+  const handleCheckbox = e => {
     props.property.value = !props.property.value;
     setProperty([props.property.value]);
+    props.updateChartProperties(props.property);
   };
 
-  const handleValueChange = (value, possibleValues = null) => {
+  const handleSelect = (value, possibleValues = null) => {
     if (possibleValues) {
       const selectedValue = possibleValues.filter(item => {
         return item.value === value;
@@ -41,9 +35,10 @@ const Properties = (props: IPropertiesProps) => {
       props.property.value = value;
     }
     setProperty([props.property.value]);
+    props.updateChartProperties(props.property);
   };
 
-  const handleChange = (value, actionMeta) => {
+  const handleMultiSelect = (value, actionMeta) => {
     let values = props.property?.value ? JSON.parse(props.property?.value.toString()) : [];
     if (actionMeta.action === 'select-option') {
       values.push({ featureId: actionMeta.option.value, featureName: actionMeta.option.label })
@@ -54,6 +49,7 @@ const Properties = (props: IPropertiesProps) => {
     }
     props.property.value = JSON.stringify(values);
     setProperty([props.property.value]);
+    props.updateChartProperties(props.property);
   };
   return (
     <>
@@ -61,7 +57,7 @@ const Properties = (props: IPropertiesProps) => {
         <TextField
           type="number"
           onChange={text => {
-            handleValueChange(text);
+            handleSelect(text);
           }}
           value={props.property.value.toString() || ''}
           label={props.property.propertyType.name}
@@ -72,7 +68,7 @@ const Properties = (props: IPropertiesProps) => {
           selectedKey={props.property.value['value']}
           label={props.property.propertyType.name}
           items={props.property.propertyType.possibleValues}
-          onSelectionChange={selected => handleValueChange(selected.toString(), props.property.propertyType.possibleValues)}
+          onSelectionChange={selected => handleSelect(selected.toString(), props.property.propertyType.possibleValues)}
         >
           {item => <Item key={item.value}>{item.value}</Item>}
         </Picker>
@@ -81,7 +77,7 @@ const Properties = (props: IPropertiesProps) => {
         <Switch
           isEmphasized
           onChange={() => {
-            handleCheckboxChange(props.property);
+            handleCheckbox(props.property);
           }}
           isSelected={parseBool(props.property.value)}
           defaultSelected={parseBool(props.property.propertyType.defaultValue)}
@@ -92,19 +88,18 @@ const Properties = (props: IPropertiesProps) => {
       {props.property.type === 'COLOR_PICKER' && (
         <><TextField
           onChange={text => {
-            handleValueChange(text);
+            handleSelect(text);
           }}
           value={parseString(props.property.value)}
           type="color"
           label={props.property.propertyType.name} />
-
           {/* 
 working on it
           <ColorSlider
             label="Hue (controlled)"
             value={parseString(props.property.value)}
             onChange={text => {
-              handleValueChange(text);
+              handleSelect(text);
             } }
             channel="hue" />*/}
         </>
@@ -112,7 +107,7 @@ working on it
       {props.property.type === 'TEXT' && props.property.propertyType.name !== 'Alternative Dimensions' && (
         <TextField
           onChange={text => {
-            handleValueChange(text);
+            handleSelect(text);
           }}
           value={parseString(props.property.value) || ''}
           label={props.property.propertyType.name}
@@ -126,7 +121,7 @@ working on it
           </span>
           <Select
             isMulti
-            onChange={handleChange}
+            onChange={handleMultiSelect}
             value={generateAlternativeDimensionsOptions(props.property.value)}
             label={props.property.propertyType.name}
             options={generateFeaturesOptions(props.features)}
@@ -137,4 +132,10 @@ working on it
   );
 };
 
-export default Properties
+const mapDispatchToProps = {
+  updateChartProperties
+};
+
+type DispatchProps = typeof mapDispatchToProps;
+
+export default connect(null, mapDispatchToProps)(Property);

@@ -3,7 +3,6 @@ import { Content, Item, View, Tabs, TabList, TabPanels } from '@adobe/react-spec
 import VisualisationChartConfigProperties from './visualisation-chart-properties';
 import VisualisationTitleProperties from './visualisation-title-properties';
 import VisualisationBodyProperties from './visualisation-body-properties';
-import { getChartPropertiesTranslations } from '../../../visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-util';
 import { Translate } from 'react-jhipster';
 
 const VisualisationChartProperties = () => {

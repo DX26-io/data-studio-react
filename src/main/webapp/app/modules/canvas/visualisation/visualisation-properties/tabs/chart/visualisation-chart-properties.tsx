@@ -1,8 +1,8 @@
 import React from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
-import { View, Heading, Form } from '@adobe/react-spectrum';
-import Properties from 'app/modules/canvas/visualisation/visualisation-properties/tabs/property';
+import { View, Form } from '@adobe/react-spectrum';
+import Property from 'app/modules/canvas/visualisation/visualisation-properties/property';
 
 export interface IVisualisationChartConfigPropertiesProps extends StateProps, DispatchProps {}
 
@@ -16,10 +16,10 @@ const VisualisationChartConfigProperties = (props: IVisualisationChartConfigProp
             props.visual.properties
               .sort((a, b) => (a.order > b.order ? 1 : -1))
               .map(property => (
-                <Properties
+                <Property
                   key={property.propertyType.id}
                   property={property}
-                  propstyle={'chart'}
+                  propStyle={'chart'}
                   visual={props.visual}
                   features={props.features}
                 />

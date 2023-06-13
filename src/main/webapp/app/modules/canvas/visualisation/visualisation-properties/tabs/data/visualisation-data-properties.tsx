@@ -1,7 +1,7 @@
 import React, { useEffect, useState, ReactText } from 'react';
 import { ActionButton, Flex, Form, View, Content, Item, Button, TextField, Heading, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
 import uuid from 'react-uuid';
-import Properties from 'app/modules/canvas/visualisation/visualisation-properties/tabs/property';
+import Property from 'app/modules/canvas/visualisation/visualisation-properties/property';
 import { VisualWrap } from 'app/modules/canvas/visualisation/util/visualmetadata-wrapper';
 import LockClosed from '@spectrum-icons/workflow/LockClosed';
 import Delete from '@spectrum-icons/workflow/Delete';
@@ -170,7 +170,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                   selectedField.properties
                     .sort((a, b) => (a.order > b.order ? 1 : -1))
                     .map((property, i) => (
-                      <Properties key={uuid()} property={property} propstyle={'data'} visual={props.visual} features={props.features} />
+                      <Property key={uuid()} property={property} propStyle={'data'} visual={props.visual} features={props.features} />
                     ))}
               </Form>
             </Content>
@@ -225,7 +225,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                   selectedField.properties
                     .sort((a, b) => (a.order > b.order ? 1 : -1))
                     .map((property, i) => (
-                      <Properties key={uuid()} property={property} propstyle={'data'} visual={props.visual} features={props.features} />
+                      <Property key={uuid()} property={property} propStyle={'data'} visual={props.visual} features={props.features} />
                     ))}
               </Form>
             </Content>
@@ -341,7 +341,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                   selectedField.properties
                     .sort((a, b) => (a.order > b.order ? 1 : -1))
                     .map((property, i) => (
-                      <Properties key={uuid()} property={property} propstyle={'data'} visual={props.visual} features={props.features} />
+                      <Properties key={uuid()} property={property} propStyle={'data'} visual={props.visual} features={props.features} />
                     ))}
               </Form>
             </Content>

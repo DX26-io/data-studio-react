@@ -96,7 +96,6 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
     if (props.visualMetadataEntity.fields && ValidateFields(props.visualMetadataEntity.fields)) {
       _validateQuery();
       shareLinkfForwardCall();
-      renderVisualisation(props.visualMetadataEntity, props.visualMetadataEntity.data, 'visualisation-edit', props);
     }
   }, [props.visualMetadataEntity]);
 

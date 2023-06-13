@@ -19,6 +19,7 @@ import { getVisualisationData, ValidateFields } from 'app/modules/canvas/visuali
 import { ICrudPutActionVisual } from './visualmetadata-util';
 import { DIMENSION } from 'app/shared/util/visualisation.constants';
 import { any } from 'prop-types';
+import { Property } from 'app/shared/model/property.model';
 
 const addVisualField = (visual: IVisualMetadataSet, field) => {
   visual.fields.push(field);
@@ -39,6 +40,12 @@ const updateVisualFieldBodyProperties = (visual: IVisualMetadataSet, bodyPropert
 
 const updateVisualFieldTitleProperties = (visual: IVisualMetadataSet, titleProperties) => {
   visual.titleProperties[titleProperties.property] = titleProperties.value;
+  return Object.assign({}, visual);
+};
+
+const updateVisualChartProperties = (visual: IVisualMetadataSet, property: Property) => {
+  const fieldIndex = visual.properties.findIndex(item => item.order === property.order);
+  visual.properties[fieldIndex] = property;
   return Object.assign({}, visual);
 };
 
@@ -68,6 +75,7 @@ export const ACTION_TYPES = {
   VISUAL_METADATA_SET_CONDITION_EXPRESSION: 'visualmetadata/VISUAL_METADATA_SET_CONDITION_EXPRESSION',
   VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES',
+  VISUAL_METADATA_UPDATE_CHART_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_CHART_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD',
   ADD_PINNED_FILTERS_INTO_VISUAL_METADATA: 'visualmetadata/ADD_PINNED_FILTERS_INTO_VISUAL_METADATA',
   REMOVE_PINNED_FILTERS_INTO_VISUAL_METADATA: 'visualmetadata/REMOVE_PINNED_FILTERS_INTO_VISUAL_METADATA',
@@ -281,6 +289,11 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         ...state,
         entity: updateVisualFieldTitleProperties(state.entity, action.payload),
       };
+    case ACTION_TYPES.VISUAL_METADATA_UPDATE_CHART_PROPERTIES:
+      return {
+        ...state,
+        entity: updateVisualChartProperties(state.entity, action.payload),
+      };
     case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD:
       return {
         ...state,
@@ -491,4 +504,9 @@ export const applyAlternativeDimensionFilter = (dimension, visual, view, selecte
 export const setDraggedFeature = feature => ({
   type: ACTION_TYPES.SET_DRAGGED_FEATURE,
   payload: feature,
+});
+
+export const updateChartProperties = property => ({
+  type: ACTION_TYPES.VISUAL_METADATA_UPDATE_CHART_PROPERTIES,
+  payload: property,
 });
