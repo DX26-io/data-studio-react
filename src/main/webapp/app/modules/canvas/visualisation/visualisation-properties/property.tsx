@@ -6,14 +6,15 @@ import { parseBool, parseString } from 'app/shared/util/common-utils';
 import { Property } from 'app/shared/model/property.model';
 import Select from 'react-select';
 import { generateAlternativeDimensionsOptions, generateFeaturesOptions } from 'app/entities/feature/feature-util';
-import { updateChartProperties } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { updateProperties } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { connect } from 'react-redux';
 
 export interface IPropertiesProps extends DispatchProps {
   features: readonly IFeature[];
   visual: IVisualMetadataSet;
-  propStyle: string;
+  propertyType: string;
   property: Property;
+  fieldName?:string;
 }
 
 const Property = (props: IPropertiesProps) => {
@@ -22,7 +23,7 @@ const Property = (props: IPropertiesProps) => {
   const handleCheckbox = e => {
     props.property.value = !props.property.value;
     setProperty([props.property.value]);
-    props.updateChartProperties(props.property);
+    props.updateProperties(props.property,props.propertyType,props.fieldName);
   };
 
   const handleSelect = (value, possibleValues = null) => {
@@ -35,7 +36,7 @@ const Property = (props: IPropertiesProps) => {
       props.property.value = value;
     }
     setProperty([props.property.value]);
-    props.updateChartProperties(props.property);
+    props.updateProperties(props.property,props.propertyType,props.fieldName);
   };
 
   const handleMultiSelect = (value, actionMeta) => {
@@ -49,7 +50,7 @@ const Property = (props: IPropertiesProps) => {
     }
     props.property.value = JSON.stringify(values);
     setProperty([props.property.value]);
-    props.updateChartProperties(props.property);
+    props.updateProperties(props.property,props.propertyType,props.fieldName);
   };
   return (
     <>
@@ -133,7 +134,7 @@ working on it
 };
 
 const mapDispatchToProps = {
-  updateChartProperties
+  updateProperties
 };
 
 type DispatchProps = typeof mapDispatchToProps;

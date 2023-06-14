@@ -55,6 +55,14 @@ export const updateVisualField = (visual: IVisualMetadataSet, field) => {
   return Object.assign({}, visual);
 };
 
+const updateVisualDataProperties = (visual: IVisualMetadataSet, property: Property, fieldName: string) => {
+  const field = visual.fields.filter(field => field.feature.name === fieldName)[0];
+  const propertyIndex = field.properties.findIndex(item => item.order === property.order);
+  field.properties[propertyIndex] = property;
+  const updatedVisual = updateVisualField(visual, field);
+  return updatedVisual;
+};
+
 export const ACTION_TYPES = {
   FETCH_VISUALMETADATA_LIST: 'visualmetadata/FETCH_VISUALMETADATA_LIST',
   FETCH_VISUALMETADATA: 'visualmetadata/FETCH_VISUALMETADATA',
@@ -76,6 +84,7 @@ export const ACTION_TYPES = {
   VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES',
   VISUAL_METADATA_UPDATE_CHART_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_CHART_PROPERTIES',
+  VISUAL_METADATA_UPDATE_DATA_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_DATA_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD',
   ADD_PINNED_FILTERS_INTO_VISUAL_METADATA: 'visualmetadata/ADD_PINNED_FILTERS_INTO_VISUAL_METADATA',
   REMOVE_PINNED_FILTERS_INTO_VISUAL_METADATA: 'visualmetadata/REMOVE_PINNED_FILTERS_INTO_VISUAL_METADATA',
@@ -283,6 +292,11 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
       return {
         ...state,
         entity: updateVisualFieldBodyProperties(state.entity, action.payload),
+      };
+    case ACTION_TYPES.VISUAL_METADATA_UPDATE_DATA_PROPERTIES:
+      return {
+        ...state,
+        entity: updateVisualDataProperties(state.entity, action.payload.property, action.payload.fieldName),
       };
     case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES:
       return {
@@ -510,3 +524,16 @@ export const updateChartProperties = property => ({
   type: ACTION_TYPES.VISUAL_METADATA_UPDATE_CHART_PROPERTIES,
   payload: property,
 });
+
+export const updateDataProperties = (property, fieldName) => ({
+  type: ACTION_TYPES.VISUAL_METADATA_UPDATE_DATA_PROPERTIES,
+  payload: { property, fieldName },
+});
+
+export const updateProperties = (property, propertyType, fieldName?) => dispatch => {
+  if (propertyType === 'data') {
+    dispatch(updateDataProperties(property, fieldName));
+  } else {
+    dispatch(updateChartProperties(property));
+  }
+};

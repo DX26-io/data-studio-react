@@ -170,7 +170,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                   selectedField.properties
                     .sort((a, b) => (a.order > b.order ? 1 : -1))
                     .map((property, i) => (
-                      <Property key={uuid()} property={property} propStyle={'data'} visual={props.visual} features={props.features} />
+                      <Property key={uuid()} property={property} propertyType={'data'} visual={props.visual} features={props.features} fieldName={selectedField?.feature?.name} />
                     ))}
               </Form>
             </Content>
@@ -225,7 +225,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                   selectedField.properties
                     .sort((a, b) => (a.order > b.order ? 1 : -1))
                     .map((property, i) => (
-                      <Property key={uuid()} property={property} propStyle={'data'} visual={props.visual} features={props.features} />
+                      <Property key={uuid()} property={property} propertyType={'data'} visual={props.visual} features={props.features} fieldName={selectedField?.feature?.name} />
                     ))}
               </Form>
             </Content>
@@ -341,7 +341,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                   selectedField.properties
                     .sort((a, b) => (a.order > b.order ? 1 : -1))
                     .map((property, i) => (
-                      <Properties key={uuid()} property={property} propStyle={'data'} visual={props.visual} features={props.features} />
+                      <Properties key={uuid()} property={property} propertyType={'data'} visual={props.visual} features={props.features} />
                     ))}
               </Form>
             </Content>

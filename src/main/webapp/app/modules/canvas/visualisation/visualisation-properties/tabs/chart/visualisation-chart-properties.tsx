@@ -19,7 +19,7 @@ const VisualisationChartConfigProperties = (props: IVisualisationChartConfigProp
                 <Property
                   key={property.propertyType.id}
                   property={property}
-                  propStyle={'chart'}
+                  propertyType={'chart'}
                   visual={props.visual}
                   features={props.features}
                 />
