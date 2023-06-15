@@ -155,6 +155,7 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
                       height: '100%',
                       backgroundColor: props.visualMetadataEntity.bodyProperties.backgroundColor,
                       opacity: props.visualMetadataEntity.bodyProperties.opacity,
+                      border: props.visualMetadataEntity.bodyProperties.border,
                     }}
                     id={`visualisation-edit-${props.visualMetadataEntity.id}`}
                     className="visualisation"
