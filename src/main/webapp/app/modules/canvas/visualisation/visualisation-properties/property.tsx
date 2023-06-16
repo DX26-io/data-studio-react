@@ -39,6 +39,10 @@ const Property = (props: IPropertiesProps) => {
     props.updateProperties(props.property,props.propertyType,props.fieldName);
   };
 
+  const handleInput = () => {
+    props.updateProperties(props.property,props.propertyType,props.fieldName);
+  };
+
   const handleMultiSelect = (value, actionMeta) => {
     let values = props.property?.value ? JSON.parse(props.property?.value.toString()) : [];
     if (actionMeta.action === 'select-option') {
@@ -58,7 +62,9 @@ const Property = (props: IPropertiesProps) => {
         <TextField
           type="number"
           onChange={text => {
-            handleSelect(text);
+            props.property.value = text;
+            setProperty([props.property.value]);
+            setTimeout(handleInput, 1000);
           }}
           value={props.property.value.toString() || ''}
           label={props.property.propertyType.name}
@@ -89,7 +95,9 @@ const Property = (props: IPropertiesProps) => {
       {props.property.type === 'COLOR_PICKER' && (
         <><TextField
           onChange={text => {
-            handleSelect(text);
+            props.property.value = text;
+            setProperty([props.property.value]);
+            setTimeout(handleInput, 1000);
           }}
           value={parseString(props.property.value)}
           type="color"
@@ -108,7 +116,9 @@ working on it
       {props.property.type === 'TEXT' && props.property.propertyType.name !== 'Alternative Dimensions' && (
         <TextField
           onChange={text => {
-            handleSelect(text);
+            props.property.value = text;
+            setProperty([props.property.value]);
+            setTimeout(handleInput, 2000);
           }}
           value={parseString(props.property.value) || ''}
           label={props.property.propertyType.name}
