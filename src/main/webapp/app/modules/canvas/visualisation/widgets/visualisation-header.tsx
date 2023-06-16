@@ -247,10 +247,22 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
 
   return (
     <>
-      <View backgroundColor="gray-200">
+      <div
+        style={{
+          borderBottom: props.visual?.titleProperties?.borderBottom,
+          backgroundColor: props.visual?.titleProperties?.backgroundColor
+            ? props.visual?.titleProperties?.backgroundColor
+            : `var(
+            --spectrum-alias-background-color-gray-200,
+            var(--spectrum-global-color-gray-200, var(--spectrum-semantic-gray-200-color-background))
+          )`,
+        }}
+      >
         <Flex direction="row" justifyContent="space-between" alignContent="center">
           <Flex direction="column" alignItems="center" justifyContent="space-around">
-            <span className={'chart-title'}>{props.visual?.titleProperties?.titleText}</span>
+            <span className={'chart-title'} style={{ color: props.visual?.titleProperties?.color }}>
+              {props.visual?.titleProperties?.titleText}
+            </span>
             {props.visual?.data?.length > 0 && (
               <CSVLink
                 data={transactionData}
@@ -308,7 +320,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
             )}
           </Flex>
         </Flex>
-      </View>
+      </div>
     </>
   );
 };
