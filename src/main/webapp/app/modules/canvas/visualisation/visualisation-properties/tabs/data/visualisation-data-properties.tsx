@@ -1,7 +1,7 @@
 import React, { useEffect, useState, ReactText } from 'react';
 import { ActionButton, Flex, Form, View, Content, Item, Button, TextField, Heading, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
 import uuid from 'react-uuid';
-import Properties from 'app/modules/canvas/visualisation/visualisation-properties/partials/properties/property';
+import Property from 'app/modules/canvas/visualisation/visualisation-properties/property';
 import { VisualWrap } from 'app/modules/canvas/visualisation/util/visualmetadata-wrapper';
 import LockClosed from '@spectrum-icons/workflow/LockClosed';
 import Delete from '@spectrum-icons/workflow/Delete';
@@ -97,10 +97,10 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
       >
         <TabList>
           <Item key="DIMENSION">
-            <Translate contentKey="views.editConfiguration.properties.dataProperties.dimensions"></Translate>
+            <Translate contentKey="datastudioApp.visualmetadata.editConfiguration.properties.dataProperties.dimensions"></Translate>
           </Item>
           <Item key="MEASURE">
-            <Translate contentKey="views.editConfiguration.properties.dataProperties.measures"></Translate>
+            <Translate contentKey="datastudioApp.visualmetadata.editConfiguration.properties.dataProperties.measures"></Translate>
           </Item>
         </TabList>
         <TabPanels>
@@ -130,7 +130,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                   {selectedField && (
                     <>
                       <span className="spectrum-Body-emphasis--sizeXXS">
-                        {translate('views.editConfiguration.properties.dataProperties.dimensions')}
+                        {translate('datastudioApp.visualmetadata.editConfiguration.properties.dataProperties.dimensions')}
                       </span>
                       <Select
                         onChange={selected => {
@@ -170,7 +170,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                   selectedField.properties
                     .sort((a, b) => (a.order > b.order ? 1 : -1))
                     .map((property, i) => (
-                      <Properties key={uuid()} property={property} propstyle={'data'} visual={props.visual} features={props.features} />
+                      <Property key={uuid()} property={property} propertyType={'data'} visual={props.visual} features={props.features} fieldName={selectedField?.feature?.name} />
                     ))}
               </Form>
             </Content>
@@ -201,7 +201,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                   {selectedField && (
                     <>
                       <span className="spectrum-Body-emphasis--sizeXXS">
-                        {translate('views.editConfiguration.properties.dataProperties.measures')}
+                        {translate('datastudioApp.visualmetadata.editConfiguration.properties.dataProperties.measures')}
                       </span>
                       <Select
                         onChange={selected => {
@@ -225,7 +225,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                   selectedField.properties
                     .sort((a, b) => (a.order > b.order ? 1 : -1))
                     .map((property, i) => (
-                      <Properties key={uuid()} property={property} propstyle={'data'} visual={props.visual} features={props.features} />
+                      <Property key={uuid()} property={property} propertyType={'data'} visual={props.visual} features={props.features} fieldName={selectedField?.feature?.name} />
                     ))}
               </Form>
             </Content>
@@ -258,7 +258,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                     {selectedField && (
                       <>
                         <span className="spectrum-Body-emphasis--sizeXXS">
-                          {translate('views.editConfiguration.properties.dataProperties.dimensions')}
+                          {translate('datastudioApp.visualmetadata.editConfiguration.properties.dataProperties.dimensions')}
                         </span>
                         <Select
                           onChange={selected => {
@@ -316,7 +316,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                     {selectedField && (
                       <>
                         <span className="spectrum-Body-emphasis--sizeXXS">
-                          {translate('views.editConfiguration.properties.dataProperties.measures')}
+                          {translate('datastudioApp.visualmetadata.editConfiguration.properties.dataProperties.measures')}
                         </span>
                         <Select
                           onChange={selected => {
@@ -341,7 +341,7 @@ const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) =
                   selectedField.properties
                     .sort((a, b) => (a.order > b.order ? 1 : -1))
                     .map((property, i) => (
-                      <Properties key={uuid()} property={property} propstyle={'data'} visual={props.visual} features={props.features} />
+                      <Properties key={uuid()} property={property} propertyType={'data'} visual={props.visual} features={props.features} />
                     ))}
               </Form>
             </Content>

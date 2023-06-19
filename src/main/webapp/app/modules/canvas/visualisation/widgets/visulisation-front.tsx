@@ -13,7 +13,7 @@ interface IVisualisationFrontProps extends StateProps, DispatchProps {
   v: IVisualMetadataSet;
   i: number;
   handleFlipClick: (isFlipped) => void;
-  isFlipped:boolean
+  isFlipped: boolean;
 }
 const VisualisationFront = (props: IVisualisationFrontProps) => {
   const handlevisualisationClick = v => {
@@ -37,7 +37,11 @@ const VisualisationFront = (props: IVisualisationFrontProps) => {
         ></VisualisationHeader>
       </div>
       <div
-        style={{ backgroundColor: props.v.bodyProperties.backgroundColor, opacity: props.v.bodyProperties.opacity }}
+        style={{
+          backgroundColor: props.v.bodyProperties.backgroundColor,
+          opacity: props.v.bodyProperties.opacity,
+          border: props.v.bodyProperties.border,
+        }}
         className="visualBody"
         id={`visualBody-${props.v.id}`}
       >

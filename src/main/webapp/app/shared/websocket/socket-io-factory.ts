@@ -8,7 +8,7 @@ import { IRootState } from '../reducers';
 
 export const useSocket = () => {
   const dispatch = useDispatch();
-  const [socket, setSocket] = useState({ connected: false, disconnected: true, emit: null });
+  const [socket, setSocket] = useState({ connected: false, disconnected: true, emit: null, connect: null });
   const [isConnected, setConnected] = useState(false);
   const account = useSelector((storeState: IRootState) => storeState.authentication.account);
   const sendEvent = useCallback(
@@ -23,7 +23,7 @@ export const useSocket = () => {
   );
   useEffect(() => {
     const s = io(`${NETTY_SOCKET_IO_URL}/query`, {
-      reconnection: false,
+      reconnection: true,
       transports: ['websocket'],
       path: '/dx26io-ws',
       query: {
