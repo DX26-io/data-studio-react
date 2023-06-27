@@ -1,7 +1,7 @@
 import React, { ReactText, useState } from 'react';
 import { Content, Item, View, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
-import VisualisationChartProperties from 'app/modules/canvas/visualisation/visualisation-properties/partials/visualisation-chart-properties';
-import VisualisationDataProperties from 'app/modules/canvas/visualisation/visualisation-properties/partials/visualisation-data-properties';
+import VisualisationChartProperties from 'app/modules/canvas/visualisation/visualisation-properties/tabs/chart/visualisation-chart-properties-tabs';
+import VisualisationDataProperties from 'app/modules/canvas/visualisation/visualisation-properties/tabs/data/visualisation-data-properties';
 import { Translate } from 'react-jhipster';
 
 const VisualisationProperties = () => {
@@ -19,12 +19,12 @@ const VisualisationProperties = () => {
         <TabList>
           <Item key="chartProperties">
             <Content margin="size-100">
-              <Translate contentKey="views.editConfiguration.properties.chartProperties.titleProperties"></Translate>
+              <Translate contentKey="datastudioApp.visualmetadata.editConfiguration.properties.chartProperties.title"></Translate>
             </Content>
           </Item>
           <Item key="dataProperties">
             <Content margin="size-100">
-              <Translate contentKey="views.editConfiguration.properties.chartProperties.bodyProperties"></Translate>
+              <Translate contentKey="datastudioApp.visualmetadata.editConfiguration.properties.dataProperties.title"></Translate>
             </Content>
           </Item>
         </TabList>

@@ -19,6 +19,7 @@ import { getVisualisationData, ValidateFields } from 'app/modules/canvas/visuali
 import { ICrudPutActionVisual } from './visualmetadata-util';
 import { DIMENSION } from 'app/shared/util/visualisation.constants';
 import { any } from 'prop-types';
+import { Property } from 'app/shared/model/property.model';
 
 const addVisualField = (visual: IVisualMetadataSet, field) => {
   visual.fields.push(field);
@@ -42,10 +43,24 @@ const updateVisualFieldTitleProperties = (visual: IVisualMetadataSet, titlePrope
   return Object.assign({}, visual);
 };
 
+const updateVisualChartProperties = (visual: IVisualMetadataSet, property: Property) => {
+  const fieldIndex = visual.properties.findIndex(item => item.order === property.order);
+  visual.properties[fieldIndex] = property;
+  return Object.assign({}, visual);
+};
+
 export const updateVisualField = (visual: IVisualMetadataSet, field) => {
   const fieldIndex = visual.fields.findIndex(item => item.fieldType.id === field.fieldType.id);
   visual.fields[fieldIndex] = field;
   return Object.assign({}, visual);
+};
+
+const updateVisualDataProperties = (visual: IVisualMetadataSet, property: Property, fieldName: string) => {
+  const field = visual.fields.filter(field => field.feature.name === fieldName)[0];
+  const propertyIndex = field.properties.findIndex(item => item.order === property.order);
+  field.properties[propertyIndex] = property;
+  const updatedVisual = updateVisualField(visual, field);
+  return updatedVisual;
 };
 
 export const ACTION_TYPES = {
@@ -68,6 +83,8 @@ export const ACTION_TYPES = {
   VISUAL_METADATA_SET_CONDITION_EXPRESSION: 'visualmetadata/VISUAL_METADATA_SET_CONDITION_EXPRESSION',
   VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES',
+  VISUAL_METADATA_UPDATE_CHART_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_CHART_PROPERTIES',
+  VISUAL_METADATA_UPDATE_DATA_PROPERTIES: 'visualmetadata/VISUAL_METADATA_UPDATE_DATA_PROPERTIES',
   VISUAL_METADATA_UPDATE_FIELD: 'visualmetadata/VISUAL_METADATA_UPDATE_FIELD',
   ADD_PINNED_FILTERS_INTO_VISUAL_METADATA: 'visualmetadata/ADD_PINNED_FILTERS_INTO_VISUAL_METADATA',
   REMOVE_PINNED_FILTERS_INTO_VISUAL_METADATA: 'visualmetadata/REMOVE_PINNED_FILTERS_INTO_VISUAL_METADATA',
@@ -90,7 +107,6 @@ const initialState = {
   filterData: {},
   selectedFilter: {},
   isEditMode: false,
-  visual: {} as IVisualMetadataSet,
   editAction: '',
   visualMetadataContainerList: [],
   tableActivePage: 0,
@@ -260,12 +276,12 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
     case ACTION_TYPES.VISUAL_METADATA_ADD_FIELD:
       return {
         ...state,
-        visual: action.payload,
+        entity: action.payload,
       };
     case ACTION_TYPES.VISUAL_METADATA_DELETE_FIELD:
       return {
         ...state,
-        visual: action.payload,
+        entity: action.payload,
       };
     case ACTION_TYPES.VISUAL_METADATA_SET_CONDITION_EXPRESSION:
       return {
@@ -275,17 +291,27 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
     case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_BODY_PROPERTIES:
       return {
         ...state,
-        visual: updateVisualFieldBodyProperties(state.entity, action.payload),
+        entity: updateVisualFieldBodyProperties(state.entity, action.payload),
+      };
+    case ACTION_TYPES.VISUAL_METADATA_UPDATE_DATA_PROPERTIES:
+      return {
+        ...state,
+        entity: updateVisualDataProperties(state.entity, action.payload.property, action.payload.fieldName),
       };
     case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD_TITLE_PROPERTIES:
       return {
         ...state,
-        visual: updateVisualFieldTitleProperties(state.entity, action.payload),
+        entity: updateVisualFieldTitleProperties(state.entity, action.payload),
+      };
+    case ACTION_TYPES.VISUAL_METADATA_UPDATE_CHART_PROPERTIES:
+      return {
+        ...state,
+        entity: updateVisualChartProperties(state.entity, action.payload),
       };
     case ACTION_TYPES.VISUAL_METADATA_UPDATE_FIELD:
       return {
         ...state,
-        visual: action.payload,
+        entity: action.payload,
       };
     case ACTION_TYPES.UPDATE_TABLE_PAGENO:
       return {
@@ -493,3 +519,21 @@ export const setDraggedFeature = feature => ({
   type: ACTION_TYPES.SET_DRAGGED_FEATURE,
   payload: feature,
 });
+
+export const updateChartProperties = property => ({
+  type: ACTION_TYPES.VISUAL_METADATA_UPDATE_CHART_PROPERTIES,
+  payload: property,
+});
+
+export const updateDataProperties = (property, fieldName) => ({
+  type: ACTION_TYPES.VISUAL_METADATA_UPDATE_DATA_PROPERTIES,
+  payload: { property, fieldName },
+});
+
+export const updateProperties = (property, propertyType, fieldName?) => dispatch => {
+  if (propertyType === 'data') {
+    dispatch(updateDataProperties(property, fieldName));
+  } else {
+    dispatch(updateChartProperties(property));
+  }
+};

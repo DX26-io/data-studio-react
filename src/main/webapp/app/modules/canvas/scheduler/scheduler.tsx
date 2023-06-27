@@ -168,18 +168,18 @@ const Scheduler = (props: ISchedulerProps) => {
       <Heading>
         <Flex alignItems="center" gap="size-100" data-testid="scheduler-form-heading">
           {(!props.errorMessage?.isValid || props.scheduleReportresponse?.message) && (
-            <React.Fragment>
-              <Alert color="informative" />
-              <Text>
-                <span className="spectrum-Body-emphasis">
-                  {props.errorMessage?.isValid ? (
-                    props.scheduleReportresponse?.message
-                  ) : (
+            <Flex direction="row" gap="size-50">
+              <Alert size="M" />
+              <div className="spectrum-HelpText-text" style={{ fontSize: '15px', fontWeight: '200' }}>
+                {props.errorMessage?.isValid ? (
+                  <span style={{ verticalAlign: '-5px' }}>{props.scheduleReportresponse?.message}</span>
+                ) : (
+                  <span style={{ verticalAlign: '-5px' }}>
                     <Translate contentKey={props.errorMessage?.translationKey}></Translate>
-                  )}
-                </span>
-              </Text>
-            </React.Fragment>
+                  </span>
+                )}
+              </div>
+            </Flex>
           )}
         </Flex>
       </Heading>
@@ -330,6 +330,7 @@ const Scheduler = (props: ISchedulerProps) => {
               props.setErrorMessage(errorObj);
             }}
           />
+          <br />
           <DatePicker
             label={translate('reportsManagement.reports.form.endDate')}
             value={stringToDate(props.schedulerReport?.schedule?.endDate || '')}
