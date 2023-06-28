@@ -8,7 +8,7 @@ RUN mkdir -p /data-studio/node_modules/.staging && apk add git
 
 WORKDIR /data-studio/
 
-COPY package*.json .eslintignore .eslintrc.json tsconfig.json tsconfig.e2e.json ./
+COPY package.json .eslintignore .eslintrc.json tsconfig.json tsconfig.e2e.json ./
 
 RUN npm install
 
@@ -31,7 +31,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /data-studio/build/resources/main/static /usr/share/nginx/html
 
-ADD VERSION .
+# ADD VERSION .
 
 VOLUME ["/usr/share/nginx/html","/etc/nginx"]
 
