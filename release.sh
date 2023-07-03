@@ -11,7 +11,7 @@ sudo docker run --rm -v "$PWD":/app treeder/bump patch
 version=`cat VERSION`
 echo "version: $version"
 # run build
-sudo docker build -t $PLATFORM/$PROJECT:"v$version" .
+sudo docker build -t $PLATFORM/$PROJECT:latest -t $PLATFORM/$PROJECT:"v$version" .
 # tag it
 git add VERSION
 git commit -m "version v$version"
