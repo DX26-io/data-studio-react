@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { getEntity as getViewEntity, getCurrentViewState, saveViewState } from 'app/entities/views/views.reducer';
+import { getEntity as getViewEntity, getCurrentViewState } from 'app/entities/views/views.reducer';
 import { getEntities as getVisualisationsEntities } from 'app/entities/visualisations/visualisations.reducer';
 import { IRootState } from 'app/shared/reducers';
 import {
@@ -335,9 +335,7 @@ const mapDispatchToProps = {
   getViewEntity,
   getCurrentViewState,
   getVisualisationsEntities,
-
   deleteVisualmetadataEntity,
-  saveViewState,
   getVisualmetadataEntity,
   updateVisualmetadataEntity,
   metadataContainerAdd,

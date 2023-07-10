@@ -70,7 +70,7 @@ const CanvasHeader = props => {
       title: translate('canvas.menu.save'),
       onPress: props.saveViewState,
       data: {
-        visualMetadataSet: props.visualmetadata.visualMetadataSet,
+        visualMetadataSet: props.visualMetadataContainerList,
         _id: props.view.id,
         viewFeatureCriterias : getViewFeatureCriteria(props.selectedFilter,props.features,props.view.id,props.dynamicDateRangeMetaData),
       },
@@ -210,6 +210,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   isAuthenticated: storeState.authentication.isAuthenticated,
   visualmetadata: storeState.views.viewState,
   visualisationsList: storeState.visualisations.entities,
+  visualMetadataContainerList: storeState.visualmetadata.visualMetadataContainerList,
   visualmetadataEntity: storeState.visualmetadata.entity,
   isEditMode: storeState.visualmetadata.isEditMode,
   bookmarkSelectOptions: generateBookmarksOptions(storeState.bookmarks.bookmarks),

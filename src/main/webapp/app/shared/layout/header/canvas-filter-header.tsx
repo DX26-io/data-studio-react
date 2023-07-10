@@ -4,7 +4,6 @@ import { View, Flex, Text } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import { createEntity as addVisualmetadataEntity, toggleEditMode } from 'app/entities/visualmetadata/visualmetadata.reducer';
-import { saveViewState } from 'app/entities/views/views.reducer';
 import 'bootstrap/dist/css/bootstrap.css';
 import {
   applyFilter,
@@ -106,7 +105,6 @@ const mapDispatchToProps = {
   addVisualmetadataEntity,
   toggleEditMode,
   toggleFilterPanel,
-  saveViewState,
   saveSelectedFilter,
   applyFilter,
   addAppliedFilters,
