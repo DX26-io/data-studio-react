@@ -211,10 +211,10 @@ const apiUrl = 'api/views';
 
 // Actions
 
-export const saveViewFeatureCriteria = (features, viewId) => {
+export const saveViewFeatureCriteria = viewFeatureCriterias => {
   return {
     type: ACTION_TYPES.SAVE_VIEW_FEATURE_CRITERIA,
-    payload: axios.post(`api/view-feature-criteria?cacheBuster=${new Date().getTime()}`, { features, viewId }),
+    payload: axios.post(`api/view-feature-criteria?cacheBuster=${new Date().getTime()}`, viewFeatureCriterias),
   };
 };
 
@@ -241,7 +241,7 @@ export const saveViewState: ICrudPutAction<IViewStateDTO> = entity => async disp
       successMessage: translate('canvas.saveMessage'),
     },
   });
-  dispatch(saveViewFeatureCriteria(entity.viewFeatureCriterias, entity._id));
+  if (entity.viewFeatureCriterias.features.length !== 0) dispatch(saveViewFeatureCriteria(entity.viewFeatureCriterias));
   return result;
 };
 
