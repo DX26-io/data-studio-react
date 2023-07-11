@@ -461,12 +461,17 @@ export const generateFilterOptions = (data = []) => {
 export const generateOptionsForDateRange = (config: any, dates: Array<string>) => {
   const options = [];
   if (config && (config.tab === '2' || config.dateRangeTab === 2)) {
-    let displayValue = config.currentDynamicDateRangeConfig.title;
-    if (config.currentDynamicDateRangeConfig.isCustom) {
-      displayValue = config.currentDynamicDateRangeConfig.title.replace('X', config.customDynamicDateRange);
+    let displayValue = '';
+    if (config?.currentDynamicDateRangeConfig?.title) {
+      displayValue = config.currentDynamicDateRangeConfig.title;
+      if (config?.currentDynamicDateRangeConfig?.isCustom) {
+        displayValue = config.currentDynamicDateRangeConfig.title.replace('X', config.customDynamicDateRange);
+      }
+      options.push({ value: config.currentDynamicDateRangeConfig.title, label: displayValue });
+      return options;
+    } else {
+      return;
     }
-    options.push({ value: config.currentDynamicDateRangeConfig.title, label: displayValue });
-    return options;
   } else if (config?.startDateFormatted && config?.endDateFormatted) {
     const date = changeDateFormat(config?.startDateFormatted) + ' ' + changeDateFormat(config?.endDateFormatted);
     options.push({ value: date, label: date });
