@@ -6,10 +6,9 @@ import './canvas.scss';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import 'flair-visualizations/styles/stylesheets/screen.css';
-import { getEntity as getViewEntity, getCurrentViewState } from 'app/entities/views/views.reducer';
+import { getEntity as getViewEntity, getCurrentViewState, resetViewState } from 'app/entities/views/views.reducer';
 import { getEntities as getVisualisationsEntities } from 'app/entities/visualisations/visualisations.reducer';
 import { IRootState } from 'app/shared/reducers';
-import { reset } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import { getEntity as getVisualmetadataEntity, metadataContainerAdd } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import Loader from 'app/shared/components/card/loader/loader';
 import FilterPanel from 'app/modules/canvas/filter/filter-panel';
@@ -20,7 +19,7 @@ import { getFeatureCriteria, reset as resetFeatureCriteria } from 'app/entities/
 import { getAppliedBookmark, reset as resetBookmark } from 'app/entities/bookmarks/bookmark.reducer';
 import { reset as resetFilters } from 'app/modules/canvas/filter/filter.reducer';
 import { getViewFeaturesEntities } from 'app/entities/feature/feature.reducer';
-import { setVisualisationAction } from 'app/entities/visualmetadata/visualmetadata.reducer';
+import { setVisualisationAction, reset as resetVisualMetadataContainerList } from 'app/entities/visualmetadata/visualmetadata.reducer';
 import VisualisationEditModalPopUp from './visualisation-modal/visualisation-edit-modal/visualisation-edit-modal-popup';
 import VisualisationDataModal from './visualisation-modal/visualisation-data-modal/visualisations-data-modal';
 import VisualisationShareModal from './visualisation-modal/visualisation-share-modal/visualisation-share-modal';
@@ -43,11 +42,12 @@ const Canvas = (props: ICanvasProps) => {
       props.getDefaultVisualisationColors();
     }
     return () => {
-      props.reset();
+      props.resetVisualMetadataContainerList();
       props.resetVisualisationData();
       props.resetFeatureCriteria();
       props.resetBookmark();
       props.resetFilters();
+      props.resetViewState();
     };
   }, []);
 
@@ -94,13 +94,14 @@ const mapDispatchToProps = {
   getAppliedBookmark,
   toggleLoader,
   getViewFeaturesEntities,
-  reset,
+  resetVisualMetadataContainerList,
   setVisualisationAction,
   resetVisualisationData,
   resetFeatureCriteria,
   resetBookmark,
   resetFilters,
   getDefaultVisualisationColors,
+  resetViewState
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
