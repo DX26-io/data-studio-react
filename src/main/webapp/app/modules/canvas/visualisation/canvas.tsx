@@ -6,7 +6,7 @@ import './canvas.scss';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import 'flair-visualizations/styles/stylesheets/screen.css';
-import { getEntity as getViewEntity, getCurrentViewState } from 'app/entities/views/views.reducer';
+import { getEntity as getViewEntity, getCurrentViewState, resetViewState } from 'app/entities/views/views.reducer';
 import { getEntities as getVisualisationsEntities } from 'app/entities/visualisations/visualisations.reducer';
 import { IRootState } from 'app/shared/reducers';
 import { getEntity as getVisualmetadataEntity, metadataContainerAdd } from 'app/entities/visualmetadata/visualmetadata.reducer';
@@ -47,6 +47,7 @@ const Canvas = (props: ICanvasProps) => {
       props.resetFeatureCriteria();
       props.resetBookmark();
       props.resetFilters();
+      props.resetViewState();
     };
   }, []);
 
@@ -100,6 +101,7 @@ const mapDispatchToProps = {
   resetBookmark,
   resetFilters,
   getDefaultVisualisationColors,
+  resetViewState
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
