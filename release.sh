@@ -1,3 +1,4 @@
+# do not use this script to release
 set -ex
 # SET THE FOLLOWING VARIABLES
 # sudo docker hub username
