@@ -59,7 +59,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
   const broadcast: IBroadcast = {
     selectedFilters: props.selectedFilters,
     applyFilter: props.applyFilter,
-    visualmetadata: props.visualmetadata,
+    visualmetadata: props.viewState,
     view: props.view,
     saveSelectedFilter: props.saveSelectedFilter,
     alternateDimension: props.alternateDimension,
@@ -74,7 +74,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
 
   const onLayoutChange = _visualmetaList => {
     _visualmetaList.map((item, i) => {
-      const v = visualMetadataContainerGetOne(item.i);
+      const v = visualMetadataContainerGetOne(props.visualMetadataContainerList, item.i);
       if (v) {
         v.x = item.x;
         v.y = item.y;
@@ -84,7 +84,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
         v.yPosition = item.y;
         v.height = item.h;
         v.width = item.w;
-        props.metadataContainerUpdate(v.id, v, 'id');
+        props.metadataContainerUpdate(props.visualMetadataContainerList, v.id, v, 'id');
       }
     });
     if (props.pinnedFeatures && props.pinnedFeatures.length > 0) {
@@ -93,13 +93,13 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
   };
 
   const onResizeStop = (layout, oldItem, newItem, placeholder, e, element) => {
-    const v = visualMetadataContainerGetOne(oldItem.i);
+    const v = visualMetadataContainerGetOne(props.visualMetadataContainerList, oldItem.i);
     if (v && v.data?.length > 0) {
       v.h = newItem.h;
       v.height = newItem.h;
       v.w = newItem.w;
       v.width = newItem.w;
-      props.metadataContainerUpdate(v.id, v, 'id');
+      props.metadataContainerUpdate(props.visualMetadataContainerList,v.id, v, 'id');
       renderVisualisation(v, v.data, 'widget', broadcast);
     }
   };
@@ -124,7 +124,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
   };
 
   const loadvisualisation = () => {
-    props.visualmetadata.visualMetadataSet.map((item, i) => {
+    props.viewState.visualMetadataSet.map((item, i) => {
       renderVisualisationById(item);
     });
   };
@@ -149,7 +149,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
 
   useEffect(() => {
     if (props.visualData.data.length > 0) {
-      const v = visualMetadataContainerGetOne(props.visualData.queryId);
+      const v = visualMetadataContainerGetOne(props.visualMetadataContainerList, props.visualData.queryId);
       if (v && props.visualData?.data?.length > 0) {
         v.data = props.visualData?.data;
         props.toggleLoader(false);
@@ -168,8 +168,8 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
   }, [props.visualData]);
 
   useEffect(() => {
-    if (props.visualmetadata?.visualMetadataSet?.length > 0) {
-      props.visualmetadata?.visualMetadataSet.map(item => {
+    if (props.viewState?.visualMetadataSet?.length > 0) {
+      props.viewState?.visualMetadataSet.map(item => {
         const loader = {
           visualisationId: item.id,
           loaderVisibility: true,
@@ -180,7 +180,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
         setIsLoaderDisplay([...visList]);
       });
 
-      props.visualmetadata.visualMetadataSet.map(item => {
+      props.viewState.visualMetadataSet.map(item => {
         (item.x = item.xPosition), (item.y = item.yPosition), (item.h = item.height), (item.w = item.width);
       });
       if (props.params.get('bookmarkId')) {
@@ -201,17 +201,17 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
         );
       }
     }
-  }, [props.visualmetadata]);
+  }, [props.viewState]);
 
   useEffect(() => {
-    if (isConnected && props.visualmetadata?.visualMetadataSet?.length > 0 && props.view?.id) {
+    if (isConnected && props.viewState?.visualMetadataSet?.length > 0 && props.view?.id) {
       props.dispatchSendEvent(sendEvent);
-      props.metadataContainerAdd(props.visualmetadata?.visualMetadataSet);
+      props.metadataContainerAdd(props.visualMetadataContainerList, props.viewState?.visualMetadataSet);
       loadvisualisation();
     } else {
       props.toggleLoader(false);
     }
-  }, [isConnected, props.visualmetadata, props.view]);
+  }, [isConnected, props.viewState, props.view]);
 
   useEffect(() => {
     if (props.updateSuccess) {
@@ -310,7 +310,7 @@ const mapStateToProps = (storeState: IRootState) => ({
   view: storeState.views.entity,
   account: storeState.authentication.account,
   isAuthenticated: storeState.authentication.isAuthenticated,
-  visualmetadata: storeState.views.viewState,
+  viewState: storeState.views.viewState,
   isCreated: storeState.visualmetadata.newCreated,
   updateSuccess: storeState.visualmetadata.updateSuccess,
   deleteSuccess: storeState.visualmetadata.deleteSuccess,

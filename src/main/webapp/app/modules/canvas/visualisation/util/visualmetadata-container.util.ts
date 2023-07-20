@@ -1,14 +1,12 @@
-let visualMetadataContainerList = [];
-
 export const pinnedFiltersKey = 'pinned-filters-div';
 
-export const visualMetadataContainerGetOne = (id: string) => {
+export const visualMetadataContainerGetOne = (visualMetadataContainerList: any, id: string) => {
   return visualMetadataContainerList.filter(function (item) {
     return item.id === id;
   })[0];
 };
 
-export const visualMetadataContainerAdd = (widget: any) => {
+export const visualMetadataContainerAdd = (visualMetadataContainerList: any, widget: any) => {
   if (widget.constructor === Array) {
     visualMetadataContainerList = [];
     const widgetCont = widget.map(function (item) {
@@ -24,7 +22,7 @@ export const visualMetadataContainerAdd = (widget: any) => {
   return visualMetadataContainerList;
 };
 
-export const visualMetadataContainerRemove = (widget: string) => {
+export const visualMetadataContainerRemove = (visualMetadataContainerList: any, widget: string) => {
   const index = visualMetadataContainerList.findIndex(x => x.id === widget);
   if (index > -1) {
     visualMetadataContainerList.splice(index, 1);
@@ -64,7 +62,7 @@ const addConfigs = (widgetNew: any, widgetOld: any) => {
   });
 };
 
-export const visualMetadataContainerUpdate = (id: string, widget: any, key: string) => {
+export const visualMetadataContainerUpdate = (visualMetadataContainerList: any, id: string, widget: any, key: string) => {
   let index = -1;
   visualMetadataContainerList.some(function (item, i) {
     return item[key] === id ? (index = i) : false;

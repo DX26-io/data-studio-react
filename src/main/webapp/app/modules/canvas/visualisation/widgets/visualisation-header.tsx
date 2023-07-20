@@ -225,7 +225,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
       viewId: props.view.id,
       visualMetadata: props.visual,
     });
-    props.metadataContainerUpdate(props.visual.id, props.visual, 'id');
+    props.metadataContainerUpdate(props.visualMetadataContainerList, props.visual.id, props.visual, 'id');
     handleFlipClick(!props.isFlipped);
   };
 
@@ -327,6 +327,7 @@ const VisualisationHeader: FC<IVisualisationHeaderProps> = props => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   editAction: storeState.visualmetadata.editAction,
+  visualMetadataContainerList: storeState.visualmetadata.visualMetadataContainerList,
   featuresList: storeState.feature.entities,
   selectedFilters: storeState.filter.selectedFilters,
   view: storeState.views.entity,
