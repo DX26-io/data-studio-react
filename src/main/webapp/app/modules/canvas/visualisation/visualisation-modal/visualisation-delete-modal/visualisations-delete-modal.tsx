@@ -24,7 +24,7 @@ const VisualisationsDeleteModal = (props: IVisualisationsDeleteModalProps) => {
 
   const confirmDelete = () => {
     props.deleteVisualmetadataEntity(props.visualMetadataEntity.id);
-    props.metadataContainerRemove(props.visualMetadataEntity.id);
+    props.metadataContainerRemove(props.visualMetadataContainerList ,props.visualMetadataEntity.id);
     props.setVisualisationAction(null);
   };
 
@@ -66,6 +66,7 @@ const VisualisationsDeleteModal = (props: IVisualisationsDeleteModalProps) => {
 
 const mapStateToProps = (storeState: IRootState) => ({
   visualMetadataEntity: storeState.visualmetadata.entity,
+  visualMetadataContainerList: storeState.visualmetadata.visualMetadataContainerList,
   deleteSuccess: storeState.visualmetadata.deleteSuccess,
 });
 

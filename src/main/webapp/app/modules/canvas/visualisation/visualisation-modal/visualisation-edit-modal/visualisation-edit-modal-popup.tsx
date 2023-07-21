@@ -71,7 +71,7 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
       viewId: props.view.id,
       visualMetadata: props.visualMetadataEntity,
     });
-    props.metadataContainerUpdate(props.visualMetadataEntity.id, props.visualMetadataEntity, 'id');
+    props.metadataContainerUpdate(props.visualMetadataContainerList, props.visualMetadataEntity.id, props.visualMetadataEntity, 'id');
     handleClose('save');
   };
 
@@ -182,6 +182,7 @@ export const VisualisationEditModalPopUp = (props: IVisualisationEditModalPopUpP
 
 const mapStateToProps = (storeState: IRootState) => ({
   visualMetadataEntity: storeState.visualmetadata.entity,
+  visualMetadataContainerList: storeState.visualmetadata.visualMetadataContainerList,
   featuresList: storeState.feature.entities,
   view: storeState.views.entity,
   visualDataById: storeState.visualisationData.visualDataById,

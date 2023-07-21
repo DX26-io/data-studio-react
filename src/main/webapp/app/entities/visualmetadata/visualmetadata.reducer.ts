@@ -220,7 +220,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         newCreated: true,
         errorMessage: action.payload,
         entity: action.payload.data,
-        visualMetadataContainerList: visualMetadataContainerAdd(action.payload.data),
+        visualMetadataContainerList: visualMetadataContainerAdd(state.visualMetadataContainerList, action.payload.data),
       };
     case SUCCESS(ACTION_TYPES.UPDATE_VISUALMETADATA):
       return {
@@ -228,7 +228,12 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         updating: false,
         updateSuccess: true,
         entity: action.payload.data,
-        visualMetadataContainerList: visualMetadataContainerUpdate(action.payload.data.id, action.payload.data, 'id'),
+        visualMetadataContainerList: visualMetadataContainerUpdate(
+          state.visualMetadataContainerList,
+          action.payload.data.id,
+          action.payload.data,
+          'id'
+        ),
       };
     case SUCCESS(ACTION_TYPES.DELETE_VISUALMETADATA):
       return {
@@ -236,7 +241,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
         updating: false,
         deleteSuccess: true,
         newCreated: false,
-        visualMetadataContainerList: visualMetadataContainerRemove(state.entity.id),
+        visualMetadataContainerList: visualMetadataContainerRemove(state.visualMetadataContainerList, state.entity.id),
       };
     case SUCCESS(ACTION_TYPES.VALIDATE_QUERY):
       return {
@@ -345,6 +350,7 @@ export default (state: VisualmetadataState = initialState, action): Visualmetada
     case ACTION_TYPES.RESET:
       return {
         ...initialState,
+        visualMetadataContainerList: [],
       };
     default:
       return state;
@@ -425,14 +431,14 @@ export const reset = () => ({
   type: ACTION_TYPES.RESET,
 });
 
-export const metadataContainerAdd = (widget: any) => ({
+export const metadataContainerAdd = (visualMetadataContainerList: any, widget: any) => ({
   type: ACTION_TYPES.VISUAL_METADATA_CONTAINER_ADD,
-  payload: visualMetadataContainerAdd(widget),
+  payload: visualMetadataContainerAdd(visualMetadataContainerList, widget),
 });
 
-export const metadataContainerRemove = (id: string) => ({
+export const metadataContainerRemove = (visualMetadataContainerList: any, id: string) => ({
   type: ACTION_TYPES.VISUAL_METADATA_CONTAINER_REMOVE,
-  payload: visualMetadataContainerRemove(id),
+  payload: visualMetadataContainerRemove(visualMetadataContainerList, id),
 });
 
 export const addPinnedFiltersIntoMetadataContainer = pinnedFeatures => ({
@@ -444,9 +450,9 @@ export const removePinnedFiltersIntoMetadataContainer = () => ({
   type: ACTION_TYPES.REMOVE_PINNED_FILTERS_INTO_VISUAL_METADATA,
 });
 
-export const metadataContainerUpdate = (id: string, widget: any, key: string) => ({
+export const metadataContainerUpdate = (visualMetadataContainerList: any, id: string, widget: any, key: string) => ({
   type: ACTION_TYPES.VISUAL_METADATA_CONTAINER_UPDATE,
-  payload: visualMetadataContainerUpdate(id, widget, key),
+  payload: visualMetadataContainerUpdate(visualMetadataContainerList, id, widget, key),
 });
 
 export const addField = (visual: IVisualMetadataSet, field) => ({
