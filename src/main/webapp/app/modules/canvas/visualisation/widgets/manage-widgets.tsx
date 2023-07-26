@@ -99,7 +99,7 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
       v.height = newItem.h;
       v.w = newItem.w;
       v.width = newItem.w;
-      props.metadataContainerUpdate(props.visualMetadataContainerList,v.id, v, 'id');
+      props.metadataContainerUpdate(props.visualMetadataContainerList, v.id, v, 'id');
       renderVisualisation(v, v.data, 'widget', broadcast);
     }
   };
@@ -256,25 +256,27 @@ const ManageWidgets = (props: IManageWidgetsProps) => {
           </div>
         );
       } else {
-        return (
-          <div
-            className={v.metadataVisual.name === VisualisationType.Iframe ? 'iframe-widget item widget' : 'item widget'}
-            id={`widget-${v.id}`}
-            key={`${v.id}`}
-            data-grid={{
-              i: v.id,
-              x: v.xPosition || 0,
-              y: v.yPosition || 0,
-              w: v.width,
-              h: v.height,
-              maxW: Infinity,
-              maxH: Infinity,
-              isBounded: true,
-            }}
-          >
-            <Widgets v={v} isLoaderDisplay={isLoaderDisplay} i={i} key={`viz-widget-${i}`} />
-          </div>
-        );
+        if (v.width && v.height) {
+          return (
+            <div
+              className={v.metadataVisual.name === VisualisationType.Iframe ? 'iframe-widget item widget' : 'item widget'}
+              id={`widget-${v.id}`}
+              key={`${v.id}`}
+              data-grid={{
+                i: v.id,
+                x: v.xPosition || 0,
+                y: v.yPosition || 0,
+                w: v.width,
+                h: v.height,
+                maxW: Infinity,
+                maxH: Infinity,
+                isBounded: true,
+              }}
+            >
+              <Widgets v={v} isLoaderDisplay={isLoaderDisplay} i={i} key={`viz-widget-${i}`} />
+            </div>
+          );
+        }
       }
     });
 
