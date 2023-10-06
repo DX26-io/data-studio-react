@@ -1,11 +1,11 @@
-import React, { ReactText, useState } from 'react';
+import React, { useState } from 'react';
 import { Content, Item, View, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
 import VisualisationChartProperties from 'app/modules/canvas/visualisation/visualisation-properties/tabs/chart/visualisation-chart-properties-tabs';
 import VisualisationDataProperties from 'app/modules/canvas/visualisation/visualisation-properties/tabs/data/visualisation-data-properties';
 import { Translate } from 'react-jhipster';
 
 const VisualisationProperties = () => {
-  const [activeTabId, setActiveTabId] = useState<ReactText>('chartProperties');
+  const [activeTabId, setActiveTabId] = useState<React.Key>('chartProperties');
 
   return (
     <div className="properties-tabs">

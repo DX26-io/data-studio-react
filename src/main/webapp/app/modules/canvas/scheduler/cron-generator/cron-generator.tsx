@@ -1,4 +1,4 @@
-import React, { useState, ReactText } from 'react';
+import React, { useState } from 'react';
 import Select from 'react-select';
 import { connect } from 'react-redux';
 import { IRootState } from 'app/shared/reducers';
@@ -11,7 +11,7 @@ import { setSchedulerReport, setErrorMessage } from 'app/modules/canvas/schedule
 import { isFormValid } from '../scheduler.util';
 
 const CronGenerator = props => {
-  const [tabId, setTabId] = useState<ReactText>('1');
+  const [tabId, setTabId] = useState<React.Key>('1');
   const [minutes, setMinutes] = useState([]);
   const [hours, setHours] = useState([]);
   const [days, setDays] = useState([]);

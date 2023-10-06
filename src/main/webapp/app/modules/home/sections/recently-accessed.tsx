@@ -128,7 +128,8 @@ const RecentlyAccessed = (props: IRecentlyAccessedProps) => {
       <Tabs
         aria-label="recent-tabs"
         onSelectionChange={id => {
-          recentlyAccessed[id].getData();
+          const idTemp = Number(id);
+          recentlyAccessed[idTemp].getData();
         }}
       >
         <TabList>

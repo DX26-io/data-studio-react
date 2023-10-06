@@ -20,7 +20,7 @@ import { translate, Translate } from 'react-jhipster';
 export interface IVisualisationDataPropertiesProps extends StateProps, DispatchProps {}
 
 const VisualisationDataProperties = (props: IVisualisationDataPropertiesProps) => {
-  const [activeTabId, setActiveTabId] = useState<ReactText>('DIMENSION');
+  const [activeTabId, setActiveTabId] = useState<React.Key>('DIMENSION');
   const [selectedField, setSelectedField] = useState<Field>(null);
 
   const visualWrap = VisualWrap(props.visual);
