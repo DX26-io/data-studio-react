@@ -8,7 +8,9 @@ RUN mkdir -p /data-studio/node_modules/.staging && apk add git
 
 WORKDIR /data-studio/
 
-COPY package.json .eslintignore .eslintrc.json tsconfig.json tsconfig.e2e.json ./
+COPY package.json .eslintignore .eslintrc.json tsconfig.json tsconfig.e2e.json docker-entrypoint.sh ./
+
+RUN chmod +x docker-entrypoint.sh
 
 RUN npm install
 
@@ -27,7 +29,7 @@ FROM nginx:1.22.0-alpine
 ## Remove default nginx index page
 RUN rm -rf /usr/share/nginx/html/*
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx-default.conf.template /etc/nginx/conf.d/default.conf.template
 
 COPY --from=builder /data-studio/build/resources/main/static /usr/share/nginx/html
 
@@ -41,4 +43,6 @@ EXPOSE 443 80
 # RUN chmod -R 755 /data-studio
 # USER dx26user
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+CMD ["nginx", "-g", "daemon off;"]
