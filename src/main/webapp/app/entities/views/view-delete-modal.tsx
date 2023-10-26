@@ -9,7 +9,7 @@ export interface IViewDeleteModalProps extends StateProps, DispatchProps, RouteC
 
 const ViewDeleteModal = (props: IViewDeleteModalProps) => {
   const history = useHistory();
-  const [viewNameConfirmation, setViewNameConfirmation] = useState<ReactText>('');
+  const [viewNameConfirmation, setViewNameConfirmation] = useState<React.Key>('');
   const viewId = props.match.params.viewId;
   const dashboardId = props.match.params.id;
 

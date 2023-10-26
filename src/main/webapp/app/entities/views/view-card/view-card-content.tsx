@@ -22,7 +22,7 @@ export interface IViewCardContentProps extends DispatchProps {
 const ViewCardContent = (props: IViewCardContentProps) => {
   const { viewName, viewId, description, viewDashboard, account, dispatchReleaseRequestProps } = props;
 
-  const [redirect, setRedirect] = useState<ReactText>('');
+  const [redirect, setRedirect] = useState<React.Key>('');
 
   const onMenuAction = key => {
     if (key === 'export') {

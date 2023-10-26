@@ -1,4 +1,4 @@
-import React, { ReactNode, ReactText, useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { IRootState } from 'app/shared/reducers';
 import { connect } from 'react-redux';
 import VisualisationQuerySetting from 'app/modules/canvas/visualisation/visualisation-settings/partials/visualisation-query-setting';
@@ -11,7 +11,7 @@ import TableView from 'app/shared/components/table/table';
 import { Translate } from 'react-jhipster';
 
 const VisualisationSettings = props => {
-  const [activeTabId, setActiveTabId] = useState<ReactText>('query');
+  const [activeTabId, setActiveTabId] = useState<React.Key>('query');
   return (
     <>
       <Tabs isQuiet={true} density={'compact'} items={getSettingsTabTranslations()} onSelectionChange={setActiveTabId}>

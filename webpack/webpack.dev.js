@@ -31,6 +31,12 @@ module.exports = options =>
             'style-loader',
             'css-loader',
             'postcss-loader',
+          ],
+        },
+        {
+          test: /\.(sa|sc|c)ss$/,
+          exclude: /node_modules/,
+          use: [
             {
               loader: 'sass-loader',
               options: { implementation: sass },

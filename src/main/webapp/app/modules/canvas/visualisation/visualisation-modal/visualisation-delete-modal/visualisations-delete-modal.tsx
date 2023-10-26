@@ -1,4 +1,4 @@
-import React, { ReactText, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, ButtonGroup, Content, Dialog, DialogContainer, Divider, Heading, TextField } from '@adobe/react-spectrum';
 import { Translate } from 'react-jhipster';
 import {
@@ -13,7 +13,7 @@ import { IRootState } from 'app/shared/reducers';
 interface IVisualisationsDeleteModalProps extends StateProps, DispatchProps {}
 
 const VisualisationsDeleteModal = (props: IVisualisationsDeleteModalProps) => {
-  const [visualisationsTitleConfirmation, setVisualisationsTitleConfirmation] = useState<ReactText>('');
+  const [visualisationsTitleConfirmation, setVisualisationsTitleConfirmation] = useState<React.Key>('');
 
   const handleClose = () => {
     props.setVisualisationAction(null);

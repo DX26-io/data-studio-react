@@ -1,4 +1,4 @@
-import React, { ReactText, useState } from 'react';
+import React, { useState } from 'react';
 import { Content, Item, View, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
 import VisualisationChartConfigProperties from './visualisation-chart-properties';
 import VisualisationTitleProperties from './visualisation-title-properties';
@@ -6,7 +6,7 @@ import VisualisationBodyProperties from './visualisation-body-properties';
 import { Translate } from 'react-jhipster';
 
 const VisualisationChartProperties = () => {
-  const [activeTabId, setActiveTabId] = useState<ReactText>('titleProperties');
+  const [activeTabId, setActiveTabId] = useState<React.Key>('titleProperties');
 
   return (
     <View>

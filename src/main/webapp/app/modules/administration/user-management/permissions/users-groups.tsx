@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactText } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getUserGroups, searchUserGroups } from '../groups/user-group.reducer';
 import { getUsers, searchUsers } from '../users/user.reducer';
@@ -18,7 +18,7 @@ export interface IUsersGroupsProps extends StateProps, DispatchProps {
 export const UsersGroups = (props: IUsersGroupsProps) => {
 
   const [searchValue, setSearchValue] = React.useState('');
-  const [tabId, setTabId] = useState<ReactText>(1);
+  const [tabId, setTabId] = useState<React.Key>(1);
 
   const { permissionProps, groups, users, searchedUsers, searchedGroups } = props;
 
