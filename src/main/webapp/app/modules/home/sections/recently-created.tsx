@@ -91,7 +91,8 @@ const RecentlyCreated = (props: IRecentlyCreatedProps) => {
       <Tabs
         aria-label="recent-tabs"
         onSelectionChange={id => {
-          recentlyCreated[id].getData();
+          const idTemp = Number(id);
+          recentlyCreated[idTemp].getData();
         }}
       >
         <TabList>

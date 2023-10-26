@@ -30,7 +30,7 @@ export interface IFeaturesPanelProp extends StateProps, DispatchProps {}
 
 const FeaturesPanel = (props: IFeaturesPanelProp) => {
   const [isFeaturesMinimize, setFeaturesMinimize] = useState<boolean>(true);
-  const [activeTabId, setActiveTabId] = useState<Key>(0);
+  const [activeTabId, setActiveTabId] = useState<React.Key>(0);
   const [isHierarchyDialogOpen, setHierarchyDialogOpen] = useState<boolean>(false);
   const [isFeatureDialogOpen, setFeatureDialogOpen] = useState<boolean>(false);
 
@@ -43,7 +43,8 @@ const FeaturesPanel = (props: IFeaturesPanelProp) => {
   }, [props.view]);
 
   const featureFilter = feature => {
-    return feature.featureType === featureTypeToActiveTabs[activeTabId];
+    const activeTabTemp = Number(activeTabId);
+    return feature.featureType === featureTypeToActiveTabs[activeTabTemp];
   };
 
   const create = () => {

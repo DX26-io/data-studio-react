@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ReactText } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Flex, View, Text, Button, Divider, Item, Content, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
@@ -26,7 +26,7 @@ export interface IFilterPanelProp extends StateProps, DispatchProps {
 
 const FilterPanel = (props: IFilterPanelProp) => {
   const [isFilterMinimize, setFilterMinimize] = useState(true);
-  const [tabId, setTabId] = useState<ReactText>('1');
+  const [tabId, setTabId] = useState<React.Key>('1');
 
   const _setSeparator = separator => {
     props.setSeparator(separator);

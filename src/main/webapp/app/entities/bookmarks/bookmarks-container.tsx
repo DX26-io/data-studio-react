@@ -1,4 +1,4 @@
-import React, { useState, ReactText } from 'react';
+import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Grid, View, DialogContainer, Content, Item, ProgressBar, Tabs, TabList, TabPanels } from '@adobe/react-spectrum';
 import { IRootState } from 'app/shared/reducers';
@@ -10,7 +10,7 @@ import BookmarkCard from './bookmarks-card';
 import BookmarkTable from './bookmarks-table';
 
 export const BookmarksContainer = props => {
-  const [tabId, setTabId] = useState<ReactText>(1);
+  const [tabId, setTabId] = useState<React.Key>(1);
 
   const tabs = [
     { id: 1, name: 'featureBookmark.tabs.table' },

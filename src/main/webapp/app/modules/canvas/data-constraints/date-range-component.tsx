@@ -1,5 +1,5 @@
 import { Content, Picker, Section, Text, TextField, View, TabList, Item, TabPanels, Tabs } from '@adobe/react-spectrum';
-import React, { FC, ReactText, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import {
   formatDate,
   resetTimezone,
@@ -26,11 +26,11 @@ interface IDateRangeComponentProps {
 
 const DateRangeComponent = (props: IDateRangeComponentProps) => {
 
-  const [tabId, setTabId] = useState<ReactText>('0');
+  const [tabId, setTabId] = useState<React.Key>('0');
   const [startDate, setStartDate] = useState(props.startDate);
   const [endDate, setEndDate] = useState(props.endDate);
   const [customDynamicDateRange, setCustomDynamicDateRange] = useState('0');
-  const [isdynamicDateRangeConfig, setDynamicDateRangeConfig] = useState<ReactText>('');
+  const [isdynamicDateRangeConfig, setDynamicDateRangeConfig] = useState<React.Key>('');
   const [isCustom, setCustom] = useState(false);
   const TAB_DAY = '0';
   const TAB_RANGE = '1';

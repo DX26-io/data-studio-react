@@ -10,7 +10,7 @@ export interface IDashboardDeleteModalProps extends StateProps, DispatchProps, R
 
 const DashboardDeleteModal = (props: IDashboardDeleteModalProps) => {
   const history = useHistory();
-  const [dashboardNameConfirmation, setDashboardNameConfirmation] = useState<ReactText>('');
+  const [dashboardNameConfirmation, setDashboardNameConfirmation] = useState<React.Key>('');
   const handleDelete = () => {
     props.deleteEntity(props.match.params.id);
   };
