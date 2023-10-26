@@ -10,9 +10,9 @@ services:
       - ./nginx-default.conf.template:/etc/nginx/conf.d/default.conf.template:ro
     # below code is commented for now.
     environment:
-      - NGINX_PROXY=http://localhost:8002
-      - NGINX_PORT=80
-      - NGINX_HOST=localhost
+      - GATEWAY_HOST=localhost
+      - GATEWAY_API_PORT=8002
+      - GATEWAY_NETTY_SOCKET_IO_PORT=8085
     build:
       context: '.'
       args:
